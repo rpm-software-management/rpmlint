@@ -171,6 +171,7 @@ cross_compile_regex=re.compile('-mandrake-linux-[^/]+$')
 perl_version_trick=Config.getOption('PerlVersionTrick', 1)
 log_regex=re.compile('^/var/log/[^/]+$')
 lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
+lib_package_regex=re.compile('^(lib|.+-libs)')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -195,6 +196,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         req_names=pkg.req_names()
         deps=pkg.requires()+pkg.prereq()
         prein=pkg[rpm.RPMTAG_PREIN]
+        lib_package=lib_package_regex.search(pkg.name)
 
         # erport these errors only once
         perl_dep_error=0
@@ -454,7 +456,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			for linksegment in string.split(mylink, '/'):
 			    if linksegment == '..':
 				printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
-        if lib_file and non_lib_file:
+        if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
             
 # Create an object to enable the auto registration of the test
@@ -660,7 +662,7 @@ email to flepied@mandrakesoft.com to add it to the list of exceptions in the nex
 
 'outside-libdir-files',
 '''This library package must not contain non library files to allow 64
-and 32 bits versions of the package to cohabit.''',
+and 32 bits versions of the package to coexist.''',
 
 )
 
