@@ -227,6 +227,9 @@ addFilter('hotplug non-standard-dir-perm /var/run/usb 0700')
 #udev
 addFilter('udev statically-linked-binary /sbin/udev')
 
+# dmraid
+addFilter('dmraid statically-linked-binary /sbin/dmraid-static')
+
 #policycoreutils
 addFilter('policycoreutils statically-linked-binary /usr/sbin/load_policy')
 
