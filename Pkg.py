@@ -118,9 +118,14 @@ class Pkg:
 
 	self.name=self.header[rpm.RPMTAG_NAME]
 
-    # Return true is the package is a source package
+    # Return true if the package is a source package
     def isSource(self):
 	return self.is_source
+
+    # Return true if the package is a nosource package.
+    # NoSource files are ghosts in source packages.
+    def isNoSource(self):
+        return self.is_source and self.ghostFiles()
 
     # access the tags like an array
     def __getitem__(self, key):
