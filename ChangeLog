@@ -1,6 +1,15 @@
 1999-10-23  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
 
 	* rpmlint.py:
+		* version 0.6.1.
+
+	* Makefile:
+	        * (all): use compile.py to byte compile files.
+		
+	* compile.py:
+		* first version.
+
+	* rpmlint.py:
 		* version 0.6.
 
 	* BinariesCheck.py, ConfigCheck.py, FHSCheck.py, MandrakeCheck.py, SignatureCheck.py:
