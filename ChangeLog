@@ -1,3 +1,7 @@
+2004-01-19 14:12  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.54-1mdk
+
 2004-01-19 12:28  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: fixed main loop for argument testing on files and
