@@ -132,7 +132,7 @@ STANDARD_DIRS=(
 
 DEFAULT_GAMES_GROUPS='Games'
 
-DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode'],
+DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
