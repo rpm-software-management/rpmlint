@@ -8,7 +8,7 @@
 #############################################################################
 %define name rpmlint
 %define version 0.33
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
