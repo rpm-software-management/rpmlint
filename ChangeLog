@@ -1,3 +1,8 @@
+1999-11-18 Frederic Lepied   <lepied@kenobi.mandrakesoft.com>
+
+	* version 0.7
+	* MandrakeCheck.py: don't warn about .../info/dir not compressed.
+
 1999-11-15  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
 
 	* rpmlint.py: 0.7.
