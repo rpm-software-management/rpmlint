@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.6.1
+%define version 0.7
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -63,6 +63,11 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Mon Nov 15 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- 0.7: more robust cleanup, filters are regexp now and added
+exception for /var/catman subirs beeing setgid.
+
 * Sat Oct 23 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - 0.6.1: corrected compilation step.
