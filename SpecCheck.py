@@ -18,6 +18,7 @@ spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
 applied_patch_regex=re.compile("^\s*%patch([^\s]*)\s")
 source_dir_regex=re.compile("[^#]*\$RPM_SOURCE_DIR")
+obsolete_tags_regex=re.compile("^\s*(Copyright|Serial)\s*:\s*([^\s]+)")
 
 def file2string(file):
     fd=open(file, "r")
@@ -66,6 +67,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         if res:
                             source_dir=1
                             printError(pkg, "use-of-RPM_SOURCE_DIR")
+                res=obsolete_tags_regex.search(line)
+                if res:
+                    printWarning(pkg, "obsolete-tag", res.group(1))
 
             # process gathered info
             for p in patches.keys():
@@ -78,5 +82,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
 # Create an object to enable the auto registration of the test
 check=SpecCheck()
+
+# Add information about checks
+if Config.info:
+    addDetails(
+'obsolete-tag',
+'''The following tags are obsolete: Copyright and Serial. They must
+be replaced by License and Epoch respectively.''',
+)
 
 # SpecCheck.py ends here
