@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.24
+%define version 0.25
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,28 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Thu Oct 12 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.25-1mdk
+* Config.py: added exception for sympa, rpm and bcast.
+
+* TagsCheck.py: o check that devel package depends on the base
+                  package with the same version.
+                o check that summary begins with a
+
+* PostCheck.py: check dangerous commands.  check reference to ~ or
+                $HOME.
+
+* MenuCheck.py: o check that titles and longtitles begin by a capital
+                  letter.
+                o check that no version is included in title and longtitle.
+                o /lib/cpp errors to /dev/null for new cpp.
+
+* FilesCheck.py: check package owning system dirs.
+
+* SpecCheck.py: o new check.
+                o check name of spec file.
+                o check use of $RPM_SOURCE_DIR.
+                o warn if a patch is not applied.
+
 * Mon Oct  2 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.24-1mdk
 - FilesCheck.py: added apache and postgres to standard groups.
 - TagsCheck.py: spell check a la Debian.
