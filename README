@@ -72,3 +72,5 @@ ForbiddenWords		regex		'Linux.?Mandrake|Mandrake[^ ]*Linux'
 ValidBuildHost		regex		'\.mandrakesoft\.com$|\.mandrake\.org$'
 InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any', 'package')
 IconFilename		regex		'.*\.png$'
+PerlVersionTrick	boolean		1
+CrossCompilation	regex		'-mandrake-linux-[^/]+$'
