@@ -28,6 +28,7 @@ STANDARD_DIRS=(
     '/etc/xinetd.d',
     '/home',
     '/lib',
+    '/lib64',
     '/lib/modules',
     '/mnt',
     '/mnt/cdrom',
@@ -44,6 +45,7 @@ STANDARD_DIRS=(
     '/usr/X11R6/doc',
     '/usr/X11R6/include',
     '/usr/X11R6/lib',
+    '/usr/X11R6/lib64',
     '/usr/X11R6/man',
     '/usr/X11R6/man/man1',
     '/usr/X11R6/man/man2',
@@ -61,9 +63,11 @@ STANDARD_DIRS=(
     '/usr/games',
     '/usr/include',
     '/usr/lib',
+    '/usr/lib64',
     '/usr/lib/X11',
     '/usr/lib/games',
     '/usr/lib/gcc-lib',
+    '/usr/lib64/gcc-lib',
     '/usr/local',
     '/usr/local/bin',
     '/usr/local/doc',
@@ -71,6 +75,7 @@ STANDARD_DIRS=(
     '/usr/local/games',
     '/usr/local/info',
     '/usr/local/lib',
+    '/usr/local/lib64',
     '/usr/local/man',
     '/usr/local/man/man1',
     '/usr/local/man/man2',
@@ -145,9 +150,9 @@ points_regex=re.compile('^../(.*)')
 doc_regex=re.compile('^/usr/(doc|man|info)|^/usr/share/(doc|man|info)')
 bin_regex=re.compile('^(/usr)?/s?bin/')
 includefile_regex=re.compile('\.[ch]$|\.a$')
-sofile_regex=re.compile('/lib/[^/]+\.so$')
+sofile_regex=re.compile('/lib(64)?/[^/]+\.so$')
 devel_regex=re.compile('-(devel|source)$')
-lib_regex=re.compile('lib/lib[^/]*\.so\..*')
+lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
 info_regex=re.compile('^/usr/share/info')
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
