@@ -36,7 +36,7 @@ CORRECT_SUBDIRS = (
 'es_GT', 'es_HN', 'es_SV', 'es_PE', 'es_PA', 'es_MX', 'et', 'eu', 'fa',
 'fa_IR.iransystem', 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hr',
 'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'ka_GE.georgian-ps', 'kl', 'ko',
-'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'nb', 'nl', 'no', 'no@nynorsk',
+'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'nb', 'nl', 'nn', 'no', 'no@nynorsk',
 'ny', 'oc', 'pd', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
 'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'ur', 'uk', 'vi',
 'vi_VN.viscii', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_TW.Big5'
