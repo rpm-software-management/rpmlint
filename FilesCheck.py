@@ -41,7 +41,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     ldconfig_regex=re.compile("^[^#]*ldconfig", re.MULTILINE)
     info_regex=re.compile("^/usr/share/info")
     install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
-    perl_temp_file=re.compile(".*(bs|\.packlist)$")
+    perl_temp_file=re.compile(".*perl.*(bs|\.packlist)$")
 
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
