@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.65
+%define version 0.66
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -53,6 +53,13 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Tue Jan 25 2005 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.66-1mdk
+- exceptions for %%multiarch policy
+- FilesCheck.py: Add a new warning for perl modules installed under
+  site_perl instead of vendor_perl (Rafael)
+- FilesCheck.py: Perl modules go under vendor_perl, not site_perl
+  (Rafael)
+
 * Fri Jan 21 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.65-1mdk
 - I18NCheck.py: o recognition of some more languages (bug #12216)
                 o Added language codes (nr, nso, tn, ts) of South
