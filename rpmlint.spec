@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Jul  6 2001 Christian Belisle <cbelisle@mandrakesoft.com> 0.33-2mdk
+- Added descriptions for the -i option.
+
 * Mon Jul  2 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.33-1mdk
 - more descriptions from Christian Belisle.
 
