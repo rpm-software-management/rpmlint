@@ -1,3 +1,18 @@
+2000-07-31 12:46  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py:	     * (DEFAULT_CHECKS): removed ScriptCheck.
+
+2000-07-31 12:45  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: 	* merged ScriptCheck.py and corrected shell
+	script check.
+
+2000-07-31 12:44  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py:	* allow install-info call in preun.
+		* check chkconfig calls for package that comes with an
+		/etc/rc.d/init.d/script.
+
 2000-07-29 12:38  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: If we use kdesu check in it present in Requires:
