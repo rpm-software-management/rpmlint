@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.18
+%define version 0.19
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,18 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Aug 18 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.19-1mdk
+-BinariesCheck.py: check rpath only on system lib paths (ie /lib,
+/usr/lib and /usr/X11R6/lib).  This can be configured with the
+SystemLibPaths option.
+- I18NCheck.py: warn if .mo is not registered in %%lang.
+- MenuCheck.py: protected kdesu check.
+- FilesCheck.py: check perl temporary files.
+- rpmlint.py: added ExtractDir option usable in the config
+file.
+- PostCheck.py: check ] in if statement.  report warning for a
+percent.
+
 * Thu Aug 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.18-1mdk
 - TagsCheck: check licence file.
 - ConfigCheck: check files without no-replace flag.

@@ -1,3 +1,43 @@
+2000-08-18 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.19
+
+2000-08-18 07:43  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: added SystemLibPaths mention.
+
+2000-08-18 07:41  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: check rpath only on system lib paths (ie /lib,
+	/usr/lib and /usr/X11R6/lib).  This can be configured with the
+	SystemLibPaths option.
+
+2000-08-18 07:39  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added fileLang to retrieve the lang associated to a file.
+
+2000-08-17 15:49  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: warn if .mo is not registered in %lang.
+
+2000-08-17 15:06  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: protected kdesu check.
+
+2000-08-17 14:59  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check perl temporary files.
+
+2000-08-16 11:25  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README, rpmlint.py: added ExtractDir option usable in the config
+	file.
+
+2000-08-16 09:29  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check ] in if statement.  report warning for a
+	percent.
+
 2000-08-10 16:51  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.18-1mdk
