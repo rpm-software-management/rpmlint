@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Project         : Mandrake Linux
+# Project         : Mandrakelinux
 # Module          : rpmlint
 # File            : NamingPolicyCheck.py
 # Version         : $Id$

@@ -54,8 +54,8 @@ Available options:
 
 name			type		default
 ========================================================
-Vendor			string		"MandrakeSoft"
-Distribution		string		"Mandrake Linux"
+Vendor			string		"Mandrakesoft"
+Distribution		string		"Mandrakelinux"
 UseBzip2		boolean		1
 ValidGroups		list of strings
 ValidMenuSections	list of strings

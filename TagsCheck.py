@@ -406,7 +406,7 @@ DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[ .]'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
-distribution=Config.getOption("Distribution", "Mandrake Linux")
+distribution=Config.getOption("Distribution", "Mandrakelinux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
