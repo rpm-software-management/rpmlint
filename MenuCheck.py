@@ -357,7 +357,7 @@ that contains it.''',
 'menu-longtitle-not-capitalized',
 '''The longtitle field of the menu doesn't start with a capital letter.''',
 
-'version-in-menu-longtitle'
+'version-in-menu-longtitle',
 '''A version is contained in the longtitle field of the menu entry. This is bad because
 it will be prone to error when the version of the package changes.''',
 
