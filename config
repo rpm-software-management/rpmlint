@@ -23,6 +23,7 @@ from Config import *
 
 # Output filters
 
-#addFilter("AfterStep", "non-standard-dir-in-usr")
+# /var/catman subdirs are setgid man
+addFilter("W: man-pages-[^ ]+ non-standard-dir-perm /var/catman[^ ]+ 0775")
 
 # config ends here
