@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.20
+%define version 0.21
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,17 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Thu Aug 31 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.21-1mdk
+- TagsCheck.py: check packager field compliance to a regexp.
+- Config.py: imported default exceptions.
+- TagsCheck.py: added Apache License, PHP Licence and BSD-Style.
+- MenuCheck.py: check hardcoded path in icon field and large, mini, 
+  normal icon files.
+- PostCheck.py: Fix typo in check of /usr/bin/perl.
+- PostCheck.py: Check perl script like we do for bash script.
+- I18NCheck.py: updated locales list
+- FilesCheck.py: Only check perl_temp_file in a /perl/ directory.
+
 * Fri Aug 25 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.20-1mdk
 - InitScriptCheck.py: new check for /etc/rc.d/init.d scripts.
 - PostCheck.py: check when a script is present that the shell is valid.
