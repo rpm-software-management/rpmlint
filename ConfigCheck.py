@@ -45,4 +45,29 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=ConfigCheck()
 
+# Add information about checks
+if Config.info:
+    addDetails(
+'app-defaults-must-not-be-conffile',
+"""
+""",
+
+'score-file-must-not-be-conffile',
+"""
+""",
+
+'file-in-usr-marked-as-conffile',
+"""A file in /usr is marked as being a configuration file.
+Store your conf files in /etc/ instead.""",
+
+'non-etc-or-var-file-marked-as-conffile',
+"""
+""",
+
+'conffile-without-noreplace-flag',
+"""
+""",
+
+)
+
 # ConfigCheck.py ends here
