@@ -53,12 +53,13 @@ addFilter("I: menu unable-to-parse-menu-command")
 addFilter("W: menu invalid-menu-section")
 addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modules")
 addFilter("W: icewm-light menu-command-not-in-package icewm")
-addFilter("W: lftp shared-lib-without-dependency-information /usr/lib/lftp/.*.so")
+addFilter("E: slocate non-standard-dir-perm /var/lib/slocate 0750")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
 addFilter("E: initscripts (setuid|setgid)-binary (/usr/sbin/usernetctl|/sbin/netreport) root.*")
 addFilter("E: initscripts non-standard-dir-perm /var/run/netreport 0775")
+
 
 #Setuid
 addFilter("E: traceroute setuid-binary /usr/sbin/traceroute root 04755")
@@ -74,6 +75,7 @@ addFilter("E: rsh setuid-binary /usr/bin/rcp root 04755")
 addFilter("E: man setgid-binary /usr/bin/man man 02755")
 addFilter("E: sudo non-standard-dir-perm /var/run/sudo 0700")
 addFilter("E: sudo setuid-binary /usr/bin/sudo root 04111")
+addFilter("E: slocate setgid-binary /usr/bin/slocate slocate 02755")
 
 
 # config ends here
