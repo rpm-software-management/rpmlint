@@ -384,9 +384,10 @@ release_ext=Config.getOption('ReleaseExtension', 'mdk')
 extension_regex=release_ext and re.compile(release_ext + '$')
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_regex=re.compile('(.*)-devel')
-devel_number_regex=re.compile('(.*)[0-9]+-devel')
+devel_number_regex=re.compile('(.*?)[0-9.]+-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http)://')
+so_regex=re.compile('\.so$')
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -438,26 +439,32 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if res:
                 base=res.group(1)
                 dep=None
-                for d in pkg.requires() + pkg.prereq():
-                    if d[0] == base:
-                        dep=d
+                has_so=0
+                for f in pkg.files().keys():
+                    if so_regex.search(f):
+                        has_so=1
                         break
-                if not dep:
-                    printWarning(pkg, 'no-dependency-on', base)
-                elif version:
-                    if dep[1][:len(version)] != version:
-                        if dep[1] != '':
-                            printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], version)
-                        else:
-                            printWarning(pkg, 'no-version-dependency-on', base, version)
-                res=devel_number_regex.search(name)
-                if not res:
-                    printWarning(pkg, 'no-major-in-name', name)
-                else:
-                    prov=res.group(1) + '-devel'
-                    if not prov in map(lambda x: x[0], pkg.provides()):
-                        printWarning(pkg, 'no-provides', prov)
-                
+                if has_so:
+                    for d in pkg.requires() + pkg.prereq():
+                        if d[0] == base:
+                            dep=d
+                            break
+                    if not dep:
+                        printWarning(pkg, 'no-dependency-on', base)
+                    elif version:
+                        if dep[1][:len(version)] != version:
+                            if dep[1] != '':
+                                printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], version)
+                            else:
+                                printWarning(pkg, 'no-version-dependency-on', base, version)
+                    res=devel_number_regex.search(name)
+                    if not res:
+                        printWarning(pkg, 'no-major-in-name', name)
+                    else:
+                        prov=res.group(1) + '-devel'
+                        if not prov in map(lambda x: x[0], pkg.provides()):
+                            printWarning(pkg, 'no-provides', prov)
+                    
 	summary=pkg[rpm.RPMTAG_SUMMARY]
 	if not summary:
 	    printError(pkg, 'no-summary-tag')
