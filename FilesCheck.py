@@ -66,6 +66,7 @@ STANDARD_DIRS=(
     '/usr/lib/X11',
     '/usr/lib/games',
     '/usr/lib/gcc-lib',
+    '/usr/lib/menu',
     '/usr/lib64/gcc-lib',
     '/usr/local',
     '/usr/local/bin',
