@@ -92,6 +92,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
     title=re.compile("title=(\"([^\"]+)\"|([^ \t\"]+))")
     command=re.compile("command=\"?([^\" ]+)")
+    kdesu_command=re.compile("command=\"?kdesu -c \"?([^\" ]+)")
     icon=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
@@ -174,13 +175,18 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         command=res.group(1)
                         try:
-                            if command[0] == '/':
-                                files[command]
+                            if command[:5] == 'kdesu':
+                                res2=MenuCheck.kdesu_command.search(line)
+                                command2=res2.group(1)
+                                files[command2]
                             else:
-                                if not (files.has_key("/bin/" + command) or
-                                        files.has_key("/usr/bin/" + command) or
-                                        files.has_key("/usr/X11R6/bin/" + command)):
-                                    raise KeyError, command
+                                if command[0] == '/':
+                                    files[command]
+                                else:
+                                    if not (files.has_key("/bin/" + command) or
+                                            files.has_key("/usr/bin/" + command) or
+                                            files.has_key("/usr/X11R6/bin/" + command)):
+                                        raise KeyError, command
                         except KeyError:
                             printWarning(pkg, "menu-command-not-in-package", command)
                     else:
