@@ -1,3 +1,11 @@
+2005-01-25 14:34  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* rpmlint.spec: 0.66-1mdk
+
+2005-01-25 14:34  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* Config.py: exceptions for %multiarch policy
+
 2005-01-24 13:50  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Add a new warning for perl modules installed under
