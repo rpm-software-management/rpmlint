@@ -359,6 +359,9 @@ addFilter('W: gettext-devel no-major-in-name gettext-devel')
 #chromium
 addFilter('E: chromium-setup .*-icon-not-in-package chromium.xpm')
 
+#setup
+addFilter('E: setup zero-length (/etc/motd|/var/log/lastlog|/etc/exports)')
+
 #webmin
 addFilter('W: webmin dangerous-command-in-%postun rm')
 
