@@ -36,7 +36,9 @@ configure_start_regex=re.compile('\./configure')
 configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex=re.compile('^%package.*lib')
 mklibname_regex=re.compile('%mklibname')
-
+ifarch_regex=re.compile('%ifarch')
+if_regex=re.compile('%if\s+')
+endif_regex=re.compile('%endif')
 biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
 
@@ -77,6 +79,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             spec=file2string(spec_file)
             patches={}
             applied_patches=[]
+            applied_patches_ifarch=[]
             source_dir=None
             buildroot=0
             clean=0
@@ -85,6 +88,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             configure_cmdline=""
             mklibname=0
             lib=0
+            if_depth=0
+            ifarch_depth=-1
             
             # gather info from spec lines
             for line in spec:
@@ -95,6 +100,19 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     changelog=1
                     break
+
+                res=ifarch_regex.search(line)
+                if res:
+                    if_depth = if_depth + 1
+                    ifarch_depth = if_depth
+                res=if_regex.search(line)
+                if res:
+                    if_depth = if_depth + 1
+                res=endif_regex.search(line)
+                if res:
+                    if ifarch_depth == if_depth:
+                        ifarch_depth = -1
+                    if_depth = if_depth - 1
                 
                 res=patch_regex.search(line)
                 if res:
@@ -103,6 +121,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     res=applied_patch_regex.search(line)
                     if res:
                         applied_patches.append(res.group(1))
+                        if ifarch_depth > 0:
+                            applied_patches_ifarch.append(res.group(1))
                     elif not source_dir:
                         res=source_dir_regex.search(line)
                         if res:
@@ -161,6 +181,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 
             # process gathered info
             for p in patches.keys():
+                if p in applied_patches_ifarch:
+                    printError(pkg, "%ifarch-applied-patch", "Patch" + p + ":", patches[p])
                 if p not in applied_patches:
                     if p == "" and "0" in applied_patches:
                         continue
@@ -217,6 +239,11 @@ by the %install section.''',
 'lib-package-without-%mklibname',
 '''The package name must be built using %mklibname to allow lib64 and lib32
 coexistence.''',
+
+'%ifarch-applied-patch',
+'''A patch is applied inside an %ifarch block. Patches must be applied
+on all architectures and may contain necessary configure and/or code
+patch to be effective only on a given arch.'''
 
 )
 
