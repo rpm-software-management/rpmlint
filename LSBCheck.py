@@ -22,9 +22,6 @@ class LSBCheck(AbstractCheck.AbstractCheck):
 	AbstractCheck.AbstractCheck.__init__(self, "LSBCheck")
 
     def check(self, pkg, verbose):
-	# Check only binary package
-	if pkg.isSource():
-	    return
 
 	name=pkg[rpm.RPMTAG_NAME]
 	if name and not name_regex.search(name):
