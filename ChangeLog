@@ -1,3 +1,37 @@
+2000-02-10  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.py:
+		* 0.9.
+
+	* README:
+		* added description of new options: ValidGroups, ReleaseExtension and
+	UseVersionInChangelog.
+
+	* config:
+		* added commented examples for ReleaseExtension and ValidGroups.
+
+	* TagsCheck.py:
+	        * (check): check release extension.
+		* (check): added configuration option for version on changelog and
+		release extension.
+
+	* DistributionCheck.py:
+		* first version.
+
+	* Makefile:
+		* install .py files too.
+
+	* Config.py:
+		* change MandrakeCheck to DistributionCheck.
+
+	* MandrakeCheck.py:
+		* renamed in DistributionCheck.
+
+2000-01-24  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* FilesCheck.py:
+		* added a check on non executable in bin directories.
+
 1999-12-30  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* version 0.8
