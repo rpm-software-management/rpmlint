@@ -70,7 +70,8 @@ DEFAULT_VALID_SECTIONS=(
     "Amusement/Toys",
     "Multimedia/Sound",
     "Multimedia/Graphics",
-    "Multimedia/Video"
+    "Multimedia/Video",
+    "Session/Windowmanagers"
     )
 
 class MenuCheck(AbstractCheck.AbstractCheck):
