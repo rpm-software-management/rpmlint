@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.17
+%define version 0.18
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Thu Aug 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.18-1mdk
+- TagsCheck: check licence file.
+- ConfigCheck: check files without no-replace flag.
+- MenuCheck: allow depency on kdesu to point directly to /usr/bin/kdesu.
+- FHSCheck: allow ftp and www in var (from upcoming FHS 2.2).
+
 * Tue Aug  8 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.17-1mdk
 - PostCheck: check bourne shell syntax (Chmouel).
 - FileCheck: o check chkconfig calls for packages with a file in
