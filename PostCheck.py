@@ -29,7 +29,8 @@ def incorrect_shell_script(shellscript):
     return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):
-    braces_regex=re.compile("[^#]*%{")
+    braces_regex=re.compile("^[^#]*%", re.MULTILINE)
+    bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
     
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "PostCheck")
@@ -46,9 +47,11 @@ class PostCheck(AbstractCheck.AbstractCheck):
             script = pkg[tag[0]]
             prog = pkg[tag[1]]
             if script:
-                if PostCheck.braces_regex.search(script):
-                    printError(pkg, "braces-in-" + tag[2])
                 if prog == "/bin/sh" or prog == "/bin/bash":
+                    if PostCheck.braces_regex.search(script):
+                        printWarning(pkg, "percent-in-" + tag[2])
+                    if PostCheck.bracket_regex.search(script):
+                        printWarning(pkg, "spurious-bracket-in-" + tag[2])
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
 
