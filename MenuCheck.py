@@ -87,6 +87,11 @@ DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
                      ('/usr/share/icons/mini/', 'mini'),
                      ('/usr/share/icons/large/', 'large'))
 
+DEFAULT_LAUNCHERS = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
+                     ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
+                     ['(?:/usr/bin/)?soundwrapper', None]
+                     )
+
 menu_file_regex=re.compile('^/usr/lib/menu/([^/]+)$')
 old_menu_file_regex=re.compile('^/usr/share/(gnome/apps|applnk)/([^/]+)$')
 package_regex=re.compile('\?package\((.*)\):')
@@ -94,7 +99,7 @@ needs_regex=re.compile('needs=(\"([^\"]+)\"|([^ \t\"]+))')
 section_regex=re.compile('section=(\"([^\"]+)\"|([^ \t\"]+))')
 title_regex=re.compile('[\"\s]title=(\"([^\"]+)\"|([^ \t\"]+))')
 longtitle_regex=re.compile('longtitle=(\"([^\"]+)\"|([^ \t\"]+))')
-command_regex=re.compile('command=\"?([^\" ]+)')
+command_regex=re.compile('command=(?:\"([^\"]+)\"|([^ \t\"]+))')
 kdesu_command_regex=re.compile('[/usr/bin/]?kdesu -c \"?([^ \t\"]+)\"?')
 kdesu_bin_regex=re.compile('[/usr/bin/]?kdesu')
 icon_regex=re.compile('icon=\"?([^\" ]+)')
@@ -105,7 +110,12 @@ icon_paths=Config.getOption('IconPath', DEFAULT_ICON_PATH)
 xpm_ext_regex=re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
 capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
+launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
 
+# compile regexps
+for l in launchers:
+    l[0]=re.compile(l[0])
+    
 class MenuCheck(AbstractCheck.AbstractCheck):
     
     def __init__(self):
@@ -182,18 +192,26 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     command=1
                     res=command_regex.search(line)
                     if res:
-                        command=res.group(1)
-                        try:
-                            if kdesu_bin_regex.search(command):
+                        command_line=string.split(res.group(1) or res.group(2))
+                        command=command_line[0]
+                        for launcher in launchers:
+                            if launcher[0].search(command):
                                 found=0
-                                for i in pkg.requires() + pkg.prereq():
-                                    if i[0] == 'kdesu' or i[0] == '/usr/bin/kdesu' : found=1
-                                if not found: printError(pkg, 'use-of-kdesu-in-menu-but-not-in-requires')
-
-                                res2=kdesu_command_regex.search(line)
-                                if res2:
-                                    command=res2.group(1)
-
+                                if launcher[1]:
+                                    if (files.has_key('/bin/' + command_line[0]) or
+                                        files.has_key('/usr/bin/' + command_line[0]) or
+                                        files.has_key('/usr/X11R6/bin/' + command_line[0])):
+                                        found=1
+                                    else:
+                                        for l in launcher[1]:
+                                            if l in pkg.req_names():
+                                                found=1
+                                                break
+                                    if not found:
+                                        printError(pkg, 'use-of-launcher-in-menu-but-no-requires-on', launcher[1][0])
+                                command=command_line[1]
+                                break
+                        try:
                             if command[0] == '/':
                                 files[command]
                             else:
@@ -206,19 +224,6 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     else:
                         command=0
 
-                    res=title_regex.search(line)
-                    if res:
-                        grp=res.groups()
-                        title=grp[1] or grp[2]
-                        if not capital_regex.search(title[0]):
-                            printWarning(pkg, 'menu-title-not-capitalized', title)
-                        res=version_regex.search(title)
-                        if res:
-                            printWarning(pkg, 'version-in-menu-title', title)
-                    else:
-                        printError(pkg, 'no-title-in-menu', f)
-                        title=None
-                        
                     res=longtitle_regex.search(line)
                     if res:
                         grp=res.groups()
@@ -230,6 +235,19 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'version-in-menu-longtitle', title)
                     else:
                         printError(pkg, 'no-longtitle-in-menu', f)
+                        title=None
+                        
+                    res=title_regex.search(line)
+                    if res:
+                        grp=res.groups()
+                        title=grp[1] or grp[2]
+                        if not capital_regex.search(title[0]):
+                            printWarning(pkg, 'menu-title-not-capitalized', title)
+                        res=version_regex.search(title)
+                        if res:
+                            printWarning(pkg, 'version-in-menu-title', title)
+                    else:
+                        printError(pkg, 'no-title-in-menu', f)
                         title=None
                         
                     res=needs_regex.search(line)
