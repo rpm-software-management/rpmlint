@@ -1,3 +1,7 @@
+2004-03-12 20:58  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.58-1mdk
+
 2004-03-12 20:45  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: The Mandrake word is forbidden alone.
