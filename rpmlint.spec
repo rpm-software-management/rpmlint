@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.52
+%define version 0.53
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,7 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
-- Config.py: o added statically-linked-binary exception for udev, policycoreutils
+* Mon Dec 22 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.53-1mdk
+- FilesCheck.py: o log-files-without-logrotate (Michael Scherer)
+		 o non-standard-executable-perm was never run (Ville Skyttä)
+		 o added checks for correct depmod calls in scriptlets (Eric Sandeen)
+- ZipCheck.py: new check (Ville Skyttä)
+- SpecCheck.py: check lib packages only they start by lib (Pixel)
+- spelling fixes (Ville Skyttä)
+- InitScriptCheck.py: allow multiple spaces before chkconfig (Eric Sandeen)
 
 * Fri Sep  5 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.52-1mdk
 - TagsCheck.py: o added explicit-lib-dependency check
