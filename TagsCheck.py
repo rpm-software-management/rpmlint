@@ -12,8 +12,9 @@ import AbstractCheck
 import rpm
 import string
 import re
+import Config
 
-VALID_GROUPS=(
+DEFAULT_VALID_GROUPS=(
     "Amusements/Games",
     "Amusements/Graphics",
     "Applications/Archiving",
@@ -48,12 +49,16 @@ VALID_GROUPS=(
 class TagsCheck(AbstractCheck.AbstractCheck):
     basename_regex=re.compile("/?([^/]+)$")
     changelog_version_regex=re.compile("[^>]([^ >]+)$")
-
+    valid_groups=Config.getOption("ValidGroups", DEFAULT_VALID_GROUPS)
+    release_ext=Config.getOption("ReleaseExtension", "mdk")
+    extension_regex=release_ext and re.compile(release_ext + "$")
+    use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
+    
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
 
     def check(self, pkg, verbose):
-	# Check only binary package
+
 	if not pkg[rpm.RPMTAG_PACKAGER]:
 	    printError(pkg, "no-packager-tag")
 
@@ -74,6 +79,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         release=pkg[rpm.RPMTAG_RELEASE]
 	if not release:
 	    printError(pkg, "no-release-tag")
+        elif TagsCheck.release_ext and not TagsCheck.extension_regex.search(release):
+            printWarning(pkg, "not-standard-release-extension", release)
 
 	summary=pkg[rpm.RPMTAG_SUMMARY]
 	if not summary:
@@ -89,13 +96,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	if not pkg[rpm.RPMTAG_GROUP]:
 	    printError(pkg, "no-group-tag")
 	else:
-	    if not group in VALID_GROUPS:
+	    if not group in TagsCheck.valid_groups:
 		printWarning(pkg, "non-standard-group", group)
 
 	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
 	    printError(pkg, "no-changelogname-tag")
-        else:
+        elif TagsCheck.use_version_in_changelog:
             ret=TagsCheck.changelog_version_regex.search(changelog[0])
             if not ret:
                 printWarning(pkg, "no-version-in-last-changelog")
