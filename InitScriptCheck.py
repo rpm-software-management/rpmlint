@@ -83,50 +83,43 @@ check=InitScriptCheck()
 if Config.info:
     addDetails(
 'init-script-without-chkconfig-postin',
-"""
-""",
+'''The package contains an initscript but doesn't contain a %post with
+a call to chkconfig.''',
 
 'postin-without-chkconfig',
-"""
-""",
+'''The package contains an initscript but doesn't call chkconfig in its %post.''',
 
 'init-script-without-chkconfig-preun',
-"""
-""",
+'''The package contains an initscript but doesn't contain a %preun with
+a call to chkconfig.''',
 
 'preun-without-chkconfig',
-"""
-""",
+'''The package contains an initscript but doesn't call chkconfig in its %preun.''',
 
 'no-status-entry',
-"""In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'status' entry, which is necessary for a good functionnality.
-""",
+'''In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'status' entry, which is necessary for a good functionnality.''',
 
 'no-reload-entry',
-"""In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'reload' entry, which is necessary for a good functionnality.
-""",
+'''In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'reload' entry, which is necessary for a good functionnality.''',
 
 'no-chkconfig-line',
-"""
-""",
+'''The initscript doesn't contain a chkconfig line to specify the runlevels at which
+to start and stop it.''',
 
 'no-default-runlevel',
-"""
-""",
+'''The default runlevel isn't specified in the initscript.''',
 
 'subsys-not-used',
-"""While your program is running, you have to put a lock file in
+'''While your program is running, you have to put a lock file in
 /var/lock/subsys/. To see an example, look at this directory on your
-machine.
-""",
+machine.''',
 
 'incoherent-subsys',
-"""The filename of your lock file in /var/lock/subsys/ is incoherent
+'''The filename of your lock file in /var/lock/subsys/ is incoherent
 with your actual init script name. For example, if your script name
-is httpd, you have to put a 'httpd' file in your subsys directory.
-""",
+is httpd, you have to put a 'httpd' file in your subsys directory.''',
 
 )
 # InitScriptCheck.py ends here

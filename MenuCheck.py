@@ -297,96 +297,86 @@ check=MenuCheck()
 if Config.info:
     addDetails(
 'non-file-in-menu-dir',
-"""
-""",
+'''/usr/lib/menu must not contain something else than normal files.''',
 
 'non-coherent-menu-filename',
-"""
-""",
+'''The menu file name should be /usr/lib/menu/<package>.''',
 
 'non-readable-menu-file',
-"""
-""",
+'''The menu file isn't readable. Check the permissions.''',
 
 'old-menu-entry',
-"""
-""",
+'''
+''',
 
 'non-transparent-xpm',
-"""
-""",
+'''xpm icon should be transparent to used in menus.''',
 
 'menu-without-postin',
-"""
-""",
+'''A menu file exists in the package but no %post is present to call
+update-menus.''',
 
 'postin-without-update-menus',
-"""
-""",
+'''A menu file exists in the package but the %post doesn't call update-menus.''',
 
 'menu-without-postun',
-"""
-""",
+'''A menu file exists in the package but no %postun is present to call
+update-menus.''',
 
 'postun-without-update-menus',
-"""
-""",
+'''A menu file exists in the package but the %postun doesn't call update-menus.''',
 
 'incoherent-package-value-in-menu',
-"""
-""",
+'''The package field of the menu entry isn't the same as the package name.''',
 
 'use-of-launcher-in-menu-but-no-requires-on',
-"""
-""",
+'''The menu command uses a launcher but there is no require on the package
+that contains it.''',
 
 'menu-command-not-in-package',
-"""
-""",
+'''The command used in the menu isn't contained in the package.''',
 
 'menu-longtitle-not-capitalized',
-"""
-""",
+'''The lontitle field of the menu doesn't start with a capital letter.''',
 
 'version-in-menu-longtitle'
-"""
-""",
+'''A version is contained in the longtitle field of the menu entry. This is bad because
+it will be prone to error when the version of the package changes.''',
 
 'no-longtitle-in-menu',
-"""
-""",
+'''The longtitle field isn't present in the menu entry.''',
 
 'menu-title-not-capitalized',
-"""
-""",
+'''The title field of the menu entry doesn't start with a capital letter.''',
 
 'version-in-menu-title',
-"""
-""",
+'''A version is contained in the title field of the menu entry. This is bad because
+it will be prone to error when the version of the package changes.''',
 
 'no-title-in-menu',
-"""
-""",
+'''The title field isn't present in the menu entry.''',
 
 'invalid-menu-section',
-"""
-""",
+'''The section field of the menu entry isn't standard.''',
 
 'unable-to-parse-menu-section',
-"""
-""",
+'''rpmlint wasn't able to parse the menu section. Please report.''',
 
 'hardcoded-path-in-menu-icon',
-"""
-""",
+'''The path of the icon is hardcoded in the menu entry. This prevent multiple sizes
+of the icon to be found.''',
 
-'-icon-not-in-package',
-"""
-""",
+'normal-icon-not-in-package',
+'''The normal icon isn't present in the package.''',
+
+'mini-icon-not-in-package',
+'''The mini icon isn't present in the package.''',
+
+'large-icon-not-in-package',
+'''The large icon isn't present in the package.''',
 
 'no-icon-in-menu',
-"""
-""",
+'''The menu entry doesn't contain an icon field.''',
 
 )
 

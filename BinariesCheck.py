@@ -215,8 +215,8 @@ FHS and the FSSTND forbid this.''',
 '''The soname of the library isn't in the form lib<libname>.so.<major>.''',
 
 'invalid-ldconfig-symlink',
-'''The symbolic link references the wrong file. (It should reference
-the shared library.)''',
+'''The symbolic link references the wrong file. It should reference
+the shared library.''',
 
 'no-ldconfig-symlink',
 '''The package should not only include the shared library itself, but
@@ -245,8 +245,8 @@ Makefile with a line like: gcc test.o -o test -Wl,--rpath.''',
 
 Usually this is a bug. Otherwise, please contact
 <flepied@mandrakesoft.com> about this so that this error gets included
-in the exception file for rpmlint. (With that, rpmlint will ignore
-this bug in the future.)''',
+in the exception file for rpmlint. With that, rpmlint will ignore
+this bug in the future.''',
 
 'executable-in-library-package',
 '''The package mixes up libraries and executables. Mixing up these

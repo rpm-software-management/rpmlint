@@ -393,16 +393,17 @@ check=FilesCheck()
 if Config.info:
     addDetails(
 'no-documentation',
-"""The package contains no documentation (README, doc, etc).
-You have to include documentation files.""",
+'''The package contains no documentation (README, doc, etc).
+You have to include documentation files.''',
 
 'not-listed-as-documentation',
-"""The documentation files of this package are not listed with
-the standard %doc tag.""",
+'''The documentation files of this package are not listed with
+the standard %doc tag.''',
 
 'non-standard-uid',
-"""A file in this package is owned by a non standard owner.
-Standard owners are:\n
+'''A file in this package is owned by a non standard owner.
+Standard owners are:
+
 - root		- bin
 - daemon	- adm
 - lp		- sync
@@ -414,11 +415,12 @@ Standard owners are:\n
 - nobody	- lists
 - gdm		- xfs
 - apache	- postgres
-- rpcuser	- rpm""",
+- rpcuser	- rpm''',
 
 'non-standard-gid',
-"""A file in this package is owned by a non standard group.
-Standard groups are:\n
+'''A file in this package is owned by a non standard group.
+Standard groups are:
+
 - root		- bin		- dip
 - daemon	- sys		- ftp
 - adm		- tty		- smb
@@ -432,146 +434,142 @@ Standard groups are:\n
 - lists		- gdm		- xfs
 - popusers	- slipusers	- slocate
 - x10		- urpmi		- apache
-- postgres	- rpcuser	- rpm""",
+- postgres	- rpcuser	- rpm''',
 
 'library-without-ldconfig-postin',
-"""
-""",
+'''This package contains a library and provides no %post with a call to ldconfig.''',
 
 'postin-without-ldconfig',
-"""
-""",
+'''This package contains a library and its %post doesn't call ldconfig.''',
 
 'library-without-ldconfig-postun',
-"""
-""",
+'''This package contains a library and provides no %postun with a call to ldconfig.''',
 
 'postun-without-ldconfig',
-"""
-""",
+'''This package contains a library and its %postun doesn't call ldconfig.''',
 
 'info-files-without-install-info-postin',
-"""
-""",
+'''This package contains info files and provides no %post with a call to install-info.''',
 
 'postin-without-install-info',
-"""
-""",
+'''This package contains info files and its %post doesn't call install-info.''',
 
 'info-files-without-install-info-postun',
-"""
-""",
+'''This package contains info files and provides no %postun with a call to install-info.''',
 
 'postun-without-install-info',
-"""
-""",
+'''This package contains info files and its %postun doesn't call install-info.''',
 
 'perl-temp-file',
-"""You have a perl temporary file in your package. Usually, this
-file is beginning with a dot (.) and contain "perl" in its name.""",
+'''You have a perl temporary file in your package. Usually, this
+file is beginning with a dot (.) and contain "perl" in its name.''',
 
 'dir-or-file-in-tmp',
-"""A file in the package is located in /tmp. It's not permitted
-to put a file in this directory.""",
+'''A file in the package is located in /tmp. It's not permitted
+to put a file in this directory.''',
 
 'dir-or-file-in-mnt',
-"""A file in the package is located in /mnt. It's not permitted
-to put a file in this directory.""",
+'''A file in the package is located in /mnt. It's not permitted
+to put a file in this directory.''',
 
 'dir-or-file-in-opt',
-"""A file in the package is located in /opt. It's not permitted
-to put a file in this directory.""",
+'''A file in the package is located in /opt. It's not permitted
+to put a file in this directory.''',
 
 'subdir-in-bin',
-"""The package contains a sub-directory in the /usr/bin. You can't
-create a subdir there. Create it in /usr/lib/ instead.""",
+'''The package contains a sub-directory in the /usr/bin. You can't
+create a subdir there. Create it in /usr/lib/ instead.''',
 
 'backup-file-in-package',
-"""You have a backup file in your package. The files are usually
+'''You have a backup file in your package. The files are usually
 beginning with ~ (vi) or #file# (emacs). Please remove it and rebuild
-your package.""",
+your package.''',
 
 'dir-or-file-in-home',
-"""A file in the package is located in /home. It's not permitted
-to put a file in this directory.""",
+'''A file in the package is located in /home. It's not permitted
+to put a file in this directory.''',
 
 'cvs-internal-file',
-"""You have file(s) from your CVS build directory. Move your CVS directory
-out of the package and rebuild it.""",
+'''You have file(s) from your CVS build directory. Move your CVS directory
+out of the package and rebuild it.''',
 
 'info-dir-file',
-"""You have /usr/info/dir or /usr/share/info/dir in your package. It's not allowed.
-Please remove it and rebuild your package.""",
+'''You have /usr/info/dir or /usr/share/info/dir in your package. It's not allowed.
+Please remove it and rebuild your package.''',
 
 'non-conffile-in-etc',
-"""A file in your package is being installed in /etc, but is not a
-configuration file. All the files in /etc MUST be configuration files.""",
+'''A file in your package is being installed in /etc, but is not a
+configuration file. All the files in /etc MUST be configuration files.''',
 
 'compressed-symlink-with-wrong-ext',
-"""
-""",
+'''The symlink points to a compressed file but doesn't use the same extension.''',
 
 'setuid-gid-binary',
-"""
-""",
+'''The file is setuid and setgid. Usually this is a bug. Otherwise, please contact
+<flepied@mandrakesoft.com> about this so that this error gets included
+in the exception file for rpmlint. With that, rpmlint will ignore
+this bug in the future.''',
 
 'setuid-binary',
-"""
-""",
+'''The file is setuid. Usually this is a bug. Otherwise, please contact
+<flepied@mandrakesoft.com> about this so that this error gets included
+in the exception file for rpmlint. With that, rpmlint will ignore
+this bug in the future.''',
 
 'setgid-binary',
-"""
-""",
+'''The file is setgid. Usually this is a bug. Otherwise, please contact
+<flepied@mandrakesoft.com> about this so that this error gets included
+in the exception file for rpmlint. With that, rpmlint will ignore
+this bug in the future.''',
 
 'non-standard-executable-perm',
-"""A standard executable should have permission set to 0755. If you get this message,
-that means that you have a wrong executable permission in your package""",
+'''A standard executable should have permission set to 0755. If you get this message,
+that means that you have a wrong executable permission in your package.''',
 
 'non-executable-in-bin',
-"""A file is being installed in /usr/bin, but is not an executable. Be sure
-that the file is an executable or that it has executable permissions.""",
+'''A file is being installed in /usr/bin, but is not an executable. Be sure
+that the file is an executable or that it has executable permissions.''',
 
 'devel-file-in-non-devel-package',
-"""A development file (usually source code) is located in a non-devel
+'''A development file (usually source code) is located in a non-devel
 package. If you want to include source code in your package, be sure to
-create a development package.""",
+create a development package.''',
 
 
 'non-standard-dir-perm',
-"""A standard directory should have permission set to 0755. If you get this message,
-that means that you have a wrong directory permission in your package""",
+'''A standard directory should have permission set to 0755. If you get this message,
+that means that you have a wrong directory permission in your package.''',
 
 'standard-dir-owned-by-package',
-"""
-""",
+'''This package owns a directory that is part of the standard hierarchy and this
+can lead to default directory rights, owner or group be changed to something
+non standard.''',
 
 'no-dependancy-on',
-"""
-""",
+'''
+''',
 
 'dangling-symlink',
-"""
-""",
+'''The symbolik link points nowhere.''',
 
 'symlink-should-be-relative',
-"""
-""",
+'''
+''',
 
 'dangling-relative-symlink',
-"""
-""",
+'''The relative symbolik link points nowhere.''',
 
 'symlink-has-too-many-up-segments',
-"""
-""",
+'''
+''',
 
 'symlink-should-be-absolute',
-"""
-""",
+'''
+''',
 
 'symlink-contains-up-and-down-segments',
-"""
-"""
+'''
+'''
 )
 
 # FilesCheck.py ends here

@@ -33,8 +33,9 @@ check=SignatureCheck()
 if Config.info:
     addDetails(
 'no-signature',
-"""You have to include your pgp or gpg signature in your package.
-For more informations on your signature, please refer to www.gnupg.org""",
+'''You have to include your pgp or gpg signature in your package.
+For more informations on your signature, please refer to www.gnupg.org.''',
 
 )
+
 # SignatureCheck.py ends here

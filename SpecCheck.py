@@ -87,24 +87,25 @@ check=SpecCheck()
 if Config.info:
     addDetails(
 'no-spec-file',
-"""No spec file was specified in your RPM building. Please specify a valid
-SPEC file to build a valid RPM package.""",
+'''No spec file was specified in your RPM building. Please specify a valid
+SPEC file to build a valid RPM package.''',
 
 'invalid-spec-name',
-"""Your spec file must finish with '.spec'. If it's not the case, rename your
-file and rebuild your package.""",
+'''Your spec file must finish with '.spec'. If it's not the case, rename your
+file and rebuild your package.''',
 
 'use-of-RPM_SOURCE_DIR',
-"""You use RPM_SOURCE_DIR in your spec file. If you have to use a directory
-for building, use RPM_BUILD_ROOT instead.""",
+'''You use RPM_SOURCE_DIR in your spec file. If you have to use a directory
+for building, use RPM_BUILD_ROOT instead.''',
 
 'patch-not-applied',
-"""A patch is included in your package but was not applied. Refer to the patches
-documentation to see what's wrong.""",
+'''A patch is included in your package but was not applied. Refer to the patches
+documentation to see what's wrong.''',
 
 'obsolete-tag',
 '''The following tags are obsolete: Copyright and Serial. They must
 be replaced by License and Epoch respectively.''',
+
 )
 
 # SpecCheck.py ends here
