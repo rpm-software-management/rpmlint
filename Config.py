@@ -395,4 +395,7 @@ addFilter('E: iptables shared-lib-without-dependency-information /lib/iptables/'
 #Starting from Mandrake Linux 8.1 we let standard menu files in the packages
 addFilter('old-menu-entry')
 
+#zapping
+addFilter('W: zapping devel-file-in-non-devel-package /usr/lib/zapping/plugins/.*\.a$')
+
 # Config.py ends here
