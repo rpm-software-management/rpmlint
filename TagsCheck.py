@@ -72,7 +72,7 @@ DEFAULT_VALID_GROUPS=(
     "Video",
     "Networking/File transfer",
     "Networking/IRC",
-    "Networking/ICQ",
+    "Networking/Instant messaging",
     "Networking/Chat",
     "Networking/News",
     "Networking/Mail",

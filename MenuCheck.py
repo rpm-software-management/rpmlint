@@ -53,7 +53,7 @@ DEFAULT_VALID_SECTIONS=(
     "Office",
     "Networking/File transfer",
     "Networking/IRC",
-    "Networking/ICQ",
+    "Networking/Instant messaging",
     "Networking/Chat",
     "Networking/News",
     "Networking/Mail",
