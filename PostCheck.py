@@ -36,6 +36,14 @@ tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
 menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/')
 bogus_var_regex=re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
+prereq_assoc = (
+#    ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
+    ['chkfontpath', ('chkfontpath', '/usr/sbin/chkfontpath')],
+    )
+
+for p in prereq_assoc:
+    p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)
+    
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
     if not shellscript:
@@ -69,6 +77,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
 	    return
 
         menu_error=0
+        prereq=pkg.prereq()
+        files=pkg.files().keys()
         
         for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, "%pre"),
                     (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, "%post"),
@@ -90,7 +100,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "dangerous-command-in-" + tag[2], res.group(2))
                     if update_menu_regex.search(script):
                         menu_error=1
-                        for f in pkg.files().keys():
+                        for f in files:
                             if menu_regex.search(f):
                                 menu_error=0
                                 break
@@ -98,6 +108,16 @@ class PostCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'update-menus-without-menu-file-in-' + tag[2])
                     if tmp_regex.search(script):
                         printError(pkg, 'use-tmp-in-' + tag[2])
+                    for c in prereq_assoc:
+                        if c[0].search(script):
+                            found=0
+                            for p in c[1]:
+                                if p in prereq or p in files:
+                                    found=1
+                                    break
+                            if not found:
+                                printError(pkg, 'no-prereq-on', c[1][0])
+                                
                 if prog == "/bin/sh" or prog == "/bin/bash":
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
