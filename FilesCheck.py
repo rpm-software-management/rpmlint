@@ -266,9 +266,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             logrotate_file=res or logrotate_file
             if res and res.group(1) != pkg.name:
                 printError(pkg, 'incoherent-logrotate-file', f)
-	    if etc_regex.search(f) and stat.S_ISREG(mode):
-		if not f in config_files and not f in ghost_files:
-		    printWarning(pkg, 'non-conffile-in-etc', f)
 	    link=enreg[3]
 	    if link != '':
 		ext=compr_regex.search(link)
@@ -419,8 +416,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		if mode & stat.S_IXUSR and perm != 0755:
 		    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 		    
-                if mode & 0111 != 0 and f in config_files:
-                    printError(pkg, 'executable-marked-as-config-file', f)
+                if mode & 0111 != 0:
+                    if f in config_files:
+                        printError(pkg, 'executable-marked-as-config-file', f)
+                elif etc_regex.search(f):
+                    if not f in config_files and not f in ghost_files:
+                        printWarning(pkg, 'non-conffile-in-etc', f)
                     
 	    # normal dir check
             elif stat.S_ISDIR(mode):
