@@ -470,6 +470,9 @@ addFilter('drakconf invalid-menu-section Configuration /usr/lib/menu/drakconf')
 #wvdial
 addFilter('wvdial non-readable /etc/ppp/peers/wvdial(-pipe)? 0600')
 
+#tpctl
+addFilter('tpctl incoherent-init-script-name apmiser')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
@@ -495,5 +498,9 @@ def load_policy(policy):
         DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_OLD
         STANDARD_GROUPS = STANDARD_GROUPS_OLD
         STANDARD_USERS = STANDARD_USERS_OLD
-
+    if policy != 'mdk9.1':
+        addFilter('lib-package-without-%mklibname|outside-libdir-files')
+    if policy != 'mdk9.2':
+        addFilter('no-epoch-tag|unreasonable-epoch|no-epoch-in-obsoletes|no-epoch-in-conflicts|no-epoch-in-provides|no-epoch-in-dependency')
+        
 # Config.py ends here
