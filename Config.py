@@ -135,6 +135,33 @@ addFilter('E: sympa non-standard-uid [^\s]+ sympa')
 addFilter('E: sympa non-standard-gid [^\s]+ sympa')
 addFilter('W: rpm dangerous-command-in-%post rpm')
 
+#XFree86
+addFilter('W: XFree86-server unstripped-binary-or-object /usr/X11R6/lib/modules/')
+addFilter('E: XFree86-server statically-linked-binary /usr/X11R6/lib/modules/')
+
+#db
+addFilter('W: db[1-3]-devel no-provides db-devel')
+
+#emacs
+addFilter('W: emacs-X11 menu-command-not-in-package emacs')
+
+#freetype
+addFilter('W: freetype-devel no-major-in-name freetype-devel')
+
+#openh323
+addFilter('W: openh323_1-devel no-provides openh323_-devel')
+
+#openssh
+addFilter('W: openssh-clients dangling-relative-symlink /usr/bin/ssh-askpass ../..//usr/lib/ssh/ssh-askpass')
+
+#tkinter
+addFilter('E: tkinter normal-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+addFilter('E: tkinter mini-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+addFilter('E: tkinter large-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+addFilter('E: tkinter normal-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+addFilter('E: tkinter mini-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+addFilter('E: tkinter large-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
+
 #menus
 addFilter('W: bcast version-in-menu-title Broadcast 2000')
 addFilter('W: xawtv version-in-menu-longtitle The X11 Video4Linux Stream Capture Viewer')
