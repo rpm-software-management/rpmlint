@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.13
+%define version 0.14
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Mon Apr 17 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.14-1mdk
+- 0.14:
+ o MenuCheck: check old entries from KDE and GNOME and allow entries
+for sections.
+ o config: exceptions for urpmi, sash, octave, ghc, procmail, rsh.
+ o extract temp files in <tmppath>/<pkgname>.<pid>
+
 * Mon Apr 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.13-1mdk
 - 0.13:
  o MenuCheck: issue a warning if no icon specified (Chmouel).

@@ -1,3 +1,23 @@
+2000-04-17  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.py rpmlint.spec:
+		* 0.14
+		
+	* MenuCheck.py, FilesCheck.py:
+		* corrected check of %post, %postun to avoid comments.
+
+	* MenuCheck.py:
+		* check old menu entries for KDE and GNOME.
+		* allow entries for sections.
+
+	* config:
+		* added exceptions for urpmi, sash, octave, ghc, procmail, rsh.
+
+2000-04-12  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* Pkg.py:
+	        * (Pkg._extract): extract in dir <tmppath>/<pkgname>.<pid>
+
 2000-04-10  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.py rpmlint.spec:
