@@ -180,13 +180,13 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 res2=MenuCheck.kdesu_command.search(line)
                                 command=res2.group(1)
 
-                                if command[0] == '/':
-                                    files[command]
-                                else:
-                                    if not (files.has_key("/bin/" + command) or
-                                            files.has_key("/usr/bin/" + command) or
-                                            files.has_key("/usr/X11R6/bin/" + command)):
-                                        raise KeyError, command
+                            if command[0] == '/':
+                                files[command]
+                            else:
+                                if not (files.has_key("/bin/" + command) or
+                                        files.has_key("/usr/bin/" + command) or
+                                        files.has_key("/usr/X11R6/bin/" + command)):
+                                    raise KeyError, command
                         except KeyError:
                             printWarning(pkg, "menu-command-not-in-package", command)
                     else:
