@@ -30,6 +30,9 @@ install:
 	cp -p rpmlint $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
+verify:
+	pychecker.sh *.py
+
 # rules to build a test rpm
 
 localrpm: localdist buildrpm
