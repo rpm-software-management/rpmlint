@@ -72,7 +72,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "percent-in-" + tag[2])
                     if PostCheck.bracket_regex.search(script):
                         printWarning(pkg, "spurious-bracket-in-" + tag[2])
-
+                    
                 if prog == "/bin/sh" or prog == "/bin/bash":
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
@@ -80,7 +80,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if prog == "/usr/bin/perl":
                     if incorrect_perl_script(script):
                         printError(pkg, "perl-syntax-error-in-" + tag[2])
-                
+            else:
+                if prog in valid_shells:
+                    printWarning(pkg, "empty-" + tag[2])
+                    
 # Create an object to enable the auto registration of the test
 check=PostCheck()
 
