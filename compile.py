@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -O
 #############################################################################
 # File		: compile.py
 # Package	: rpmlint
@@ -9,13 +9,9 @@
 #############################################################################
 
 import py_compile
-import re
 import sys
 
-py_regex=re.compile(".*\.py$")
-
-for f in sys.argv[1:]:
-    if py_regex.search(f):
-	py_compile.compile(f, f+"o")
+for f in sys.argv[2:]:
+    py_compile.compile(f, f + 'o', sys.argv[1] + f)
     
 # compile.py ends here
