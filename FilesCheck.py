@@ -31,7 +31,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     absolute_regex=re.compile("^/([^/]+)")
     absolute2_regex=re.compile("^/?([^/]+)")
     points_regex=re.compile("^../(.*)")
-    doc_regex=re.compile("^/usr/(doc|man|info)|^/usr/share/(doc|man|info)")
+    doc_before_bm_regex=re.compile("^/usr/(doc|man|info)")
+    doc_regex=re.compile("^/usr/share/(doc|man|info)")
     bin_regex=re.compile("^(/usr)?/s?bin/")
     includefile_regex=re.compile("\.h$|\.a$")
     sofile_regex=re.compile("\.so$")
@@ -64,6 +65,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    user=enreg[1]
 	    group=enreg[2]
 
+            if FilesCheck.doc_before_bm_regex.search(f):
+                printError(pkg, "no-fhs-documentation", f)
+            
 	    if stat.S_ISREG(mode) and FilesCheck.doc_regex.search(f) and not f in doc_files:
 		printError(pkg, "not-listed-as-documentation", f)
 
