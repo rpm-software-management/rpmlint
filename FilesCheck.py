@@ -181,6 +181,7 @@ lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex=re.compile('^(lib|.+-libs)')
 hidden_file_regex=re.compile('/\.[^/]*$')
 mispelled_macro_regex=re.compile('%{.*}')
+siteperl_perl_regex=re.compile('^/usr/lib/perl5/site_perl/')
 manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 
 for idx in range(0, len(dangling_exceptions)):
@@ -259,6 +260,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printWarning(pkg, 'hidden-file-or-dir', f)
 	    elif manifest_perl_regex.search(f):
 		printWarning(pkg, 'manifest-in-perl-module', f)
+	    elif siteperl_perl_regex.search(f):
+		printWarning(pkg, 'siteperl-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
@@ -760,6 +763,10 @@ of a mispelled macro. Please check your spec file.''',
 'manifest-in-perl-module',
 '''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
 in the documentation directory.''',
+
+'siteperl-in-perl-module',
+'''This perl module package installs files under the subdirectory site_perl,
+while they must appear under vendor_perl.''',
 
 'executable-marked-as-config-file',
 '''Executables must not be marked as config files because it will
