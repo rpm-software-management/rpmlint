@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # File          : ZipCheck.py
 # Package       : rpmlint
-# Author        : Ville Skyttä
+# Author        : Ville Skytta
 # Created on    : Thu Oct 30 00:14:45 EET 2003
 # Version       : $Id$
 # Purpose       : Verify Zip/Jar file correctness
@@ -62,8 +62,10 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                             if want_indexed_jars:
                                 printWarning(pkg, 'jar-not-indexed', i[0])
                             pass
-                finally:
-                    zip and zip.close()
+                except:
+                    sys.stderr.write('%s: unable-to-read-zip %s "%s"\n' % (pkg.name, i[0], sys.exc_info()[1]))
+
+                zip and zip.close()
 
 
 check = ZipCheck()
