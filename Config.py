@@ -618,14 +618,19 @@ STANDARD_GROUPS = STANDARD_GROUPS_NEW
 STANDARD_USERS = STANDARD_USERS_NEW
 
 def load_policy(policy):
-    if policy != 'mdk9.2':
-        addFilter('no-epoch-tag|unreasonable-epoch|no-epoch-in-obsoletes|no-epoch-in-conflicts|no-epoch-in-provides|no-epoch-in-dependency|devel-dependency|invalid-build-requires')
-        if policy != 'mdk9.1':
-            addFilter('lib-package-without-%mklibname|outside-libdir-files')
-            if policy != 'mdk9.0':
-                addFilter('no-prereq-on|non-root-user-log-file|non-root-group-log-file|non-ghost-file|hardcoded-library-path|configure-without-libdir-spec|no-binary|only-non-binary-in-usr-lib')
-                DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_OLD
-                STANDARD_GROUPS = STANDARD_GROUPS_OLD
-                STANDARD_USERS = STANDARD_USERS_OLD
-        
+    if policy != 'mdk10.2':
+        addFilter('executable-marked-as-config-file|requires-on-release')
+        if policy != 'mdk10.1':
+            addFilter('obsolete-on-name|manifest-in-perl-module|useless-explicit-provides')
+            if policy != 'mdk10.0':
+                if policy != 'mdk9.2':
+                    addFilter('no-epoch-tag|unreasonable-epoch|no-epoch-in-obsoletes|no-epoch-in-conflicts|no-epoch-in-provides|no-epoch-in-dependency|devel-dependency|invalid-build-requires')
+                    if policy != 'mdk9.1':
+                        addFilter('lib-package-without-%mklibname|outside-libdir-files')
+                        if policy != 'mdk9.0':
+                            addFilter('no-prereq-on|non-root-user-log-file|non-root-group-log-file|non-ghost-file|hardcoded-library-path|configure-without-libdir-spec|no-binary|only-non-binary-in-usr-lib')
+                            DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_OLD
+                            STANDARD_GROUPS = STANDARD_GROUPS_OLD
+                            STANDARD_USERS = STANDARD_USERS_OLD
+                            
 # Config.py ends here
