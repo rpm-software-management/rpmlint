@@ -115,4 +115,41 @@ class PostCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=PostCheck()
 
+# Add information about checks
+if Config.info:
+    addDetails(
+'one-line-command-in-%post',
+'''You must use %post -p <command> instead of using:
+
+%post
+<command>
+
+It will avoid the fork of a shell interpreter to execute your command.''',
+
+'one-line-command-in-%postun',
+'''You must use %postun -p <command> instead of using:
+
+%postun
+<command>
+
+It will avoid the fork of a shell interpreter to execute your command.''',
+
+'one-line-command-in-%pre',
+'''You must use %pre -p <command> instead of using:
+
+%pre
+<command>
+
+It will avoid the fork of a shell interpreter to execute your command.''',
+
+'one-line-command-in-%preun',
+'''You must use %preun -p <command> instead of using:
+
+%preun
+<command>
+
+It will avoid the fork of a shell interpreter to execute your command.''',
+
+)
+
 # PostCheck.py ends here
