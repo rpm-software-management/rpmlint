@@ -4,7 +4,7 @@
 # Author	: Frederic Lepied
 # Created on	: Tue Sep 28 00:03:24 1999
 # Version	: $Id$
-# Purpose	: Check a binary package to see if some rpm tags are present
+# Purpose	: Check a package to see if some rpm tags are present
 #############################################################################
 
 from Filter import *
@@ -53,9 +53,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg, verbose):
 	# Check only binary package
-	if pkg.isSource():
-	    return
-	
 	if not pkg[rpm.RPMTAG_PACKAGER]:
 	    printError(pkg, "no-packager-tag")
 
