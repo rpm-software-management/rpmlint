@@ -67,7 +67,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if prog:
                     if not prog in valid_shells:
                         printError(pkg, "invalid-shell-in-" + tag[2], prog)
-                if prog == "/bin/sh" or prog == "/bin/bash" or prog == "/usr/bin/perl"
+                if prog == "/bin/sh" or prog == "/bin/bash" or prog == "/usr/bin/perl":
                     if PostCheck.braces_regex.search(script):
                         printWarning(pkg, "percent-in-" + tag[2])
                     if PostCheck.bracket_regex.search(script):
