@@ -11,7 +11,7 @@ BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
 
-FILES= rpmlint *.py INSTALL README COPYING ChangeLog Makefile config
+FILES= rpmlint *.py INSTALL README README.CVS COPYING ChangeLog Makefile config
 
 all:
 	./compile.py [A-Z]*.py
@@ -26,7 +26,7 @@ install:
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 dist:
-	VERSION=`python rpmlint.py -V|sed -e 's/rpmlint version //' -e 's/ Copyright (C) 1999 Frederic Lepied//'`; \
+	VERSION=`python rpmlint.py -V|sed -e 's/rpmlint version //' -e 's/ Copyright (C).*//'`; \
 	rm -f rpmlint-$$VERSION.tar.bz2; \
 	mkdir rpmlint-$$VERSION; \
 	ln $(FILES) rpmlint-$$VERSION/; \
