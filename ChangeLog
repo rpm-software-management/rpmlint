@@ -1,3 +1,13 @@
+2003-01-17 13:20  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* FilesCheck.py: Errour out about outside-libdir-files only if it
+	concerns a library package.  This is heuristically determined on
+	the package name as '^(lib|.+-libs)'.
+
+2003-01-17 13:18  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* BinariesCheck.py: Add lib64 paths
+
 2003-01-16 23:41  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.48-1mdk
