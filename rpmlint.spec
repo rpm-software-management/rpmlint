@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.15
+%define version 0.16
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,11 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Wed Jul 19 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.16-1mdk
+- FHSCheck activated by default.
+- FileCheck: o check dangling symlinks.
+             o check info/dir.
+
 * Tue Jun 27 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.15-1mdk
 - 0.15:
  o check non transparent pixmaps in icon path

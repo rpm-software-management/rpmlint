@@ -1,3 +1,66 @@
+2000-07-19  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.py rpmlint.spec ChangeLog:
+		* 0.16
+
+	* TagsCheck.py:
+	        * (DEFAULT_VALID_GROUPS): sawmill => sawfish.
+
+	* Config.py:
+		* added FHSCheck by default.
+
+	* config:
+		* added exception for wall.
+
+	* FHSCheck.py:
+		* corrected check to not match substrings.
+
+	* FilesCheck.py:
+		* added check dandling symlinks.
+		* check the presence of /usr(/share)/info/dir
+
+2000-07-19  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config: Exception for pam package.
+
+2000-07-19  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* README.CVS:
+		* give command line example.
+
+2000-07-19  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* MenuCheck.py:
+	If the menu_command contain a kdesu -c "", check instead for the
+	command instead of kdesu.
+
+	* FilesCheck.py:
+	By default {doc,man,info} in /usr/share, product an error when the
+	package use /usr/.
+
+	* config: su is suid and it normal !!
+
+2000-07-05  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* README:
+		* added description for PostCheck.
+
+	* Config.py:
+		* added PostCheck
+
+	* PostCheck.py:
+		* first version.
+
+2000-07-01  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config:
+	Remove lftp .So warning (should be fixed in rpmlint), add expeption
+	for slocate.
+
+2000-06-30  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config: Add sudo exception.
+
 2000-06-27  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec, ChangeLog:
