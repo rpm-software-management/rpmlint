@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.35
+%define version 0.36
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -50,6 +50,23 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Sep 28 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.36-1mdk
+
+- MenuCheck.py: check if a menu file is executable.
+
+- rpmlint.py: added -n/--noexception option to display all the errors/warnings
+without exceptions from Config.
+
+- TagsCheck.py: added the bugzilla https address as a valid one.
+
+- PostCheck.py: o ghost-files-without-postun => ghost-files-without-postin
+		o check if /tmp or /var/tmp is used.
+		o check if update-menus is called without a menu file.
+
+- FilesCheck.py: added /etc/logrotate.d entry check.
+
+- Config.py: various exceptions
+
 * Tue Aug 21 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.35-1mdk
 
 - BinariesCheck.py: o Make libraries not linked against libc errors
