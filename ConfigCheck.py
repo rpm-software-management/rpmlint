@@ -21,6 +21,10 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 	AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
 
     def check(self, pkg, verbose):
+	# Check only binary package
+	if pkg.isSource():
+	    return
+	
 	config_files=pkg.configFiles()
 	for c in config_files:
 	    if ConfigCheck.appdefaults_regex.search(c):
