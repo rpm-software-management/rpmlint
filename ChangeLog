@@ -1,3 +1,63 @@
+2000-12-07 16:21  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* PostCheck.py: Add /sbin/sash as VALID_SHELLS.
+
+2000-12-06 02:38  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for dev.
+
+2000-12-06 02:36  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check dangling-symlink in the file index too to
+	avoid missing special files that aren't created when extracted as a
+	user.
+
+2000-12-06 02:24  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: removed trace.
+
+2000-12-06 02:11  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: cleaned header.
+
+2000-12-06 02:08  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: added description of DanglingSymlinkExceptions.
+
+2000-12-06 02:08  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added a generic way to avoid dangling-symlink
+	warnings.
+
+2000-12-06 01:40  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: for devel packages, check dependency on lib package
+	only when a .so file is present.
+
+2000-11-29 05:57  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: addFilter W: dev86-devel no-provides dev8-devel on
+	this warning.
+
+2000-11-29 05:29  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: add some execptions for pam (0750 dir for /etc/default
+	is normal as weel to have gpasswd and chage as suid).
+
+2000-11-29 04:51  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: the dangling symlink in dev are not dangled they are
+	relatives !!!
+
+2000-11-29 02:14  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Don't check info-file-with-install-info for bash since
+	it's by default in the dir file.
+
+2000-11-24 09:34  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.28-1mdk
+
 2000-11-24 09:29  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.28
