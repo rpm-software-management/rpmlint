@@ -543,9 +543,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
                 
+# Create an object to enable the auto registration of the test
 check=TagsCheck()
 
-addDetails(
+# Add information about checks
+if Config.info:
+    addDetails(
 'summary-too-long',
 'The "Summary:" must not exceed 80 characters.',
 
