@@ -9,7 +9,7 @@
 
 %define name rpmlint
 %define version 0.42
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Mar  8 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.42-2mdk
+- corrected rpmdiff location
+
 * Sun Mar  3 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.42-1mdk
  o  FilesCheck.py: allow perl and python dependencies to be on
 perl-base and python-base. Manage Mandrake perl versionning.
