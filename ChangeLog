@@ -1,3 +1,35 @@
+1999-10-23  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
+
+	* rpmlint.py:
+		* version 0.6.
+
+	* BinariesCheck.py, ConfigCheck.py, FHSCheck.py, MandrakeCheck.py, SignatureCheck.py:
+		* output via Filter.
+
+	* README:
+		* added description of addFilter.
+
+	* Config.py:
+		* don't use FHS check by default because rpm doesn't put the
+		doc files under /usr/share/doc => too much reports.
+
+	* config:
+	        * added an example of addFilter.
+
+	* TagsCheck.py:
+	 	* output via Filter.
+	        * (TagsCheck.check): checks if the summary is on multiple lines.
+
+	* FilesCheck.py:
+	 	* output via Filter.
+	        * added documentation checks.
+
+	* Filter.py:
+		* first version.
+
+	* Config.py:
+	        * (addFilter isFiltered): new funtions for output filters.
+
 1999-10-16  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
 
 	* rpmlint.spec:
