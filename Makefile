@@ -11,7 +11,7 @@ BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
 
-FILES= rpmlint *.py INSTALL README README.CVS COPYING ChangeLog Makefile config rpmlint.spec
+FILES= rpmlint *.py INSTALL README README.CVS COPYING ChangeLog Makefile config rpmlint.spec rpmdiff
 
 PACKAGE=rpmlint
 VERSION:=$(shell grep '%define *version ' $(PACKAGE).spec| cut -d ' ' -f 3)
@@ -28,6 +28,7 @@ install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp -p rpmlint $(DESTDIR)$(BINDIR)
+	cp -p rpmdiff $(DESTDIR)$(BINDIR)/rpmdiff.py
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 verify:
