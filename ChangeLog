@@ -1,3 +1,22 @@
+2004-07-05 04:25  Michael Scherer <mscherer@mandrake.org>
+
+	* TagsCheck.py: - added useless-explicit-provides ( check if there
+	  is 2 times the same provides )
+
+2004-05-17 11:47  Michael Scherer <mscherer@mandrake.org>
+
+	* rpmlint.py: - fix -I, rpmlint didn't work f run without the
+	  option.
+
+2004-05-07 17:28  Michael Scherer <mscherer@mandrake.org>
+
+	* rpmlint.py: added option -I, to print description of the error
+	  passed on commandline
+
+2004-05-03 20:58  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added Furlan language code (fur)
+
 2004-04-30 11:24  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.59-1mdk
