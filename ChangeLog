@@ -1,3 +1,31 @@
+2000-11-13 08:54  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.27
+
+2000-11-13 08:53  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: don't warn if a games is setgid games.
+
+2000-11-13 08:52  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: RpmGamesGroup added to the list of available options.
+
+2000-11-13 08:30  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added axception for xman.
+
+2000-11-13 08:29  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: check ldconfig symlinks.
+
+2000-11-11 19:45  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: don't check no-version-in-changelog for source rpm.
+
+2000-11-10 11:47  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.26
+
 2000-11-10 11:35  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.26
@@ -225,7 +253,7 @@
 
 	* PostCheck.py: Check perl script like we do for bash script.
 
-2000-08-28 18:15  pablo
+2000-08-28 18:15  Pablo Saratxaga <pablo@mandrakesoft.com>
 
 	* I18NCheck.py: updated locales list
 
