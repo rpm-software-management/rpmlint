@@ -4,4 +4,13 @@ to use cvs.
 
 Then just checkout the rpmlint module from the base.
 
+The trick to use it locally is to run the following command
+line:
+
+$ python -O -u rpmlint.py -C . <rpms>
+
+and to run only a single check, for example to test only FHSCheck:
+
+$ python -O -u rpmlint.py -C . -c FHSCheck <rpms>
+
 Frederic Lepied <flepied@mandrakesoft.com>.
