@@ -16,7 +16,7 @@ import Pkg
 import Config
 import os
 
-version="0.6"
+version="0.6.1"
 
 # Print usage information
 def usage(name):
