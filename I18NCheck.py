@@ -35,9 +35,9 @@ INCORRECT_LOCALES = {
 #
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
-'af', 'am', 'ar', 'as', 'az', 'be', 'bg', 'bn', 'br', 'bs', 'ca', 'cs', 'cy',
-'da', 'de', 'de_AT', 'dz', 'el', 
-'en_AU', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA', 
+'af', 'am', 'ar', 'as', 'az', 'az_IR', 'be', 'bg', 'bn', 'br', 'bs',
+'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el', 
+'en_AU', 'en_CA', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA', 
 'eo', 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu',
 'fa', 'fi', 'fo', 'fr', 'fur', 'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
@@ -47,8 +47,8 @@ CORRECT_SUBDIRS = (
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso'
-'oc', 'or', 'pa', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
-'ro', 'ru', 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'ss', 'st', 'sv',
+'oc', 'or', 'pa', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru',
+'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st', 'sv',
 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt', 
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
 've', 'vi', 'wa', 'wen', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
