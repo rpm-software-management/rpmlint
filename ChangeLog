@@ -1,3 +1,28 @@
+2004-02-10 13:28  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: changed uz@Latn locale
+
+2004-02-10 07:15  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: added missing ',' (Michael Scherer)
+
+2004-02-09 08:43  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* NamingPolicyCheck.py: Better error message. Fixed bug when no
+	  files are present. (Michael Scherer)
+
+2004-02-09 08:39  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: more robust processing when scanning a directory
+	  (Michael Scherer)
+
+	  force to have / in directory names to allow to have directory
+	  with the same name as an installed package (Michael Scherer)
+
+2004-01-28 06:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: removed duplicated Physics entry
+
 2004-01-27 18:04  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.55-1mdk
