@@ -421,6 +421,7 @@ lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
+lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAULT_FORBIDDEN_WORDS_REGEX) + ')', re.IGNORECASE)
@@ -505,6 +506,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     devel_depend=1
             if is_source and lib_devel_number_regex.search(d[0]):
                 printError(pkg, 'invalid-build-requires', d[0])
+            if not is_source and not is_devel:
+                res=lib_regex.search(d[0])
+                if res and not res.group(1) and not d[1]:
+                    printError(pkg, 'explicit-lib-dependency', d[0])
 
 	if not name:
 	    printError(pkg, 'no-name-tag')
@@ -812,6 +817,9 @@ Epoch tag.''',
 '''Your source package contains a dependency not compliant with the lib64 naming.
 This BuildRequires dependency will not be resolved on lib64 platforms (i.e. amd64).''',
 
+'explicit-lib-dependency',
+'''You must let rpm find the library dependencies by itself. Do not put unneeded
+explicit Requires: tags.''',
 )
     
 # TagsCheck.py ends here
