@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.57.1
+%define version 0.58
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Mar 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.58-1mdk
+- TagsCheck.py: The Mandrake word is forbidden alone.
+- FilesCheck.py: consolehelper is in usermode-consoleonly
+- MenuCheck.py: fixed missing comma
+- TagsCheck.py: fixed missing comma (Michael Scherer)
+- MenuCheck.py: Add missing "More applications/Other" section
+
 * Thu Feb 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.57.1-1mdk
 - PostCheck.py: removed buggy trigger code
 
