@@ -37,7 +37,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     sofile_regex=re.compile("\.so$")
     devel_regex=re.compile("-(devel|source)$")
     lib_regex=re.compile("lib/lib[^/]*\.so\..*")
-    ldconfig_regex=re.compile("^[^#]*ldconfig")
+    ldconfig_regex=re.compile("^[^#]*ldconfig",re.MULTILINE)
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")

@@ -84,7 +84,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     command=re.compile("command=\"?([^\" ]+)")
     icon=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
-    update_menus=re.compile("update-menus")
+    update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
