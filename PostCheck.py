@@ -28,7 +28,7 @@ valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 
 braces_regex=re.compile('^[^#]*%', re.MULTILINE)
 double_braces_regex=re.compile('%%', re.MULTILINE)
-bracket_regex=re.compile('^[^#]*if.*[^ \]]\]', re.MULTILINE)
+bracket_regex=re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\$HOME', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|\s|;|/bin/|\|)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl)\s", re.MULTILINE)
 single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
