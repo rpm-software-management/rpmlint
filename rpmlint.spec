@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
-* Mon Jul 31 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.17-1mdk
+* Tue Aug  8 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.17-1mdk
 - PostCheck: check bourne shell syntax (Chmouel).
 - FileCheck: o check chkconfig calls for packages with a file in
              /etc/rc.d/init.d.
