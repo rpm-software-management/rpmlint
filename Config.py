@@ -26,6 +26,7 @@ DEFAULT_CHECKS=("DistributionCheck",
                 )
 
 info=0
+no_exception=0
 
 # handle the list of checks to load
 _checks=[]
@@ -98,9 +99,10 @@ def addFilter(s):
 def isFiltered(s):
     global _filters
 
-    for f in _filters:
-	if f.search(s):
-	    return 1
+    if not no_exception:
+        for f in _filters:
+            if f.search(s):
+                return 1
     return 0
     
 # Standard exceptions:
