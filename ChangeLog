@@ -1,3 +1,11 @@
+2004-07-13 07:15  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
+
+	* FilesCheck.py: Add a warning for MANIFEST* files in perl modules
+
+2004-07-08 10:33  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: add ruby exceptions like perl and python.
+
 2004-07-05 04:25  Michael Scherer <mscherer@mandrake.org>
 
 	* TagsCheck.py: - added useless-explicit-provides ( check if there
