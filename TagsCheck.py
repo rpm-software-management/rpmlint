@@ -97,7 +97,7 @@ DEFAULT_VALID_GROUPS=(
     'Books/Howtos',
     'Books/Faqs',
     'Books/Computer books',
-    'Books/Litterature',
+    'Books/Literature',
     'Books/Other'
     )
 
