@@ -1,3 +1,19 @@
+2000-08-10 16:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.18-1mdk
+
+2000-08-10 16:47  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check for valid licence.
+
+2000-08-10 16:45  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: added ValidLicenses.
+
+2000-08-10 16:37  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.18
+
 2000-08-10 14:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* ConfigCheck.py: check files without no-replace flag.
