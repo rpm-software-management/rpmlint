@@ -396,7 +396,7 @@ use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_regex=re.compile('(.*)-devel')
 devel_number_regex=re.compile('(.*?)[0-9.]+-devel')
 capital_regex=re.compile('[0-9A-Z]')
-url_regex=re.compile('^(ftp|http)://')
+url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
 
 def spell_check(pkg, str, tagname):
