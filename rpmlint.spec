@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.61
+%define version 0.62
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Fri Aug 27 2004 Frederic Crozat <fcrozat@mandrakesoft.com> 0.62-1mdk
+- MenuCheck.py: Fix missing capitalization
+
 * Wed Aug 25 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.61-1mdk
 - I18NCheck.py: Added recognition of "pa" (Punjabi) language code (Pablo)
 		added some more language codes (Pablo)
