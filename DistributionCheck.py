@@ -59,4 +59,31 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=DistributionCheck()
 
+if Config.info:
+    addDetails(
+'invalid-vendor',
+"""
+""",
+
+'invalid-distribution',
+"""
+""",
+
+'manpage-not-bzipped',
+"""
+""",
+
+'manpage-not-gzipped',
+"""
+""",
+
+'infopage-not-bzipped',
+"""
+""",
+
+'infopage-not-gzipped',
+"""
+""",
+
+)
 # DistributionCheck.py ends here
