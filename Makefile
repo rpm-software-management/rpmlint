@@ -12,7 +12,7 @@ LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
 
 FILES= rpmlint *.py AUTHORS INSTALL README README.CVS COPYING ChangeLog Makefile \
-       config rpmlint.spec rpmdiff
+       config rpmlint.spec rpmdiff rpmlint.bash-completion
 
 PACKAGE=rpmlint
 VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
@@ -30,6 +30,7 @@ clean:
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
+	rm -f $(DESTDIR)$(LIBDIR)/compile.py
 	if [ -z "$(POLICY)" ]; then \
 	  sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py ; \
 	else \
