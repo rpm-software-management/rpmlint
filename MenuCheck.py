@@ -97,11 +97,6 @@ DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
                      ('/usr/share/icons/mini/', 'mini'),
                      ('/usr/share/icons/large/', 'large'))
 
-DEFAULT_LAUNCHERS = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
-                     ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
-                     ['(?:/usr/bin/)?soundwrapper', None],
-                     ['NO_XALF', None],
-                     )
 
 menu_file_regex=re.compile('^/usr/lib/menu/([^/]+)$')
 old_menu_file_regex=re.compile('^/usr/share/(gnome/apps|applnk)/([^/]+)$')
@@ -122,7 +117,7 @@ xpm_ext_regex=re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
 icon_ext_regex=re.compile(Config.getOption('IconFilename', '.*\.png$'))
 capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
-launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
+launchers=Config.getOption('MenuLaunchers', Config.DEFAULT_LAUNCHERS)
 bad_title_regex=re.compile('/')
 
 # compile regexps
@@ -292,7 +287,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         icon=res.group(1)
                         if not icon_ext_regex.search(icon):
                             printWarning(pkg, 'invalid-menu-icon-type', icon)
-                        if icon[0] == '/':
+                        if icon[0] == '/' and needs == 'x11':
                             printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
                         else:
                             for path in icon_paths:
