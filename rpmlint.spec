@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.9
+%define version 0.9.1
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -26,7 +26,7 @@ BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
 %description
 rpmlint is a tool to check common errors on rpm packages.
-Only binary packages are supported for the moment.
+Binary and source packages can be checked.
 
 %prep
 %setup -q
@@ -38,31 +38,20 @@ make
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
-find $RPM_BUILD_ROOT/ -type 'f'|grep -E '.*[0-9]'|xargs file|grep troff\
-|cut -d: -f1|xargs bzip2 -9
-for aa in man X11R6/man local/man;do
-[ -d $RPM_BUILD_ROOT/usr/$aa ] || continue
-for i in $(find $RPM_BUILD_ROOT/usr/$aa -type 'l');do
- 	TO=$(/bin/ls -l $i|awk '{print $NF}')
-	ln -sf $TO.bz2 $i && mv $i $.bz2
-done
-done
-for i in `find $RPM_BUILD_ROOT/ -type 'f' -perm '+a=x' ! -name 'lib*so*'`;do
-    file $i|grep -q "not stripped" && strip $i
-done
-
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,0755)
-%doc COPYING ChangeLog INSTALL README 
+%doc COPYING ChangeLog INSTALL README*
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
 %config /etc/rpmlint/config
 
 %changelog
+* Wed Feb 23 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9.1-1mdk
+- updated to support the way rpm 3.0.4 stores file names.
+
 * Thu Feb 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9-1mdk
 
 - 0.9: * gpg support.
