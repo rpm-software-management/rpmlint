@@ -128,8 +128,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		    printError(pkg, "non-standard-executable-perm", f, oct(perm))
 		    
 	    # normal dir check
-	    elif stat.S_ISDIR(mode) and perm != 0755:
-		printError(pkg, "non-standard-dir-perm", f, oct(perm))
+            elif stat.S_ISDIR(mode):
+                if perm != 0755:
+                    printError(pkg, "non-standard-dir-perm", f, oct(perm))
+#                 for file in files.keys():
+#                     if f != file and string.find(file, f, 0) != -1:
+#                         printInfo(pkg, "non-empty-dir-listed", f)
+#                         break
 
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
