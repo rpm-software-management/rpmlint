@@ -8,8 +8,8 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.54
-%define release 2mdk
+%define version 0.55
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Jan 27 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.55-1mdk
+- final menu structure
+
 * Fri Jan 23 2004 David Baudens <baudens@mandrakesoft.com> 0.54-2mdk
 - Replace old menu structure by new menu structure
 
