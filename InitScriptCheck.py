@@ -99,27 +99,33 @@ if Config.info:
 """,
 
 'no-status-entry',
-"""
+"""In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'status' entry, which is necessary for a good functionnality.
 """,
 
 'no-reload-entry',
-"""
+"""In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'reload' entry, which is necessary for a good functionnality.
 """,
 
 'no-chkconfig-line',
 """
 """,
 
-'no-default-runlever',
+'no-default-runlevel',
 """
 """,
 
-'subsys-not-user',
-"""
+'subsys-not-used',
+"""While your program is running, you have to put a lock file in
+/var/lock/subsys/. To see an example, look at this directory on your
+machine.
 """,
 
 'incoherent-subsys',
-"""
+"""The filename of your lock file in /var/lock/subsys/ is incoherent
+with your actual init script name. For example, if your script name
+is httpd, you have to put a 'httpd' file in your subsys directory.
 """,
 
 )
