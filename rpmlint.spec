@@ -1,4 +1,4 @@
-it#############################################################################
+#############################################################################
 # File		: rpmlint.spec
 # Package	: rpmlint
 # Author	: Frederic Lepied
@@ -62,6 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/rpmlint
 
 %changelog
+
 * Fri Oct  8 1999 Chmouel Boudjnah <chmouel@mandrakesoft.com>
 - Add Doc.
 
