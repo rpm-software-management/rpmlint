@@ -483,11 +483,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if version + "-" + release != ret.group(1):
                     printWarning(pkg, "incoherent-version-in-changelog", ret.group(1), version + "-" + release)
 
-        provides=pkg.provides()
-        for (provide_name, provide_version, provide_flags) in provides:
-            if name == provide_name:
-                printWarning(pkg, "package-provides-itself")
-                break
+#         provides=pkg.provides()
+#         for (provide_name, provide_version, provide_flags) in provides:
+#             if name == provide_name:
+#                 printWarning(pkg, "package-provides-itself")
+#                 break
 
         license=pkg[rpm.RPMTAG_LICENSE]
         if not license:
