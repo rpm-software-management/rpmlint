@@ -1,3 +1,25 @@
+2000-09-29 12:06  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.23
+
+2000-09-29 12:04  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: added Applications/Accessibility.  check that menu
+	file are readable by everyone.
+
+2000-09-29 12:01  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py:	     * removed exception for /home.
+		* added exceptions for vixie-cron.
+
+2000-09-25 10:13  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check cvs internal files.
+
+2000-09-12 12:59  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.22
+
 2000-09-12 11:59  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.22
