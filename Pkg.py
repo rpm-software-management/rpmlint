@@ -150,8 +150,14 @@ class Pkg:
                     dirnames=self.header[rpm.RPMTAG_DIRNAMES]
                     dirindexes=self.header[rpm.RPMTAG_DIRINDEXES]
                     files=[]
-                    for idx in range(0, len(basenames)):
-                        files.append(dirnames[dirindexes[idx]] + basenames[idx])
+                    l=len(basenames)
+                    # The rpmlib or the python module doesn't report a list for RPMTAG_DIRINDEXES
+                    # if the list has one element...
+                    if l == 0:
+                        files.append(dirnames[dirindexes] + basenames[0])
+                    else:
+                        for idx in range(0, l):
+                            files.append(dirnames[dirindexes[idx]] + basenames[idx])
         else:
             files=self.header[rpm.RPMTAG_FILENAMES]
 
