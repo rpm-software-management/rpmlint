@@ -43,7 +43,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
     rc_regex=re.compile("^/etc/rc.d/init.d")
     chkconfig_regex=re.compile("^[^#]*chkconfig", re.MULTILINE)
-    
+    perl_temp_file=re.compile(".*(bs|\.packlist)$")
+
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
 
@@ -127,7 +128,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         if not FilesCheck.chkconfig_regex.search(preun):
                             printError(pkg, "preun-without-chkconfig", f)
-    
+                
+                # check perl temp file
+                if FilesCheck.perl_temp_file.search(f):
+                    printWarning(pkg, 'perl-temp-file', f)
+
             if FilesCheck.tmp_regex.search(f):
 		printError(pkg, "dir-or-file-in-tmp", f)
 	    elif FilesCheck.mnt_regex.search(f):
