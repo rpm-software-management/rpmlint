@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.41
+%define version 0.42
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Sun Mar  3 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.42-1mdk
+ o  FilesCheck.py: allow perl and python dependencies to be on
+perl-base and python-base. Manage Mandrake perl versionning.
+
+ o I18NCheck.py: Added 'mt' to recognized locales
+
+ o various exceptions.
+
 * Sat Feb  9 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.41-1mdk
  o SpecCheck.py: report missing %clean section.
 
