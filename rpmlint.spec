@@ -1,5 +1,13 @@
+#############################################################################
+# File		: rpmlint.spec
+# Package	: rpmlint
+# Author	: Frederic Lepied
+# Created on	: Tue Sep 28 07:18:06 1999
+# Version	: $Id$
+# Purpose	: rules to create the rpmlint binary package.
+#############################################################################
 %define name rpmlint
-%define version 0.1
+%define version 0.2
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -48,14 +56,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,0755)
-%doc README INSTALL COPYING
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
 
 %changelog
+* Mon Oct  4 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- version 0.2.
+
 * Fri Oct  1 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - First spec file for Mandrake distribution.
 
 
-# end of file
+# rpmlint.spec ends here
