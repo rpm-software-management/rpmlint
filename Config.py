@@ -15,7 +15,8 @@ DEFAULT_CHECKS=("MandrakeCheck",
 		"ConfigCheck",
 		"FilesCheck",
 #		"FHSCheck",
-		"SignatureCheck")
+		"SignatureCheck",
+		"SourceCheck")
 
 # handle the list of checks to load
 _checks=[]
