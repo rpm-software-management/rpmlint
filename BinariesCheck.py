@@ -85,7 +85,7 @@ system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*\\.so\\.([0-9][.0-9]*).*|.*?([0-9][.0-9]*)\\.so')
-la_regex=re.compile('\.la$')
+reference_regex=re.compile('\.la$|^/usr/lib/pkgconfig/')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -203,9 +203,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 					else:
 					    printError(pkg, 'program-not-linked-against-libc', i[0])
             else:
-                if la_regex.search(i[0]):
+                if reference_regex.search(i[0]):
                     if Pkg.grep('tmp|home', pkg.dirname + '/' + i[0]):
-                        printError(pkg, 'la-file-with-invalid-dir-reference', i[0])
+                        printError(pkg, 'invalid-directory-reference', i[0])
 
         if has_lib != []:
             if exec_files != []:
@@ -292,8 +292,8 @@ themselves.''',
 'incoherent-version-in-name',
 '''The package name should contain the major version of the library.''',
 
-'la-file-with-invalid-dir-reference',
-'The .la file contains a reference to /tmp or /home.',
+'invalid-directory-reference',
+'This file contains a reference to /tmp or /home.',
 
 )
 
