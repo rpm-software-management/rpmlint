@@ -1,0 +1,142 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : Mandrake Linux
+# Module          : rpmlint
+# File            : rpmdiff
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Sat Feb  9 21:24:33 2002
+# Purpose         : rewritting of rpmdiff to show the use of the
+#                 Pkg lib.
+#---------------------------------------------------------------
+
+import Pkg
+import rpm
+import sys
+import os
+import stat
+
+# constants
+
+TAGS = [ (rpm.RPMTAG_NAME, 'NAME'),
+         (rpm.RPMTAG_SUMMARY, 'SUMMARY'),
+         (rpm.RPMTAG_DESCRIPTION, 'DESCRIPTION'),
+         (rpm.RPMTAG_GROUP, 'GROUP'),
+         (rpm.RPMTAG_LICENSE, 'LICENSE'),
+         (rpm.RPMTAG_URL, 'URL'),
+         (rpm.RPMTAG_PREIN, 'PREIN'),
+         (rpm.RPMTAG_POSTIN, 'POSTIN'),
+         (rpm.RPMTAG_PREUN, 'PREUN'),
+         (rpm.RPMTAG_POSTUN, 'POSTUN'),
+         ]
+
+FILEIDX = [ ('S', 4),
+            ('M', 0),
+            ('5', 5),
+            ('D', None),
+            ('L', 3),
+            ('U', 1),
+            ('G', 2),
+            ('T', 6)
+            ]
+
+FORMAT = '%-11s%s'
+
+ADDED   = 'added'
+REMOVED = 'removed'
+CHANGED = 'S.5....T'
+
+# code starts here
+
+# load a package from a file or from the installed ones
+def load_pkg(name, tmpdir='/tmp'):
+    st=os.stat(name)
+    if stat.S_ISREG(st[stat.ST_MODE]):
+        try:
+            return Pkg.Pkg(name, tmpdir)
+        except TypeError:
+            pass
+    return Pkg.InstalledPkg(name)
+
+# compares 2 lists
+def cmp_list(old, new, name):
+    if old != new:
+        if not old:
+            print FORMAT % (ADDED, name)
+        elif not new:
+            print FORMAT % (REMOVED, name)
+        else:
+            print FORMAT % (CHANGED, name)
+
+def main():
+    if len(sys.argv) != 3:
+        print "usage: %s <old package> <new package>" % sys.argv[0]
+        sys.exit(1)
+
+    old = load_pkg(sys.argv[1])
+    new = load_pkg(sys.argv[2])
+
+    old_files = old.files().keys()
+    new_files = new.files().keys()
+    files = old_files + new_files
+
+    files.sort()
+    previous = None
+
+    for s in TAGS:
+        old_tag = old[s[0]]
+        new_tag = new[s[0]]
+        if old_tag != new_tag:
+            if old_tag == None:
+                print FORMAT % (ADDED, s[1])
+            elif new_tag == None:
+                print FORMAT % (REMOVED, s[1])
+            else:
+                print FORMAT % ('S.5.....', s[1])
+
+    cmp_list(old.prereq(), new.prereq(), 'PREREQ')
+    cmp_list(old.requires(), new.requires(), 'REQUIRES')
+    cmp_list(old.provides(), new.provides(), 'PROVIDES')
+    cmp_list(old.conflicts(), new.conflicts(), 'CONFLICTS')
+
+    old_files = old.files()
+    new_files = new.files()
+    
+    for f in files:
+        diff = 0
+        if f == previous:
+            continue
+        previous = f
+        try:
+            old_file = old_files[f]
+        except KeyError:
+            old_file = None
+        try:
+            new_file = new_files[f]
+        except KeyError:
+            new_file = None
+            
+        if not old_file:
+            print FORMAT % (ADDED, f)
+        elif not new_file:
+            print FORMAT % (REMOVED, f)
+        else:
+            format = ''
+            for idx in range(0, len(FILEIDX)):
+                entry = FILEIDX[idx]
+                if entry[1] != None and old_file[entry[1]] != new_file[entry[1]]:
+                    format = format + entry[0]
+                    diff = 1
+                else:
+                    format = format + '.'
+            if diff:
+                print FORMAT % (format, f)
+
+if __name__ == '__main__':
+    main()
+    
+# rpmdiff ends here
+#
+# Local variables:
+# mode: python
+# End:
