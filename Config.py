@@ -14,7 +14,7 @@ DEFAULT_CHECKS=("MandrakeCheck",
 		"BinariesCheck",
 		"ConfigCheck",
 		"FilesCheck",
-		"FHSCheck",
+#		"FHSCheck",
 		"SignatureCheck")
 
 # handle the list of checks to load
