@@ -1,3 +1,48 @@
+2000-11-24 09:29  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.28
+
+2000-11-24 09:28  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check -devel package naming scheme only on binary
+	packages.
+
+2000-11-24 09:22  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* SourceCheck.py: only check compression on tar or diff files.
+
+2000-11-24 09:13  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: various exceptions added.
+
+2000-11-24 09:12  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: report a warning if a -devel package comes with no
+	major in its name.  added python licence and public domain.  check
+	syntax of url tag.
+
+2000-11-24 08:01  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: report the file location on objdump errors. 
+	new error: executable in library package.
+
+2000-11-23 16:39  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: fuzzy check on packages without dependency on
+	locales
+
+2000-11-23 16:31  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check if a package provides sources.
+
+2000-11-23 16:29  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: force a separator before dangerous command.
+
+2000-11-13 08:56  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.27-1mdk
+
 2000-11-13 08:54  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.27
