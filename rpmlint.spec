@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.31
+%define version 0.32
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -49,6 +49,25 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Wed Jun 13 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.32-1mdk
+- rpmlint.py: o If the file given on the command line doesn't exist,
+               try to use the name as an installed package to check.
+              o new -i option to give explanation on the errors/warnings (not too much
+               descriptions have been added ;-)
+
+- MenuCheck.py: added new Office sub menus.
+
+- FilesCheck.py: o added /usr/X11R6/man subdirs to the list of
+	          STANDARD_DIRS.
+	         o warn for .so file only if they are in a lib dir.
+                 o warn for source files in a non devel package only if they are not
+                  doc files.
+
+- TagsCheck.py: corrected description-line-too-long check.
+
+- FilesCheck.py: add the rpm user and group per request of Jeff
+	         Johnson for the future version of rpm.
+
 * Fri May 18 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.31-1mdk
 - PostCheck.py: check that a script isn't only one command.
                 check postin and prein instead of postun and preun
