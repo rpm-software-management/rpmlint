@@ -1,3 +1,11 @@
+2003-12-22 15:26  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.53-1mdk
+
+2003-12-22 15:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added *@mandrake.org as a correct packager tag.
+
 2003-12-22 14:04  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* ZipCheck.py: handle exception while reading zip file
