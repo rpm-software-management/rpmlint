@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.23
+%define version 0.24
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Mon Oct  2 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.24-1mdk
+- FilesCheck.py: added apache and postgres to standard groups.
+- TagsCheck.py: spell check a la Debian.
+
 * Fri Sep 29 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.23-1mdk
 - MenuCheck.py: added Applications/Accessibility.
                 check that menu	files are readable by everyone.
