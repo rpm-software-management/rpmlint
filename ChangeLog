@@ -1,3 +1,26 @@
+2002-05-29 16:01  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added
+	non-root-user-log-file|non-root-group-log-file|non-ghost-file for
+	mdk9.0 policy.
+
+2002-05-29 16:00  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added non-ghost-file check
+
+2002-05-13 23:13  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: added AUTHORS
+
+2002-05-13 23:13  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* AUTHORS: first version
+
+2002-05-02 14:42  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added non-root-user-log-file and
+	non-root-group-log-file.
+
 2002-05-01 16:20  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: remove debug trace
