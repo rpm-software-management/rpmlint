@@ -14,8 +14,9 @@ import re
 import commands
 import string
 import sys
+import stat
 
-VALID_SECTIONS=(
+DEFAULT_VALID_SECTIONS=(
     "Configuration/Hardware",
     "Configuration/Packaging",
     "Configuration/Networking",
@@ -75,8 +76,10 @@ VALID_SECTIONS=(
 class MenuCheck(AbstractCheck.AbstractCheck):
     menu_file=re.compile("^/usr/lib/menu/([^/]+)$")
     package=re.compile("\?package\((.*)\):")
-    needs=re.compile("needs=\"?([^ \t\"]+)\"?")
-    section=re.compile("section=\"([^\"]+)\"")
+    needs=re.compile("needs=(\"([^\"]+)\"|([^ \t\"]+))")
+    section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
+    valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
+    
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
 
@@ -93,9 +96,13 @@ class MenuCheck(AbstractCheck.AbstractCheck):
             res=MenuCheck.menu_file.search(f)
             if res:
                 basename=res.group(1)
-                if basename != pkgname:
-                    printWarning(pkg, "non-coherent-menu-filename", f)
-                menus.append(f)
+                mode=files[f][0]
+                if not stat.S_ISREG(mode):
+                    printError(pkg, "non-file-in-menu-dir", f)
+                else:
+                    if basename != pkgname:
+                        printWarning(pkg, "non-coherent-menu-filename", f)
+                    menus.append(f)
 
         if len(menus) > 0:
             dir=pkg.dirName()
@@ -113,12 +120,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         printInfo(pkg, "unable-to-parse-menu-entry", line)
                     res=MenuCheck.needs.search(line)
                     if res:
-                        needs=string.lower(res.group(1))
+                        grp=res.groups()
+                        needs=string.lower(grp[1] or grp[2])
                         if needs == "x11" or needs == "text" or needs == "wm":
                             res=MenuCheck.section.search(line)
                             if res:
-                                section=res.group(1)
-                                if section not in VALID_SECTIONS:
+                                grp=res.groups()
+                                section=grp[1] or grp[2]
+                                if section not in MenuCheck.valid_sections:
                                     printWarning(pkg, "invalid-menu-section", section, f)
                             else:
                                 printInfo(pkg, "unable-to-parse-menu-section", line)
