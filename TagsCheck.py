@@ -15,374 +15,374 @@ import re
 import Config
 
 DEFAULT_VALID_GROUPS=(
-    "Accessibility",
-    "System/Servers",
-    "System/Kernel and hardware",
-    "System/Libraries",
-    "System/XFree86",
-    "System/Fonts/Console",
-    "System/Fonts/True type",
-    "System/Fonts/Type1",
-    "System/Fonts/X11 bitmap",
-    "System/Base",
-    "System/Configuration/Hardware",
-    "System/Configuration/Packaging",
-    "System/Configuration/Networking",
-    "System/Configuration/Printing",
-    "System/Configuration/Boot and Init",
-    "System/Configuration/Other",
-    "System/Internationalization",
-    "Development/Kernel",
-    "Development/Databases",
-    "Development/Perl",
-    "Development/Python",
-    "Development/C",
-    "Development/C++",
-    "Development/Java",
-    "Development/GNOME and GTK+",
-    "Development/KDE and QT",
-    "Development/Other",
-    "Sciences/Astronomy",
-    "Sciences/Biology",
-    "Sciences/Chemistry",
-    "Sciences/Computer science",
-    "Sciences/Geosciences",
-    "Sciences/Mathematics",
-    "Sciences/Physics",
-    "Sciences/Other",
-    "Communications",
-    "Databases",
-    "Editors",
-    "Emulators",
-    "Games/Adventure",
-    "Games/Arcade",
-    "Games/Boards",
-    "Games/Cards",
-    "Games/Puzzles",
-    "Games/Sports",
-    "Games/Strategy",
-    "Games/Other",
-    "Toys",
-    "Archiving/Compression",
-    "Archiving/Cd burning",
-    "Archiving/Backup",
-    "Archiving/Other",
-    "Monitoring",
-    "Sound",
-    "Graphics",
-    "Video",
-    "Networking/File transfer",
-    "Networking/IRC",
-    "Networking/Instant messaging",
-    "Networking/Chat",
-    "Networking/News",
-    "Networking/Mail",
-    "Networking/WWW",
-    "Networking/Remote access",
-    "Networking/Other",
-    "Office",
-    "Publishing",
-    "Terminals",
-    "Shells",
-    "File tools",
-    "Text tools",
-    "Graphical desktop/GNOME",
-    "Graphical desktop/Icewm",
-    "Graphical desktop/FVWM based",
-    "Graphical desktop/KDE",
-    "Graphical desktop/Sawfish",
-    "Graphical desktop/Window Maker",
-    "Graphical desktop/Enlightenment",
-    "Graphical desktop/Other",
-    "Books/Howtos",
-    "Books/Faqs",
-    "Books/Computer books",
-    "Books/Litterature",
-    "Books/Other"
+    'Accessibility',
+    'System/Servers',
+    'System/Kernel and hardware',
+    'System/Libraries',
+    'System/XFree86',
+    'System/Fonts/Console',
+    'System/Fonts/True type',
+    'System/Fonts/Type1',
+    'System/Fonts/X11 bitmap',
+    'System/Base',
+    'System/Configuration/Hardware',
+    'System/Configuration/Packaging',
+    'System/Configuration/Networking',
+    'System/Configuration/Printing',
+    'System/Configuration/Boot and Init',
+    'System/Configuration/Other',
+    'System/Internationalization',
+    'Development/Kernel',
+    'Development/Databases',
+    'Development/Perl',
+    'Development/Python',
+    'Development/C',
+    'Development/C++',
+    'Development/Java',
+    'Development/GNOME and GTK+',
+    'Development/KDE and QT',
+    'Development/Other',
+    'Sciences/Astronomy',
+    'Sciences/Biology',
+    'Sciences/Chemistry',
+    'Sciences/Computer science',
+    'Sciences/Geosciences',
+    'Sciences/Mathematics',
+    'Sciences/Physics',
+    'Sciences/Other',
+    'Communications',
+    'Databases',
+    'Editors',
+    'Emulators',
+    'Games/Adventure',
+    'Games/Arcade',
+    'Games/Boards',
+    'Games/Cards',
+    'Games/Puzzles',
+    'Games/Sports',
+    'Games/Strategy',
+    'Games/Other',
+    'Toys',
+    'Archiving/Compression',
+    'Archiving/Cd burning',
+    'Archiving/Backup',
+    'Archiving/Other',
+    'Monitoring',
+    'Sound',
+    'Graphics',
+    'Video',
+    'Networking/File transfer',
+    'Networking/IRC',
+    'Networking/Instant messaging',
+    'Networking/Chat',
+    'Networking/News',
+    'Networking/Mail',
+    'Networking/WWW',
+    'Networking/Remote access',
+    'Networking/Other',
+    'Office',
+    'Publishing',
+    'Terminals',
+    'Shells',
+    'File tools',
+    'Text tools',
+    'Graphical desktop/GNOME',
+    'Graphical desktop/Icewm',
+    'Graphical desktop/FVWM based',
+    'Graphical desktop/KDE',
+    'Graphical desktop/Sawfish',
+    'Graphical desktop/Window Maker',
+    'Graphical desktop/Enlightenment',
+    'Graphical desktop/Other',
+    'Books/Howtos',
+    'Books/Faqs',
+    'Books/Computer books',
+    'Books/Litterature',
+    'Books/Other'
     )
 
 DEFAULT_VALID_LICENSES = (
-    "GPL",
-    "LGPL",
-    "Artistic",
-    "BSD",
-    "MIT",
-    "QPL",
-    "MPL",
-    "IBM Public License",
-    "Apache License",
-    "PHP License",
-    "BSD-Style",
+    'GPL',
+    'LGPL',
+    'Artistic',
+    'BSD',
+    'MIT',
+    'QPL',
+    'MPL',
+    'IBM Public License',
+    'Apache License',
+    'PHP License',
+    'BSD-Style',
     )
 
-DEFAULT_PACKAGER = "@mandrakesoft.com|bugs@linux-mandrake.com"
+DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com'
 
 BAD_WORDS = {
     'alot': 'a lot',
-    "accesnt": "accent",
-    "accelleration": "acceleration",
-    "accessable": "accessible",
-    "accomodate": "accommodate",
-    "acess": "access",
-    "acording": "according",
-    "additionaly": "additionally",
-    "adress": "address",
-    "adresses": "addresses",
-    "adviced": "advised",
-    "albumns": "albums",
-    "alegorical": "allegorical",
-    "algorith": "algorithm",
-    "allpication": "application",
-    "altough": "although",
-    "alows": "allows",
-    "amoung": "among",
-    "amout": "amount",
-    "analysator": "analyzer",
-    "ang": "and",
-    "appropiate": "appropriate",
-    "arraival": "arrival",
-    "artifical": "artificial",
-    "artillary": "artillery",
-    "attemps": "attempts",
-    "automatize": "automate",
-    "automatized": "automated",
-    "automatizes": "automates",
-    "auxilliary": "auxiliary",
-    "availavility": "availability",
-    "availble": "available",
-    "avaliable": "available",
-    "availiable": "available",
-    "backgroud": "background",
-    "baloons": "balloons",
-    "becomming": "becoming",
-    "becuase": "because",
-    "cariage": "carriage",
-    "challanges": "challenges",
-    "changable": "changeable",
-    "charachters": "characters",
-    "charcter": "character",
-    "choosen": "chosen",
-    "colorfull": "colorful",
-    "comand": "command",
-    "commerical": "commercial",
-    "comminucation": "communication",
-    "commoditiy": "commodity",
-    "compability": "compatibility",
-    "compatability": "compatibility",
-    "compatable": "compatible",
-    "compatibiliy": "compatibility",
-    "compatibilty": "compatibility",
-    "compleatly": "completely",
-    "complient": "compliant",
-    "compres": "compress",
-    "containes": "contains",
-    "containts": "contains",
-    "contence": "contents",
-    "continous": "continuous",
-    "contraints": "constraints",
-    "convertor": "converter",
-    "convinient": "convenient",
-    "cryptocraphic": "cryptographic",
-    "deamon": "daemon",
-    "debians": "Debian's",
-    "decompres": "decompress",
-    "definate": "definite",
-    "definately": "definitely",
-    "dependancies": "dependencies",
-    "dependancy": "dependency",
-    "dependant": "dependent",
-    "developement": "development",
-    "developped": "developed",
-    "deveolpment": "development",
-    "devided": "divided",
-    "dictionnary": "dictionary",
-    "diplay": "display",
-    "disapeared": "disappeared",
-    "dissapears": "disappears",
-    "documentaion": "documentation",
-    "docuentation": "documentation",
-    "documantation": "documentation",
-    "dont": "don't",
-    "easilly": "easily",
-    "ecspecially": "especially",
-    "edditable": "editable",
-    "editting": "editing",
-    "eletronic": "electronic",
-    "enchanced": "enhanced",
-    "encorporating": "incorporating",
-    "enlightnment": "enlightenment",
-    "enterily": "entirely",
-    "enviroiment": "environment",
-    "environement": "environment",
-    "excellant": "excellent",
-    "exlcude": "exclude",
-    "exprimental": "experimental",
-    "extention": "extension",
-    "failuer": "failure",
-    "familar": "familiar",
-    "fatser": "faster",
-    "fetaures": "features",
-    "forse": "force",
-    "fortan": "fortran",
-    "framwork": "framework",
-    "fuction": "function",
-    "fuctions": "functions",
-    "functionnality": "functionality",
-    "functonality": "functionality",
-    "functionaly": "functionally",
-    "futhermore": "furthermore",
-    "generiously": "generously",
-    "grahical": "graphical",
-    "grahpical": "graphical",
-    "grapic": "graphic",
-    "guage": "gauge",
-    "halfs": "halves",
-    "heirarchically": "hierarchically",
-    "helpfull": "helpful",
-    "hierachy": "hierarchy",
-    "hierarchie": "hierarchy",
-    "howver": "however",
-    "implemantation": "implementation",
-    "incomming": "incoming",
-    "incompatabilities": "incompatibilities",
-    "indended": "intended",
-    "indendation": "indentation",
-    "independant": "independent",
-    "informatiom": "information",
-    "initalize": "initialize",
-    "inofficial": "unofficial",
-    "integreated": "integrated",
-    "integrety": "integrity",
-    "integrey": "integrity",
-    "intendet": "intended",
-    "interchangable": "interchangeable",
-    "intermittant": "intermittent",
-    "jave": "java",
-    "langage": "language",
-    "langauage": "language",
-    "langugage": "language",
-    "lauch": "launch",
-    "lesstiff": "lesstif",
-    "libaries": "libraries",
-    "licenceing": "licencing",
-    "loggin": "login",
-    "logile": "logfile",
-    "loggging": "logging",
-    "maintainance": "maintenance",
-    "maintainence": "maintenance",
-    "makeing": "making",
-    "managable": "manageable",
-    "manoeuvering": "maneuvering",
-    "ment": "meant",
-    "modulues": "modules",
-    "monochromo": "monochrome",
-    "multidimensionnal": "multidimensional",
-    "navagating": "navigating",
-    "nead": "need",
-    "neccesary": "necessary",
-    "neccessary": "necessary",
-    "necesary": "necessary",
-    "nescessary": "necessary",
-    "noticable": "noticeable",
-    "optionnal": "optional",
-    "orientied": "oriented",
-    "pacakge": "package",
-    "pachage": "package",
-    "packacge": "package",
-    "packege": "package",
-    "packge": "package",
-    "pakage": "package",
-    "particularily": "particularly",
-    "persistant": "persistent",
-    "plattform": "platform",
-    "ploting": "plotting",
-    "posible": "possible",
-    "powerfull": "powerful",
-    "prefered": "preferred",
-    "prefferably": "preferably",
-    "prepaired": "prepared",
-    "princliple": "principle",
-    "priorty": "priority",
-    "proccesors": "processors",
-    "proces": "process",
-    "processsing": "processing",
-    "processessing": "processing",
-    "progams": "programs",
-    "programers": "programmers",
-    "programm": "program",
-    "programms": "programs",
-    "promps": "prompts",
-    "pronnounced": "pronounced",
-    "prononciation": "pronunciation",
-    "pronouce": "pronounce",
-    "protcol": "protocol",
-    "protocoll": "protocol",
-    "recieve": "receive",
-    "recieved": "received",
-    "redircet": "redirect",
-    "regulamentations": "regulations",
-    "remoote": "remote",
-    "repectively": "respectively",
-    "replacments": "replacements",
-    "requiere": "require",
-    "runnning": "running",
-    "safly": "safely",
-    "savable": "saveable",
-    "searchs": "searches",
-    "separatly": "separately",
-    "seperate": "separate",
-    "seperately": "separately",
-    "seperatly": "separately",
-    "serveral": "several",
-    "setts": "sets",
-    "similiar": "similar",
-    "simliar": "similar",
-    "speach": "speech",
-    "standart": "standard",
-    "staically": "statically",
-    "staticly": "statically",
-    "succesful": "successful",
-    "succesfully": "successfully",
-    "suplied": "supplied",
-    "suport": "support",
-    "suppport": "support",
-    "supportin": "supporting",
-    "synchonized": "synchronized",
-    "syncronize": "synchronize",
-    "syncronizing": "synchronizing",
-    "syncronus": "synchronous",
-    "syste": "system",
-    "sythesis": "synthesis",
-    "taht": "that",
-    "throught": "through",
-    "useable": "usable",
-    "usefull": "useful",
-    "usera": "users",
-    "usetnet": "Usenet",
-    "utilites": "utilities",
-    "utillities": "utilities",
-    "utilties": "utilities",
-    "utiltity": "utility",
-    "utitlty": "utility",
-    "variantions": "variations",
-    "varient": "variant",
-    "verson": "version",
-    "vicefersa": "vice-versa",
-    "yur": "your",
-    "wheter": "whether",
-    "wierd": "weird",
-    "xwindows": "X"
+    'accesnt': 'accent',
+    'accelleration': 'acceleration',
+    'accessable': 'accessible',
+    'accomodate': 'accommodate',
+    'acess': 'access',
+    'acording': 'according',
+    'additionaly': 'additionally',
+    'adress': 'address',
+    'adresses': 'addresses',
+    'adviced': 'advised',
+    'albumns': 'albums',
+    'alegorical': 'allegorical',
+    'algorith': 'algorithm',
+    'allpication': 'application',
+    'altough': 'although',
+    'alows': 'allows',
+    'amoung': 'among',
+    'amout': 'amount',
+    'analysator': 'analyzer',
+    'ang': 'and',
+    'appropiate': 'appropriate',
+    'arraival': 'arrival',
+    'artifical': 'artificial',
+    'artillary': 'artillery',
+    'attemps': 'attempts',
+    'automatize': 'automate',
+    'automatized': 'automated',
+    'automatizes': 'automates',
+    'auxilliary': 'auxiliary',
+    'availavility': 'availability',
+    'availble': 'available',
+    'avaliable': 'available',
+    'availiable': 'available',
+    'backgroud': 'background',
+    'baloons': 'balloons',
+    'becomming': 'becoming',
+    'becuase': 'because',
+    'cariage': 'carriage',
+    'challanges': 'challenges',
+    'changable': 'changeable',
+    'charachters': 'characters',
+    'charcter': 'character',
+    'choosen': 'chosen',
+    'colorfull': 'colorful',
+    'comand': 'command',
+    'commerical': 'commercial',
+    'comminucation': 'communication',
+    'commoditiy': 'commodity',
+    'compability': 'compatibility',
+    'compatability': 'compatibility',
+    'compatable': 'compatible',
+    'compatibiliy': 'compatibility',
+    'compatibilty': 'compatibility',
+    'compleatly': 'completely',
+    'complient': 'compliant',
+    'compres': 'compress',
+    'containes': 'contains',
+    'containts': 'contains',
+    'contence': 'contents',
+    'continous': 'continuous',
+    'contraints': 'constraints',
+    'convertor': 'converter',
+    'convinient': 'convenient',
+    'cryptocraphic': 'cryptographic',
+    'deamon': 'daemon',
+    'debians': 'Debian\'s',
+    'decompres': 'decompress',
+    'definate': 'definite',
+    'definately': 'definitely',
+    'dependancies': 'dependencies',
+    'dependancy': 'dependency',
+    'dependant': 'dependent',
+    'developement': 'development',
+    'developped': 'developed',
+    'deveolpment': 'development',
+    'devided': 'divided',
+    'dictionnary': 'dictionary',
+    'diplay': 'display',
+    'disapeared': 'disappeared',
+    'dissapears': 'disappears',
+    'documentaion': 'documentation',
+    'docuentation': 'documentation',
+    'documantation': 'documentation',
+    'dont': 'don\'t',
+    'easilly': 'easily',
+    'ecspecially': 'especially',
+    'edditable': 'editable',
+    'editting': 'editing',
+    'eletronic': 'electronic',
+    'enchanced': 'enhanced',
+    'encorporating': 'incorporating',
+    'enlightnment': 'enlightenment',
+    'enterily': 'entirely',
+    'enviroiment': 'environment',
+    'environement': 'environment',
+    'excellant': 'excellent',
+    'exlcude': 'exclude',
+    'exprimental': 'experimental',
+    'extention': 'extension',
+    'failuer': 'failure',
+    'familar': 'familiar',
+    'fatser': 'faster',
+    'fetaures': 'features',
+    'forse': 'force',
+    'fortan': 'fortran',
+    'framwork': 'framework',
+    'fuction': 'function',
+    'fuctions': 'functions',
+    'functionnality': 'functionality',
+    'functonality': 'functionality',
+    'functionaly': 'functionally',
+    'futhermore': 'furthermore',
+    'generiously': 'generously',
+    'grahical': 'graphical',
+    'grahpical': 'graphical',
+    'grapic': 'graphic',
+    'guage': 'gauge',
+    'halfs': 'halves',
+    'heirarchically': 'hierarchically',
+    'helpfull': 'helpful',
+    'hierachy': 'hierarchy',
+    'hierarchie': 'hierarchy',
+    'howver': 'however',
+    'implemantation': 'implementation',
+    'incomming': 'incoming',
+    'incompatabilities': 'incompatibilities',
+    'indended': 'intended',
+    'indendation': 'indentation',
+    'independant': 'independent',
+    'informatiom': 'information',
+    'initalize': 'initialize',
+    'inofficial': 'unofficial',
+    'integreated': 'integrated',
+    'integrety': 'integrity',
+    'integrey': 'integrity',
+    'intendet': 'intended',
+    'interchangable': 'interchangeable',
+    'intermittant': 'intermittent',
+    'jave': 'java',
+    'langage': 'language',
+    'langauage': 'language',
+    'langugage': 'language',
+    'lauch': 'launch',
+    'lesstiff': 'lesstif',
+    'libaries': 'libraries',
+    'licenceing': 'licencing',
+    'loggin': 'login',
+    'logile': 'logfile',
+    'loggging': 'logging',
+    'maintainance': 'maintenance',
+    'maintainence': 'maintenance',
+    'makeing': 'making',
+    'managable': 'manageable',
+    'manoeuvering': 'maneuvering',
+    'ment': 'meant',
+    'modulues': 'modules',
+    'monochromo': 'monochrome',
+    'multidimensionnal': 'multidimensional',
+    'navagating': 'navigating',
+    'nead': 'need',
+    'neccesary': 'necessary',
+    'neccessary': 'necessary',
+    'necesary': 'necessary',
+    'nescessary': 'necessary',
+    'noticable': 'noticeable',
+    'optionnal': 'optional',
+    'orientied': 'oriented',
+    'pacakge': 'package',
+    'pachage': 'package',
+    'packacge': 'package',
+    'packege': 'package',
+    'packge': 'package',
+    'pakage': 'package',
+    'particularily': 'particularly',
+    'persistant': 'persistent',
+    'plattform': 'platform',
+    'ploting': 'plotting',
+    'posible': 'possible',
+    'powerfull': 'powerful',
+    'prefered': 'preferred',
+    'prefferably': 'preferably',
+    'prepaired': 'prepared',
+    'princliple': 'principle',
+    'priorty': 'priority',
+    'proccesors': 'processors',
+    'proces': 'process',
+    'processsing': 'processing',
+    'processessing': 'processing',
+    'progams': 'programs',
+    'programers': 'programmers',
+    'programm': 'program',
+    'programms': 'programs',
+    'promps': 'prompts',
+    'pronnounced': 'pronounced',
+    'prononciation': 'pronunciation',
+    'pronouce': 'pronounce',
+    'protcol': 'protocol',
+    'protocoll': 'protocol',
+    'recieve': 'receive',
+    'recieved': 'received',
+    'redircet': 'redirect',
+    'regulamentations': 'regulations',
+    'remoote': 'remote',
+    'repectively': 'respectively',
+    'replacments': 'replacements',
+    'requiere': 'require',
+    'runnning': 'running',
+    'safly': 'safely',
+    'savable': 'saveable',
+    'searchs': 'searches',
+    'separatly': 'separately',
+    'seperate': 'separate',
+    'seperately': 'separately',
+    'seperatly': 'separately',
+    'serveral': 'several',
+    'setts': 'sets',
+    'similiar': 'similar',
+    'simliar': 'similar',
+    'speach': 'speech',
+    'standart': 'standard',
+    'staically': 'statically',
+    'staticly': 'statically',
+    'succesful': 'successful',
+    'succesfully': 'successfully',
+    'suplied': 'supplied',
+    'suport': 'support',
+    'suppport': 'support',
+    'supportin': 'supporting',
+    'synchonized': 'synchronized',
+    'syncronize': 'synchronize',
+    'syncronizing': 'synchronizing',
+    'syncronus': 'synchronous',
+    'syste': 'system',
+    'sythesis': 'synthesis',
+    'taht': 'that',
+    'throught': 'through',
+    'useable': 'usable',
+    'usefull': 'useful',
+    'usera': 'users',
+    'usetnet': 'Usenet',
+    'utilites': 'utilities',
+    'utillities': 'utilities',
+    'utilties': 'utilities',
+    'utiltity': 'utility',
+    'utitlty': 'utility',
+    'variantions': 'variations',
+    'varient': 'variant',
+    'verson': 'version',
+    'vicefersa': 'vice-versa',
+    'yur': 'your',
+    'wheter': 'whether',
+    'wierd': 'weird',
+    'xwindows': 'X'
     }
 
-VALID_GROUPS=Config.getOption("ValidGroups", DEFAULT_VALID_GROUPS)
-VALID_LICENSES=Config.getOption("ValidLicenses", DEFAULT_VALID_LICENSES)
-packager_regex=re.compile(Config.getOption("Packager", DEFAULT_PACKAGER))
-basename_regex=re.compile("/?([^/]+)$")
-changelog_version_regex=re.compile("[^>]([^ >]+)$")
-release_ext=Config.getOption("ReleaseExtension", "mdk")
-extension_regex=release_ext and re.compile(release_ext + "$")
-use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
-devel_regex=re.compile("(.*)-devel")
+VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
+VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
+packager_regex=re.compile(Config.getOption('Packager', DEFAULT_PACKAGER))
+basename_regex=re.compile('/?([^/]+)$')
+changelog_version_regex=re.compile('[^>]([^ >]+)$')
+release_ext=Config.getOption('ReleaseExtension', 'mdk')
+extension_regex=release_ext and re.compile(release_ext + '$')
+use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
+devel_regex=re.compile('(.*)-devel')
 capital_regex=re.compile('[0-9A-Z]')
 
 def spell_check(pkg, str, tagname):
@@ -395,42 +395,42 @@ def spell_check(pkg, str, tagname):
                     if word[-1] == '\'':
                         word=word[:-1]                
                     correct=BAD_WORDS[word]
-                    printWarning(pkg, "spelling-error-in-" + tagname, word, correct)
+                    printWarning(pkg, 'spelling-error-in-' + tagname, word, correct)
                 except KeyError:
                     pass
 
 class TagsCheck(AbstractCheck.AbstractCheck):
     
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
+	AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
 
     def check(self, pkg, verbose):
 
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
-	    printError(pkg, "no-packager-tag")
+	    printError(pkg, 'no-packager-tag')
         elif not packager_regex.search(packager):
-            printWarning(pkg, "invalid-packager", packager)
+            printWarning(pkg, 'invalid-packager', packager)
             
 	version=pkg[rpm.RPMTAG_VERSION]
 	if not version:
-	    printError(pkg, "no-version-tag")
+	    printError(pkg, 'no-version-tag')
 
         release=pkg[rpm.RPMTAG_RELEASE]
 	if not release:
-	    printError(pkg, "no-release-tag")
+	    printError(pkg, 'no-release-tag')
         elif release_ext and not extension_regex.search(release):
-            printWarning(pkg, "not-standard-release-extension", release)
+            printWarning(pkg, 'not-standard-release-extension', release)
 
 	name=pkg[rpm.RPMTAG_NAME]
 	if not name:
-	    printError(pkg, "no-name-tag")
+	    printError(pkg, 'no-name-tag')
 	elif name:
 	    res=basename_regex.search(pkg.filename)
 	    if res:
 		basename=res.group(1)
 		if name != basename[0:len(name)]:
-		    printWarning(pkg, "non-coherent-filename", name, basename)
+		    printWarning(pkg, 'non-coherent-filename', name, basename)
             res=devel_regex.search(name)
             if res:
                 base=res.group(1)
@@ -440,61 +440,67 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         dep=d
                         break
                 if not dep:
-                    printWarning(pkg, "no-dependency-on", base)
+                    printWarning(pkg, 'no-dependency-on', base)
                 elif version:
                     if dep[1][:len(version)] != version:
-                        if dep[1] != "":
-                            printWarning(pkg, "incoherent-version-dependency-on", base, dep[1], version)
+                        if dep[1] != '':
+                            printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], version)
                         else:
-                            printWarning(pkg, "no-version-dependency-on", base, version)
+                            printWarning(pkg, 'no-version-dependency-on', base, version)
                 
 	summary=pkg[rpm.RPMTAG_SUMMARY]
 	if not summary:
-	    printError(pkg, "no-summary-tag")
+	    printError(pkg, 'no-summary-tag')
 	else:
-            spell_check(pkg, summary, "summary")
-            if string.find(summary, "\n") != -1:
-                printError(pkg, "summary-on-multiple-lines")
+            spell_check(pkg, summary, 'summary')
+            if string.find(summary, '\n') != -1:
+                printError(pkg, 'summary-on-multiple-lines')
                 print summary
             if not capital_regex.search(summary[0]):
                 printWarning(pkg, 'summary-not-capitalized', summary)
 
         description=pkg[rpm.RPMTAG_DESCRIPTION]
 	if not description:
-	    printError(pkg, "no-description-tag")
+	    printError(pkg, 'no-description-tag')
         else:
-            spell_check(pkg, description, "description")
+            spell_check(pkg, description, 'description')
 
 	group=pkg[rpm.RPMTAG_GROUP]
 	if not pkg[rpm.RPMTAG_GROUP]:
-	    printError(pkg, "no-group-tag")
+	    printError(pkg, 'no-group-tag')
 	else:
 	    if not group in VALID_GROUPS:
-		printWarning(pkg, "non-standard-group", group)
+		printWarning(pkg, 'non-standard-group', group)
 
 	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
-	    printError(pkg, "no-changelogname-tag")
+	    printError(pkg, 'no-changelogname-tag')
         elif use_version_in_changelog:
             ret=changelog_version_regex.search(changelog[0])
             if not ret:
-                printWarning(pkg, "no-version-in-last-changelog")
+                printWarning(pkg, 'no-version-in-last-changelog')
             elif version and release:
-                if version + "-" + release != ret.group(1):
-                    printWarning(pkg, "incoherent-version-in-changelog", ret.group(1), version + "-" + release)
+                srpm=pkg[rpm.RPMTAG_SOURCERPM]
+                # only check when source name correspond to name
+                if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
+                    if version + '-' + release != ret.group(1):
+                        printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), version + '-' + release)
 
 #         provides=pkg.provides()
 #         for (provide_name, provide_version, provide_flags) in provides:
 #             if name == provide_name:
-#                 printWarning(pkg, "package-provides-itself")
+#                 printWarning(pkg, 'package-provides-itself')
 #                 break
 
         license=pkg[rpm.RPMTAG_LICENSE]
         if not license:
-            printError(pkg, "no-license")
+            printError(pkg, 'no-license')
         else:
-            if not license in VALID_LICENSES:
-                printWarning(pkg, "invalid-license", license)
+            licenses=re.split('(?:and|or|&|\s|-|-like|/|ish|-style)+', license)
+            for l in licenses:
+                if not l in VALID_LICENSES:
+                    printWarning(pkg, 'invalid-license', license)
+                    break
 
 check=TagsCheck()
 
