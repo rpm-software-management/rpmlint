@@ -30,6 +30,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
 
     def check(self, pkg, verbose):
+	# Check only binary package
+	if pkg.isSource():
+	    return
+	
 	files=pkg.files()
 	config_files=pkg.configFiles()
 	for f in files.keys():
