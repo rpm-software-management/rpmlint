@@ -23,6 +23,11 @@ DEFAULT_VALID_SHELLS=('/bin/sh',
 extract_dir=Config.getOption('ExtractDir', '/tmp')
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 
+braces_regex=re.compile("^[^#]*%", re.MULTILINE)
+bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
+home_regex=re.compile('[^a-zA-Z]+~|\$HOME', re.MULTILINE)
+dangerous_command_regex=re.compile("(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio)\s", re.MULTILINE)
+
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
     if not shellscript:
@@ -46,8 +51,6 @@ def incorrect_perl_script(perlscript):
     return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):
-    braces_regex=re.compile("^[^#]*%", re.MULTILINE)
-    bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
     
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "PostCheck")
@@ -68,14 +71,19 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     if not prog in valid_shells:
                         printError(pkg, "invalid-shell-in-" + tag[2], prog)
                 if prog == "/bin/sh" or prog == "/bin/bash" or prog == "/usr/bin/perl":
-                    if PostCheck.braces_regex.search(script):
+                    if braces_regex.search(script):
                         printWarning(pkg, "percent-in-" + tag[2])
-                    if PostCheck.bracket_regex.search(script):
+                    if bracket_regex.search(script):
                         printWarning(pkg, "spurious-bracket-in-" + tag[2])
-                    
+                    res=dangerous_command_regex.search(script)
+                    if res:
+                        printError(pkg, "dangerous-command-in-" + tag[2], res.group(1))
+                        
                 if prog == "/bin/sh" or prog == "/bin/bash":
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
+                    if home_regex.search(script):
+                        printError(pkg, "use-of-home-in-" + tag[2])
 
                 if prog == "/usr/bin/perl":
                     if incorrect_perl_script(script):
