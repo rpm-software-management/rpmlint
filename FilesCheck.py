@@ -14,6 +14,7 @@ import rpm
 import re
 import stat
 import string
+import os
 
 STANDARD_USERS=('root','bin','daemon','adm','lp','sync','shutdown','halt','mail','news','uucp','operator','games','gopher','ftp','nobody','lists','gdm','xfs')
 
@@ -31,8 +32,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     absolute_regex=re.compile("^/([^/]+)")
     absolute2_regex=re.compile("^/?([^/]+)")
     points_regex=re.compile("^../(.*)")
-    doc_before_bm_regex=re.compile("^/usr/(doc|man|info)")
-    doc_regex=re.compile("^/usr/share/(doc|man|info)")
+    doc_regex=re.compile("^/usr/(doc|man|info)|^/usr/share/(doc|man|info)")
     bin_regex=re.compile("^(/usr)?/s?bin/")
     includefile_regex=re.compile("\.h$|\.a$")
     sofile_regex=re.compile("\.so$")
@@ -65,9 +65,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    user=enreg[1]
 	    group=enreg[2]
 
-            if FilesCheck.doc_before_bm_regex.search(f):
-                printError(pkg, "no-fhs-documentation", f)
-            
 	    if stat.S_ISREG(mode) and FilesCheck.doc_regex.search(f) and not f in doc_files:
 		printError(pkg, "not-listed-as-documentation", f)
 
@@ -104,6 +101,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, "backup-file-in-package", f)
             elif FilesCheck.home_regex.search(f):
 		printError(pkg, "dir-or-file-in-home", f)
+            elif f == "/usr/info/dir" or f == "/usr/share/info/dir":
+                printError(pkg, "info-dir-file", f)
 	    if FilesCheck.etc_regex.search(f) and stat.S_ISREG(mode):
 		if not f in config_files and not f in ghost_files:
 		    printWarning(pkg, "non-conffile-in-etc", f)
@@ -161,10 +160,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
 		r=FilesCheck.absolute_regex.search(link)
-                if not devel_pkg and FilesCheck.sofile_regex.search(f):
+                is_so=FilesCheck.sofile_regex.search(f)
+                if not devel_pkg and is_so:
                     printWarning(pkg, "devel-file-in-non-devel-package", f)
 		# absolute link
 		if r:
+                    if not is_so and link not in files.keys():
+                        printWarning(pkg, "dangling-symlink", f, link)
 		    linktop=r.group(1)
 		    r=FilesCheck.absolute_regex.search(f)
 		    if r:
@@ -174,6 +176,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			    printWarning(pkg ,"symlink-should-be-relative", f, link)
 		# relative link
 		else:
+                    if not is_so:
+                        file = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
+                        file = os.path.normpath(file)
+                        if not os.path.exists(file):
+                            printWarning(pkg, "dangling-symlink", f, link)
+                            sys.exit(0)
 		    pathcomponents=string.split(f, '/')[1:]
 		    r=FilesCheck.points_regex.search(link)
 		    lastpop=None
