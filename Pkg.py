@@ -288,14 +288,17 @@ class Pkg:
 
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
-    def __init__(self, name):
-        db = rpm.opendb()
-        tab = db.findbyname(name)
-        if not tab:
+    def __init__(self, name, h=None):
+        if h:
+            Pkg.__init__(self, name, '/', h)
+        else:
+            db = rpm.opendb()
+            tab = db.findbyname(name)
+            if not tab:
+                del db
+                raise KeyError, name
+            Pkg.__init__(self, name, '/', db[tab[0]])
             del db
-            raise KeyError, name
-        Pkg.__init__(self, name, '/', db[tab[0]])
-        del db
         self.extracted = 1
         
     def cleanup(self):
