@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.45
+%define version 0.46
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Jun  4 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.46-1mdk
+ o BinariesCheck.py: added no-binary and only-non-binary-in-usr-lib
+
 * Mon Jun  3 2002 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.45-1mdk
  o SpecCheck.py: - Add configure-without-libdir-spec check
 	         - Add hardcoded-library-path check
