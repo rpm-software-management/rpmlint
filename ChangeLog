@@ -1,3 +1,31 @@
+2001-04-01 23:19  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* FilesCheck.py: Add rpcuser
+
+2001-03-15 02:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Expections for ldconfig.
+
+2001-03-15 01:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Some more exeptions for initscripts.
+
+2001-03-15 01:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add some Execptions for initscripts.
+
+2001-02-28 07:04  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check length of summary and description lines
+
+2001-02-21 12:34  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: netkit-base and iputils is the same for Filter.
+
+2001-02-16 17:45  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.30-1mdk
+
 2001-02-16 17:40  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.30
