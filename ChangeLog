@@ -1,3 +1,8 @@
+2000-04-05  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+	Move Applications/Terminals to Terminals
+
 2000-04-04  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
 
 	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
@@ -75,7 +80,6 @@
 	* BinariesCheck.py:
 		* check for non sparc32 binaries in sparc rpms.
 
->>>>>>> 1.16
 2000-03-27  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.spec, rpmlint.py:
