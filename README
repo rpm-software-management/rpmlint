@@ -60,3 +60,4 @@ ReleaseExtension	string or None	"mdk"
 UseVersionInChangelog	boolen		1
 ExtraMenuNeeds		list of strings
 XpmIconPath		regexp		"/usr/share/icons"
+ValidLicenses		list of strings
