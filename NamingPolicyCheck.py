@@ -26,7 +26,7 @@ import Config
 # XFree
 # xine 
 
-simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-]*$');
+simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-_]*$');
 
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     checks_=[]
@@ -41,15 +41,15 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         c['file_re']=re.compile(file_re)
         self.checks_.append(c)
         if Config.info:
-            if simple_naming_policy_re.search(c['name_re']):
-                details="The name sould begin with " + c['name_re'][1:]
+            if simple_naming_policy_re.search(name_re):
+                details="The name sould begin with " + name_re[1:]
             else:
-                details="The name should match this regular expression"
+                details="The name should match this regular expression " + name_re
 				
             addDetails(pkg_name + '-naming-policy-not-applied',
                        """This package doesn't respect the naming policy.
                        """ + details)
-
+            
     def check(self, pkg):
         if pkg.isSource():
             return
