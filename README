@@ -20,6 +20,7 @@ Implemented checks:
 	o FHS checks (FHSCheck)
 	o Source specific checks (SourceCheck)
 	o i18n checks (I18NCheck).
+	o menu system checks (MenuCheck)
 
 If you want to change configuration options or the list of checks, use the
 global configuration file /etc/rpmlint/config or in the user configuration
@@ -47,11 +48,12 @@ addFilter(regexp) adds a filter to remove the output of a check.
 
 Available options:
 
-name		type		default
-==============================================
-Vendor		string		"MandrakeSoft"
-Distribution	string		"Mandrake"
-UseBzip2	boolean		1
-ValidGroups	list of strings	
-ReleaseExtension string or None	"mdk"
-UseVersionInChangelog boolen	1
+name			type		default
+========================================================
+Vendor			string		"MandrakeSoft"
+Distribution		string		"Linux-Mandrake"
+UseBzip2		boolean		1
+ValidGroups		list of strings
+ValidMenuSections	list of strings
+ReleaseExtension	string or None	"mdk"
+UseVersionInChangelog	boolen		1
