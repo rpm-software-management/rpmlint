@@ -1,3 +1,19 @@
+2001-05-18 17:10  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.31
+
+2001-05-18 17:07  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: added rules to build test and release rpms.
+
+2001-05-18 17:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for XFree86
+
+2001-05-18 16:43  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added various exceptions
+
 2001-05-18 14:39  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* PostCheck.py: check that a script isn't a oneliner.
