@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #---------------------------------------------------------------
-# Project         : Linux-Mandrake
+# Project         : Mandrake Linux
 # Module          : rpmlint
 # File            : check-install.py
 # Version         : $Id$

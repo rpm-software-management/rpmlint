@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Project         : Linux-Mandrake
+# Project         : Mandrake Linux
 # Module          : rpmlint
 # File            : LSBCheck.py
 # Version         : $Id$
