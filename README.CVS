@@ -1,0 +1,7 @@
+To  get  the  last developement  version,  you  may  use CVS  see  the
+http://www.linuxmandrake.com/en/cvs.php3 page for more information how
+to use cvs.
+
+Then just checkout the rpmlint module from the base.
+
+Frederic Lepied <flepied@mandrakesoft.com>.
