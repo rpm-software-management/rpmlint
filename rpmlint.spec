@@ -44,8 +44,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,0755)
 %doc COPYING ChangeLog INSTALL README*
-%{prefix}/bin/*
-%{prefix}/share/rpmlint
+%{_bindir}/*
+%{_datadir}/rpmlint
 %config(noreplace) /etc/rpmlint/config
 %dir /etc/rpmlint
 
