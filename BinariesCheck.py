@@ -86,6 +86,8 @@ usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib/pkgconfig/')
+usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'))
+srcname_regex=re.compile('(.*?)-[0-9]')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -114,19 +116,25 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         binary_in_usr_lib=0
         has_usr_lib_file=0
 
+        res=srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM])
+        if res:
+            multi_pkg=(pkg.name != res.group(1))
+        else:
+            multi_pkg=0
+        
         for f in files:
-            if usr_lib_regex.search(f):
+            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f):
                 has_usr_lib_file=f
                 break
             
 	for i in info:
 	    is_binary=binary_regex.search(i[1])
-
+            
 	    if is_binary:
                 binary=binary+1
                 if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
                     binary_in_usr_lib=1
-                
+                    
 		if arch == 'noarch':
 		    printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
 		else:
@@ -230,9 +238,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
             if version and version != -1 and string.find(pkg.name, version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)
-        if arch != 'noarch':
+
+        if arch != 'noarch' and not multi_pkg:
             if binary == 0:
                 printError(pkg, 'no-binary')
+
         if has_usr_lib_file and not binary_in_usr_lib:
             printError(pkg, 'only-non-binary-in-usr-lib')
         
