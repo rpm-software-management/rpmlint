@@ -16,6 +16,7 @@ import string
 import sys
 import Config
 import Pkg
+import stat
 
 DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib',
                           '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
@@ -124,7 +125,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             multi_pkg=0
 
         for f in files.keys():
-            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f):
+            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f][0]):
                 has_usr_lib_file=f
                 break
             
