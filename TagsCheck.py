@@ -134,6 +134,7 @@ DEFAULT_VALID_LICENSES = (
     'X.Net License',
     'Sun Public License',
     'Eiffel Forum License',
+    'W3C License',
     # non open source licences:
     'Proprietary',
     'Freeware',
@@ -401,7 +402,7 @@ BAD_WORDS = {
     }
 DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
-DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', 'any', 'package', 'libsafe\.so\.')
+DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
 distribution=Config.getOption("Distribution", "Mandrake Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
