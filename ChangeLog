@@ -1,3 +1,7 @@
+2001-11-30 13:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.39-2mdk
+
 2001-11-30 13:03  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py: search references to home or tmp in
