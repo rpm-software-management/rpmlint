@@ -14,7 +14,7 @@ import re
 import Config
 
 man_regex=re.compile("/man./")
-info_regex=re.compile("/info/")
+info_regex=re.compile("(/usr/share|/usr)/info/")
 info_dir_regex=re.compile("/info/dir$")
 bz2_regex=re.compile(".bz2$")
 gz_regex=re.compile(".gz$")
