@@ -33,7 +33,22 @@ try:
         v304=1
 except AttributeError:
     v304=0
-    
+
+def grep(regex, filename):
+    fd=open(filename, "r")
+    ret=0
+    if fd:
+        reg=re.compile(regex)
+        
+        for line in fd.readlines():
+            if reg.search(line):
+                ret=1
+                break
+        fd.close()
+    else:
+        print "unable to open", f
+    return ret
+
 class Pkg:
     file_regex=re.compile("\.([^:]+):\s+(.*)")
 
@@ -46,7 +61,8 @@ class Pkg:
 	self._doc_files=None
 	self._ghost_files=None
 	self._files=None
-	
+	self.required=None
+        
 	# Create a package object from the file name
 	fd=os.open(filename, os.O_RDONLY)
 	(self.header, self.is_source)=rpm.headerFromPackage(fd)
@@ -171,5 +187,53 @@ class Pkg:
 		    self._ghost_files.append(files[idx])
 		self._files[files[idx]]=(modes[idx], users[idx],
 					 groups[idx], links[idx])
-	
+
+    # API to access dependency information
+    def requires(self):
+        self._gatherDepInfo()
+        return self._requires
+    
+    def prereq(self):
+        self._gatherDepInfo()
+        return self._prereq
+
+    def conflicts(self):
+        self._gatherDepInfo()
+        return self._conflicts
+        
+    def provides(self):
+        self._gatherDepInfo()
+        return self._provides
+
+    # internal function to gather dependency info used by the above ones
+    def _gatherDepInfo(self):
+        if self.required == None:
+            self._requires = []
+            self._prereq = []
+            self._provides = []
+            names = self.header[rpm.RPMTAG_REQUIRENAME]
+            versions = self.header[rpm.RPMTAG_REQUIREVERSION]
+            flags = self.header[rpm.RPMTAG_REQUIREFLAGS]
+            for loop in range(len(versions)):
+                if flags[loop] & rpm.RPMSENSE_PREREQ:
+                    self._prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
+                else:
+                    self._requires.append((names[loop], versions[loop], flags[loop]))
+            names = self.header[rpm.RPMTAG_CONFLICTNAME]
+            versions = self.header[rpm.RPMTAG_CONFLICTVERSION]
+            flags = self.header[rpm.RPMTAG_CONFLICTFLAGS]
+            print names, versions, flags
+            for loop in range(len(versions)):
+                self._provides.append((names[loop], versions[loop], flags[loop]))
+            
+if __name__ == '__main__':
+    import sys
+    for p in sys.argv[1:]:
+        pkg=Pkg(sys.argv[1], "/tmp")
+        print "Requires:", pkg.requires()
+        print "Prereq:", pkg.prereq()
+        print "Conflicts:", pkg.conflicts()
+        print "Provides:", pkg.provides()
+        pkg.cleanup()
+    
 # Pkg.py ends here
