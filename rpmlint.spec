@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.3
+%define version 0.4
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -15,11 +15,12 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
+URL: http://www.lepied.com/rpmlint/
 Copyright: GPL
 Group: Development/System
 BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils
+Requires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
 BuildArchitectures: noarch
 
 %description
@@ -60,6 +61,15 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/rpmlint
 
 %changelog
+
+* Thu Oct  7 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- version 0.4: pgp check and group name check.
+
+* Wed Oct  6 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- version 0.3.
+
 * Mon Oct  4 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - version 0.2.
@@ -67,6 +77,5 @@ rm -rf $RPM_BUILD_ROOT
 * Fri Oct  1 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - First spec file for Mandrake distribution.
-
 
 # rpmlint.spec ends here
