@@ -403,4 +403,9 @@ addFilter('W: zapping devel-file-in-non-devel-package /usr/lib/zapping/plugins/.
 #ssane
 addFilter('libsane1 non-versioned-file-in-library-package /usr/lib/sane')
 
+#mgetty
+addFilter('E: mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing 01777')        
+addFilter('E: mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing/locks 0777')
+addFilter('mgetty-sendfax incoherent-logrotate-file /etc/logrotate.d/sendfax')
+
 # Config.py ends here
