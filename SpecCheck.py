@@ -19,6 +19,8 @@ patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
 applied_patch_regex=re.compile("^\s*%patch([^\s]*)\s")
 source_dir_regex=re.compile("[^#]*\$RPM_SOURCE_DIR")
 obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
+buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
+tmp_regex=re.compile('^/')
 
 def file2string(file):
     fd=open(file, "r")
@@ -53,6 +55,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             patches={}
             applied_patches=[]
             source_dir=None
+            buildroot=0
+            
             # gather info from spec lines
             for line in spec:
                 res=patch_regex.search(line)
@@ -67,10 +71,20 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         if res:
                             source_dir=1
                             printError(pkg, "use-of-RPM_SOURCE_DIR")
+                
                 res=obsolete_tags_regex.search(line)
                 if res:
                     printWarning(pkg, "obsolete-tag", res.group(1))
-
+                
+                res=buildroot_regex.search(line)
+                if res:
+                    buildroot=1
+                    if tmp_regex.search(res.group(1)):
+                        printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
+                        
+            if not buildroot:
+                printError(pkg, 'no-buildroot-tag')
+                    
             # process gathered info
             for p in patches.keys():
                 if p not in applied_patches:
@@ -105,6 +119,14 @@ documentation to see what's wrong.''',
 'obsolete-tag',
 '''The following tags are obsolete: Copyright and Serial. They must
 be replaced by License and Epoch respectively.''',
+
+'no-buildroot-tag',
+'''The BuildRoot tag isn't used in your spec. It must be used to
+allow build as non root.''',
+
+'hardcoded-path-in-buildroot-tag',
+'''A path is hardcoded in your Buildroot tag. It should be replaced
+by something like %{_tmppath}/%name-root.''',
 
 )
 
