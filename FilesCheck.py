@@ -275,6 +275,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-root-user-log-file', f, user)
                     if group != 'root':
                         printError(pkg, 'non-root-group-log-file', f, group)
+                    if not f in ghost_files:
+                        printError(pkg, 'non-ghost-file', f)
                         
                 if doc_regex.search(f) and not f in doc_files:
                     printError(pkg, 'not-listed-as-documentation', f)
@@ -551,7 +553,8 @@ Please remove it and rebuild your package.''',
 
 'non-conffile-in-etc',
 '''A file in your package is being installed in /etc, but is not a
-configuration file. All the files in /etc MUST be configuration files.''',
+configuration file. All the files in /etc MUST be configuration files
+(add the %config option to the file in the spec file).''',
 
 'compressed-symlink-with-wrong-ext',
 '''The symlink points to a compressed file but doesn't use the same extension.''',
@@ -636,6 +639,8 @@ email to flepied@mandrakesoft.com to add it to the list of exceptions in the nex
 'non-root-group-log-file',
 '''If you need non root log file, just create a subdir in /var/log and put your files inside.''',
 
+'non-ghost-file',
+'''File should be tagged %ghost.''',
 
 )
 
