@@ -238,6 +238,7 @@ addFilter('W: alsa(-source)? incoherent-version-in-changelog.*')
 addFilter('W: kernel-headers dangling-symlink /usr/include/asm ../src/linux/include/asm')
 addFilter('W: kernel-source dangling-symlink .*/linux/config.h ../pcmcia/config.h')
 addFilter('W: reiserfs-utils dangling-symlink /sbin/fsck.reiserfs.*')
+addFilter('W: reiserfsprogs dangling-relative-symlink /sbin/fsck.reiserfs ../bin/true')
 addFilter('W: reiserfs-utils incoherent-version-in-changelog')
 
 #Glibc
