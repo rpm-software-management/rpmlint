@@ -17,7 +17,38 @@ Implemented checks:
 	o locations, permissions, groups and owners checks (FileCheck)
 	o suid warnings (FileCheck)
 	o pgp checks (SignatureCheck)
+	o FHS checks (FHSCheck)
 
 Planned checks:
 
 	o rpm source checks
+
+If you want to change configuration options or the list of checks, use the
+global configuration file /etc/rpmlint/config or in the user configuration
+file ~/.rpmlintrc.
+
+Configuration files are python source files and should begin with the
+following line:
+
+from Config import *
+
+to load configuration functions.
+
+Configuration functions:
+
+resetChecks()  reset the list of checks.
+
+addCheck(check) add the check to the list of checks to try.
+
+addCheckDir(path) add a path to look for checks.
+
+setOption(name, value) set the value of the configuration option. See bellow
+to have the list of available options.
+
+Available options:
+
+name		type		default
+==============================================
+Vendor		string		"MandrakeSoft"
+Distribution	string		"Mandrake"
+UseBzip2	boolean		1
