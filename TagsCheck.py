@@ -163,7 +163,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             elif version and release:
                 if version + "-" + release != ret.group(1):
                     printWarning(pkg, "incoherent-version-in-changelog", ret.group(1), version + "-" + release)
-                                 
+
+        provides=pkg.provides()
+        for (provide_name, provide_version, provide_flags) in provides:
+            print provide_name
+            if name == provide_name:
+                printWarning(pkg, "package-provides-itself")
+                break
+        
 check=TagsCheck()
 
 # TagsCheck.py ends here
