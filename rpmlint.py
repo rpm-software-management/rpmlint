@@ -15,7 +15,7 @@ import getopt
 import Pkg
 import os.path
 
-version="0.2"
+version="0.3"
 
 # Print usage information
 def usage(name):
@@ -92,6 +92,7 @@ try:
 	    pkg=Pkg.Pkg(f, extract_dir)
 	except:
 	    sys.stderr.write("Error while reading " + f + "\n")
+	    pkg=None
 	    continue
 
 	if verbose:
@@ -100,8 +101,7 @@ try:
 	    c.check(pkg, verbose)
 	    
 	pkg.cleanup()
-except:
-    print "Exception:", sys.exc_type, sys.exc_value
-    pkg.cleanup()
+finally:
+    pkg and pkg.cleanup()
     
 # rpmlint.py ends here
