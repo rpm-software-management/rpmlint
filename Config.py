@@ -23,7 +23,8 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "PostCheck",
                 "InitScriptCheck",
 		"SourceCheck",
-                "SpecCheck"
+                "SpecCheck",
+                "NamingPolicyCheck",
                 )
 
 info=0
@@ -512,7 +513,20 @@ addFilter('rootfiles hidden-file-or-dir /root/.*')
 addFilter('scilab hidden-file-or-dir /usr/lib/scilab-.*/.pvmd.conf')
 
 # pvm
-addFilter('pvm  hidden-file-or-dir /usr/share/pvm3/.bash(_profile|rc)')
+addFilter('pvm hidden-file-or-dir /usr/share/pvm3/.bash(_profile|rc)')
+
+addFilter('apache2-devel apache2-naming-policy-not-applied')
+addFilter('apache2-modules apache2-naming-policy-not-applied')
+
+addFilter('apache2-mod_ruby ruby-naming-policy-not-applied')
+addFilter('ruby ruby-naming-policy-not-applied')
+addFilter('python python-naming-policy-not-applied')
+addFilter('xmms xmms-naming-policy-not-applied')
+
+# rpm 4.2's debuginfo packages
+addFilter('-debug(info)? no-documentation')
+addFilter('-debug(info)? devel-file-in-non-devel-package')
+addFilter('-debug(info)? unstripped-binary-or-object')
 
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
