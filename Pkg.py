@@ -89,6 +89,7 @@ class Pkg:
     # remove the extracted files from the package
     def cleanup(self):
 	if self.extracted:
+	    commands.getstatusoutput("chmod -R +X " + self.dirname)
 	    commands.getstatusoutput("rm -rf " + self.dirname)
 
     # return the associative array indexed on file names with
