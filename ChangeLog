@@ -1,3 +1,7 @@
+2003-01-16 23:41  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.48-1mdk
+
 2003-01-16 23:30  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: added a way to load an alternative config file.
