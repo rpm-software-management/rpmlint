@@ -1,3 +1,21 @@
+2003-05-09 14:43  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: Make %ifarch-applied-patch a warning
+
+2003-05-09 14:34  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: install rpmdiff in /usr/bin
+
+2003-05-09 14:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmdiff: load Pkg from /usr/share/rpmlint to be able to be
+	installed anywhere
+
+2003-05-08 11:27  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: Hanle %ifnarch in ifarch_regex too. Aka. don't
+	suddenly think about rpmlint prior to taking a bath.
+
 2003-05-08 11:10  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* SpecCheck.py: check for hardcoded-library-path exceptions only on
