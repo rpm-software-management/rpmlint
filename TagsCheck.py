@@ -644,6 +644,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         obs=map(lambda x: x[0], pkg.obsoletes())
         provs=map(lambda x: x[0], pkg.provides())
+	if pkg.name in obs:
+		printError(pkg, 'obsolete-on-name')
+		
         for o in obs:
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
@@ -836,6 +839,9 @@ explicit Requires: tags.''',
 
 'useless-explicit-provides',
 '''This package provides 2 times the same capacity. It should only provides it once.''',
+
+'obsolete-on-name',
+'''A package sould not obsolete itself, as it can cause weird error in tools.''',
 )
     
 # TagsCheck.py ends here
