@@ -98,33 +98,33 @@ check=InitScriptCheck()
 if Config.info:
     addDetails(
 'init-script-without-chkconfig-postin',
-'''The package contains an initscript but doesn't contain a %post with
+'''The package contains an init script but doesn't contain a %post with
 a call to chkconfig.''',
 
 'postin-without-chkconfig',
-'''The package contains an initscript but doesn't call chkconfig in its %post.''',
+'''The package contains an init script but doesn't call chkconfig in its %post.''',
 
 'init-script-without-chkconfig-preun',
-'''The package contains an initscript but doesn't contain a %preun with
+'''The package contains an init script but doesn't contain a %preun with
 a call to chkconfig.''',
 
 'preun-without-chkconfig',
-'''The package contains an initscript but doesn't call chkconfig in its %preun.''',
+'''The package contains an init script but doesn't call chkconfig in its %preun.''',
 
 'no-status-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'status' entry, which is necessary for a good functionnality.''',
+have a 'status' entry, which is necessary for a good functionality.''',
 
 'no-reload-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'reload' entry, which is necessary for a good functionnality.''',
+have a 'reload' entry, which is necessary for a good functionality.''',
 
 'no-chkconfig-line',
-'''The initscript doesn't contain a chkconfig line to specify the runlevels at which
+'''The init script doesn't contain a chkconfig line to specify the runlevels at which
 to start and stop it.''',
 
 'no-default-runlevel',
-'''The default runlevel isn't specified in the initscript.''',
+'''The default runlevel isn't specified in the init script.''',
 
 'subsys-not-used',
 '''While your program is running, you have to put a lock file in

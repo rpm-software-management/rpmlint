@@ -344,7 +344,7 @@ that contains it.''',
 '''The command used in the menu isn't contained in the package.''',
 
 'menu-longtitle-not-capitalized',
-'''The lontitle field of the menu doesn't start with a capital letter.''',
+'''The longtitle field of the menu doesn't start with a capital letter.''',
 
 'version-in-menu-longtitle'
 '''A version is contained in the longtitle field of the menu entry. This is bad because

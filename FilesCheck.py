@@ -652,14 +652,14 @@ non standard.''',
 ''',
 
 'dangling-symlink',
-'''The symbolik link points nowhere.''',
+'''The symbolic link points nowhere.''',
 
 'symlink-should-be-relative',
 '''
 ''',
 
 'dangling-relative-symlink',
-'''The relative symbolik link points nowhere.''',
+'''The relative symbolic link points nowhere.''',
 
 'symlink-has-too-many-up-segments',
 '''

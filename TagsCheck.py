@@ -143,7 +143,7 @@ DEFAULT_VALID_LICENSES = (
     'Charityware'
     )
 
-DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakesoft.com|http://www.mandrakeexpert.com'
+DEFAULT_PACKAGER = '@mandrakesoft.com|@linux-mandrake.com|https?://qa.mandrakesoft.com|http://www.mandrakeexpert.com'
 
 BAD_WORDS = {
     'alot': 'a lot',
@@ -669,10 +669,10 @@ when the final version will be out, you will have to use an Epoch tag to make
 you package upgradable. Instead put it in the release tag like 0.alpha8.1''' + release_ext + '.',
 
 'spelling-error-in-description',
-'''You made a mispelling in the Description. Please double-check.''',
+'''You made a misspelling in the Description. Please double-check.''',
 
 'spelling-error-in-summary',
-'''You made a mispelling in the Summary. Please double-check.''',
+'''You made a misspelling in the Summary. Please double-check.''',
 
 'no-packager-tag',
 '''There is no Packager tag in your package. You have to specify a packager using
@@ -785,7 +785,7 @@ if the license is near an existing one, you can use '<license> style'.''',
 
 'obsolete-not-provided',
 '''The obsoleted package must also be provided to allow a clean upgrade
-and not to break depencencies.''',
+and not to break dependencies.''',
 
 'invalid-dependency',
 '''An invalid dependency has been detected. It usually means that the build of the
