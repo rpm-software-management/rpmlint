@@ -1,4 +1,42 @@
-2004-11-28 23:56  guillomovitch
+2004-12-05 01:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for kernel-source.* on
+	  devel-file-in-non-devel-package reports.
+
+2004-12-05 01:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added dir-or-file-in-usr-local (Michael Scherer).
+
+2004-12-05 01:14  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: allow soname in the form libfoo-X.Y.Z.so too
+	  (Guillaume Rousse) [bug #12522].
+
+2004-12-05 01:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* NamingPolicyCheck.py: make exception to the
+	  python/perl/ruby/ocaml naming policy when the package contains
+	  executable (Guillaume Rousse) [bug #12521].
+
+2004-12-05 01:05  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: Don't tag .mo in webapps (Guillaume Rousse) [bug
+	  #12186]
+
+2004-12-05 01:02  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added summary-ended-with-dot (Guillaume Rousse)
+	  [bug #12520]
+
+2004-12-05 00:55  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: cleanup exceptions (Michael Scherer)
+
+2004-12-05 00:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: exit on C-c (Michael Scherer)
+
+2004-11-28 23:56  Guillaume Rousse <guillomovitch@mandrake.org>
 
 	* NamingPolicyCheck.py: ocaml naming policy
 
