@@ -566,6 +566,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'summary-on-multiple-lines')
             if not capital_regex.search(summary[0]):
                 printWarning(pkg, 'summary-not-capitalized', summary)
+            if summary[-1] == '.':
+                printWarning(pkg, 'summary-ended-with-dot', summary)
             if len(summary) >= 80:
                 printError(pkg, 'summary-too-long', summary)
             if leading_space_regex.search(summary):
@@ -744,6 +746,9 @@ using this tag. To insert it, just insert a tag 'Summary'.''',
 
 'summary-not-capitalized',
 '''Summary doesn't begin with a capital letter.''',
+
+'summary-ended-with-dot',
+'''Summary ends with a dot.''',
 
 'summary-has-leading-spaces',
 '''Summary begins with spaces and that will waste space when displayed.''',
