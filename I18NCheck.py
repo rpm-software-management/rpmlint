@@ -31,8 +31,8 @@ INCORRECT_LOCALES = {
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 # and /usr/share/man for locale man pages.
 CORRECT_SUBDIRS = (
-'af', 'ar', 'az', 'be', 'bg', 'br', 'ca', 'cs', 'cy', 'da', 'de',
-'de_AT', 'el', 'en_GB', 'en_RN', 'en@IPA', 'eo',
+'af', 'ar', 'az', 'be', 'bg', 'br', 'bs', 'ca', 'cs', 'cy', 'da',
+'de', 'de_AT', 'el', 'en_GB', 'en_RN', 'en@IPA', 'eo',
 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu', 'fa',
 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hr',
