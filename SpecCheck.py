@@ -86,6 +86,22 @@ check=SpecCheck()
 # Add information about checks
 if Config.info:
     addDetails(
+'no-spec-file',
+"""
+""",
+
+'invalid-spec-name',
+"""
+""",
+
+'use-of-RPM_SOURCE_DIR',
+"""
+""",
+
+'patch-not-applied',
+"""
+""",
+
 'obsolete-tag',
 '''The following tags are obsolete: Copyright and Serial. They must
 be replaced by License and Epoch respectively.''',
