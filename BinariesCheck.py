@@ -14,6 +14,9 @@ import re
 import commands
 import string
 import sys
+import Config
+
+DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib')
 
 class BinaryInfo:
 
@@ -40,7 +43,8 @@ class BinaryInfo:
 		else:
 		    rpath=BinaryInfo.rpath_regex.search(l)
 		    if rpath:
-			self.rpath.append(rpath.group(1))
+                        for p in string.split(rpath.group(1), ':'):
+                            self.rpath.append(p)
 		    elif BinaryInfo.comment_regex.search(l):
 			self.comment=1
 		    elif BinaryInfo.dynsyms_regex.search(l):
@@ -67,7 +71,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     so_regex=re.compile("/lib/[^/]+\.so")
     validso_regex=re.compile("\.so\.")
     sparc_regex=re.compile("SPARC32PLUS|SPARC V9|UltraSPARC")
-
+    system_lib_paths=Config.getOption("SystemLibPaths", DEFAULT_SYSTEM_LIB_PATHS)
+    
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "BinariesCheck")
 
@@ -113,7 +118,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             
 			# rpath ?
 			if bin_info.rpath:
-			    printWarning(pkg, "binary-or-shlib-defines-rpath", i[0], bin_info.rpath)
+                            for p in bin_info.rpath:
+                                if p in BinariesCheck.system_lib_paths:
+                                    printWarning(pkg, "binary-or-shlib-defines-rpath", i[0], bin_info.rpath)
+                                    break
 
 			# statically linked ?
 			if BinariesCheck.shared_object_regex.search(i[1]) or \
