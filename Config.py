@@ -464,6 +464,9 @@ addFilter('ocamltk devel-file-in-non-devel-package')
 #drakconf
 addFilter('drakconf invalid-menu-section Configuration /usr/lib/menu/drakconf')
 
+#wvdial
+addFilter('wvdial non-readable /etc/ppp/peers/wvdial(-pipe)? 0600')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
