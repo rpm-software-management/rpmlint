@@ -59,7 +59,7 @@ DEFAULT_VALID_SECTIONS=(
     'System/Configuration/Packaging',
     'System/Configuration/Printing',
     'System/Configuration/Users',
-    'System/Configuration/Other'
+    'System/Configuration/Other',
     'System/File tools',
     'System/Monitoring',
     'System/Session/Windowmanagers',
@@ -117,7 +117,7 @@ DEFAULT_EXTRA_MENU_NEEDS = (
     'gnome',
     'icewm',
     'kde',
-    'wmaker'
+    'wmaker',
     )
 
 DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
