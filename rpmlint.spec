@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.59
+%define version 0.60
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,18 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Aug  3 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.60-1mdk
+- added obsolete-on-name error: a package sould not obsolete itself, as
+  it can cause weird error in tools. (Michael)
+- added exceptions for perl and dyalog on  devel-file-in-non-devel-package.
+- Add a warning for MANIFEST* files in perl modules. (Rafael)
+- add ruby exceptions like perl and python.
+- TagsCheck.py: - added useless-explicit-provides ( check if there is
+  2 times the same provides ) (Michael)
+- rpmlint.py: added option -I, to print description of the error
+  passed on commandline (Michael)
+- * I18NCheck.py: Added Furlan language code (fur) (Pablo)
+
 * Fri Apr 30 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.59-1mdk
 - TagsCheck.py: check if a package requires a interpreter in
  /usr/local/bin/ (Michael)
