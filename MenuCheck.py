@@ -259,6 +259,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         except KeyError:
                             printWarning(pkg, 'menu-command-not-in-package', command)
                     else:
+                        printWarning(pkg, 'missing-menu-command')
                         command=0
 
                     res=longtitle_regex.search(line)
@@ -414,6 +415,9 @@ of the icon to be found.''',
 
 'invalid-title',
 '''The menu title contains invalid characters like /.''',
+
+'missing-menu-command',
+'''The menu file doesn't contain a command.''',
 
 )
 
