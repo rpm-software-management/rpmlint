@@ -1,3 +1,41 @@
+1999-12-30  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* version 0.8
+	
+	* README:
+		* changed email address.
+		* added a line about i18n checks.
+
+	* config:
+		* added exception for sympa, postgresql-test and filesystem.
+	
+	* MandrakeCheck.py:
+		* change default distribution to Linux-Mandrake.
+
+	* TagsCheck.py:
+	        * (TagsCheck.check): added check on version in the first line of
+		the changelog.
+
+	* FilesCheck.py:
+		* change severity of reports.
+
+	* BinariesCheck.py:
+		* binaries not stripped is downgraded to warning.
+
+1999-12-14  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* I18NCheck.py:
+		* added a check on dirs containing LC_MESSAGES catalogs.
+
+1999-11-30  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* I18NCheck.py:
+		* correct the locales subdir regex to capture only correct names.
+
+1999-11-25  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* I18NCheck.py: 	* initial release.
+
 1999-11-18 Frederic Lepied   <lepied@kenobi.mandrakesoft.com>
 
 	* version 0.7
