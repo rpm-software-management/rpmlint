@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.25
+%define version 0.26
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,19 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Nov 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.26-1mdk
+
+- Config.py: added various exceptions.
+
+- TagsCheck.py: o allow multiple licenses.
+                o don't report anymore the package-provides-itself warning because
+                it's the default in rpm 4.
+                o try to not report incoherent-version-in-changelog for sub-packages.
+
+- MenuCheck.py: correct the non-transparent-xpm check.
+
+- FilesCheck.py: don't report buggy length-symlink anymore.
+
 * Thu Oct 12 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.25-1mdk
 
 - Config.py: added exception for sympa, rpm and bcast.
