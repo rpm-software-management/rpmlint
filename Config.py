@@ -409,4 +409,7 @@ addFilter('E: mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing 01777
 addFilter('E: mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing/locks 0777')
 addFilter('mgetty-sendfax incoherent-logrotate-file /etc/logrotate.d/sendfax')
 
+#kdebase
+addFilter('E: kdebase standard-dir-owned-by-package /usr/share/icons')
+
 # Config.py ends here
