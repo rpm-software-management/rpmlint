@@ -1,3 +1,38 @@
+2001-10-10 15:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* FilesCheck.py: Check if kernel modules are in the kernel package.
+
+2001-10-10 13:43  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: track command with full path too.
+
+2001-10-09 20:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for hylafax
+
+2001-10-09 17:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for mkinitrd automake gettext chromium
+	webmin methane apache-suexec
+
+2001-10-05 18:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added squid group and user.
+
+2001-10-05 16:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: Warn for man pages without version in library
+	packages.
+
+2001-10-02 19:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* DistributionCheck.py: More explicit path regexp check for info
+	files.
+
+2001-09-29 23:30  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: execptions for shadow-utils package.
+
 2001-09-28 21:14  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.36-1mdk
