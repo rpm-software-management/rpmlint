@@ -50,9 +50,9 @@ def grep(regex, filename):
     return ret
 
 class Pkg:
-    file_regex=re.compile("\.([^:]+):\s+(.*)")
+    file_regex=re.compile("(?:\.)?([^:]+):\s+(.*)")
 
-    def __init__(self, filename, dirname, header=None):
+    def __init__(self, filename, dirname, header=None, is_source=0):
 	self.filename=filename
 	self.extracted=0
 	self.dirname=dirname
@@ -66,7 +66,7 @@ class Pkg:
         
         if header:
             self.header=header
-            self.is_source=0
+            self.is_source=is_source
         else:
             # Create a package object from the file name
             fd=os.open(filename, os.O_RDONLY)
@@ -103,6 +103,9 @@ class Pkg:
             cmd=commands.getstatusoutput(str)
 	    self.extracted=1
 
+    def checkSignature(self):
+        return commands.getstatusoutput("rpm -K " + self.filename)
+    
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
 	if self.file_info == None:
@@ -282,11 +285,47 @@ class Pkg:
                     flags=[flags]
                 for loop in range(len(versions)):
                     self._provides.append((names[loop], versions[loop], flags[loop]))
-            
+
+# Class to provide an API to an installed package
+class InstalledPkg(Pkg):
+    def __init__(self, name):
+        db = rpm.opendb()
+        tab = db.findbyname(name)
+        if not tab:
+            del db
+            raise KeyError, name
+        Pkg.__init__(self, name, '/', db[tab[0]])
+        del db
+        self.extracted = 1
+        
+    def cleanup(self):
+        pass
+
+    def checkSignature(self):
+        return (0, 'fake: pgp md5 OK')
+
+    # return the array of info returned by the file command on each file
+    def getFilesInfo(self):
+	if self.file_info == None:
+	    self.file_info=[]
+            cmd='file'
+            for f in self.files().keys():
+                cmd=cmd + ' ' + f
+            lines=commands.getoutput(cmd)
+            #print lines
+	    lines=string.split(lines, "\n")
+	    for l in lines:
+		#print l
+		res=Pkg.file_regex.search(l)
+		if res:
+		    self.file_info.append([res.group(1), res.group(2)])
+            #print self.file_info
+	return self.file_info
+
 if __name__ == '__main__':
     import sys
     for p in sys.argv[1:]:
-        pkg=Pkg(sys.argv[1], "/tmp")
+        pkg=Pkg(sys.argv[1])
         print "Requires:", pkg.requires()
         print "Prereq:", pkg.prereq()
         print "Conflicts:", pkg.conflicts()
