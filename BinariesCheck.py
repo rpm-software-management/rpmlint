@@ -15,6 +15,7 @@ import commands
 import string
 import sys
 import Config
+import Pkg
 
 DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib')
 
@@ -84,6 +85,7 @@ system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*\\.so\\.([0-9][.0-9]*).*|.*?([0-9][.0-9]*)\\.so')
+la_regex=re.compile('\.la$')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -201,6 +203,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 					    printError(pkg, 'library-not-linked-against-libc', i[0])
 					else:
 					    printError(pkg, 'program-not-linked-against-libc', i[0])
+            else:
+                if la_regex.search(i[0]):
+                    if Pkg.grep('tmp|home', pkg.dirname + '/' + i[0]):
+                        printError(pkg, 'la-file-with-invalid-dir-reference', i[0])
+
         if has_lib != []:
             if exec_files != []:
                 for f in exec_files:
@@ -285,6 +292,9 @@ themselves.''',
 
 'incoherent-version-in-name',
 '''The package name should contain the major version of the library.''',
+
+'la-file-with-invalid-dir-reference',
+'The .la file contains a reference to /tmp or /home.',
 
 )
 
