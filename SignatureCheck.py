@@ -17,10 +17,10 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
     pgp_regex=re.compile("pgp|gpg", re.IGNORECASE)
     
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
+	AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
 
     def check(self, pkg, verbose):
-	res=commands.getstatusoutput("rpm -K " + pkg.filename)
+	res=pkg.checkSignature()
 	if not res or res[0] != 0:
 	    sys.stderr.write("error checking signature of " + pkg.filename + "\n")
 	else:
