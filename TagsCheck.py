@@ -487,21 +487,26 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if p[1] and not epoch_regex.search(p[1]):
                     printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
 
+	name=pkg[rpm.RPMTAG_NAME]
         deps=pkg.requires() + pkg.prereq()
+        devel_depend=0
+        is_devel=(not pkg.isSource()) and devel_regex.search(name)
         for d in deps:
             if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
                 printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
-
-	name=pkg[rpm.RPMTAG_NAME]
+            if not devel_depend and not is_devel:
+                if devel_regex.search(d[0]):
+                    printError(pkg, 'devel-dependency', d[0])
+                    devel_depend=1
+                    
 	if not name:
 	    printError(pkg, 'no-name-tag')
 	else:
-            res=(not pkg.isSource()) and devel_regex.search(name)
-            if res:
-                base=res.group(1)
+            if is_devel:
+                base=is_devel.group(1)
                 dep=None
                 has_so=0
                 for f in pkg.files().keys():
@@ -795,6 +800,9 @@ Epoch tag.''',
 
 'no-epoch-in-dependency',
 '''Your package contains a versioned dependency without an Epoch.''',
+
+'devel-dependency',
+'''Your package has a dependency on a devel package whereas it's not a devel package.''',
 
 )
     
