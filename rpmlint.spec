@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.22
+%define version 0.23
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Sep 29 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.23-1mdk
+- MenuCheck.py: added Applications/Accessibility.
+                check that menu	files are readable by everyone.
+- Config.py: removed exception for /home.
+             added exceptions for vixie-cron.
+- FilesCheck.py: check cvs internal files.
+
 * Tue Sep 12 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.22-1mdk
 - PostCheck.py: print a warning on empty script.
 - FilesCheck.py: added postgres and apache to default users.
