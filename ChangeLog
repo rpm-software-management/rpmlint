@@ -1,9 +1,9 @@
-2005-01-24 13:50  rgarciasuarez
+2005-01-24 13:50  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Add a new warning for perl modules installed under
 	  site_perl instead of vendor_perl
 
-2005-01-24 12:11  rgarciasuarez
+2005-01-24 12:11  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Perl modules go under vendor_perl, not site_perl
 
@@ -101,20 +101,20 @@
 
 	* Makefile: clean the build
 
-2004-12-19 18:56  rgarciasuarez
+2004-12-19 18:56  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* TagsCheck.py: The Lucent Public Licence (Plan9) is
 	  opensource.org-approved.
 
-2004-12-19 00:25  guillomovitch
+2004-12-19 00:25  Guillaume Rousse <guillomovitch@mandrake.org>
 
 	* rpmlint.bash-completion: initial import
 
-2004-12-18 17:19  guillomovitch
+2004-12-18 17:19  Guillaume Rousse <guillomovitch@mandrake.org>
 
 	* FilesCheck.py: typo
 
-2004-12-06 15:22  rgarciasuarez
+2004-12-06 15:22  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* SpecCheck.py: Clarify the use-of-RPM_SOURCE_DIR message
 	  explanation
@@ -170,7 +170,7 @@
 
 	* rpmlint.py: exit on C-c (Michael Scherer)
 
-2004-11-28 23:56  guillomovitch
+2004-11-28 23:56  Guillaume Rousse <guillomovitch@mandrake.org>
 
 	* NamingPolicyCheck.py: ocaml naming policy
 
@@ -179,12 +179,12 @@
 	* PostCheck.py: doc for postin-without-ghost-file-creation (Pascal
 	  Terjan)
 
-2004-09-22 16:22  mscherer
+2004-09-22 16:22  Michael Scherer <mscherer@mandrake.org>
 
 	* Config.py: - some code factorisation - fix addCheck ( was not
 	  useable since it was a tuple instead of a list )
 
-2004-08-30 04:56  rgarciasuarez
+2004-08-30 04:56  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Minor nit in the regexp that checks that perl
 	  module rpms should come without the source tarball MANIFEST.
@@ -226,7 +226,7 @@
 	* Config.py: added exceptions for perl and dyalog on
 	  devel-file-in-non-devel-package
 
-2004-07-13 07:15  rgarciasuarez
+2004-07-13 07:15  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Add a warning for MANIFEST* files in perl modules
 
@@ -234,17 +234,17 @@
 
 	* BinariesCheck.py: add ruby exceptions like perl and python.
 
-2004-07-05 04:25  mscherer
+2004-07-05 04:25  Michael Scherer <mscherer@mandrake.org>
 
 	* TagsCheck.py: - added useless-explicit-provides ( check if there
 	  is 2 times the same provides )
 
-2004-05-17 11:47  mscherer
+2004-05-17 11:47  Michael Scherer <mscherer@mandrake.org>
 
 	* rpmlint.py: - fix -I, rpmlint didn't work f run without the
 	  option.
 
-2004-05-07 17:28  mscherer
+2004-05-07 17:28  Michael Scherer <mscherer@mandrake.org>
 
 	* rpmlint.py: added option -I, to print description of the error
 	  passed on commandline
@@ -257,7 +257,7 @@
 
 	* rpmlint.spec: 0.59-1mdk
 
-2004-04-30 10:53  mscherer
+2004-04-30 10:53  Michael Scherer <mscherer@mandrake.org>
 
 	* TagsCheck.py: check if a package requires a interpreter in
 	  /usr/local/bin/
@@ -736,11 +736,11 @@
 
 	* FilesCheck.py: added outside-libdir-files
 
-2003-01-09 11:49  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2003-01-09 11:49  Chmouel Boudjnah
 
 	* Config.py: Add modutils rules.
 
-2003-01-07 14:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2003-01-07 14:40  Chmouel Boudjnah
 
 	* Config.py: fix pcmcia-cs regexp.
 
@@ -1097,11 +1097,11 @@
 
 	* Makefile: compile.py takes an extra argument now.
 
-2002-01-07 14:04  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2002-01-07 14:04  Chmouel Boudjnah
 
 	* setuplist.py: Sync with version 2.2.0-18mdk  of setup package
 
-2002-01-07 14:04  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2002-01-07 14:04  Chmouel Boudjnah
 
 	* Config.py: Add exceptions for wine
 
@@ -1114,7 +1114,7 @@
 
 	* Config.py: added exception for kdebase.
 
-2001-12-04 15:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-12-04 15:41  Chmouel Boudjnah
 
 	* setuplist.py: Sync with version 2.2.0-16mdk  of setup package
 
@@ -1145,16 +1145,16 @@
 	* TagsCheck.py: group "Development/KDE and QT" renamed
 	  "Development/KDE and Qt"
 
-2001-11-27 16:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-27 16:47  Chmouel Boudjnah
 
 	* Config.py: Add some exceptions for zero-lenght files in setup
 	  packages.
 
-2001-11-27 16:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-27 16:40  Chmouel Boudjnah
 
 	* setuplist.py: Sync with version  of setup package
 
-2001-11-27 16:31  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-27 16:31  Chmouel Boudjnah
 
 	* Config.py: mandrake_consmap doen't have a status and reload entry
 	  which is normal.
@@ -1208,7 +1208,7 @@
 
 	* setuplist.py: setup 2.2.0-13mdk
 
-2001-11-21 17:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-21 17:03  Chmouel Boudjnah
 
 	* PostCheck.py: Don't print error about percent if post-script has
 	  a %%.
@@ -1240,11 +1240,11 @@
 	* BinariesCheck.py: check if .la files contain tmp or home
 	  references.
 
-2001-11-13 14:58  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-13 14:58  Chmouel Boudjnah
 
 	* Config.py: Fix regexp with emacs.*el
 
-2001-11-13 14:57  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-11-13 14:57  Chmouel Boudjnah
 
 	* Config.py: Don't do dependences on locale-el on all emacs and
 	  xemacs el package.
@@ -1354,7 +1354,7 @@
 
 	* BinariesCheck.py: check for new style of pic sections.
 
-2001-10-10 15:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-10-10 15:39  Chmouel Boudjnah
 
 	* FilesCheck.py: Check if kernel modules are in the kernel package.
 
@@ -1380,12 +1380,12 @@
 	* BinariesCheck.py: Warn for man pages without version in library
 	  packages.
 
-2001-10-02 19:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-10-02 19:55  Chmouel Boudjnah
 
 	* DistributionCheck.py: More explicit path regexp check for info
 	  files.
 
-2001-09-29 23:30  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-09-29 23:30  Chmouel Boudjnah
 
 	* Config.py: execptions for shadow-utils package.
 
@@ -1416,19 +1416,19 @@
 
 	* TagsCheck.py: added the https address as a valid one.
 
-2001-09-28 15:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-09-28 15:40  Chmouel Boudjnah
 
 	* Config.py: ipsec.secrets is normal to be not readable.
 
-2001-09-28 15:32  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-09-28 15:32  Chmouel Boudjnah
 
 	* Config.py: mandrake_consmap like mandrake_(fistime|everytime)
 
-2001-09-28 15:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-09-28 15:15  Chmouel Boudjnah
 
 	* Config.py: Add exeptions for traceoute6 and ping6 setuid.
 
-2001-09-28 12:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-09-28 12:52  Chmouel Boudjnah
 
 	* Config.py: Add nfs-utils execptions.
 
@@ -1445,11 +1445,11 @@
 
 	* FilesCheck.py: added /etc/logrotate.d entry check.
 
-2001-08-24 13:21  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-08-24 13:21  Chmouel Boudjnah
 
 	* Config.py: Add execpt for initscripts.
 
-2001-08-23 14:08  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-08-23 14:08  Chmouel Boudjnah
 
 	* Config.py: iputils setuid ping6/tracroute6, safe as they drop it
 	  VERY early.
@@ -1494,7 +1494,7 @@
 
 	* MenuCheck.py: added a check for / in menu titles.
 
-2001-08-13 11:14  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-08-13 11:14  Chmouel Boudjnah
 
 	* FilesCheck.py: Add wine groups.
 
@@ -1502,7 +1502,7 @@
 
 	* I18NCheck.py: Added 'bs' as a valid language code name
 
-2001-08-04 18:36  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-08-04 18:36  Chmouel Boudjnah
 
 	* Config.py: Add a filter for reiserfsprogs
 	  dangling-relative-symlink /sbin/fsck.reiserfs ../bin/true
@@ -1567,27 +1567,27 @@
 
 	* I18NCheck.py: added two more language codes
 
-2001-07-06 20:40  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-06 20:40  Christian Belisle
 
 	* rpmlint.spec: 0.33-2mdk
 
-2001-07-06 18:59  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-06 18:59  Christian Belisle
 
 	* rpmlint.spec: Version 0.33-2mdk, Added descriptions
 
-2001-07-06 18:56  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-06 18:56  Christian Belisle
 
 	* TagsCheck.py: Added descriptions
 
-2001-07-06 00:14  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-06 00:14  Christian Belisle
 
 	* TagsCheck.py: Added descriptions.
 
-2001-07-05 20:44  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-05 20:44  Christian Belisle
 
 	* TagsCheck.py: Added entries for descriptions.
 
-2001-07-05 18:11  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-05 18:11  Christian Belisle
 
 	* SpecCheck.py: Added descriptions.
 
@@ -1599,23 +1599,23 @@
 
 	* I18NCheck.py: added nn as a valid subdir of /usr/share/local.
 
-2001-07-03 23:13  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-03 23:13  Christian Belisle
 
 	* SpecCheck.py: Added entries for the descriptions
 
-2001-07-03 21:53  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-03 21:53  Christian Belisle
 
 	* MenuCheck.py: Added entries to put descriptions.
 
-2001-07-03 21:43  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-03 21:43  Christian Belisle
 
 	* SourceCheck.py: Added descriptions.
 
-2001-07-03 21:32  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-03 21:32  Christian Belisle
 
 	* SignatureCheck.py: Added a description.
 
-2001-07-03 21:01  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-07-03 21:01  Christian Belisle
 
 	* LSBCheck.py: Added descriptions
 
@@ -1635,15 +1635,15 @@
 
 	* BinariesCheck.py: removed debug trace
 
-2001-06-27 21:41  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-27 21:41  Christian Belisle
 
 	* InitScriptCheck.py: Added descriptions.
 
-2001-06-27 21:08  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-27 21:08  Christian Belisle
 
 	* FilesCheck.py: Added descriptions.
 
-2001-06-26 20:48  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-26 20:48  Christian Belisle
 
 	* ConfigCheck.py, DistributionCheck.py, FHSCheck.py: Added
 	  descriptions.
@@ -1677,32 +1677,32 @@
 
 	* FilesCheck.py: added named user and group to the exception list.
 
-2001-06-19 02:16  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 02:16  Christian Belisle
 
 	* FHSCheck.py, I18NCheck.py, InitScriptCheck.py, LSBCheck.py,
 	  rpmlint.spec: Added few descriptions
 
-2001-06-19 02:01  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 02:01  Christian Belisle
 
 	* DistributionCheck.py: Added few descriptions
 
-2001-06-19 00:43  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 00:43  Christian Belisle
 
 	* DistributionCheck.py: Added few descriptions
 
-2001-06-18 23:16  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-18 23:16  Christian Belisle
 
 	* ConfigCheck.py: Added few descriptions
 
-2001-06-18 23:00  Christian Belisle <cbelisle@mandrakesoft.com>
+2001-06-18 23:00  Christian Belisle
 
 	* FilesCheck.py: Added few descriptions
 
-2001-06-15 17:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-06-15 17:18  Chmouel Boudjnah
 
 	* Config.py: Add more filesystem exclude.
 
-2001-06-14 14:25  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-06-14 14:25  Chmouel Boudjnah
 
 	* Config.py: /var/run/usb as 700 is normal.
 
@@ -1728,7 +1728,7 @@
 
 	* MenuCheck.py: added new Office sub menus.
 
-2001-06-12 14:34  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-06-12 14:34  Chmouel Boudjnah
 
 	* FilesCheck.py: Add /etc/profile.d/.
 
@@ -1828,19 +1828,19 @@
 
 	* check-install.py: factorized checks
 
-2001-04-01 23:19  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-04-01 23:19  Chmouel Boudjnah
 
 	* FilesCheck.py: Add rpcuser
 
-2001-03-15 02:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-03-15 02:03  Chmouel Boudjnah
 
 	* Config.py: Expections for ldconfig.
 
-2001-03-15 01:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-03-15 01:55  Chmouel Boudjnah
 
 	* Config.py: Some more exeptions for initscripts.
 
-2001-03-15 01:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-03-15 01:52  Chmouel Boudjnah
 
 	* Config.py: Add some Execptions for initscripts.
 
@@ -1848,7 +1848,7 @@
 
 	* TagsCheck.py: check length of summary and description lines
 
-2001-02-21 12:34  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-02-21 12:34  Chmouel Boudjnah
 
 	* Config.py: netkit-base and iputils is the same for Filter.
 
@@ -1901,7 +1901,7 @@
 
 	* LSBCheck.py: first version
 
-2001-01-23 14:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2001-01-23 14:41  Chmouel Boudjnah
 
 	* TagsCheck.py: Add https as valid url.
 
@@ -1919,7 +1919,7 @@
 
 	* rpmlint.py, rpmlint.spec: 0.29
 
-2000-12-07 16:21  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-12-07 16:21  Chmouel Boudjnah
 
 	* PostCheck.py: Add /sbin/sash as VALID_SHELLS.
 
@@ -1955,22 +1955,22 @@
 	* TagsCheck.py: for devel packages, check dependency on lib package
 	  only when a .so file is present.
 
-2000-11-29 05:57  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-11-29 05:57  Chmouel Boudjnah
 
 	* Config.py: addFilter W: dev86-devel no-provides dev8-devel on
 	  this warning.
 
-2000-11-29 05:29  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-11-29 05:29  Chmouel Boudjnah
 
 	* Config.py: add some execptions for pam (0750 dir for /etc/default
 	  is normal as weel to have gpasswd and chage as suid).
 
-2000-11-29 04:51  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-11-29 04:51  Chmouel Boudjnah
 
 	* Config.py: the dangling symlink in dev are not dangled they are
 	  relatives !!!
 
-2000-11-29 02:14  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-11-29 02:14  Chmouel Boudjnah
 
 	* Config.py: Don't check info-file-with-install-info for bash since
 	  it's by default in the dir file.
@@ -2083,7 +2083,7 @@
 	* TagsCheck.py: don't check if package provides itself because rpm
 	  4.0 always does it.
 
-2000-10-17 11:46  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-10-17 11:46  Chmouel Boudjnah
 
 	* Config.py: Fix exception for glibc.
 
@@ -2157,7 +2157,7 @@
 
 	* SpecCheck.py: first version
 
-2000-10-10 20:23  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-10-10 20:23  Chmouel Boudjnah
 
 	* MenuCheck.py: /lib/cpp errors to /dev/null for new cpp.
 
@@ -2273,11 +2273,11 @@
 	* MenuCheck.py: check hardcoded path in icon field and large, mini,
 	  normal icon files.
 
-2000-08-29 00:09  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-29 00:09  Chmouel Boudjnah
 
 	* PostCheck.py: Fix typo in check of /usr/bin/perl.
 
-2000-08-29 00:08  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-29 00:08  Chmouel Boudjnah
 
 	* PostCheck.py: Check perl script like we do for bash script.
 
@@ -2285,7 +2285,7 @@
 
 	* I18NCheck.py: updated locales list
 
-2000-08-26 21:17  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-26 21:17  Chmouel Boudjnah
 
 	* FilesCheck.py: Only check perl_temp_file in a /perl/ directory.
 
@@ -2434,15 +2434,15 @@
 
 	* ScriptCheck.py:     * replaced by PostCheck.py
 
-2000-08-03 14:13  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-03 14:13  Chmouel Boudjnah
 
 	* config: Add few filters for util-linux
 
-2000-08-01 04:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-01 04:40  Chmouel Boudjnah
 
 	* config: Correct pam setuid-binary execptions.
 
-2000-08-01 04:37  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-08-01 04:37  Chmouel Boudjnah
 
 	* config: mount and umount are suid binary.
 
@@ -2461,34 +2461,34 @@
 		  * check chkconfig calls for package that comes with an
 		  /etc/rc.d/init.d/script.
 
-2000-07-29 21:38  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:38  Chmouel Boudjnah
 
 	* MenuCheck.py: If we use kdesu check in it present in Requires:
 	  Prereq:
 
-2000-07-29 21:27  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:27  Chmouel Boudjnah
 
 	* MenuCheck.py: Fix again kdesu (i hate python indentation :-()
 
-2000-07-29 21:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:10  Chmouel Boudjnah
 
 	* MenuCheck.py: Get kdesu check to work :-\
 
-2000-07-29 19:58  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 19:58  Chmouel Boudjnah
 
 	* Makefile: Add a changelog rules to be used with cvs2cl.
 
-2000-07-29 19:50  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 19:50  Chmouel Boudjnah
 
 	* Config.py, ScriptCheck.py: check syntax of (post|pre)(un)?install
 	  script, currently only bash is supported.
 
-2000-07-28 04:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-28 04:03  Chmouel Boudjnah
 
 	* FilesCheck.py: install-info can't be	RPMTAG_POSTUNPROG or
 	  RPMTAG_POSTPROG
 
-2000-07-27 14:35  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-27 14:35  Chmouel Boudjnah
 
 	* config: Add e2fsprogs changes.
 
@@ -2497,29 +2497,29 @@
 	* config: add exception for some devel packages, updated the filter
 	  for setuid perl's
 
-2000-07-21 20:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-21 20:28  Chmouel Boudjnah
 
 	* config: Add some glibc exceptions.
 
-2000-07-20 17:01  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-20 17:01  Chmouel Boudjnah
 
 	* FilesCheck.py: if there is info files check to see if we have a
 	  install-info in the %post(un)?
 
-2000-07-20 01:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-20 01:55  Chmouel Boudjnah
 
 	* config: filter me the "shadow-utils dangling-symlink /usr/bin/sg
 	  newgrp"
 
-2000-07-19 20:56  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 20:56  Chmouel Boudjnah
 
 	* config: static binaries for ldconfig is permit :-)
 
-2000-07-19 20:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 20:26  Chmouel Boudjnah
 
 	* config: Add some exeptions for kernel packages.
 
-2000-07-19 12:51  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 12:51  Chmouel Boudjnah
 
 	* config: /bin/ping as suid binary is correct.
 
@@ -2553,7 +2553,7 @@
 	* FilesCheck.py:	* added check dandling symlinks.
 		  * check the presence of /usr(/share)/info/dir
 
-2000-07-19 10:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 10:15  Chmouel Boudjnah
 
 	* config: Exception for pam package.
 
@@ -2561,17 +2561,17 @@
 
 	* README.CVS:	* give command line example.
 
-2000-07-19 07:42  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:42  Chmouel Boudjnah
 
 	* MenuCheck.py: If the menu_command contain a kdesu -c "", check
 	  instead for the command instead of kdesu.
 
-2000-07-19 07:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:41  Chmouel Boudjnah
 
 	* FilesCheck.py: By default {doc,man,info} in /usr/share, product
 	  an error when the package use /usr/.
 
-2000-07-19 07:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:18  Chmouel Boudjnah
 
 	* config: su is suid and it normal !!
 
@@ -2587,12 +2587,12 @@
 
 	* PostCheck.py: 	* first version.
 
-2000-07-01 15:24  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-01 15:24  Chmouel Boudjnah
 
 	* config: Remove lftp .So warning (should be fixed in rpmlint), add
 	  expeption for slocate.
 
-2000-06-30 18:36  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-30 18:36  Chmouel Boudjnah
 
 	* config: Add sudo exception.
 
@@ -2636,7 +2636,7 @@
 	* Pkg.py:	* (_gatherDepInfo) corrected the conflicts and
 	  provides acquisition.
 
-2000-06-16 20:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-16 20:39  Chmouel Boudjnah
 
 	* config: add W: lftp shared-lib-without-dependency-information
 	  /usr/lib/lftp/.*.so
@@ -2657,7 +2657,7 @@
 
 	* MenuCheck.py: 	* added a list of valid needs.
 
-2000-06-15 10:54  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-15 10:54  Chmouel Boudjnah
 
 	* config: add execption for "I: iceconf strange-needs icewm
 	  /usr/lib/menu/iceconf"
@@ -2704,38 +2704,38 @@
 	* FilesCheck.py:	* check ldconfig in %post and %postun.
 		  * added urpmi to default group list.
 
-2000-04-07 20:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:52  Chmouel Boudjnah
 
 	* rpmlint.spec: Use %{_tmppath}
 
-2000-04-07 20:49  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:49  Chmouel Boudjnah
 
 	* MenuCheck.py: Add check on icons, if no icon print a warning, if
 	  icon specified (with a long path, not with relative path) is	not
 	  here print a Error.
 
-2000-04-07 20:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:47  Chmouel Boudjnah
 
 	* FilesCheck.py: package -source are also devel package.
 
-2000-04-06 00:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-06 00:26  Chmouel Boudjnah
 
 	* config: traceroute need to be setuid-binary
 
-2000-04-05 20:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-05 20:28  Chmouel Boudjnah
 
 	* config: Add exception rules for initscripts.
 
-2000-04-05 04:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-05 04:47  Chmouel Boudjnah
 
 	* MenuCheck.py: Move Applications/Terminals to Terminals
 
-2000-04-04 04:29  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-04 04:29  Chmouel Boudjnah
 
 	* MenuCheck.py: Add Session/Windowmanagers in List of good
 	  window-managers.
 
-2000-04-04 00:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-04 00:10  Chmouel Boudjnah
 
 	* config: Add hackkernel* like kernel* for the
 	  devel-file-in-non-devel-package stuff.
@@ -2763,7 +2763,7 @@
 	* MenuCheck.py: 	* corrected default menu (thanks to
 	  DindinX).
 
-2000-03-30 05:59  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-30 05:59  Chmouel Boudjnah
 
 	* config: add /mnt/disk like /mnt/(floppy|cdrom) and clean up
 	  regex.
@@ -2803,17 +2803,17 @@
 
 	* Config.py:	     * (DEFAULT_CHECKS): added MenuCheck.
 
-2000-03-23 13:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 13:40  Chmouel Boudjnah
 
 	* config: don't check devel-file-in-non-devel-package for
 	  alsa-source
 
-2000-03-23 11:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 11:18  Chmouel Boudjnah
 
 	* config: it's allow to have a tmpdir as 700 in etcskel and
 	  rootfile.
 
-2000-03-23 11:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 11:10  Chmouel Boudjnah
 
 	* config: Don't check for config files on /root/*.
 
@@ -2847,7 +2847,7 @@
 
 	* FilesCheck.py:	* check files on /home.
 
-2000-03-09 22:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-09 22:18  Chmouel Boudjnah
 
 	* FilesCheck.py: Correct cdwriters to cdwriter Add x10 group.
 
@@ -3180,7 +3180,7 @@
 
 	* rpmlint.spec: 	* corrected typo.
 
-1999-10-08 14:22  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-08 14:22  Chmouel Boudjnah
 
 	* rpmlint.spec: [no log message]
 
@@ -3306,14 +3306,14 @@
 
 	* rpmlint.py:	* 0.2
 
-1999-10-01 09:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-01 09:15  Chmouel Boudjnah
 
 	* AbstractCheck.py, AllChecks.py, BinariesCheck.py, INSTALL,
 	  MandrakeCheck.py, PermissionsCheck.py, Pkg.py, README,
 	  TagsCheck.py, rpmlint, rpmlint.py, COPYING, Makefile,
 	  rpmlint.spec: First_import
 
-1999-10-01 09:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-01 09:15  Chmouel Boudjnah
 
 	* AbstractCheck.py, AllChecks.py, BinariesCheck.py, INSTALL,
 	  MandrakeCheck.py, PermissionsCheck.py, Pkg.py, README,
