@@ -455,6 +455,15 @@ addFilter('rpm postin-without-ghost-file-creation')
 # packages without binary but built with other binary packages
 addFilter('(Mesa|hylafax|openldap|xclass|gtk\+mdk) no-binary')
 
+#extipl
+addFilter('extipl only-non-binary-in-usr-lib')
+
+#ocamltk
+addFilter('ocamltk devel-file-in-non-devel-package')
+
+#drakconf
+addFilter('drakconf invalid-menu-section Configuration /usr/lib/menu/drakconf')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
