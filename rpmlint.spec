@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.55
+%define version 0.56
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,17 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Feb 10 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.56-1mdk
+- I18NCheck.py: changed uz@Latn locale
+- MenuCheck.py: added missing ',' (Michael Scherer)
+                removed duplicated Physics entry
+- NamingPolicyCheck.py: Better error message. Fixed bug when no
+  files are present. (Michael Scherer)
+- rpmlint.py: more robust processing when scanning a directory
+  (Michael Scherer)
+  force to have / in directory names to allow to have directory
+  with the same name as an installed package (Michael Scherer)
+
 * Tue Jan 27 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.55-1mdk
 - final menu structure
 
