@@ -417,6 +417,7 @@ extension_regex=release_ext and re.compile(release_ext + '$')
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_regex=re.compile('(.*)-devel')
 devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
@@ -502,7 +503,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
                     devel_depend=1
-                    
+            if is_source and lib_devel_number_regex.search(d[0]):
+                printError(pkg, 'invalid-build-requires', d[0])
+
 	if not name:
 	    printError(pkg, 'no-name-tag')
 	else:
@@ -804,6 +807,10 @@ Epoch tag.''',
 
 'devel-dependency',
 '''Your package has a dependency on a devel package whereas it's not a devel package.''',
+
+'invalid-build-requires',
+'''Your source package contains a dependency not compliant with the lib64 naming.
+This BuildRequires dependency will not be resolved on lib64 platforms (i.e. amd64).''',
 
 )
     
