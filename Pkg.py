@@ -62,7 +62,8 @@ class Pkg:
 	self._ghost_files=None
 	self._files=None
 	self.required=None
-
+        self._req_names=-1
+        
         if header:
             self.header=header
             self.is_source=0
@@ -228,6 +229,11 @@ class Pkg:
         self._gatherDepInfo()
         return self._prereq
 
+    def req_names(self):
+        if self._req_names == -1:
+            self._req_names = map(lambda x: x[0], self.requires() + self.prereq())
+        return self._req_names
+    
     def conflicts(self):
         self._gatherDepInfo()
         return self._conflicts
