@@ -84,7 +84,7 @@ sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
-soversion_regex=re.compile('.*\\.so\\.([0-9][.0-9]*).*|.*?([0-9][.0-9]*)\\.so')
+soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib/pkgconfig/')
 
 def dir_base(path):
