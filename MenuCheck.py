@@ -78,6 +78,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     package=re.compile("\?package\((.*)\):")
     needs=re.compile("needs=(\"([^\"]+)\"|([^ \t\"]+))")
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
+    command=re.compile("command=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     
     def __init__(self):
@@ -135,6 +136,22 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printInfo(pkg, "strange-needs", needs, f)
                     else:
                         printInfo(pkg, "unable-to-parse-menu-needs", line)
+
+                    res=MenuCheck.command.search(line)
+                    if res:
+                        command=res.group(1)
+                        try:
+                            if command[0] == '/':
+                                files[command]
+                            else:
+                                if not (files.has_key("/bin/" + command) or
+                                        files.has_key("/usr/bin/" + command) or
+                                        files.has_key("/usr/X11R6/bin/" + command)):
+                                    raise KeyError, command
+                        except KeyError:
+                            printWarning(pkg, "menu-command-not-in-package", command)
+                    else:
+                        printInfo(pkg, "unable-to-parse-menu-command", line)
                         
 # Create an object to enable the auto registration of the test
 check=MenuCheck()
