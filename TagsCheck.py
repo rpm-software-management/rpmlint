@@ -112,7 +112,8 @@ DEFAULT_VALID_LICENSES = (
     'IBM Public License',
     'Apache License',
     'PHP License',
-    'BSD-Style',
+    'Public Domain',
+    'Modified CNRI Open Source License'
     )
 
 DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com'
@@ -383,7 +384,9 @@ release_ext=Config.getOption('ReleaseExtension', 'mdk')
 extension_regex=release_ext and re.compile(release_ext + '$')
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_regex=re.compile('(.*)-devel')
+devel_number_regex=re.compile('(.*)[0-9]+-devel')
 capital_regex=re.compile('[0-9A-Z]')
+url_regex=re.compile('^(ftp|http)://')
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -447,6 +450,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], version)
                         else:
                             printWarning(pkg, 'no-version-dependency-on', base, version)
+                res=devel_number_regex.search(name)
+                if not res:
+                    printWarning(pkg, 'no-major-in-name', name)
+                else:
+                    prov=res.group(1) + '-devel'
+                    if not prov in map(lambda x: x[0], pkg.provides()):
+                        printWarning(pkg, 'no-provides', prov)
                 
 	summary=pkg[rpm.RPMTAG_SUMMARY]
 	if not summary:
@@ -496,12 +506,17 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not license:
             printError(pkg, 'no-license')
         else:
-            licenses=re.split('(?:and|or|&|\s|-|-like|/|ish|-style)+', license)
+            licenses=re.split('(?:and|or|&|\s|-like|/|ish|-style|-Style|-)+', license)
             for l in licenses:
-                if not l in VALID_LICENSES:
+                if l != '' and not l in VALID_LICENSES:
                     printWarning(pkg, 'invalid-license', license)
                     break
 
+        url=pkg[rpm.RPMTAG_URL]
+        if url and url != 'none':
+            if not url_regex.search(url):
+                printWarning(pkg, 'invalid-url', url)
+                
 check=TagsCheck()
 
 # TagsCheck.py ends here
