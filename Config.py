@@ -535,17 +535,17 @@ addFilter('ppp non-readable /etc/ppp/pap-secrets 0600')
 
 # devel-dependancy wrong warnings
 addFilter('gcc devel-dependency glibc-devel')
-addFilter('gcc-c++ devel-dependency libstdc++5-devel')
+addFilter('gcc-c\+\+ devel-dependency libstdc\+\+5-devel')
 addFilter('gcc-java devel-dependency libgcj4-devel')
 addFilter('gcc2.96 devel-dependency glibc-devel')
-addFilter('gcc2.96-c++ devel-dependency glibc-devel')
+addFilter('gcc2.96-c\+\+ devel-dependency glibc-devel')
 addFilter('gcj-tools devel-dependency libgcj4-devel')
 addFilter('glade devel-dependency gnome-libs-devel')
 addFilter('glademm devel-dependency libgtkmm-devel')
 addFilter('kdevelop devel-dependency libpng3-devel')
 addFilter('kernel-source devel-dependency glibc-devel')
-addFilter('libsigc++-examples devel-dependency libsigc++-devel')
-addFilter('libsigc++1.0-examples devel-dependency libsigc++1.0-devel')
+addFilter('libsigc\+\+-examples devel-dependency libsigc\+\+-devel')
+addFilter('libsigc\+\+1\.0-examples devel-dependency libsigc\+\+1\.0-devel')
 
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
