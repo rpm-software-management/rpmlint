@@ -61,7 +61,7 @@ except getopt.error:
 # process options
 checkdir="/usr/share/rpmlint"
 verbose=0
-extract_dir="/tmp"
+extract_dir=Config.getOption('ExtractDir', "/tmp")
 
 # load global config file
 try:
@@ -91,6 +91,7 @@ for o in opt:
 	sys.exit(0)
     elif o[0] == '-E' or o[0] == "--extractdir":
 	extract_dir=o[1]
+        Config.setOption('ExtractDir', extract_dir)
     else:
 	print "unknown option", o
 
@@ -106,19 +107,19 @@ for c in Config.allChecks():
 try:
     # Loop over all file names given in arguments
     for f in args:
-	try:
-	    pkg=Pkg.Pkg(f, extract_dir)
-	except:
-	    sys.stderr.write("Error while reading " + f + "\n")
-	    pkg=None
-	    continue
-
-	if verbose:
-	    printInfo(pkg, "checking")
-	for c in AbstractCheck.AbstractCheck.checks:
-	    c.check(pkg, verbose)
-	    
-	pkg.cleanup()
+        try:
+            pkg=Pkg.Pkg(f, extract_dir)
+        except:
+            sys.stderr.write("Error while reading " + f + "\n")
+            pkg=None
+            continue
+    
+        if verbose:
+            printInfo(pkg, "checking")
+        for c in AbstractCheck.AbstractCheck.checks:
+            c.check(pkg, verbose)
+            
+        pkg.cleanup()
 finally:
     pkg and pkg.cleanup()
     
