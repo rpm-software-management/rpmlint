@@ -108,6 +108,10 @@ DEFAULT_VALID_LICENSES = (
     "MIT",
     "QPL",
     "MPL",
+    "IBM Public License",
+    "Apache License",
+    "PHP License",
+    "BSD-Style",
     )
 
 class TagsCheck(AbstractCheck.AbstractCheck):
