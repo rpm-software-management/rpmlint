@@ -1,3 +1,53 @@
+2000-06-27  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec, ChangeLog:
+		* 0.15
+
+	* README:
+		* added XpmIconPath.
+
+	* MenuCheck.py:
+		* check non transparent pixmaps in icon path.
+
+	* config:
+		* added man for sgid exception.
+		* corrected the regex for /var/catman and /usr/man.
+
+	* BinariesCheck.py:
+		* added a check for soname.
+
+	* TagsCheck.py: 	* removed trace.
+
+	* TagsCheck.py:
+		* added a warning for packages that provide themselves (for Pixel).
+
+	* Pkg.py:
+		* (_gatherDepInfo) corrected the conflicts and provides acquisition.
+
+2000-06-16  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config:
+		* add W: lftp shared-lib-without-dependency-information /usr/lib/lftp/.*.so
+
+2000-06-15  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* Pkg.py:
+		* added a builtin grep.
+
+	* config:
+		* removed stange-needs filters.
+
+	* README:
+		* added ExtraMenuNeeds
+
+	* MenuCheck.py:
+		* added a list of valid needs.
+
+2000-06-15  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config:
+		* add execption for "I: iceconf strange-needs icewm /usr/lib/menu/iceconf"
+
 2000-04-17  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.py rpmlint.spec:

@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.14
+%define version 0.15
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,14 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Tue Jun 27 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.15-1mdk
+- 0.15:
+ o check non transparent pixmaps in icon path
+ o added a check for soname
+ o added a warning for packages that provide themselves (for Pixel)
+ o corrected check for needs in menu files.
+ o various exceptions added.
+
 * Mon Apr 17 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.14-1mdk
 - 0.14:
  o MenuCheck: check old entries from KDE and GNOME and allow entries
