@@ -32,9 +32,6 @@ INCORRECT_LOCALES = {
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 # and /usr/share/man for locale man pages.
 #
-# note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
-# are obsolescnet, but still widely used; some day however they should
-# be removed from this list.
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
 'af', 'am', 'ar', 'az', 'be', 'bg', 'bn', 'br', 'bs', 'ca', 'cs', 'cy',
@@ -45,9 +42,14 @@ CORRECT_SUBDIRS = (
 'ia', 'id', 'is', 'it', 'ja', 'ka', 'kn', 'ko', 'kw', 'lo', 'lt', 'lg', 'lv',
 'mi', 'mk', 'mr', 'ms', 'mt', 'nb', 'nl', 'nn', 'no',
 'oc', 'or', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
-'ro', 'ru', 'sk', 'sl', 'sp', 'sq', 'sr', 'sv',
+'ro', 'ru', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sv',
 'ta', 'te', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz', 'vi', 'wa',
-'xh', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_HK', 'zh_TW', 'zh_TW.Big5'
+'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
+# 
+# note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
+# are obsolescnet, but still widely used; some day however they should
+# be removed from this list.
+'zh_CN.GB2312', 'zh_TW.Big5',
 )
 
 str='-('
