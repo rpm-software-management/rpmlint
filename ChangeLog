@@ -1,3 +1,64 @@
+2001-09-28 21:05  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: check if a menu file is executable.
+
+2001-09-28 20:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check if /tmp or /var/tmp is used.
+	
+	check if update-menus is called without a menu file.
+
+2001-09-28 20:50  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: don't make exception if no_exception is set.
+
+2001-09-28 18:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: added -n/--noexception option to display all the
+	errors/warnings without exceptions from Config.
+
+2001-09-28 17:37  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added the https address as a valid one.
+
+2001-09-28 15:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: ipsec.secrets is normal to be not readable.
+
+2001-09-28 15:32  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: mandrake_consmap like mandrake_(fistime|everytime)
+
+2001-09-28 15:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add exeptions for traceoute6 and ping6 setuid.
+
+2001-09-28 12:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add nfs-utils execptions.
+
+2001-09-14 18:01  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: ghost-files-without-postun =>
+	ghost-files-without-postin
+
+2001-09-13 21:45  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for portsentry.
+
+2001-09-04 17:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added /etc/logrotate.d entry check.
+
+2001-08-24 13:21  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add execpt for initscripts.
+
+2001-08-23 14:08  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: iputils setuid ping6/tracroute6, safe as they drop it
+	VERY early.
+
 2001-08-21 20:57  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.35-1mdk
