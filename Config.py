@@ -172,6 +172,7 @@ addFilter('E: mount setuid-binary /bin/(u)?mount root 04755')
 addFilter('E: util-linux setuid-binary /usr/bin/(newgrp|chsh|chfn) root 04711')
 addFilter('E: util-linux setgid-binary /usr/bin/write tty 02755')
 addFilter('E: X11R6-contrib setgid-binary /usr/X11R6/bin/xman man 02755')
+addFilter('W: dev86-devel no-provides dev8-devel')
 
 #bash
 addFilter("E: bash info-files-without-install-info-post(u|i)n.*bash.info*")
