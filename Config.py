@@ -25,6 +25,8 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "SpecCheck"
                 )
 
+info=0
+
 # handle the list of checks to load
 _checks=[]
 
