@@ -70,12 +70,12 @@ if Config.info:
 """,
 
 'manpage-not-bzipped',
-"""
-""",
+"""Manual Pages are not under the .bz2 extension/format. Please
+run bzip2 <man page file> to bzip it and after, build the package""",
 
 'manpage-not-gzipped',
-"""
-""",
+"""Manual Pages are not under the .gz extension/format. Please
+run gzip <man page file> to gzip it and after, build the package""",
 
 'infopage-not-bzipped',
 """
