@@ -1,3 +1,20 @@
+2003-08-05 12:02  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: don't check devel-dependency on source package
+
+2003-08-05 11:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 2003
+
+2003-08-05 11:58  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* NamingPolicyCheck.py: corrected info reports
+
+2003-08-05 11:49  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: Add /usr/lib/hotplug to hardcoded-library-path
+	exceptions
+
 2003-08-04 21:06  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.51-1mdk
