@@ -1,7 +1,7 @@
-2004-01-23 15:52 David Baudens <baudens@mandrakesoft.com>
+2004-01-23 15:58  David Baudens <baudens@mandrakesoft.com>
 
-	* rpmlint.spec: 0.54-2mdk
-	* MenuCheck.py: replace old menu structure by new menu structure
+	* MenuCheck.py, rpmlint.spec: Replace old menu structure by new
+	  menu structure
 
 2004-01-19 14:12  Frederic Lepied <flepied@mandrakesoft.com>
 
