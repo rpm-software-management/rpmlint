@@ -490,14 +490,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	name=pkg[rpm.RPMTAG_NAME]
         deps=pkg.requires() + pkg.prereq()
         devel_depend=0
-        is_devel=(not pkg.isSource()) and devel_regex.search(name)
+        is_devel=devel_regex.search(name)
+        is_source=pkg.isSource()
         for d in deps:
             if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
                 printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
-            if not devel_depend and not is_devel:
+            if not devel_depend and not is_devel and not is_source:
                 if devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
                     devel_depend=1
@@ -505,7 +506,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	if not name:
 	    printError(pkg, 'no-name-tag')
 	else:
-            if is_devel:
+            if is_devel and not is_source:
                 base=is_devel.group(1)
                 dep=None
                 has_so=0
