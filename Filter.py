@@ -13,17 +13,17 @@ import Config
 def printInfo(pkg, reason, *details):
     _print("I", pkg, reason, details)
     if Config.info:
-        printDetails(reason)
+        printDescriptions(reason)
         
 def printWarning(pkg, reason, *details):
     _print("W", pkg, reason, details)
     if Config.info:
-        printDetails(reason)
+        printDescriptions(reason)
 
 def printError(pkg, reason, *details):
     _print("E", pkg, reason, details)
     if Config.info:
-        printDetails(reason)
+        printDescriptions(reason)
 
 def _print(type, pkg, reason, details):
     s="%s: %s %s" % (type, pkg.name, reason)
@@ -34,10 +34,12 @@ def _print(type, pkg, reason, details):
 	sys.stdout.write(s)
 	sys.stdout.write("\n")
 
-def printDetails(reason):
+def printDescriptions(reason):
     try:
-        sys.stdout.write(_details[reason])
-        sys.stdout.write("\n\n")
+        d = _details[reason]
+        if d and d != '' and d != "\n":
+            sys.stdout.write(d)
+            sys.stdout.write("\n\n")
     except KeyError:
         pass
     
