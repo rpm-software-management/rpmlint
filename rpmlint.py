@@ -158,7 +158,7 @@ extract_dir=Config.getOption('ExtractDir', '/tmp')
 prof=0
 all=0
 conf_file='~/.rpmlintrc'
-
+info_error=0
 # load global config file
 try:
     loadFile('/etc/rpmlint/config')
@@ -172,7 +172,7 @@ for o in opt:
     elif o[0] == '-i' or o[0] == '--info':
         Config.info=1
     elif o[0] == '-I':
-        Config.info_error=o[1]
+        info_error=o[1]
     elif o[0] == '-h' or o[0] == '--help':
 	usage(sys.argv[0])
 	sys.exit(0)
@@ -209,11 +209,11 @@ except:
     
 policy and Config.load_policy(policy)
 
-if Config.info_error:
+if info_error:
     Config.info=1
     for c in Config.allChecks():
         loadCheck(c)
-    for e in Config.info_error.split(','):
+    for e in info_error.split(','):
         print "%s :" % e 
         printDescriptions(e)
     sys.exit(0)
