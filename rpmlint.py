@@ -15,7 +15,6 @@ import getopt
 import Pkg
 import Config
 import os
-import sys
 import stat
 import rpm
 from Filter import *
