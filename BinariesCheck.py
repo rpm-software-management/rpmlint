@@ -12,6 +12,7 @@ import rpm
 import re
 import commands
 import string
+import sys
 
 class BinaryInfo:
 
@@ -44,8 +45,8 @@ class BinaryInfo:
 		    else:
 			r=BinaryInfo.unrecognized_regex.search(l)
 			if r:
-			    sys.stderr.write("file format not recognized for $1\n." % (r.group(1)))
-			    sys.exit(1)
+			    sys.stderr.write("file format not recognized for %s\n." % (r.group(1)))
+			    #sys.exit(1)
 	    
 class BinariesCheck(AbstractCheck.AbstractCheck):
 
