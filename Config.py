@@ -181,8 +181,10 @@ addFilter("W: dev dangling-symlink.*")
 
 #Pam
 addFilter('W: pam devel-file-in-non-devel-package /lib/security/pam_unix_(session|passwd|acct|auth).so')
+addFilter('E: shadow-utils non-standard-dir-perm /etc/default 0750')
 addFilter('E: pam setuid-binary /sbin/(unix|pwdb)_chkpwd root 04(5|7)55')
 addFilter('E: pam subdir-in-bin /sbin/pam_filter/upperLOWER')
+addFilter('E: shadow-utils setuid-binary /usr/bin/(gpasswd|chage) root 04755')
 
 #Kernel
 addFilter('W: alsa(-source)? incoherent-version-in-changelog.*')
