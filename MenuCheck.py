@@ -80,7 +80,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
     command=re.compile("command=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
-    
+    update_menus=re.compile("update-menus")
+
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
 
@@ -107,6 +108,21 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
         if len(menus) > 0:
             dir=pkg.dirName()
+            if menus != []:
+                postin=pkg[rpm.RPMTAG_POSTIN]
+                if not postin:
+                    printError(pkg, "menu-without-postin")
+                else:
+                    if not MenuCheck.update_menus.search(postin):
+                        printError(pkg, "postin-without-update-menus")                    
+                    
+                postun=pkg[rpm.RPMTAG_POSTUN]
+                if not postun:
+                    printError(pkg, "menu-without-postun")
+                else:
+                    if not MenuCheck.update_menus.search(postun):
+                        printError(pkg, "postun-without-update-menus")
+
             for f in menus:
                 # remove comments and handle cpp continuation lines
                 str="/lib/cpp %s%s | grep ^\?" % (dir, f)
