@@ -15,8 +15,9 @@ import getopt
 import Pkg
 import Config
 import os
+from Filter import *
 
-version="0.6.1"
+version="0.7"
 
 # Print usage information
 def usage(name):
@@ -113,7 +114,7 @@ try:
 	    continue
 
 	if verbose:
-	    print "I: checking", pkg.name
+	    printInfo(pkg, "checking")
 	for c in AbstractCheck.AbstractCheck.checks:
 	    c.check(pkg, verbose)
 	    
