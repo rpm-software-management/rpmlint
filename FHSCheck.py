@@ -57,4 +57,18 @@ class FHSCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=FHSCheck()
 
+if Config.info:
+    addDetails(
+'non-standard-dir-in-usr',
+"""
+""",
+
+'FSSTND-dir-in-var',
+"""
+""",
+
+'non-standard-dir-in-var',
+"""
+""",
+)
 # FHSCheck.py ends here

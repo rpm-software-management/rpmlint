@@ -80,4 +80,47 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=InitScriptCheck()
 
+if Config.info:
+    addDetails(
+'init-script-without-chkconfig-postin',
+"""
+""",
+
+'postin-without-chkconfig',
+"""
+""",
+
+'init-script-without-chkconfig-preun',
+"""
+""",
+
+'preun-without-chkconfig',
+"""
+""",
+
+'no-status-entry',
+"""
+""",
+
+'no-reload-entry',
+"""
+""",
+
+'no-chkconfig-line',
+"""
+""",
+
+'no-default-runlever',
+"""
+""",
+
+'subsys-not-user',
+"""
+""",
+
+'incoherent-subsys',
+"""
+""",
+
+)
 # InitScriptCheck.py ends here

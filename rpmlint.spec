@@ -8,7 +8,7 @@
 #############################################################################
 %define name rpmlint
 %define version 0.32
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Mon Jun 18 2001 Christian Belisle <cbelisle@mandrakesoft.com> 0.32-2mdk
+- Added descriptions for the -i option.
+
 * Wed Jun 13 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.32-1mdk
 - rpmlint.py: o If the file given on the command line doesn't exist,
                try to use the name as an installed package to check.

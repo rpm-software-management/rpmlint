@@ -125,4 +125,37 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=I18NCheck()
 
+if Config.info:
+    addDetails(
+# Need to add a function to list all the locales
+'incorrect-i18n-tag-',
+"""
+""",
+
+'incorrect-locale-subdir',
+"""
+""",
+
+'incorrect-locale-',
+"""
+""",
+
+'invalid-lc-message-dir',
+"""
+""",
+
+'invalid-locale-man-dir',
+"""
+""",
+
+'file-not-in-lang',
+"""
+""",
+
+'no-dependency-on',
+"""
+""",
+
+)
+
 # I18NCheck.py ends here

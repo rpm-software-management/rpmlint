@@ -38,4 +38,19 @@ class LSBCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=LSBCheck()
 
+if Config.info:
+    addDetails(
+'non-lsb-compliant-package-name',
+"""
+""",
+
+'non-lsb-compliant-version',
+"""
+""",
+
+'non-lsb-compliant-release',
+"""
+""",
+
+)
 # LSBCheck.py ends here
