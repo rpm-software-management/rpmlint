@@ -18,7 +18,7 @@ spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
 applied_patch_regex=re.compile("^\s*%patch([^\s]*)\s")
 source_dir_regex=re.compile("[^#]*\$RPM_SOURCE_DIR")
-obsolete_tags_regex=re.compile("^\s*(Copyright|Serial)\s*:\s*([^\s]+)")
+obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 
 def file2string(file):
     fd=open(file, "r")
