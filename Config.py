@@ -139,7 +139,7 @@ addFilter('filesystem non-standard-dir-perm /proc 0555')
 addFilter('filesystem dir-or-file-in-usr-local .*')
 
 addFilter('postgresql-test non-standard-[gu]id [^ ]+ postgres')
-addFilter('(binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|gcc-c\+\+|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|ocaml-lablgtk|camlp4|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package')
+addFilter('(binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|gcc-c\+\+|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source.*|kernel-headers|octave|ghc|mercury|ocaml|ocaml-lablgtk|camlp4|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package')
 addFilter('menu devel-file-in-non-devel-package /etc/menu-methods/menu.h')
 addFilter('[^ ]+ devel-file-in-non-devel-package /usr/doc/.*\.h$')
 addFilter('glibc-profile devel-file-in-non-devel-package .*\.a$')
