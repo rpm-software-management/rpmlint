@@ -1,3 +1,7 @@
+2004-12-05 01:46  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: add /usr/lib/menu to STANDARD_DIRS (Michael)
+
 2004-12-05 01:25  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py: added exceptions for kernel-source.* on
