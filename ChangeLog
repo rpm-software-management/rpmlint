@@ -1,3 +1,24 @@
+2000-08-10 14:27  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* ConfigCheck.py: check files without no-replace flag.
+
+2000-08-10 14:24  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added noreplaceFiles()
+
+2000-08-10 10:54  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: allow depency on kdesu to point directly to
+	/usr/bin/kdesu.
+
+2000-08-08 16:48  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FHSCheck.py: allow ftp and www in var (from upcoming FHS 2.2).
+
+2000-08-08 15:57  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.17
+
 2000-08-08 15:51  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.17-1mdk
