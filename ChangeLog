@@ -1,3 +1,7 @@
+2002-08-08 16:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.47-1mdk
+
 2002-08-08 09:51  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* setuplist.py: split old and new users/groups.
@@ -28,11 +32,11 @@
 	* BinariesCheck.py: added /usr/lib/bonobo to no binary in /usr/lib
 	exceptions
 
-2002-07-23 10:29  gbeauchesne
+2002-07-23 10:29  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* FilesCheck.py: Add lib64 directories
 
-2002-07-23 10:23  gbeauchesne
+2002-07-23 10:23  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* FHSCheck.py: Add lib64 as standard subdir in /usr (that's the
 	/lib<qual> part of FHS)
@@ -58,7 +62,7 @@
 
 	* PostCheck.py: corrected prereq test
 
-2002-06-07 15:40  gbeauchesne
+2002-06-07 15:40  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* SpecCheck.py: Also check for %{?_prefix}?/lib references
 
@@ -99,20 +103,20 @@
 
 	* Config.py: added new check from Gwenole in mdk9.0 policy
 
-2002-06-01 16:18  gbeauchesne
+2002-06-01 16:18  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* SpecCheck.py: - Add configure-without-libdir-spec check - Fix
 	typos in previous hardcoded-library-path description
 
-2002-06-01 16:03  gbeauchesne
+2002-06-01 16:03  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* Config.py: Revert last change
 
-2002-06-01 15:18  gbeauchesne
+2002-06-01 15:18  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* Config.py: Add hardcoded-library-path to mdk9.0 policy
 
-2002-06-01 15:17  gbeauchesne
+2002-06-01 15:17  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* SpecCheck.py: Add hardcoded-library-path check
 
