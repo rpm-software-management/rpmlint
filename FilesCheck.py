@@ -387,12 +387,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     res=perl_regex.search(f)
                     if res:
                         if perl_version_trick:
-                            vers = res.group(1) + '0' + res.group(2)
+                            vers = res.group(1) + '.' + res.group(2)
                         else:
                             vers = res.group(1) + res.group(2)
                         if not (pkg.check_versioned_dep('perl-base', vers) or
                                 pkg.check_versioned_dep('perl', vers)):
-                            printError(pkg, 'no-dependancy', 'perl-base', vers)
+                            printError(pkg, 'no-dependency-on', 'perl-base', vers)
                             perl_dep_error=1
 
                 if not python_dep_error:
@@ -400,7 +400,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if res:
                         if not (pkg.check_versioned_dep('python-base', res.group(1)) or
                                 pkg.check_versioned_dep('python', res.group(1))):
-                            printError(pkg, 'no-dependancy', 'python-base', res.group(1))
+                            printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
                             python_dep_error=1
                 
                 # normal executable check
@@ -434,7 +434,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 break
                         if is_exception:
                             if is_exception not in req_names:
-                                printWarning(pkg, 'no-dependancy-on', is_exception)
+                                printWarning(pkg, 'no-dependency-on', is_exception)
                         else:
                             printWarning(pkg, 'dangling-symlink', f, link)
 		    linktop=r.group(1)
@@ -459,7 +459,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     break
                             if is_exception:
                                 if not is_exception in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
-                                    printWarning(pkg, 'no-dependancy-on', is_exception)
+                                    printWarning(pkg, 'no-dependency-on', is_exception)
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
 		    pathcomponents=string.split(f, '/')[1:]
@@ -660,7 +660,7 @@ that means that you have a wrong directory permission in your package.''',
 can lead to default directory rights, owner or group be changed to something
 non standard.''',
 
-'no-dependancy-on',
+'no-dependency-on',
 '''
 ''',
 
