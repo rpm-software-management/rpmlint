@@ -552,6 +552,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if url and url != 'none':
             if not url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
+
+        obs=map(lambda x: x[0], pkg.obsoletes())
+        provs=map(lambda x: x[0], pkg.provides())
+        for o in obs:
+            if not o in provs:
+                printError(pkg, 'obsolete-not-provided', o)
                 
 # Create an object to enable the auto registration of the test
 check=TagsCheck()
@@ -682,6 +688,10 @@ if the license is near an existing one, you can use '<license> style'.''',
 
 'invalid-url',
 '''Your URL is not valid. It must begin with http, https or ftp.''',
+
+'obsolete-not-provided',
+'''The obsoleted package must also be provided to allow a clean upgrade
+and not to break depencencies.''',
 
 )
     
