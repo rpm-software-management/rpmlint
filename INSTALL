@@ -5,3 +5,4 @@ You need the following utilities to run rpmlint:
 	o find and xargs
 	o objdump
 	o file
+	o cpio
