@@ -448,8 +448,11 @@ addFilter('shorewall non-standard-dir-perm /etc/shorewall 0700')
 #DansGuardian
 addFilter('DansGuardian non-readable /etc/dansguardian/.* 0600')
 
+# packages without binary but built with other binary packages
+addFilter('(Mesa|hylafax|openldap|xclass|gtk\+mdk) no-binary')
+
 def load_policy(policy):
     if policy != 'mdk9.0':
-        addFilter('no-prereq-on|non-root-user-log-file|non-root-group-log-file|non-ghost-file|hardcoded-library-path|configure-without-libdir-spec')
+        addFilter('no-prereq-on|non-root-user-log-file|non-root-group-log-file|non-ghost-file|hardcoded-library-path|configure-without-libdir-spec|no-binary|only-non-binary-in-usr-lib')
         
 # Config.py ends here
