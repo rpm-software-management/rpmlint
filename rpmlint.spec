@@ -9,7 +9,7 @@
 
 %define name rpmlint
 %define version 0.54
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Jan 23 2004 David Baudens <baudens@mandrakesoft.com> 0.54-2mdk
+- Replace old menu structure by new menu structure
+
 * Mon Jan 19 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.54-1mdk
 - adapted to rpm-python 4.2.2 reporting [] instead of None in rpm headers
 - Allow to pass a directory as an argument (Michael Scherer)
