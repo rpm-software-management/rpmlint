@@ -177,8 +177,8 @@ addFilter("W: reiserfs-utils dangling-symlink /sbin/fsck.reiserfs.*")
 addFilter("W: reiserfs-utils incoherent-version-in-changelog")
 
 #Glibc
-addFilter("W: glibc shared-lib-without-dependency-information /lib/ld-2.1.3.so")
-addFilter("W: glibc library-not-linked-against-libc /lib/libc-2.1.3.so")
+addFilter("W: glibc shared-lib-without-dependency-information /lib/ld-2.*.so")
+addFilter("W: glibc library-not-linked-against-libc /lib/libc-2.*.so")
 addFilter("E: glibc statically-linked-binary /sbin/sln")
 addFilter("E: glibc setuid-binary /usr/libexec/pt_chown root 04755")
 
