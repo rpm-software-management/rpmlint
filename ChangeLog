@@ -1,3 +1,15 @@
+2000-10-02 10:25  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added apache and postgres to standard groups.
+
+2000-10-02 10:06  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: spell check a la Debian.
+
+2000-09-29 12:10  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.23
+
 2000-09-29 12:06  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.23
