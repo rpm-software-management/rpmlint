@@ -161,6 +161,8 @@ games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GR
 source_regex=re.compile('(.c|.cc|.cpp|.ui)$')
 dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
 logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
+kernel_modules_regex=re.compile('^/lib/modules/')
+kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -240,6 +242,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if perl_temp_file.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
 
+            if kernel_modules_regex.search(f) and not kernel_package_regex.search(pkg.name):
+                printError(pkg, "kernel-modules-not-in-kernel-packages", f)
+                
             if tmp_regex.search(f):
 		printError(pkg, 'dir-or-file-in-tmp', f)
 	    elif mnt_regex.search(f):
