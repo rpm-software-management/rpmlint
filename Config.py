@@ -10,7 +10,7 @@
 import os.path
 import re
 
-DEFAULT_CHECKS=("MandrakeCheck",
+DEFAULT_CHECKS=("DistributionCheck",
 		"TagsCheck",
 		"BinariesCheck",
 		"ConfigCheck",
