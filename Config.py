@@ -260,6 +260,9 @@ addFilter('pam setuid-binary /sbin/(unix|pwdb)_chkpwd root 04(5|7)55')
 addFilter('pam subdir-in-bin /sbin/pam_filter/upperLOWER')
 addFilter('shadow-utils setuid-binary /usr/bin/(gpasswd|chage) root 04755')
 
+#modutils
+addFilter('module-init-tools hardcoded-library-path in .*/lib/modutils/macros')
+
 #Kernel
 addFilter('alsa(-source)? incoherent-version-in-changelog.*')
 addFilter('kernel-headers dangling-symlink /usr/include/asm ../src/linux/include/asm')
