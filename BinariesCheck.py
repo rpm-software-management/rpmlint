@@ -17,7 +17,8 @@ import sys
 import Config
 import Pkg
 
-DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib')
+DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib',
+                          '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
 
 class BinaryInfo:
 
@@ -78,11 +79,11 @@ shared_object_regex=re.compile('shared object')
 executable_regex=re.compile('executable')
 libc_regex=re.compile('libc\.')
 ldso_soname_regex=re.compile('^ld(-linux(-ia64|)|)\.so')
-so_regex=re.compile('/lib/[^/]+\.so')
+so_regex=re.compile('/lib(64)?/[^/]+\.so')
 validso_regex=re.compile('\.so\.[0-9]+')
 sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
-usr_lib_regex=re.compile('^/usr/lib/')
+usr_lib_regex=re.compile('^/usr/lib(64)?/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib/pkgconfig/')
