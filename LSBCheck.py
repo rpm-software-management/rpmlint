@@ -41,16 +41,16 @@ check=LSBCheck()
 if Config.info:
     addDetails(
 'non-lsb-compliant-package-name',
-"""Your package name contain an illegal caracter. You have to put
-alpha-numeric symbols in your package name.""",
+"""Your package name contains an illegal character. Use only
+alphanumeric symbols in your package name.""",
 
 'non-lsb-compliant-version',
-"""Your version number contain an illegal caracter. You have to put
-letters in lower case and/or numbers.""",
+"""Your version number contains an illegal character. Use only
+lowercase letters and/or numbers.""",
 
 'non-lsb-compliant-release',
-"""Your version number contain an illegal caracter. You have to put
-letters in lower case and/or numbers.""",
+"""Your version number contains an illegal character. Use only
+lowercase letters and/or numbers.""",
 
 )
 # LSBCheck.py ends here
