@@ -21,7 +21,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
     bz2_regex=re.compile(".bz2$")
     gz_regex=re.compile(".gz$")
     vendor=Config.getOption("Vendor", "MandrakeSoft")
-    distribution=Config.getOption("Distribution", "Linux-Mandrake")
+    distribution=Config.getOption("Distribution", "Mandrake Linux")
     use_bzip2=Config.getOption("UseBzip2", 1)
     
     def __init__(self):
