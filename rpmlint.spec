@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.2
+%define version 0.3
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -19,7 +19,7 @@ Copyright: GPL
 Group: Development/System
 BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: python, rpm-devel, binutils, file, findutils
+Requires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils
 BuildArchitectures: noarch
 
 %description
