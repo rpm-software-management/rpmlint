@@ -176,6 +176,7 @@ lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex=re.compile('^(lib|.+-libs)')
 hidden_file_regex=re.compile('/\.[^/]*$')
 mispelled_macro_regex=re.compile('%{.*}')
+manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)$');
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -247,6 +248,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'cvs-internal-file', f)
 	    elif hidden_file_regex.search(f):	
 		printWarning(pkg, 'hidden-file-or-dir', f)
+	    elif manifest_perl_regex.search(f):
+		printWarning(pkg, 'manifest-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
@@ -728,7 +731,11 @@ logrotate.''',
 
 'mispelled-macro',
 '''This package contains a file which match %{.*}, this is often the sign
-of a mispelled macro. Please check your spec file.'''
+of a mispelled macro. Please check your spec file.''',
+
+'manifest-in-perl-module',
+'''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
+in the documentation directory.'''
 
 )
 
