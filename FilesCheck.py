@@ -31,6 +31,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     absolute2_regex=re.compile("^/?([^/]+)")
     points_regex=re.compile("^../(.*)")
     doc_regex=re.compile("^/usr/(doc|man|info)|^/usr/share/(doc|man|info)")
+    bin_regex=re.compile("^(/usr)?/s?bin/")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -104,6 +105,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			printError(pkg, "setgid-binary", f, setgid, oct(perm))
 		    elif mode & 0777 != 0755:
 			printError(pkg, "non-standard-executable-perm", f, oct(perm))
+
+            # normal file check
+            if stat.S_ISREG(mode):
+                if FilesCheck.bin_regex.search(f) and mode & 0111 == 0:
+                    printWarning(pkg, "non-executable-in-bin", f, oct(perm))
 
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
