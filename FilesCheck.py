@@ -18,7 +18,7 @@ import os
 
 STANDARD_USERS=('root','bin','daemon','adm','lp','sync','shutdown','halt','mail','news','uucp','operator','games','gopher','ftp','nobody','lists','gdm','xfs', 'apache', 'postgres')
 
-STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriter','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate', 'x10', 'urpmi')
+STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriter','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate', 'x10', 'urpmi', 'apache', 'postgres')
 
 class FilesCheck(AbstractCheck.AbstractCheck):
     tmp_regex=re.compile("^/tmp/|^(/var|/usr)/tmp/")
