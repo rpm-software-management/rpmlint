@@ -10,17 +10,18 @@ Comments and new checks welcome. Send feedback to
 
 Implemented checks:
 
-	o tags checks (TagsCheck)
-	o Distribution specific checks (MandrakeCheck)
-	o binaries checks (BinaryCheck)
-	o configuration files checks (ConfigCheck)
-	o locations, permissions, groups and owners checks (FileCheck)
-	o suid warnings (FileCheck)
-	o pgp checks (SignatureCheck)
-	o FHS checks (FHSCheck)
-	o Source specific checks (SourceCheck)
+	o tags checks (TagsCheck).
+	o Distribution specific checks (MandrakeCheck).
+	o binaries checks (BinaryCheck).
+	o configuration files checks (ConfigCheck).
+	o locations, permissions, groups and owners checks (FileCheck).
+	o suid warnings (FileCheck).
+	o pgp checks (SignatureCheck).
+	o FHS checks (FHSCheck).
+	o Source specific checks (SourceCheck).
 	o i18n checks (I18NCheck).
-	o menu system checks (MenuCheck)
+	o menu system checks (MenuCheck).
+	o %post; %pre, %postun and %preun scripts checks (PostCheck).
 
 If you want to change configuration options or the list of checks, use the
 global configuration file /etc/rpmlint/config or in the user configuration
