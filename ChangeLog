@@ -1,6 +1,6 @@
 2005-02-16 14:08  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* FilesCheck.py: simplify site_perl regexp (Ville Skytt‰).
+	* FilesCheck.py: simplify site_perl regexp (Ville Skytt√§).
 
 2005-02-14 18:39  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
@@ -60,7 +60,7 @@
 
 2005-02-07 14:44  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* TagsCheck.py: added Design Sciences License (SÈbastien Savarin)
+	* TagsCheck.py: added Design Sciences License (S√©bastien Savarin)
 	  fixed Lucent Public License
 
 2005-01-30 22:28  Frederic Lepied <flepied@mandrakesoft.com>
@@ -113,8 +113,8 @@
 2005-01-05 23:31  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: - E:V-R should be consistent in package and
-	  changelog regardless if   use_epoch is set or not (Ville Skytt‰).
-	  - Spelling fixes (Ville Skytt‰).
+	  changelog regardless if   use_epoch is set or not (Ville Skytt√§).
+	  - Spelling fixes (Ville Skytt√§).
 
 2005-01-05 23:29  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -123,14 +123,14 @@
 
 2005-01-05 23:28  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* I18NCheck.py: - "se" -> "sv" in I18NCheck (Ville Skytt‰).
+	* I18NCheck.py: - "se" -> "sv" in I18NCheck (Ville Skytt√§).
 
 2005-01-05 23:28  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: - Flag installing files to /var/local as an error
-	  (Ville Skytt‰).  - Improved perl temp file regexp (Ville Skytt‰).
+	  (Ville Skytt√§).  - Improved perl temp file regexp (Ville Skytt√§).
 	  - Extended CVS internal file regexp to cover Subversion and GNU
-	  Arch (Ville Skytt‰).
+	  Arch (Ville Skytt√§).
 
 2005-01-05 23:25  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -407,12 +407,12 @@
 
 	* PostCheck.py: makes postcheck not to whine about ghost files that
 	  are created by %triggerin scripts in addition to %pre and %post.
-	  (Ville Skytt‰)
+	  (Ville Skytt√§)
 
 	  Additionally, somewhat improved documentation on
 	  one-line-commands, using "should" instead of "must" since AFAICS
 	  %post -p <command> cannot be used if <command> needs parameters.
-	  (Ville Skytt‰)
+	  (Ville Skytt√§)
 
 2004-02-11 18:03  David Baudens <baudens@mandrakesoft.com>
 
@@ -523,7 +523,7 @@
 
 2003-12-22 12:29  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* Config.py, README, ZipCheck.py: new check ZipCheck (Ville Skytt‰)
+	* Config.py, README, ZipCheck.py: new check ZipCheck (Ville Skytt√§)
 
 2003-12-22 12:27  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -532,7 +532,7 @@
 2003-12-22 12:23  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py, InitScriptCheck.py, LSBCheck.py, MenuCheck.py,
-	  TagsCheck.py: spelling fixes (Ville Skytt‰)
+	  TagsCheck.py: spelling fixes (Ville Skytt√§)
 
 2003-12-22 12:21  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -545,7 +545,7 @@
 2003-12-22 12:15  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: non-standard-executable-perm was never run (Ville
-	  Skytt‰)
+	  Skytt√§)
 
 2003-12-22 12:10  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -656,11 +656,11 @@
 2003-07-22 21:31  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py: in shell_var_value escape the var name to avoid a
-	  backtrace (Ville Skytt‰)
+	  backtrace (Ville Skytt√§)
 
 2003-07-22 21:29  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* Config.py: don't warn on -debug packages (Ville Skytt‰)
+	* Config.py: don't warn on -debug packages (Ville Skytt√§)
 
 2003-07-22 21:25  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -717,11 +717,11 @@
 
 2003-05-05 10:31  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* TagsCheck.py: corrected epoch tests (Ville Skytt‰)
+	* TagsCheck.py: corrected epoch tests (Ville Skytt√§)
 
 2003-05-05 10:25  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* FilesCheck.py: allow empty __init__.py (StÈfane Fermigier)
+	* FilesCheck.py: allow empty __init__.py (St√©fane Fermigier)
 
 2003-05-05 10:23  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -751,22 +751,22 @@
 2003-04-23 15:32  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py, SignatureCheck.py, rpmlint.py: rpm 4.2 support (Ville
-	  Skytt‰)
+	  Skytt√§)
 
 2003-03-25 13:14  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* README: Spelling fixes, new options: UseEpoch, ValidSrcPerms
-	  (Ville Skytt‰).
+	  (Ville Skytt√§).
 
 2003-03-25 13:13  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: Handle nosrc packages properly, add required Epoch
-	  functionality (Ville Skytt‰).
+	  functionality (Ville Skytt√§).
 
 2003-03-25 13:12  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* SourceCheck.py: Made valid source permissions configurable (Ville
-	  Skytt‰).
+	  Skytt√§).
 
 2003-03-25 13:11  Frederic Lepied <flepied@mandrakesoft.com>
 
