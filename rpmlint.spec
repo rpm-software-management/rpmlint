@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.58
+%define version 0.59
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Apr 30 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.59-1mdk
+- TagsCheck.py: check if a package requires a interpreter in
+ /usr/local/bin/ (Michael)
+- Mandrakelinux (Robert Vojta) [bug #9542]
+- I18NCheck.py: some more languages recognized
+- InitScriptCheck.py: chack that the initscript is executable (Michael)
+
 * Fri Mar 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.58-1mdk
 - TagsCheck.py: The Mandrake word is forbidden alone.
 - FilesCheck.py: consolehelper is in usermode-consoleonly
