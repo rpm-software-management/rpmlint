@@ -19,7 +19,7 @@ RELEASE:=$(shell grep '%define *release ' $(PACKAGE).spec| cut -d ' ' -f 3)
 TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
 
 all:
-	./compile.py [A-Z]*.py
+	./compile.py "$(LIBDIR)/" [A-Z]*.py
 
 clean:
 	rm -f *~ *.pyc *.pyo
