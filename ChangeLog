@@ -1,726 +1,755 @@
-2000-07-31 12:46  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-08-08 15:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.17-1mdk
+
+2000-08-08 15:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: corrected check for install_info to avoid
+	backtrace on empty postun or preun.
+
+2000-08-08 15:18  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 	* 0.17
+
+2000-08-07 10:20  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* ScriptCheck.py:     * replaced by PostCheck.py
+
+2000-08-03 14:13  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* config: Add few filters for util-linux
+
+2000-08-01 04:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* config: Correct pam setuid-binary execptions.
+
+2000-08-01 04:37  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* config: mount and umount are suid binary.
+
+2000-07-31 21:46  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	     * (DEFAULT_CHECKS): removed ScriptCheck.
 
-2000-07-31 12:45  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-31 21:45  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* PostCheck.py: 	* merged ScriptCheck.py and corrected shell
 	script check.
 
-2000-07-31 12:44  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-31 21:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* allow install-info call in preun.
 		* check chkconfig calls for package that comes with an
 		/etc/rc.d/init.d/script.
 
-2000-07-29 12:38  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:38  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: If we use kdesu check in it present in Requires:
 	Prereq:
 
-2000-07-29 12:27  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:27  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: Fix again kdesu (i hate python indentation :-()
 
-2000-07-29 12:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 21:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: Get kdesu check to work :-\
 
-2000-07-29 10:58  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 19:58  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* Makefile: Add a changelog rules to be used with cvs2cl.
 
-2000-07-29 10:50  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-29 19:50  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* Config.py, ScriptCheck.py: check syntax of (post|pre)(un)?install
 	script, currently only bash is supported.
 
-2000-07-27 19:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-28 04:03  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: install-info can't be	RPMTAG_POSTUNPROG or
 	RPMTAG_POSTPROG
 
-2000-07-27 05:35  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-27 14:35  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add e2fsprogs changes.
 
-2000-07-25 14:09  Pixel <pixel@mandrakesoft.com>
+2000-07-25 23:09  Pixel <pixel@mandrakesoft.com>
 
 	* config: add exception for some devel packages, updated the filter
 	for setuid perl's
 
-2000-07-21 11:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-21 20:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add some glibc exceptions.
 
-2000-07-20 08:01  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-20 17:01  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: if there is info files check to see if we have a
 	install-info in the %post(un)?
 
-2000-07-19 16:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-20 01:55  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: filter me the "shadow-utils dangling-symlink /usr/bin/sg
 	newgrp"
 
-2000-07-19 11:56  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 20:56  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: static binaries for ldconfig is permit :-)
 
-2000-07-19 11:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 20:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add some exeptions for kernel packages.
 
-2000-07-19 03:51  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 12:51  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: /bin/ping as suid binary is correct.
 
-2000-07-19 03:08  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 12:08  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.16
 
-2000-07-19 02:58  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:58  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.16
 
-2000-07-19 02:58  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:58  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* (DEFAULT_VALID_GROUPS): sawmill =>
 	sawfish.
 
-2000-07-19 02:57  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:57  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	* added FHSCheck by default.
 
-2000-07-19 02:56  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:56  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added exception for wall.
 
-2000-07-19 02:51  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:51  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FHSCheck.py:	* corrected check to not match substrings.
 
-2000-07-19 02:35  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 11:35  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* added check dandling symlinks.
 		* check the presence of /usr(/share)/info/dir
 
-2000-07-19 01:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 10:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Exception for pam package.
 
-2000-07-19 01:05  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-19 10:05  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README.CVS:	* give command line example.
 
-2000-07-18 22:42  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:42  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: If the menu_command contain a kdesu -c "", check
 	instead for the command instead of kdesu.
 
-2000-07-18 22:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: By default {doc,man,info} in /usr/share, product
 	an error when the package use /usr/.
 
-2000-07-18 22:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-19 07:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: su is suid and it normal !!
 
-2000-07-05 07:48  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-05 16:48  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added description for PostCheck.
 
-2000-07-05 07:46  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-05 16:46  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	* added PostCheck
 
-2000-07-05 07:42  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-07-05 16:42  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* PostCheck.py: 	* first version.
 
-2000-07-01 06:24  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-07-01 15:24  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Remove lftp .So warning (should be fixed in rpmlint), add
 	expeption for slocate.
 
-2000-06-30 09:36  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-30 18:36  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add sudo exception.
 
-2000-06-27 01:59  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:59  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.15
 
-2000-06-27 01:22  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:22  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.15
 
-2000-06-27 01:21  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:21  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added XpmIconPath.
 
-2000-06-27 01:19  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:19  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* check non transparent pixmaps in icon
 	path.
 
-2000-06-27 01:18  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:18  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added man for sgid exception.
 		* corrected the regex for /var/catman and /usr/man.
 
-2000-06-27 01:16  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:16  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py:	* added a check for soname.
 
-2000-06-27 01:14  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:14  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* removed trace.
 
-2000-06-27 01:14  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:14  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* added a warning for packages that provide
 	themselves (for Pixel).
 
-2000-06-27 01:12  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-27 10:12  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* (_gatherDepInfo) corrected the conflicts and
 	provides acquisition.
 
-2000-06-16 11:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-16 20:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: add W: lftp shared-lib-without-dependency-information
 	/usr/lib/lftp/.*.so
 
-2000-06-15 05:07  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-15 14:07  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* added a builtin grep.
 
-2000-06-15 02:56  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-15 11:56  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* removed stange-needs filters.
 
-2000-06-15 02:54  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-15 11:54  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added ExtraMenuNeeds
 
-2000-06-15 02:54  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-06-15 11:54  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* added a list of valid needs.
 
-2000-06-15 01:54  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-06-15 10:54  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: add execption for "I: iceconf strange-needs icewm
 	/usr/lib/menu/iceconf"
 
-2000-04-17 01:37  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-17 10:37  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec:	* 0.14
 
-2000-04-17 01:33  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-17 10:33  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py, MenuCheck.py:	* corrected check of %post, %postun
 	to avoid comments.
 
-2000-04-16 22:36  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-17 07:36  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* check old menu entries for KDE and GNOME.
 		* allow entries for sections.
 
-2000-04-16 22:27  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-17 07:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added exceptions for urpmi, sash, octave, ghc,
 	procmail, rsh.
 
-2000-04-12 00:36  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-12 09:36  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	  * (Pkg._extract): extract in dir
 	<tmppath>/<pkgname>.<pid>
 
-2000-04-09 23:24  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-10 08:24  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec:	* 0.13
 
-2000-04-09 23:21  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-10 08:21  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added exception for XFree86 4.0 .a modules.
 
-2000-04-09 23:12  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-10 08:12  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* use POSTINPROG if no POSTIN.
 		* use POSTUNPROG if no POSTUN.
 
-2000-04-09 23:09  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-04-10 08:09  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* check ldconfig in %post and %postun.
 		* added urpmi to default group list.
 
-2000-04-07 11:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:52  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* rpmlint.spec: Use %{_tmppath}
 
-2000-04-07 11:49  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:49  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: Add check on icons, if no icon print a warning, if
 	icon specified (with a long path, not with relative path) is  not
 	here print a Error.
 
-2000-04-07 11:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-07 20:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: package -source are also devel package.
 
-2000-04-05 15:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-06 00:26  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: traceroute need to be setuid-binary
 
-2000-04-05 11:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-05 20:28  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add exception rules for initscripts.
 
-2000-04-04 19:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-05 04:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: Move Applications/Terminals to Terminals
 
-2000-04-03 19:29  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-04 04:29  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* MenuCheck.py: Add Session/Windowmanagers in List of good
 	window-managers.
 
-2000-04-03 15:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-04-04 00:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Add hackkernel* like kernel* for the
 	devel-file-in-non-devel-package stuff.
 
-2000-03-31 01:56  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-31 11:56  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 1.12
 
-2000-03-31 01:53  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-31 11:53  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.12
 
-2000-03-31 01:51  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-31 11:51  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* check update-menus in %post and %postun
 	if a menu is present.
 
-2000-03-31 01:44  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-31 11:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* avoid I: strange-needs kde for package beginning
 	by k.
 
-2000-03-30 23:52  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-31 09:52  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* corrected default menu (thanks to
 	DindinX).
 
-2000-03-29 19:59  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-30 05:59  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: add /mnt/disk like /mnt/(floppy|cdrom) and clean up
 	regex.
 
-2000-03-28 21:44  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-29 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* check that the command is present in the
 	menu.
 
-2000-03-28 21:09  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-29 07:09  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py:	* check for non sparc32 binaries in sparc
 	rpms.
 
-2000-03-26 21:45  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-27 07:45  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec:	* 0.11
 
-2000-03-26 21:44  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-27 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added MenuCheck.
 
-2000-03-26 21:44  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-27 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* valid sections are now a configuration
 	variable.
 
-2000-03-26 21:43  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-27 07:43  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added an exception for MenuCheck.
 
-2000-03-23 05:20  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-23 14:20  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* commented out non-empty-dir-listed.
 
-2000-03-23 05:17  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-23 14:17  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	     * (DEFAULT_CHECKS): added MenuCheck.
 
-2000-03-23 04:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 13:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: don't check devel-file-in-non-devel-package for
 	alsa-source
 
-2000-03-23 02:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 11:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: it's allow to have a tmpdir as 700 in etcskel and
 	rootfile.
 
-2000-03-23 02:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-23 11:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* config: Don't check for config files on /root/*.
 
-2000-03-20 01:00  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-20 10:00  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: 	* first version.
 
-2000-03-14 00:03  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-14 09:03  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* corrected Group header.
 
-2000-03-13 23:51  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-14 08:51  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added exceptions for
 	devel-file-in-non-devel-package and
 	dir-or-file-in-home.
 
-2000-03-13 23:48  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-14 08:48  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 1.10.
 
-2000-03-13 23:41  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-14 08:41  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.10.
 
-2000-03-13 02:49  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-13 11:49  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* corrected new group list.
 
-2000-03-13 02:46  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-13 11:46  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* check files on /home.
 
-2000-03-09 13:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+2000-03-09 22:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: Correct cdwriters to cdwriter Add x10 group.
 
-2000-03-06 07:12  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-06 16:12  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* changed the list of standard groups.
 
-2000-03-06 06:57  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-03-06 15:57  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	 * (FilesCheck.check): added a check for .h
 	and .a files and
 		symbolic link .so in non devel packages.
 
-2000-02-28 06:35  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-28 15:35  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* real correction for rpm 3.0.4 (I hope).
 
-2000-02-28 06:24  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-28 15:24  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.9.2.
 
-2000-02-28 06:21  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-28 15:21  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.9.2
 
-2000-02-28 04:37  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-28 13:37  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* corrected rpm 3.0.4 support.
 
-2000-02-22 22:48  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-23 07:48  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.9.1-1mdk.
 
-2000-02-22 22:45  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-23 07:45  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	* added README.CVS.
 
-2000-02-22 22:42  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-23 07:42  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.9.1
 		* changed copyright year.
 
-2000-02-22 22:40  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-23 07:40  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* added support for the rpm 3.0.4 way to store file
 	names.
 
-2000-02-22 22:39  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-23 07:39  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README.CVS:	* first version.
 
-2000-02-10 04:24  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 13:24  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.9.
 
-2000-02-10 04:20  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 13:20  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* SignatureCheck.py:	* added gpg to correct signatures.
 
-2000-02-10 04:02  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 13:02  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.9.
 
-2000-02-10 04:02  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 13:02  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added description of new options: ValidGroups,
 	ReleaseExtension and
 	UseVersionInChangelog.
 
-2000-02-10 04:00  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 13:00  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added commented examples for ReleaseExtension and
 	ValidGroups.
 
-2000-02-10 03:59  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 12:59  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* (check): check release extension.
 		* (check): added configuration option for version on
 	changelog and
 		release extension.
 
-2000-02-10 03:58  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 12:58  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* DistributionCheck.py: 	* first version.
 
-2000-02-10 03:58  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 12:58  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	* install .py files too.
 
-2000-02-10 03:56  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 12:56  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	* change MandrakeCheck to DistributionCheck.
 
-2000-02-10 03:55  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-02-10 12:55  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MandrakeCheck.py:	* renamed in DistributionCheck.
 
-2000-01-24 02:28  Fredrice Lepied <flepied@mandrakesoft.com>
+2000-01-24 11:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* added a check on non executable in bin
 	directories.
 
-1999-12-29 23:24  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 08:24  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.8-1mdk.
 
-1999-12-29 23:03  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 08:03  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.8.
 
-1999-12-29 23:02  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 08:02  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* change email.
 		* added a line about i18n checks.
 
-1999-12-29 23:01  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 08:01  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	* added exception for sympa, postgresql-test and
 	filesystem.
 
-1999-12-29 22:55  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 07:55  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MandrakeCheck.py:	* change default distribution to
 	Linux-Mandrake.
 
-1999-12-29 22:53  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 07:53  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* (TagsCheck.check): added check on version
 	in the first line of
 		the changelog.
 
-1999-12-29 22:52  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 07:52  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* change severity of reports.
 
-1999-12-29 22:52  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-30 07:52  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py:	* binaries not stripped is dowgraded to
 	warning.
 
-1999-12-14 00:57  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-12-14 09:57  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* I18NCheck.py: 	* added a check on dirs containing
 	LC_MESSAGES catalogs.
 
-1999-11-30 00:39  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-30 09:39  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* I18NCheck.py: 	* correct the locales subdir regex to
 	capture only correct names.
 
-1999-11-25 06:41  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-25 15:41  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* I18NCheck.py: 	* initial release.
 
-1999-11-18 02:04  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-18 11:04  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MandrakeCheck.py:	   * don't warn about info/dir not
 	compressed
 
-1999-11-15 20:43  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-16 05:43  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* updated to reflect the change to addFilter.
 		* corrected the description of the checks.
 
-1999-11-15 10:37  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:37  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.7
 
-1999-11-15 10:33  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:33  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Filter.py:	* test a string against the filters.
 
-1999-11-15 10:32  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:32  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	  * (cleanup): change access rights before removing
 	the package to
 		prevent very bad packages from making rpmlint abort.
 
-1999-11-15 10:30  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:30  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* peform all the check on source package
 	too.
 
-1999-11-15 10:29  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:29  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	  * added /var/catman exceptions.
 
-1999-11-15 10:29  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:29  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	* filters are regexp now.
 
-1999-11-15 10:28  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-11-15 19:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.7
 		* output through Filter.
 
-1999-10-27 13:10  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-27 22:10  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* SourceCheck.py:	* oops: added Filter import.
 
-1999-10-27 13:01  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-27 22:01  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* (TagsCheck.check): verify the name tag
 	and the file name coherence.
 
-1999-10-27 13:00  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-27 22:00  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	     * (DEFAULT_CHECKS): added SourceCheck.
 
-1999-10-27 13:00  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-27 22:00  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* SourceCheck.py:	* first version.
 
-1999-10-23 15:10  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-24 00:10  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* .cvsignore:	* added .flog and .bz2.
 
-1999-10-23 15:09  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-24 00:09  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.6.1.
 
-1999-10-23 15:08  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-24 00:08  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	    * (all): use compile.py to byte compile files.
 
-1999-10-23 15:07  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-24 00:07  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* compile.py:	* first version.
 
-1999-10-23 15:07  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-24 00:07  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.6.1
 
-1999-10-23 11:45  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:45  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.6.
 
-1999-10-23 11:38  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:38  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py, ConfigCheck.py, FHSCheck.py, MandrakeCheck.py,
 	SignatureCheck.py:   * output via Filter.
 
-1999-10-23 11:34  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:34  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added description of addFilter.
 
-1999-10-23 11:33  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:33  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	* don't use FHS check by default because rpm
 	doesn't put the doc
 	files under /usr/share/doc => too much reports.
 
-1999-10-23 11:31  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:31  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* version 0.6.
 
-1999-10-23 11:31  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:31  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* config:	  * added an example of addFilter.
 
-1999-10-23 11:30  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:30  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* output via Filter.
 		* (TagsCheck.check): checks if the summary is on multiple
 	lines.
 
-1999-10-23 11:30  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:30  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* output via Filter.
 		* added documentation checks.
 
-1999-10-23 11:27  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Filter.py:	* first version.
 
-1999-10-23 11:26  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-23 20:26  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Config.py:	     * (addFilter isFiltered): new funtions for
 	output filters.
 
-1999-10-16 04:15  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:15  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.5.
 
-1999-10-16 04:14  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:14  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	      * (version): 0.5.
 		* uses Config to get the list of checks.
 
-1999-10-16 04:13  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:13  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	  * added description of config files and options.
 
-1999-10-16 04:12  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:12  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* MandrakeCheck.py:	* uses Config options for vendor,
 	ditribution and compression.
 
-1999-10-16 04:10  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:10  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	    * install the config file in /etc/rpmlint
 
-1999-10-16 04:09  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:09  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* AllChecks.py: no more needed
 
-1999-10-16 04:06  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-16 13:06  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FHSCheck.py, config, Config.py:	* first version.
 
-1999-10-12 00:28  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-12 09:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* (TagsCheck.check): corrected the message
 	for non-standard-group
 		to display the package name.
 
-1999-10-11 21:38  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-12 06:38  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	  * (Pkg._gatherFilesInfo): gather ghost files.
 
-1999-10-11 21:37  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-12 06:37  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	* (FilesCheck.check): avoid reporting
 	non-conffile-in-etc for a
@@ -728,143 +757,143 @@
 		* (FilesCheck.check): added a check of non standard users
 	and groups.
 
-1999-10-10 20:45  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-11 05:45  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* corrected typo.
 
-1999-10-08 05:22  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-08 14:22  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* rpmlint.spec: [no log message]
 
-1999-10-07 11:29  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:29  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* (Requires): added cpio.
 		* 0.4.
 
-1999-10-07 11:28  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	      * (version): 0.4.
 
-1999-10-07 11:28  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: 	* added a check for valid group name.
 
-1999-10-07 11:28  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:28  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	  * pgp check impemented.
 
-1999-10-07 11:27  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py:	 * (FilesCheck.check): check only binary
 	package.
 
-1999-10-07 11:27  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* ConfigCheck.py:	  * (ConfigCheck.check): check only binary
 	package.
 
-1999-10-07 11:25  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:25  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py:	* corrected error message when there is a
 	problem with objdump.
 
-1999-10-07 11:24  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:24  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* AllChecks.py: 	* added SignatureCheck.
 
-1999-10-07 11:23  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-07 20:23  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* SignatureCheck.py:	     * first version.
 
-1999-10-06 06:10  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:10  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* PermissionsCheck.py: removed
 
-1999-10-06 06:08  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:08  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* 0.3-1.
 		* added version of needed dependencies.
 
-1999-10-06 06:05  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:05  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* changed the exception handling to have all the
 	traceback.
 
-1999-10-06 06:03  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:03  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint:	* launch python with unbuffered output.
 
-1999-10-06 06:01  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:01  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* added name of check on the implemented part.
 		* added FileCheck to the implemented part.
 
-1999-10-06 06:00  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 15:00  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	* added comments.
 		* extract all file listing in one place (_gatherFilesInfo).
 
-1999-10-06 05:58  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:58  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	* install only .pyo files.
 		* new target ndist to make a tar ball without the version
 	number in
 	the directory name.
 
-1999-10-06 05:56  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:56  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* INSTALL:	* added cpio to the list of dependencies.
 
-1999-10-06 05:53  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:53  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* AllChecks.py: 	* added FilesCheck.
 
-1999-10-06 05:50  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:50  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* .cvsignore, FilesCheck.py:	* first version.
 
-1999-10-06 05:43  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:43  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 	* added header.
 		* 0.2-1.
 
-1999-10-06 05:36  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:36  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* README:	* changed configuration check comment from planed
 	to implemented.
 
-1999-10-06 05:35  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:35  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py:	(configFiles): new method to return the list of
 	configuration files.
 
-1999-10-06 05:32  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:32  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* Makefile:	* added ChangeLog to distribution files.
 		* bzip2 in a separate command to make the dist target run
 	on
 	system without the y option of tar.
 
-1999-10-06 05:29  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:29  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* AllChecks.py: 	* added ConfigCheck.
 
-1999-10-06 05:27  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:27  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* ConfigCheck.py:	* first version.
 
-1999-10-06 05:25  Fredrice Lepied <flepied@mandrakesoft.com>
+1999-10-06 14:25  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py:	* 0.2
 
-1999-10-01 00:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-01 09:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* AbstractCheck.py, AllChecks.py, BinariesCheck.py, INSTALL,
 	MandrakeCheck.py, PermissionsCheck.py, Pkg.py, README,
 	TagsCheck.py, rpmlint, rpmlint.py, COPYING, Makefile, rpmlint.spec:
 	Initial revision
 
-1999-10-01 00:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+1999-10-01 09:15  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* AbstractCheck.py, AllChecks.py, BinariesCheck.py, INSTALL,
 	MandrakeCheck.py, PermissionsCheck.py, Pkg.py, README,
