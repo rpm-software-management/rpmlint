@@ -1,3 +1,7 @@
+2002-06-04 00:13  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.46-1mdk
+
 2002-06-04 00:10  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py: added exceptions for no-binary
