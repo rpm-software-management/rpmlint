@@ -14,7 +14,7 @@ ETCDIR=/etc/rpmlint
 FILES= rpmlint *.py INSTALL README COPYING ChangeLog Makefile config
 
 all:
-	python -O rpmlint.py -C . /dev/null
+	./compile.py [A-Z]*.py
 
 clean:
 	rm -f *~ *.pyc *.pyo
