@@ -33,6 +33,7 @@ single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
 update_menu_regex=re.compile('update-menus', re.MULTILINE)
 tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
 menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/')
+bogus_var_regex=re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
@@ -101,6 +102,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
                     if home_regex.search(script):
                         printError(pkg, "use-of-home-in-" + tag[2])
+                    res=bogus_var_regex.search(script)
+                    if res:
+                        printWarning(pkg, 'bogus-variable-use-in-' + tag[2], res.group(1))
 
                 if prog == "/usr/bin/perl":
                     if incorrect_perl_script(script):
