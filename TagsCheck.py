@@ -560,7 +560,7 @@ if Config.info:
 'invalid-version',
 '''The version string must not contain the pre, alpha, beta or rc suffixes because
 when the final version will be out, you will have to use an Epoch tag to make
-you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
+you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.''',
 
 'spelling-error-in-',
 """You made a mispelling in your text. Please double-check.""",
@@ -613,12 +613,11 @@ term designing the application your package is installing. To insert it, just
 insert a tag 'Provide'""",
 
 'no-summary-tag',
-"""
-""",
+"""There is no Summary tag in your package. You have to describe your package
+using this tag. To insert it, just insert a tag 'Summary'""",
 
 'summary-on-multiple-lines',
-"""
-""",
+"""Your summary must fit on one line. Please make it shorter and rebuilt your package.""",
 
 'summary-not-capitalized',
 """
@@ -629,12 +628,12 @@ insert a tag 'Provide'""",
 """,
 
 'no-description-tag',
-"""
-""",
+"""There is no %description tag in your spec file. To insert it, just insert a '%tag' in
+your spec file and rebuild it.""",
 
 'description-line-too-long',
-"""
-""",
+"""Your description lines must no exceed 80 characters. If a line is exceeding this number,
+cut it to fit in two lines.""",
 
 'no-group-tag',
 """There is no Group tag in your package. You have to specify a valid group
@@ -645,23 +644,33 @@ in your spec file using the Group tag.""",
 please refer to the Mandrake Linux RPM documentation.""",
 
 'no-changelogname-tag',
-"""
-""",
+"""There is no %changelog tag in your spec file. To insert it, just insert a '%changelog' in
+your spec file and rebuild it.""",
 
 'no-version-in-last-changelog',
-"""
-""",
+"""The last changelog entry doesn't contain a version. Please insert the coherent version and
+rebuild your package.""",
 
 'incoherent-version-in-changelog',
-"""
-""",
+"""Your last entry in %changelog contains a version that is not coherent with the current
+version of your package.""",
 
 'no-license',
-"""
-""",
+"""There is no License tag in your spec file. You have to specify one license for your
+program (ie GPL). To insert this tag, just insert a 'License' in your file.""",
 
 'invalid-license',
-"""
+"""The license you specified is invalid. The valid licenses are:
+-GPL					-LGPL
+-Artistic				-BSD
+-MIT					-QPL
+-MPL					-IBM Public License
+-Apache License				-PHP License
+-Public Domain				-Modified CNRI Open Source License
+-zlib License				-CVW License
+-Ricoh Source Code Public License	-Python license
+-Vovida Software License		-Sun Internet Standards Source License
+-Intel Open Source License		-Jabber Open Source License
 """,
 
 'invalid-url',
