@@ -1,3 +1,7 @@
+2000-08-28 15:09  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* PostCheck.py: Fix typo in check of /usr/bin/perl.
+
 2000-08-28 15:08  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* PostCheck.py: Check perl script like we do for bash script.
