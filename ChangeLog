@@ -1,3 +1,7 @@
+2001-07-06 18:59  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* rpmlint.spec: Version 0.33-2mdk, Added descriptions
+
 2001-07-06 18:56  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* TagsCheck.py: Added descriptions
