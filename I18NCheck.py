@@ -32,10 +32,11 @@ INCORRECT_LOCALES = {
 # and /usr/share/man for locale man pages.
 CORRECT_SUBDIRS = (
 'af', 'ar', 'az', 'be', 'bg', 'br', 'ca', 'cs', 'cy', 'da', 'de',
-'de_AT', 'el', 'en_GB', 'en_RN', 'eo', 'es', 'es_AR', 'es_ES', 'es_DO',
-'es_GT', 'es_HN', 'es_SV', 'es_PE', 'es_PA', 'es_MX', 'et', 'eu', 'fa',
+'de_AT', 'el', 'en_GB', 'en_RN', 'en@IPA', 'eo',
+'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
+'es_PA', 'es_MX', 'et', 'eu', 'fa',
 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hr',
-'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'ko',
+'hu', 'hy', 'ia', 'id', 'is', 'it', 'ja', 'ka', 'ko',
 'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'nb', 'nl', 'nn', 'no', 
 'oc', 'pd', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
 'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz',
