@@ -14,6 +14,7 @@ import sys
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
     pgp_regex=re.compile("pgp|gpg", re.IGNORECASE)
+    unknown_key_regex=re.compile("\(MISSING KEYS:\s+([^\)]+)\)")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
@@ -21,7 +22,14 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
 	res=pkg.checkSignature()
 	if not res or res[0] != 0:
-	    sys.stderr.write("error checking signature of " + pkg.filename + "\n")
+            if res and res[1]:
+                kres=SignatureCheck.unknown_key_regex.search(res[1])
+            else:
+                kres=None
+            if kres:
+                printError(pkg, "unknown-key", kres.group(1))
+            else:
+                sys.stderr.write("error checking signature of " + pkg.filename + "\n")
 	else:
 	    if not SignatureCheck.pgp_regex.search(res[1]):
 		printError(pkg, "no-signature")
@@ -33,7 +41,10 @@ if Config.info:
     addDetails(
 'no-signature',
 '''You have to include your pgp or gpg signature in your package.
-For more informations on your signature, please refer to www.gnupg.org.''',
+For more information on signatures, please refer to www.gnupg.org.''',
+'unknown-key',
+'''The package was signed, but with an unknown key.
+See the rpm --import option for more information.''',
 
 )
 
