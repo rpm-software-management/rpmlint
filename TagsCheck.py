@@ -602,7 +602,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for o in obs:
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
-                
+
+        arch=pkg[rpm.RPMTAG_ARCH]
+        if not arch:
+            printError(pkg, 'no-arch-tag')
+        elif pkg.filename[-(len(arch) + 4):] != arch + '.rpm':
+            printWarning(pkg, 'incoherent-architecture-in-filename', arch, pkg.filename)
+            
 # Create an object to enable the auto registration of the test
 check=TagsCheck()
 
