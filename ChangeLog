@@ -1,3 +1,7 @@
+2001-09-28 21:14  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.36-1mdk
+
 2001-09-28 21:05  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* MenuCheck.py: check if a menu file is executable.
