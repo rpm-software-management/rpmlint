@@ -7,8 +7,8 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.4
-%define release 2mdk
+%define version 0.5
+%define release 1mdk
 
 Summary: rpm correctness checker
 Name: %{name}
@@ -60,8 +60,13 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING ChangeLog INSTALL README 
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
+%config /etc/rpmlint/config
 
 %changelog
+
+* Fri Oct 15 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- 0.5: FHS check, configuration files.
 
 * Fri Oct  8 1999 Chmouel Boudjnah <chmouel@mandrakesoft.com>
 - Add Doc.
