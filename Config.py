@@ -152,6 +152,10 @@ addFilter("E:.*initscripts subsys-not-used.*mandrake_(firstime|everytime).*")
 addFilter("E:.*initscripts subsys-not-used.*/etc/rc.d/init.d/(halt|rawdevices)")
 addFilter("E:.*initscripts no-status-entry.*/etc/rc.d/init.d/(killall|halt|single).*")
 addFilter("W:.*initscripts no-(status|reload)-entry.*/etc/rc.d/init.d/(killall|halt|functions|single).*")
+addFilter("W: initscripts conffile-without-noreplace-flag /etc/rc.d/rc.*.d/.*(killall|halt|single|local|reboot)")
+addFilter("W: initscripts non-conffile-in-etc /etc/locale/.*")
+addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
+
 
 #Setuid
 addFilter('E: traceroute setuid-binary /usr/sbin/traceroute root 04755')
@@ -210,10 +214,8 @@ addFilter('E: glibc invalid-soname /lib/libpcprofile.so libpcprofile.so')
 addFilter('W: mathplot non-transparent-xpm ')
 
 # InitScriptCheck exceptions
-addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
 addFilter('E: squid incoherent-subsys /etc/rc.d/init.d/squid $SQUID')
 addFilter('E: heartbeat incoherent-subsys /etc/rc.d/init.d/heartbeat $SUBSYS')
-addFilter('E: initscripts:.*mandrake_(firstime|everytime)')
 
 
 # non-conffile-in-etc
