@@ -1,3 +1,9 @@
+2000-02-28  Frederic Lepied  <flepied@mandrakesoft.com>
+
+	* rpmlint.py:
+		* 0.9.2
+	* corrected rpm 3.0.4 support.
+
 2000-02-23  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.spec:

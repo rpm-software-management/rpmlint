@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.9.1
+%define version 0.9.2
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -20,7 +20,7 @@ Copyright: GPL
 Group: Development/System
 BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
+Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
 BuildArchitectures: noarch
 BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
@@ -49,6 +49,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Mon Feb 28 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9.2-1mdk
+- added a dependency on rpm-python.
+- corrected rpm 3.0.4 support.
+
 * Wed Feb 23 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9.1-1mdk
 - updated to support the way rpm 3.0.4 stores file names.
 
