@@ -29,6 +29,8 @@ applied_patch_regex=re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
 source_dir_regex=re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
+prefix_regex=re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
+packager_regex=re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex=re.compile('^/')
 clean_regex=re.compile('^%clean')
 changelog_regex=re.compile('^%changelog')
@@ -161,6 +163,16 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if tmp_regex.search(res.group(1)):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
+		res=packager_regex.search(line)
+                if res:
+                        printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
+		res=prefix_regex.search(line)
+                if res:
+                    if res.group(1) == '%{_prefix}':
+                        printWarning(pkg, 'redundant-prefix-tag')
+		    else:
+                        printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
+
                 if not clean and clean_regex.search(line):
                     clean=1
 
@@ -223,6 +235,15 @@ allow build as non root.''',
 'hardcoded-path-in-buildroot-tag',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
 by something like %{_tmppath}/%name-root.''',
+
+'hardcoded-packager-tag',
+'''The Packager tag is hardcoded in your spec file. It should be removed, so as to use rebuilder's own defaults.''',
+
+'hardcoded-prefix-tag',
+'''The Prefix tag is hardcoded in your spec file. It should be removed, so as to allow package relocation.''',
+
+'redundant-prefix-tag',
+'''The Prefix tag is uselessly defined as %{_prefix} in your spec file. It should be removed, as it is redundant with rpm defaults.''',
 
 'hardcoded-library-path',
 '''A library path is hardcoded to one of the following paths: /lib,
