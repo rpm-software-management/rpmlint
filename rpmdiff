@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #---------------------------------------------------------------
-# Project         : Mandrake Linux
+# Project         : Mandrakelinux
 # Module          : rpmlint
 # File            : rpmdiff
 # Version         : $Id$
@@ -73,6 +73,15 @@ def cmp_list(old, new, name):
         else:
             print FORMAT % (CHANGED, name)
 
+# filter the own name of the package
+def get_provides(pkg):
+    name = pkg[rpm.RPMTAG_NAME]
+    p = []
+    for prov in pkg.provides():
+        if prov[0] != name and prov[1] == '%s-%s' % (pkg[rpm.RPMTAG_VERSION], pkg[rpm.RPMTAG_RELEASE]) and prov[2] == rpm.RPMSENSE_EQUAL:
+            p.append(prov)
+    return p
+
 def main():
     if len(sys.argv) != 3:
         print "usage: %s <old package> <new package>" % sys.argv[0]
@@ -101,7 +110,7 @@ def main():
 
     cmp_list(old.prereq(), new.prereq(), 'PREREQ')
     cmp_list(old.requires(), new.requires(), 'REQUIRES')
-    cmp_list(old.provides(), new.provides(), 'PROVIDES')
+    cmp_list(get_provides(old), get_provides(new), 'PROVIDES')
     cmp_list(old.conflicts(), new.conflicts(), 'CONFLICTS')
 
     old_files = old.files()
