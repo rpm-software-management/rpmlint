@@ -47,7 +47,8 @@ VALID_GROUPS=(
 
 class TagsCheck(AbstractCheck.AbstractCheck):
     basename_regex=re.compile("/?([^/]+)$")
-    
+    changelog_version_regex=re.compile("[^>]([^ >]+)$")
+
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
 
@@ -65,11 +66,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 		basename=res.group(1)
 		if name != basename[0:len(name)]:
 		    printWarning(pkg, "non-coherent-filename", name, basename)
-	
-	if not pkg[rpm.RPMTAG_VERSION]:
+
+	version=pkg[rpm.RPMTAG_VERSION]
+	if not version:
 	    printError(pkg, "no-version-tag")
 
-	if not pkg[rpm.RPMTAG_RELEASE]:
+        release=pkg[rpm.RPMTAG_RELEASE]
+	if not release:
 	    printError(pkg, "no-release-tag")
 
 	summary=pkg[rpm.RPMTAG_SUMMARY]
@@ -88,10 +91,18 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	else:
 	    if not group in VALID_GROUPS:
 		printWarning(pkg, "non-standard-group", group)
-	
-	if not pkg[rpm.RPMTAG_CHANGELOGTEXT]:
-	    printError(pkg, "no-changelogtext-tag")
 
+	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
+        if not changelog:
+	    printError(pkg, "no-changelogname-tag")
+        else:
+            ret=TagsCheck.changelog_version_regex.search(changelog[0])
+            if not ret:
+                printWarning(pkg, "no-version-in-last-changelog")
+            elif version and release:
+                if version + "-" + release != ret.group(1):
+                    printWarning(pkg, "incoherent-version-in-changelog", ret.group(1), version + "-" + release)
+                                 
 check=TagsCheck()
 
 # TagsCheck.py ends here
