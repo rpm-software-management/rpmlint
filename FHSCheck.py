@@ -19,7 +19,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
     usr_subdir_regex=re.compile("^(X11R6|X386|bin|games|include|lib|local|sbin|share|src|spool|tmp)$")
     var_regex=re.compile("^/var/([^/]+)/")
     var_fsstnd_regex=re.compile("^(adm|catman|local|named|nis|preserve)$")
-    var_subdir_regex=re.compile("^(account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|yp)$")
+    var_subdir_regex=re.compile("^(account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|yp|www|ftp)$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")
