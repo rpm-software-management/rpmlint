@@ -19,7 +19,7 @@ import stat
 import rpm
 from Filter import *
 
-version='0.40'
+version='0.41'
 
 # Print usage information
 def usage(name):
@@ -29,7 +29,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print 'rpmlint version', version, 'Copyright (C) 1999-2001 Frederic Lepied, MandrakeSoft'
+    print 'rpmlint version', version, 'Copyright (C) 1999-2002 Frederic Lepied, MandrakeSoft'
 
 # Load a python module from its file name
 def loadCheck(name):	
@@ -40,6 +40,7 @@ def loadCheck(name):
 def loadFile(name):
     file=os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
     imp.load_source('', name, file)
+    file.close()
     
 #############################################################################
 # main program

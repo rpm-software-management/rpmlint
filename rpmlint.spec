@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.40
+%define version 0.41
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Sat Feb  9 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.41-1mdk
+ o SpecCheck.py: report missing %clean section.
+
+ o FilesCheck.py: check dependency on the right version of the
+interpreter for python and perl modules.
+
+ o various exceptions.
+
 * Thu Jan 10 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.40-1mdk
 
  o MenuCheck.py: new check: invalid-menu-icon-type
