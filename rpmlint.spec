@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.8
+%define version 0.9
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -27,7 +27,6 @@ BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 %description
 rpmlint is a tool to check common errors on rpm packages.
 Only binary packages are supported for the moment.
-
 
 %prep
 %setup -q
@@ -64,6 +63,14 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Thu Feb 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9-1mdk
+
+- 0.9: * gpg support.
+       * check release extension.
+       * check non executable in bin directories.
+       * new options: ValidGroups, ReleaseExtension and
+	UseVersionInChangelog.
+
 * Thu Dec 30 1999 Frederic Lepied <flepied@mandrakesoft.com> 0.8-1mdk
 
 - 0.8: I18N checks, some exceptions added.
