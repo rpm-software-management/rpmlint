@@ -29,7 +29,7 @@ configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*'
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
 hardcoded_library_paths='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
-hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s;]*))')
+hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s;]*))')
 
 def file2string(file):
     fd=open(file, "r")
