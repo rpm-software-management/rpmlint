@@ -14,7 +14,7 @@ import commands
 import rpm
 
 rc_regex=re.compile("^/etc(/rc.d)?/init.d/")
-chkconfig_content_regex=re.compile("# chkconfig: +[-0-9]+ +[-0-9]+ +[-0-9]+", re.MULTILINE)
+chkconfig_content_regex=re.compile("# chkconfig: +([-0-9]+) +[-0-9]+ +[-0-9]+", re.MULTILINE)
 subsys_regex=re.compile("/var/lock/subsys/([^/\n ]+)", re.MULTILINE)
 chkconfig_regex=re.compile("^[^#]*chkconfig", re.MULTILINE)
 status_regex=re.compile("^[^#]*status", re.MULTILINE)
@@ -52,12 +52,20 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 fd=open(pkg.dirName() + "/" + f, "r")
                 content=fd.read(-1)
                 fd.close()
+                
                 if not status_regex.search(content):
                     printError(pkg, "no-status-entry", f)
+                    
                 if not reload_regex.search(content):
                     printWarning(pkg, "no-reload-entry", f)
-                if not chkconfig_content_regex.search(content):
+                    
+                res=chkconfig_content_regex.search(content)
+                if not res:
                     printError(pkg, "no-chkconfig-line", f)
+                else:
+                    if res.group(1) == '-':
+                        printWarning(pkg, 'no-default-runlevel')
+                        
                 res=subsys_regex.search(content)
                 if not res:
                     printError(pkg, "subsys-not-used", f)
