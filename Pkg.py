@@ -34,7 +34,9 @@ class Pkg:
 	self.extracted=0
 	self.dirname=dirname
 	self.file_info=None
-	self.config_files=None
+	self._config_files=None
+	self._doc_files=None
+	self._files=None
 	
 	# Create a package object from the file name
 	fd=os.open(filename, os.O_RDONLY)
@@ -42,18 +44,22 @@ class Pkg:
 	os.close(fd)
 
 	self.name=self.header[rpm.RPMTAG_NAME]
-	
+
+    # Return true is the package is a source package
     def isSource(self):
 	return self.is_source
-    
+
+    # access the tags like an array
     def __getitem__(self, key):
 	return self.header[key]
 
+    # return the name of the directory where the package is extracted
     def dirName(self):
 	if not self.extracted:
 	    self._extract()
 	return self.dirname
 
+    # handle the extract phasis
     def _extract(self):
 	s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
@@ -64,7 +70,8 @@ class Pkg:
             str="rpm2cpio %s | (cd %s; cpio -id)" % (self.filename, self.dirname)
             cmd=commands.getstatusoutput(str)
 	    self.extracted=1
-	    
+
+    # return the array of info returned by the file command on each file
     def getFilesInfo(self):
 	if self.file_info == None:
 	    self.file_info=[]
@@ -77,21 +84,52 @@ class Pkg:
 		    self.file_info.append([res.group(1), res.group(2)])
 	    #print self.file_info
 	return self.file_info
-    
-    def cleanup(self):
-	commands.getstatusoutput("rm -rf " + self.dirname)
-	pass
 
+    # remove the extracted files from the package
+    def cleanup(self):
+	if self.extracted:
+	    commands.getstatusoutput("rm -rf " + self.dirname)
+
+    # return the associative array indexed on file names with
+    # the values as: (file perm, file owner, file group, file link to)
+    def files(self):
+	if self._files != None:
+	    return self._files
+	self._gatherFilesInfo()
+	return self._files
+
+    # return the list of config files
     def configFiles(self):
-	if self.config_files != None:
-	    return self.config_files
-	self.config_files=[]
+	if self._config_files != None:
+	    return self._config_files
+	self._gatherFilesInfo()
+	return self._config_files
+
+    # return the list of documentation files
+    def docFiles(self):
+	if self._doc_files != None:
+	    return self._doc_files
+	self._gatherFilesInfo()
+	return self._doc_files
+
+    # extract information about the files
+    def _gatherFilesInfo(self):
+	self._config_files=[]
+	self._doc_files=[]
+	self._files={}
 	flags=self.header[rpm.RPMTAG_FILEFLAGS]
 	files=self.header[rpm.RPMTAG_FILENAMES]
-	if flags:
-	    for idx in range(0, len(flags)):
+	modes=self.header[rpm.RPMTAG_FILEMODES]
+	users=self.header[rpm.RPMTAG_FILEUSERNAME]
+	groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
+	links=self.header[rpm.RPMTAG_FILELINKTOS]
+	if files:
+	    for idx in range(0, len(files)):
 		if flags[idx] & RPMFILE_CONFIG:
-		    self.config_files.append(files[idx])
-	return self.config_files
-
+		    self._config_files.append(files[idx])
+		elif flags[idx] & RPMFILE_DOC:
+		    self._doc_files.append(files[idx])
+		self._files[files[idx]]=(modes[idx], users[idx],
+					 groups[idx], links[idx])
+	
 # Pkg.py ends here
