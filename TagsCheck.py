@@ -11,6 +11,7 @@ from Filter import *
 import AbstractCheck
 import rpm
 import string
+import re
 
 VALID_GROUPS=(
     "Amusements/Games",
@@ -45,6 +46,8 @@ VALID_GROUPS=(
     )
 
 class TagsCheck(AbstractCheck.AbstractCheck):
+    basename_regex=re.compile("/?([^/]+)$")
+    
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
 
@@ -56,9 +59,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	if not pkg[rpm.RPMTAG_PACKAGER]:
 	    printError(pkg, "no-packager-tag")
 
-	if not pkg[rpm.RPMTAG_NAME]:
+	name=pkg[rpm.RPMTAG_NAME]
+	if not name:
 	    printError(pkg, "no-name-tag")
-
+	elif name:
+	    res=TagsCheck.basename_regex.search(pkg.filename)
+	    if res:
+		basename=res.group(1)
+		if name != basename[0:len(name)]:
+		    printWarning(pkg, "non-coherent-filename", name, basename)
+	
 	if not pkg[rpm.RPMTAG_VERSION]:
 	    printError(pkg, "no-version-tag")
 
