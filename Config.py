@@ -427,4 +427,11 @@ addFilter('E: perl(-base)? no-dependancy perl')
 addFilter('nut-server non-readable /etc/ups/upsd.(users|conf) 0600')
 addFilter('nut non-readable /etc/ups/upsmon.conf 0600')
 
+#shorewall
+addFilter('shorewall non-readable /etc/shorewall/.* 0600')
+addFilter('shorewall non-standard-dir-perm /etc/shorewall 0700')
+
+#DansGuardian
+addFilter('DansGuardian non-readable /etc/dansguardian/.* 0600')
+
 # Config.py ends here
