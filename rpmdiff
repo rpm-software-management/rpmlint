@@ -10,11 +10,16 @@
 #                 Pkg lib.
 #---------------------------------------------------------------
 
-import Pkg
 import rpm
 import sys
 import os
 import stat
+import site
+
+if not os.path.exists('Pkg.py') and os.path.isdir("/usr/share/rpmlint"):
+    site.addsitedir("/usr/share/rpmlint")
+
+import Pkg
 
 # constants
 
