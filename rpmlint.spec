@@ -50,23 +50,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Oct 12 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.25-1mdk
-* Config.py: added exception for sympa, rpm and bcast.
 
-* TagsCheck.py: o check that devel package depends on the base
+- Config.py: added exception for sympa, rpm and bcast.
+
+- TagsCheck.py: o check that devel package depends on the base
                   package with the same version.
                 o check that summary begins with a
 
-* PostCheck.py: o check dangerous commands.
+- PostCheck.py: o check dangerous commands.
                 ocheck reference to ~ or $HOME.
 
-* MenuCheck.py: o check that titles and longtitles begin by a capital
+- MenuCheck.py: o check that titles and longtitles begin by a capital
                   letter.
                 o check that no version is included in title and longtitle.
                 o /lib/cpp errors to /dev/null for new cpp.
 
-* FilesCheck.py: check package owning system dirs.
+- FilesCheck.py: check package owning system dirs.
 
-* SpecCheck.py: o new check.
+- SpecCheck.py: o new check.
                 o check name of spec file.
                 o check use of $RPM_SOURCE_DIR.
                 o warn if a patch is not applied.
