@@ -496,7 +496,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	    printError(pkg, 'no-description-tag')
         else:
             spell_check(pkg, description, 'description')
-            for l in string.split(description):
+            for l in string.split(description, "\n"):
                 if len(l) >= 80:
                     printError(pkg, 'description-line-too-long', l)
                     
