@@ -1,3 +1,16 @@
+2001-10-16 21:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added invalid-word check in description and
+	summary.  added invalid-buildhost check.
+
+2001-10-16 17:30  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added .cvsignore to the list of cvs-internal-file.
+
+2001-10-16 17:15  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: check for new style of pic sections.
+
 2001-10-10 15:39  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: Check if kernel modules are in the kernel package.
