@@ -306,9 +306,9 @@ addFilter('E: lpr setuid-gid-binary /usr/bin/lprm-lpd root lp 06555')
 
 #Mesa
 # this is needed to not conflict with XFree86-libs
-addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
-addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
-addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGLwrapper.so.')
+addFilter('E: .* no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
+addFilter('E: .* no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
+addFilter('E: .* no-ldconfig-symlink /usr/X11R6/lib/libGLwrapper.so.')
 
 #False reports on locales
 addFilter('E: libclanlib0-gl|clanlib-gl|xscreensaver-gl|prboom-gl no-dependency-on locales-gl')
