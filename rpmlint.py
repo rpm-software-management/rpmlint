@@ -27,7 +27,7 @@ policy=None
 def usage(name):
     print 'usage:', name, '[<options>] <rpm files>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
+    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
 # Print version information
 def printVersion():
@@ -132,7 +132,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args)=getopt.getopt(sys.argv[1:],
-                              'ic:C:hVvp:anP:E:f:',
+                              'iI:c:C:hVvp:anP:E:f:',
                               ['info',
                                'check=',
                                'checkdir=',
@@ -171,6 +171,8 @@ for o in opt:
 	Config.addCheck(o[1])
     elif o[0] == '-i' or o[0] == '--info':
         Config.info=1
+    elif o[0] == '-I':
+        Config.info_error=o[1]
     elif o[0] == '-h' or o[0] == '--help':
 	usage(sys.argv[0])
 	sys.exit(0)
@@ -206,6 +208,15 @@ except:
     sys.stderr.write('Error loading %s, skipping\n' % conf_file)
     
 policy and Config.load_policy(policy)
+
+if Config.info_error:
+    Config.info=1
+    for c in Config.allChecks():
+        loadCheck(c)
+    for e in Config.info_error.split(','):
+        print "%s :" % e 
+        printDescriptions(e)
+    sys.exit(0)
 
 # if no argument print usage
 if args == [] and not all:
