@@ -106,6 +106,8 @@ DEFAULT_VALID_GROUPS=(
 DEFAULT_VALID_LICENSES = (
     'GPL',
     'LGPL',
+    'GFDL',
+    'OPL',
     'Artistic',
     'BSD',
     'MIT',
@@ -399,10 +401,12 @@ BAD_WORDS = {
     }
 DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
+DEFAULT_INVALID_REQUIRES=('is', 'not', 'owned', 'by', 'any', 'package')
 
 distribution=Config.getOption("Distribution", "Mandrake Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
+INVALID_REQUIRES=Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES)
 packager_regex=re.compile(Config.getOption('Packager', DEFAULT_PACKAGER))
 basename_regex=re.compile('/?([^/]+)$')
 changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
@@ -460,6 +464,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         elif release_ext and not extension_regex.search(release):
             printWarning(pkg, 'not-standard-release-extension', release)
 
+        deps=pkg.requires() + pkg.prereq()
+        for d in deps:
+            if d[0] in INVALID_REQUIRES:
+                printError(pkg, 'invalid-dependency', d[0])
+
 	name=pkg[rpm.RPMTAG_NAME]
 	if not name:
 	    printError(pkg, 'no-name-tag')
@@ -479,7 +488,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         has_so=1
                         break
                 if has_so:
-                    for d in pkg.requires() + pkg.prereq():
+                    for d in deps:
                         if d[0] == base:
                             dep=d
                             break
@@ -725,6 +734,10 @@ if the license is near an existing one, you can use '<license> style'.''',
 'obsolete-not-provided',
 '''The obsoleted package must also be provided to allow a clean upgrade
 and not to break depencencies.''',
+
+'invalid-dependency',
+'''An invalid dependency has been detected. It usually means that the build of the
+package was buggy.''',
 
 )
     
