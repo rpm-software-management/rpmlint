@@ -30,6 +30,11 @@ INCORRECT_LOCALES = {
 
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 # and /usr/share/man for locale man pages.
+#
+# note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
+# are obsolescnet, but still widely used; some day however they should
+# be removed from this list.
+# 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
 'af', 'ar', 'az', 'be', 'bg', 'br', 'bs', 'ca', 'cs', 'cy', 'da',
 'de', 'de_AT', 'el', 'en_GB', 'en_RN', 'en@IPA', 'eo',
@@ -40,7 +45,7 @@ CORRECT_SUBDIRS = (
 'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'mt', 'nb', 'nl', 'nn', 'no', 
 'oc', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
 'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz',
-'vi', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_TW', 'zh_TW.Big5'
+'vi', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_HK', 'zh_TW', 'zh_TW.Big5'
 )
 
 str='-('
@@ -56,6 +61,10 @@ man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
 mo_regex=re.compile('\.mo$')
 
 # list of exceptions
+#
+# note: ISO-8859-9E is non standard, ISO-8859-{6,8} are of limited use
+# as locales (since all modern handling of bidi is based on utf-8 anyway),
+# so they should be removed once UTF-8 is deployed)
 EXCEPTION_DIRS=('C', 'POSIX', 'CP1251', 'CP1255', 'CP1256',
 'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4', 'ISO-8859-5',
 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-9E',
