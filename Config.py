@@ -254,6 +254,7 @@ addFilter('W: kernel-source dangling-symlink .*/linux/config.h ../pcmcia/config.
 addFilter('W: reiserfs-utils dangling-symlink /sbin/fsck.reiserfs.*')
 addFilter('W: reiserfsprogs dangling-relative-symlink /sbin/fsck.reiserfs ../bin/true')
 addFilter('W: reiserfs-utils incoherent-version-in-changelog')
+addFilter('kernel use-of-RPM_SOURCE_DIR')
 
 #Glibc
 addFilter('W: glibc shared-lib-without-dependency-information /lib/ld-.*so')
@@ -400,7 +401,7 @@ addFilter('old-menu-entry')
 #zapping
 addFilter('W: zapping devel-file-in-non-devel-package /usr/lib/zapping/plugins/.*\.a$')
 
-#ssane
+#sane
 addFilter('libsane1 non-versioned-file-in-library-package /usr/lib/sane')
 
 #mgetty
