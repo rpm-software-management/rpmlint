@@ -9,7 +9,7 @@
 
 %define name rpmlint
 %define version 0.39
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Nov 30 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.39-2mdk
+
+ o BinariesCheck.py: search references to home or tmp in /usr/lib/pkgconfig/ files.
+
+ o FilesCheck.py: .nosearch files are allowed to have a zero length.
+
+ o Config.py: added some exceptions.
+
 * Sun Nov 25 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.39-1mdk
 
  o TagsCheck.py: Corrected regexp to check devel provides.
