@@ -416,4 +416,14 @@ addFilter('E: basesystem no-%clean-section')
 #fetchmail
 addFilter('W: fetchmail-daemon incoherent-init-script-name fetchmail')
 
+#python
+addFilter('E: python(-base)? no-dependancy python')
+
+#perl
+addFilter('E: perl(-base)? no-dependancy perl')
+
+#nut
+addFilter('nut-server non-readable /etc/ups/upsd.(users|conf) 0600')
+addFilter('nut non-readable /etc/ups/upsmon.conf 0600')
+
 # Config.py ends here
