@@ -1,3 +1,16 @@
+2001-06-13 08:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: corrected copyright statement
+
+2001-06-13 08:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* DistributionCheck.py: changed Linux-Mandrake => Mandrake Linux as
+	default Distribution tag.
+
+2001-06-13 08:23  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: added new Office sub menus.
+
 2001-06-12 14:34  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: Add /etc/profile.d/.
