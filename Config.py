@@ -376,6 +376,7 @@ addFilter('E: apache-suexec setuid-binary /usr/sbin/suexec root 04710')
 #hylafax
 addFilter('E: hylafax-server non-readable /var/spool/fax/etc/hosts.hfaxd 0600')
 addFilter('E: hylafax-server non-standard-dir-perm /var/spool/fax/(sendq|tmp|doneq|docq|pollq|archive) 0700')
+addFilter('hylafax-server incoherent-logrotate-file /etc/logrotate.d/hylafax')
 
 #ctcs
 addFilter('E: ctcs statically-linked-binary /root/ctcs/runin/bin/')
