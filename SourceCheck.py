@@ -51,4 +51,24 @@ class SourceCheck(AbstractCheck.AbstractCheck):
 		
 check=SourceCheck()
 
+if Config.info:
+    addDetails(
+'multiple-specfiles',
+"""Your package contain multiple spec files. To build a
+correct package, you need to have only one spec file containing
+all your RPM information.""",
+
+'source-or-patch-not-bzipped',
+"""A source package or file in your package is not bzipped (doesn't
+have the .bz2 extension. To bzip it, use bzip2.""",
+
+'source-or-patch-not-gzipped',
+"""A source package or file in your package is not gzipped (doesn't
+have the .gz extension. To gzip it, use the gzip command""",
+
+'strange-permission',
+"""A file that you listed to include in your package is under strange
+permissions. Usually, a file is under a 0644 permission.""",
+
+)
 # SourceCheck.py ends here
