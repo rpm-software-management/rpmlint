@@ -26,6 +26,7 @@ INCORRECT_LOCALES = {
     'cz': 'cs',
     'cz_CZ': 'cs_CZ',
     'sw': 'sv',
+    'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
 
 # Correct subdirs of /usr/share/local for LC_MESSAGES
@@ -36,16 +37,17 @@ INCORRECT_LOCALES = {
 # be removed from this list.
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
-'af', 'am', 'ar', 'az', 'be', 'bg', 'br', 'bs', 'ca', 'cs', 'cy', 'da',
-'de', 'de_AT', 'el', 'en_GB', 'en_US', 'en_RN', 'en@IPA', 'eo',
+'af', 'am', 'ar', 'az', 'be', 'bg', 'bn', 'br', 'bs', 'ca', 'cs', 'cy',
+'da', 'de', 'de_AT', 'el', 'en_GB', 'en_US', 'en_RN', 'en@IPA', 'eo',
 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
-'es_PA', 'es_MX', 'et', 'eu', 'fa',
-'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hi', 'hr',
-'hu', 'hy', 'ia', 'id', 'is', 'it', 'ja', 'ka', 'ko',
-'kw', 'lo', 'lt', 'lug', 'lv', 'ma', 'mk', 'ms', 'mt', 'nb', 'nl', 'nn', 'no', 
-'oc', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
-'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz',
-'vi', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_HK', 'zh_TW', 'zh_TW.Big5'
+'es_PA', 'es_MX', 'et', 'eu',
+'fa', 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hi', 'hr', 'hu', 'hy',
+'ia', 'id', 'is', 'it', 'ja', 'ka', 'kn', 'ko', 'kw', 'lo', 'lt', 'lg', 'lv',
+'mi', 'mk', 'mr', 'ms', 'mt', 'nb', 'nl', 'nn', 'no',
+'oc', 'or', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
+'ro', 'ru', 'sk', 'sl', 'sp', 'sq', 'sr', 'sv',
+'ta', 'te', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz', 'vi', 'wa',
+'xh', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_HK', 'zh_TW', 'zh_TW.Big5'
 )
 
 str='-('
