@@ -21,7 +21,9 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "MenuCheck",
                 "PostCheck",
                 "InitScriptCheck",
-		"SourceCheck")
+		"SourceCheck",
+                "SpecCheck"
+                )
 
 # handle the list of checks to load
 _checks=[]
