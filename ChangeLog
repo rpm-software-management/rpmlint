@@ -1,3 +1,7 @@
+2004-08-03 08:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.60-1mdk
+
 2004-08-03 08:09  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: added obsolete-on-name
