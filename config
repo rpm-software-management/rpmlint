@@ -76,6 +76,6 @@ addFilter("E: man setgid-binary /usr/bin/man man 02755")
 addFilter("E: sudo non-standard-dir-perm /var/run/sudo 0700")
 addFilter("E: sudo setuid-binary /usr/bin/sudo root 04111")
 addFilter("E: slocate setgid-binary /usr/bin/slocate slocate 02755")
-
+addFilter("E: sh-utils setuid-binary /bin/su root 04755")
 
 # config ends here
