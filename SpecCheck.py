@@ -20,6 +20,7 @@ source_dir_regex=re.compile("[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex=re.compile('^/')
+clean_regex=re.compile('^%clean')
 
 def file2string(file):
     fd=open(file, "r")
@@ -55,6 +56,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             applied_patches=[]
             source_dir=None
             buildroot=0
+            clean=0
             
             # gather info from spec lines
             for line in spec:
@@ -80,10 +82,16 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     buildroot=1
                     if tmp_regex.search(res.group(1)):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
-                        
+
+                if not clean and clean_regex.search(line):
+                    clean=1
+                    
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
-                    
+
+            if not clean:
+                printError(pkg, 'no-%clean-section')
+                
             # process gathered info
             for p in patches.keys():
                 if p not in applied_patches:
@@ -126,6 +134,10 @@ allow build as non root.''',
 'hardcoded-path-in-buildroot-tag',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
 by something like %{_tmppath}/%name-root.''',
+
+'no-%clean-section',
+'''The spec file doesn't contain a %clean section to remove the files installed
+by the %install section.''',
 
 )
 
