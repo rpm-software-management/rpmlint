@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.30
+%define version 0.31
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -49,6 +49,19 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri May 18 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.31-1mdk
+- PostCheck.py: check that a script isn't only one command.
+                check postin and prein instead of postun and preun
+	        for ghost files creation.
+
+- MenuCheck.py: don't check NO_XALF in menu command.
+
+- FilesCheck.py: Add rpcuser.
+
+- Config.py: Expections for ldconfig, initscripts, netkit-base and iputils.
+
+- TagsCheck.py: check length of summary and description lines.
+
 * Fri Feb 16 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.30-1mdk
 
 - InitScriptCheck.py: check if runlevels are set
