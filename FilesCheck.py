@@ -184,7 +184,7 @@ mispelled_macro_regex=re.compile('%{.*}')
 siteperl_perl_regex=re.compile('/site_perl/')
 manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 shellbang_regex=re.compile('^#!\s*(\S*)')
-interpreter_regex=re.compile('^/(usr/)?bin/[^/]+$')
+interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(d|hourly|daily|monthly|weekly)))/')
 
 for idx in range(0, len(dangling_exceptions)):
