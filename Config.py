@@ -136,6 +136,8 @@ addFilter('filesystem non-standard-dir-perm /var/spool/mail 0775')
 addFilter('filesystem non-standard-dir-perm /root 0750')
 addFilter('filesystem non-standard-dir-perm /var/lock 0775')
 addFilter('filesystem non-standard-dir-perm /proc 0555')
+addFilter('filesystem dir-or-file-in-usr-local .*')
+
 addFilter('postgresql-test non-standard-[gu]id [^ ]+ postgres')
 addFilter('(binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|gcc-c\+\+|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|ocaml-lablgtk|camlp4|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package')
 addFilter('menu devel-file-in-non-devel-package /etc/menu-methods/menu.h')
@@ -155,6 +157,7 @@ addFilter('info-install info-dir-file /usr/share/info/dir')
 addFilter('sympa non-standard-uid [^\s]+ sympa')
 addFilter('sympa non-standard-gid [^\s]+ sympa')
 addFilter('rpm dangerous-command-in-%post rpm')
+addFilter('menu standard-dir-owned-by-package /usr/lib/menu')
 
 #XFree86
 addFilter('XFree86-server unstripped-binary-or-object /usr/X11R6/lib/modules/')
@@ -163,6 +166,9 @@ addFilter('XFree86.* postin-without-ghost-file-creation /usr/X11R6/lib/X11/fonts
 addFilter('XFree86 dangling-relative-symlink /usr/X11R6/lib/X11/xinit ../../../../etc/X11/xinit')
 addFilter('XFree86 non-standard-dir-perm /var/lib/xdm 0700')
 addFilter('XFree86 dangling-relative-symlink /usr/X11R6/lib/X11/xserver ../../../.././etc/X11/xserver')
+addFilter('XFree86 standard-dir-owned-by-package /usr/X11R6/man.*')
+addFilter('XFree86 standard-dir-owned-by-package /usr/share/icons')
+addFilter('XFree86 standard-dir-owned-by-package /etc/X11')
 
 #db
 addFilter('db[1-3]-devel no-provides db-devel')
@@ -227,7 +233,7 @@ addFilter('policycoreutils statically-linked-binary /usr/sbin/load_policy')
 #Setuid
 addFilter('traceroute setuid-binary /usr/sbin/traceroute root 04755')
 addFilter('iputils setuid-binary /usr/sbin/(traceroute|ping)6 root 04755')
-addFilter('urpmi setuid-binary /usr/bin/urpmi root 04750')
+#addFilter('urpmi setuid-binary /usr/bin/urpmi root 04750')
 addFilter('sash statically-linked-binary /sbin/sash')
 addFilter('perl-base setuid-binary /usr/bin/sperl5\.\d+\.\d+ root 04711')
 addFilter('perl-base setuid-binary /usr/bin/suidperl root 04711')
@@ -247,7 +253,7 @@ addFilter('e2fsprogs statically-linked-binary /sbin/.*fsck.*')
 addFilter('mount setuid-binary /bin/(u)?mount root 04755')
 addFilter('util-linux setuid-binary /usr/bin/(newgrp|chsh|chfn) root 04711')
 addFilter('util-linux setgid-binary /usr/bin/write tty 02755')
-addFilter('X11R6-contrib setgid-binary /usr/X11R6/bin/xman man 02755')
+#addFilter('X11R6-contrib setgid-binary /usr/X11R6/bin/xman man 02755')
 addFilter('dev86-devel no-provides dev8-devel')
 addFilter('usermode setuid-binary /usr/sbin/userhelper root 04755')
 addFilter('avifile-samples setuid-binary /usr/bin/kv4lsetup root')
@@ -470,6 +476,7 @@ addFilter('DansGuardian non-readable /etc/dansguardian/.* 0600')
 
 #rpm
 addFilter('rpm postin-without-ghost-file-creation')
+addFilter('rpm standard-dir-owned-by-package /var/lib/rpm')
 
 # packages without binary but built with other binary packages
 addFilter('(Mesa|hylafax|openldap|xclass|gtk\+mdk) no-binary')
@@ -557,6 +564,12 @@ addFilter('postfix(-[^ ]+)? non-standard-gid /usr/sbin/post(drop|queue) postdrop
 addFilter('postfix(-[^ ]+)? non-standard-gid /var/spool/postfix/(public|maildrop) postdrop')
 addFilter('postfix(-[^ ]+)? non-standard-uid /var/spool/postfix/([^ ]+) postfix')
 addFilter('postfix(-[^ ]+)? setgid-binary /usr/sbin/post(drop|queue) postdrop 02755')
+
+# xinetd
+addFilter('xinetd standard-dir-owned-by-package /etc/xinetd.d')
+
+# lsb
+addFilter('lsb standard-dir-owned-by-package /etc/opt')
 
 # devel-dependency wrong warnings
 addFilter('gcc devel-dependency glibc-devel')
