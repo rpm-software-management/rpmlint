@@ -1,0 +1,24 @@
+# -*- python -*-
+# Configuration for the rpmlint utility.
+# Loaded before ~/.rpmlintrc
+# $Id$
+
+# This line is mandatory to access the configuration functions
+from Config import *
+
+# Additionale path to look for checks
+
+#addCheckDir("~/mandrake/rpmlint")
+
+# Configure the checks if you don't want the default ones
+
+#addCheck("FHSCheck")
+#addCheck("BinariesCheck")
+
+# Configuration options used by the checks
+
+#setOption("Vendor", "MySelf")
+#setOption("Distribution", "MyDistrib")
+#setOption("UseBzip2", 1)
+
+# config ends here
