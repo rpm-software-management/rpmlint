@@ -467,8 +467,8 @@ Standard groups are:\n
 """,
 
 'perl-temp-file',
-"""
-""",
+"""You have a perl temporary file in your package. Usually, this
+file is beginning with a dot (.) and contain "perl" in its name.""",
 
 'dir-or-file-in-tmp',
 """A file in the package is located in /tmp. It's not permitted
@@ -487,20 +487,21 @@ to put a file in this directory.""",
 create a subdir there. Create it in /usr/lib/ instead.""",
 
 'backup-file-in-package',
-"""
-""",
+"""You have a backup file in your package. The files are usually
+beginning with ~ (vi) or #file# (emacs). Please remove it and rebuild
+your package.""",
 
 'dir-or-file-in-home',
 """A file in the package is located in /home. It's not permitted
 to put a file in this directory.""",
 
 'cvs-internal-file',
-"""
-""",
+"""You have file(s) from your CVS build directory. Move your CVS directory
+out of the package and rebuild it.""",
 
 'info-dir-file',
-"""
-""",
+"""You have /usr/info/dir or /usr/share/info/dir in your package. It's not allowed.
+Please remove it and rebuild your package.""",
 
 'non-conffile-in-etc',
 """A file in your package is being installed in /etc, but is not a
@@ -523,8 +524,8 @@ configuration file. All the files in /etc MUST be configuration files.""",
 """,
 
 'non-standard-executable-perm',
-"""
-""",
+"""A standard executable should have permission set to 0755. If you get this message,
+that means that you have a wrong executable permission in your package""",
 
 'non-executable-in-bin',
 """A file is being installed in /usr/bin, but is not an executable. Be sure
@@ -535,13 +536,10 @@ that the file is an executable or that it has executable permissions.""",
 package. If you want to include source code in your package, be sure to
 create a development package.""",
 
-'non-standard-executable-perm',
-"""
-""",
 
 'non-standard-dir-perm',
-"""
-""",
+"""A standard directory should have permission set to 0755. If you get this message,
+that means that you have a wrong directory permission in your package""",
 
 'standard-dir-owned-by-package',
 """
