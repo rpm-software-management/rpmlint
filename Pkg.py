@@ -74,7 +74,7 @@ class Pkg:
         if not stat.S_ISDIR(s[stat.ST_MODE]):
             print "unable to access dir", self.dirname
         else:
-            self.dirname = "%s/%s" % (self.dirname, os.path.basename(self.filename))
+            self.dirname = "%s/%s.%d" % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
             str="rpm2cpio %s | (cd %s; cpio -id)" % (self.filename, self.dirname)
             cmd=commands.getstatusoutput(str)
