@@ -1,3 +1,7 @@
+2004-02-10 15:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.56-1mdk
+
 2004-02-10 13:28  Pablo Saratxaga <pablo@mandrakesoft.com>
 
 	* I18NCheck.py: changed uz@Latn locale
