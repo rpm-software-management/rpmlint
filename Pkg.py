@@ -268,7 +268,16 @@ class Pkg:
         if self._req_names == -1:
             self._req_names = map(lambda x: x[0], self.requires() + self.prereq())
         return self._req_names
-    
+
+    def check_versioned_dep(self, name, version):
+        for d in self.requires()+self.prereq():
+            if d[0] == name:
+                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or d[1] != version:
+                    return 0
+                else:
+                    return 1
+        return 0
+
     def conflicts(self):
         self._gatherDepInfo()
         return self._conflicts
