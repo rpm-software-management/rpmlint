@@ -25,7 +25,7 @@ DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS='/lib/(modules|cpp|perl5|rpm)($|[\s/,])'
 
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
-applied_patch_regex=re.compile("^\s*%patch([^\s]*)\s")
+applied_patch_regex=re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
 source_dir_regex=re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
@@ -120,7 +120,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 else:
                     res=applied_patch_regex.search(line)
                     if res:
-                        applied_patches.append(res.group(1))
+                        applied_patches.append(res.group(1) or res.group(2))
                         if ifarch_depth > 0:
                             applied_patches_ifarch.append(res.group(1))
                     elif not source_dir:
