@@ -85,7 +85,7 @@ def getOption(name, default):
     
     try:
 	return _options[name]
-    except KeyError:
+    except:
 	return default
 
 # List of filters
@@ -409,5 +409,8 @@ addFilter('mgetty-sendfax incoherent-logrotate-file /etc/logrotate.d/sendfax')
 
 #kdebase
 addFilter('E: kdebase standard-dir-owned-by-package /usr/share/icons')
+
+#basesystem
+addFilter('E: basesystem no-%clean-section')
 
 # Config.py ends here
