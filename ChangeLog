@@ -3,6 +3,9 @@
 	* rpmlint.py:
 		* 0.9.
 
+	* SignatureCheck.py:
+		* added gpg to correct signatures.
+		
 	* README:
 		* added description of new options: ValidGroups, ReleaseExtension and
 	UseVersionInChangelog.
