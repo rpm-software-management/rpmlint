@@ -488,7 +488,7 @@ addFilter('extipl only-non-binary-in-usr-lib')
 addFilter('ocamltk devel-file-in-non-devel-package')
 
 #drakconf
-addFilter('drakconf invalid-menu-section Configuration /usr/lib/menu/drakconf')
+addFilter('drakconf invalid-menu-section System/Configuration /usr/lib/menu/drakconf')
 
 #wvdial
 addFilter('wvdial non-readable /etc/ppp/peers/wvdial(-pipe)? 0600')
