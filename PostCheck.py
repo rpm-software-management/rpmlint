@@ -30,6 +30,9 @@ bracket_regex=re.compile('^[^#]*if.*[^ \]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\$HOME', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|\s|;)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install)\s", re.MULTILINE)
 single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
+update_menu_regex=re.compile('update-menus', re.MULTILINE)
+tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
+menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/')
 
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
@@ -63,6 +66,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
 	if pkg.isSource():
 	    return
 
+        menu_error=0
+        
         for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, "%pre"),
                     (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, "%post"),
                     (rpm.RPMTAG_PREUN, rpm.RPMTAG_PREUNPROG, "%preun"),
@@ -81,7 +86,16 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     res=dangerous_command_regex.search(script)
                     if res:
                         printWarning(pkg, "dangerous-command-in-" + tag[2], res.group(2))
-                        
+                    if update_menu_regex.search(script):
+                        menu_error=1
+                        for f in pkg.files().keys():
+                            if menu_regex.search(f):
+                                menu_error=0
+                                break
+                        if menu_error:
+                            printError(pkg, 'update-menus-without-menu-file-in-' + tag[2])
+                    if tmp_regex.search(script):
+                        printError(pkg, 'use-tmp-in-' + tag[2])
                 if prog == "/bin/sh" or prog == "/bin/bash":
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
