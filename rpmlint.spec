@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.60
+%define version 0.61
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -50,7 +50,14 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 %dir /etc/rpmlint
 
+# MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
+
 %changelog
+* Wed Aug 25 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.61-1mdk
+- I18NCheck.py: Added recognition of "pa" (Punjabi) language code (Pablo)
+		added some more language codes (Pablo)
+- MenuCheck.py: Fix menu capitalization (Frederic Crozat)
+
 * Tue Aug  3 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.60-1mdk
 - added obsolete-on-name error: a package sould not obsolete itself, as
   it can cause weird error in tools. (Michael)
