@@ -8,8 +8,8 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.48
-%define release 2mdk
+%define version 0.49
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,17 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Apr 29 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.49-1mdk
+- added support for rpm 4.2 (Ville Skyttä)
+- Spelling fixes, new options: UseEpoch, ValidSrcPerms (Ville Skyttä).
+- TagsCheck.py: Handle nosrc packages properly, add required Epoch
+functionality (Ville Skyttä).
+- SourceCheck.py: Made valid source permissions configurable (Ville Skyttä).
+- I18NCheck.py: Fixed Maori ('mi', was wrongly coded as 'ma'), Added
+various Indic languages that have Gnome/KDE translations, Added Xhosa
+(xh), changed Ganda code lug -> lg (we standardize on two letter
+codes) (Pablo)
+
 * Fri Jan 17 2003 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.48-2mdk
 - BinariesCheck.py: Add lib64 paths
 - FilesCheck.py: Errour out about outside-libdir-files only if it
