@@ -18,7 +18,7 @@ import os
 import stat
 from Filter import *
 
-version="0.32"
+version="0.33"
 
 # Print usage information
 def usage(name):
