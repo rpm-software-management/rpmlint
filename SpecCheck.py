@@ -13,6 +13,15 @@ import re
 import sys
 import rpm
 import string
+import Config
+
+# Don't check for hardcoded library paths in biarch packages
+DEFAULT_BIARCH_PACKAGES='^(gcc|glibc)'
+
+# Don't check for hardcoded library paths in packages which can have
+# their noarch files in /usr/lib/<package>/*, or packages that can't
+# be installed on biarch systems
+DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS='/lib/(modules|cpp|perl5|rpm)($|[\s/,])'
 
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
@@ -28,10 +37,13 @@ configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*'
 lib_package_regex=re.compile('^%package.*lib')
 mklibname_regex=re.compile('%mklibname')
 
+biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
+hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
+
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
 hardcoded_library_paths='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
-hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s;]*))')
+hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
 
 def file2string(file):
     fd=open(file, "r")
@@ -120,7 +132,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     configure_cmdline=string.strip(line)
                 
                 res=hardcoded_library_path_regex.search(line)
-                if not changelog and res:
+                if not changelog and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(line)):
                     printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
                 
                 res=buildroot_regex.search(line)
