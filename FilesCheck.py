@@ -97,22 +97,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		    if stat.S_ISGID & mode:
 			setgid=group
 		    if setuid and setgid:
-			printWarning(pkg, "setuid-gid-binary", f, setuid, setgid, oct(perm))
+			printError(pkg, "setuid-gid-binary", f, setuid, setgid, oct(perm))
 		    elif setuid:
-			printWarning(pkg, "setuid-binary", f, setuid, oct(perm))
+			printError(pkg, "setuid-binary", f, setuid, oct(perm))
 		    elif setgid:
-			printWarning(pkg, "setgid-binary", f, setgid, oct(perm))
+			printError(pkg, "setgid-binary", f, setgid, oct(perm))
 		    elif mode & 0777 != 0755:
-			printWarning(pkg, "non-standard-executable-perm", f, oct(perm))
+			printError(pkg, "non-standard-executable-perm", f, oct(perm))
 
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
 		if perm != 0755:
-		    printWarning(pkg, "non-standard-executable-perm", f, oct(perm))
+		    printError(pkg, "non-standard-executable-perm", f, oct(perm))
 		    
 	    # normal dir check
 	    elif stat.S_ISDIR(mode) and perm != 0755:
-		printWarning(pkg, "non-standard-dir-perm", f, oct(perm))
+		printError(pkg, "non-standard-dir-perm", f, oct(perm))
 
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
@@ -125,7 +125,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			filetop=r.group(1)
 			if filetop == linktop:
 			    # absolute links within one toplevel directory are _not_ ok!
-			    printError(pkg ,"symlink-should-be-relative", f, link)
+			    printWarning(pkg ,"symlink-should-be-relative", f, link)
 		# relative link
 		else:
 		    pathcomponents=string.split(f, '/')[1:]
