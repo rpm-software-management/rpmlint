@@ -147,7 +147,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=xpm_ext_regex.search(f)
                     if res:
                         mode=files[f][0]
-                        if stat.S_ISREG(mode) and not Pkg.grep('None\',', dirname + '/' + f):
+                        if stat.S_ISREG(mode) and not Pkg.grep('None",', dirname + '/' + f):
                             printWarning(pkg, 'non-transparent-xpm', f)
         if len(menus) > 0:
             dir=pkg.dirName()
