@@ -27,13 +27,13 @@ clean:
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
-	cp -p rpmdiff *.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	if [ -z "$(POLICY)" ]; then \
 	  sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py ; \
 	else \
 	  sed -e 's/@VERSION@/$(VERSION)/' -e 's/policy=None/policy="$(POLICY)"/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py; \
 	fi
-	cp -p rpmlint $(DESTDIR)$(BINDIR)
+	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 verify:
