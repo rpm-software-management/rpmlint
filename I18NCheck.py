@@ -71,6 +71,7 @@ correct_subdir_regex=re.compile('^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex=re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
 man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
 mo_regex=re.compile('\.mo$')
+webapp_regex=re.compile('/etc/httpd/webapps.d/[^/]+$/')
 
 # list of exceptions
 #
@@ -105,6 +106,13 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'incorrect-i18n-tag-' + correct, i)
 	    except KeyError:
 		pass
+
+	# as some webapps have their files under /var/www/html, and
+	# others in /usr/share or /usr/lib, the only reliable way
+	# sofar to detect them is to look for an apache configuration file
+	for f in files.keys():
+	    if mo_regex.search(f):
+		webapp=True
 	    
 	for f in files.keys():
 	    res=locale_regex.search(f)
@@ -140,7 +148,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                         subdir=None
 
             if mo_regex.search(f) or subdir:
-                if pkg.fileLang(f) == '':
+                if pkg.fileLang(f) == '' and not webapp:
                     printWarning(pkg, 'file-not-in-%lang', f)
 
         name=pkg[rpm.RPMTAG_NAME]
