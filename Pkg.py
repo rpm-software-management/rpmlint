@@ -16,6 +16,16 @@ import commands
 import re
 import string
 
+RPMFILE_CONFIG=(1 << 0)
+RPMFILE_DOC=(1 << 1)
+RPMFILE_DONOTUSE=(1 << 2)
+RPMFILE_MISSINGOK=(1 << 3)
+RPMFILE_NOREPLACE=(1 << 4)
+RPMFILE_SPECFILE=(1 << 5)
+RPMFILE_GHOST=(1 << 6)
+RPMFILE_LICENSE=(1 << 7)
+RPMFILE_README=(1 << 8)
+
 class Pkg:
     file_regex=re.compile("\.([^:]+):\s+(.*)")
 
@@ -24,6 +34,7 @@ class Pkg:
 	self.extracted=0
 	self.dirname=dirname
 	self.file_info=None
+	self.config_files=None
 	
 	# Create a package object from the file name
 	fd=os.open(filename, os.O_RDONLY)
@@ -70,5 +81,17 @@ class Pkg:
     def cleanup(self):
 	commands.getstatusoutput("rm -rf " + self.dirname)
 	pass
-    
+
+    def configFiles(self):
+	if self.config_files != None:
+	    return self.config_files
+	self.config_files=[]
+	flags=self.header[rpm.RPMTAG_FILEFLAGS]
+	files=self.header[rpm.RPMTAG_FILENAMES]
+	if flags:
+	    for idx in range(0, len(flags)):
+		if flags[idx] & RPMFILE_CONFIG:
+		    self.config_files.append(files[idx])
+	return self.config_files
+
 # Pkg.py ends here
