@@ -114,6 +114,8 @@ DEFAULT_VALID_LICENSES = (
     "BSD-Style",
     )
 
+DEFAULT_PACKAGER = "@mandrakesoft.com"
+
 class TagsCheck(AbstractCheck.AbstractCheck):
     basename_regex=re.compile("/?([^/]+)$")
     changelog_version_regex=re.compile("[^>]([^ >]+)$")
@@ -122,15 +124,19 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     release_ext=Config.getOption("ReleaseExtension", "mdk")
     extension_regex=release_ext and re.compile(release_ext + "$")
     use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
+    packager=re.compile(Config.getOption("Packager", DEFAULT_PACKAGER))
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
 
     def check(self, pkg, verbose):
 
-	if not pkg[rpm.RPMTAG_PACKAGER]:
+        packager=pkg[rpm.RPMTAG_PACKAGER]
+        if not packager:
 	    printError(pkg, "no-packager-tag")
-
+        elif not TagsCheck.packager.search(packager):
+            printWarning(pkg, "invalid-packager", packager)
+            
 	name=pkg[rpm.RPMTAG_NAME]
 	if not name:
 	    printError(pkg, "no-name-tag")
