@@ -1,3 +1,7 @@
+2003-04-29 20:53  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.49-1mdk
+
 2003-04-29 20:47  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py: added an exception for tpctl
