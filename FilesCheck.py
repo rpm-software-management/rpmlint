@@ -142,6 +142,7 @@ opt_regex=re.compile('^/opt/')
 home_regex=re.compile('^/home/')
 etc_regex=re.compile('^/etc/')
 usr_local_regex=re.compile('^/usr/local/')
+var_local_regex=re.compile('^/var/local/')
 sub_bin_regex=re.compile('^(/usr)?/s?bin/\S+/')
 backup_regex=re.compile('~$|\#[^/]+\#$')
 compr_regex=re.compile('\.(gz|z|Z|zip|bz2)$')
@@ -159,8 +160,8 @@ ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
 info_regex=re.compile('^/usr/share/info')
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
-perl_temp_file=re.compile('.*perl.*(bs|\.packlist)$')
-cvs_regex=re.compile('/CVS/[^/]+$|/.cvsignore$')
+perl_temp_file=re.compile('.*perl.*(\.bs|/\.packlist|/perllocal\.pod)$')
+scm_regex=re.compile('/CVS/[^/]+$|/.cvsignore$|/\.svn/|/(\.arch-ids|{arch})/')
 htaccess_regex=re.compile('\.htaccess$')
 games_path_regex=re.compile('/usr/(lib/)?/games')
 games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
@@ -242,14 +243,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'dir-or-file-in-opt', f)
 	    elif usr_local_regex.search(f):
 		printError(pkg, 'dir-or-file-in-usr-local', f)
+	    elif var_local_regex.search(f):
+		printError(pkg, 'dir-or-file-in-var-local', f)
 	    elif sub_bin_regex.search(f):
 		printError(pkg, 'subdir-in-bin', f)
 	    elif backup_regex.search(f):
 		printError(pkg, 'backup-file-in-package', f)
             elif home_regex.search(f):
 		printError(pkg, 'dir-or-file-in-home', f)
-            elif cvs_regex.search(f):
-		printError(pkg, 'cvs-internal-file', f)
+            elif scm_regex.search(f):
+		printError(pkg, 'version-control-internal-file', f)
             elif htaccess_regex.search(f):
 		printError(pkg, 'htaccess-file', f)
 	    elif hidden_file_regex.search(f):	
@@ -606,8 +609,12 @@ to put a file in this directory.''',
 '''A file in the package is located in /usr/local. It's not permitted
 to put a file in this directory.''',
 
+'dir-or-file-in-var-local',
+'''A file in the package is located in /var/local. It's not permitted
+to put a file in this directory.''',
+
 'subdir-in-bin',
-'''The package contains a sub-directory in the /usr/bin. You can't
+'''The package contains a subdirectory in /usr/bin. It's not permitted to
 create a subdir there. Create it in /usr/lib/ instead.''',
 
 'backup-file-in-package',
@@ -619,9 +626,9 @@ your package.''',
 '''A file in the package is located in /home. It's not permitted
 to put a file in this directory.''',
 
-'cvs-internal-file',
-'''You have file(s) from your CVS build directory. Move your CVS directory
-out of the package and rebuild it.''',
+'version-control-internal-file',
+'''You have included file(s) internally used by a version control system
+in the package. Move these files out of the package and rebuild it.''',
 
 'htaccess-file',
 '''You have individual apache configuration .htaccess file(s) in your package. Replace them by a central configuration file in /etc/httpd/webapps.d.''',
