@@ -36,14 +36,16 @@ to load configuration functions.
 
 Configuration functions:
 
-resetChecks()  reset the list of checks.
+resetChecks() resets the list of checks.
 
-addCheck(check) add the check to the list of checks to try.
+addCheck(check) adds the check to the list of checks to try.
 
-addCheckDir(path) add a path to look for checks.
+addCheckDir(path) adds a path to look for checks.
 
-setOption(name, value) set the value of the configuration option. See bellow
+setOption(name, value) sets the value of the configuration option. See bellow
 to have the list of available options.
+
+addFilter(package, reason) adds a filter to remove the output of a check.
 
 Available options:
 
