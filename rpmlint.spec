@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.49
+%define version 0.50
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Thu May  8 2003 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.50-1mdk
+- Ship with rpmdiff
+- Add Zope Public License
+- Add %%ifarch-applied-patch warning
+- Add hardcoded-library-path exceptions
+- Add hidden-file-or-dir check (Michael Scherer)
+- Fix Epoch tests (Ville Skyttä)
+
 * Tue Apr 29 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.49-1mdk
 - added support for rpm 4.2 (Ville Skyttä)
 - Spelling fixes, new options: UseEpoch, ValidSrcPerms (Ville Skyttä).
