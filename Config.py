@@ -134,7 +134,6 @@ addFilter('W: icewm-light menu-command-not-in-package icewm')
 addFilter('E: slocate non-standard-dir-perm /var/lib/slocate 0750')
 addFilter('E: ld.so statically-linked-binary /sbin/ldconfig')
 addFilter('E: ocaml statically-linked-binary /sbin/ldconfig')
-addFilter('W: shadow-utils dangling-symlink /usr/bin/sg newgrp')
 addFilter('E: rpm statically-linked-binary /usr/bin/rpm2cpio|/bin/rpm')
 addFilter('E: info-install info-dir-file /usr/share/info/dir')
 addFilter('E: sympa non-standard-uid [^\s]+ sympa')
@@ -328,6 +327,10 @@ addFilter('W: autoconf devel-file-in-non-devel-package /usr/share/autoconf/accon
 addFilter('E: portsentry non-readable /etc/portsentry/portsentry.ignore 0600')
 addFilter('E: portsentry non-readable /etc/portsentry/portsentry.conf 0600')
 addFilter('E: portsentry non-standard-dir-perm /var/portsentry 0700')
+
+# shadow-utils
+addFilter('W: shadow-utils dangling-relative-symlink /usr/bin/sg newgrp')
+addFilter('E: shadow-utils non-readable /etc/default/useradd 0600')
 
 #ipsec
 addFilter('E: freeswan non-readable /etc/freeswan/ipsec.secrets 0600')
