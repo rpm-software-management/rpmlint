@@ -37,7 +37,7 @@ INCORRECT_LOCALES = {
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
 'af', 'am', 'ar', 'az', 'be', 'bg', 'br', 'bs', 'ca', 'cs', 'cy', 'da',
-'de', 'de_AT', 'el', 'en_GB', 'en_RN', 'en@IPA', 'eo',
+'de', 'de_AT', 'el', 'en_GB', 'en_US', 'en_RN', 'en@IPA', 'eo',
 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu', 'fa',
 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hi', 'hr',
