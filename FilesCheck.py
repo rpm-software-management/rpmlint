@@ -118,6 +118,8 @@ STANDARD_DIRS=(
     '/var/tmp'
     )
 
+DEFAULT_GAMES_GROUPS='Games'
+
 tmp_regex=re.compile("^/tmp/|^(/var|/usr)/tmp/")
 mnt_regex=re.compile("^/mnt/")
 opt_regex=re.compile("^/opt/")
@@ -140,6 +142,8 @@ info_regex=re.compile("^/usr/share/info")
 install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
 perl_temp_file=re.compile(".*perl.*(bs|\.packlist)$")
 cvs_regex=re.compile("/CVS/[^/]+$")
+games_path_regex=re.compile('/usr/(lib/)?/games')
+games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -261,7 +265,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		    elif setuid:
 			printError(pkg, "setuid-binary", f, setuid, oct(perm))
 		    elif setgid:
-			printError(pkg, "setgid-binary", f, setgid, oct(perm))
+                        if not (group == 'games' and
+                                (games_path_regex.search(f) or games_group_regex.search(pkg[rpm.RPMTAG_GROUP]))):
+                            printError(pkg, "setgid-binary", f, setgid, oct(perm))
 		    elif mode & 0777 != 0755:
 			printError(pkg, "non-standard-executable-perm", f, oct(perm))
 
