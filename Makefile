@@ -75,7 +75,6 @@ export:
 	cvs export -d $(PACKAGE)-$(VERSION) -r $(TAG) $(PACKAGE)
 
 cvstag:
-	cvs commit
 	cvs tag $(CVSTAGOPT) $(TAG)
 
 changelog: ../common/username
