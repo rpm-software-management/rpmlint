@@ -100,10 +100,21 @@ DEFAULT_VALID_GROUPS=(
     "Books/Other"
     )
 
+DEFAULT_VALID_LICENSES = (
+    "GPL",
+    "LGPL",
+    "Artistic",
+    "BSD",
+    "MIT",
+    "QPL",
+    "MPL",
+    )
+
 class TagsCheck(AbstractCheck.AbstractCheck):
     basename_regex=re.compile("/?([^/]+)$")
     changelog_version_regex=re.compile("[^>]([^ >]+)$")
     valid_groups=Config.getOption("ValidGroups", DEFAULT_VALID_GROUPS)
+    valid_licenses=Config.getOption("ValidLicenses", DEFAULT_VALID_LICENSES)
     release_ext=Config.getOption("ReleaseExtension", "mdk")
     extension_regex=release_ext and re.compile(release_ext + "$")
     use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
@@ -169,7 +180,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if name == provide_name:
                 printWarning(pkg, "package-provides-itself")
                 break
-        
+
+        license=pkg[rpm.RPMTAG_LICENSE]
+        if not license:
+            printError(pkg, "no-license")
+        else:
+            if not license in TagsCheck.valid_licenses:
+                printWarning(pkg, "invalid-license", license)
+
 check=TagsCheck()
 
 # TagsCheck.py ends here
