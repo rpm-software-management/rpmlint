@@ -331,7 +331,7 @@ addFilter('.* no-ldconfig-symlink /usr/X11R6/lib/libGLwrapper.so.')
 #False reports on locales
 addFilter('(?:libclanlib0-gl|clanlib-gl|xscreensaver-gl|prboom-gl) no-dependency-on locales-gl')
 addFilter('(?:emacs.*-el|xemacs.*-el) no-dependency-on locales-el')
-addFilter('(hack)?kernel-pcmcia-cs no-dependency-on locales-cs')
+addFilter('(hack)?(kernel-)?pcmcia-cs no-dependency-on locales-cs')
 addFilter('php-gd no-dependency-on locales-gd')
 
 #dev
