@@ -1,0 +1,7 @@
+You need the following utilities to run rpmlint:
+
+	o python 1.5.2 or better
+	o python rpm support
+	o find and xargs
+	o objdump
+	o file

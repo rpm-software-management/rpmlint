@@ -1,0 +1,61 @@
+%define name rpmlint
+%define version 0.1
+%define release 1mdk
+
+Summary: rpm correctness checker
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Source0: %{name}-%{version}.tar.bz2
+Copyright: GPL
+Group: Development/System
+BuildRoot: /tmp/%{name}-buildroot
+Prefix: %{_prefix}
+Requires: python, rpm-devel, binutils, file, findutils
+BuildArchitectures: noarch
+
+%description
+rpmlint is a tool to check common errors on rpm packages.
+Only binary packages are supported for the moment.
+
+
+%prep
+%setup -q
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+find $RPM_BUILD_ROOT/ -type 'f'|grep -E '.*[0-9]'|xargs file|grep troff\
+|cut -d: -f1|xargs bzip2 -9
+for aa in man X11R6/man local/man;do
+[ -d $RPM_BUILD_ROOT/usr/$aa ] || continue
+for i in $(find $RPM_BUILD_ROOT/usr/$aa -type 'l');do
+ 	TO=$(/bin/ls -l $i|awk '{print $NF}')
+	ln -sf $TO.bz2 $i && mv $i $.bz2
+done
+done
+for i in `find $RPM_BUILD_ROOT/ -type 'f' -perm '+a=x' ! -name 'lib*so*'`;do
+    file $i|grep -q "not stripped" && strip $i
+done
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root,0755)
+%doc README INSTALL COPYING
+%{prefix}/bin/*
+%{prefix}/share/rpmlint
+
+%changelog
+* Fri Oct  1 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- First spec file for Mandrake distribution.
+
+
+# end of file

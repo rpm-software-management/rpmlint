@@ -1,0 +1,19 @@
+rpmlint is a tool to check common errors on rpm packages.
+Only binary packages are tested for the moment.
+
+Comments and new checks welcome. Send feedback to
+<Frederic.Lepied@sugix.frmug.org>.
+
+Implemented checks:
+
+	o tags checks
+	o Mandrake specific checks
+	o binaries checks
+
+Planned checks:
+
+	o pgp checks
+	o permissions, groups and owners checks
+	o suid warnings
+	o configuration files checks
+	o rpm source checks
