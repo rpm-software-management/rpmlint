@@ -52,3 +52,6 @@ name		type		default
 Vendor		string		"MandrakeSoft"
 Distribution	string		"Mandrake"
 UseBzip2	boolean		1
+ValidGroups	list of strings	
+ReleaseExtension string or None	"mdk"
+UseVersionInChangelog boolen	1
