@@ -19,7 +19,7 @@ clean:
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR)
-	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p rpmlint.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp rpmlint $(DESTDIR)$(BINDIR)
 
 dist:
@@ -30,5 +30,14 @@ dist:
 	tar cvf rpmlint-$$VERSION.tar rpmlint-$$VERSION;\
 	bzip2 -9vf rpmlint-$$VERSION.tar;\
 	rm -rf rpmlint-$$VERSION
+
+ndist:
+	TEMP=$$$$;\
+	rm -f rpmlint.tar.bz2; \
+	mkdir -p $$TEMP/rpmlint; \
+	ln $(FILES) $$TEMP/rpmlint/; \
+	tar cvf rpmlint.tar -C $$TEMP rpmlint;\
+	bzip2 -9vf rpmlint.tar;\
+	rm -rf $$TEMP
 
 # Makefile ends here
