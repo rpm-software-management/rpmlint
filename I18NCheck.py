@@ -27,12 +27,21 @@ INCORRECT_LOCALES = {
     "sw": "sv",
     "en_UK": "en_GB"}
 
+# Correct subdirs of /usr/share/local for LC_MESSAGES
+CORRECT_SUBDIRS = (
+"af", "ar", "bg", "br", "ca", "cs", "cy", "da", "de", "de_AT", "el", "en_GB", "en_RN", "eo", "es", "es_AR", "es_ES", "es_DO",
+"es_GT", "es_HN", "es_SV", "es_PE", "es_PA", "es_MX", "et", "eu", "fa", "fa_IR.iransystem", "fi", "fo", "fr", "ga",
+"gl", "he", "hr", "hu", "hy", "id", "is", "it", "ja", "ka", "ka_GE.georgian-ps", "kl", "ko", "lo", "lt", "lv", "mk", "nl", "no", "no@nynorsk", "oc", "pl", "pt",
+"pt_BR", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tr", "uk", "vi", "vi_VN.viscii", "wa", "zh_CN", "zh_CN.GB2312", "zh_TW.Big5"
+)
+
 # list of exceptions
 EXCEPTION_DIRS=('C', 'POSIX', 'iso88591', 'iso8859')
 
 class I18NCheck(AbstractCheck.AbstractCheck):
     locale_regex=re.compile("^(/usr/share/locale/([^/]+))/")
     correct_subdir_regex=re.compile("^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$")
+    lc_messages_regex=re.compile("/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "I18NCheck")
@@ -68,7 +77,12 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 			    printError(pkg, "incorrect-locale-" + correct, f)
 			except KeyError:
 			    pass
-			
+            res=I18NCheck.lc_messages_regex.search(f)
+            if res:
+                subdir=res.group(1)
+                if not subdir in CORRECT_SUBDIRS:
+                    printError(pkg, "invalid-lc-messages-dir", f)
+                
 # Create an object to enable the auto registration of the test
 check=I18NCheck()
 
