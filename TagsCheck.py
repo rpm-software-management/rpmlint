@@ -399,6 +399,7 @@ capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
 leading_space_regex=re.compile('^\s+')
+invalid_version_regex=re.compile('((?:rc|alpha|beta).*)', re.IGNORECASE)
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -430,7 +431,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	version=pkg[rpm.RPMTAG_VERSION]
 	if not version:
 	    printError(pkg, 'no-version-tag')
-
+        else:
+            res=invalid_version_regex.search(version)
+            if res:
+                printError(pkg, 'invalid-version', version)
+                
         release=pkg[rpm.RPMTAG_RELEASE]
 	if not release:
 	    printError(pkg, 'no-release-tag')
@@ -551,6 +556,11 @@ if Config.info:
     addDetails(
 'summary-too-long',
 'The "Summary:" must not exceed 80 characters.',
+
+'invalid-version',
+'''The version string must not contain the alpha, beta or rc suffixes because
+when the final version will be out, you will have to use an Epoch tag to make
+you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
 
 )
     
