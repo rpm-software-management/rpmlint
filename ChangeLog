@@ -1,3 +1,70 @@
+2001-06-12 14:34  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* FilesCheck.py: Add /etc/profile.d/.
+
+2001-06-06 18:32  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: If the file given on the command line doesn't exist,
+	try to use the name as an installed package to check.
+
+2001-06-06 18:26  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: add error desccriptions only when -i is given on
+	the command line.
+
+2001-06-06 18:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added /usr/X11R6/man subdirs to the list of
+	STANDARD_DIRS.
+	
+	warn for .so file only if they are in a lib dir.
+	
+	warn for source files in a non devel package only if they are not a
+	doc file.
+
+2001-06-06 18:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: corrected soname regexp.
+	
+	document errors.
+
+2001-06-06 18:19  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SignatureCheck.py: use checkSignature from the Pkg class to avoid
+	calling rpm directly to support the installed packages.
+
+2001-06-06 18:18  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: created InstalledPkg class to access already installed
+	packages.
+
+2001-05-26 00:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added an example of details use.
+
+2001-05-26 00:19  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: added -i/--info command line option to print details
+	of warings/errors.
+
+2001-05-26 00:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Filter.py: added functions to print/store details of
+	warnings/errors.
+
+2001-05-26 00:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added info global variable.
+
+2001-05-22 13:23  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: corrected description-line-too-long check.
+
+2001-05-20 21:02  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: add the rpm user and group per request of Jeff
+	Johnson for the future version of rpm.
+
 2001-05-18 17:10  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec: 0.31
