@@ -97,15 +97,15 @@ class PostCheck(AbstractCheck.AbstractCheck):
 
         ghost_files=pkg.ghostFiles()
         if ghost_files:
-            postun=pkg[rpm.RPMTAG_POSTUN]
-            preun=pkg[rpm.RPMTAG_PREUN]
-            if not postun and not preun:
+            postin=pkg[rpm.RPMTAG_POSTIN]
+            prein=pkg[rpm.RPMTAG_PREIN]
+            if not postin and not prein:
                 printWarning(pkg, 'ghost-files-without-postun')
             else:
                 for f in ghost_files:
-                    if (not postun or string.find(postun, f) == -1) and \
-                       (not preun or string.find(preun, f) == -1):
-                        printWarning(pkg, 'postun-without-ghost-file-creation', f)
+                    if (not postin or string.find(postin, f) == -1) and \
+                       (not prein or string.find(prein, f) == -1):
+                        printWarning(pkg, 'postin-without-ghost-file-creation', f)
                     
 # Create an object to enable the auto registration of the test
 check=PostCheck()
