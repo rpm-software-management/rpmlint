@@ -55,6 +55,7 @@ def main():
     pkg=None
     try:
         # Loop over all file names given in arguments
+	dirs=[]
         for f in args:
             try:
                 try:
@@ -62,6 +63,7 @@ def main():
 		    if stat.S_ISREG(st[stat.ST_MODE]):
                     	pkg=Pkg.Pkg(f, extract_dir)
                     if stat.S_ISDIR(st[stat.ST_MODE]):
+			dirs.append(f)
 			continue
 		    else:	
                        	raise OSError
@@ -73,18 +75,18 @@ def main():
                 continue
 
             runChecks(pkg)
-	for d in args:
+	for d in dirs:
 	    try:
-                st=os.stat(d)
-	        if stat.S_ISDIR(st[stat.ST_MODE]):
-	            for i in os.listdir(d):
-			f=d+'/'+i
-		        st=os.stat(f)
-		        if stat.S_ISREG(st[stat.ST_MODE]):
-		            pkg=Pkg.Pkg(f, extract_dir)
-			    runChecks(pkg)
+		f=''
+	        for i in os.listdir(d):
+		    f=d+'/'+i
+		    st=os.stat(f)
+		    if stat.S_ISREG(st[stat.ST_MODE]):
+		        pkg=Pkg.Pkg(f, extract_dir)
+		        runChecks(pkg)
+			    
             except:
-                sys.stderr.write('Error while reading ' + d + f + '\n')
+		sys.stderr.write('Error while reading ' + d + '/' + f + '\n')
                 pkg=None
                 continue
 
