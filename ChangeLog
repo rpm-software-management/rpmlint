@@ -1,3 +1,24 @@
+2002-06-04 00:10  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for no-binary
+
+2002-06-04 00:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README: added UsrLibBinaryException
+
+2002-06-04 00:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: added UsrLibBinaryException option and
+	exception no-binary for multiple packages.
+
+2002-06-04 00:07  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: make all extracted files accessible.
+
+2002-06-03 21:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: added no-binary and only-non-binary-in-usr-lib
+
 2002-06-03 12:49  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.45-1mdk
