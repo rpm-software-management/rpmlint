@@ -140,7 +140,6 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     try:
                                         symlink = dir + bin_info.soname
                                         (perm, owner, group, link) = files[symlink]
-                                        print link, base, link != base
                                         if link != i[0] and link != base and link != '':
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
