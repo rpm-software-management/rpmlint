@@ -1,3 +1,20 @@
+2002-06-01 10:18  gbeauchesne
+
+	* SpecCheck.py: - Add configure-without-libdir-spec check - Fix
+	typos in previous hardcoded-library-path description
+
+2002-06-01 10:03  gbeauchesne
+
+	* Config.py: Revert last change
+
+2002-06-01 09:18  gbeauchesne
+
+	* Config.py: Add hardcoded-library-path to mdk9.0 policy
+
+2002-06-01 09:17  gbeauchesne
+
+	* SpecCheck.py: Add hardcoded-library-path check
+
 2002-05-29 16:29  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.44-1mdk
