@@ -135,6 +135,7 @@ DEFAULT_VALID_LICENSES = (
     'Sun Public License',
     'Eiffel Forum License',
     'W3C License',
+    'Zope Public License',
     # non open source licences:
     'Proprietary',
     'Freeware',
