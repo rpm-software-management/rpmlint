@@ -47,7 +47,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
     locale_regex=re.compile("^(/usr/share/locale/([^/]+))/")
     correct_subdir_regex=re.compile("^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$")
     lc_messages_regex=re.compile("/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$")
-    mo_regex=re.compile("/usr/share/locale/.*\.mo$")
+    mo_regex=re.compile("\.mo$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "I18NCheck")
