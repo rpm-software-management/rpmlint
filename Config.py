@@ -453,10 +453,10 @@ addFilter('basesystem no-%clean-section')
 addFilter('fetchmail-daemon incoherent-init-script-name fetchmail')
 
 #python
-addFilter('python(-base)? no-dependancy python')
+addFilter('python(-base)? no-depend[ae]ncy(-on)? python')
 
 #perl
-addFilter('perl(-base)? no-dependancy perl')
+addFilter('perl(-base)? no-depend[ae]ncy(-on)? perl')
 
 #nut
 addFilter('nut-server non-readable /etc/ups/upsd.(users|conf) 0600')
@@ -559,7 +559,7 @@ addFilter('postfix(-[^ ]+)? non-standard-gid /var/spool/postfix/(public|maildrop
 addFilter('postfix(-[^ ]+)? non-standard-uid /var/spool/postfix/([^ ]+) postfix')
 addFilter('postfix(-[^ ]+)? setgid-binary /usr/sbin/post(drop|queue) postdrop 02755')
 
-# devel-dependancy wrong warnings
+# devel-dependency wrong warnings
 addFilter('gcc devel-dependency glibc-devel')
 addFilter('gcc-c\+\+ devel-dependency libstdc\+\+5-devel')
 addFilter('gcc-java devel-dependency libgcj4-devel')
