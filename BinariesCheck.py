@@ -82,7 +82,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     executable_regex=re.compile('executable')
     libc_regex=re.compile('libc\.')
     so_regex=re.compile('/lib/[^/]+\.so')
-    validso_regex=re.compile('\.so\.')
+    validso_regex=re.compile('\.so\.[0-9]+')
     sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
     system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
     usr_lib_regex=re.compile('^/usr/lib/')
@@ -189,4 +189,65 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()
 
+# Add information about checks
+if Config.info:
+    addDetails(
+'arch-independent-package-contains-binary-or-object',
+"""The package contains a binary or object file but is tagged
+Architecture: noarch.""",
+
+'arch-dependent-file-in-usr-share',
+"""This package installs an ELF binary in the /usr/share
+ hierarchy, which is reserved for architecture-independent files.""",
+
+'binary-in-etc',
+"""This package installs an ELF binary in /etc.  Both the
+FHS and the FSSTND forbid this.""",
+
+# 'non-sparc32-binary',
+# '',
+
+'invalid-soname',
+"""The soname of the library isn't in the form lib<libname>.so.<major>.""",
+
+'invalid-ldconfig-symlink',
+"""The symbolic link references the wrong file. (It should reference
+the shared library.)""",
+
+'no-ldconfig-symlink',
+"""The package should not only include the shared library itself, but
+also the symbolic link which ldconfig would produce. (This is
+necessary, so that the link gets removed by dpkg automatically when
+the package gets removed.)  If the symlink is in the package, check
+that the SONAME of the library matches the info in the shlibs
+file.""",
+
+'shlib-with-non-pic-code',
+"""The listed shared libraries contain object code that was compiled
+without -fPIC. All object code in shared libraries should be
+recompiled separately from the static libraries with the -fPIC option.
+
+Another common mistake that causes this problem is linking with 
+``gcc -Wl,-shared'' instead of ``gcc -shared''.""",
+
+'binary-or-shlib-defines-rpath',
+"""The binary or shared library defines the `RPATH'. Usually this is a
+bad thing because it hard codes the path to search libraries and so it
+makes difficult to move libraries around.  Most likely you will find a
+Makefile with a line like: gcc test.o -o test -Wl,--rpath.""",
+
+'statically-linked-binary',
+"""The package installs a statically linked binary or object file.
+
+Usually this is a bug. Otherwise, please contact
+<flepied@mandrakesoft.com> about this so that this error gets included
+in the exception file for rpmlint. (With that, rpmlint will ignore
+this bug in the future.)""",
+
+'executable-in-library-package',
+"""The package mixes up libraries and executables. Mixing up these
+both types of files makes upgrades quite impossible.""",
+
+)
+    
 # BinariesCheck.py ends here
