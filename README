@@ -22,6 +22,7 @@ Implemented checks:
 	o i18n checks (I18NCheck).
 	o menu system checks (MenuCheck).
 	o %post; %pre, %postun and %preun scripts checks (PostCheck).
+	o /etc/rc.d/init.d checks (InitScriptCheck).
 
 If you want to change configuration options or the list of checks, use the
 global configuration file /etc/rpmlint/config or in the user configuration
@@ -62,4 +63,5 @@ ExtraMenuNeeds		list of strings
 XpmIconPath		regexp		"/usr/share/icons"
 ExtractDir		string		"/tmp"
 ValidLicenses		list of strings
-SystemLibPaths		list of string
+SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
+ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
