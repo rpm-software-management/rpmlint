@@ -111,14 +111,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
         if len(menus) > 0:
             dir=pkg.dirName()
             if menus != []:
-                postin=pkg[rpm.RPMTAG_POSTIN]
+                postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
                     printError(pkg, "menu-without-postin")
                 else:
                     if not MenuCheck.update_menus.search(postin):
                         printError(pkg, "postin-without-update-menus")                    
                     
-                postun=pkg[rpm.RPMTAG_POSTUN]
+                postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                 if not postun:
                     printError(pkg, "menu-without-postun")
                 else:
