@@ -513,11 +513,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not license:
             printError(pkg, 'no-license')
         else:
-            licenses=re.split('(?:and|or|&|\s|-like|/|ish|-style|-Style|-)+', license)
-            for l in licenses:
-                if l != '' and not l in VALID_LICENSES:
-                    printWarning(pkg, 'invalid-license', license)
-                    break
+            if license not in VALID_LICENSES:
+                licenses=re.split('(?:and|or|&|\s|-like|/|ish|-style|-Style|-)+', license)
+                for l in licenses:
+                    if l != '' and not l in VALID_LICENSES:
+                        printWarning(pkg, 'invalid-license', license)
+                        break
 
         url=pkg[rpm.RPMTAG_URL]
         if url and url != 'none':
