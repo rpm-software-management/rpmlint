@@ -1,3 +1,7 @@
+1999-10-07  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
+
+	* Version 0.4: added pgp check and valid group name.
+
 1999-10-06  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
 
 	* Version 0.3: added files checks (permissions, suid, setgid,
