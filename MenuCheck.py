@@ -15,6 +15,7 @@ import commands
 import string
 import sys
 import stat
+import Pkg
 
 DEFAULT_VALID_SECTIONS=(
     "Configuration/Hardware",
@@ -81,6 +82,8 @@ DEFAULT_EXTRA_MENU_NEEDS = (
     "wmaker"
     )
 
+DEFAULT_ICON_PATH = "/usr/share/icons/"
+
 class MenuCheck(AbstractCheck.AbstractCheck):
     menu_file=re.compile("^/usr/lib/menu/([^/]+)$")
     old_menu_file=re.compile("^/usr/share/(gnome/apps|applnk)/([^/]+)$")
@@ -93,6 +96,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
     standard_needs=Config.getOption("ExtraMenuNeeds", DEFAULT_EXTRA_MENU_NEEDS)
+    xpm_icon_paths=Config.getOption("XpmIconPath", DEFAULT_ICON_PATH)
+    xpm_ext=re.compile(xpm_icon_paths + ".*\.xpm$")
     
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
@@ -105,6 +110,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
         files=pkg.files()
         pkgname=pkg[rpm.RPMTAG_NAME]
         menus=[]
+        dirname=pkg.dirName()
         
         for f in files.keys():
             # Check menu files
@@ -118,13 +124,21 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if basename != pkgname:
                         printWarning(pkg, "non-coherent-menu-filename", f)
                     menus.append(f)
-            # Check old menus from KDE and GNOME
-            res=MenuCheck.old_menu_file.search(f)
-            if res:
-                mode=files[f][0]
-                if stat.S_ISREG(mode):
-                    printError(pkg, "old-menu-entry", f)
-
+            else:
+                # Check old menus from KDE and GNOME
+                res=MenuCheck.old_menu_file.search(f)
+                if res:
+                    mode=files[f][0]
+                    if stat.S_ISREG(mode):
+                        printError(pkg, "old-menu-entry", f)
+                else:
+                    # Check non transparent xpm files
+                    res=MenuCheck.xpm_ext.search(f)
+                    if res:
+                        mode=files[f][0]
+                        if stat.S_ISREG(mode) and not Pkg.grep("None\",", dirname + "/" + f):
+                            printWarning(pkg, "non-transparent-xpm", f)
+                            pass
         if len(menus) > 0:
             dir=pkg.dirName()
             if menus != []:
