@@ -121,8 +121,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             multi_pkg=(pkg.name != res.group(1))
         else:
             multi_pkg=0
-        
-        for f in files:
+
+        for f in files.keys():
             if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f):
                 has_usr_lib_file=f
                 break
