@@ -59,9 +59,12 @@ def main():
             try:
                 try:
                     st=os.stat(f)
-                    if not stat.S_ISREG(st[stat.ST_MODE]):
-                        raise OSError
-                    pkg=Pkg.Pkg(f, extract_dir)
+		    if stat.S_ISREG(st[stat.ST_MODE]):
+                    	pkg=Pkg.Pkg(f, extract_dir)
+                    if stat.S_ISDIR(st[stat.ST_MODE]):
+			continue
+		    else:	
+                       	raise OSError
                 except OSError:
                     pkg=Pkg.InstalledPkg(f)
             except:
@@ -70,6 +73,20 @@ def main():
                 continue
 
             runChecks(pkg)
+	for d in args:
+	    try:
+                st=os.stat(d)
+	        if stat.S_ISDIR(st[stat.ST_MODE]):
+	            for i in os.listdir(d):
+			f=d+'/'+i
+		        st=os.stat(f)
+		        if stat.S_ISREG(st[stat.ST_MODE]):
+		            pkg=Pkg.Pkg(f, extract_dir)
+			    runChecks(pkg)
+            except:
+                sys.stderr.write('Error while reading ' + d + f + '\n')
+                pkg=None
+                continue
 
         # if requested, scan all the installed packages
         if all:
