@@ -131,6 +131,13 @@ class Pkg:
 	self._gatherFilesInfo()
 	return self._config_files
 
+    # return the list of noreplace files
+    def noreplaceFiles(self):
+	if self._noreplace_files != None:
+	    return self._noreplace_files
+	self._gatherFilesInfo()
+	return self._noreplace_files
+
     # return the list of documentation files
     def docFiles(self):
 	if self._doc_files != None:
@@ -151,6 +158,7 @@ class Pkg:
         
 	self._config_files=[]
 	self._doc_files=[]
+	self._noreplace_files=[]
 	self._ghost_files=[]
 	self._files={}
 	flags=self.header[rpm.RPMTAG_FILEFLAGS]
@@ -181,9 +189,11 @@ class Pkg:
 	    for idx in range(0, len(files)):
 		if flags[idx] & RPMFILE_CONFIG:
 		    self._config_files.append(files[idx])
-		elif flags[idx] & RPMFILE_DOC:
+		if flags[idx] & RPMFILE_DOC:
 		    self._doc_files.append(files[idx])
-		elif flags[idx] & RPMFILE_GHOST:
+		if flags[idx] & RPMFILE_NOREPLACE:
+		    self._noreplace_files.append(files[idx])
+		if flags[idx] & RPMFILE_GHOST:
 		    self._ghost_files.append(files[idx])
 		self._files[files[idx]]=(modes[idx], users[idx],
 					 groups[idx], links[idx])
