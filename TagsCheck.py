@@ -398,6 +398,7 @@ devel_number_regex=re.compile('(.*?)[0-9.]+-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
+leading_space_regex=re.compile('^\s+')
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -485,13 +486,20 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 print summary
             if not capital_regex.search(summary[0]):
                 printWarning(pkg, 'summary-not-capitalized', summary)
-
+            if len(summary) >= 80:
+                printError(pkg, 'summary-too-long', summary)
+            if leading_space_regex.search(summary):
+                printError(pkg, 'summary-has-leading-spaces', summary)
+                
         description=pkg[rpm.RPMTAG_DESCRIPTION]
 	if not description:
 	    printError(pkg, 'no-description-tag')
         else:
             spell_check(pkg, description, 'description')
-
+            for l in string.split(description):
+                if len(l) >= 80:
+                    printError(pkg, 'description-line-too-long', l)
+                    
 	group=pkg[rpm.RPMTAG_GROUP]
 	if not pkg[rpm.RPMTAG_GROUP]:
 	    printError(pkg, 'no-group-tag')
