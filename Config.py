@@ -177,6 +177,9 @@ addFilter('W: xawtv version-in-menu-longtitle The X11 Video4Linux Stream Capture
 #ocaml
 addFilter('W: ocaml unstripped-binary-or-object /usr/bin/(ocamldebug|ocamlbrowser)')
 
+#nfs
+addFilter('E: nfs-utils-clients non-standard-dir-perm /var/lib/nfs/statd 0700')
+
 #initscripts
 addFilter('W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)')
 addFilter('E: initscripts (setuid|setgid)-binary (/usr/sbin/usernetctl|/sbin/netreport) root.*')
