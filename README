@@ -3,6 +3,8 @@ be used  to test individual packages  before uploading or  to check an
 entire distribution. By default  all checks are processed but specific
 checks can be performed by using command line parameters.
 
+rpmlint idea comes from the lintian tool of the Debian project.
+
 Comments and new checks welcome. Send feedback to
 <Frederic.Lepied@sugix.frmug.org>.
 
@@ -14,8 +16,8 @@ Implemented checks:
 	o configuration files checks (ConfigCheck)
 	o locations, permissions, groups and owners checks (FileCheck)
 	o suid warnings (FileCheck)
+	o pgp checks (SignatureCheck)
 
 Planned checks:
 
-	o pgp checks
 	o rpm source checks
