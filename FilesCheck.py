@@ -41,8 +41,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     ldconfig_regex=re.compile("^[^#]*ldconfig", re.MULTILINE)
     info_regex=re.compile("^/usr/share/info")
     install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
-    rc_regex=re.compile("^/etc/rc.d/init.d")
-    chkconfig_regex=re.compile("^[^#]*chkconfig", re.MULTILINE)
     perl_temp_file=re.compile(".*(bs|\.packlist)$")
 
     def __init__(self):
@@ -113,22 +111,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                            (not preun or not FilesCheck.install_info_regex.search(preun)):
                             printError(pkg, "postin-without-install-info", f)
     
-                # check chkconfig call in %post and %preun
-                if FilesCheck.rc_regex.search(f):
-                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
-                    if not postin:
-                        printError(pkg, "init-script-without-chkconfig-postin", f)
-                    else:
-                        if not FilesCheck.chkconfig_regex.search(postin):
-                            printError(pkg, "postin-without-chkconfig", f)                    
-                            
-                    preun=pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
-                    if not preun:
-                        printError(pkg, "init-script-without-chkconfig-preun", f)
-                    else:
-                        if not FilesCheck.chkconfig_regex.search(preun):
-                            printError(pkg, "preun-without-chkconfig", f)
-                
+               
                 # check perl temp file
                 if FilesCheck.perl_temp_file.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
