@@ -161,6 +161,8 @@ logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
 kernel_modules_regex=re.compile('^/lib/modules/')
 kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
 normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$')
+perl_regex=re.compile('^/usr/lib/perl5/(?:site_perl/)?([.0-9]+)/')
+python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -182,8 +184,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	config_files=pkg.configFiles()
 	ghost_files=pkg.ghostFiles()
 	doc_files=pkg.docFiles()
+        req_names=pkg.req_names()
+        deps=pkg.requires()+pkg.prereq()
 
-	if doc_files == []:
+        # erport these errors only once
+        perl_dep_error=0
+        python_dep_error=0
+        
+        if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
 	    printWarning(pkg, 'no-documentation')
 	    
 	for f in files.keys():
@@ -193,53 +201,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    group=enreg[2]
             size=enreg[4]
             
-	    if stat.S_ISREG(mode) and doc_regex.search(f) and not f in doc_files:
-		printError(pkg, 'not-listed-as-documentation', f)
-
 	    if not user in STANDARD_USERS:
 		printError(pkg, 'non-standard-uid', f, user)
 	    if not group in STANDARD_GROUPS:
 		printError(pkg, 'non-standard-gid', f, group)
-
-            if stat.S_ISREG(mode):
-                # check ldconfig call in %post and %postun
-                if lib_regex.search(f):
-                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
-                    if not postin:
-                        printError(pkg, 'library-without-ldconfig-postin', f)
-                    else:
-                        if not ldconfig_regex.search(postin):
-                            printError(pkg, 'postin-without-ldconfig', f)                    
-                        
-                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
-                    if not postun:
-                        printError(pkg, 'library-without-ldconfig-postun', f)
-                    else:
-                        if not ldconfig_regex.search(postun):
-                            printError(pkg, 'postun-without-ldconfig', f)
-                    
-                # check install-info call in %post and %postun
-                if info_regex.search(f):
-                    postin=pkg[rpm.RPMTAG_POSTIN]
-                    if not postin:
-                        printError(pkg, 'info-files-without-install-info-postin', f)
-                    else:
-                        if not install_info_regex.search(postin):
-                            printError(pkg, 'postin-without-install-info', f)                    
-                        
-                    postun=pkg[rpm.RPMTAG_POSTUN]
-                    preun=pkg[rpm.RPMTAG_PREUN]
-                    if not postun and not preun:
-                        printError(pkg, 'info-files-without-install-info-postun', f)
-                    else:
-                        if (not postun or not install_info_regex.search(postun)) and \
-                           (not preun or not install_info_regex.search(preun)):
-                            printError(pkg, 'postin-without-install-info', f)
-    
-               
-                # check perl temp file
-                if perl_temp_file.search(f):
-                    printWarning(pkg, 'perl-temp-file', f)
 
             if kernel_modules_regex.search(f) and not kernel_package_regex.search(pkg.name):
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
@@ -300,6 +265,49 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal file check
             if stat.S_ISREG(mode):
+
+                if doc_regex.search(f) and not f in doc_files:
+                    printError(pkg, 'not-listed-as-documentation', f)
+
+                # check ldconfig call in %post and %postun
+                if lib_regex.search(f):
+                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    if not postin:
+                        printError(pkg, 'library-without-ldconfig-postin', f)
+                    else:
+                        if not ldconfig_regex.search(postin):
+                            printError(pkg, 'postin-without-ldconfig', f)                    
+                        
+                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                    if not postun:
+                        printError(pkg, 'library-without-ldconfig-postun', f)
+                    else:
+                        if not ldconfig_regex.search(postun):
+                            printError(pkg, 'postun-without-ldconfig', f)
+                    
+                # check install-info call in %post and %postun
+                if info_regex.search(f):
+                    postin=pkg[rpm.RPMTAG_POSTIN]
+                    if not postin:
+                        printError(pkg, 'info-files-without-install-info-postin', f)
+                    else:
+                        if not install_info_regex.search(postin):
+                            printError(pkg, 'postin-without-install-info', f)                    
+                        
+                    postun=pkg[rpm.RPMTAG_POSTUN]
+                    preun=pkg[rpm.RPMTAG_PREUN]
+                    if not postun and not preun:
+                        printError(pkg, 'info-files-without-install-info-postun', f)
+                    else:
+                        if (not postun or not install_info_regex.search(postun)) and \
+                           (not preun or not install_info_regex.search(preun)):
+                            printError(pkg, 'postin-without-install-info', f)
+    
+               
+                # check perl temp file
+                if perl_temp_file.search(f):
+                    printWarning(pkg, 'perl-temp-file', f)
+
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
                 if not devel_pkg and includefile_regex.search(f) and not f in doc_files:
@@ -309,6 +317,20 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if size == 0 and not normal_zero_length_regex.search(f) and f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
+                if not perl_dep_error:
+                    res=perl_regex.search(f)
+                    if res:
+                        if not pkg.check_versioned_dep('perl', res.group(1)):
+                            printError(pkg, 'no-dependancy', 'perl', res.group(1))
+                            perl_dep_error=1
+
+                if not python_dep_error:
+                    res=python_regex.search(f)
+                    if res:
+                        if not pkg.check_versioned_dep('python', res.group(1)):
+                            printError(pkg, 'no-dependancy', 'python', res.group(1))
+                            python_dep_error=1
+                
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
 		if perm != 0755:
@@ -337,7 +359,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 is_exception=e[1]
                                 break
                         if is_exception:
-                            if is_exception not in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
+                            if is_exception not in req_names:
                                 printWarning(pkg, 'no-dependancy-on', is_exception)
                         else:
                             printWarning(pkg, 'dangling-symlink', f, link)
