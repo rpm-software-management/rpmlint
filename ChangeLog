@@ -1,3 +1,64 @@
+2002-05-01 16:08  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added no-prereq-on for mdk9.0 policy
+
+2002-05-01 16:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: change non-coherent-filename to check all the
+	filename
+
+2002-05-01 16:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: added no-prereq-on
+
+2002-04-24 16:33  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: corrected bad report on libgimp1.2_1
+
+2002-04-24 16:12  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* INSTALL: described policy
+
+2002-04-24 16:11  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added load_policy
+
+2002-04-24 16:10  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: retrieve the version and release in a more generic way.
+	
+	put the version and policy at install time.
+
+2002-04-24 16:07  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check that the architecture is coherent with the
+	file name.
+
+2002-04-24 16:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: added a --policy option.
+	
+	the version is set at install time.
+
+2002-04-24 16:03  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: create a fake filename to satisfy some checks on the
+	filename for InstalledPkg objects.
+
+2002-04-17 11:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: build one regex from all the exceptions
+	
+	added exception for avifile-samples
+
+2002-03-08 14:08  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.42-2mdk
+
+2002-03-08 14:08  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: install rpmdiff in LIBDIR
+
 2002-03-04 10:01  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Makefile: added rpmdiff
