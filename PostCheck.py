@@ -27,7 +27,7 @@ valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 braces_regex=re.compile("^[^#]*%", re.MULTILINE)
 bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~|\$HOME', re.MULTILINE)
-dangerous_command_regex=re.compile("(^|\s|;)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio)\s", re.MULTILINE)
+dangerous_command_regex=re.compile("(^|\s|;)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install)\s", re.MULTILINE)
 
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
