@@ -16,6 +16,7 @@ import sys
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
 applied_patch_regex=re.compile("^\s*%patch([^\s]*)\s")
+source_dir_regex=re.compile("[^#]*\$RPM_SOURCE_DIR")
 
 def file2string(file):
     fd=open(file, "r")
@@ -24,10 +25,9 @@ def file2string(file):
     return content
     
 class SpecCheck(AbstractCheck.AbstractCheck):
-    pgp_regex=re.compile("pgp|gpg", re.IGNORECASE)
     
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
+	AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
 
     def check(self, pkg, verbose):
         if not pkg.isSource():
@@ -47,6 +47,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             spec=file2string(spec_file)
             patches={}
             applied_patches=[]
+            source_dir=None
             # gather info from spec lines
             for line in spec:
                 res=patch_regex.search(line)
@@ -56,6 +57,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     res=applied_patch_regex.search(line)
                     if res:
                         applied_patches.append(res.group(1))
+                    elif not source_dir:
+                        res=source_dir_regex.search(line)
+                        if res:
+                            source_dir=1
+                            printError(pkg, "use-of-RPM_SOURCE_DIR")
+
             # process gathered info
             for p in patches.keys():
                 if p not in applied_patches:
