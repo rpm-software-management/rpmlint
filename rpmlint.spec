@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.19
+%define version 0.20
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,8 +49,16 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Aug 25 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.20-1mdk
+- InitScriptCheck.py: new check for /etc/rc.d/init.d scripts.
+- PostCheck.py: check when a script is present that the shell is valid.
+- ConfigCheck.py: report warnings for app-defaults only
+in /usr/X11R6/lib/X11/app-defaults.
+- BinariesCheck.py: report the rpath warning if the directory isn't a
+sub-directory of /usr/lib/.
+
 * Fri Aug 18 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.19-1mdk
--BinariesCheck.py: check rpath only on system lib paths (ie /lib,
+- BinariesCheck.py: check rpath only on system lib paths (ie /lib,
 /usr/lib and /usr/X11R6/lib).  This can be configured with the
 SystemLibPaths option.
 - I18NCheck.py: warn if .mo is not registered in %%lang.
