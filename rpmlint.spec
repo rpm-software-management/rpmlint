@@ -7,10 +7,10 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.26
+%define version 0.27
 %define release 1mdk
 
-Summary: rpm correctness checker
+Summary: Rpm correctness checker
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -25,7 +25,7 @@ BuildArchitectures: noarch
 BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
 %description
-rpmlint is a tool to check common errors on rpm packages.
+Rpmlint is a tool to check common errors on rpm packages.
 Binary and source packages can be checked.
 
 %prep
@@ -49,6 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Mon Nov 13 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.27-1mdk
+- FilesCheck.py: don't warn if a games is setgid games.
+- README: RpmGamesGroup added to the list of available options.
+- Config.py: added exception for xman.
+- BinariesCheck.py: check ldconfig symlinks.
+- TagsCheck.py: don't check no-version-in-changelog for source rpm.
+
 * Fri Nov 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.26-1mdk
 
 - Config.py: added various exceptions.
