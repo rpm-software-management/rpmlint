@@ -12,6 +12,7 @@ import AbstractCheck
 import re
 import sys
 import rpm
+import string
 
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
@@ -21,6 +22,12 @@ obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex=re.compile('^/')
 clean_regex=re.compile('^%clean')
+changelog_regex=re.compile('^%changelog')
+
+# Only check for /lib, /usr/lib, /usr/X11R6/lib
+# TODO: better handling of X libraries and modules.
+hardcoded_lib_dirs='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
+hardcoded_lib_dir_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?)' + hardcoded_lib_dirs + '(?=[\s;/])([^\s;]*))')
 
 def file2string(file):
     fd=open(file, "r")
@@ -57,6 +64,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             source_dir=None
             buildroot=0
             clean=0
+            changelog=0
             
             # gather info from spec lines
             for line in spec:
@@ -76,6 +84,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 res=obsolete_tags_regex.search(line)
                 if res:
                     printWarning(pkg, "obsolete-tag", res.group(1))
+				
+                res=changelog_regex.search(line)
+                if res:
+                    changelog=1
+                
+                res=hardcoded_lib_dir_regex.search(line)
+                if not changelog and res:
+                    printError(pkg, "harcoded-library-path", "in " + string.lstrip(res.group(1)))
                 
                 res=buildroot_regex.search(line)
                 if res:
@@ -134,6 +150,10 @@ allow build as non root.''',
 'hardcoded-path-in-buildroot-tag',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
 by something like %{_tmppath}/%name-root.''',
+
+'harcoded-library-path',
+'''A library path is hardcoded to one of the following paths: /lib,
+/usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.''',
 
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed
