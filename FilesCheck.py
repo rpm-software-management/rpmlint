@@ -394,9 +394,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'no-dependancy', 'python-base', res.group(1))
                             python_dep_error=1
                 
-	    # normal executable check
-	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
-		if perm != 0755:
+                # normal executable check
+		if mode & stat.S_IXUSR and perm != 0755:
 		    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 		    
 	    # normal dir check
