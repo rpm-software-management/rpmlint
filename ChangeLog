@@ -1,3 +1,11 @@
+2004-02-12 21:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.57.1-1mdk
+
+2004-02-12 21:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: removed buggy trigger code
+
 2004-02-12 17:40  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.57-1mdk
