@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.53
+%define version 0.54
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Mon Jan 19 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.54-1mdk
+- adapted to rpm-python 4.2.2 reporting [] instead of None in rpm headers
+- Allow to pass a directory as an argument (Michael Scherer)
+- I18NCheck.py: Added new language codes (Pablo)
+- PostCheck.py: allow the [[:space:]] construction (bug #6466) (Luca Berra)
+- BinariesCheck.py: in only-non-binary-in-usr-lib don't report
+directories (Michael Scherer)
+- FilesCheck.py: mispelled-macro check (Michael Scherer)
+
 * Mon Dec 22 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.53-1mdk
 - FilesCheck.py: o log-files-without-logrotate (Michael Scherer)
 		 o non-standard-executable-perm was never run (Ville Skyttä)
