@@ -78,6 +78,7 @@ addFilter("E: sudo setuid-binary /usr/bin/sudo root 04111")
 addFilter("E: slocate setgid-binary /usr/bin/slocate slocate 02755")
 addFilter("E: SysVinit setgid-binary /usr/bin/wall tty 02555")
 addFilter("E: sh-utils setuid-binary /bin/su root 04755")
+addFilter("E: netkit-base setuid-binary /bin/ping root 04755")
 
 #Pam
 addFilter("W: pam devel-file-in-non-devel-package /lib/security/pam_unix_(session|passwd|acct|auth).so")
