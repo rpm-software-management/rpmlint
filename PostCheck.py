@@ -169,6 +169,22 @@ It will avoid the fork of a shell interpreter to execute your command.''',
 
 It will avoid the fork of a shell interpreter to execute your command.''',
 
+'spurious-bracket-in-%pre',
+'''The %pre scriptlet contains an if [] construction without a space before the
+].''',
+
+'spurious-bracket-in-%post',
+'''The %post scriptlet contains an if [] construction without a space before the
+].''',
+
+'spurious-bracket-in-%preun',
+'''The %preun scriptlet contains an if [] construction without a space before the
+].''',
+
+'spurious-bracket-in-%postun',
+'''The %postun scriptlet contains an if [] construction without a space before the
+].''',
+
 )
 
 # PostCheck.py ends here
