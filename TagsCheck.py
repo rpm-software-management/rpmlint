@@ -429,6 +429,7 @@ forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAUL
 valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost', DEFAULT_VALID_BUILDHOST))
 epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
+requires_in_usr_local_regex=re.compile('^/usr/local/bin')
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -501,6 +502,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
+
+	    if requires_in_usr_local_regex.search(d[0]):
+                    printError(pkg, 'invalid-dependency', d[0])
+		
             if not devel_depend and not is_devel and not is_source:
                 if devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
