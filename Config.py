@@ -200,6 +200,7 @@ addFilter('E: hotplug non-standard-dir-perm /var/run/usb 0700')
 
 #Setuid
 addFilter('E: traceroute setuid-binary /usr/sbin/traceroute root 04755')
+addFilter('E: iputils setuid-binary /usr/sbin/(traceroute|ping)6 root 04755')
 addFilter('E: urpmi setuid-binary /usr/bin/urpmi root 04750')
 addFilter('E: sash statically-linked-binary /sbin/sash')
 addFilter('E: perl-base setuid-binary /usr/bin/sperl5.6.0 root 04711')
