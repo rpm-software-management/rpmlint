@@ -201,6 +201,12 @@ addFilter("W: initscripts non-conffile-in-etc /etc/locale/.*")
 addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
 addFilter('E: initscripts obsolete-not-provided (rhsound|sapinit)')
 
+#wine
+addFilter("E:.*libwine.*non-versioned-file-in-library-package /usr/lib/wine.*")
+addFilter("W:.*wine-utils.*dangling-relative-symlink.*wine")
+addFilter("E:.*wine non-standard-dir-perm.*/var/lib/wine.*")
+addFilter("E:.*zero-length.*/var/lib/wine/.*")
+
 #hotplug
 addFilter('E: hotplug non-standard-dir-perm /var/run/usb 0700')
 
