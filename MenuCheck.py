@@ -122,6 +122,7 @@ xpm_ext_regex=re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
 capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
 launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
+bad_title_regex=re.compile('/')
 
 # compile regexps
 for l in launchers:
@@ -257,6 +258,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         res=version_regex.search(title)
                         if res:
                             printWarning(pkg, 'version-in-menu-title', title)
+                        if bad_title_regex.search(title):
+                            printError(pkg, 'invalid-title', title)
                     else:
                         printError(pkg, 'no-title-in-menu', f)
                         title=None
@@ -381,6 +384,9 @@ of the icon to be found.''',
 
 'no-icon-in-menu',
 '''The menu entry doesn't contain an icon field.''',
+
+'invalid-title',
+'''The menu title contains invalid characters like /.''',
 
 )
 
