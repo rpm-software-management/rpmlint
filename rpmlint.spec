@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.47
+%define version 0.48
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Jan 17 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.48-1mdk
+ o rpmlint.py: added a way to load an alternative config file (using -f).
+ o SpecCheck.py: * added lib-package-without-%%mklibname
+                 * don't parse changelog section to find errors and
+                 correct source_dir_regex.
+ o FilesCheck.py: added outside-libdir-files
+ o I18NCheck.py: * Added 'en_US' as valid locale name
+                 * Added "lug" (Luganda) language as a valid code for
+                 translations
+                 * Added recognition of some more language codes
+                 (Gnome includes some translations in those languages now)
+ o various exceptions
+
 * Thu Aug  8 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.47-1mdk
  o BinariesCheck.py: added /usr/lib/bonobo to no binary in /usr/lib exceptions
                      corrected wrong loop for /usr/lib check
