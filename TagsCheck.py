@@ -545,4 +545,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 
 check=TagsCheck()
 
+addDetails(
+'summary-too-long',
+'The "Summary:" must not exceed 80 characters.',
+
+)
+    
 # TagsCheck.py ends here
