@@ -8,8 +8,8 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.42
-%define release 2mdk
+%define version 0.43
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Wed May  1 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.43-1mdk
+ o added no-prereq-on check.
+
+ o check that the package tags are coherent with the file name.
+
+ o added a --policy option.
+
+ o build only one regexp for all exception and correct the broken ones.
+
 * Fri Mar  8 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.42-2mdk
 - corrected rpmdiff location
 
