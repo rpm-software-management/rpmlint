@@ -23,6 +23,7 @@ Implemented checks:
 	o menu system checks (MenuCheck).
 	o %post; %pre, %postun and %preun scripts checks (PostCheck).
 	o /etc/rc.d/init.d checks (InitScriptCheck).
+	o spec file checks (SpecCheck).
 
 If you want to change configuration options or the list of checks, use the
 global configuration file /etc/rpmlint/config or in the user configuration
