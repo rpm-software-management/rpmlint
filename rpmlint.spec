@@ -51,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
-- Config.py: o added statically-linked-binary exception for udev
+- Config.py: o added statically-linked-binary exception for udev, policycoreutils
 
 * Fri Sep  5 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.52-1mdk
 - TagsCheck.py: o added explicit-lib-dependency check

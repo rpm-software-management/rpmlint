@@ -220,6 +220,9 @@ addFilter('hotplug non-standard-dir-perm /var/run/usb 0700')
 #udev
 addFilter('udev statically-linked-binary /sbin/udev')
 
+#policycoreutils
+addFilter('policycoreutils statically-linked-binary /usr/sbin/load_policy')
+
 #Setuid
 addFilter('traceroute setuid-binary /usr/sbin/traceroute root 04755')
 addFilter('iputils setuid-binary /usr/sbin/(traceroute|ping)6 root 04755')
