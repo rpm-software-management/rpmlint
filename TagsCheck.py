@@ -57,6 +57,7 @@ DEFAULT_VALID_GROUPS=(
     'Graphical desktop/Other',
     'Graphical desktop/Sawfish',
     'Graphical desktop/WindowMaker',
+    'Graphical desktop/Xfce',
     'Graphics',
     'Monitoring',
     'Networking/Chat',
