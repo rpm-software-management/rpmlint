@@ -1,3 +1,20 @@
+2000-04-07  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+	Add check on icons, if no icon print a warning, if icon specified
+	(with a long path, not with relative path) is  not here print a Error.
+
+	* /home/cvs/cooker/soft/rpmlint/FilesCheck.py:
+	package -source are also devel package.
+
+2000-04-05  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	traceroute need to be setuid-binary
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	Add exception rules for initscripts.
+
 2000-04-05  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
 
 	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
