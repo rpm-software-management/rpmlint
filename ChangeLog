@@ -1,3 +1,11 @@
+2002-03-04 10:01  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: added rpmdiff
+
+2002-03-03 21:42  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.42
+
 2002-03-03 21:35  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* README: added PerlVersionTrick
