@@ -1,4 +1,45 @@
+2000-03-27  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.spec, rpmlint.py:
+		* 0.11
+
+	* README:
+		* added MenuCheck.
+
+	* MenuCheck.py:
+		* valid sections are now a configuration variable.
+
+	* config:
+		* added an exception for MenuCheck.
+
+2000-03-23  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* FilesCheck.py:
+		* commented out non-empty-dir-listed.
+
+	* Config.py:
+	        * (DEFAULT_CHECKS): added MenuCheck.
+
+2000-03-23  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config:
+		* don't check devel-file-in-non-devel-package for alsa-source
+		* it's allow to have a tmpdir as 700 in etcskel and rootfile.
+		* Don't check for config files on /root/*.
+
+2000-03-20  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* MenuCheck.py:
+		* first version.
+
 2000-03-14  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.spec:
+		* corrected Group header.
+
+	* config:
+		* added exceptions for devel-file-in-non-devel-package and
+	dir-or-file-in-home.
 
 	* rpmlint.py:
 		* 0.10.

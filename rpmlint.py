@@ -17,7 +17,7 @@ import Config
 import os
 from Filter import *
 
-version="0.10"
+version="0.11"
 
 # Print usage information
 def usage(name):

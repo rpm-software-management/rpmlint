@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.10
+%define version 0.11
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -20,7 +20,7 @@ Copyright: GPL
 Group: Development/Other
 BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
+Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep
 BuildArchitectures: noarch
 BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
@@ -49,6 +49,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Mon Mar 27 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.11-1mdk
+- 0.11:
+ o check menu files.
+
 * Tue Mar 14 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.10-1mdk
 - 1.10:
  o check .h, .a and .so in non devel package.
