@@ -516,11 +516,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     if not dep:
                         printWarning(pkg, 'no-dependency-on', base)
                     elif version:
-                        if dep[1][:len(version)] != version:
+                        if use_epoch:
+                            expected=str(epoch) + ":" + version
+                        else:
+                            expected=version
+                        if dep[1][:len(expected)] != expected:
                             if dep[1] != '':
-                                printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], version)
+                                printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], expected)
                             else:
-                                printWarning(pkg, 'no-version-dependency-on', base, version)
+                                printWarning(pkg, 'no-version-dependency-on', base, expected)
                     res=devel_number_regex.search(name)
                     if not res:
                         printWarning(pkg, 'no-major-in-name', name)
