@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.34
+%define version 0.35
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -15,7 +15,7 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
-URL: http://www.lepied.com/rpmlint/
+URL: http://people.mandrakesoft.com/~flepied/projects/rpmlint/
 Copyright: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -47,8 +47,35 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
 %config(noreplace) /etc/rpmlint/config
+%dir /etc/rpmlint
 
 %changelog
+* Tue Aug 21 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.35-1mdk
+
+- BinariesCheck.py: o Make libraries not linked against libc errors
+  and not warnings. (Bill Nottingham)
+
+                    o libc doesn't need to be linked against libc,
+  and the dynamic linker doesn't need dependeny information. (Bill Nottingham)
+
+	            o Fix some of the library checks to be more correct. (Bill
+  Nottingham)
+
+- TagsCheck.py: added a check on obsoleted packages not provided.
+
+- FilesCheck.py: check non readable files.
+
+- PostCheck.py: check ~/ instead of ~ to allow awk scripts not to
+  give false reports.
+
+- MenuCheck.py: o added a check for / in menu titles.
+
+                o Add missing menu entries. (FredC)
+
+- I18NCheck.py: Added 'bs' as a valid language code name. (Pablo)
+
+- Config.py: added a few exceptions.
+
 * Sun Jul 15 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.34-1mdk
 - added missing descriptions.
 - added -a option to check all the installed packages.
