@@ -183,7 +183,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 if not found: printError(pkg, "use-of-kdesu-in-menu-but-not-in-requires")
 
                                 res2=MenuCheck.kdesu_command.search(line)
-                                command=res2.group(1)
+                                if res2:
+                                    command=res2.group(1)
 
                             if command[0] == '/':
                                 files[command]
