@@ -598,6 +598,10 @@ addFilter('explicit-lib-dependency libxslt-proc|libimlib2_1-loaders')
 # don't report errors on debug packages
 addFilter('^.+-debug(info)? [^ ]+ /usr/lib/debug/')
 
+# exceotuibs fir %multiarch policy
+addFilter('^.+-devel subdir-in-bin .+/multiarch-.+-.+/')
+addFilter('^.+-devel dangling-relative-symlink .+/multiarch-dispatch')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
