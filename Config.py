@@ -167,6 +167,7 @@ addFilter("E: e2fsprogs statically-linked-binary /sbin/.*fsck.*")
 addFilter("E: mount setuid-binary /bin/(u)?mount root 04755")
 addFilter("E: util-linux setuid-binary /usr/bin/(newgrp|chsh|chfn) root 04711")
 addFilter("E: util-linux setgid-binary /usr/bin/write tty 02755")
+addFilter("E: X11R6-contrib setgid-binary /usr/X11R6/bin/xman man 02755")
 
 #Pam
 addFilter("W: pam devel-file-in-non-devel-package /lib/security/pam_unix_(session|passwd|acct|auth).so")
