@@ -625,7 +625,7 @@ STANDARD_USERS = STANDARD_USERS_NEW
 
 def load_policy(policy):
     if policy != 'mdk10.2':
-        addFilter('executable-marked-as-config-file|requires-on-release|missing-menu-command|dir-or-file-in-var-local')
+        addFilter('executable-marked-as-config-file|requires-on-release|missing-menu-command|dir-or-file-in-var-local|wrong-script-interpreter|non-executable-script|script-without-shellbang|wrong-script-end-of-line-encoding|wrong-file-end-of-line-encoding')
         if policy != 'mdk10.1':
             addFilter('obsolete-on-name|manifest-in-perl-module|useless-explicit-provides')
             if policy != 'mdk10.0':
