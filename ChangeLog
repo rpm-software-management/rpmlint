@@ -1,3 +1,7 @@
+2005-01-21 09:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.65-1mdk
+
 2005-01-19 23:18  Pablo Saratxaga <pablo@mandrakesoft.com>
 
 	* I18NCheck.py: recognition of some more languages (bug #12216)
