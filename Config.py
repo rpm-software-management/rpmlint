@@ -165,7 +165,7 @@ addFilter('E: sudo setuid-binary /usr/bin/sudo root 04111')
 addFilter('E: slocate setgid-binary /usr/bin/slocate slocate 02755')
 addFilter('E: SysVinit setgid-binary /usr/bin/wall tty 02555')
 addFilter('E: sh-utils setuid-binary /bin/su root 04755')
-addFilter('E: netkit-base setuid-binary /bin/ping root 04755')
+addFilter('E: (netkit-base|iputils) setuid-binary /bin/ping root 04755')
 addFilter('E: e2fsprogs statically-linked-binary /sbin/.*fsck.*')
 addFilter('E: mount setuid-binary /bin/(u)?mount root 04755')
 addFilter('E: util-linux setuid-binary /usr/bin/(newgrp|chsh|chfn) root 04711')
@@ -208,6 +208,8 @@ addFilter('W: mathplot non-transparent-xpm ')
 addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
 addFilter('E: squid incoherent-subsys /etc/rc.d/init.d/squid $SQUID')
 addFilter('E: heartbeat incoherent-subsys /etc/rc.d/init.d/heartbeat $SUBSYS')
+addFilter('E: initscripts:.*mandrake_(firstime|everytime)')
+
 
 # non-conffile-in-etc
 addFilter('W: mandrake-release non-conffile-in-etc /etc/mandrake-release')
