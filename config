@@ -23,7 +23,20 @@ from Config import *
 
 # Output filters
 
-# /var/catman subdirs are setgid man
+# Standard exceptions:
 addFilter("W: man-pages-[^ ]+ non-standard-dir-perm /var/catman[^ ]+ 0775")
+addFilter("E: filesystem non-standard-dir-perm /var/lock/subsys 0775")
+addFilter("E: filesystem non-standard-dir-perm /tmp 01777")
+addFilter("E: filesystem non-standard-dir-perm /var/tmp 01777")
+addFilter("E: filesystem dir-or-file-in-mnt /mnt/cdrom")
+addFilter("E: filesystem non-standard-dir-perm /mnt/cdrom 0775")
+addFilter("E: filesystem non-standard-dir-perm /var/spool/mail 0775")
+addFilter("E: filesystem dir-or-file-in-mnt /mnt/floppy")
+addFilter("E: filesystem non-standard-dir-perm /mnt/floppy 0775")
+addFilter("E: filesystem non-standard-dir-perm /root 0750")
+addFilter("E: filesystem non-standard-dir-perm /var/lock 0775")
+addFilter("E: filesystem non-standard-dir-perm /proc 0555")
+addFilter("E: postgresql-test non-standard-[gu]id [^ ]+ postgres")
+addFilter("E: sympa non-standard-[gu]id /home/sympa/[^ ]+ sympa")
 
 # config ends here
