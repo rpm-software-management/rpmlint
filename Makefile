@@ -11,7 +11,8 @@ BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
 
-FILES= rpmlint *.py INSTALL README README.CVS COPYING ChangeLog Makefile config rpmlint.spec rpmdiff
+FILES= rpmlint *.py AUTHORS INSTALL README README.CVS COPYING ChangeLog Makefile \
+       config rpmlint.spec rpmdiff
 
 PACKAGE=rpmlint
 VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
