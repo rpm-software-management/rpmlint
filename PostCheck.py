@@ -25,10 +25,11 @@ DEFAULT_VALID_SHELLS=('/bin/sh',
 extract_dir=Config.getOption('ExtractDir', '/tmp')
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 
-braces_regex=re.compile("^[^#]*%", re.MULTILINE)
-bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
+braces_regex=re.compile('^[^#]*%', re.MULTILINE)
+bracket_regex=re.compile('^[^#]*if.*[^ \]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~|\$HOME', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|\s|;)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install)\s", re.MULTILINE)
+single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
 
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
@@ -90,6 +91,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if prog == "/usr/bin/perl":
                     if incorrect_perl_script(script):
                         printError(pkg, "perl-syntax-error-in-" + tag[2])
+                        
+                res=single_command_regex.search(script)
+                if res:
+                    printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))
             else:
                 if prog in valid_shells:
                     printWarning(pkg, "empty-" + tag[2])
