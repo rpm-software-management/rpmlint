@@ -31,10 +31,10 @@ DEFAULT_VALID_SECTIONS=(
     "Applications/Sciences/Biology",
     "Applications/Sciences/Chemistry",
     "Applications/Sciences/Computer science",
-    "Applications/Sciences/Geosciences ",
+    "Applications/Sciences/Geosciences",
     "Applications/Sciences/Mathematics",
     "Applications/Sciences/Physics",
-    "Applications/Sciences/Other    ",
+    "Applications/Sciences/Other",
     "Applications/Communications",
     "Applications/Editors",
     "Applications/Emulators",
@@ -70,7 +70,7 @@ DEFAULT_VALID_SECTIONS=(
     "Amusement/Toys",
     "Multimedia/Sound",
     "Multimedia/Graphics",
-    "Multimedia/Video",
+    "Multimedia/Video"
     )
 
 class MenuCheck(AbstractCheck.AbstractCheck):
