@@ -296,7 +296,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
                 if not devel_pkg and includefile_regex.search(f) and not f in doc_files:
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
-                
+                if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
+                    printError(pkg, 'non-readable', f, oct(perm))
+
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
 		if perm != 0755:
@@ -569,7 +571,12 @@ non standard.''',
 
 'symlink-contains-up-and-down-segments',
 '''
-'''
+''',
+
+'non-readable',
+'''The file can't be read by everybody. If this is normal (for security reason), send an
+email to flepied@mandrakesoft.com to add it to the list of exceptions in the next release.''',
+
 )
 
 # FilesCheck.py ends here
