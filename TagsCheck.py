@@ -474,12 +474,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	name=pkg[rpm.RPMTAG_NAME]
 	if not name:
 	    printError(pkg, 'no-name-tag')
-	elif name:
-	    res=basename_regex.search(pkg.filename)
-	    if res:
-		basename=res.group(1)
-		if name != basename[0:len(name)]:
-		    printWarning(pkg, 'non-coherent-filename', name, basename)
+	else:
             res=(not pkg.isSource()) and devel_regex.search(name)
             if res:
                 base=res.group(1)
@@ -603,12 +598,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
 
-        arch=pkg[rpm.RPMTAG_ARCH]
-        if not arch:
-            printError(pkg, 'no-arch-tag')
-        elif pkg.filename[-(len(arch) + 4):] != arch + '.rpm':
-            printWarning(pkg, 'incoherent-architecture-in-filename', arch, pkg.filename)
-            
+        if not pkg.isSource():
+            arch=pkg[rpm.RPMTAG_ARCH]
+        else:
+            arch='src'
+
+        expected='%s-%s-%s.%s.rpm' % (name, version, release, arch)
+        basename=string.split(pkg.filename, '/')[-1]
+        if basename != expected:
+            printWarning(pkg, 'non-coherent-filename', basename)
+
 # Create an object to enable the auto registration of the test
 check=TagsCheck()
 
@@ -652,8 +651,7 @@ Release tag.''',
 '''There is no Name tag in your package. You have to specify a name using the Name tag.''',
 
 'non-coherent-filename',
-'''
-''',
+'''The file which contains the package should be named <NAME>-<VERSION>-<RELEASE>.<ARCH>.rpm.''',
 
 'no-dependency-on',
 '''
