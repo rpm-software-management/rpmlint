@@ -9,11 +9,11 @@ Implemented checks:
 	o tags checks
 	o Mandrake specific checks
 	o binaries checks
+	o configuration files checks
 
 Planned checks:
 
 	o pgp checks
 	o permissions, groups and owners checks
 	o suid warnings
-	o configuration files checks
 	o rpm source checks
