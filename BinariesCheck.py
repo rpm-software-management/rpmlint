@@ -88,7 +88,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 		    # stripped ?
 		    if not BinariesCheck.unstrippable.search(i[0]):
 			if BinariesCheck.not_stripped.search(i[1]):
-			    printError(pkg, "unstripped-binary-or-object", i[0])
+			    printWarning(pkg, "unstripped-binary-or-object", i[0])
 
 			# inspect binary file
 			bin_info=BinaryInfo(pkg.dirName()+i[0])
