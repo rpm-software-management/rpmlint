@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.29
+%define version 0.30
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -49,6 +49,26 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Feb 16 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.30-1mdk
+
+- InitScriptCheck.py: check if runlevels are set
+
+- MenuCheck.py: added support to check launchers.
+
+- I18NCheck.py: check subdirs of /sur/share/man.
+
+- PostCheck.py: check that the postun creates the ghost files
+                added install to dangerous commands
+
+- LSBCheck.py: first version
+
+- TagsCheck.py: changed Window Maker to WindowMaker
+                Add https as valid url.
+                Used list of licenses from www.opensource.org/licenses
+                Check the full license before splitting in it
+                multiple parts.
+
+
 * Thu Dec  7 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.29-1mdk
 
 - PostCheck.py: Add /sbin/sash as VALID_SHELLS.
