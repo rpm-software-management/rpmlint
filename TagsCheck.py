@@ -101,6 +101,8 @@ DEFAULT_VALID_GROUPS=(
     'Books/Other'
     )
 
+# liste grabbed from www.opensource.org/licenses
+
 DEFAULT_VALID_LICENSES = (
     'GPL',
     'LGPL',
@@ -113,7 +115,15 @@ DEFAULT_VALID_LICENSES = (
     'Apache License',
     'PHP License',
     'Public Domain',
-    'Modified CNRI Open Source License'
+    'Modified CNRI Open Source License',
+    'zlib License',
+    'CVW License',
+    'Ricoh Source Code Public License',
+    'Python license',
+    'Vovida Software License',
+    'Sun Internet Standards Source License',
+    'Intel Open Source License',
+    'Jabber Open Source License'
     )
 
 DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com'
