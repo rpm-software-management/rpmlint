@@ -170,6 +170,7 @@ python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
 cross_compile_regex=re.compile('-mandrake-linux-[^/]+$')
 perl_version_trick=Config.getOption('PerlVersionTrick', 1)
 log_regex=re.compile('^/var/log/[^/]+$')
+lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -198,6 +199,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         # erport these errors only once
         perl_dep_error=0
         python_dep_error=0
+        lib_file=0
+        non_lib_file=0
         
         if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
 	    printWarning(pkg, 'no-documentation')
@@ -274,6 +277,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal file check
             if stat.S_ISREG(mode):
+
+                if not devel_pkg:
+                    if lib_path_regex.search(f):
+                        lib_file=1
+                    elif f not in doc_files:
+                        non_lib_file=f
 
                 if log_regex.search(f):
                     if user != 'root':
@@ -445,7 +454,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			for linksegment in string.split(mylink, '/'):
 			    if linksegment == '..':
 				printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
-
+        if lib_file and non_lib_file:
+            printError(pkg, 'outside-libdir-files', non_lib_file)
+            
 # Create an object to enable the auto registration of the test
 check=FilesCheck()
 
@@ -646,6 +657,10 @@ email to flepied@mandrakesoft.com to add it to the list of exceptions in the nex
 
 'non-ghost-file',
 '''File should be tagged %ghost.''',
+
+'outside-libdir-files',
+'''This library package must not contain non library files to allow 64
+and 32 bits versions of the package to cohabit.''',
 
 )
 
