@@ -11,17 +11,14 @@ Comments and new checks welcome. Send feedback to
 Implemented checks:
 
 	o tags checks (TagsCheck)
-	o Mandrake specific checks (MandrakeCheck)
+	o Distribution specific checks (MandrakeCheck)
 	o binaries checks (BinaryCheck)
 	o configuration files checks (ConfigCheck)
 	o locations, permissions, groups and owners checks (FileCheck)
 	o suid warnings (FileCheck)
 	o pgp checks (SignatureCheck)
 	o FHS checks (FHSCheck)
-
-Planned checks:
-
-	o rpm source checks
+	o Source specific checks (SourceCheck)
 
 If you want to change configuration options or the list of checks, use the
 global configuration file /etc/rpmlint/config or in the user configuration
@@ -45,7 +42,7 @@ addCheckDir(path) adds a path to look for checks.
 setOption(name, value) sets the value of the configuration option. See bellow
 to have the list of available options.
 
-addFilter(package, reason) adds a filter to remove the output of a check.
+addFilter(regexp) adds a filter to remove the output of a check.
 
 Available options:
 
