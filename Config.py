@@ -528,6 +528,11 @@ addFilter('-debug(info)? no-documentation')
 addFilter('-debug(info)? devel-file-in-non-devel-package')
 addFilter('-debug(info)? unstripped-binary-or-object')
 
+# ppp
+addFilter('ppp non-readable /etc/ppp/chap-secrets 0600')
+addFilter('ppp setuid-binary /usr/sbin/pppd root 05755')
+addFilter('ppp non-readable /etc/ppp/pap-secrets 0600')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
