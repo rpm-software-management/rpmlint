@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.21
+%define version 0.22
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Tue Sep 12 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.22-1mdk
+- PostCheck.py: print a warning on empty script.
+- FilesCheck.py: added postgres and apache to default users.
+- TagsCheck.py: added bugs@linux-mandrake.com as a valid packager address.
+- I18NCheck.py: check *.mo for file-not-in-%lang, not only in /usr/share/locale
+- TagsCheck.py, MenuCheck.py: replaced Networking/ICQ group with Networking/Instant messaging.
+
 * Thu Aug 31 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.21-1mdk
 - TagsCheck.py: check packager field compliance to a regexp.
 - Config.py: imported default exceptions.
