@@ -110,6 +110,7 @@ DEFAULT_VALID_SECTIONS=(
     'More applications/Sciences/Physics',
     'More applications/Sciences/Robotics',
     'More applications/Sciences/Other',
+    'More applications/Other',
     )
 
 DEFAULT_EXTRA_MENU_NEEDS = (
