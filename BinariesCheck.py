@@ -86,7 +86,7 @@ usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib/pkgconfig/')
-usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'))
+usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
 srcname_regex=re.compile('(.*?)-[0-9]')
 
 def dir_base(path):
