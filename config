@@ -22,6 +22,7 @@ from Config import *
 #setOption("UseBzip2", 1)
 #setOption("ReleaseExtension", None)
 #setOption("ValidGroups", ("Group1", "Group2"))
+#setOption("KernelModuleRPMsOK", 0)
 
 # Output filters
 # addFilter("E: .* no-signature")
