@@ -272,6 +272,8 @@ addFilter('reiserfs-utils dangling-symlink /sbin/fsck.reiserfs.*')
 addFilter('reiserfsprogs dangling-relative-symlink /sbin/fsck.reiserfs ../bin/true')
 addFilter('reiserfs-utils incoherent-version-in-changelog')
 addFilter('kernel use-of-RPM_SOURCE_DIR')
+addFilter('kernel-source zero-length .*\.stamp$')
+addFilter('kernel-source hidden-file-or-dir .*\.depend$')
 
 #Glibc
 addFilter('glibc shared-lib-without-dependency-information /lib/ld-.*so')
@@ -548,7 +550,7 @@ addFilter('libsigc\+\+-examples devel-dependency libsigc\+\+-devel')
 addFilter('libsigc\+\+1\.0-examples devel-dependency libsigc\+\+1\.0-devel')
 
 # invalid-build-requires
-addFilter('invalid-build-requires libgnomeui2-devel|libGConf2-devel|libglade2.0-devel|libgnomecanvas2-devel|libgtkhtml2-devel|libORBit2-devel|libglib2.0-devel|libgtk\+2-devel|libgtk\+2.0-devel|libxml2-devel|libIDL2-devel|libglib2-devel|libgal2.0-devel|libgtkhtml-3.0-devel|libgtop2.0-devel|libpanel-applet-2-devel|libatk1.0-devel|libgnome-vfs2-devel|libglib2.0-devel|libgnome2-devel|libXft2-devel|libgnet2-devel|libgdk_pixbuf2.0-devel|libdxr3-devel|libbzip2-devel|libhdf5-devel')
+addFilter('invalid-build-requires libgnomeui2-devel|libGConf2-devel|libglade2.0-devel|libgnomecanvas2-devel|libgtkhtml2-devel|libORBit2-devel|libglib2.0-devel|libgtk\+2-devel|libgtk\+2.0-devel|libxml2-devel|libIDL2-devel|libglib2-devel|libgal2.0-devel|libgtkhtml-3.0-devel|libgtop2.0-devel|libpanel-applet-2-devel|libatk1.0-devel|libgnome-vfs2-devel|libglib2.0-devel|libgnome2-devel|libXft2-devel|libgnet2-devel|libgdk_pixbuf2.0-devel|libdxr3-devel|libbzip2-devel|libhdf5-devel|libieee1284-devel')
 
 # explicit-lib-dependency
 addFilter('explicit-lib-dependency libxslt-proc|libimlib2_1-loaders')
