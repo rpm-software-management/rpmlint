@@ -21,10 +21,15 @@ DEFAULT_VALID_SHELLS=('/bin/sh',
                       '/bin/bash',
                       '/sbin/sash',
                       '/usr/bin/perl',
+                      '/sbin/ldconfig',
                       )
+
+DEFAULT_EMPTY_SHELLS=('/sbin/ldconfig',
+                     )
 
 extract_dir=Config.getOption('ExtractDir', '/tmp')
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
+empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 
 braces_regex=re.compile('^[^#]*%', re.MULTILINE)
 double_braces_regex=re.compile('%%', re.MULTILINE)
@@ -114,6 +119,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
             if prog:
                 if not prog in valid_shells:
                     printError(pkg, 'invalid-shell-in-' + tag[2], prog)
+                if prog in empty_shells:
+                    printError(pkg, 'non-empty-' + tag[2], prog)
             if prog == '/bin/sh' or prog == '/bin/bash' or prog == '/usr/bin/perl':
                 if braces_regex.search(script) and not double_braces_regex.search(script):
                     printWarning(pkg, 'percent-in-' + tag[2])
@@ -159,7 +166,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
             if res:
                 printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))
         else:
-            if prog in valid_shells:
+            if prog not in empty_shells and prog in valid_shells:
                 printWarning(pkg, 'empty-' + tag[2])
 
 # Create an object to enable the auto registration of the test

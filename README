@@ -65,13 +65,17 @@ ExtraMenuNeeds		list of strings
 ExtractDir		string		"/tmp"
 ValidLicenses		list of strings
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
-ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
+ValidShells		list of strings	('/bin/sh', '/bin/bash', '/sbin/sash',
+					 '/usr/bin/perl', '/sbin/ldconfig')
+ValidEmptyShells	list of strings	('/sbin/ldconfig')
+
 Packager		regex		'@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakesoft.com'
 RpmGamesGroup		regex		'Games'
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 ForbiddenWords		regex		'Linux.?Mandrake|Mandrake[^ ]*Linux'
 ValidBuildHost		regex		'\.mandrakesoft\.com$|\.mandrake\.org$'
-InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any', 'package')
+InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any',
+					 'package')
 IconFilename		regex		'.*\.png$'
 PerlVersionTrick	boolean		1
 CrossCompilation	regex		'-mandrake-linux-[^/]+$'
