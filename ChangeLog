@@ -1,3 +1,7 @@
+2005-03-10 19:19  Frederic Lepied <flepied at mandrakesoft.com>
+
+	* rpmlint.spec: 0.68-1mdk
+
 2005-03-04 20:44  Thierry Vignaud <tvignaud at mandrakesoft.com>
 
 	* Config.py: add exception for dmraid
