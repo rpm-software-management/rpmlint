@@ -189,6 +189,8 @@ addFilter("W: initscripts conffile-without-noreplace-flag /etc/rc.d/rc.*.d/.*(ki
 addFilter("W: initscripts non-conffile-in-etc /etc/locale/.*")
 addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
 
+#hotplug
+addFilter('E: hotplug non-standard-dir-perm /var/run/usb 0700')
 
 #Setuid
 addFilter('E: traceroute setuid-binary /usr/sbin/traceroute root 04755')
