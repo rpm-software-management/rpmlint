@@ -8,6 +8,7 @@
 #############################################################################
 
 import os.path
+import re
 
 DEFAULT_CHECKS=("MandrakeCheck",
 		"TagsCheck",
@@ -34,6 +35,11 @@ def allChecks():
 	_checks=DEFAULT_CHECKS
     return _checks
 
+def defaultChecks():
+    global _checks
+
+    _checks=DEFAULT_CHECKS
+    
 def resetChecks():
     global _checks
 
@@ -74,23 +80,19 @@ def getOption(name, default):
 	return default
 
 # List of filters
-_filters={}
+_filters=[]
 
-def addFilter(name, reason):
+def addFilter(s):
     global _filters
 
-    try:
-	_filters[name].append(reason)
-    except KeyError:
-	_filters[name]=[reason,]
+    _filters.append(re.compile(s))
 
-def isFiltered(name, reason):
+def isFiltered(s):
     global _filters
-    
-    try:
-	reasons=_filters[name]
-	return reason in reasons
-    except KeyError:
-	return 0
+
+    for f in _filters:
+	if f.search(s):
+	    return 1
+    return 0
     
 # Config.py ends here
