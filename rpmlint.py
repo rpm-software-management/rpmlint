@@ -15,6 +15,7 @@ import getopt
 import Pkg
 import Config
 import os
+import sys
 import stat
 import rpm
 from Filter import *
@@ -26,7 +27,7 @@ policy=None
 def usage(name):
     print 'usage:', name, '[<options>] <rpm files>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]'
+    print '\t[-i|--info]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
 # Print version information
 def printVersion():
@@ -104,7 +105,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args)=getopt.getopt(sys.argv[1:],
-                              'ic:C:hVvp:anP:E:',
+                              'ic:C:hVvp:anP:E:f:',
                               ['info',
                                'check=',
                                'checkdir=',
@@ -115,7 +116,9 @@ try:
                                'all',
                                'noexception',
                                'policy='
-                               'extractdir='])
+                               'extractdir=',
+                               'file=',
+                               ])
 except getopt.error:
     print 'bad option'
     usage(sys.argv[0])
@@ -127,16 +130,11 @@ verbose=0
 extract_dir=Config.getOption('ExtractDir', '/tmp')
 prof=0
 all=0
+conf_file='~/.rpmlintrc'
 
 # load global config file
 try:
     loadFile('/etc/rpmlint/config')
-except OSError:
-    pass
-
-# load user config file
-try:
-    loadFile('~/.rpmlintrc')
 except OSError:
     pass
 
@@ -167,9 +165,19 @@ for o in opt:
         policy=o[1]
     elif o[0] == '-a' or o[0] == '--all':
         all=1
+    elif o[0] == '-f' or o[0] == '--file':
+	conf_file=o[1]
     else:
 	print 'unknown option', o
 
+# load user config file
+try:
+    loadFile(conf_file)
+except OSError:
+    pass
+except:
+    sys.stderr.write('Error loading %s, skipping\n' % conf_file)
+    
 policy and Config.load_policy(policy)
 
 # if no argument print usage
