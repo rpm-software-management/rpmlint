@@ -1,3 +1,50 @@
+2003-01-16 23:30  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: added a way to load an alternative config file.
+
+2003-01-16 23:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: added lib-package-without-%mklibname
+
+2003-01-16 23:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added outside-libdir-files
+
+2003-01-09 11:49  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add modutils rules.
+
+2003-01-07 14:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: fix pcmcia-cs regexp.
+
+2002-12-19 22:50  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exception for wvdial
+
+2002-12-06 08:11  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: don't parse changelog section to find errors and
+	correct source_dir_regex.
+
+2002-11-19 18:04  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added 'en_US' as valid locale name
+
+2002-11-07 11:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for extipl, ocamltk and drakconf
+
+2002-10-14 11:57  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added "lug" (Luganda) language as a valid code for
+	translations
+
+2002-08-21 17:22  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added recognition of some more language codes
+	(Gnome includes some translations in those languages now)
+
 2002-08-08 16:17  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.47-1mdk
