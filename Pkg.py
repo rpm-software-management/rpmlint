@@ -304,7 +304,10 @@ class Pkg:
     def check_versioned_dep(self, name, version):
         for d in self.requires()+self.prereq():
             if d[0] == name:
-                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or d[1] != version:
+                current_version=d[1]
+                if current_version.index(':'):
+		    current_version=''.join(current_version.split(':')[1:])
+                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or current_version != version:
                     return 0
                 else:
                     return 1
