@@ -307,7 +307,7 @@ addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
 addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGLwrapper.so.')
 
 #False reports on locales
-addFilter('E: libclanlib0-gl|clanlib-gl|xscreensaver-gl no-dependency-on locales-gl')
+addFilter('E: libclanlib0-gl|clanlib-gl|xscreensaver-gl|prboom-gl no-dependency-on locales-gl')
 addFilter('E: emacs-el|xemacs-el no-dependency-on locales-el')
 addFilter('E: (hack)?kernel-pcmcia-cs no-dependency-on locales-cs')
 addFilter('E: php-gd no-dependency-on locales-gd')
@@ -337,5 +337,30 @@ addFilter('E: freeswan non-readable /etc/freeswan/ipsec.secrets 0600')
 
 #library policy exceptions
 addFilter('rpm|glibc|anonftp|pam|popt|egcs-c\+\+ .*in-library-package')
+
+#mkinitrd
+addFilter('E: mkinitrd statically-linked-binary /sbin/insmod-DIET')
+addFilter('E: mkinitrd statically-linked-binary /sbin/nash')
+
+#automake
+addFilter('W: automake devel-file-in-non-devel-package /usr/share/automake/ansi2knr.c')
+
+#gettext
+addFilter('W: gettext-devel no-major-in-name gettext-devel')
+
+#chromium
+addFilter('E: chromium-setup .*-icon-not-in-package chromium.xpm')
+
+#webmin
+addFilter('W: webmin dangerous-command-in-%postun rm')
+
+#methane
+addFilter('W: methane dangerous-command-in-%post chown')
+
+#icon from menu can be used in other packages
+addFilter('icon-not-in-package .*_section.xpm')
+
+#apache
+addFilter('E: apache-suexec setuid-binary /usr/sbin/suexec root 04710')
 
 # Config.py ends here
