@@ -30,7 +30,7 @@ braces_regex=re.compile('^[^#]*%', re.MULTILINE)
 double_braces_regex=re.compile('%%', re.MULTILINE)
 bracket_regex=re.compile('^[^#]*if.*[^ \]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\$HOME', re.MULTILINE)
-dangerous_command_regex=re.compile("(^|\s|;|/bin/)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl)\s", re.MULTILINE)
+dangerous_command_regex=re.compile("(^|\s|;|/bin/|\|)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl)\s", re.MULTILINE)
 single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
 update_menu_regex=re.compile('update-menus', re.MULTILINE)
 tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
@@ -40,6 +40,7 @@ bogus_var_regex=re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 prereq_assoc = (
 #    ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
     ['chkfontpath', ('chkfontpath', '/usr/sbin/chkfontpath')],
+    ['rpm-helper', ('rpm-helper',)],
     )
 
 for p in prereq_assoc:
@@ -91,10 +92,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
             prog = pkg[tag[1]]
 
             if type(script) != types.ListType:
-                self.check_aux(pkg, files, prog, script, tag)
+                self.check_aux(pkg, files, prog, script, tag, prereq)
             else:
                 for idx in range(0, len(prog)):
-                    self.check_aux(pkg, files, prog[idx], script[idx], tag)
+                    self.check_aux(pkg, files, prog[idx], script[idx], tag, prereq)
                      
         ghost_files=pkg.ghostFiles()
         if ghost_files:
@@ -108,7 +109,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                        (not prein or string.find(prein, f) == -1):
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 
-    def check_aux(self, pkg, files, prog, script, tag):
+    def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
             if prog:
                 if not prog in valid_shells:
