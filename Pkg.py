@@ -62,6 +62,7 @@ class Pkg:
 	self._ghost_files=None
 	self._files=None
 	self.required=None
+        self._lang_files=None
         
 	# Create a package object from the file name
 	fd=os.open(filename, os.O_RDONLY)
@@ -161,6 +162,7 @@ class Pkg:
 	self._noreplace_files=[]
 	self._ghost_files=[]
 	self._files={}
+        self._files_array=[]
 	flags=self.header[rpm.RPMTAG_FILEFLAGS]
 	modes=self.header[rpm.RPMTAG_FILEMODES]
 	users=self.header[rpm.RPMTAG_FILEUSERNAME]
@@ -186,6 +188,7 @@ class Pkg:
             files=self.header[rpm.RPMTAG_FILENAMES]
 
 	if files:
+            self._files_array=files
 	    for idx in range(0, len(files)):
 		if flags[idx] & RPMFILE_CONFIG:
 		    self._config_files.append(files[idx])
@@ -197,6 +200,19 @@ class Pkg:
 		    self._ghost_files.append(files[idx])
 		self._files[files[idx]]=(modes[idx], users[idx],
 					 groups[idx], links[idx])
+
+    def langFiles(self):
+        if self._lang_files == None:
+            self._lang_files={}
+            array=self.header[rpm.RPMTAG_FILELANGS]
+            if array:
+                for idx in range(0, len(array)):
+                    self._lang_files[self._files_array[idx]] = array[idx]
+                    
+        return self._lang_files
+
+    def fileLang(self, f):
+        return self.langFiles()[f]
 
     # API to access dependency information
     def requires(self):
