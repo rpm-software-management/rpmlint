@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.7
+%define version 0.8
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -22,6 +22,7 @@ BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
 Requires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
 BuildArchitectures: noarch
+BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
 %description
 rpmlint is a tool to check common errors on rpm packages.
@@ -63,6 +64,10 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Thu Dec 30 1999 Frederic Lepied <flepied@mandrakesoft.com> 0.8-1mdk
+
+- 0.8: I18N checks, some exceptions added.
+
 * Mon Nov 15 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - 0.7: more robust cleanup, filters are regexp now and added
