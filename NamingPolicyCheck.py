@@ -89,6 +89,7 @@ check.add_check('apache2', '^apache2-mod_', '^/usr/lib/apache2-')
 check.add_check('fortune', '^fortune-', '^/usr/share/games/fortunes/')
 check.add_check('php', '^php-', '/usr/lib/php/extensions/')
 check.add_check('ruby', '^ruby-', '/usr/lib/ruby/[1-9](-[1-9])?/')
+check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/')
 
 # these exception should be added 
 # apache2 => apache2-devel
