@@ -1,3 +1,62 @@
+2001-10-30 05:38  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added incoherent-version-in-name exceptions.
+
+2001-10-29 18:05  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README, TagsCheck.py: added mandrake.org as a valid build host.
+
+2001-10-29 03:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: check that major version is present in package
+	name.
+
+2001-10-27 22:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check that regular files haven't a zero size.
+
+2001-10-27 22:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: add the size to the record about a file
+
+2001-10-25 22:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for Mesa libification
+
+2001-10-25 18:15  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: only check binary packages
+
+2001-10-24 18:30  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: don't allow space before tag name
+
+2001-10-23 17:42  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added mandrakeexpert url as a valid Packager field.
+
+2001-10-19 02:18  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: allow space after the release in a changelog entry.
+
+2001-10-18 18:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: updated list from opensource.org and added non
+	opensource ones.
+
+2001-10-17 21:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: report a warning if no url tag is defined.
+
+2001-10-17 20:33  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exception for fetchmail-daemon.
+
+2001-10-17 12:23  Pixel <pixel@mandrakesoft.com>
+
+	* Config.py: - add ocaml-lablgtk and camlp4 in devel packages - fix
+	the setuid filter for /usr/bin/sperl5.6.1
+
 2001-10-16 22:07  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* README: added descriptions for ForbiddenWords and ValidBuildHost.
