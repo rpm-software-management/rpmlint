@@ -329,8 +329,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			linktop=r.group(1)
 			
 			# does the link go up and then down into the same directory?
-			if linktop == lastpop:
-			    printWarning(pkg, "lengthy-symlink", f, link)
+			#if linktop == lastpop:
+			#    printWarning(pkg, "lengthy-symlink", f, link)
 		    
 			if len(pathcomponents) == 0:
 			    # we've reached the root directory
