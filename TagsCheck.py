@@ -89,7 +89,7 @@ DEFAULT_VALID_GROUPS=(
     "Graphical desktop/Icewm",
     "Graphical desktop/FVWM based",
     "Graphical desktop/KDE",
-    "Graphical desktop/Sawmill",
+    "Graphical desktop/Sawfish",
     "Graphical desktop/Window Maker",
     "Graphical desktop/Enlightenment",
     "Graphical desktop/Other",
