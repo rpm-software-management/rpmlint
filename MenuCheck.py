@@ -82,7 +82,9 @@ DEFAULT_EXTRA_MENU_NEEDS = (
     "wmaker"
     )
 
-DEFAULT_ICON_PATH = "/usr/share/icons/"
+DEFAULT_ICON_PATH = (("/usr/share/icons/", "normal"),
+                     ("/usr/share/icons/mini/", "mini"),
+                     ("/usr/share/icons/large/", "large"))
 
 class MenuCheck(AbstractCheck.AbstractCheck):
     menu_file=re.compile("^/usr/lib/menu/([^/]+)$")
@@ -98,8 +100,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
     standard_needs=Config.getOption("ExtraMenuNeeds", DEFAULT_EXTRA_MENU_NEEDS)
-    xpm_icon_paths=Config.getOption("XpmIconPath", DEFAULT_ICON_PATH)
-    xpm_ext=re.compile(xpm_icon_paths + ".*\.xpm$")
+    icon_paths=Config.getOption("IconPath", DEFAULT_ICON_PATH)
+    xpm_ext=re.compile("/usr/share/icons/(mini/|large/).*\.xpm$")
     
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
@@ -140,7 +142,6 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         mode=files[f][0]
                         if stat.S_ISREG(mode) and not Pkg.grep("None\",", dirname + "/" + f):
                             printWarning(pkg, "non-transparent-xpm", f)
-                            pass
         if len(menus) > 0:
             dir=pkg.dirName()
             if menus != []:
@@ -229,11 +230,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=MenuCheck.icon.search(line)
                     if res:
                         icon=res.group(1)
-                        try:
-                            if icon[0] == '/':
-                                files[icon]
-                        except KeyError:
-                            printError(pkg, "specified-icon-not-in-package", icon, f)
+                        if icon[0] == '/':
+                            printWarning(pkg, "hardcoded-path-in-menu-icon", icon)
+                        else:
+                            for path in MenuCheck.icon_paths:
+                                try:
+                                    files[path[0] + icon]
+                                except KeyError:
+                                    printError(pkg, path[1] + "-icon-not-in-package", icon, f)
                     else:
                         printWarning(pkg, "no-icon-in-menu", title)
                         
