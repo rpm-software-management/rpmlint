@@ -19,6 +19,8 @@ VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
 RELEASE:=$(shell rpm -q --qf %{RELEASE} --specfile $(PACKAGE).spec)
 TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
 
+RPMOPT = --clean --rmspec
+
 all:
 	./compile.py "$(LIBDIR)/" [A-Z]*.py
 
@@ -63,7 +65,7 @@ tar:
 	rm -rf $(PACKAGE)-$(VERSION)
 
 buildrpm:
-	rpm -ta $(PACKAGE)-$(VERSION).tar.bz2
+	rpm -ta $(RPMOPT) $(PACKAGE)-$(VERSION).tar.bz2
 
 # rules to build a distributable rpm
 
