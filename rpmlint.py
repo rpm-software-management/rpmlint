@@ -31,7 +31,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print 'rpmlint version', version, 'Copyright (C) 1999-2003 Frederic Lepied, MandrakeSoft'
+    print 'rpmlint version', version, 'Copyright (C) 1999-2004 Frederic Lepied, MandrakeSoft'
 
 # Load a python module from its file name
 def loadCheck(name):	
@@ -62,7 +62,7 @@ def main():
                     st=os.stat(f)
 		    if stat.S_ISREG(st[stat.ST_MODE]):
                     	pkg=Pkg.Pkg(f, extract_dir)
-                    if stat.S_ISDIR(st[stat.ST_MODE]):
+                    elif stat.S_ISDIR(st[stat.ST_MODE]):
 			dirs.append(f)
 			continue
 		    else:	
