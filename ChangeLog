@@ -1,3 +1,7 @@
+2002-06-04 00:14  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: remove cvs commit from cvstag target
+
 2002-06-04 00:13  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.46-1mdk
