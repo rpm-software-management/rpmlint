@@ -164,7 +164,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                str="/lib/cpp %s%s | grep ^\?" % (dir, f)
+                str="/lib/cpp %s%s 2>/dev/null| grep ^\?" % (dir, f)
                 cmd=commands.getoutput(str)
                 for line in string.split(cmd, "\n"):
                     res=MenuCheck.package.search(line)
