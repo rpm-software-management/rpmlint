@@ -20,7 +20,6 @@ URL: http://people.mandrakesoft.com/~flepied/projects/rpmlint/
 License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Prefix: %{_prefix}
 Requires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep, /bin/bash
 BuildArchitectures: noarch
 BuildRequires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, make
