@@ -1,3 +1,7 @@
+2003-08-05 12:10  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.51.1-1mdk
+
 2003-08-05 12:02  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: don't check devel-dependency on source package
