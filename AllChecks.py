@@ -12,5 +12,6 @@ import TagsCheck
 import BinariesCheck
 import ConfigCheck
 import FilesCheck
+import SignatureCheck
 
 # AllChecks.py ends here
