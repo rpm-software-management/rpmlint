@@ -6,8 +6,9 @@
 # Version	: $Id$
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
+
 %define name rpmlint
-%define version 0.36
+%define version 0.37
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -16,7 +17,7 @@ Version: %{version}
 Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
 URL: http://people.mandrakesoft.com/~flepied/projects/rpmlint/
-Copyright: GPL
+License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
 Prefix: %{_prefix}
@@ -50,6 +51,30 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Oct 16 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.37-1mdk
+
+ o SourceCheck.py: allow 0755 as a valid mode for source.
+
+ o Config.py: various exceptions
+
+ o TagsCheck.py: added invalid-word check in description and summary.
+                 added invalid-buildhost check.
+
+ o FilesCheck.py: added .cvsignore to the list of cvs-internal-file.
+
+ o BinariesCheck.py: check for new style of pic sections.
+
+ o FilesCheck.py: Check if kernel modules are in the kernel package. (Chmouel)
+
+ o PostCheck.py: track command with full path too.
+
+ o FilesCheck.py: added squid group and user.
+
+ o BinariesCheck.py: Warn for man pages without version in library packages.
+
+ o DistributionCheck.py: More explicit path regexp check for info files. (Chmouel)
+
+
 * Fri Sep 28 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.36-1mdk
 
 - MenuCheck.py: check if a menu file is executable.
