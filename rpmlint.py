@@ -15,7 +15,7 @@ import getopt
 import Pkg
 import os.path
 
-version="0.3"
+version="0.4"
 
 # Print usage information
 def usage(name):
