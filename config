@@ -54,6 +54,7 @@ addFilter("W: menu invalid-menu-section")
 addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modules")
 addFilter("W: icewm-light menu-command-not-in-package icewm")
 addFilter("E: slocate non-standard-dir-perm /var/lib/slocate 0750")
+addFilter("E: ld.so statically-linked-binary /sbin/ldconfig")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
