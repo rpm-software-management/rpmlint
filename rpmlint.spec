@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.46
+%define version 0.47
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,21 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Thu Aug  8 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.47-1mdk
+ o BinariesCheck.py: added /usr/lib/bonobo to no binary in /usr/lib exceptions
+                     corrected wrong loop for /usr/lib check
+ o Config.py: added handling of default values.
+ o FHSCheck.py: Add lib64 as standard subdir in /usr (that's the /lib<qual> part of FHS)
+ o FilesCheck.py: Add lib64 directories
+                  use default values from Config.
+ o I18NCheck.py: Added 'zh_HK' recognition
+ o InitScriptCheck.py: allow to add/del service with rpm-helper scripts.
+ o MenuCheck.py: add default values from Config.
+ o PostCheck.py: added perl to dangerous command check trigger scripts too
+                 check rpm-helper prereq.
+                 corrected prereq test
+ o SpecCheck.py: Also check for \{?_prefix}?/lib references
+
 * Tue Jun  4 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.46-1mdk
  o BinariesCheck.py: added no-binary and only-non-binary-in-usr-lib
 
