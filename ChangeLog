@@ -1,7 +1,39 @@
-2000-09-06  Pixel  <pixel@mandrakesoft.com>
+2000-09-12 11:59  Fredrice Lepied <flepied@mandrakesoft.com>
 
-	* I18NCheck.py (I18NCheck.check): check *.mo for
-	file-not-in-%lang, not only in /usr/share/locale
+	* rpmlint.py: 0.22
+
+2000-09-12 11:58  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: print a warning on empty script.
+
+2000-09-12 11:57  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added postgres and apache to default users.
+
+2000-09-12 11:57  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added libwmf and doxygen as dev packages.
+	
+	info/dir exception for info-install package.
+
+2000-09-12 11:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README, TagsCheck.py: added bugs@linux-mandrake.com as a valid
+	packager address.
+
+2000-09-06 23:01  Pixel <pixel@mandrakesoft.com>
+
+	* I18NCheck.py: check *.mo for file-not-in-%lang, not only in
+	/usr/share/locale
+
+2000-09-05 18:46  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py, MenuCheck.py: replaced Networking/ICQ group with
+	Networking/Instant messaging.
+
+2000-08-31 13:54  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.21
 
 2000-08-31 13:47  Fredrice Lepied <flepied@mandrakesoft.com>
 
