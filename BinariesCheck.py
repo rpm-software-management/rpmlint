@@ -19,6 +19,7 @@ class BinaryInfo:
 
     needed_regex=re.compile("^\s*NEEDED\s*(\S+)")
     rpath_regex=re.compile("^\s*RPATH\s*(\S+)")
+    soname_regex=re.compile("^\s*SONAME\s*(\S+)")
     comment_regex=re.compile("^\s*\d+\s+\.comment\s+")
     dynsyms_regex=re.compile("^DYNAMIC SYMBOL TABLE:")
     unrecognized_regex=re.compile("^objdump: (.*?): File format not recognized$")
@@ -28,7 +29,8 @@ class BinaryInfo:
 	self.rpath=[]
 	self.comment=0
 	self.dynsyms=0
-	
+	self.soname=0
+        
 	res=commands.getoutput("objdump --headers --private-headers -T " + path)
 	if res:
 	    for l in string.split(res, "\n"):
@@ -48,6 +50,9 @@ class BinaryInfo:
 			if r:
 			    sys.stderr.write("file format not recognized for %s\n." % (r.group(1)))
 			    #sys.exit(1)
+		    r=BinaryInfo.soname_regex.search(l)
+                    if r:
+			self.soname=r.group(1)
 	    
 class BinariesCheck(AbstractCheck.AbstractCheck):
 
@@ -59,6 +64,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     shared_object_regex=re.compile("shared object")
     executable_regex=re.compile("executable")
     libc_regex=re.compile("libc\.")
+    so_regex=re.compile("/lib/[^/]+\.so")
+    validso_regex=re.compile("\.so\.")
     sparc_regex=re.compile("SPARC32PLUS|SPARC V9|UltraSPARC")
 
     def __init__(self):
@@ -97,6 +104,13 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 			# inspect binary file
 			bin_info=BinaryInfo(pkg.dirName()+i[0])
 
+                        # so name in library
+                        if BinariesCheck.so_regex.search(i[0]):
+                            if not bin_info.soname:
+                                printWarning(pkg, "no-soname", i[0])
+                            elif not BinariesCheck.validso_regex.search(bin_info.soname):
+                                printWarning(pkg, "invalid-soname", i[0], bin_info.soname)
+                            
 			# rpath ?
 			if bin_info.rpath:
 			    printWarning(pkg, "binary-or-shlib-defines-rpath", i[0], bin_info.rpath)
