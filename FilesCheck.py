@@ -163,6 +163,7 @@ dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLI
 logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
 kernel_modules_regex=re.compile('^/lib/modules/')
 kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
+normal_zero_length_regex=re.compile('^/etc/security/console.apps/')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -193,7 +194,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    mode=enreg[0]
 	    user=enreg[1]
 	    group=enreg[2]
-
+            size=enreg[4]
+            
 	    if stat.S_ISREG(mode) and doc_regex.search(f) and not f in doc_files:
 		printError(pkg, 'not-listed-as-documentation', f)
 
@@ -307,6 +309,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
                     printError(pkg, 'non-readable', f, oct(perm))
+                if size == 0 and not normal_zero_length_regex.search(f) and f not in ghost_files:
+                    printError(pkg, 'zero-length', f)
 
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
