@@ -92,7 +92,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
     title=re.compile("title=(\"([^\"]+)\"|([^ \t\"]+))")
     command=re.compile("command=\"?([^\" ]+)")
-    kdesu_command=re.compile("command=\"?kdesu -c \"?([^\" ]+)")
+    kdesu_command=re.compile("[/usr/bin/]?kdesu -c \"?([^ \t\"]+)\"?")
+    kdesu_bin=re.compile("[/usr/bin/]?kdesu")
     icon=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
@@ -175,11 +176,10 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         command=res.group(1)
                         try:
-                            if command[:5] == 'kdesu':
+                            if MenuCheck.kdesu_bin.search(command):
                                 res2=MenuCheck.kdesu_command.search(line)
-                                command2=res2.group(1)
-                                files[command2]
-                            else:
+                                command=res2.group(1)
+
                                 if command[0] == '/':
                                     files[command]
                                 else:
