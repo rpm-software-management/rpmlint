@@ -160,7 +160,7 @@ dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLI
 logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
 kernel_modules_regex=re.compile('^/lib/modules/')
 kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
-normal_zero_length_regex=re.compile('^/etc/security/console.apps/')
+normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
