@@ -36,6 +36,7 @@ class Pkg:
 	self.file_info=None
 	self._config_files=None
 	self._doc_files=None
+	self._ghost_files=None
 	self._files=None
 	
 	# Create a package object from the file name
@@ -112,10 +113,18 @@ class Pkg:
 	self._gatherFilesInfo()
 	return self._doc_files
 
+    # return the list of ghost files
+    def ghostFiles(self):
+	if self._ghost_files != None:
+	    return self._ghost_files
+	self._gatherFilesInfo()
+	return self._ghost_files
+
     # extract information about the files
     def _gatherFilesInfo(self):
 	self._config_files=[]
 	self._doc_files=[]
+	self._ghost_files=[]
 	self._files={}
 	flags=self.header[rpm.RPMTAG_FILEFLAGS]
 	files=self.header[rpm.RPMTAG_FILENAMES]
@@ -129,6 +138,8 @@ class Pkg:
 		    self._config_files.append(files[idx])
 		elif flags[idx] & RPMFILE_DOC:
 		    self._doc_files.append(files[idx])
+		elif flags[idx] & RPMFILE_GHOST:
+		    self._ghost_files.append(files[idx])
 		self._files[files[idx]]=(modes[idx], users[idx],
 					 groups[idx], links[idx])
 	
