@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.63
+%define version 0.64
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -53,6 +53,23 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Thu Dec 30 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.64-1mdk
+- FilesCheck.py: o Check that pkg-config files and config script are
+                   in devel packages (Guillaume Rousse, bug #12662).
+                 o added htaccess-file check (Guillaume Rousse, bug #12661).
+                 o added executable-marked-as-config-file check.
+                 o lookup .cmi files as devel files too (Guillaume
+                   Rousse) [bug #12186].
+
+- Config.py: first pass to update load_policy.
+
+- TagsCheck.py: o added requires-on-release check
+                o The Lucent Public Licence (Plan9) is
+                  opensource.org-approved. (Rafael)
+
+- SpecCheck.py: Clarify the use-of-RPM_SOURCE_DIR message
+                explanation. (Rafael)
+
 * Sun Dec  5 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.63-1mdk
 - Config.py: o added exceptions for kernel-source.* on
              devel-file-in-non-devel-package reports.
