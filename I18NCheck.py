@@ -68,6 +68,10 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 	AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
 
     def check(self, pkg, verbose):
+
+        if pkg.isSource():
+            return
+        
 	files=pkg.files()
 	locales=[]			# list of locales for this packages
 
