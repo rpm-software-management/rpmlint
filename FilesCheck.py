@@ -183,9 +183,36 @@ hidden_file_regex=re.compile('/\.[^/]*$')
 mispelled_macro_regex=re.compile('%{.*}')
 siteperl_perl_regex=re.compile('^/usr/lib/perl5/site_perl/')
 manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
+shellbang_regex=re.compile('^#!\s*(\S*)')
+interpreter_regex=re.compile('^/(usr/)?bin/[^/]+$')
+script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(d|hourly|daily|monthly|weekly)))/')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
+
+# loosely inspired from Python Cookbook
+# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
+text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
+_null_trans = string.maketrans("", "")
+
+def istextfile(f):
+    s=open(f).read(512)
+
+    if "\0" in s:
+        return 0
+    
+    if not s:  # Empty files are considered text
+        return 1
+
+    # Get the non-text characters (maps a character to itself then
+    # use the 'remove' option to get rid of the text characters.)
+    t = s.translate(_null_trans, text_characters)
+
+    # If more than 30% non-text characters, then
+    # this is considered a binary file
+    if len(t)/len(s) > 0.30:
+        return 0
+    return 1
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -514,6 +541,34 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			    if linksegment == '..':
 				printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
 
+	    # check text file
+	    if stat.S_ISREG(mode):
+		path=pkg.dirName() + '/' + f
+		if os.access(path, os.R_OK) and istextfile(path):
+		    line=open(path).readline();
+		    script=0
+
+		    # check for shellbang presence
+		    res=shellbang_regex.search(line)
+		    if res:
+			if not interpreter_regex.search(res.group(1)):
+			    printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
+			script=1
+		    # otherwise check against usual script locations
+		    else:
+			if script_regex.search(f):
+			    printError(pkg, 'script-without-shellbang', f)
+			script=1
+		    
+		    if script==1:
+			if mode & stat.S_IXUSR and perm != 0755:
+			    printError(pkg, 'non-executable-script', f, oct(perm))
+			if line.endswith('\r\n'):
+			    printError(pkg, 'wrong-script-end-of-line-encoding', f)
+                    else:
+			if line.endswith('\r\n'):
+			    printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
+
         if log_file and not logrotate_file:
             printWarning(pkg, 'log-files-without-logrotate', log_file)
 
@@ -773,6 +828,23 @@ while they must appear under vendor_perl.''',
 prevent upgrades to work correctly. If you need to be able to
 customize an executable, make it read a config file in /etc/sysconfig
 for example.''',
+
+'wrong-script-interpreter',
+'''This script uses an incorrect interpreter.''',
+
+'non-executable-script',
+'''This script is not executable.''',
+
+'script-without-shellbang',
+'''This script does not begins with a shellbang. It will prevent its execution.''',
+
+'wrong-script-end-of-line-encoding',
+'''This script has wrong end-of-line encoding, usually caused by creation on a
+non-Unix system. It will prevent its execution.''',
+
+'wrong-file-end-of-line-encoding',
+'''This file has wrong end-of-line encoding, usually caused by creation on a
+non-Unix system. It could harm its visualisation.'''
 
 )
 
