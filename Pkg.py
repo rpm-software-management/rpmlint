@@ -132,7 +132,11 @@ class Pkg:
 
     # access the tags like an array
     def __getitem__(self, key):
-	return self.header[key]
+	val = self.header[key]
+        if val == []:
+            return None
+        else:
+            return val
 
     # return the name of the directory where the package is extracted
     def dirName(self):
