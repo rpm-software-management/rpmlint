@@ -39,16 +39,19 @@ CORRECT_SUBDIRS = (
 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu',
 'fa', 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hi', 'hr', 'hu', 'hy',
-'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kn', 'ko', 'kw',
+'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kn', 'ko', 'ku', 'kw',
 'li', 'lo', 'lt', 'lg', 'lv',
-'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt', 'nb', 'nl', 'nn', 'no',
+'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
+'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no',
 'oc', 'or', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
 'ro', 'ru', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'ss', 'st', 'sv',
 'ta', 'te', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz', 'uz@Cyrl',
-'ve', 'vi', 'wa', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
+'ve', 'vi', 'wa', 'wen', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
+# KDE uses 'ven' for 've'; and 'nso' for 'st'
+'ven', 'nso',
 # 
 # note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
-# are obsolescnet, but still widely used; some day however they should
+# are obsolescent, but still widely used; some day however they should
 # be removed from this list.
 'zh_CN.GB2312', 'zh_TW.Big5',
 )
