@@ -1,3 +1,53 @@
+2000-04-04  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+	Add Session/Windowmanagers in List of good menu.
+
+2000-04-03  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	Add hackkernel* like kernel* for the devel-file-in-non-devel-package stuff.
+
+2000-04-03  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	Add hackkernel* like kernel* for the devel-file-in-non-devel-package stuff.
+
+2000-04-03  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	Add hackkernel* like kernel* for the devel-file-in-non-devel-package stuff.
+
+2000-03-31  flepied  <flepied@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/ChangeLog: 	* 0.12
+
+	* /home/cvs/cooker/soft/rpmlint/rpmlint.spec: 	* 1.12
+
+	* /home/cvs/cooker/soft/rpmlint/rpmlint.py: 	* 0.12
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+		* check update-menus in %post and %postun if a menu is present.
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+		* avoid I: strange-needs kde for package beginning by k.
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+		* corrected default menu (thanks to DindinX).
+
+2000-03-30  chmouel  <chmouel@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/config:
+	add /mnt/disk like /mnt/(floppy|cdrom) and clean up regex.
+
+2000-03-29  flepied  <flepied@mururoa.us.mandrakesoft.com>
+
+	* /home/cvs/cooker/soft/rpmlint/MenuCheck.py:
+		* check that the command is present in the menu.
+
+	* /home/cvs/cooker/soft/rpmlint/BinariesCheck.py:
+		* check for non sparc32 binaries in sparc rpms.
+
 2000-03-31  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.spec, rpmlint.py:
@@ -25,6 +75,7 @@
 	* BinariesCheck.py:
 		* check for non sparc32 binaries in sparc rpms.
 
+>>>>>>> 1.16
 2000-03-27  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.spec, rpmlint.py:
