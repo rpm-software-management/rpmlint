@@ -161,8 +161,10 @@ logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
 kernel_modules_regex=re.compile('^/lib/modules/')
 kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
 normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$')
-perl_regex=re.compile('^/usr/lib/perl5/(?:site_perl/)?([.0-9]+)/')
+perl_regex=re.compile('^/usr/lib/perl5/(?:site_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
+cross_compile_regex=re.compile('-mandrake-linux-[^/]+$')
+perl_version_trick=Config.getOption('PerlVerionTrick', 1)
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -225,6 +227,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'cvs-internal-file', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
+
             res=logrotate_regex.search(f)
             if res and res.group(1) != pkg.name:
                 printError(pkg, 'incoherent-logrotate-file', f)
@@ -268,6 +271,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if doc_regex.search(f) and not f in doc_files:
                     printError(pkg, 'not-listed-as-documentation', f)
+                #elif cross_compile_regex.search(f):
+                #    printError(pkg, 'cross-compile-name', f)
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
@@ -320,15 +325,21 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if not perl_dep_error:
                     res=perl_regex.search(f)
                     if res:
-                        if not pkg.check_versioned_dep('perl', res.group(1)):
-                            printError(pkg, 'no-dependancy', 'perl', res.group(1))
+                        if perl_version_trick:
+                            vers = res.group(1) + '0' + res.group(2)
+                        else:
+                            vers = res.group(1) + res.group(2)
+                        if not (pkg.check_versioned_dep('perl-base', vers) or
+                                pkg.check_versioned_dep('perl', vers)):
+                            printError(pkg, 'no-dependancy', 'perl-base', vers)
                             perl_dep_error=1
 
                 if not python_dep_error:
                     res=python_regex.search(f)
                     if res:
-                        if not pkg.check_versioned_dep('python', res.group(1)):
-                            printError(pkg, 'no-dependancy', 'python', res.group(1))
+                        if not (pkg.check_versioned_dep('python-base', res.group(1)) or
+                                pkg.check_versioned_dep('python', res.group(1))):
+                            printError(pkg, 'no-dependancy', 'python-base', res.group(1))
                             python_dep_error=1
                 
 	    # normal executable check
