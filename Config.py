@@ -138,6 +138,10 @@ addFilter('W: rpm dangerous-command-in-%post rpm')
 #XFree86
 addFilter('W: XFree86-server unstripped-binary-or-object /usr/X11R6/lib/modules/')
 addFilter('E: XFree86-server statically-linked-binary /usr/X11R6/lib/modules/')
+addFilter('W: XFree86.* postin-without-ghost-file-creation /usr/X11R6/lib/X11/fonts/')
+addFilter('W: XFree86 dangling-relative-symlink /usr/X11R6/lib/X11/xinit ../../../../etc/X11/xinit')
+addFilter('E: XFree86 non-standard-dir-perm /var/lib/xdm 0700')
+addFilter('W: XFree86 dangling-relative-symlink /usr/X11R6/lib/X11/xserver ../../../.././etc/X11/xserver')
 
 #db
 addFilter('W: db[1-3]-devel no-provides db-devel')
