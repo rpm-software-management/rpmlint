@@ -77,7 +77,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
 	    return
 
         menu_error=0
-        prereq=pkg.prereq()
+        prereq=map(lambda x: x[0], pkg.prereq())
         files=pkg.files().keys()
         
         for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, "%pre"),
