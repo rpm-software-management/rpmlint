@@ -1,3 +1,7 @@
+2003-05-09 15:01  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* rpmlint.spec: 0.50-1mdk
+
 2003-05-09 14:43  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* SpecCheck.py: Make %ifarch-applied-patch a warning
@@ -1493,7 +1497,7 @@
 
 2000-10-12 08:01  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* rpmlint.spec, rpmlint.spec: corrected changelog
+	* rpmlint.spec: corrected changelog
 
 2000-10-12 08:00  Frederic Lepied <flepied@mandrakesoft.com>
 
