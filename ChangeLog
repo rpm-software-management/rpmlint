@@ -1,3 +1,17 @@
+2005-01-19 23:18  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: recognition of some more languages (bug #12216)
+
+2005-01-14 15:04  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added language codes (nr, nso, tn, ts) of South
+	  Africa that have efforts on creating localizations for them
+	  (source: http://www.translate.org.za/ )
+
+2005-01-10 11:53  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: don't report non-conffile-in-etc on executable.
+
 2005-01-05 23:31  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py: added dir-or-file-in-var-local to mdk10.2 policy
