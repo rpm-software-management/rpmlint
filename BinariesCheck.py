@@ -63,7 +63,7 @@ class BinaryInfo:
 			self.soname=r.group(1)
 
 path_regex=re.compile('(.*/)([^/]+)')
-versioned_dir_regex=re.compile('[0-9.][0-9.]+')
+versioned_dir_regex=re.compile('[0-9]')
 binary_regex=re.compile('ELF|current ar archive')
 usr_share=re.compile('^/usr/share/')
 etc=re.compile('^/etc/')
@@ -72,6 +72,7 @@ unstrippable=re.compile('\.o$|\.static$')
 shared_object_regex=re.compile('shared object')
 executable_regex=re.compile('executable')
 libc_regex=re.compile('libc\.')
+ldso_soname_regex=re.compile('^ld(-linux(-ia64|)|)\.so')
 so_regex=re.compile('/lib/[^/]+\.so')
 validso_regex=re.compile('\.so\.[0-9]+')
 sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
@@ -164,14 +165,19 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             if is_exec and bin_regex.search(i[0]):
                                 exec_files.append(i[0])
                                 
-			    if not bin_info.needed:
+			    if not bin_info.needed and \
+                               not (bin_info.soname and \
+                                    ldso_soname_regex.search(bin_info.soname)):
 				if shared_object_regex.search(i[1]):
-				    printWarning(pkg, 'shared-lib-without-dependency-information', i[0])
+				    printError(pkg, 'shared-lib-without-dependency-information', i[0])
 				else:
 				    printError(pkg, 'statically-linked-binary', i[0])
 			    else:
 				# linked against libc ?
-				if not libc_regex.search(i[0]):
+				if not libc_regex.search(i[0]) and \
+				   ( not bin_info.soname or \
+				     ( not libc_regex.search(bin_info.soname) and \
+				       not ldso_soname_regex.search(bin_info.soname))):
 				    found_libc=0
 				    for lib in bin_info.needed:
 					if libc_regex.search(lib):
@@ -179,9 +185,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 					    break
 				    if not found_libc:
 					if shared_object_regex.search(i[1]):
-					    printWarning(pkg, 'library-not-linked-against-libc', i[0])
+					    printError(pkg, 'library-not-linked-against-libc', i[0])
 					else:
-					    printWarning(pkg, 'program-not-linked-against-libc', i[0])
+					    printError(pkg, 'program-not-linked-against-libc', i[0])
         if has_lib != []:
             if exec_files != []:
                 for f in exec_files:
