@@ -21,4 +21,8 @@ from Config import *
 #setOption("Distribution", "MyDistrib")
 #setOption("UseBzip2", 1)
 
+# Output filters
+
+#addFilter("AfterStep", "non-standard-dir-in-usr")
+
 # config ends here
