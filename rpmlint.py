@@ -13,9 +13,10 @@ import AbstractCheck
 import imp
 import getopt
 import Pkg
-import os.path
+import Config
+import os
 
-version="0.4"
+version="0.5"
 
 # Print usage information
 def usage(name):
@@ -29,9 +30,14 @@ def printVersion():
 
 # Load a python module from its file name
 def loadCheck(name):	
-    (file, pathname, description)=imp.find_module(name, [checkdir])
+    (file, pathname, description)=imp.find_module(name, Config.checkDirs())
     imp.load_module(name, file, pathname, description)
 
+# Load a file
+def loadFile(name):
+    file=os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
+    imp.load_source("", name, file)
+    
 #############################################################################
 # main program
 #############################################################################
@@ -52,20 +58,31 @@ except getopt.error:
     sys.exit(1)
 
 # process options
-loaded=0
 checkdir="/usr/share/rpmlint"
 verbose=0
 extract_dir="/tmp"
 
+# load global config file
+try:
+    loadFile("/etc/rpmlint/config")
+except OSError:
+    pass
+
+# load user config file
+try:
+    loadFile("~/.rpmlintrc")
+except OSError:
+    pass
+
+# process command line options
 for o in opt:
     if o[0] == '-c' or o[0] == "--check":
-	loadCheck(o[1])
-	loaded=1
+	Config.addCheck(o[1])
     elif o[0] == '-h' or o[0] == "--help":
 	usage(sys.argv[0])
 	sys.exit(0)
     elif o[0] == '-C' or o[0] == "--checkdir":
-	checkdir=o[1]
+	Config.addCheckDir(o[1])
     elif o[0] == '-v' or o[0] == "--verbose":
 	verbose=1
     elif o[0] == '-V' or o[0] == "--version":
@@ -81,9 +98,9 @@ if args == []:
     usage(sys.argv[0])
     sys.exit(0)
     
-# If no specific test has been loaded, load all the tests
-if not loaded:
-    loadCheck("AllChecks")
+# Load all the tests
+for c in Config.allChecks():
+    loadCheck(c)
 
 try:
     # Loop over all file names given in arguments
