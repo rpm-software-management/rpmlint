@@ -252,6 +252,12 @@ addFilter('X11R6-contrib setgid-binary /usr/X11R6/bin/xman man 02755')
 addFilter('dev86-devel no-provides dev8-devel')
 addFilter('usermode setuid-binary /usr/sbin/userhelper root 04755')
 addFilter('avifile-samples setuid-binary /usr/bin/kv4lsetup root')
+addFilter('mailman setgid-binary /usr/lib/mailman/(mail/mailman|cgi-bin/(rmlist|roster|listinfo|admindb|private|create|admin|confirm|subscribe|options|edithtml)) mail 02755')
+addFilter('sympa setuid-binary /usr/lib/sympa/bin/aliaswrapper root 04750')
+addFilter('sympa setuid-binary /usr/lib/sympa/bin/bouncequeue sympa 04755')
+addFilter('sympa setuid-binary /usr/lib/sympa/bin/virtualwrapper root 04750')
+addFilter('sympa setuid-gid-binary /var/www/cgi-bin/wwsympa.fcgi root root 06755')
+addFilter('sympa setuid-binary /usr/lib/sympa/bin/queue sympa 04755')
 
 #iputilis setuid it safe as they drop it VERY early.
 addFilter('iputils setuid-binary /usr/sbin/(traceroute|ping)6 root 04755')
@@ -542,6 +548,16 @@ addFilter('-debug(info)? unstripped-binary-or-object')
 addFilter('ppp non-readable /etc/ppp/chap-secrets 0600')
 addFilter('ppp setuid-binary /usr/sbin/pppd root 05755')
 addFilter('ppp non-readable /etc/ppp/pap-secrets 0600')
+
+# postfix
+addFilter('postfix(-[^ ]+)? non-standard-dir-perm /var/spool/postfix/(corrupt|trace|defer|deferred|flush|private|incoming|hold|bounce|active) 0700')
+addFilter('postfix(-[^ ]+)? non-standard-dir-perm /var/spool/postfix/maildrop 0730')
+addFilter('postfix(-[^ ]+)? non-standard-dir-perm /var/spool/postfix/public 0710')
+addFilter('postfix(-[^ ]+)? non-standard-executable-perm /usr/sbin/post(drop|queue) 02755')
+addFilter('postfix(-[^ ]+)? non-standard-gid /usr/sbin/post(drop|queue) postdrop')
+addFilter('postfix(-[^ ]+)? non-standard-gid /var/spool/postfix/(public|maildrop) postdrop')
+addFilter('postfix(-[^ ]+)? non-standard-uid /var/spool/postfix/([^ ]+) postfix')
+addFilter('postfix(-[^ ]+)? setgid-binary /usr/sbin/post(drop|queue) postdrop 02755')
 
 # devel-dependancy wrong warnings
 addFilter('gcc devel-dependency glibc-devel')
