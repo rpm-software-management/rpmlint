@@ -27,6 +27,8 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 	    return
 	
 	config_files=pkg.configFiles()
+        noreplace_files=pkg.noreplaceFiles()
+        
 	for c in config_files:
 	    if ConfigCheck.appdefaults_regex.search(c):
 		printError(pkg, "app-defaults-must-not-be-conffile", c)
@@ -36,6 +38,10 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, "file-in-usr-marked-as-conffile", c)
 	    elif not ConfigCheck.etc_var_regex.search(c):
 		printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
+
+            if not c in noreplace_files:
+                printWarning(pkg, "conffile-without-noreplace-flag", c)
+                
 # Create an object to enable the auto registration of the test
 check=ConfigCheck()
 
