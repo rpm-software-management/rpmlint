@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.57
+%define version 0.57.1
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Thu Feb 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.57.1-1mdk
+- PostCheck.py: removed buggy trigger code
+
 * Thu Feb 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.57-1mdk
 - FilesCheck.py: no-dependancy-on => no-dependency-on fixed perl
   check (Michael Scherer)
