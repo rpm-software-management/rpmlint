@@ -1,3 +1,11 @@
+2000-08-28 15:08  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* PostCheck.py: Check perl script like we do for bash script.
+
+2000-08-28 09:15  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: updated locales list
+
 2000-08-26 12:17  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: Only check perl_temp_file in a /perl/ directory.
