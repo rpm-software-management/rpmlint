@@ -516,7 +516,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             spell_check(pkg, summary, 'summary')
             if string.find(summary, '\n') != -1:
                 printError(pkg, 'summary-on-multiple-lines')
-                print summary
             if not capital_regex.search(summary[0]):
                 printWarning(pkg, 'summary-not-capitalized', summary)
             if len(summary) >= 80:
