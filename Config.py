@@ -381,4 +381,7 @@ addFilter('nss_db executable-in-library-package')
 #pwiki
 addFilter('pwiki non-standard-dir-perm /var/www/pwiki/.* 0750')
 
+#fetchmail
+addFilter('E: fetchmail-daemon non-readable /etc/fetchmailrc 0600')
+
 # Config.py ends here
