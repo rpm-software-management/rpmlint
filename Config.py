@@ -18,6 +18,7 @@ DEFAULT_CHECKS=("DistributionCheck",
 #		"FHSCheck",
 		"SignatureCheck",
                 "MenuCheck",
+                "PostCheck",
 		"SourceCheck")
 
 # handle the list of checks to load
