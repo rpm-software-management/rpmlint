@@ -1,3 +1,11 @@
+2004-12-30 21:23  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: removed unused variables
+
+2004-12-30 21:22  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.64-1mdk
+
 2004-12-30 16:55  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: fix double import
