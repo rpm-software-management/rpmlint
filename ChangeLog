@@ -1,3 +1,27 @@
+2003-08-04 21:02  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added devel-dependency check
+
+2003-08-04 21:01  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: escape ++ in addFilter correct load_policy
+
+2003-08-04 20:55  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: corrected load_policy
+
+2003-08-04 20:48  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added devel-dependancy wrong warnings
+
+2003-08-04 08:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptios for ppp (Guillaume Rousse)
+
+2003-07-30 11:06  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* TagsCheck.py: fixed English typo
+
 2003-07-22 21:45  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* SpecCheck.py: allow the following form for a patch instruction:
