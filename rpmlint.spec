@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.37
+%define version 0.38
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,27 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Oct 30 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.38-1mdk
+
+ o BinariesCheck.py: check that major version is present in package
+name.
+
+ o FilesCheck.py: check that regular files haven't a zero size.
+
+ o I18NCheck.py: only check binary packages.
+
+ o SpecCheck.py: don't allow space before tag name.
+
+ o TagsCheck.py: * allow space after the release in a changelog entry.
+                 * updated list of licenses from opensource.org and added non
+                 opensource ones.
+                * report a warning if no url tag is defined.
+
+ o Config.py: various exceptions.
+
+ o SourceCheck.py: correct boolean expression for strange-permission
+
+
 * Tue Oct 16 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.37-1mdk
 
  o SourceCheck.py: allow 0755 as a valid mode for source.

@@ -19,7 +19,7 @@ import stat
 import rpm
 from Filter import *
 
-version='0.37'
+version='0.38'
 
 # Print usage information
 def usage(name):
