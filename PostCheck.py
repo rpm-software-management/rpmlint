@@ -101,14 +101,12 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if ghost_files:
             postin=pkg[rpm.RPMTAG_POSTIN]
             prein=pkg[rpm.RPMTAG_PREIN]
-            triggerin=pkg[rpm.RPMTAG_TRIGGERIN]
-            if not postin and not prein and not triggerin:
+            if not postin and not prein:
                 printWarning(pkg, 'ghost-files-without-postin')
             else:
                 for f in ghost_files:
                     if (not postin or string.find(postin, f) == -1) and \
-                       (not prein or string.find(prein, f) == -1) and \
-                       (not triggerin or string.find(triggerin, f) == -1):
+                       (not prein or string.find(prein, f) == -1):
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
