@@ -476,6 +476,44 @@ addFilter('tpctl incoherent-init-script-name apmiser')
 #gconf schemas
 addFilter('non-conffile-in-etc /etc/gconf/schemas/')
 
+# hidden-file-or-dir
+# apache .htaccess
+addFilter('.* hidden-file-or-dir /var/www/.*/.htaccess')
+
+# Rox .DirIcon
+addFilter('rox(-.*)? hidden-file-or-dir /usr/lib/apps/.*/.DirIcon' )
+
+# some kde packages use a .hidden directory.
+addFilter('(kdebase|kdemultimedia|kdenetwork|kdepim|lisa) hidden-file-or-dir /usr/share/.*/.hidden' )
+
+# Kde .directory, also used by nautilus and OpenOffice.
+addFilter('.* hidden-file-or-dir .*/.directory' )
+
+# gnumeric templates
+addFilter('gnumeric hidden-file-or-dir /usr/share/gnumeric/.*/autoformat-templates/.category')
+
+# if it is at root, it should be important
+addFilter('am-utils hidden-file-or-dir /.automount')
+
+# kernel hidden file.
+addFilter('(hack)?kernel.*source hidden-file-or-dir /usr/share/linux.*/(\.config|\.need_mrproper|\.version|\.depend)')
+
+# /etc/skel standard file
+addFilter('bash hidden-file-or-dir /etc/skel/.bash(rc|_profile|_logout)')
+addFilter('etcskel hidden-file-or-dir /etc/skel/.mailcap')
+
+# koffice 
+addFilter('koffice hidden-file-or-dir /usr/share/apps/.*(.autoforms|.icon|.source)')
+
+# root preferences
+addFilter('rootfiles hidden-file-or-dir /root/.*')
+
+# scilab
+addFilter('scilab hidden-file-or-dir /usr/lib/scilab-.*/.pvmd.conf')
+
+# pvm
+addFilter('pvm  hidden-file-or-dir /usr/share/pvm3/.bash(_profile|rc)')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
