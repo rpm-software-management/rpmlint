@@ -12,11 +12,14 @@ import AbstractCheck
 import re
 import Config
 
+DEFAULT_VALID_SRC_PERMS=(0644, 0755)
+
 spec_regex=re.compile('.spec$')
 bz2_regex=re.compile('.bz2$')
 gz_regex=re.compile('gz$')
 source_regex=re.compile('\\.(tar|patch|tgz|diff)$')
 use_bzip2=Config.getOption('UseBzip2', 1)
+valid_src_perms=Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 
 class SourceCheck(AbstractCheck.AbstractCheck):
 
@@ -46,7 +49,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
 		    if not gz_regex.search(f):
 			printWarning(pkg, 'source-or-patch-not-gzipped', f)
 	    perm=files[f][0] & 07777
-	    if perm != 0644 and perm != 0755:
+	    if perm not in valid_src_perms:
 		printWarning(pkg, 'strange-permission', f, oct(perm))	    
 		
 check=SourceCheck()
