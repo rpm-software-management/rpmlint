@@ -618,7 +618,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 # only check when source name correspond to name
                 if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
                     expected=version + '-' + release
-                    if use_epoch and epoch is not None:
+                    if epoch is not None:
                         expected=str(epoch) + ':' + expected
                     if expected != ret.group(1):
                         printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
@@ -846,10 +846,10 @@ This BuildRequires dependency will not be resolved on lib64 platforms (i.e. amd6
 explicit Requires: tags.''',
 
 'useless-explicit-provides',
-'''This package provides 2 times the same capacity. It should only provides it once.''',
+'''This package provides 2 times the same capacity. It should only provide it once.''',
 
 'obsolete-on-name',
-'''A package sould not obsolete itself, as it can cause weird error in tools.''',
+'''A package should not obsolete itself, as it can cause weird errors in tools.''',
 )
     
 # TagsCheck.py ends here
