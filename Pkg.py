@@ -102,6 +102,8 @@ class Pkg:
             # Create a package object from the file name
             if v42:
                 ts=rpm.TransactionSet()
+                # Don't check signatures here...
+                ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
                 fd=os.open(filename, os.O_RDONLY)
                 self.header=ts.hdrFromFdno(fd)
                 os.close(fd)
@@ -360,13 +362,21 @@ class InstalledPkg(Pkg):
         if h:
             Pkg.__init__(self, name, '/', h)
         else:
-            db = rpm.opendb()
-            tab = db.findbyname(name)
-            if not tab:
+            if v42:
+                ts = rpm.TransactionSet()
+                tab = ts.dbMatch('name', name)
+                if not tab:
+                    raise KeyError, name
+                theHdr = tab.next()
+            else:
+                db = rpm.opendb()
+                tab = db.findbyname(name)
+                if not tab:
+                    del db
+                    raise KeyError, name
+                theHdr = db[tab[0]]
                 del db
-                raise KeyError, name
-            Pkg.__init__(self, name, '/', db[tab[0]])
-            del db
+            Pkg.__init__(self, name, '/', theHdr)
         self.extracted = 1
         # create a fake filename to satisfy some checks on the filename
         self.filename = '%s-%s-%s.%s.rpm' % (self[rpm.RPMTAG_NAME], self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])

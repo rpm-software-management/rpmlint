@@ -52,6 +52,7 @@ def main():
     for c in Config.allChecks():
         loadCheck(c)
     
+    pkg=None
     try:
         # Loop over all file names given in arguments
         for f in args:
@@ -67,35 +68,38 @@ def main():
                 sys.stderr.write('Error while reading ' + f + '\n')
                 pkg=None
                 continue
-        
-            if verbose:
-                printInfo(pkg, 'checking')
 
-            for c in AbstractCheck.AbstractCheck.checks:
-                c.check(pkg)                
-
-            pkg.cleanup()
+            runChecks(pkg)
 
         # if requested, scan all the installed packages
         if all:
-            db=rpm.opendb()
-            idx=db.firstkey()
-            while idx:
-                pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
-                
-                if verbose:
-                    printInfo(pkg, 'checking')
-
-                for c in AbstractCheck.AbstractCheck.checks:
-                    c.check(pkg)
-
-                pkg.cleanup()
-
-                idx=db.nextkey(idx)
-            del db
+            if Pkg.v42:
+                ts=rpm.TransactionSet('/')
+                for item in ts.IDTXload():
+                    pkg=Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
+                    runChecks(pkg)
+            else:
+                db=rpm.opendb()
+                idx=db.firstkey()
+                while idx:
+                    pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
+                    runChecks(pkg)
+                    idx=db.nextkey(idx)
+                del db
 
     finally:
         pkg and pkg.cleanup()
+
+
+def runChecks(pkg):
+
+    if verbose:
+        printInfo(pkg, 'checking')
+
+    for c in AbstractCheck.AbstractCheck.checks:
+        c.check(pkg)
+
+    pkg.cleanup()
 
 #############################################################################
 # 
