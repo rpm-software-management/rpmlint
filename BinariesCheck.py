@@ -26,7 +26,8 @@ class BinaryInfo:
     comment_regex=re.compile('^\s*\d+\s+\.comment\s+')
     dynsyms_regex=re.compile('^DYNAMIC SYMBOL TABLE:')
     unrecognized_regex=re.compile('^objdump: (.*?): File format not recognized$')
-    non_pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
+    pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
+    non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
     
     def __init__(self, path, file):
 	self.needed=[]
@@ -35,7 +36,7 @@ class BinaryInfo:
 	self.dynsyms=0
 	self.soname=0
         self.non_pic=1
-
+        
 	res=commands.getoutput('objdump --headers --private-headers -T ' + path)
 	if res:
 	    for l in string.split(res, '\n'):
@@ -51,7 +52,7 @@ class BinaryInfo:
 			self.comment=1
 		    elif BinaryInfo.dynsyms_regex.search(l):
 			self.dynsyms=1
-                    elif BinaryInfo.non_pic_regex.search(l):
+                    elif BinaryInfo.pic_regex.search(l):
                         self.non_pic=0
 		    else:
 			r=BinaryInfo.unrecognized_regex.search(l)
@@ -61,6 +62,8 @@ class BinaryInfo:
 		    r=BinaryInfo.soname_regex.search(l)
                     if r:
 			self.soname=r.group(1)
+            if self.non_pic:
+                self.non_pic=BinaryInfo.non_pic_regex.search(res)
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
