@@ -137,6 +137,7 @@ DEFAULT_VALID_LICENSES = (
     'Eiffel Forum License',
     'W3C License',
     'Zope Public License',
+    'Lucent Public Licence',
     # non open source licences:
     'Proprietary',
     'Freeware',
