@@ -51,9 +51,7 @@ addFilter("E: sympa dir-or-file-in-home /home/sympa/")
 addFilter("E: menu non-file-in-menu-dir /usr/lib/menu/default")
 addFilter("I: menu unable-to-parse-menu-command")
 addFilter("W: menu invalid-menu-section")
-addFilter("I: k[^ ]+ strange-needs kde")
 addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modules")
-addFilter("I: iceconf strange-needs icewm /usr/lib/menu/iceconf")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
