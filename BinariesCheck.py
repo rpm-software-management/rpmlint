@@ -83,6 +83,7 @@ sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 usr_lib_regex=re.compile('^/usr/lib/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
+soversion_regex=re.compile('.*\\.so\\.([0-9][.0-9]*).*|.*?([0-9][.0-9]*)\\.so')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -106,6 +107,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         files=pkg.files()
         exec_files=[]
         has_lib=[]
+        version=None
         
 	for i in info:
 	    is_binary=binary_regex.search(i[1])
@@ -144,11 +146,18 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     (dir, base) = dir_base(i[0])
                                     try:
                                         symlink = dir + bin_info.soname
-                                        (perm, owner, group, link) = files[symlink]
+                                        (perm, owner, group, link, size) = files[symlink]
                                         if link != i[0] and link != base and link != '':
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
                                         printError(pkg, 'no-ldconfig-symlink', i[0])
+                                res=soversion_regex.search(bin_info.soname)
+                                if res:
+                                    soversion=res.group(1) or res.group(2)
+                                    if version == None:
+                                        version = soversion
+                                    elif version != soversion:
+                                        version = -1
                                     
                             if bin_info.non_pic:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
@@ -201,7 +210,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 fn=res and res.group(1) or f
                 if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
-                    
+            if version and version != -1 and string.find(pkg.name, version) == -1:
+                printError(pkg, 'incoherent-version-in-name', version)
+                
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()
 
@@ -271,6 +282,9 @@ One solution can be to change the directories which contain the files
 to subdirs of /usr/lib/<name>-<version> or /usr/share/<name>-<version>.
 Another solution can be to include a version number in the file names
 themselves.''',
+
+'incoherent-version-in-name',
+'''The package name should contain the major version of the library.''',
 
 )
 
