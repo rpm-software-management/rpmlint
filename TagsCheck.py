@@ -563,32 +563,29 @@ when the final version will be out, you will have to use an Epoch tag to make
 you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
 
 'spelling-error-in-',
-"""
-""",
+"""You made a mispelling in your text. Please double-check.""",
 
 'no-packager-tag',
-"""
-""",
+"""There is no Packager tag in your package. You have to specify a packager using
+the Package tag. Ex: Packager: Christian Belisle <cbelisle@mandrakesoft.com>""",
 
 'invalid-packager',
-"""
-""",
+"""The packager email must finish with @mandrakesoft.com or must be bugs@linux-mandrake.com.
+Please change it and rebuild your package.""",
 
 'no-version-tag',
-"""
-""",
+"""There is no Version tag in your package. You have to specify a version using the
+Version tag.""",
 
 'no-release-tag',
-"""
-""",
+"""There is no Release tag in your package. You have to specify a release using the
+Release tag.""",
 
 'not-standard-release-extension',
-"""
-""",
+"""Your release number must finish with mdk and must be valid.""",
 
 'no-name-tag',
-"""
-""",
+"""There is no Name tag in your package. You have to specify a name using the Name tag.""",
 
 'non-coherent-filename',
 """
@@ -607,12 +604,13 @@ you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
 """,
 
 'no-major-in-name',
-"""
+""" 
 """,
 
 'no-provides',
-"""
-""",
+"""There is no Provides tag in your package. You have to specify at least one
+term designing the application your package is installing. To insert it, just
+insert a tag 'Provide'""",
 
 'no-summary-tag',
 """
@@ -639,12 +637,12 @@ you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
 """,
 
 'no-group-tag',
-"""
-""",
+"""There is no Group tag in your package. You have to specify a valid group
+in your spec file using the Group tag.""",
 
 'non-standard-group',
-"""
-""",
+"""The group specified in your spec file is not valid. To find a valid group,
+please refer to the Mandrake Linux RPM documentation.""",
 
 'no-changelogname-tag',
 """
@@ -667,8 +665,7 @@ you package upgradable. Instead put it in the release tag like 0.alpha8.1mdk.'''
 """,
 
 'invalid-url',
-"""
-""",
+"""Your URL is not valid. It must begin with http, https or ftp.""",
 
 )
     
