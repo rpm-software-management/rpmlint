@@ -15,10 +15,7 @@ import re
 import stat
 import string
 import os
-
-STANDARD_USERS=('root','bin','daemon','adm','lp','sync','shutdown','halt','mail','news','uucp','operator','games','gopher','ftp','nobody','lists','gdm','xfs', 'apache', 'postgres', 'rpcuser', 'rpm', 'named', 'squid')
-
-STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriter','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate', 'x10', 'urpmi', 'apache', 'postgres', 'rpcuser', 'rpm', 'named', 'wine', 'squid')
+from setuplist import *
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS=(
