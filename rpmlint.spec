@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.9.2
+%define version 0.10
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Tue Mar 14 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.10-1mdk
+- 1.10:
+ o check .h, .a and .so in non devel package.
+ o check files in /home.
+ o corected lists of groups.
+
 * Mon Feb 28 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.9.2-1mdk
 - added a dependency on rpm-python.
 - corrected rpm 3.0.4 support.
