@@ -151,6 +151,7 @@ points_regex=re.compile('^../(.*)')
 doc_regex=re.compile('^/usr/(doc|man|info)|^/usr/share/(doc|man|info)')
 bin_regex=re.compile('^(/usr)?/s?bin/')
 includefile_regex=re.compile('\.(c|h|a|cmi)$')
+buildconfigfile_regex=re.compile('(\.pc|-config)$')
 sofile_regex=re.compile('/lib(64)?/[^/]+\.so$')
 devel_regex=re.compile('-(devel|source)$')
 lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
@@ -386,7 +387,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
-                if not devel_pkg and includefile_regex.search(f) and not f in doc_files:
+                if not devel_pkg and (includefile_regex.search(f) or buildconfigfile_regex.search(f)) and not f in doc_files:
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
                     printError(pkg, 'non-readable', f, oct(perm))
