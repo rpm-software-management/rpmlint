@@ -120,6 +120,9 @@ STANDARD_DIRS=(
 
 DEFAULT_GAMES_GROUPS='Games'
 
+DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode'],
+                               )
+
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
 mnt_regex=re.compile('^/mnt/')
 opt_regex=re.compile('^/opt/')
@@ -134,7 +137,7 @@ points_regex=re.compile('^../(.*)')
 doc_regex=re.compile('^/usr/(doc|man|info)|^/usr/share/(doc|man|info)')
 bin_regex=re.compile('^(/usr)?/s?bin/')
 includefile_regex=re.compile('\.h$|\.a$')
-sofile_regex=re.compile('/lib/[^/]+\.so$')
+sofile_regex=re.compile('[^/]+\.so$')
 devel_regex=re.compile('-(devel|source)$')
 lib_regex=re.compile('lib/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
@@ -145,6 +148,10 @@ cvs_regex=re.compile('/CVS/[^/]+$')
 games_path_regex=re.compile('/usr/(lib/)?/games')
 games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 source_regex=re.compile('(.c|.cc|.cpp|.ui)$')
+dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
+
+for idx in range(0, len(dangling_exceptions)):
+    dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -300,8 +307,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
 		# absolute link
 		if r:
-                    if not is_so and link not in files.keys():
-                        printWarning(pkg, 'dangling-symlink', f, link)
+                    if (not is_so) and link not in files.keys():
+                        is_exception=0
+                        for e in dangling_exceptions:
+                            if e[0].search(link):
+                                is_exception=e[1]
+                                break
+                        if is_exception:
+                            if is_exception not in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
+                                printWarning(pkg, 'no-dependancy-on', is_exception)
+                        else:
+                            printWarning(pkg, 'dangling-symlink', f, link)
 		    linktop=r.group(1)
 		    r=absolute_regex.search(f)
 		    if r:
@@ -315,7 +331,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         file = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
                         file = os.path.normpath(file)
                         if not os.path.exists(file):
-                            printWarning(pkg, 'dangling-symlink', f, link)
+                            is_exception=0
+                            for e in dangling_exceptions:
+                                if e[0].search(link):
+                                    is_exception=e[1]
+                                    break
+                            if is_exception:
+                                if not is_exception in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
+                                    printWarning(pkg, 'no-dependancy-on', is_exception)
+                            else:
+                                print is_so
+                                printWarning(pkg, 'dangling-relative-symlink', f, link)
 		    pathcomponents=string.split(f, '/')[1:]
 		    r=points_regex.search(link)
 		    lastpop=None
