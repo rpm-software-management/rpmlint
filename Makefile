@@ -30,7 +30,7 @@ clean:
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
-	rm -f $(DESTDIR)$(LIBDIR)/compile.py
+	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
 	if [ -z "$(POLICY)" ]; then \
 	  sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py ; \
 	else \
