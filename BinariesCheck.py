@@ -81,7 +81,7 @@ executable_regex=re.compile('executable')
 libc_regex=re.compile('libc\.')
 ldso_soname_regex=re.compile('^ld(-linux(-ia64|)|)\.so')
 so_regex=re.compile('/lib(64)?/[^/]+\.so')
-validso_regex=re.compile('\.so\.[0-9]+')
+validso_regex=re.compile('^lib.+(\.so\.[\.0-9]+|-[\.0-9]+\.so)$')
 sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 usr_lib_regex=re.compile('^/usr/lib(64)?/')
@@ -270,7 +270,7 @@ FHS and the FSSTND forbid this.''',
 # '',
 
 'invalid-soname',
-'''The soname of the library isn't in the form lib<libname>.so.<major>.''',
+'''The soname of the library is neither of the form lib<libname>.so.<major> or lib<libname>-<major>.so.''',
 
 'invalid-ldconfig-symlink',
 '''The symbolic link references the wrong file. It should reference
