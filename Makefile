@@ -31,7 +31,7 @@ install:
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 verify:
-	pychecker.sh *.py
+	pychecker *.py
 
 # rules to build a test rpm
 
