@@ -14,6 +14,10 @@ import re
 import stat
 import string
 
+STANDARD_USERS=('root','bin','daemon','adm','lp','sync','shutdown','halt','mail','news','uucp','operator','games','gopher','ftp','nobody','lists','gdm','xfs')
+
+STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriters','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate')
+
 class FilesCheck(AbstractCheck.AbstractCheck):
     tmp_regex=re.compile("^/tmp/|^(/var|/usr)/tmp/")
     mnt_regex=re.compile("^/mnt/")
@@ -36,9 +40,19 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	
 	files=pkg.files()
 	config_files=pkg.configFiles()
+	ghost_files=pkg.ghostFiles()
+
 	for f in files.keys():
 	    enreg=files[f]
 	    mode=enreg[0]
+	    user=enreg[1]
+	    group=enreg[2]
+
+	    if not user in STANDARD_USERS:
+		print "E:", pkg.name, "non-standard-uid", f, user
+	    if not group in STANDARD_GROUPS:
+		print "E:", pkg.name, "non-standard-gid", f, group
+		
 	    if FilesCheck.tmp_regex.search(f):
 		print "E:", pkg.name, "dir-or-file-in-tmp", f
 	    elif FilesCheck.mnt_regex.search(f):
@@ -50,7 +64,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    elif FilesCheck.backup_regex.search(f):
 		print "E:", pkg.name, "backup-file-in-package", f
 	    if FilesCheck.etc_regex.search(f) and stat.S_ISREG(mode):
-		if not f in config_files:
+		if not f in config_files and not f in ghost_files:
 		    print "W:", pkg.name, "non-conffile-in-etc", f
 	    link=enreg[3]
 	    if link != '':
