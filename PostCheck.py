@@ -105,7 +105,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
             postin=pkg[rpm.RPMTAG_POSTIN]
             prein=pkg[rpm.RPMTAG_PREIN]
             if not postin and not prein:
-                printWarning(pkg, 'ghost-files-without-postun')
+                printWarning(pkg, 'ghost-files-without-postin')
             else:
                 for f in ghost_files:
                     if (not postin or string.find(postin, f) == -1) and \
