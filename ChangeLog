@@ -1,3 +1,48 @@
+2001-11-30 13:03  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: search references to home or tmp in
+	/usr/lib/pkgconfig/ files.
+
+2001-11-30 13:02  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: .nosearch files are allowed to have a zero length.
+
+2001-11-30 13:01  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added an exception for use-of-RPM_SOURCE_DIR in the
+	kernel package.
+
+2001-11-28 11:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for ;getty
+
+2001-11-27 11:43  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: group "Development/KDE and QT" renamed
+	"Development/KDE and Qt"
+
+2001-11-27 10:47  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add some exceptions for zero-lenght files in setup
+	packages.
+
+2001-11-27 10:40  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* setuplist.py: Sync with version  of setup package
+
+2001-11-27 10:31  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: mandrake_consmap doen't have a status and reload entry
+	which is normal.
+
+2001-11-26 13:05  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exception for libsane
+
+2001-11-25 17:07  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for zapping.
+
 2001-11-25 17:03  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec: 0.39-1mdk
