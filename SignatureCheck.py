@@ -7,6 +7,7 @@
 # Purpose	: check the presence of a PGP signature.
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import commands
 import re
@@ -24,7 +25,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
 	    sys.stderr.write("error checking signature of " + pkg.filename + "\n")
 	else:
 	    if not SignatureCheck.pgp_regex.search(res[1]):
-		print "E:", pkg.name, "no-signature"
+		printError(pkg, "no-signature")
 	
 # Create an object to enable the auto registration of the test
 check=SignatureCheck()

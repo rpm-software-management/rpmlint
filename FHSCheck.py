@@ -7,6 +7,7 @@
 # Purpose	: check FHS conformity
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
 import re
@@ -38,7 +39,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
 		dir=s.group(1)
 		if not FHSCheck.usr_subdir_regex.search(dir):
 		    if not dir in usr_list:
-			print "W:", pkg.name, "non-standard-dir-in-usr", dir
+			printWarning(pkg, "non-standard-dir-in-usr", dir)
 			usr_list.append(dir)
 	    else:
 		s=FHSCheck.var_regex.search(f)
@@ -46,11 +47,11 @@ class FHSCheck(AbstractCheck.AbstractCheck):
 		    dir=s.group(1)
 		    if FHSCheck.var_fsstnd_regex.search(dir):
 			if not dir in var_list:
-			    print "W:", pkg.name, "FSSTND-dir-in-var", f
+			    printWarning(pkg, "FSSTND-dir-in-var", f)
 			    var_list.append(dir)
 		    elif not FHSCheck.var_subdir_regex.search(dir):
 			if not dir in var_list:
-			    print "W:", pkg.name, "non-standard-dir-in-var", dir
+			    printWarning(pkg, "non-standard-dir-in-var", dir)
 			    var_list.append(dir)
 			    
 # Create an object to enable the auto registration of the test

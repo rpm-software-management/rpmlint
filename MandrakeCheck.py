@@ -7,6 +7,7 @@
 # Purpose	: check the Mandrake specificities in a binary rpm package.
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
 import re
@@ -31,10 +32,10 @@ class MandrakeCheck(AbstractCheck.AbstractCheck):
 	    return
 	
 	if pkg[rpm.RPMTAG_VENDOR] != MandrakeCheck.vendor:
-	    print "W:", pkg.name, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR]
+	    printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
 
 	if pkg[rpm.RPMTAG_DISTRIBUTION] != MandrakeCheck.distribution:
-	    print "W:", pkg.name, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION]
+	    printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
 	# Check the listing of files
 	list=pkg[rpm.RPMTAG_FILENAMES]
@@ -44,15 +45,15 @@ class MandrakeCheck(AbstractCheck.AbstractCheck):
 		if MandrakeCheck.man_regex.search(f):
 		    if MandrakeCheck.use_bzip2:
 			if not MandrakeCheck.bz2_regex.search(f):
-			    print "W:", pkg.name, "manpage-not-bzipped", f
+			    printWarning(pkg, "manpage-not-bzipped", f)
 		    elif not MandrakeCheck.gz_regex.search(f):
-			print "W:", pkg.name, "manpage-not-gzipped", f
+			printWarning(pkg, "manpage-not-gzipped", f)
 		if MandrakeCheck.info_regex.search(f):
 		    if MandrakeCheck.use_bzip2:
 			if not MandrakeCheck.bz2_regex.search(f):
-			    print "W:", pkg.name, "infopage-not-bzipped", f
+			    printWarning(pkg, "infopage-not-bzipped", f)
 		    elif not MandrakeCheck.gz_regex.search(f):
-			    print "W:", pkg.name, "infopage-not-gzipped", f
+			    printWarning(pkg, "infopage-not-gzipped", f)
 
 # Create an object to enable the auto registration of the test
 check=MandrakeCheck()

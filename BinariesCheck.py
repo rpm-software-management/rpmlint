@@ -7,6 +7,7 @@
 # Purpose	: check binary files in a binary rpm package.
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
 import re
@@ -75,26 +76,26 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
 	    if is_binary:
 		if arch == "noarch":
-		    print "E:", pkg.name, "arch-independent-package-contains-binary-or-object", i[0]
+		    printError(pkg, "arch-independent-package-contains-binary-or-object", i[0])
 		else:
 		    # in /usr/share ?
 		    if BinariesCheck.usr_share.search(i[0]):
-			print "E:", pkg.name, "arch-dependent-file-in-usr-share", i[0]
+			printError(pkg, "arch-dependent-file-in-usr-share", i[0])
 		    # in /etc ?
 		    if BinariesCheck.etc.search(i[0]):
-			print "E:", pkg.name, "binary-in-etc", i[0]
+			printError(pkg, "binary-in-etc", i[0])
 
 		    # stripped ?
 		    if not BinariesCheck.unstrippable.search(i[0]):
 			if BinariesCheck.not_stripped.search(i[1]):
-			    print "E:", pkg.name, "unstripped-binary-or-object", i[0]
+			    printError(pkg, "unstripped-binary-or-object", i[0])
 
 			# inspect binary file
 			bin_info=BinaryInfo(pkg.dirName()+i[0])
 
 			# rpath ?
 			if bin_info.rpath:
-			    print "W:", pkg.name, "binary-or-shlib-defines-rpath", i[0], bin_info.rpath
+			    printWarning(pkg, "binary-or-shlib-defines-rpath", i[0], bin_info.rpath)
 
 			# statically linked ?
 			if BinariesCheck.shared_object_regex.search(i[1]) or \
@@ -102,9 +103,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
 			    if not bin_info.needed:
 				if BinariesCheck.shared_object_regex.search(i[1]):
-				    print "W:", pkg.name, "shared-lib-without-dependency-information", i[0]
+				    printWarning(pkg, "shared-lib-without-dependency-information", i[0])
 				else:
-				    print "E:", pkg.name, "statically-linked-binary", i[0]
+				    printError(pkg, "statically-linked-binary", i[0])
 			    else:
 				# linked against libc ?
 				if not BinariesCheck.libc_regex.search(i[0]):
@@ -115,9 +116,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 					    break
 				    if not found_libc:
 					if BinariesCheck.shared_object_regex.search(i[1]):
-					    print "W:", pkg.name, "library-not-linked-against-libc", i[0]
+					    printWarning(pkg, "library-not-linked-against-libc", i[0])
 					else:
-					    print "W:", pkg.name, "program-not-linked-against-libc", i[0]
+					    printWarning(pkg, "program-not-linked-against-libc", i[0])
 			    
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()

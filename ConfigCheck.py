@@ -7,6 +7,7 @@
 # Purpose	: 
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
 import re
@@ -28,13 +29,13 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 	config_files=pkg.configFiles()
 	for c in config_files:
 	    if ConfigCheck.appdefaults_regex.search(c):
-		print "E:", pkg.name, "app-defaults-must-not-be-conffile", c
+		printError(pkg, "app-defaults-must-not-be-conffile", c)
 	    if ConfigCheck.games_regex.search(c):
-		print "E:", pkg.name, "score-file-must-not-be-conffile", c
+		printError(pkg, "score-file-must-not-be-conffile", c)
 	    if ConfigCheck.usr_regex.search(c):
-		print "E:", pkg.name, "file-in-usr-marked-as-conffile", c
+		printError(pkg, "file-in-usr-marked-as-conffile", c)
 	    elif not ConfigCheck.etc_var_regex.search(c):
-		print "W:", pkg.name, "non-etc-or-var-file-marked-as-conffile", c
+		printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
 # Create an object to enable the auto registration of the test
 check=ConfigCheck()
 
