@@ -72,5 +72,8 @@ addFilter("E: rsh setuid-binary /usr/bin/rlogin root 04755")
 addFilter("E: rsh setuid-binary /usr/bin/rsh root 04755")
 addFilter("E: rsh setuid-binary /usr/bin/rcp root 04755")
 addFilter("E: man setgid-binary /usr/bin/man man 02755")
+addFilter("E: sudo non-standard-dir-perm /var/run/sudo 0700")
+addFilter("E: sudo setuid-binary /usr/bin/sudo root 04111")
+
 
 # config ends here
