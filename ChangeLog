@@ -1,3 +1,46 @@
+2003-05-08 11:10  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: check for hardcoded-library-path exceptions only on
+	the actual suspected hardcoded library path
+
+2003-05-08 10:41  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: add %ifarch-applied-patch check
+
+2003-05-08 10:03  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
+
+	* SpecCheck.py: Add hardcoded-library-path exceptions
+
+2003-05-07 16:48  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: changed Serbian lang codes to match what is now
+	used in Gnome and KDE
+
+2003-05-05 10:31  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: corrected epoch tests (Ville Skyttä)
+
+2003-05-05 10:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: allow empty __init__.py (Stéfane Fermigier)
+
+2003-05-05 10:23  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added Zope Public License
+
+2003-05-05 10:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for hidden-file-or-dir check (Michael
+	Scherer)
+
+2003-05-05 10:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added hidden-file-or-dir check (Michael Scherer)
+
+2003-04-30 10:36  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added an exception for gconf schemas
+
 2003-04-29 20:53  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.49-1mdk
@@ -1432,7 +1475,7 @@
 
 2000-10-12 08:01  Frederic Lepied <flepied@mandrakesoft.com>
 
-	* rpmlint.spec: corrected changelog
+	* rpmlint.spec, rpmlint.spec: corrected changelog
 
 2000-10-12 08:00  Frederic Lepied <flepied@mandrakesoft.com>
 
