@@ -123,7 +123,20 @@ DEFAULT_VALID_LICENSES = (
     'Vovida Software License',
     'Sun Internet Standards Source License',
     'Intel Open Source License',
-    'Jabber Open Source License'
+    'Jabber Open Source License',
+    'Nokia Open Source License',
+    'Sleepycat License',
+    'Nethack General Public License',
+    'Common Public License',
+    'Apple Public Source License',
+    'X.Net License',
+    'Sun Public License',
+    'Eiffel Forum License',
+    # non open source licences:
+    'Proprietary',
+    'Freeware',
+    'Shareware',
+    'Charityware'
     )
 
 DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakesoft.com'
