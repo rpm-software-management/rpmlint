@@ -1,3 +1,31 @@
+2000-03-14  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.py:
+		* 0.10.
+
+2000-03-13  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* TagsCheck.py:
+		* corrected new group list.
+
+	* FilesCheck.py:
+		* check files on /home.
+
+2000-03-09  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* FilesCheck.py:
+		* Correct cdwriters to cdwriter
+		* Add x10 group.
+
+2000-03-06  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* TagsCheck.py:
+		* changed the list of standard groups.
+
+	* FilesCheck.py:
+	        * (FilesCheck.check): added a check for .h and .a files and
+		symbolic link .so in non devel packages.
+
 2000-02-28  Frederic Lepied  <flepied@mandrakesoft.com>
 
 	* rpmlint.py:
