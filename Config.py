@@ -209,6 +209,7 @@ addFilter('E: glibc statically-linked-binary /sbin/sln')
 addFilter('E: glibc setuid-binary /usr/libexec/pt_chown root 04755')
 addFilter('E: glibc invalid-soname /lib/libmemusage.so libmemusage.so')
 addFilter('E: glibc invalid-soname /lib/libpcprofile.so libpcprofile.so')
+addFilter('E: ldconfig statically-linked-binary /sbin/ldconfig')
 
 #Transparent-xpm
 addFilter('W: mathplot non-transparent-xpm ')
