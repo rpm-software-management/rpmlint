@@ -40,7 +40,7 @@ DEFAULT_VALID_GROUPS=(
     'Development/C++',
     'Development/Java',
     'Development/GNOME and GTK+',
-    'Development/KDE and QT',
+    'Development/KDE and Qt',
     'Development/Other',
     'Sciences/Astronomy',
     'Sciences/Biology',
