@@ -128,8 +128,12 @@ addFilter("W: icewm-light menu-command-not-in-package icewm")
 addFilter("E: slocate non-standard-dir-perm /var/lib/slocate 0750")
 addFilter("E: ld.so statically-linked-binary /sbin/ldconfig")
 addFilter("W: shadow-utils dangling-symlink /usr/bin/sg newgrp")
-addFilter("E: rpm statically-linked-binary /bin/rpm")
+addFilter("E: rpm statically-linked-binary /usr/bin/rpm2cpio|/bin/rpm")
 addFilter("E: info-install info-dir-file /usr/share/info/dir")
+addFilter("E: sympa non-standard-uid [^\s]+ sympa")
+addFilter("E: sympa non-standard-gid [^\s]+ sympa")
+addFilter("E: rpm dangerous-command-in-%post rpm")
+addFilter("W: bcast version-in-menu-title Broadcast 2000")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
