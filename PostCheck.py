@@ -14,6 +14,7 @@ import rpm
 import re
 import os
 import commands
+import string
 
 DEFAULT_VALID_SHELLS=('/bin/sh',
                       '/bin/bash',
@@ -92,6 +93,19 @@ class PostCheck(AbstractCheck.AbstractCheck):
             else:
                 if prog in valid_shells:
                     printWarning(pkg, "empty-" + tag[2])
+
+
+        ghost_files=pkg.ghostFiles()
+        if ghost_files:
+            postun=pkg[rpm.RPMTAG_POSTUN]
+            preun=pkg[rpm.RPMTAG_PREUN]
+            if not postun and not preun:
+                printWarning(pkg, 'ghost-files-without-postun')
+            else:
+                for f in ghost_files:
+                    if (not postun or string.find(postun, f) == -1) and \
+                       (not preun or string.find(preun, f) == -1):
+                        printWarning(pkg, 'postun-without-ghost-file-creation', f)
                     
 # Create an object to enable the auto registration of the test
 check=PostCheck()
