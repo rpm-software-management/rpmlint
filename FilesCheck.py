@@ -32,6 +32,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     points_regex=re.compile("^../(.*)")
     doc_regex=re.compile("^/usr/(doc|man|info)|^/usr/share/(doc|man|info)")
     bin_regex=re.compile("^(/usr)?/s?bin/")
+    includefile_regex=re.compile("\.h$|\.a$")
+    sofile_regex=re.compile("\.so$")
+    devel_regex=re.compile("-devel$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -40,7 +43,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	# Check only binary package
 	if pkg.isSource():
 	    return
-	
+
+        # Check if the package is a development package
+	devel_pkg=FilesCheck.devel_regex.search(pkg.name)
+
 	files=pkg.files()
 	config_files=pkg.configFiles()
 	ghost_files=pkg.ghostFiles()
@@ -110,7 +116,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if stat.S_ISREG(mode):
                 if FilesCheck.bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, "non-executable-in-bin", f, oct(perm))
-
+                if not devel_pkg and FilesCheck.includefile_regex.search(f):
+                    printWarning(pkg, "devel-file-in-non-devel-package", f)
+                
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
 		if perm != 0755:
@@ -123,6 +131,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
 		r=FilesCheck.absolute_regex.search(link)
+                if not devel_pkg and FilesCheck.sofile_regex.search(f):
+                    printWarning(pkg, "devel-file-in-non-devel-package", f)
 		# absolute link
 		if r:
 		    linktop=r.group(1)
