@@ -140,6 +140,7 @@ mnt_regex=re.compile('^/mnt/')
 opt_regex=re.compile('^/opt/')
 home_regex=re.compile('^/home/')
 etc_regex=re.compile('^/etc/')
+usr_local_regex=re.compile('^/usr/local/')
 sub_bin_regex=re.compile('^(/usr)?/s?bin/\S+/')
 backup_regex=re.compile('~$|\#[^/]+\#$')
 compr_regex=re.compile('\.(gz|z|Z|zip|bz2)$')
@@ -238,6 +239,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'dir-or-file-in-mnt', f)
 	    elif opt_regex.search(f):
 		printError(pkg, 'dir-or-file-in-opt', f)
+	    elif usr_local_regex.search(f):
+		printError(pkg, 'dir-or-file-in-usr-local', f)
 	    elif sub_bin_regex.search(f):
 		printError(pkg, 'subdir-in-bin', f)
 	    elif backup_regex.search(f):
@@ -591,6 +594,10 @@ to put a file in this directory.''',
 
 'dir-or-file-in-opt',
 '''A file in the package is located in /opt. It's not permitted
+to put a file in this directory.''',
+
+'dir-or-file-in-usr-local',
+'''A file in the package is located in /usr/local. It's not permitted
 to put a file in this directory.''',
 
 'subdir-in-bin',
