@@ -8,6 +8,7 @@
 #		permission, setuid, setgid...
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
 import re
@@ -29,6 +30,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     absolute_regex=re.compile("^/([^/]+)")
     absolute2_regex=re.compile("^/?([^/]+)")
     points_regex=re.compile("^../(.*)")
+    doc_regex=re.compile("^/usr/(doc|man|info)|^/usr/share/(doc|man|info)")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -41,37 +43,44 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	files=pkg.files()
 	config_files=pkg.configFiles()
 	ghost_files=pkg.ghostFiles()
+	doc_files=pkg.docFiles()
 
+	if doc_files == []:
+	    printWarning(pkg, "no-documentation")
+	    
 	for f in files.keys():
 	    enreg=files[f]
 	    mode=enreg[0]
 	    user=enreg[1]
 	    group=enreg[2]
 
+	    if stat.S_ISREG(mode) and FilesCheck.doc_regex.search(f) and not f in doc_files:
+		printError(pkg, "not-listed-as-documentation", f)
+
 	    if not user in STANDARD_USERS:
-		print "E:", pkg.name, "non-standard-uid", f, user
+		printError(pkg, "non-standard-uid", f, user)
 	    if not group in STANDARD_GROUPS:
-		print "E:", pkg.name, "non-standard-gid", f, group
+		printError(pkg, "non-standard-gid", f, group)
 		
 	    if FilesCheck.tmp_regex.search(f):
-		print "E:", pkg.name, "dir-or-file-in-tmp", f
+		printError(pkg, "dir-or-file-in-tmp", f)
 	    elif FilesCheck.mnt_regex.search(f):
-		print "E:", pkg.name, "dir-or-file-in-mnt", f
+		printError(pkg, "dir-or-file-in-mnt", f)
 	    elif FilesCheck.opt_regex.search(f):
-		print "E:", pkg.name, "dir-or-file-in-opt", f
+		printError(pkg, "dir-or-file-in-opt", f)
 	    elif FilesCheck.sub_bin_regex.search(f):
-		print "E:", pkg.name, "subdir-in-bin", f
+		printError(pkg, "subdir-in-bin", f)
 	    elif FilesCheck.backup_regex.search(f):
-		print "E:", pkg.name, "backup-file-in-package", f
+		printError(pkg, "backup-file-in-package", f)
 	    if FilesCheck.etc_regex.search(f) and stat.S_ISREG(mode):
 		if not f in config_files and not f in ghost_files:
-		    print "W:", pkg.name, "non-conffile-in-etc", f
+		    printWarning(pkg, "non-conffile-in-etc", f)
 	    link=enreg[3]
 	    if link != '':
 		ext=FilesCheck.compr_regex.search(link)
 		if ext:
 		    if not re.compile("\." + ext.group(1) + "$").search(f):
-			print "E:", pkg.name, "compressed-symlink-with-wrong-ext", f, link
+			printError(pkg, "compressed-symlink-with-wrong-ext", f, link)
 
 	    perm=mode & 07777
 
@@ -88,22 +97,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		    if stat.S_ISGID & mode:
 			setgid=group
 		    if setuid and setgid:
-			print "W:", pkg.name, "setuid-gid-binary", f, setuid, setgid, oct(perm)
+			printWarning(pkg, "setuid-gid-binary", f, setuid, setgid, oct(perm))
 		    elif setuid:
-			print "W:", pkg.name, "setuid-binary", f, setuid, oct(perm)
+			printWarning(pkg, "setuid-binary", f, setuid, oct(perm))
 		    elif setgid:
-			print "W:", pkg.name, "setgid-binary", f, setgid, oct(perm)
+			printWarning(pkg, "setgid-binary", f, setgid, oct(perm))
 		    elif mode & 0777 != 0755:
-			print "W:", pkg.name, "non-standard-executable-perm", f, oct(perm)
+			printWarning(pkg, "non-standard-executable-perm", f, oct(perm))
 
 	    # normal executable check
 	    elif stat.S_ISREG(mode) and mode & stat.S_IXUSR:
 		if perm != 0755:
-		    print "W:", pkg.name, "non-standard-executable-perm", f, oct(perm)
+		    printWarning(pkg, "non-standard-executable-perm", f, oct(perm))
 		    
 	    # normal dir check
 	    elif stat.S_ISDIR(mode) and perm != 0755:
-		print "W:", pkg.name, "non-standard-dir-perm", f, oct(perm)
+		printWarning(pkg, "non-standard-dir-perm", f, oct(perm))
 
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
@@ -116,7 +125,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			filetop=r.group(1)
 			if filetop == linktop:
 			    # absolute links within one toplevel directory are _not_ ok!
-			    print "E:", pkg.name ,"symlink-should-be-relative", f, link
+			    printError(pkg ,"symlink-should-be-relative", f, link)
 		# relative link
 		else:
 		    pathcomponents=string.split(f, '/')[1:]
@@ -127,7 +136,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		    while r:
 			mylink=r.group(1)
 			if len(pathcomponents) == 0:
-			    print "E:", pkg.name, "symlink-has-too-many-up-segments", f, link
+			    printError(pkg, "symlink-has-too-many-up-segments", f, link)
 			    break
 			else:
 			    lastpop=pathcomponents[0]
@@ -140,17 +149,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			
 			# does the link go up and then down into the same directory?
 			if linktop == lastpop:
-			    print "W:", pkg.name, "lengthy-symlink", f, link
+			    printWarning(pkg, "lengthy-symlink", f, link)
 		    
 			if len(pathcomponents) == 0:
 			    # we've reached the root directory
 			    if linktop != lastpop:
 				# relative link into other toplevel directory
-				print "W:", pkg.name, "symlink-should-be-absolute", f, link
+				printWarning(pkg, "symlink-should-be-absolute", f, link)
 			# check additional segments for mistakes like `foo/../bar/'
 			for linksegment in string.split(mylink, '/'):
 			    if linksegment == '..':
-				print "E:", pkg.name, "symlink-contains-up-and-down-segments", f, link
+				printError(pkg, "symlink-contains-up-and-down-segments", f, link)
 			    
 # Create an object to enable the auto registration of the test
 check=FilesCheck()
