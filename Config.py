@@ -327,6 +327,9 @@ addFilter('E: portsentry non-readable /etc/portsentry/portsentry.ignore 0600')
 addFilter('E: portsentry non-readable /etc/portsentry/portsentry.conf 0600')
 addFilter('E: portsentry non-standard-dir-perm /var/portsentry 0700')
 
+#ipsec
+addFilter('E: freeswan non-readable /etc/freeswan/ipsec.secrets 0600')
+
 #library policy exceptions
 addFilter('rpm|glibc|anonftp|pam|popt|egcs-c\+\+ .*in-library-package')
 
