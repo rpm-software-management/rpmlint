@@ -17,6 +17,7 @@ DEFAULT_CHECKS=("DistributionCheck",
 		"FilesCheck",
 		"FHSCheck",
 		"SignatureCheck",
+		"I18NCheck",
                 "MenuCheck",
                 "PostCheck",
 		"SourceCheck")
