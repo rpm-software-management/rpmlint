@@ -66,3 +66,4 @@ ValidLicenses		list of strings
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
 ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
 Packager		regex		"@mandrakesoft.com|bugs@linux-mandrake.com"
+RpmGamesGroup		regex		"Games"
