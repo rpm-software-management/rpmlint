@@ -24,6 +24,7 @@ DEFAULT_VALID_SECTIONS=(
     "Configuration/Printing",
     "Configuration/Boot and Init",
     "Configuration/Other",
+    "Applications/Accessibility",
     "Applications/Development/Interpreters",
     "Applications/Development/Code generators",
     "Applications/Development/Development environments",
@@ -127,6 +128,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 else:
                     if basename != pkgname:
                         printWarning(pkg, "non-coherent-menu-filename", f)
+                    if mode & 0444 != 0444:
+                        printError(pkg, "non-readable-menu-file", f)
                     menus.append(f)
             else:
                 # Check old menus from KDE and GNOME
