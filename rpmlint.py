@@ -15,6 +15,7 @@ import getopt
 import Pkg
 import Config
 import os
+import stat
 from Filter import *
 
 version="0.32"
@@ -111,7 +112,13 @@ try:
     # Loop over all file names given in arguments
     for f in args:
         try:
-            pkg=Pkg.Pkg(f, extract_dir)
+            try:
+                st=os.stat(f)
+                if not stat.S_ISREG(st[stat.ST_MODE]):
+                    raise OSError
+                pkg=Pkg.Pkg(f, extract_dir)
+            except OSError:
+                pkg=Pkg.InstalledPkg(f)
         except:
             sys.stderr.write("Error while reading " + f + "\n")
             pkg=None
