@@ -160,6 +160,7 @@ info_regex=re.compile('^/usr/share/info')
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
 perl_temp_file=re.compile('.*perl.*(bs|\.packlist)$')
 cvs_regex=re.compile('/CVS/[^/]+$|/.cvsignore$')
+htaccess_regex=re.compile('\.htaccess$')
 games_path_regex=re.compile('/usr/(lib/)?/games')
 games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 source_regex=re.compile('(.c|.cc|.cpp|.ui)$')
@@ -250,6 +251,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'dir-or-file-in-home', f)
             elif cvs_regex.search(f):
 		printError(pkg, 'cvs-internal-file', f)
+            elif htaccess_regex.search(f):
+		printError(pkg, 'htaccess-file', f)
 	    elif hidden_file_regex.search(f):	
 		printWarning(pkg, 'hidden-file-or-dir', f)
 	    elif manifest_perl_regex.search(f):
@@ -620,6 +623,9 @@ to put a file in this directory.''',
 'cvs-internal-file',
 '''You have file(s) from your CVS build directory. Move your CVS directory
 out of the package and rebuild it.''',
+
+'htaccess-file',
+'''You have individual apache configuration .htaccess file(s) in your package. Replace them by a central configuration file in /etc/httpd/webapps.d.''',
 
 'info-dir-file',
 '''You have /usr/info/dir or /usr/share/info/dir in your package. It's not allowed.
