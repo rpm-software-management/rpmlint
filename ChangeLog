@@ -3,6 +3,9 @@
 	* rpmlint.py rpmlint.spec:
 		* 0.13
 		
+	* config:
+		* added exception for XFree86 4.0 .a modules.
+
 	* MenuCheck.py:
 		* use POSTINPROG if no POSTIN.
 		* use POSTUNPROG if no POSTUN.

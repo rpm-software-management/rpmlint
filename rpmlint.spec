@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.12
+%define version 0.13
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -49,6 +49,15 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
+* Mon Apr 10 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.13-1mdk
+- 0.13:
+ o MenuCheck: issue a warning if no icon specified (Chmouel).
+              corrected list of correct sections (Chmouel).
+ o FilesCheck: check ldconfig calls in %%post and %%postun if the package
+provide a library.
+ o config: new exceptions added.
+ o BinariesCheck: check non sparc32 binaries in sparc packages.
+
 * Fri Mar 31 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.12-1mdk
 - 0.12:
  o MenuCheck: check binaries launched by menus and
