@@ -1,3 +1,36 @@
+2002-01-10 13:55  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py, MenuCheck.py, README: icons for menu are now png
+
+2002-01-10 13:53  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added libsafe.so as an invalid Requires.
+
+2002-01-10 13:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: compile.py takes an extra argument now.
+
+2002-01-07 08:04  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* setuplist.py: Sync with version 2.2.0-18mdk  of setup package
+
+2002-01-07 08:04  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add exceptions for wine
+
+2002-01-02 23:56  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* compile.py: pass the destination directory to avoid change when
+	the byte compilation is checked.
+
+2001-12-11 12:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exception for kdebase.
+
+2001-12-04 09:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* setuplist.py: Sync with version 2.2.0-16mdk  of setup package
+
 2001-11-30 13:06  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.39-2mdk
