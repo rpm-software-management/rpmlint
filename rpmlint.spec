@@ -56,8 +56,8 @@ rm -rf $RPM_BUILD_ROOT
                   package with the same version.
                 o check that summary begins with a
 
-* PostCheck.py: check dangerous commands.  check reference to ~ or
-                $HOME.
+* PostCheck.py: o check dangerous commands.
+                ocheck reference to ~ or $HOME.
 
 * MenuCheck.py: o check that titles and longtitles begin by a capital
                   letter.
