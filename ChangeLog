@@ -1,7 +1,46 @@
-2001-07-04 18:10  Pablo Saratxaga <pablo@mandrakesoft.com>
+2001-07-06 18:56  Christian Belisle <cbelisle@mandrakesoft.com>
 
-	* I18NCheck.py: reviewed the list of acceptable languages and the
-	exception directories
+	* TagsCheck.py: Added descriptions
+
+2001-07-06 00:14  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* TagsCheck.py: Added descriptions.
+
+2001-07-05 20:44  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* TagsCheck.py: Added entries for descriptions.
+
+2001-07-05 18:11  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* SpecCheck.py: Added descriptions.
+
+2001-07-04 18:32  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: updated I18NCheck.py file
+
+2001-07-04 10:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: added nn as a valid subdir of /usr/share/local.
+
+2001-07-03 23:13  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* SpecCheck.py: Added entries for the descriptions
+
+2001-07-03 21:53  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* MenuCheck.py: Added entries to put descriptions.
+
+2001-07-03 21:43  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* SourceCheck.py: Added descriptions.
+
+2001-07-03 21:32  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* SignatureCheck.py: Added a description.
+
+2001-07-03 21:01  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* LSBCheck.py: Added descriptions
 
 2001-07-02 10:43  Frederic Lepied <flepied@mandrakesoft.com>
 
@@ -19,15 +58,15 @@
 
 	* BinariesCheck.py: removed debug trace
 
-2001-06-27 21:41  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-27 21:41  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* InitScriptCheck.py: Added descriptions.
 
-2001-06-27 21:08  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-27 21:08  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* FilesCheck.py: Added descriptions.
 
-2001-06-26 20:48  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-26 20:48  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* ConfigCheck.py, DistributionCheck.py, FHSCheck.py: Added
 	descriptions.
@@ -61,24 +100,24 @@
 
 	* FilesCheck.py: added named user and group to the exception list.
 
-2001-06-19 02:16  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 02:16  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* FHSCheck.py, I18NCheck.py, InitScriptCheck.py, LSBCheck.py,
 	rpmlint.spec: Added few descriptions
 
-2001-06-19 02:01  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 02:01  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* DistributionCheck.py: Added few descriptions
 
-2001-06-19 00:43  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-19 00:43  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* DistributionCheck.py: Added few descriptions
 
-2001-06-18 23:16  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-18 23:16  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* ConfigCheck.py: Added few descriptions
 
-2001-06-18 23:00  Christan Belisle <cbelisle@mandrakesoft.com>
+2001-06-18 23:00  Christian Belisle <cbelisle@mandrakesoft.com>
 
 	* FilesCheck.py: Added few descriptions
 
