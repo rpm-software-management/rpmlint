@@ -17,6 +17,7 @@ import commands
 
 DEFAULT_VALID_SHELLS=('/bin/sh',
                       '/bin/bash',
+                      '/sbin/sash',
                       '/usr/bin/perl',
                       )
 
