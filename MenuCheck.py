@@ -177,6 +177,11 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         command=res.group(1)
                         try:
                             if MenuCheck.kdesu_bin.search(command):
+                                found=0
+                                for i in pkg.requires() + pkg.prereq():
+                                    if i[0] == "kdesu": found=1
+                                if not found: printError(pkg, "use-of-kdesu-in-menu-but-not-in-requires")
+
                                 res2=MenuCheck.kdesu_command.search(line)
                                 command=res2.group(1)
 
