@@ -177,6 +177,7 @@ class Pkg:
 	users=self.header[rpm.RPMTAG_FILEUSERNAME]
 	groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
 	links=self.header[rpm.RPMTAG_FILELINKTOS]
+	sizes=self.header[rpm.RPMTAG_FILESIZES]
         # Get files according to rpm version
         if v304:
             files=self.header[rpm.RPMTAG_OLDFILENAMES]
@@ -208,7 +209,8 @@ class Pkg:
 		if flags[idx] & RPMFILE_GHOST:
 		    self._ghost_files.append(files[idx])
 		self._files[files[idx]]=(modes[idx], users[idx],
-					 groups[idx], links[idx])
+					 groups[idx], links[idx],
+                                         sizes[idx])
 
     def langFiles(self):
         if self._lang_files == None:
