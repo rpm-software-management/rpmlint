@@ -1,3 +1,42 @@
+2002-03-03 21:35  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README: added PerlVersionTrick
+
+2002-03-03 21:35  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: handle new file attributes
+
+2002-03-03 21:33  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: allow perl and python dependencies to be on
+	perl-base and python-base.
+	
+	manage Mandrake perl versionning.
+
+2002-03-03 21:31  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added md5, mtime and rdev to file attributes
+
+2002-02-26 17:00  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added 'mt' to recognized locales
+
+2002-02-22 21:00  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmdiff: first version
+
+2002-02-20 10:38  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for shorewall and DansGuardian
+
+2002-02-13 14:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: add descriptions for spurious-bracket-in-.
+
+2002-02-11 10:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exception for logrotate entry for hylafax.
+
 2002-02-09 19:51  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* setuplist.py: Sync with version 2.2.0-23mdk  of setup package
