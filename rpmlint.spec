@@ -21,9 +21,9 @@ License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep, /bin/bash
+Requires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep, /bin/bash
 BuildArchitectures: noarch
-BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
+BuildRequires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, make
 
 %description
 Rpmlint is a tool to check common errors on rpm packages.
