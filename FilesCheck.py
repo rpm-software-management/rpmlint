@@ -390,4 +390,190 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check=FilesCheck()
 
+if Config.info:
+    addDetails(
+'no-documentation',
+"""The package contains no documentation (README, doc, etc).
+You have to include documentation files.""",
+
+'not-listed-as-documentation',
+"""The documentation files of this package are not listed with
+the standard %doc tag.""",
+
+'non-standard-uid',
+"""A file in this package is owned by a non standard owner.
+Standard owners are:\n
+- root		- bin
+- daemon	- adm
+- lp		- sync
+- shutdown	- halt
+- mail		- news
+- uucp		- operator
+- games		- gopher
+- ftp		- nobody
+- nobody	- lists
+- gdm		- xfs
+- apache	- postgres
+- rpcuser	- rpm""",
+
+'non-standard-gid',
+"""A file in this package is owned by a non standard group.
+Standard groups are:\n
+- root		- bin		- dip
+- daemon	- sys		- ftp
+- adm		- tty		- smb
+- disk		- lp		- cdrom
+- mem		- kmem		- pppusers
+- wheel		- floppy	- cdwriter
+- mail		- news		- audio
+- uucp		- man		- dos
+- games		- gopher	- nobody
+- users		- console	- utmp
+- lists		- gdm		- xfs
+- popusers	- slipusers	- slocate
+- x10		- urpmi		- apache
+- postgres	- rpcuser	- rpm""",
+
+'library-without-ldconfig-postin',
+"""
+""",
+
+'postin-without-ldconfig',
+"""
+""",
+
+'library-without-ldconfig-postun',
+"""
+""",
+
+'postun-without-ldconfig',
+"""
+""",
+
+'info-files-without-install-info-postin',
+"""
+""",
+
+'postin-without-install-info',
+"""
+""",
+
+'info-files-without-install-info-postun',
+"""
+""",
+
+'postun-without-install-info',
+"""
+""",
+
+'perl-temp-file',
+"""
+""",
+
+'dir-or-file-in-tmp',
+"""A file in the package is located in /tmp. It's not permitted
+to put a file in this directory.""",
+
+'dir-or-file-in-mnt',
+"""A file in the package is located in /mnt. It's not permitted
+to put a file in this directory.""",
+
+'dir-or-file-in-opt',
+"""A file in the package is located in /opt. It's not permitted
+to put a file in this directory.""",
+
+'subdir-in-bin',
+"""The package contains a sub-directory in the /usr/bin. You can't
+create a subdir there. Create it in /usr/lib/ instead.""",
+
+'backup-file-in-package',
+"""
+""",
+
+'dir-or-file-in-home',
+"""A file in the package is located in /home. It's not permitted
+to put a file in this directory.""",
+
+'cvs-internal-file',
+"""
+""",
+
+'info-dir-file',
+"""
+""",
+
+'non-conffile-in-etc',
+"""A file in your package is being installed in /etc, but is not a
+configuration file. All the files in /etc MUST be configuration files.""",
+
+'compressed-symlink-with-wrong-ext',
+"""
+""",
+
+'setuid-gid-binary',
+"""
+""",
+
+'setuid-binary',
+"""
+""",
+
+'setgid-binary',
+"""
+""",
+
+'non-standard-executable-perm',
+"""
+""",
+
+'non-executable-in-bin',
+"""A file is being installed in /usr/bin, but is not an executable. Be sure
+that the file is an executable or that it has executable permissions.""",
+
+'devel-file-in-non-devel-package',
+"""A development file (usually source code) is located in a non-devel
+package. If you want to include source code in your package, be sure to
+create a development package.""",
+
+'non-standard-executable-perm',
+"""
+""",
+
+'non-standard-dir-perm',
+"""
+""",
+
+'standard-dir-owned-by-package',
+"""
+""",
+
+'no-dependancy-on',
+"""
+""",
+
+'dangling-symlink',
+"""
+""",
+
+'symlink-should-be-relative',
+"""
+""",
+
+'dangling-relative-symlink',
+"""
+""",
+
+'symlink-has-too-many-up-segments',
+"""
+""",
+
+'symlink-should-be-absolute',
+"""
+""",
+
+'symlink-contains-up-and-down-segments',
+"""
+"""
+)
+
 # FilesCheck.py ends here
