@@ -37,7 +37,7 @@ except AttributeError:
 # utilities
 
 def grep(regex, filename):
-    fd=open(filename, "r")
+    fd=open(filename, 'r')
     ret=0
     if fd:
         reg=re.compile(regex)
@@ -48,7 +48,7 @@ def grep(regex, filename):
                 break
         fd.close()
     else:
-        print "unable to open", filename
+        print 'unable to open', filename
     return ret
 
 def shell_var_value(var, script):
@@ -74,7 +74,7 @@ def substitute_shell_vars(val, script):
 # classes representing package
 
 class Pkg:
-    file_regex=re.compile("(?:\.)?([^:]+):\s+(.*)")
+    file_regex=re.compile('(?:\.)?([^:]+):\s+(.*)')
 
     def __init__(self, filename, dirname, header=None, is_source=0):
 	self.filename=filename
@@ -119,25 +119,25 @@ class Pkg:
     def _extract(self):
 	s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
-            print "unable to access dir", self.dirname
+            print 'unable to access dir', self.dirname
             return None
         else:
-            self.dirname = "%s/%s.%d" % (self.dirname, os.path.basename(self.filename), os.getpid())
+            self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
-            str="rpm2cpio %s | (cd %s; cpio -id)" % (self.filename, self.dirname)
+            str='rpm2cpio %s | (cd %s; cpio -id); chmod -R +rX %s' % (self.filename, self.dirname, self.dirname)
             cmd=commands.getstatusoutput(str)
 	    self.extracted=1
             return cmd
         
     def checkSignature(self):
-        return commands.getstatusoutput("rpm -K " + self.filename)
+        return commands.getstatusoutput('rpm -K ' + self.filename)
     
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
 	if self.file_info == None:
 	    self.file_info=[]
-	    lines=commands.getoutput("cd %s; find . -type f -print0 | xargs -0r file" % (self.dirName()))
-	    lines=string.split(lines, "\n")
+	    lines=commands.getoutput('cd %s; find . -type f -print0 | xargs -0r file' % (self.dirName()))
+	    lines=string.split(lines, '\n')
 	    for l in lines:
 		#print l
 		res=Pkg.file_regex.search(l)
@@ -149,8 +149,7 @@ class Pkg:
     # remove the extracted files from the package
     def cleanup(self):
 	if self.extracted:
-	    commands.getstatusoutput("chmod -R +X " + self.dirname)
-	    commands.getstatusoutput("rm -rf " + self.dirname)
+	    commands.getstatusoutput('rm -rf ' + self.dirname)
 
     # return the associative array indexed on file names with
     # the values as: (file perm, file owner, file group, file link to)
@@ -365,7 +364,7 @@ class InstalledPkg(Pkg):
                 cmd=cmd + ' ' + f
             lines=commands.getoutput(cmd)
             #print lines
-	    lines=string.split(lines, "\n")
+	    lines=string.split(lines, '\n')
 	    for l in lines:
 		#print l
 		res=Pkg.file_regex.search(l)
@@ -377,12 +376,12 @@ class InstalledPkg(Pkg):
 if __name__ == '__main__':
     import sys
     for p in sys.argv[1:]:
-        pkg=Pkg(sys.argv[1], "/tmp")
-        print "Requires:", pkg.requires()
-        print "Prereq:", pkg.prereq()
-        print "Conflicts:", pkg.conflicts()
-        print "Provides:", pkg.provides()
-        print "Obsoletes:", pkg.obsoletes()
+        pkg=Pkg(sys.argv[1], '/tmp')
+        print 'Requires:', pkg.requires()
+        print 'Prereq:', pkg.prereq()
+        print 'Conflicts:', pkg.conflicts()
+        print 'Provides:', pkg.provides()
+        print 'Obsoletes:', pkg.obsoletes()
         pkg.cleanup()
     
 # Pkg.py ends here
