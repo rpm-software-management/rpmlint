@@ -38,9 +38,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     sofile_regex=re.compile("\.so$")
     devel_regex=re.compile("-(devel|source)$")
     lib_regex=re.compile("lib/lib[^/]*\.so\..*")
-    ldconfig_regex=re.compile("^[^#]*ldconfig",re.MULTILINE)
+    ldconfig_regex=re.compile("^[^#]*ldconfig", re.MULTILINE)
     info_regex=re.compile("^/usr/share/info")
-    install_info_regex=re.compile("install-info")
+    install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
+    rc_regex=re.compile("^/etc/rc.d/init.d")
+    chkconfig_regex=re.compile("^[^#]*chkconfig", re.MULTILINE)
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -75,39 +77,58 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    if not group in STANDARD_GROUPS:
 		printError(pkg, "non-standard-gid", f, group)
 
-            # check ldconfig call in %post and %postun
-            if stat.S_ISREG(mode) and FilesCheck.lib_regex.search(f):
-                postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
-                if not postin:
-                    printError(pkg, "library-without-ldconfig-postin", f)
-                else:
-                    if not FilesCheck.ldconfig_regex.search(postin):
-                        printError(pkg, "postin-without-ldconfig", f)                    
-                    
-                postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
-                if not postun:
-                    printError(pkg, "library-without-ldconfig-postun", f)
-                else:
-                    if not FilesCheck.ldconfig_regex.search(postun):
-                        printError(pkg, "postun-without-ldconfig", f)
-
-            # check install-info call in %post and %postun
-            if stat.S_ISREG(mode) and FilesCheck.info_regex.search(f):
-                postin=pkg[rpm.RPMTAG_POSTIN]
-                if not postin:
-                    printError(pkg, "info-files-without-install-info-postin", f)
-                else:
-                    if not FilesCheck.install_info_regex.search(postin):
-                        printError(pkg, "postin-without-install-info", f)                    
-                    
-                postun=pkg[rpm.RPMTAG_POSTUN]
-                if not postun:
-                    printError(pkg, "info-files-without-install-info-postun", f)
-                else:
-                    if not FilesCheck.install_info_regex.search(postun):
-                        printError(pkg, "postin-without-install-info", f)
-
-	    if FilesCheck.tmp_regex.search(f):
+            if stat.S_ISREG(mode):
+                # check ldconfig call in %post and %postun
+                if FilesCheck.lib_regex.search(f):
+                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    if not postin:
+                        printError(pkg, "library-without-ldconfig-postin", f)
+                    else:
+                        if not FilesCheck.ldconfig_regex.search(postin):
+                            printError(pkg, "postin-without-ldconfig", f)                    
+                        
+                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                    if not postun:
+                        printError(pkg, "library-without-ldconfig-postun", f)
+                    else:
+                        if not FilesCheck.ldconfig_regex.search(postun):
+                            printError(pkg, "postun-without-ldconfig", f)
+    
+                # check install-info call in %post and %postun
+                if FilesCheck.info_regex.search(f):
+                    postin=pkg[rpm.RPMTAG_POSTIN]
+                    if not postin:
+                        printError(pkg, "info-files-without-install-info-postin", f)
+                    else:
+                        if not FilesCheck.install_info_regex.search(postin):
+                            printError(pkg, "postin-without-install-info", f)                    
+                        
+                    postun=pkg[rpm.RPMTAG_POSTUN]
+                    preun=pkg[rpm.RPMTAG_PREUN]
+                    if not postun and not preun:
+                        printError(pkg, "info-files-without-install-info-postun", f)
+                    else:
+                        if not FilesCheck.install_info_regex.search(postun) and \
+                           not FilesCheck.install_info_regex.search(preun):
+                            printError(pkg, "postin-without-install-info", f)
+    
+                # check chkconfig call in %post and %preun
+                if FilesCheck.rc_regex.search(f):
+                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    if not postin:
+                        printError(pkg, "init-script-without-chkconfig-postin", f)
+                    else:
+                        if not FilesCheck.chkconfig_regex.search(postin):
+                            printError(pkg, "postin-without-chkconfig", f)                    
+                        
+                    preun=pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
+                    if not preun:
+                        printError(pkg, "init-script-without-chkconfig-preun", f)
+                    else:
+                        if not FilesCheck.chkconfig_regex.search(preun):
+                            printError(pkg, "preun-without-chkconfig", f)
+    
+            if FilesCheck.tmp_regex.search(f):
 		printError(pkg, "dir-or-file-in-tmp", f)
 	    elif FilesCheck.mnt_regex.search(f):
 		printError(pkg, "dir-or-file-in-mnt", f)
@@ -199,7 +220,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         file = os.path.normpath(file)
                         if not os.path.exists(file):
                             printWarning(pkg, "dangling-symlink", f, link)
-                            sys.exit(0)
 		    pathcomponents=string.split(f, '/')[1:]
 		    r=FilesCheck.points_regex.search(link)
 		    lastpop=None
