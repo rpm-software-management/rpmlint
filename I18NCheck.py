@@ -25,6 +25,7 @@ INCORRECT_LOCALES = {
     'gr_GR': 'el_GR',
     'cz': 'cs',
     'cz_CZ': 'cs_CZ',
+    'se': 'sv',
     'sw': 'sv',
     'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
