@@ -12,6 +12,21 @@ from Filter import *
 import AbstractCheck
 import rpm
 import re
+import os
+import commands
+
+extract_dir=Config.getOption('ExtractDir', '/tmp')
+
+def incorrect_shell_script(shellscript):
+    tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
+    if not shellscript:
+        return 0
+    file=open(tmpfile, 'w')
+    file.write(shellscript)
+    file.close()
+    ret=commands.getstatusoutput("/bin/bash -n %s" % tmpfile)
+    os.remove(tmpfile)
+    return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):
     braces_regex=re.compile("[^#]*%{")
@@ -24,11 +39,18 @@ class PostCheck(AbstractCheck.AbstractCheck):
 	if pkg.isSource():
 	    return
 
-        for tag in ((rpm.RPMTAG_PREIN, "%pre"), (rpm.RPMTAG_POSTIN, "%post"),
-                    (rpm.RPMTAG_PREUN, "%preun"), (rpm.RPMTAG_POSTUN, "%postun")):
+        for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, "%pre"),
+                    (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, "%post"),
+                    (rpm.RPMTAG_PREUN, rpm.RPMTAG_PREUNPROG, "%preun"),
+                    (rpm.RPMTAG_POSTUN, rpm.RPMTAG_POSTUNPROG, "%postun")):
             script = pkg[tag[0]]
-            if script and PostCheck.braces_regex.search(script):
-                printError(pkg, "braces-in-" + tag[1])
+            prog = pkg[tag[1]]
+            if script:
+                if PostCheck.braces_regex.search(script):
+                    printError(pkg, "braces-in-" + tag[2])
+                if prog == "/bin/sh" or prog == "/bin/bash":
+                    if incorrect_shell_script(script):
+                        printError(pkg, "shell-syntax-error-in-" + tag[2])
 
 # Create an object to enable the auto registration of the test
 check=PostCheck()
