@@ -1,3 +1,54 @@
+2000-11-10 11:35  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.26
+
+2000-11-10 11:35  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added various exceptions.
+
+2000-11-10 11:34  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: allow multiple licenses.
+	
+	don't report anymore the package-provides-itself warning because
+	it's the default in rpm 4.
+	
+	try to not report incoherent-version-in-changelog for sub-packages.
+
+2000-11-10 11:30  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: correct the non-transparent-xpm check.
+
+2000-11-10 11:29  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: don't report buggy length-symlink anymore.
+
+2000-10-25 08:34  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: don't check if package provides itself because rpm
+	4.0 always does it.
+
+2000-10-17 11:46  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Fix exception for glibc.
+
+2000-10-16 20:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* check-install.py: first version.
+
+2000-10-16 20:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added the possibility to create a Pkg object directly
+	from an rpm header.
+
+2000-10-12 08:01  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec, rpmlint.spec: corrected changelog
+
+2000-10-12 08:00  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.25-1mdk
+
 2000-10-12 07:54  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.25
