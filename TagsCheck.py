@@ -402,7 +402,7 @@ BAD_WORDS = {
     'wierd': 'weird',
     'xwindows': 'X'
     }
-DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
+DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[ .]'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
