@@ -1,3 +1,27 @@
+1999-10-16  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
+
+	* rpmlint.spec:
+		* 0.5.
+
+	* rpmlint.py:
+		* (version): 0.5.
+		* uses Config to get the list of checks.
+
+	* README:
+	        * added description of config files and options.
+
+	* MandrakeCheck.py:
+		* uses Config options for vendor, ditribution and compression.
+
+	* Makefile:
+	        * install the config file in /etc/rpmlint
+
+	* AllChecks.py:
+		* no more needed
+
+	* Config.py, config, FHSCheck.py:
+		* first version.
+
 1999-10-07  Frederic Lepied  <Frederic.Lepied@sugix.frmug.org>
 
 	* Version 0.4: added pgp check and valid group name.
