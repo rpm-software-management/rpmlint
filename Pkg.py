@@ -59,7 +59,8 @@ def grep(regex, filename):
     return ret
 
 def shell_var_value(var, script):
-    assign_regex=re.compile(var + '\s*=\s*(.+)\s*(#.*)*$', re.MULTILINE)
+    assign_regex=re.compile(re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
+                            re.MULTILINE)
     res=assign_regex.search(script)
     if res:
         return substitute_shell_vars(res.group(1), script)
