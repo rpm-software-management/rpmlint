@@ -17,7 +17,7 @@ import Config
 import os
 from Filter import *
 
-version="0.9"
+version="0.9.1"
 
 # Print usage information
 def usage(name):
@@ -27,7 +27,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print "rpmlint version", version, "Copyright (C) 1999 Frederic Lepied"
+    print "rpmlint version", version, "Copyright (C) 1999-2000 Frederic Lepied"
 
 # Load a python module from its file name
 def loadCheck(name):	
