@@ -517,7 +517,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res=lib_regex.search(d[0])
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
-
+            if d[2] == rpm.RPMSENSE_EQUAL and string.find(d[1], '-') != -1:
+                printError(pkg, 'requires-on-release', d[0], d[1])
+            
 	if not name:
 	    printError(pkg, 'no-name-tag')
 	else:
