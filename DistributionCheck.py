@@ -62,11 +62,11 @@ check=DistributionCheck()
 if Config.info:
     addDetails(
 'invalid-vendor',
-"""
+"""In the Mandrake Linux distribution, the vendor should be MandrakeSoft.
 """,
 
 'invalid-distribution',
-"""
+"""In the Mandrake Linux distribution, the distribution value should be "Mandrake Linux"
 """,
 
 'manpage-not-bzipped',
@@ -78,12 +78,12 @@ run bzip2 <man page file> to bzip it and after, build the package""",
 run gzip <man page file> to gzip it and after, build the package""",
 
 'infopage-not-bzipped',
-"""
-""",
+"""An info page is not under the .bz2 extension/format. Please
+run bzip2 <info page file> to bzip it and after, build the package""",
 
 'infopage-not-gzipped',
-"""
-""",
+"""An info page is not under the .gz extension/format. Please
+run gzip <info page file> to gzip it and after, build the package""",
 
 )
 # DistributionCheck.py ends here

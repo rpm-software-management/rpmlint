@@ -60,15 +60,32 @@ check=FHSCheck()
 if Config.info:
     addDetails(
 'non-standard-dir-in-usr',
-"""
+"""Your package is creating a non-standard sub directory in /usr. The standard directories are:
+	-X11R6		-X386
+	-bin		-games
+	-include	-lib
+	-local		-sbin
+	-share		-src
+	-spool		-tmp
 """,
 
 'FSSTND-dir-in-var',
-"""
+"""Your package is creating an illegal folder in /var. THE FSSTND (illegal) ones are:
+	-adm		-catman
+	-local		-named
+	-nis		-preserve
 """,
 
 'non-standard-dir-in-var',
-"""
+"""Your package is creating a non-standard sub directory in /var. The standard directories are:
+	-account	-lib
+	-cache		-crash
+	-games		-lock
+	-log		-opt
+	-run		-spool
+	-state		-tmp
+	-yp		-www
+	-ftp
 """,
 )
 # FHSCheck.py ends here

@@ -49,23 +49,26 @@ check=ConfigCheck()
 if Config.info:
     addDetails(
 'app-defaults-must-not-be-conffile',
-"""
-""",
+"""A file in /usr/X11R6/lib/X11/app-defaults/ is a configuration file.
+If you need to store your conf file, put it in /etc.""",
 
 'score-file-must-not-be-conffile',
-"""
-""",
+"""A file in /var/lib/games/ is a configuration file. Store your conf
+files in /etc instead.""",
 
 'file-in-usr-marked-as-conffile',
 """A file in /usr is marked as being a configuration file.
 Store your conf files in /etc/ instead.""",
 
 'non-etc-or-var-file-marked-as-conffile',
-"""
-""",
+"""A file not in /etc or /var is marked as being a configuration file.
+Please put your conf files in /etc or /var.""",
 
 'conffile-without-noreplace-flag',
-"""
+"""A configuration file is stored in your package without the noreplace flag.
+A way to resolve this is to put the following in your SPEC file:
+
+%config(noreplace) /etc/your_config_file_here
 """,
 
 )
