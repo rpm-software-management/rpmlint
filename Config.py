@@ -413,4 +413,7 @@ addFilter('E: kdebase standard-dir-owned-by-package /usr/share/icons')
 #basesystem
 addFilter('E: basesystem no-%clean-section')
 
+#fetchmail
+addFilter('W: fetchmail-daemon incoherent-init-script-name fetchmail')
+
 # Config.py ends here
