@@ -62,7 +62,7 @@ def main():
                     st=os.stat(f)
 		    if stat.S_ISREG(st[stat.ST_MODE]):
                     	pkg=Pkg.Pkg(f, extract_dir)
-                    elif stat.S_ISDIR(st[stat.ST_MODE]):
+                    elif stat.S_ISDIR(st[stat.ST_MODE]) and (f.index('/') >=0):
 			dirs.append(f)
 			continue
 		    else:	
@@ -75,18 +75,22 @@ def main():
                 continue
 
             runChecks(pkg)
+            
 	for d in dirs:
 	    try:
-		f=''
 	        for i in os.listdir(d):
 		    f=d+'/'+i
 		    st=os.stat(f)
 		    if stat.S_ISREG(st[stat.ST_MODE]):
-		        pkg=Pkg.Pkg(f, extract_dir)
-		        runChecks(pkg)
-			    
+			try:
+                            pkg=Pkg.Pkg(f, extract_dir)
+                            runChecks(pkg)
+			except:	
+                            sys.stderr.write('Error while reading ' + f + '\n')
+                            pkg=None
+                            continue
             except:
-		sys.stderr.write('Error while reading ' + d + '/' + f + '\n')
+		sys.stderr.write('Error while reading ' + d + '\n')
                 pkg=None
                 continue
 
