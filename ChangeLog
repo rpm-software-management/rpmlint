@@ -1,3 +1,36 @@
+2002-02-07 15:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added check_versioned_dep
+
+2002-02-07 15:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check dependency on the right version of the
+	interpreter for python and perl modules.
+
+2002-02-07 15:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exceptions for perl, python and nut.
+
+2002-02-01 10:05  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exception for fetchmail
+
+2002-01-29 11:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added W3C Licence
+
+2002-01-29 11:13  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: add exception for no-%clean-section'
+
+2002-01-25 16:55  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: report missing %clean section.
+
+2002-01-14 09:19  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* setuplist.py: Sync with version 2.2.0-18mdk  of setup package
+
 2002-01-10 14:00  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec: 0.40-1mdk
