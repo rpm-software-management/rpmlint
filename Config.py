@@ -20,6 +20,7 @@ DEFAULT_CHECKS=("DistributionCheck",
 		"I18NCheck",
                 "MenuCheck",
                 "PostCheck",
+                "InitScriptCheck",
 		"SourceCheck")
 
 # handle the list of checks to load
