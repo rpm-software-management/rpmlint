@@ -448,4 +448,8 @@ addFilter('shorewall non-standard-dir-perm /etc/shorewall 0700')
 #DansGuardian
 addFilter('DansGuardian non-readable /etc/dansguardian/.* 0600')
 
+def load_policy(policy):
+    if policy != 'mdk9.0':
+        addFilter('no-arch-tag|incoherent-architecture-in-filename')
+    
 # Config.py ends here
