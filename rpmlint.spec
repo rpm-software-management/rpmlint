@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.56
+%define version 0.57
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,23 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Thu Feb 12 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.57-1mdk
+- FilesCheck.py: no-dependancy-on => no-dependency-on fixed perl
+  check (Michael Scherer)
+
+- TagsCheck.py: added Education as a valid group
+
+- PostCheck.py: makes postcheck not to whine about ghost files that
+  are created by %triggerin scripts in addition to %pre and %post.
+  (Ville Skyttä)
+
+  Additionally, somewhat improved documentation on
+  one-line-commands, using "should" instead of "must" since AFAICS
+  %post -p <command> cannot be used if <command> needs parameters.
+  (Ville Skyttä)
+
+- MenuCheck.py: Add missing entries (David)
+
 * Tue Feb 10 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.56-1mdk
 - I18NCheck.py: changed uz@Latn locale
 - MenuCheck.py: added missing ',' (Michael Scherer)
