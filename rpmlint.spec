@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.27
+%define version 0.28
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -49,6 +49,29 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Fri Nov 24 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.28-1mdk
+- TagsCheck.py: o check -devel package naming scheme only on binary
+                packages.
+                o report a warning if a -devel package comes with no
+                major in its name.
+                o added python licence and public domain.
+                o check syntax of url tag.
+
+- SourceCheck.py: only check compression on tar or diff files.
+
+- Config.py: various exceptions added.
+
+- BinariesCheck.py: o report the file location on objdump errors. 
+                    o new error: executable in library package.
+
+- I18NCheck.py: fuzzy check on packages without dependency on
+locales
+
+- FilesCheck.py: check if a package provides sources.
+
+- PostCheck.py: force a separator before dangerous command.
+
+
 * Mon Nov 13 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.27-1mdk
 - FilesCheck.py: don't warn if a games is setgid games.
 - README: RpmGamesGroup added to the list of available options.
