@@ -1,3 +1,30 @@
+2000-03-31  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.spec, rpmlint.py:
+		* 0.12
+
+	* MenuCheck.py:
+		* check update-menus in %post and %postun if a menu is present.
+
+	* config:
+		* avoid I: strange-needs kde for package beginning by k.
+
+	* MenuCheck.py:
+		* corrected default menu (thanks to DindinX).
+
+2000-03-30  chmouel  <chmouel@kenobi.mandrakesoft.com>
+
+	* config:
+	add /mnt/disk like /mnt/(floppy|cdrom) and clean up regex.
+
+2000-03-29  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* MenuCheck.py:
+		* check that the command is present in the menu.
+
+	* BinariesCheck.py:
+		* check for non sparc32 binaries in sparc rpms.
+
 2000-03-27  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.spec, rpmlint.py:
