@@ -46,14 +46,14 @@ CORRECT_SUBDIRS = (
 # 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code 
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
-'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no',
+'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso'
 'oc', 'or', 'pa', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
 'ro', 'ru', 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'ss', 'st', 'sv',
-'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tr', 'tt', 
+'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt', 
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
 've', 'vi', 'wa', 'wen', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
-# KDE uses 'ven' for 've'; and 'nso' for 'st'
-'ven', 'nso',
+# KDE uses 'ven' for 've'
+'ven',
 # 
 # note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
 # are obsolescent, but still widely used; some day however they should
