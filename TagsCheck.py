@@ -24,7 +24,7 @@ DEFAULT_VALID_GROUPS=(
     'Books/Faqs',
     'Books/Howtos',
     'Books/Literature',
-    'Books/Other'
+    'Books/Other',
     'Communications',
     'Databases',
     'Development/C',
