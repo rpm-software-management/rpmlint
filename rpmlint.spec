@@ -8,8 +8,8 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.39
-%define release 2mdk
+%define version 0.40
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,18 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Thu Jan 10 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.40-1mdk
+
+ o MenuCheck.py: new check: invalid-menu-icon-type
+
+ o TagsCheck.py: added libsafe.so as an invalid Requires.
+
+ o sync with setup 2.2.0-18mdk (Chmouel).
+
+ o various exceptions.
+
+ o build the package in a way that rpm -V doesn't report warnings.
+
 * Fri Nov 30 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.39-2mdk
 
  o BinariesCheck.py: search references to home or tmp in /usr/lib/pkgconfig/ files.
