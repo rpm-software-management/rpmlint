@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.51
+%define version 0.51.1
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Tue Aug  5 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.51.1-1mdk
+- TagsCheck.py: don't check devel-dependency on source packages
+- NamingPolicyCheck.py: corrected info reports
+
 * Mon Aug  4 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.51-1mdk
 - TagsCheck.py: added devel-dependency check
                 fixed English typo (Pablo)
