@@ -11,5 +11,6 @@ import MandrakeCheck
 import TagsCheck
 import BinariesCheck
 import ConfigCheck
+import FilesCheck
 
 # AllChecks.py ends here
