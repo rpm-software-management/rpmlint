@@ -91,7 +91,7 @@ DEFAULT_VALID_GROUPS=(
     'Graphical desktop/FVWM based',
     'Graphical desktop/KDE',
     'Graphical desktop/Sawfish',
-    'Graphical desktop/Window Maker',
+    'Graphical desktop/WindowMaker',
     'Graphical desktop/Enlightenment',
     'Graphical desktop/Other',
     'Books/Howtos',
