@@ -1,3 +1,7 @@
+2001-11-25 17:03  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.39-1mdk
+
 2001-11-25 16:41  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* LSBCheck.py, PostCheck.py, check-install.py: Linux-Mandrake =>
