@@ -22,6 +22,7 @@ chkconfig_regex=re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTI
 status_regex=re.compile('^[^#]*status', re.MULTILINE)
 reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
 basename_regex=re.compile('([^/]+)$')
+dot_in_name_regex=re.compile('.*\..*')
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -38,7 +39,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             if rc_regex.search(f):
                 basename=basename_regex.search(f).group(1)
                 list.append(basename)
-                
+		if dot_in_name_regex.match(basename):
+			printError(pkg, 'init-script-name-with-dot', f)
                 # check chkconfig call in %post and %preun
                 postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
@@ -88,6 +90,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
         if len(list) == 1 and string.lower(pkg[rpm.RPMTAG_NAME]) != list[0]:
             printWarning(pkg, 'incoherent-init-script-name', list[0])
+	    
                 
 # Create an object to enable the auto registration of the test
 check=InitScriptCheck()
@@ -136,5 +139,8 @@ is httpd, you have to put a 'httpd' file in your subsys directory.''',
 'incoherent-init-script-name',
 '''The init script name should be the same as the package name in lower case.''',
 
+'init-script-name-with-dot',
+'''The init script name should not contains a dot in the name. 
+it would not be taken in account by chkconfig'''
 )
 # InitScriptCheck.py ends here
