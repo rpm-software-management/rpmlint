@@ -473,6 +473,9 @@ addFilter('wvdial non-readable /etc/ppp/peers/wvdial(-pipe)? 0600')
 #tpctl
 addFilter('tpctl incoherent-init-script-name apmiser')
 
+#gconf schemas
+addFilter('non-conffile-in-etc /etc/gconf/schemas/')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
