@@ -1,3 +1,11 @@
+2001-10-16 21:59  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SourceCheck.py: allow 0755 as a valid mode for source.
+
+2001-10-16 21:58  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: various exceptions
+
 2001-10-16 21:40  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* TagsCheck.py: added invalid-word check in description and
