@@ -50,9 +50,12 @@ addFilter("E: sympa dir-or-file-in-home /home/sympa/")
 addFilter("E: menu non-file-in-menu-dir /usr/lib/menu/default")
 addFilter("I: k[^ ]+ strange-needs kde")
 
+#initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
-addFilter("E: initscripts setuid-binary (/usr/sbin/usernetctl|/sbin/netreport) root.*")
+addFilter("E: initscripts (setuid|setgid)-binary (/usr/sbin/usernetctl|/sbin/netreport) root.*")
 addFilter("E: initscripts non-standard-dir-perm /var/run/netreport 0775")
 
+#Setuid
+addFilter("E: traceroute setuid-binary /usr/sbin/traceroute root 04755")
 
 # config ends here
