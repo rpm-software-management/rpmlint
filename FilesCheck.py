@@ -330,7 +330,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not is_so:
                         file = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
                         file = os.path.normpath(file)
-                        if not os.path.exists(file):
+                        pkgfile = '%s/%s' % (os.path.dirname(f), link)
+                        pkgfile = os.path.normpath(pkgfile)
+                        if not (files.has_key(pkgfile) or os.path.exists(file)):
                             is_exception=0
                             for e in dangling_exceptions:
                                 if e[0].search(link):
