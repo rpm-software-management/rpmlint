@@ -1,3 +1,23 @@
+2004-03-12 20:45  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: The Mandrake word is forbidden alone.
+
+2004-03-09 17:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: consolehelper is in usermode-consoleonly
+
+2004-03-09 15:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: fixed missing comma
+
+2004-03-01 10:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: fixed missing comma (Michael Scherer)
+
+2004-02-20 17:51  David Baudens <baudens@mandrakesoft.com>
+
+	* MenuCheck.py: Add mission "More applications/Other" section
+
 2004-02-12 21:25  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.57.1-1mdk
