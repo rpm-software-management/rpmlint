@@ -1,3 +1,7 @@
+2004-12-05 01:52  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.63-1mdk
+
 2004-12-05 01:46  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: add /usr/lib/menu to STANDARD_DIRS (Michael)
