@@ -1,3 +1,11 @@
+2004-08-17 02:28  Frederic Crozat <fcrozat@mandrakesoft.com>
+
+	* MenuCheck.py: Fix menu capitalization
+
+2004-08-03 11:26  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: added some more language codes
+
 2004-08-03 08:16  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.60-1mdk
