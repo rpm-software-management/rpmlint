@@ -21,7 +21,7 @@ DEFAULT_BIARCH_PACKAGES='^(gcc|glibc)'
 # Don't check for hardcoded library paths in packages which can have
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
-DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS='/lib/(modules|cpp|perl5|rpm)($|[\s/,])'
+DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS='/lib/(modules|cpp|perl5|rpm|hotplug)($|[\s/,])'
 
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
