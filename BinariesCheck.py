@@ -63,6 +63,21 @@ class BinaryInfo:
 			self.soname=r.group(1)
 
 path_regex=re.compile('(.*/)([^/]+)')
+versioned_dir_regex=re.compile('[0-9.][0-9.]+')
+binary_regex=re.compile('ELF|current ar archive')
+usr_share=re.compile('^/usr/share/')
+etc=re.compile('^/etc/')
+not_stripped=re.compile('not stripped')
+unstrippable=re.compile('\.o$|\.static$')
+shared_object_regex=re.compile('shared object')
+executable_regex=re.compile('executable')
+libc_regex=re.compile('libc\.')
+so_regex=re.compile('/lib/[^/]+\.so')
+validso_regex=re.compile('\.so\.[0-9]+')
+sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
+system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
+usr_lib_regex=re.compile('^/usr/lib/')
+bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -72,21 +87,6 @@ def dir_base(path):
         return '', path
     
 class BinariesCheck(AbstractCheck.AbstractCheck):
-
-    binary_regex=re.compile('ELF|current ar archive')
-    usr_share=re.compile('^/usr/share/')
-    etc=re.compile('^/etc/')
-    not_stripped=re.compile('not stripped')
-    unstrippable=re.compile('\.o$|\.static$')
-    shared_object_regex=re.compile('shared object')
-    executable_regex=re.compile('executable')
-    libc_regex=re.compile('libc\.')
-    so_regex=re.compile('/lib/[^/]+\.so')
-    validso_regex=re.compile('\.so\.[0-9]+')
-    sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
-    system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
-    usr_lib_regex=re.compile('^/usr/lib/')
-    bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'BinariesCheck')
@@ -100,48 +100,49 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 	arch=pkg[rpm.RPMTAG_ARCH]
         files=pkg.files()
         exec_files=[]
-        has_lib=0
+        has_lib=[]
         
 	for i in info:
-	    is_binary=BinariesCheck.binary_regex.search(i[1])
+	    is_binary=binary_regex.search(i[1])
 
 	    if is_binary:
 		if arch == 'noarch':
 		    printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
 		else:
 		    # in /usr/share ?
-		    if BinariesCheck.usr_share.search(i[0]):
+		    if usr_share.search(i[0]):
 			printError(pkg, 'arch-dependent-file-in-usr-share', i[0])
 		    # in /etc ?
-		    if BinariesCheck.etc.search(i[0]):
+		    if etc.search(i[0]):
 			printError(pkg, 'binary-in-etc', i[0])
 
-                    if arch == 'sparc' and BinariesCheck.sparc_regex.search(i[1]):
+                    if arch == 'sparc' and sparc_regex.search(i[1]):
                         printError(pkg, 'non-sparc32-binary', i[0])
 
 		    # stripped ?
-		    if not BinariesCheck.unstrippable.search(i[0]):
-			if BinariesCheck.not_stripped.search(i[1]):
+		    if not unstrippable.search(i[0]):
+			if not_stripped.search(i[1]):
 			    printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
 			# inspect binary file
 			bin_info=BinaryInfo(pkg.dirName()+i[0], i[0])
 
                         # so name in library
-                        if BinariesCheck.so_regex.search(i[0]):
-                            has_lib=1
+                        if so_regex.search(i[0]):
+                            has_lib.append(i[0])
                             if not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
                             else:
-                                if not BinariesCheck.validso_regex.search(bin_info.soname):
+                                if not validso_regex.search(bin_info.soname):
                                     printError(pkg, 'invalid-soname', i[0], bin_info.soname)
                                 else:
                                     (dir, base) = dir_base(i[0])
                                     try:
                                         symlink = dir + bin_info.soname
                                         (perm, owner, group, link) = files[symlink]
+                                        print link, base, link != base
                                         if link != i[0] and link != base and link != '':
-                                            printError(pkg, 'invalid-ldconfig-symlink', symlink, link)
+                                            printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
                                         printError(pkg, 'no-ldconfig-symlink', i[0])
                                     
@@ -151,41 +152,45 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 			# rpath ?
 			if bin_info.rpath:
                             for p in bin_info.rpath:
-                                if p in BinariesCheck.system_lib_paths or \
-                                   not BinariesCheck.usr_lib_regex.search(p):
+                                if p in system_lib_paths or \
+                                   not usr_lib_regex.search(p):
                                     printError(pkg, 'binary-or-shlib-defines-rpath', i[0], bin_info.rpath)
                                     break
 
 			# statically linked ?
-                        is_exec=BinariesCheck.executable_regex.search(i[1])
-			if BinariesCheck.shared_object_regex.search(i[1]) or \
+                        is_exec=executable_regex.search(i[1])
+			if shared_object_regex.search(i[1]) or \
 			   is_exec:
 
-                            if is_exec and BinariesCheck.bin_regex.search(i[0]):
+                            if is_exec and bin_regex.search(i[0]):
                                 exec_files.append(i[0])
                                 
 			    if not bin_info.needed:
-				if BinariesCheck.shared_object_regex.search(i[1]):
+				if shared_object_regex.search(i[1]):
 				    printWarning(pkg, 'shared-lib-without-dependency-information', i[0])
 				else:
 				    printError(pkg, 'statically-linked-binary', i[0])
 			    else:
 				# linked against libc ?
-				if not BinariesCheck.libc_regex.search(i[0]):
+				if not libc_regex.search(i[0]):
 				    found_libc=0
 				    for lib in bin_info.needed:
-					if BinariesCheck.libc_regex.search(lib):
+					if libc_regex.search(lib):
 					    found_libc=1
 					    break
 				    if not found_libc:
-					if BinariesCheck.shared_object_regex.search(i[1]):
+					if shared_object_regex.search(i[1]):
 					    printWarning(pkg, 'library-not-linked-against-libc', i[0])
 					else:
 					    printWarning(pkg, 'program-not-linked-against-libc', i[0])
-        if has_lib and exec_files != []:
-            for f in exec_files:
-                printError(pkg, 'executable-in-library-package', f)
-                
+        if has_lib != []:
+            if exec_files != []:
+                for f in exec_files:
+                    printError(pkg, 'executable-in-library-package', f)
+            for f in files.keys():
+                if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(f):
+                    printError(pkg, 'non-versioned-file-in-library-package', f)
+                    
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()
 
@@ -193,61 +198,69 @@ check=BinariesCheck()
 if Config.info:
     addDetails(
 'arch-independent-package-contains-binary-or-object',
-"""The package contains a binary or object file but is tagged
-Architecture: noarch.""",
+'''The package contains a binary or object file but is tagged
+Architecture: noarch.''',
 
 'arch-dependent-file-in-usr-share',
-"""This package installs an ELF binary in the /usr/share
- hierarchy, which is reserved for architecture-independent files.""",
+'''This package installs an ELF binary in the /usr/share
+ hierarchy, which is reserved for architecture-independent files.''',
 
 'binary-in-etc',
-"""This package installs an ELF binary in /etc.  Both the
-FHS and the FSSTND forbid this.""",
+'''This package installs an ELF binary in /etc.  Both the
+FHS and the FSSTND forbid this.''',
 
 # 'non-sparc32-binary',
 # '',
 
 'invalid-soname',
-"""The soname of the library isn't in the form lib<libname>.so.<major>.""",
+'''The soname of the library isn't in the form lib<libname>.so.<major>.''',
 
 'invalid-ldconfig-symlink',
-"""The symbolic link references the wrong file. (It should reference
-the shared library.)""",
+'''The symbolic link references the wrong file. (It should reference
+the shared library.)''',
 
 'no-ldconfig-symlink',
-"""The package should not only include the shared library itself, but
+'''The package should not only include the shared library itself, but
 also the symbolic link which ldconfig would produce. (This is
 necessary, so that the link gets removed by dpkg automatically when
 the package gets removed.)  If the symlink is in the package, check
 that the SONAME of the library matches the info in the shlibs
-file.""",
+file.''',
 
 'shlib-with-non-pic-code',
-"""The listed shared libraries contain object code that was compiled
+'''The listed shared libraries contain object code that was compiled
 without -fPIC. All object code in shared libraries should be
 recompiled separately from the static libraries with the -fPIC option.
 
 Another common mistake that causes this problem is linking with 
-``gcc -Wl,-shared'' instead of ``gcc -shared''.""",
+``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
 
 'binary-or-shlib-defines-rpath',
-"""The binary or shared library defines the `RPATH'. Usually this is a
+'''The binary or shared library defines the `RPATH'. Usually this is a
 bad thing because it hard codes the path to search libraries and so it
 makes difficult to move libraries around.  Most likely you will find a
-Makefile with a line like: gcc test.o -o test -Wl,--rpath.""",
+Makefile with a line like: gcc test.o -o test -Wl,--rpath.''',
 
 'statically-linked-binary',
-"""The package installs a statically linked binary or object file.
+'''The package installs a statically linked binary or object file.
 
 Usually this is a bug. Otherwise, please contact
 <flepied@mandrakesoft.com> about this so that this error gets included
 in the exception file for rpmlint. (With that, rpmlint will ignore
-this bug in the future.)""",
+this bug in the future.)''',
 
 'executable-in-library-package',
-"""The package mixes up libraries and executables. Mixing up these
-both types of files makes upgrades quite impossible.""",
+'''The package mixes up libraries and executables. Mixing up these
+both types of files makes upgrades quite impossible.''',
+
+'non-versioned-file-in-library-package',
+'''The package contains files in non versioned directories. This makes
+impossible to have multiple major versions of the libraries installed.
+One solution can be to change the directories which contain the files
+to subdirs of /usr/lib/<name>-<version> or /usr/share/<name>-<version>.
+Another solution can be to include a version number in the file names
+themselves.''',
 
 )
-    
+
 # BinariesCheck.py ends here
