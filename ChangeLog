@@ -1,3 +1,31 @@
+2004-02-12 17:39  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: no-dependancy-on => no-dependency-on fixed perl
+	  check (Michael Scherer)
+
+2004-02-12 17:36  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: dependancy => dependency
+
+2004-02-12 08:18  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added Education as a valid group
+
+2004-02-12 08:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: makes postcheck not to whine about ghost files that
+	  are created by %triggerin scripts in addition to %pre and %post.
+	  (Ville Skyttä)
+
+	  Additionally, somewhat improved documentation on
+	  one-line-commands, using "should" instead of "must" since AFAICS
+	  %post -p <command> cannot be used if <command> needs parameters.
+	  (Ville Skyttä)
+
+2004-02-11 18:03  David Baudens <baudens@mandrakesoft.com>
+
+	* MenuCheck.py: Add missing entries
+
 2004-02-10 15:16  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.56-1mdk
