@@ -156,6 +156,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'non-coherent-menu-filename', f)
                     if mode & 0444 != 0444:
                         printError(pkg, 'non-readable-menu-file', f)
+                    if mode & 0111 != 0:
+                        printError(pkg, 'executable-menu-file', f)
                     menus.append(f)
             else:
                 # Check old menus from KDE and GNOME
