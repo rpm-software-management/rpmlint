@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.38
+%define version 0.39
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,29 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Sun Nov 25 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.39-1mdk
+
+ o TagsCheck.py: Corrected regexp to check devel provides.
+                 Added the new check invalid-dependency.
+
+ o InitScriptCheck.py: Added incoherent-init-script-name check.
+	               Expand shell variable in incoherent-subsys check.
+
+ o FilesCheck.py: Use list imported from the setup package for users
+   and groups (from setuplist.py).
+
+ o PostCheck.py: Don't print error about percent if post-script has a
+                 %%. (Chmouel)
+	         Check that RPM_BUILD_ROOT or RPM_BUILD_DIR isn't
+	         used.
+
+ o SpecCheck.py: Check also %_sourcedir.
+                 Check that the BuildRoot tag doesn't contain a
+                 hardcoded path.
+
+ o BinariesCheck.py: Check if .la files contain tmp or home
+   references.
+
 * Tue Oct 30 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.38-1mdk
 
  o BinariesCheck.py: check that major version is present in package
