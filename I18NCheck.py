@@ -67,7 +67,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 
         if pkg.isSource():
             return
@@ -76,7 +76,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 	locales=[]			# list of locales for this packages
 
 	i18n_tags = pkg[HEADER_I18NTABLE]
-        i18n_files = pkg.langFiles()
+        #i18n_files = pkg.langFiles()
         
 	for i in i18n_tags:
 	    try:
@@ -127,7 +127,6 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         if res:
             locales='locales-' + res.group(1)
             if locales != name:
-                found=0
                 if not locales in map(lambda x: x[0], pkg.requires()):
                     printError(pkg, 'no-dependency-on', locales)
 

@@ -46,7 +46,7 @@ def grep(regex, filename):
                 break
         fd.close()
     else:
-        print "unable to open", f
+        print "unable to open", filename
     return ret
 
 class Pkg:
@@ -96,13 +96,15 @@ class Pkg:
 	s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
             print "unable to access dir", self.dirname
+            return None
         else:
             self.dirname = "%s/%s.%d" % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
             str="rpm2cpio %s | (cd %s; cpio -id)" % (self.filename, self.dirname)
             cmd=commands.getstatusoutput(str)
 	    self.extracted=1
-
+            return cmd
+        
     def checkSignature(self):
         return commands.getstatusoutput("rpm -K " + self.filename)
     

@@ -438,7 +438,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:

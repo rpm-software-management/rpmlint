@@ -133,7 +133,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'MenuCheck')
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only binary package
 	if pkg.isSource():
 	    return

@@ -9,7 +9,6 @@
 
 from Filter import *
 import AbstractCheck
-import rpm
 import re
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
@@ -21,7 +20,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only binary package
 	if pkg.isSource():
 	    return

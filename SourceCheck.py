@@ -24,7 +24,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'SourceCheck')
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only source package
 	if not pkg.isSource():
 	    return

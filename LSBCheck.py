@@ -21,7 +21,7 @@ class LSBCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "LSBCheck")
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 
 	name=pkg[rpm.RPMTAG_NAME]
 	if name and not name_regex.search(name):

@@ -9,7 +9,6 @@
 
 from Filter import *
 import AbstractCheck
-import commands
 import re
 import sys
 import rpm
@@ -33,7 +32,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
         if not pkg.isSource():
             return
 

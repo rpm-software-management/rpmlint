@@ -99,7 +99,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'BinariesCheck')
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only binary package
 	if pkg.isSource():
 	    return
@@ -163,7 +163,6 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     
                             if bin_info.non_pic:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
-                                
 			# rpath ?
 			if bin_info.rpath:
                             for p in bin_info.rpath:

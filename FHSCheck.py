@@ -9,10 +9,7 @@
 
 from Filter import *
 import AbstractCheck
-import rpm
 import re
-import stat
-import string
 
 class FHSCheck(AbstractCheck.AbstractCheck):
     usr_regex=re.compile("^/usr/([^/]+)/")
@@ -24,7 +21,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only binary package
 	if pkg.isSource():
 	    return

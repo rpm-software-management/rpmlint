@@ -9,7 +9,6 @@
 
 from Filter import *
 import AbstractCheck
-import commands
 import re
 import sys
 
@@ -19,7 +18,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	res=pkg.checkSignature()
 	if not res or res[0] != 0:
 	    sys.stderr.write("error checking signature of " + pkg.filename + "\n")

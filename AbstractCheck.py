@@ -14,7 +14,7 @@ class AbstractCheck:
 	AbstractCheck.checks.append(self)
 	self.name = name
 
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	pass
     
 # AbstractCheck.py ends here

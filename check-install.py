@@ -16,7 +16,7 @@ idx=db.firstkey()
 
 def check_name(db, name):
     try:
-        return db.findbyname(dep)
+        return db.findbyname(name)
     except:
         return None
     
@@ -24,13 +24,13 @@ def check_provides(db, name):
     if name[0:7] == 'rpmlib(':
         return 1
     try:
-        return db.findbyprovides(dep)
+        return db.findbyprovides(name)
     except:
         return None
     
 def check_file(db, name):
     try:
-        return db.findbyfile(dep)
+        return db.findbyfile(name)
     except:
         return None
     

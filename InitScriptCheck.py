@@ -10,7 +10,6 @@
 from Filter import *
 import AbstractCheck
 import re
-import commands
 import rpm
 
 rc_regex=re.compile("^/etc(/rc.d)?/init.d/")
@@ -26,7 +25,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "InitScriptCheck")
     
-    def check(self, pkg, verbose):
+    def check(self, pkg):
 	# Check only binary package
 	if pkg.isSource():
 	    return

@@ -69,7 +69,7 @@ def main():
                 printInfo(pkg, 'checking')
 
             for c in AbstractCheck.AbstractCheck.checks:
-                c.check(pkg, verbose)                
+                c.check(pkg)                
 
             pkg.cleanup()
 
@@ -84,7 +84,7 @@ def main():
                     printInfo(pkg, 'checking')
 
                 for c in AbstractCheck.AbstractCheck.checks:
-                    c.check(pkg, verbose)
+                    c.check(pkg)
 
                 pkg.cleanup()
 
