@@ -114,7 +114,7 @@ DEFAULT_VALID_LICENSES = (
     "BSD-Style",
     )
 
-DEFAULT_PACKAGER = "@mandrakesoft.com"
+DEFAULT_PACKAGER = "@mandrakesoft.com|bugs@linux-mandrake.com"
 
 class TagsCheck(AbstractCheck.AbstractCheck):
     basename_regex=re.compile("/?([^/]+)$")
