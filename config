@@ -41,7 +41,7 @@ addFilter("E: filesystem non-standard-dir-perm /var/lock 0775")
 addFilter("E: filesystem non-standard-dir-perm /proc 0555")
 addFilter("E: postgresql-test non-standard-[gu]id [^ ]+ postgres")
 addFilter("E: sympa non-standard-[gu]id /home/sympa/[^ ]+ sympa")
-addFilter("W: (compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby) devel-file-in-non-devel-package")
+addFilter("W: (dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby) devel-file-in-non-devel-package")
 addFilter("W: menu devel-file-in-non-devel-package /etc/menu-methods/menu.h")
 addFilter("W: [^ ]+ devel-file-in-non-devel-package /usr/doc/.*\.h$")
 addFilter("W: glibc-profile devel-file-in-non-devel-package .*\.a$")
@@ -82,9 +82,9 @@ addFilter("E: SysVinit setgid-binary /usr/bin/wall tty 02555")
 addFilter("E: sh-utils setuid-binary /bin/su root 04755")
 addFilter("E: netkit-base setuid-binary /bin/ping root 04755")
 addFilter("E: e2fsprogs statically-linked-binary /sbin/.*fsck.*")
-
-#
 addFilter("E: mount setuid-binary /bin/(u)?mount root 04755")
+addFilter("E: util-linux setuid-binary /usr/bin/(newgrp|chsh|chfn) root 04711")
+addFilter("E: util-linux setgid-binary /usr/bin/write tty 02755")
 
 #Pam
 addFilter("W: pam devel-file-in-non-devel-package /lib/security/pam_unix_(session|passwd|acct|auth).so")
