@@ -17,7 +17,7 @@ import string
 
 STANDARD_USERS=('root','bin','daemon','adm','lp','sync','shutdown','halt','mail','news','uucp','operator','games','gopher','ftp','nobody','lists','gdm','xfs')
 
-STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriter','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate', 'x10')
+STANDARD_GROUPS=('root','bin','daemon','sys','adm','tty','disk','lp','mem','kmem','wheel','floppy','mail','news','uucp','man','games','gopher','dip','ftp','smb','cdrom','pppusers','cdwriter','audio','dos','nobody','users','console','utmp','lists','gdm','xfs','popusers','slipusers','slocate', 'x10', 'urpmi')
 
 class FilesCheck(AbstractCheck.AbstractCheck):
     tmp_regex=re.compile("^/tmp/|^(/var|/usr)/tmp/")
@@ -36,6 +36,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     includefile_regex=re.compile("\.h$|\.a$")
     sofile_regex=re.compile("\.so$")
     devel_regex=re.compile("-(devel|source)$")
+    lib_regex=re.compile("lib/lib[^/]*\.so\..*")
+    ldconfig_regex=re.compile("^[^#]*ldconfig")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -69,7 +71,23 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, "non-standard-uid", f, user)
 	    if not group in STANDARD_GROUPS:
 		printError(pkg, "non-standard-gid", f, group)
-		
+
+            # check ldconfig call in %post and %postun
+            if stat.S_ISREG(mode) and FilesCheck.lib_regex.search(f):
+                postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                if not postin:
+                    printError(pkg, "library-without-ldconfig-postin", f)
+                else:
+                    if not FilesCheck.ldconfig_regex.search(postin):
+                        printError(pkg, "postin-without-ldconfig", f)                    
+                    
+                postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                if not postun:
+                    printError(pkg, "library-without-ldconfig-postun", f)
+                else:
+                    if not FilesCheck.ldconfig_regex.search(postun):
+                        printError(pkg, "postun-without-ldconfig", f)
+
 	    if FilesCheck.tmp_regex.search(f):
 		printError(pkg, "dir-or-file-in-tmp", f)
 	    elif FilesCheck.mnt_regex.search(f):
