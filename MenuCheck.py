@@ -119,6 +119,7 @@ update_menus_regex=re.compile('^[^#]*update-menus',re.MULTILINE)
 standard_needs=Config.getOption('ExtraMenuNeeds', DEFAULT_EXTRA_MENU_NEEDS)
 icon_paths=Config.getOption('IconPath', DEFAULT_ICON_PATH)
 xpm_ext_regex=re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
+icon_ext_regex=re.compile(Config.getOption('IconFilename', '.*\.png$'))
 capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
 launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
@@ -289,6 +290,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=icon_regex.search(line)
                     if res:
                         icon=res.group(1)
+                        if not icon_ext_regex.search(icon):
+                            printWarning(pkg, 'invalid-menu-icon-type', icon)
                         if icon[0] == '/':
                             printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
                         else:

@@ -71,3 +71,4 @@ DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 ForbiddenWords		regex		'Linux.?Mandrake|Mandrake[^ ]*Linux'
 ValidBuildHost		regex		'\.mandrakesoft\.com$|\.mandrake\.org$'
 InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any', 'package')
+IconFilename		regex		'.*\.png$'

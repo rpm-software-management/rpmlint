@@ -169,14 +169,6 @@ addFilter('W: openh323_1-devel no-provides openh323_-devel')
 #openssh
 addFilter('W: openssh-clients dangling-relative-symlink /usr/bin/ssh-askpass ../..//usr/lib/ssh/ssh-askpass')
 
-#tkinter
-addFilter('E: tkinter normal-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-addFilter('E: tkinter mini-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-addFilter('E: tkinter large-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-addFilter('E: tkinter normal-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-addFilter('E: tkinter mini-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-addFilter('E: tkinter large-icon-not-in-package development_section.xpm /usr/lib/menu/tkinter')
-
 #menus
 addFilter('W: bcast version-in-menu-title Broadcast 2000')
 addFilter('W: xawtv version-in-menu-longtitle The X11 Video4Linux Stream Capture Viewer')
@@ -376,7 +368,7 @@ addFilter('W: webmin dangerous-command-in-%postun rm')
 addFilter('W: methane dangerous-command-in-%post chown')
 
 #icon from menu can be used in other packages
-addFilter('icon-not-in-package .*_section.xpm')
+addFilter('icon-not-in-package .*_section.png')
 
 #apache
 addFilter('E: apache-suexec setuid-binary /usr/sbin/suexec root 04710')
