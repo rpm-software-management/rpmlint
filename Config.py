@@ -217,6 +217,9 @@ addFilter('zero-length.*/var/lib/wine/.*')
 #hotplug
 addFilter('hotplug non-standard-dir-perm /var/run/usb 0700')
 
+#udev
+addFilter('udev statically-linked-binary /sbin/udev')
+
 #Setuid
 addFilter('traceroute setuid-binary /usr/sbin/traceroute root 04755')
 addFilter('iputils setuid-binary /usr/sbin/(traceroute|ping)6 root 04755')
