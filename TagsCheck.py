@@ -434,7 +434,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 		basename=res.group(1)
 		if name != basename[0:len(name)]:
 		    printWarning(pkg, 'non-coherent-filename', name, basename)
-            res=devel_regex.search(name)
+            res=(not pkg.isSource()) and devel_regex.search(name)
             if res:
                 base=res.group(1)
                 dep=None
