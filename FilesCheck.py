@@ -160,6 +160,7 @@ games_path_regex=re.compile('/usr/(lib/)?/games')
 games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 source_regex=re.compile('(.c|.cc|.cpp|.ui)$')
 dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
+logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -255,6 +256,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'cvs-internal-file', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
+            res=logrotate_regex.search(f)
+            if res and res.group(1) != pkg.name:
+                printError(pkg, 'incoherent-logrotate-file', f)
 	    if etc_regex.search(f) and stat.S_ISREG(mode):
 		if not f in config_files and not f in ghost_files:
 		    printWarning(pkg, 'non-conffile-in-etc', f)
@@ -576,6 +580,9 @@ non standard.''',
 'non-readable',
 '''The file can't be read by everybody. If this is normal (for security reason), send an
 email to flepied@mandrakesoft.com to add it to the list of exceptions in the next release.''',
+
+'incoherent-logrotate-file',
+'''Your logrotate file should be named /etc/logrotate.d/<package name>.''',
 
 )
 
