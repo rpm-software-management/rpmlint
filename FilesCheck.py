@@ -206,7 +206,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         lib_package=lib_package_regex.search(pkg.name)
         is_kernel_package=kernel_package_regex.search(pkg.name)
         
-        # erport these errors only once
+        # report these errors only once
         perl_dep_error=0
         python_dep_error=0
         lib_file=0
