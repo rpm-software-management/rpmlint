@@ -17,7 +17,7 @@ Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
 URL: http://www.lepied.com/rpmlint/
 Copyright: GPL
-Group: Development/System
+Group: Development/Other
 BuildRoot: /tmp/%{name}-buildroot
 Prefix: %{_prefix}
 Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio
