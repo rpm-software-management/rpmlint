@@ -77,3 +77,4 @@ CrossCompilation	regex		'-mandrake-linux-[^/]+$'
 UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
 UseEpoch		boolean		0
 ValidSrcPerms		list of modes	(0644, 0755)
+KernelModuleRPMsOK	boolean		0
