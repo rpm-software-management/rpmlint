@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.67
+%define version 0.68
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -52,6 +52,11 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Thu Mar 10 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.68-1mdk
+- I18NCheck.py: Added recognition of Quechua (qu) language (Pablo)
+- FilesCheck.py: simplify site_perl regexp (Ville Skytt?).
+- Pkg.py: Fix version checking when the epoch is not defined (Michael Scherer)
+
 * Fri Feb 11 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.67-1mdk
 - SpecCheck.py: added hardcoded-packager-tag, hardcoded-prefix-tag
   and redundant-prefix-tag checks (Guillaume Rousse, bug #12725).
