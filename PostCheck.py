@@ -220,6 +220,8 @@ well as allows rpm to automatically mark the dependency on your command.''',
 '''The %postun scriptlet contains an if [] construction without a space before the
 ].''',
 
+'postin-without-ghost-file-creation',
+'''A file tagged as ghost is not created during %prein nor during %postin.''',
 )
 
 # PostCheck.py ends here
