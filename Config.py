@@ -114,14 +114,10 @@ addFilter("E: filesystem non-standard-dir-perm /root 0750")
 addFilter("E: filesystem non-standard-dir-perm /var/lock 0775")
 addFilter("E: filesystem non-standard-dir-perm /proc 0555")
 addFilter("E: postgresql-test non-standard-[gu]id [^ ]+ postgres")
-addFilter("E: sympa non-standard-[gu]id /home/sympa/[^ ]+ sympa")
 addFilter("W: (dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen) devel-file-in-non-devel-package")
 addFilter("W: menu devel-file-in-non-devel-package /etc/menu-methods/menu.h")
 addFilter("W: [^ ]+ devel-file-in-non-devel-package /usr/doc/.*\.h$")
 addFilter("W: glibc-profile devel-file-in-non-devel-package .*\.a$")
-addFilter("E: anonftp dir-or-file-in-home /home/ftp/")
-addFilter("E: [^ ]+ dir-or-file-in-home /home/httpd/")
-addFilter("E: sympa dir-or-file-in-home /home/sympa/")
 addFilter("E: menu non-file-in-menu-dir /usr/lib/menu/default")
 addFilter("I: menu unable-to-parse-menu-command")
 addFilter("W: menu invalid-menu-section")
@@ -190,5 +186,9 @@ addFilter("E: heartbeat incoherent-subsys /etc/rc.d/init.d/heartbeat $SUBSYS")
 
 # non-conffile-in-etc
 addFilter("W: mandrake-release non-conffile-in-etc /etc/mandrake-release")
+
+# vixie-cron
+addFilter("E: vixie-cron non-standard-dir-perm /var/spool/cron 0700")
+addFilter("E: vixie-cron setuid-binary /usr/bin/crontab root 04755")
 
 # Config.py ends here
