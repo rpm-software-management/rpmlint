@@ -250,7 +250,7 @@ addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGL.so.')
 addFilter('E: Mesa no-ldconfig-symlink /usr/X11R6/lib/libGLwrapper.so.')
 
 #False reports on locales
-addFilter('E: clanlib-gl|xscreensaver-gl no-dependency-on locales-gl')
+addFilter('E: libclanlib0-gl|clanlib-gl|xscreensaver-gl no-dependency-on locales-gl')
 addFilter('E: emacs-el|xemacs-el no-dependency-on locales-el')
 addFilter('E: (hack)?kernel-pcmcia-cs no-dependency-on locales-cs')
 addFilter('E: php-gd no-dependency-on locales-gd')
@@ -262,5 +262,8 @@ addFilter('W: dev dangling-relative-symlink /dev/stderr ../proc/self/fd/2')
 addFilter('W: dev dangling-relative-symlink /dev/snd ../proc/asound/dev')
 addFilter('W: dev dangling-relative-symlink /dev/core ../proc/kcore')
 addFilter('W: dev dangling-relative-symlink /dev/stdout ../proc/self/fd/1')
+
+#autoconf
+addFilter('W: autoconf devel-file-in-non-devel-package /usr/share/autoconf/acconfig.h')
 
 # Config.py ends here
