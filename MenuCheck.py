@@ -74,6 +74,13 @@ DEFAULT_VALID_SECTIONS=(
     "Session/Windowmanagers"
     )
 
+DEFAULT_EXTRA_MENU_NEEDS = (
+    "gnome",
+    "icewm",
+    "kde",
+    "wmaker"
+    )
+
 class MenuCheck(AbstractCheck.AbstractCheck):
     menu_file=re.compile("^/usr/lib/menu/([^/]+)$")
     old_menu_file=re.compile("^/usr/share/(gnome/apps|applnk)/([^/]+)$")
@@ -85,7 +92,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     icon=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("^[^#]*update-menus",re.MULTILINE)
-
+    standard_needs=Config.getOption("ExtraMenuNeeds", DEFAULT_EXTRA_MENU_NEEDS)
+    
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "MenuCheck")
 
@@ -176,7 +184,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         grp=res.groups()
                         needs=string.lower(grp[1] or grp[2])
-                        if needs == "x11" or needs == "text" or needs == "wm":
+                        if needs in ("x11", "text" ,"wm"):
                             res=MenuCheck.section.search(line)
                             if res:
                                 grp=res.groups()
@@ -187,7 +195,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                         printError(pkg, "invalid-menu-section", section, f)
                             else:
                                 printInfo(pkg, "unable-to-parse-menu-section", line)
-                        else:
+                        elif needs not in MenuCheck.standard_needs:
                             printInfo(pkg, "strange-needs", needs, f)
                     else:
                         printInfo(pkg, "unable-to-parse-menu-needs", line)
