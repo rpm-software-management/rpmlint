@@ -23,11 +23,13 @@ buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex=re.compile('^/')
 clean_regex=re.compile('^%clean')
 changelog_regex=re.compile('^%changelog')
+configure_start_regex=re.compile('\./configure')
+configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
-hardcoded_lib_dirs='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
-hardcoded_lib_dir_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?)' + hardcoded_lib_dirs + '(?=[\s;/])([^\s;]*))')
+hardcoded_library_paths='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
+hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s;]*))')
 
 def file2string(file):
     fd=open(file, "r")
@@ -65,6 +67,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             buildroot=0
             clean=0
             changelog=0
+            configure=0
+            configure_cmdline=""
             
             # gather info from spec lines
             for line in spec:
@@ -89,9 +93,27 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     changelog=1
                 
-                res=hardcoded_lib_dir_regex.search(line)
+                if configure:
+                    if configure_cmdline[-1] == "\\":
+                        configure_cmdline=configure_cmdline[:-1] + string.strip(line)
+                    else:
+                        configure=0
+                        res=configure_libdir_spec_regex.search(configure_cmdline)
+                        if not res:
+                            printError(pkg, "configure-without-libdir-spec")
+                        else:
+                            res=re.match(hardcoded_library_paths, res.group(1))
+                            if res:
+                                printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
+                
+                res=configure_start_regex.search(line)
                 if not changelog and res:
-                    printError(pkg, "harcoded-library-path", "in " + string.lstrip(res.group(1)))
+                    configure=1
+                    configure_cmdline=string.strip(line)
+                
+                res=hardcoded_library_path_regex.search(line)
+                if not changelog and res:
+                    printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
                 
                 res=buildroot_regex.search(line)
                 if res:
@@ -151,9 +173,13 @@ allow build as non root.''',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
 by something like %{_tmppath}/%name-root.''',
 
-'harcoded-library-path',
+'hardcoded-library-path',
 '''A library path is hardcoded to one of the following paths: /lib,
 /usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.''',
+
+'configure-without-libdir-spec',
+'''A configure script is run without specifying the libdir. Configure
+options must be augmented with something like libdir=%{_libdir}.''',
 
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed
