@@ -1,3 +1,11 @@
+2001-08-21 20:57  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.35-1mdk
+
+2001-08-21 20:56  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.35
+
 2001-08-21 20:28  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* BinariesCheck.py: Make libraries not linked against libc errors
