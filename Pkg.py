@@ -224,6 +224,10 @@ class Pkg:
         return self.langFiles()[f]
 
     # API to access dependency information
+    def obsoletes(self):
+        self._gatherDepInfo()
+        return self._obsoletes
+    
     def requires(self):
         self._gatherDepInfo()
         return self._requires
@@ -246,45 +250,47 @@ class Pkg:
         return self._provides
 
     # internal function to gather dependency info used by the above ones
+    def _gather_aux(self, header, list, nametag, versiontag, flagstag, prereq=None):
+        names = header[nametag]
+        versions = header[versiontag]
+        flags = header[flagstag]
+        
+        if versions:
+            # workaroung buggy rpm python module that doesn't return a list
+            if type(flags) != types.ListType:
+                flags=[flags]
+            for loop in range(len(versions)):
+                if prereq != None and flags[loop] & rpm.RPMSENSE_PREREQ:
+                    prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
+                else:
+                    list.append((names[loop], versions[loop], flags[loop]))
+                        
+        
     def _gatherDepInfo(self):
         if self.required == None:
             self._requires = []
             self._prereq = []
             self._provides = []
             self._conflicts = []
-            
-            names = self.header[rpm.RPMTAG_REQUIRENAME]
-            versions = self.header[rpm.RPMTAG_REQUIREVERSION]
-            flags = self.header[rpm.RPMTAG_REQUIREFLAGS]
-            if versions:
-                # workaroung buggy rpm python module that doesn't return a list
-                if type(flags) != types.ListType:
-                    flags=[flags]
-                for loop in range(len(versions)):
-                    if flags[loop] & rpm.RPMSENSE_PREREQ:
-                        self._prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
-                    else:
-                        self._requires.append((names[loop], versions[loop], flags[loop]))
-                        
-            names = self.header[rpm.RPMTAG_CONFLICTNAME]
-            versions = self.header[rpm.RPMTAG_CONFLICTVERSION]
-            flags = self.header[rpm.RPMTAG_CONFLICTFLAGS]
-            if versions:
-                # workaroung buggy rpm python module that doesn't return a list
-                if type(flags) != types.ListType:
-                    flags=[flags]
-                for loop in range(len(versions)):
-                    self._conflicts.append((names[loop], versions[loop], flags[loop]))
-                    
-            names = self.header[rpm.RPMTAG_PROVIDENAME]
-            versions = self.header[rpm.RPMTAG_PROVIDEVERSION]
-            flags = self.header[rpm.RPMTAG_PROVIDEFLAGS]
-            if versions:
-                # workaroung buggy rpm python module that doesn't return a list
-                if type(flags) != types.ListType:
-                    flags=[flags]
-                for loop in range(len(versions)):
-                    self._provides.append((names[loop], versions[loop], flags[loop]))
+            self._obsoletes = []
+
+            self._gather_aux(self.header, self._requires,
+                             rpm.RPMTAG_REQUIRENAME,
+                             rpm.RPMTAG_REQUIREVERSION,
+                             rpm.RPMTAG_REQUIREFLAGS,
+                             self._prereq)
+            self._gather_aux(self.header, self._conflicts,
+                             rpm.RPMTAG_CONFLICTNAME,
+                             rpm.RPMTAG_CONFLICTVERSION,
+                             rpm.RPMTAG_CONFLICTFLAGS)
+            self._gather_aux(self.header, self._provides,
+                             rpm.RPMTAG_PROVIDENAME,
+                             rpm.RPMTAG_PROVIDEVERSION,
+                             rpm.RPMTAG_PROVIDEFLAGS)
+            self._gather_aux(self.header, self._obsoletes,
+                             rpm.RPMTAG_OBSOLETENAME,
+                             rpm.RPMTAG_OBSOLETEVERSION,
+                             rpm.RPMTAG_OBSOLETEFLAGS)
 
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
@@ -328,11 +334,12 @@ class InstalledPkg(Pkg):
 if __name__ == '__main__':
     import sys
     for p in sys.argv[1:]:
-        pkg=Pkg(sys.argv[1])
+        pkg=Pkg(sys.argv[1], "/tmp")
         print "Requires:", pkg.requires()
         print "Prereq:", pkg.prereq()
         print "Conflicts:", pkg.conflicts()
         print "Provides:", pkg.provides()
+        print "Obsoletes:", pkg.obsoletes()
         pkg.cleanup()
     
 # Pkg.py ends here
