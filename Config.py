@@ -318,6 +318,11 @@ addFilter('W: dev dangling-relative-symlink /dev/stdout ../proc/self/fd/1')
 #autoconf
 addFilter('W: autoconf devel-file-in-non-devel-package /usr/share/autoconf/acconfig.h')
 
+#portsentry
+addFilter('E: portsentry non-readable /etc/portsentry/portsentry.ignore 0600')
+addFilter('E: portsentry non-readable /etc/portsentry/portsentry.conf 0600')
+addFilter('E: portsentry non-standard-dir-perm /var/portsentry 0700')
+
 #library policy exceptions
 addFilter('rpm|glibc|anonftp|pam|popt|egcs-c\+\+ .*in-library-package')
 
