@@ -46,7 +46,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
 		    if not gz_regex.search(f):
 			printWarning(pkg, 'source-or-patch-not-gzipped', f)
 	    perm=files[f][0] & 07777
-	    if perm != 0644 or perm != 0755:
+	    if perm != 0644 and perm != 0755:
 		printWarning(pkg, 'strange-permission', f, oct(perm))	    
 		
 check=SourceCheck()
