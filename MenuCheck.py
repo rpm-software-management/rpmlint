@@ -89,7 +89,8 @@ DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
 
 DEFAULT_LAUNCHERS = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
                      ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
-                     ['(?:/usr/bin/)?soundwrapper', None]
+                     ['(?:/usr/bin/)?soundwrapper', None],
+                     ['NO_XALF', None],
                      )
 
 menu_file_regex=re.compile('^/usr/lib/menu/([^/]+)$')
