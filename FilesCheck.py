@@ -23,6 +23,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     tmp_regex=re.compile("^/tmp/|^(/var|/usr)/tmp/")
     mnt_regex=re.compile("^/mnt/")
     opt_regex=re.compile("^/opt/")
+    home_regex=re.compile("^/home/")
     etc_regex=re.compile("^/etc/")
     sub_bin_regex=re.compile("^(/usr)?/s?bin/\S+/")
     backup_regex=re.compile("~$|\#[^/]+\#$")
@@ -79,6 +80,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, "subdir-in-bin", f)
 	    elif FilesCheck.backup_regex.search(f):
 		printError(pkg, "backup-file-in-package", f)
+            elif FilesCheck.home_regex.search(f):
+		printError(pkg, "dir-or-file-in-home", f)
 	    if FilesCheck.etc_regex.search(f) and stat.S_ISREG(mode):
 		if not f in config_files and not f in ghost_files:
 		    printWarning(pkg, "non-conffile-in-etc", f)
