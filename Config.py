@@ -255,4 +255,12 @@ addFilter('E: emacs-el|xemacs-el no-dependency-on locales-el')
 addFilter('E: (hack)?kernel-pcmcia-cs no-dependency-on locales-cs')
 addFilter('E: php-gd no-dependency-on locales-gd')
 
+#dev
+addFilter('W: dev dangling-relative-symlink /dev/stdin ../proc/self/fd/0')
+addFilter('W: dev dangling-relative-symlink /dev/fd ../proc/self/fd')
+addFilter('W: dev dangling-relative-symlink /dev/stderr ../proc/self/fd/2')
+addFilter('W: dev dangling-relative-symlink /dev/snd ../proc/asound/dev')
+addFilter('W: dev dangling-relative-symlink /dev/core ../proc/kcore')
+addFilter('W: dev dangling-relative-symlink /dev/stdout ../proc/self/fd/1')
+
 # Config.py ends here
