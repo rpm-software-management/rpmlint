@@ -146,7 +146,12 @@ addFilter('W: ocaml unstripped-binary-or-object /usr/bin/(ocamldebug|ocamlbrowse
 addFilter('W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)')
 addFilter('E: initscripts (setuid|setgid)-binary (/usr/sbin/usernetctl|/sbin/netreport) root.*')
 addFilter('E: initscripts non-standard-dir-perm /var/run/netreport 0775')
-
+addFilter("E:.*initscripts no-status-entry.*mandrake_(firstime|everytime).*")
+addFilter("W:.*initscripts no-reload-entry.*mandrake_(firstime|everytime).*")
+addFilter("E:.*initscripts subsys-not-used.*mandrake_(firstime|everytime).*")
+addFilter("E:.*initscripts subsys-not-used.*/etc/rc.d/init.d/(halt|rawdevices)")
+addFilter("E:.*initscripts no-status-entry.*/etc/rc.d/init.d/(killall|halt|single).*")
+addFilter("W:.*initscripts no-(status|reload)-entry.*/etc/rc.d/init.d/(killall|halt|functions|single).*")
 
 #Setuid
 addFilter('E: traceroute setuid-binary /usr/sbin/traceroute root 04755')
