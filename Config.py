@@ -9,6 +9,7 @@
 
 import os.path
 import re
+from setuplist import *
 
 DEFAULT_CHECKS=("DistributionCheck",
 		"TagsCheck",
@@ -448,11 +449,36 @@ addFilter('shorewall non-standard-dir-perm /etc/shorewall 0700')
 #DansGuardian
 addFilter('DansGuardian non-readable /etc/dansguardian/.* 0600')
 
+#rpm
+addFilter('rpm postin-without-ghost-file-creation')
+
 # packages without binary but built with other binary packages
 addFilter('(Mesa|hylafax|openldap|xclass|gtk\+mdk) no-binary')
+
+################################################################################
+# policy decisions. The idea is to be able to run rpmlint as an old version.
+################################################################################
+
+DEFAULT_LAUNCHERS_OLD = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
+                         ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
+                         ['(?:/usr/bin/)?soundwrapper', None],
+                         ['NO_XALF', None],
+                         )
+DEFAULT_LAUNCHERS_90 = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
+                        ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
+                        ['(?:/usr/bin/)?soundwrapper', None],
+                        )
+
+DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_90
+
+STANDARD_GROUPS = STANDARD_GROUPS_NEW
+STANDARD_USERS = STANDARD_USERS_NEW
 
 def load_policy(policy):
     if policy != 'mdk9.0':
         addFilter('no-prereq-on|non-root-user-log-file|non-root-group-log-file|non-ghost-file|hardcoded-library-path|configure-without-libdir-spec|no-binary|only-non-binary-in-usr-lib')
-        
+        DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_OLD
+        STANDARD_GROUPS = STANDARD_GROUPS_OLD
+        STANDARD_USERS = STANDARD_USERS_OLD
+
 # Config.py ends here
