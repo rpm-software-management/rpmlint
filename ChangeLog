@@ -1,3 +1,11 @@
+2001-10-16 22:07  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README: added descriptions for ForbiddenWords and ValidBuildHost.
+
+2001-10-16 22:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SourceCheck.py: correct boolean expression for strange-permission
+
 2001-10-16 22:04  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py, rpmlint.spec: 0.37-1mdk
