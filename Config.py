@@ -398,4 +398,7 @@ addFilter('old-menu-entry')
 #zapping
 addFilter('W: zapping devel-file-in-non-devel-package /usr/lib/zapping/plugins/.*\.a$')
 
+#ssane
+addFilter('libsane1 non-versioned-file-in-library-package /usr/lib/sane')
+
 # Config.py ends here
