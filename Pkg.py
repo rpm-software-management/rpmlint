@@ -15,6 +15,7 @@ import stat
 import commands
 import re
 import string
+import types
 
 RPMFILE_CONFIG=(1 << 0)
 RPMFILE_DOC=(1 << 1)
@@ -150,13 +151,12 @@ class Pkg:
                     dirnames=self.header[rpm.RPMTAG_DIRNAMES]
                     dirindexes=self.header[rpm.RPMTAG_DIRINDEXES]
                     files=[]
-                    l=len(basenames)
                     # The rpmlib or the python module doesn't report a list for RPMTAG_DIRINDEXES
                     # if the list has one element...
-                    if l == 0:
+                    if type(dirindexes) == types.IntType:
                         files.append(dirnames[dirindexes] + basenames[0])
                     else:
-                        for idx in range(0, l):
+                        for idx in range(0, len(dirindexes)):
                             files.append(dirnames[dirindexes[idx]] + basenames[idx])
         else:
             files=self.header[rpm.RPMTAG_FILENAMES]
