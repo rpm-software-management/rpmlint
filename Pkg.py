@@ -26,6 +26,13 @@ RPMFILE_GHOST=(1 << 6)
 RPMFILE_LICENSE=(1 << 7)
 RPMFILE_README=(1 << 8)
 
+# check if we use a rpm version compatible with 3.0.4
+try:
+    if rpm.RPMTAG_OLDFILENAMES:
+        v304=1
+except AttributeError:
+    v304=0
+    
 class Pkg:
     file_regex=re.compile("\.([^:]+):\s+(.*)")
 
@@ -123,16 +130,31 @@ class Pkg:
 
     # extract information about the files
     def _gatherFilesInfo(self):
+        global v304
+        
 	self._config_files=[]
 	self._doc_files=[]
 	self._ghost_files=[]
 	self._files={}
 	flags=self.header[rpm.RPMTAG_FILEFLAGS]
-	files=self.header[rpm.RPMTAG_FILENAMES]
 	modes=self.header[rpm.RPMTAG_FILEMODES]
 	users=self.header[rpm.RPMTAG_FILEUSERNAME]
 	groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
 	links=self.header[rpm.RPMTAG_FILELINKTOS]
+        # Get files according to rpm version
+        if v304:
+            files=self.header[rpm.RPMTAG_OLDFILENAMES]
+            if files == None:
+                basenames=self.header[rpm.RPMTAG_BASENAMES]
+                if basenames:
+                    dirnames=self.header[rpm.RPMTAG_DIRNAMES]
+                    dirindexes=self.header[rpm.RPMTAG_DIRINDEXES]
+                    files=[]
+                    for idx in range(0, len(basenames)):
+                        files.append(dirnames[dirindexes[idx]] + basenames[idx])
+        else:
+            files=self.header[rpm.RPMTAG_FILENAMES]
+
 	if files:
 	    for idx in range(0, len(files)):
 		if flags[idx] & RPMFILE_CONFIG:
