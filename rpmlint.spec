@@ -7,8 +7,8 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.32
-%define release 2mdk
+%define version 0.33
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -49,6 +49,20 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Mon Jul  2 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.33-1mdk
+- more descriptions from Christian Belisle.
+
+- BinariesCheck.py: new check for files which can cause upgrade
+ problems in the library packages.
+
+- TagsCheck.py: try to check alpha/beta/pre version improper use.
+
+- Filter.py: print description only if they aren't empty.
+
+- SpecCheck.py: added a check for obsolete tags.
+
+- FilesCheck.py: added named user and group to the exception list.
+
 * Mon Jun 18 2001 Christian Belisle <cbelisle@mandrakesoft.com> 0.32-2mdk
 - Added descriptions for the -i option.
 
