@@ -172,6 +172,7 @@ perl_version_trick=Config.getOption('PerlVersionTrick', 1)
 log_regex=re.compile('^/var/log/[^/]+$')
 lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex=re.compile('^(lib|.+-libs)')
+hidden_file_regex=re.compile('/\.[^/]*$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -236,6 +237,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, 'dir-or-file-in-home', f)
             elif cvs_regex.search(f):
 		printError(pkg, 'cvs-internal-file', f)
+	    elif hidden_file_regex.search(f):	
+		printWarning(pkg, 'hidden-file-or-dir', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
@@ -379,6 +382,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if pkg[rpm.RPMTAG_NAME] != 'filesystem':
                     if f in STANDARD_DIRS:
                         printError(pkg, 'standard-dir-owned-by-package', f)
+		if hidden_file_regex.search(f):	
+			printWarning(pkg, 'hidden-file-or-dir', f)
+ 	
 
 	    # symbolic link check
 	    elif stat.S_ISLNK(mode):
@@ -664,6 +670,9 @@ email to flepied@mandrakesoft.com to add it to the list of exceptions in the nex
 '''This library package must not contain non library files to allow 64
 and 32 bits versions of the package to coexist.''',
 
+'hidden-file-or-dir',
+'''The file or directory is hidden. You should see if this is normal, 
+and delete it if needed''',
 )
 
 # FilesCheck.py ends here
