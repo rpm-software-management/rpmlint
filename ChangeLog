@@ -1,3 +1,21 @@
+2001-01-23 14:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* TagsCheck.py: Add https as valid url.
+
+2000-12-13 22:19  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: used list of licenses from
+	www.opensource.org/licenses
+
+2000-12-07 23:46  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check the full license before splitting in it
+	multiple parts.
+
+2000-12-07 18:28  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.29
+
 2000-12-07 16:21  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* PostCheck.py: Add /sbin/sash as VALID_SHELLS.
