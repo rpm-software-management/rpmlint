@@ -11,18 +11,15 @@ import sys
 import Config
 
 def printInfo(pkg, reason, *details):
-    _print("I", pkg, reason, details)
-    if Config.info:
+    if _print("I", pkg, reason, details) and Config.info:
         printDescriptions(reason)
         
 def printWarning(pkg, reason, *details):
-    _print("W", pkg, reason, details)
-    if Config.info:
+    if _print("W", pkg, reason, details) and Config.info:
         printDescriptions(reason)
 
 def printError(pkg, reason, *details):
-    _print("E", pkg, reason, details)
-    if Config.info:
+    if _print("E", pkg, reason, details) and Config.info:
         printDescriptions(reason)
 
 def _print(type, pkg, reason, details):
@@ -33,6 +30,9 @@ def _print(type, pkg, reason, details):
     if not Config.isFiltered(s):
 	sys.stdout.write(s)
 	sys.stdout.write("\n")
+        return 1
+
+    return 0
 
 def printDescriptions(reason):
     try:
