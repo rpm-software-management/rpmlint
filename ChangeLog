@@ -1,3 +1,11 @@
+2004-01-27 18:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.55-1mdk
+
+2004-01-27 18:03  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: final menu structure
+
 2004-01-23 15:58  David Baudens <baudens@mandrakesoft.com>
 
 	* MenuCheck.py, rpmlint.spec: Replace old menu structure by new
