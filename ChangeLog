@@ -1,3 +1,64 @@
+2003-12-22 14:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* ZipCheck.py: handle exception while reading zip file
+
+2003-12-22 12:32  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: log-files-without-logrotate (Michael Scherer)
+
+2003-12-22 12:29  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py, README, ZipCheck.py: new check ZipCheck (Ville Skyttä)
+
+2003-12-22 12:27  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: check lib packages only they start by lib (Pixel)
+
+2003-12-22 12:23  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py, InitScriptCheck.py, LSBCheck.py, MenuCheck.py,
+	TagsCheck.py: spelling fixes (Ville Skyttä)
+
+2003-12-22 12:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README: KernelModuleRPMsOK defaults to 1
+
+2003-12-22 12:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* README, config: added KernelModuleRPMsOK
+
+2003-12-22 12:15  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: non-standard-executable-perm was never run (Ville
+	Skyttä)
+
+2003-12-22 12:10  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added checks for correct depmod calls in
+	scriptlets (Eric Sandeen)
+
+2003-12-11 10:56  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exception for busybox
+
+2003-11-20 17:10  Nicolas Planel <nplanel@mandrakesoft.com>
+
+	* Config.py, rpmlint.spec: add policycoreutils exception
+
+2003-11-19 22:16  Nicolas Planel <nplanel@mandrakesoft.com>
+
+	* Config.py, rpmlint.spec: added statically-linked-binary exception
+	for udev
+
+2003-10-01 14:39  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for kernel-source
+
+2003-10-01 12:56  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* InitScriptCheck.py: allow multiple spaces before chkconfig (Eric
+	Sandeen)
+
 2003-09-05 10:23  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.52-1mdk
