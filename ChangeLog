@@ -1,3 +1,7 @@
+2001-10-30 05:45  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.38-1mdk
+
 2001-10-30 05:38  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py: added incoherent-version-in-name exceptions.
