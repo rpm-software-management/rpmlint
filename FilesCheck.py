@@ -48,6 +48,16 @@ STANDARD_DIRS=(
     '/usr/X11R6/include',
     '/usr/X11R6/lib',
     '/usr/X11R6/man',
+    '/usr/X11R6/man/man1',
+    '/usr/X11R6/man/man2',
+    '/usr/X11R6/man/man3',
+    '/usr/X11R6/man/man4',
+    '/usr/X11R6/man/man5',
+    '/usr/X11R6/man/man6',
+    '/usr/X11R6/man/man7',
+    '/usr/X11R6/man/man8',
+    '/usr/X11R6/man/man9',
+    '/usr/X11R6/man/mann',
     '/usr/bin',
     '/usr/bin/X11',
     '/usr/etc',
@@ -136,8 +146,8 @@ absolute2_regex=re.compile('^/?([^/]+)')
 points_regex=re.compile('^../(.*)')
 doc_regex=re.compile('^/usr/(doc|man|info)|^/usr/share/(doc|man|info)')
 bin_regex=re.compile('^(/usr)?/s?bin/')
-includefile_regex=re.compile('\.h$|\.a$')
-sofile_regex=re.compile('[^/]+\.so$')
+includefile_regex=re.compile('\.[ch]$|\.a$')
+sofile_regex=re.compile('/lib/[^/]+\.so$')
 devel_regex=re.compile('-(devel|source)$')
 lib_regex=re.compile('lib/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
@@ -170,7 +180,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	config_files=pkg.configFiles()
 	ghost_files=pkg.ghostFiles()
 	doc_files=pkg.docFiles()
-        
+
 	if doc_files == []:
 	    printWarning(pkg, 'no-documentation')
 	    
@@ -283,7 +293,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if stat.S_ISREG(mode):
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
-                if not devel_pkg and includefile_regex.search(f):
+                if not devel_pkg and includefile_regex.search(f) and not f in doc_files:
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 
 	    # normal executable check
