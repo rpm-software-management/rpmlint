@@ -76,11 +76,13 @@ DEFAULT_VALID_SECTIONS=(
 
 class MenuCheck(AbstractCheck.AbstractCheck):
     menu_file=re.compile("^/usr/lib/menu/([^/]+)$")
+    old_menu_file=re.compile("^/usr/share/(gnome/apps|applnk)/([^/]+)$")
     package=re.compile("\?package\((.*)\):")
     needs=re.compile("needs=(\"([^\"]+)\"|([^ \t\"]+))")
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
+    title=re.compile("title=(\"([^\"]+)\"|([^ \t\"]+))")
     command=re.compile("command=\"?([^\" ]+)")
-    icons=re.compile("icon=\"?([^\" ]+)")
+    icon=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("update-menus")
 
@@ -97,6 +99,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
         menus=[]
         
         for f in files.keys():
+            # Check menu files
             res=MenuCheck.menu_file.search(f)
             if res:
                 basename=res.group(1)
@@ -107,6 +110,12 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if basename != pkgname:
                         printWarning(pkg, "non-coherent-menu-filename", f)
                     menus.append(f)
+            # Check old menus from KDE and GNOME
+            res=MenuCheck.old_menu_file.search(f)
+            if res:
+                mode=files[f][0]
+                if stat.S_ISREG(mode):
+                    printError(pkg, "old-menu-entry", f)
 
         if len(menus) > 0:
             dir=pkg.dirName()
@@ -137,24 +146,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, "incoherent-package-value-in-menu", package, f)
                     else:
                         printInfo(pkg, "unable-to-parse-menu-entry", line)
-                    res=MenuCheck.needs.search(line)
-                    if res:
-                        grp=res.groups()
-                        needs=string.lower(grp[1] or grp[2])
-                        if needs == "x11" or needs == "text" or needs == "wm":
-                            res=MenuCheck.section.search(line)
-                            if res:
-                                grp=res.groups()
-                                section=grp[1] or grp[2]
-                                if section not in MenuCheck.valid_sections:
-                                    printWarning(pkg, "invalid-menu-section", section, f)
-                            else:
-                                printInfo(pkg, "unable-to-parse-menu-section", line)
-                        else:
-                            printInfo(pkg, "strange-needs", needs, f)
-                    else:
-                        printInfo(pkg, "unable-to-parse-menu-needs", line)
 
+                    command=1
                     res=MenuCheck.command.search(line)
                     if res:
                         command=res.group(1)
@@ -169,18 +162,46 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         except KeyError:
                             printWarning(pkg, "menu-command-not-in-package", command)
                     else:
-                        printInfo(pkg, "unable-to-parse-menu-command", line)
+                        command=0
 
-                    res=MenuCheck.icons.search(line)
+                    res=MenuCheck.title.search(line)
+                    if res:
+                        grp=res.groups()
+                        title=grp[1] or grp[2]
+                    else:
+                        printError(pkg, "no-title-in-menu", f)
+                        title=None
+                        
+                    res=MenuCheck.needs.search(line)
+                    if res:
+                        grp=res.groups()
+                        needs=string.lower(grp[1] or grp[2])
+                        if needs == "x11" or needs == "text" or needs == "wm":
+                            res=MenuCheck.section.search(line)
+                            if res:
+                                grp=res.groups()
+                                section=grp[1] or grp[2]
+                                # don't warn entries for sections
+                                if command:
+                                    if section not in MenuCheck.valid_sections:
+                                        printError(pkg, "invalid-menu-section", section, f)
+                            else:
+                                printInfo(pkg, "unable-to-parse-menu-section", line)
+                        else:
+                            printInfo(pkg, "strange-needs", needs, f)
+                    else:
+                        printInfo(pkg, "unable-to-parse-menu-needs", line)
+
+                    res=MenuCheck.icon.search(line)
                     if res:
                         icon=res.group(1)
                         try:
                             if icon[0] == '/':
                                 files[icon]
                         except KeyError:
-                            printError(pkg, "specified-icon-not-in-package", icon)
+                            printError(pkg, "specified-icon-not-in-package", icon, f)
                     else:
-                        printWarning(pkg, "no-icon-in-the-package")
+                        printWarning(pkg, "no-icon-in-menu", title)
                         
 # Create an object to enable the auto registration of the test
 check=MenuCheck()
