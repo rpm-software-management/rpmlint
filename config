@@ -20,6 +20,8 @@ from Config import *
 #setOption("Vendor", "MySelf")
 #setOption("Distribution", "MyDistrib")
 #setOption("UseBzip2", 1)
+#setOption("ReleaseExtension", None)
+#setOption("ValidGroups", ("Group1", "Group2"))
 
 # Output filters
 
