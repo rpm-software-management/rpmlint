@@ -384,6 +384,8 @@ BAD_WORDS = {
     'wierd': 'weird',
     'xwindows': 'X'
     }
+DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
+DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$'
 
 distribution=Config.getOption("Distribution", "Mandrake Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
@@ -401,6 +403,8 @@ url_regex=re.compile('^(ftp|http|https)://')
 so_regex=re.compile('\.so$')
 leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
+forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAULT_FORBIDDEN_WORDS_REGEX) + ')', re.IGNORECASE)
+valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost', DEFAULT_VALID_BUILDHOST))
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -500,7 +504,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'summary-too-long', summary)
             if leading_space_regex.search(summary):
                 printError(pkg, 'summary-has-leading-spaces', summary)
-                
+            res=forbidden_words_regex.search(summary)
+            if res:
+                printWarning(pkg, 'summary-use-invalid-word', res.group(1))
+
         description=pkg[rpm.RPMTAG_DESCRIPTION]
 	if not description:
 	    printError(pkg, 'no-description-tag')
@@ -509,14 +516,25 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             for l in string.split(description, "\n"):
                 if len(l) >= 80:
                     printError(pkg, 'description-line-too-long', l)
+                res=forbidden_words_regex.search(l)
+                if res:
+                    printWarning(pkg, 'description-use-invalid-word', res.group(1))
+                
                     
 	group=pkg[rpm.RPMTAG_GROUP]
-	if not pkg[rpm.RPMTAG_GROUP]:
+        if not group:
 	    printError(pkg, 'no-group-tag')
 	else:
 	    if not group in VALID_GROUPS:
 		printWarning(pkg, 'non-standard-group', group)
 
+        buildhost=pkg[rpm.RPMTAG_BUILDHOST]
+        if not buildhost:
+            printError(pkg, 'no-buildhost-tag')
+        else:
+            if not valid_buildhost_regex.search(buildhost):
+                printWarning(pkg, 'invalid-buildhost', buildhost)
+                
 	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
 	    printError(pkg, 'no-changelogname-tag')
