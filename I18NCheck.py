@@ -29,6 +29,7 @@ INCORRECT_LOCALES = {
     'en_UK': 'en_GB'}
 
 # Correct subdirs of /usr/share/local for LC_MESSAGES
+# and /usr/share/man for locale man pages.
 CORRECT_SUBDIRS = (
 'af', 'ar', 'az', 'a3', 'be', 'bg', 'br', 'ca', 'cs', 'cy', 'da', 'de',
 'de_AT', 'el', 'en_GB', 'en_RN', 'eo', 'es', 'es_AR', 'es_ES', 'es_DO',
@@ -47,15 +48,16 @@ for s in CORRECT_SUBDIRS:
 str=str+')$'
 
 package_regex=re.compile(str)
+locale_regex=re.compile('^(/usr/share/locale/([^/]+))/')
+correct_subdir_regex=re.compile('^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$')
+lc_messages_regex=re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
+man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
+mo_regex=re.compile('\.mo$')
 
 # list of exceptions
 EXCEPTION_DIRS=('C', 'POSIX', 'iso88591', 'iso8859')
 
 class I18NCheck(AbstractCheck.AbstractCheck):
-    locale_regex=re.compile('^(/usr/share/locale/([^/]+))/')
-    correct_subdir_regex=re.compile('^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$')
-    lc_messages_regex=re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
-    mo_regex=re.compile('\.mo$')
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
@@ -75,13 +77,13 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 		pass
 	    
 	for f in files.keys():
-	    res=I18NCheck.locale_regex.search(f)
+	    res=locale_regex.search(f)
 	    if res:
 		locale=res.group(2)
 		# checks the same locale only once
 		if not locale in locales:
 		    locales.append(locale)
-		    res2=I18NCheck.correct_subdir_regex.search(locale)
+		    res2=correct_subdir_regex.search(locale)
 		    if not res2:
 			if not locale in EXCEPTION_DIRS:
 			    printError(pkg, 'incorrect-locale-subdir', f)
@@ -92,13 +94,22 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 			    printError(pkg, 'incorrect-locale-' + correct, f)
 			except KeyError:
 			    pass
-            res=I18NCheck.lc_messages_regex.search(f)
+            res=lc_messages_regex.search(f)
+            subdir=None
             if res:
                 subdir=res.group(1)
                 if not subdir in CORRECT_SUBDIRS:
                     printError(pkg, 'invalid-lc-messages-dir', f)
+            else:
+                res=man_regex.search(f)
+                if res:
+                    subdir=res.group(1)
+                    if subdir != 'man' and not subdir in CORRECT_SUBDIRS:
+                        printError(pkg, 'invalid-locale-man-dir', f)
+                    else:
+                        subdir=None
 
-            if I18NCheck.mo_regex.search(f):
+            if mo_regex.search(f) or subdir:
                 if pkg.fileLang(f) == '':
                     printWarning(pkg, 'file-not-in-%lang', f)
 
