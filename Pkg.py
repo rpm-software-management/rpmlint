@@ -211,20 +211,40 @@ class Pkg:
             self._requires = []
             self._prereq = []
             self._provides = []
+            self._conflicts = []
+            
             names = self.header[rpm.RPMTAG_REQUIRENAME]
             versions = self.header[rpm.RPMTAG_REQUIREVERSION]
             flags = self.header[rpm.RPMTAG_REQUIREFLAGS]
-            for loop in range(len(versions)):
-                if flags[loop] & rpm.RPMSENSE_PREREQ:
-                    self._prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
-                else:
-                    self._requires.append((names[loop], versions[loop], flags[loop]))
+            if versions:
+                # workaroung buggy rpm python module that doesn't return a list
+                if type(flags) != types.ListType:
+                    flags=[flags]
+                for loop in range(len(versions)):
+                    if flags[loop] & rpm.RPMSENSE_PREREQ:
+                        self._prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
+                    else:
+                        self._requires.append((names[loop], versions[loop], flags[loop]))
+                        
             names = self.header[rpm.RPMTAG_CONFLICTNAME]
             versions = self.header[rpm.RPMTAG_CONFLICTVERSION]
             flags = self.header[rpm.RPMTAG_CONFLICTFLAGS]
-            print names, versions, flags
-            for loop in range(len(versions)):
-                self._provides.append((names[loop], versions[loop], flags[loop]))
+            if versions:
+                # workaroung buggy rpm python module that doesn't return a list
+                if type(flags) != types.ListType:
+                    flags=[flags]
+                for loop in range(len(versions)):
+                    self._conflicts.append((names[loop], versions[loop], flags[loop]))
+                    
+            names = self.header[rpm.RPMTAG_PROVIDENAME]
+            versions = self.header[rpm.RPMTAG_PROVIDEVERSION]
+            flags = self.header[rpm.RPMTAG_PROVIDEFLAGS]
+            if versions:
+                # workaroung buggy rpm python module that doesn't return a list
+                if type(flags) != types.ListType:
+                    flags=[flags]
+                for loop in range(len(versions)):
+                    self._provides.append((names[loop], versions[loop], flags[loop]))
             
 if __name__ == '__main__':
     import sys
