@@ -1,3 +1,63 @@
+2000-10-12 07:54  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.25
+
+2000-10-12 07:50  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exception for sympa, rpm and bcast.
+
+2000-10-12 07:12  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: check that devel package depends on the base
+	package with the same version.	check that summary begins with a
+	capital letter.
+
+2000-10-12 07:09  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check dangerous commands.  check reference to ~ or
+	$HOME.
+
+2000-10-12 07:07  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* SourceCheck.py: cleanup.
+
+2000-10-12 06:59  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: check that titles and longtitles begin by a capital
+	letter.  check that no version is included in title and longtitle.
+
+2000-10-12 06:57  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: check package owning system dirs.
+
+2000-10-11 10:41  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: check name of spec file.
+
+2000-10-11 08:16  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: added description of SpecCheck.
+
+2000-10-11 08:16  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added SpecCheck to DEFAULT_CHECKS.
+
+2000-10-11 08:12  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: check use of $RPM_SOURCE_DIR.
+
+2000-10-11 08:03  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: first version
+
+2000-10-10 20:23  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* MenuCheck.py: /lib/cpp errors to /dev/null for new cpp.
+
+2000-10-02 10:36  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.24
+
 2000-10-02 10:25  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: added apache and postgres to standard groups.
