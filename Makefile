@@ -9,7 +9,7 @@
 
 BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
-FILES= rpmlint *.py INSTALL README COPYING Makefile
+FILES= rpmlint *.py INSTALL README COPYING ChangeLog Makefile
 
 all:
 	python -O rpmlint.py -C . /dev/null
@@ -27,7 +27,8 @@ dist:
 	rm -f rpmlint-$$VERSION.tar.bz2; \
 	mkdir rpmlint-$$VERSION; \
 	ln $(FILES) rpmlint-$$VERSION/; \
-	tar ycvf rpmlint-$$VERSION.tar.bz2 rpmlint-$$VERSION;\
+	tar cvf rpmlint-$$VERSION.tar rpmlint-$$VERSION;\
+	bzip2 -9vf rpmlint-$$VERSION.tar;\
 	rm -rf rpmlint-$$VERSION
 
 # Makefile ends here
