@@ -1,3 +1,7 @@
+2004-02-12 17:40  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.57-1mdk
+
 2004-02-12 17:39  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: no-dependancy-on => no-dependency-on fixed perl
