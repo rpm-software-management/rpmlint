@@ -55,6 +55,7 @@ addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modu
 addFilter("W: icewm-light menu-command-not-in-package icewm")
 addFilter("E: slocate non-standard-dir-perm /var/lib/slocate 0750")
 addFilter("E: ld.so statically-linked-binary /sbin/ldconfig")
+addFilter("W: shadow-utils dangling-symlink /usr/bin/sg newgrp")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
