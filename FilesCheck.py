@@ -42,6 +42,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     info_regex=re.compile("^/usr/share/info")
     install_info_regex=re.compile("^[^#]*install-info", re.MULTILINE)
     perl_temp_file=re.compile(".*perl.*(bs|\.packlist)$")
+    cvs_regex=re.compile("/CVS/[^/]+$")
 
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
@@ -128,6 +129,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		printError(pkg, "backup-file-in-package", f)
             elif FilesCheck.home_regex.search(f):
 		printError(pkg, "dir-or-file-in-home", f)
+            elif FilesCheck.cvs_regex.search(f):
+		printError(pkg, "cvs-internal-file", f)
             elif f == "/usr/info/dir" or f == "/usr/share/info/dir":
                 printError(pkg, "info-dir-file", f)
 	    if FilesCheck.etc_regex.search(f) and stat.S_ISREG(mode):
