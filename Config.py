@@ -71,5 +71,25 @@ def getOption(name, default):
 	return _options[name]
     except KeyError:
 	return default
+
+# List of filters
+_filters={}
+
+def addFilter(name, reason):
+    global _filters
+
+    try:
+	_filters[name].append(reason)
+    except KeyError:
+	_filters[name]=[reason,]
+
+def isFiltered(name, reason):
+    global _filters
+    
+    try:
+	reasons=_filters[name]
+	return reason in reasons
+    except KeyError:
+	return 0
     
 # Config.py ends here
