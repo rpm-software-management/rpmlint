@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.51.1
+%define version 0.52
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Sep  5 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.52-1mdk
+- TagsCheck.py: o added explicit-lib-dependency check
+                o added invalid-build-requires check
+- Config.py: o added exceptions for explicit-lib-dependency and
+	     o invalid-build-requires do not report errors on debug packages
+
 * Tue Aug  5 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.51.1-1mdk
 - TagsCheck.py: don't check devel-dependency on source packages
 - NamingPolicyCheck.py: corrected info reports
