@@ -7,6 +7,7 @@
 # Purpose	: verify source package correctness.
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import re
 import Config
