@@ -69,4 +69,4 @@ Packager		regex		'@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakes
 RpmGamesGroup		regex		'Games'
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 ForbiddenWords		regex		'Linux.?Mandrake|Mandrake[^ ]*Linux'
-ValidBuildHost		regex		'\.mandrakesoft\.com$'
+ValidBuildHost		regex		'\.mandrakesoft\.com$|\.mandrake\.org$'

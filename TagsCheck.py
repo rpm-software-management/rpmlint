@@ -398,7 +398,7 @@ BAD_WORDS = {
     'xwindows': 'X'
     }
 DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
-DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$'
+DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
 
 distribution=Config.getOption("Distribution", "Mandrake Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
