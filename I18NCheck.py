@@ -42,7 +42,7 @@ CORRECT_SUBDIRS = (
 'es_PA', 'es_MX', 'et', 'eu', 'fa',
 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hi', 'hr',
 'hu', 'hy', 'ia', 'id', 'is', 'it', 'ja', 'ka', 'ko',
-'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'mt', 'nb', 'nl', 'nn', 'no', 
+'kw', 'lo', 'lt', 'lug', 'lv', 'ma', 'mk', 'ms', 'mt', 'nb', 'nl', 'nn', 'no', 
 'oc', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
 'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz',
 'vi', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_HK', 'zh_TW', 'zh_TW.Big5'
