@@ -1,3 +1,20 @@
+2003-09-05 10:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added explicit-lib-dependency check
+
+2003-09-05 10:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for explicit-lib-dependency and
+	invalid-build-requires do not report errors on debug packages
+
+2003-09-04 14:06  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added invalid-build-requires
+
+2003-08-05 21:20  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: don't depend on rpm-devel anymore
+
 2003-08-05 12:10  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.51.1-1mdk
