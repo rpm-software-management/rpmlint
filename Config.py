@@ -150,6 +150,7 @@ addFilter('W: XFree86 dangling-relative-symlink /usr/X11R6/lib/X11/xserver ../..
 
 #db
 addFilter('W: db[1-3]-devel no-provides db-devel')
+addFilter('E: db[12] incoherent-version-in-name')
 
 #emacs
 addFilter('W: emacs-X11 menu-command-not-in-package emacs')
@@ -157,6 +158,10 @@ addFilter('W: emacs-X11 menu-command-not-in-package emacs')
 #freetype
 addFilter('W: freetype-devel no-major-in-name freetype-devel')
 addFilter('freetype non-versioned-file-in-library-package')
+addFilter('E: freetype incoherent-version-in-name 2')
+
+#freetype2
+addFilter('E: freetype2 incoherent-version-in-name 6')
 
 #openh323
 addFilter('W: openh323_1-devel no-provides openh323_-devel')
