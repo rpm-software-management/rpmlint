@@ -1,3 +1,15 @@
+2002-02-09 19:51  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* setuplist.py: Sync with version 2.2.0-23mdk  of setup package
+
+2002-02-09 19:47  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.41
+
+2002-02-09 19:46  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: pychecker.sh => pychecker
+
 2002-02-07 15:06  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Pkg.py: added check_versioned_dep
