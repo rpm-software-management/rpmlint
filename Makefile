@@ -14,8 +14,8 @@ ETCDIR=/etc/rpmlint
 FILES= rpmlint *.py INSTALL README README.CVS COPYING ChangeLog Makefile config rpmlint.spec rpmdiff
 
 PACKAGE=rpmlint
-VERSION:=$(shell grep '%define *version ' $(PACKAGE).spec| cut -d ' ' -f 3)
-RELEASE:=$(shell grep '%define *release ' $(PACKAGE).spec| cut -d ' ' -f 3)
+VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
+RELEASE:=$(shell rpm -q --qf %{RELEASE} --specfile $(PACKAGE).spec)
 TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
 
 all:
@@ -27,11 +27,19 @@ clean:
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
 	cp -p rpmdiff *.py *.pyo $(DESTDIR)$(LIBDIR)
+	if [ -z "$(POLICY)" ]; then \
+	  sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py ; \
+	else \
+	  sed -e 's/@VERSION@/$(VERSION)/' -e 's/policy=None/policy="$(POLICY)"/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py; \
+	fi
 	cp -p rpmlint $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 verify:
 	pychecker *.py
+
+version:
+	@echo "$(VERSION)-$(RELEASE)"
 
 # rules to build a test rpm
 
