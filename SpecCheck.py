@@ -25,6 +25,8 @@ clean_regex=re.compile('^%clean')
 changelog_regex=re.compile('^%changelog')
 configure_start_regex=re.compile('\./configure')
 configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*')
+lib_package_regex=re.compile('^%package.*lib')
+mklibname_regex=re.compile('%mklibname')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -69,6 +71,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             changelog=0
             configure=0
             configure_cmdline=""
+            mklibname=0
+            lib=0
             
             # gather info from spec lines
             for line in spec:
@@ -127,12 +131,21 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 if not clean and clean_regex.search(line):
                     clean=1
+
+                if mklibname_regex.search(line):
+                    mklibname=1
+
+                if lib_package_regex.search(line):
+                    lib=1
                     
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
 
             if not clean:
                 printError(pkg, 'no-%clean-section')
+
+            if lib and not mklibname:
+                printError(pkg, 'lib-package-without-%mklibname')
                 
             # process gathered info
             for p in patches.keys():
@@ -188,6 +201,10 @@ options must be augmented with something like libdir=%{_libdir}.''',
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed
 by the %install section.''',
+
+'lib-package-without-%mklibname',
+'''The package name must be built using %mklibname to allow lib64 and lib32
+coexistence.''',
 
 )
 
