@@ -166,7 +166,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         provides=pkg.provides()
         for (provide_name, provide_version, provide_flags) in provides:
-            print provide_name
             if name == provide_name:
                 printWarning(pkg, "package-provides-itself")
                 break
