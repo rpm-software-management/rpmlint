@@ -19,7 +19,7 @@ import stat
 import rpm
 from Filter import *
 
-version='0.35'
+version='0.36'
 
 # Print usage information
 def usage(name):
@@ -101,7 +101,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 
 # parse options
 try:
-    (opt, args)=getopt.getopt(sys.argv[1:], 'ic:C:hVvp:aE:', ['info',
+    (opt, args)=getopt.getopt(sys.argv[1:], 'ic:C:hVvp:anE:', ['info',
                                                               'check=',
                                                               'checkdir=',
                                                               'help',
@@ -109,6 +109,7 @@ try:
                                                               'verbose',
                                                               'profile',
                                                               'all',
+                                                              'noexception',
                                                               'extractdir='])
 except getopt.error:
     print 'bad option'
@@ -155,6 +156,8 @@ for o in opt:
         Config.setOption('ExtractDir', extract_dir)
     elif o[0] == '-p' or o[0] == '--profile':
         prof=o[1]
+    elif o[0] == '-n' or o[0] == '--noexception':
+        Config.no_exception=1
     elif o[0] == '-a' or o[0] == '--all':
         all=1
     else:
