@@ -27,6 +27,8 @@ from Config import *
 
 # Standard exceptions:
 addFilter("W: rootfiles non-etc-or-var-file-marked-as-conffile /root/.*")
+addFilter("E: (rootfiles|etcskel) non-standard-dir-perm /(root|etc/skel)/tmp")
+addFilter("E: rootfiles non-standard-dir-perm (/root|/etc/skel)/tmp")
 addFilter("W: man-pages-[^ ]+ non-standard-dir-perm /var/catman[^ ]+ 0775")
 addFilter("E: filesystem non-standard-dir-perm /var/lock/subsys 0775")
 addFilter("E: filesystem non-standard-dir-perm /tmp 01777")
