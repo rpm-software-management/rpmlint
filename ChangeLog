@@ -1,3 +1,8 @@
+2004-04-30 10:53  Michael Scherer <mscherer@mandrake.org>
+
+	* TagsCheck.py: check if a package requires a interpreter in
+	  /usr/local/bin/
+
 2004-04-19 14:09  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py, DistributionCheck.py, InitScriptCheck.py, LSBCheck.py,
