@@ -205,8 +205,8 @@ SPEC file to build a valid RPM package.''',
 file and rebuild your package.''',
 
 'use-of-RPM_SOURCE_DIR',
-'''You use RPM_SOURCE_DIR in your spec file. If you have to use a directory
-for building, use RPM_BUILD_ROOT instead.''',
+'''You use RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
+use a directory for building, use RPM_BUILD_ROOT instead.''',
 
 'patch-not-applied',
 '''A patch is included in your package but was not applied. Refer to the patches
