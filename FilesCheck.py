@@ -108,8 +108,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not postun and not preun:
                         printError(pkg, "info-files-without-install-info-postun", f)
                     else:
-                        if not FilesCheck.install_info_regex.search(postun) and \
-                           not FilesCheck.install_info_regex.search(preun):
+                        if (not postun or not FilesCheck.install_info_regex.search(postun)) and \
+                           (not preun or not FilesCheck.install_info_regex.search(preun)):
                             printError(pkg, "postin-without-install-info", f)
     
                 # check chkconfig call in %post and %preun
@@ -120,7 +120,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         if not FilesCheck.chkconfig_regex.search(postin):
                             printError(pkg, "postin-without-chkconfig", f)                    
-                        
+                            
                     preun=pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
                     if not preun:
                         printError(pkg, "init-script-without-chkconfig-preun", f)
