@@ -34,6 +34,8 @@ try:
 except AttributeError:
     v304=0
 
+# utilities
+
 def grep(regex, filename):
     fd=open(filename, "r")
     ret=0
@@ -48,6 +50,28 @@ def grep(regex, filename):
     else:
         print "unable to open", filename
     return ret
+
+def shell_var_value(var, script):
+    assign_regex=re.compile(var + '\s*=\s*(.+)\s*(#.*)*$', re.MULTILINE)
+    res=assign_regex.search(script)
+    if res:
+        return substitute_shell_vars(res.group(1), script)
+    else:
+        return None
+
+var_regex=re.compile('^(.*)\${?([^}]+)}?(.*)$')
+
+def substitute_shell_vars(val, script):
+    res=var_regex.search(val)
+    if res:
+        value=shell_var_value(res.group(2), script)
+        if not value:
+            value=''
+        return res.group(1) + value + substitute_shell_vars(res.group(3), script)
+    else:
+        return val
+
+# classes representing package
 
 class Pkg:
     file_regex=re.compile("(?:\.)?([^:]+):\s+(.*)")
