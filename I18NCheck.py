@@ -42,6 +42,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
     locale_regex=re.compile("^(/usr/share/locale/([^/]+))/")
     correct_subdir_regex=re.compile("^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$")
     lc_messages_regex=re.compile("/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$")
+    mo_regex=re.compile("/usr/share/locale/.*\.mo$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "I18NCheck")
@@ -51,7 +52,8 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 	locales=[]			# list of locales for this packages
 
 	i18n_tags = pkg[HEADER_I18NTABLE]
-
+        i18n_files = pkg.langFiles()
+        
 	for i in i18n_tags:
 	    try:
 		correct=INCORRECT_LOCALES[i]
@@ -82,7 +84,11 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                 subdir=res.group(1)
                 if not subdir in CORRECT_SUBDIRS:
                     printError(pkg, "invalid-lc-messages-dir", f)
-                
+
+            if I18NCheck.mo_regex.search(f):
+                if pkg.fileLang(f) == '':
+                    printWarning(pkg, "file-not-in-%lang", f)
+                    
 # Create an object to enable the auto registration of the test
 check=I18NCheck()
 
