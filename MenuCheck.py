@@ -80,6 +80,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
     needs=re.compile("needs=(\"([^\"]+)\"|([^ \t\"]+))")
     section=re.compile("section=(\"([^\"]+)\"|([^ \t\"]+))")
     command=re.compile("command=\"?([^\" ]+)")
+    icons=re.compile("icon=\"?([^\" ]+)")
     valid_sections=Config.getOption("ValidMenuSections", DEFAULT_VALID_SECTIONS)
     update_menus=re.compile("update-menus")
 
@@ -169,6 +170,17 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, "menu-command-not-in-package", command)
                     else:
                         printInfo(pkg, "unable-to-parse-menu-command", line)
+
+                    res=MenuCheck.icons.search(line)
+                    if res:
+                        icon=res.group(1)
+                        try:
+                            if icon[0] == '/':
+                                files[icon]
+                        except KeyError:
+                            printError(pkg, "specified-icon-not-in-package", icon)
+                    else:
+                        printWarning(pkg, "no-icon-in-the-package")
                         
 # Create an object to enable the auto registration of the test
 check=MenuCheck()
