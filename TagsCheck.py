@@ -77,7 +77,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	    print "E:", pkg.name, "no-group-tag"
 	else:
 	    if not group in VALID_GROUPS:
-		print "W: non-standard-group", group
+		print "W: ", pkg.name, "non-standard-group", group
 	
 	if not pkg[rpm.RPMTAG_CHANGELOGTEXT]:
 	    print "E:", pkg.name, "no-changelogtext-tag"
