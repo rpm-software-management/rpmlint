@@ -26,6 +26,7 @@ import Config
 # XFree
 # xine 
 
+executable_re=re.compile('^(/usr)?/(s?bin|games)/\S+')
 simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-_]*$');
 
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
@@ -34,11 +35,12 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "NamingPolicyCheck")
         
-    def add_check(self,pkg_name,name_re,file_re):
+    def add_check(self,pkg_name,name_re,file_re,exception):
         c={}
         c['pkg_name']=pkg_name
         c['name_re']=re.compile(name_re)
         c['file_re']=re.compile(file_re)
+	c['exception']=exception
         self.checks_.append(c)
         if Config.info:
             if simple_naming_policy_re.search(name_re):
@@ -57,9 +59,21 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         if not list:
             return
         try:
+	    # check for binaries first
+	    executables=0
+	    for f in list:
+		if executable_re.search(f):
+		    executables=1
+		    break
+
+            # check for files then
             for c in self.checks_:
+		exception=0
+		if c['exception'] and executables:
+		    exception=1
+
                 for f in list:
-                    if c['file_re'].search(f) and not c['name_re'].search(pkg[rpm.RPMTAG_NAME]):
+		    if c['file_re'].search(f) and not c['name_re'].search(pkg[rpm.RPMTAG_NAME]) and not exception:
                         raise 'naming-policy-not-applied'
         except 'naming-policy-not-applied':	
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
@@ -78,18 +92,23 @@ check=NamingPolicyCheck()
 # third is the path of the file that should contains a package to be related to the naming scheme.
 #   ex: xmms plugin are put under /usr/lib/xmms/
 #
+# fourth is a boolean for excepting packages with any executable in path of the naming scheme
+#   ex: a perl package with files both in /usr/bin and in /usr/lib/perl5 can be either a module with exemple script, of a perl programs with some personal modules
+#
+# the module is far from being perfect since you need to check this file for the naming file.
+#
 # the module is far from being perfect since you need to check this file for the naming file.
 # if somone as a elegant solution, I will be happy to implement and test it.
 
 
-check.add_check('xmms', '^xmms-', '^/usr/lib/xmms/')
-check.add_check('python', '^python-', '^/usr/lib/python[1-9](-[1-9])?')
-check.add_check('perl5', '^perl-', '^/usr/lib/perl5/vendor_perl')
-check.add_check('apache2', '^apache2-mod_', '^/usr/lib/apache2-')
-check.add_check('fortune', '^fortune-', '^/usr/share/games/fortunes/')
-check.add_check('php', '^php-', '/usr/lib/php/extensions/')
-check.add_check('ruby', '^ruby-', '/usr/lib/ruby/[1-9](-[1-9])?/')
-check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/')
+check.add_check('xmms', '^xmms-', '^/usr/lib/xmms/', 0)
+check.add_check('python', '^python-', '^/usr/lib/python[1-9](-[1-9])?', 1)
+check.add_check('perl5', '^perl-', '^/usr/lib/perl5/vendor_perl', 1)
+check.add_check('apache2', '^apache2-mod_', '^/usr/lib/apache2-', 0)
+check.add_check('fortune', '^fortune-', '^/usr/share/games/fortunes/', 0)
+check.add_check('php', '^php-', '/usr/lib/php/extensions/', 1)
+check.add_check('ruby', '^ruby-', '/usr/lib/ruby/[1-9](-[1-9])?/', 1)
+check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/', 1)
 
 # these exception should be added 
 # apache2 => apache2-devel
