@@ -15,7 +15,13 @@ import re
 import os
 import commands
 
+DEFAULT_VALID_SHELLS=('/bin/sh',
+                      '/bin/bash',
+                      '/usr/bin/perl',
+                      )
+
 extract_dir=Config.getOption('ExtractDir', '/tmp')
+valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 
 def incorrect_shell_script(shellscript):
     tmpfile = "%s/.bash-script.%d" % (extract_dir, os.getpid())
@@ -47,6 +53,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
             script = pkg[tag[0]]
             prog = pkg[tag[1]]
             if script:
+                if prog:
+                    if not prog in valid_shells:
+                        printError(pkg, "invalid-shell-in-" + tag[2], prog)
                 if prog == "/bin/sh" or prog == "/bin/bash":
                     if PostCheck.braces_regex.search(script):
                         printWarning(pkg, "percent-in-" + tag[2])
@@ -54,7 +63,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "spurious-bracket-in-" + tag[2])
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
-
+                        
 # Create an object to enable the auto registration of the test
 check=PostCheck()
 
