@@ -1,3 +1,8 @@
+2000-07-25  Pixel  <pixel@mandrakesoft.com>
+
+	* config: add exception for some devel packages, updated the
+	filter for setuid perl's
+
 2000-07-19  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.py rpmlint.spec ChangeLog:
