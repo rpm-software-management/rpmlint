@@ -9,7 +9,7 @@
 
 %define name rpmlint
 %define version 0.48
-%define release 1mdk
+%define release 2mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -51,6 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Fri Jan 17 2003 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.48-2mdk
+- BinariesCheck.py: Add lib64 paths
+- FilesCheck.py: Errour out about outside-libdir-files only if it
+  concerns a library package.  This is heuristically determined on the
+  package name as '^(lib|.+-libs)'.
+
 * Fri Jan 17 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.48-1mdk
  o rpmlint.py: added a way to load an alternative config file (using -f).
  o SpecCheck.py: * added lib-package-without-%%mklibname
