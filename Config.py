@@ -389,4 +389,10 @@ addFilter('pwiki non-standard-dir-perm /var/www/pwiki/.* 0750')
 #fetchmail
 addFilter('E: fetchmail-daemon non-readable /etc/fetchmailrc 0600')
 
+#iptable
+addFilter('E: iptables shared-lib-without-dependency-information /lib/iptables/')
+
+#Starting from Mandrake Linux 8.1 we let standard menu files in the packages
+addFilter('old-menu-entry')
+
 # Config.py ends here
