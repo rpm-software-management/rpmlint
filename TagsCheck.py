@@ -374,6 +374,17 @@ BAD_WORDS = {
     "xwindows": "X"
     }
 
+VALID_GROUPS=Config.getOption("ValidGroups", DEFAULT_VALID_GROUPS)
+VALID_LICENSES=Config.getOption("ValidLicenses", DEFAULT_VALID_LICENSES)
+packager_regex=re.compile(Config.getOption("Packager", DEFAULT_PACKAGER))
+basename_regex=re.compile("/?([^/]+)$")
+changelog_version_regex=re.compile("[^>]([^ >]+)$")
+release_ext=Config.getOption("ReleaseExtension", "mdk")
+extension_regex=release_ext and re.compile(release_ext + "$")
+use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
+devel_regex=re.compile("(.*)-devel")
+capital_regex=re.compile('[0-9A-Z]')
+
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
         for word in re.split('[^a-z]+', string.lower(seq)):
@@ -389,14 +400,6 @@ def spell_check(pkg, str, tagname):
                     pass
 
 class TagsCheck(AbstractCheck.AbstractCheck):
-    basename_regex=re.compile("/?([^/]+)$")
-    changelog_version_regex=re.compile("[^>]([^ >]+)$")
-    valid_groups=Config.getOption("ValidGroups", DEFAULT_VALID_GROUPS)
-    valid_licenses=Config.getOption("ValidLicenses", DEFAULT_VALID_LICENSES)
-    release_ext=Config.getOption("ReleaseExtension", "mdk")
-    extension_regex=release_ext and re.compile(release_ext + "$")
-    use_version_in_changelog=Config.getOption("UseVersionInChangelog", 1)
-    packager=re.compile(Config.getOption("Packager", DEFAULT_PACKAGER))
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "TagsCheck")
@@ -406,19 +409,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
 	    printError(pkg, "no-packager-tag")
-        elif not TagsCheck.packager.search(packager):
+        elif not packager_regex.search(packager):
             printWarning(pkg, "invalid-packager", packager)
             
-	name=pkg[rpm.RPMTAG_NAME]
-	if not name:
-	    printError(pkg, "no-name-tag")
-	elif name:
-	    res=TagsCheck.basename_regex.search(pkg.filename)
-	    if res:
-		basename=res.group(1)
-		if name != basename[0:len(name)]:
-		    printWarning(pkg, "non-coherent-filename", name, basename)
-
 	version=pkg[rpm.RPMTAG_VERSION]
 	if not version:
 	    printError(pkg, "no-version-tag")
@@ -426,9 +419,35 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         release=pkg[rpm.RPMTAG_RELEASE]
 	if not release:
 	    printError(pkg, "no-release-tag")
-        elif TagsCheck.release_ext and not TagsCheck.extension_regex.search(release):
+        elif release_ext and not extension_regex.search(release):
             printWarning(pkg, "not-standard-release-extension", release)
 
+	name=pkg[rpm.RPMTAG_NAME]
+	if not name:
+	    printError(pkg, "no-name-tag")
+	elif name:
+	    res=basename_regex.search(pkg.filename)
+	    if res:
+		basename=res.group(1)
+		if name != basename[0:len(name)]:
+		    printWarning(pkg, "non-coherent-filename", name, basename)
+            res=devel_regex.search(name)
+            if res:
+                base=res.group(1)
+                dep=None
+                for d in pkg.requires() + pkg.prereq():
+                    if d[0] == base:
+                        dep=d
+                        break
+                if not dep:
+                    printWarning(pkg, "no-dependency-on", base)
+                elif version:
+                    if dep[1][:len(version)] != version:
+                        if dep[1] != "":
+                            printWarning(pkg, "incoherent-version-dependency-on", base, dep[1], version)
+                        else:
+                            printWarning(pkg, "no-version-dependency-on", base, version)
+                
 	summary=pkg[rpm.RPMTAG_SUMMARY]
 	if not summary:
 	    printError(pkg, "no-summary-tag")
@@ -437,6 +456,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if string.find(summary, "\n") != -1:
                 printError(pkg, "summary-on-multiple-lines")
                 print summary
+            if not capital_regex.search(summary[0]):
+                printWarning(pkg, 'summary-not-capitalized', summary)
 
         description=pkg[rpm.RPMTAG_DESCRIPTION]
 	if not description:
@@ -448,14 +469,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	if not pkg[rpm.RPMTAG_GROUP]:
 	    printError(pkg, "no-group-tag")
 	else:
-	    if not group in TagsCheck.valid_groups:
+	    if not group in VALID_GROUPS:
 		printWarning(pkg, "non-standard-group", group)
 
 	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
 	    printError(pkg, "no-changelogname-tag")
-        elif TagsCheck.use_version_in_changelog:
-            ret=TagsCheck.changelog_version_regex.search(changelog[0])
+        elif use_version_in_changelog:
+            ret=changelog_version_regex.search(changelog[0])
             if not ret:
                 printWarning(pkg, "no-version-in-last-changelog")
             elif version and release:
@@ -472,7 +493,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not license:
             printError(pkg, "no-license")
         else:
-            if not license in TagsCheck.valid_licenses:
+            if not license in VALID_LICENSES:
                 printWarning(pkg, "invalid-license", license)
 
 check=TagsCheck()
