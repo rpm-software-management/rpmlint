@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.66
+%define version 0.67
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -53,6 +53,26 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Fri Feb 11 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.67-1mdk
+- SpecCheck.py: added hardcoded-packager-tag, hardcoded-prefix-tag
+  and redundant-prefix-tag checks (Guillaume Rousse, bug #12725).
+- FilesCheck.py: added wrong-script-interpreter,
+  non-executable-script, script-without-shellbang,
+  wrong-script-end-of-line-encoding and
+  wrong-file-end-of-line-encoding. (Guillaume Rousse, bug #12725).
+- TagsCheck.py: o added the 'Graphical desktop/Xfce' group (bug #13141).
+                o added Design Sciences License (Sébastien Savarin)
+  fixed Lucent Public License
+- rpmdiff: filter the provides on name-version-release for the
+  package itself.
+- Pkg.py: Make check_versioned_dep ignore epoch when comparing
+  versions (patch by Michael Scherer)
+- Config.py: o do not complain about explicit dependancy on liblua5
+  (else b/c of buggy lua, lua users accepted either lua4 or lua5
+  thus resulting in linkinkg issues at runtime)  (Thierry)
+             o update drakconf rule (Thierry)
+             o add exceptions for dkms packages
+
 * Tue Jan 25 2005 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.66-1mdk
 - exceptions for %%multiarch policy
 - FilesCheck.py: Add a new warning for perl modules installed under
