@@ -475,7 +475,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
 	    printError(pkg, 'no-changelogname-tag')
-        elif use_version_in_changelog:
+        elif use_version_in_changelog and not pkg.isSource():
             ret=changelog_version_regex.search(changelog[0])
             if not ret:
                 printWarning(pkg, 'no-version-in-last-changelog')
