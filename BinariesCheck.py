@@ -110,11 +110,23 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         exec_files=[]
         has_lib=[]
         version=None
-        
+        binary=0
+        binary_in_usr_lib=0
+        has_usr_lib_file=0
+
+        for f in files:
+            if usr_lib_regex.search(f):
+                has_usr_lib_file=f
+                break
+            
 	for i in info:
 	    is_binary=binary_regex.search(i[1])
 
 	    if is_binary:
+                binary=binary+1
+                if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
+                    binary_in_usr_lib=1
+                
 		if arch == 'noarch':
 		    printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
 		else:
@@ -218,7 +230,12 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
             if version and version != -1 and string.find(pkg.name, version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)
-                
+        if arch != 'noarch':
+            if binary == 0:
+                printError(pkg, 'no-binary')
+        if has_usr_lib_file and not binary_in_usr_lib:
+            printError(pkg, 'only-non-binary-in-usr-lib')
+        
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()
 
@@ -292,8 +309,17 @@ themselves.''',
 'incoherent-version-in-name',
 '''The package name should contain the major version of the library.''',
 
+'la-file-with-invalid-dir-reference',
+'The .la file contains a reference to /tmp or /home.',
+
 'invalid-directory-reference',
 'This file contains a reference to /tmp or /home.',
+
+'no-binary',
+'''The package should be of the noarch architecture because it doesn't contain any binary.''',
+
+'only-non-binary-in-usr-lib',
+'''There are only non binary files in /usr/lib so they should be in /usr/share.''',
 
 )
 
