@@ -182,7 +182,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # process gathered info
             for p in patches.keys():
                 if p in applied_patches_ifarch:
-                    printError(pkg, "%ifarch-applied-patch", "Patch" + p + ":", patches[p])
+                    printWarning(pkg, "%ifarch-applied-patch", "Patch" + p + ":", patches[p])
                 if p not in applied_patches:
                     if p == "" and "0" in applied_patches:
                         continue
