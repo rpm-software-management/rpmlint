@@ -126,7 +126,7 @@ DEFAULT_VALID_LICENSES = (
     'Jabber Open Source License'
     )
 
-DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com'
+DEFAULT_PACKAGER = '@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakesoft.com'
 
 BAD_WORDS = {
     'alot': 'a lot',
