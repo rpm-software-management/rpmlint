@@ -164,7 +164,8 @@ normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$')
 perl_regex=re.compile('^/usr/lib/perl5/(?:site_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
 cross_compile_regex=re.compile('-mandrake-linux-[^/]+$')
-perl_version_trick=Config.getOption('PerlVerionTrick', 1)
+perl_version_trick=Config.getOption('PerlVersionTrick', 1)
+log_regex=re.compile('^/var/log/[^/]+$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -269,6 +270,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             # normal file check
             if stat.S_ISREG(mode):
 
+                if log_regex.search(f):
+                    if user != 'root':
+                        printError(pkg, 'non-root-user-log-file', f, user)
+                    if group != 'root':
+                        printError(pkg, 'non-root-group-log-file', f, group)
+                        
                 if doc_regex.search(f) and not f in doc_files:
                     printError(pkg, 'not-listed-as-documentation', f)
                 #elif cross_compile_regex.search(f):
@@ -622,6 +629,13 @@ email to flepied@mandrakesoft.com to add it to the list of exceptions in the nex
 
 'incoherent-logrotate-file',
 '''Your logrotate file should be named /etc/logrotate.d/<package name>.''',
+
+'non-root-user-log-file',
+'''If you need non root log file, just create a subdir in /var/log and put your files inside.''',
+
+'non-root-group-log-file',
+'''If you need non root log file, just create a subdir in /var/log and put your files inside.''',
+
 
 )
 
