@@ -1,3 +1,7 @@
+2004-04-30 11:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.59-1mdk
+
 2004-04-30 10:53  Michael Scherer <mscherer@mandrake.org>
 
 	* TagsCheck.py: check if a package requires a interpreter in
