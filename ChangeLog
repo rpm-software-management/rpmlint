@@ -1,3 +1,50 @@
+2000-08-25 11:13  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.20
+
+2000-08-25 11:04  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added InitScriptCheck.
+
+2000-08-25 11:04  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* InitScriptCheck.py: first version.
+
+2000-08-25 10:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* config: added exceptions for InitScriptCheck.
+
+2000-08-25 10:45  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* README: added InitScriptCheck description.
+
+2000-08-25 10:42  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check where a script is present that the shell is
+	valid.
+
+2000-08-25 10:39  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: moved /etc/rc.d/init.d checks to InitScriptCheck.
+
+2000-08-25 10:38  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* ConfigCheck.py: report warnings for app-defaults only in
+	/usr/X11R6/lib/X11/app-defaults.
+
+2000-08-25 10:32  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* BinariesCheck.py: report the rpath warning if directory isn't a
+	sub-directory of /usr/lib/.
+
+2000-08-18 08:03  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: I18NCheck is back.
+
+2000-08-18 07:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.spec: 0.19
+
 2000-08-18 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.py: 0.19
