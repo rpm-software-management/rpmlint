@@ -28,14 +28,14 @@ class BinaryInfo:
     unrecognized_regex=re.compile('^objdump: (.*?): File format not recognized$')
     non_pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     
-    def __init__(self, path):
+    def __init__(self, path, file):
 	self.needed=[]
 	self.rpath=[]
 	self.comment=0
 	self.dynsyms=0
 	self.soname=0
         self.non_pic=1
-        
+
 	res=commands.getoutput('objdump --headers --private-headers -T ' + path)
 	if res:
 	    for l in string.split(res, '\n'):
@@ -56,7 +56,7 @@ class BinaryInfo:
 		    else:
 			r=BinaryInfo.unrecognized_regex.search(l)
 			if r:
-			    sys.stderr.write('file format not recognized for %s\n.' % (r.group(1)))
+			    sys.stderr.write('file format not recognized for %s in %s\n' % (r.group(1), file))
 			    #sys.exit(1)
 		    r=BinaryInfo.soname_regex.search(l)
                     if r:
@@ -86,6 +86,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
     system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
     usr_lib_regex=re.compile('^/usr/lib/')
+    bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, 'BinariesCheck')
@@ -98,6 +99,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         info=pkg.getFilesInfo()
 	arch=pkg[rpm.RPMTAG_ARCH]
         files=pkg.files()
+        exec_files=[]
+        has_lib=0
         
 	for i in info:
 	    is_binary=BinariesCheck.binary_regex.search(i[1])
@@ -122,10 +125,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 			    printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
 			# inspect binary file
-			bin_info=BinaryInfo(pkg.dirName()+i[0])
+			bin_info=BinaryInfo(pkg.dirName()+i[0], i[0])
 
                         # so name in library
                         if BinariesCheck.so_regex.search(i[0]):
+                            has_lib=1
                             if not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
                             else:
@@ -153,9 +157,13 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     break
 
 			# statically linked ?
+                        is_exec=BinariesCheck.executable_regex.search(i[1])
 			if BinariesCheck.shared_object_regex.search(i[1]) or \
-			   BinariesCheck.executable_regex.search(i[1]):
+			   is_exec:
 
+                            if is_exec and BinariesCheck.bin_regex.search(i[0]):
+                                exec_files.append(i[0])
+                                
 			    if not bin_info.needed:
 				if BinariesCheck.shared_object_regex.search(i[1]):
 				    printWarning(pkg, 'shared-lib-without-dependency-information', i[0])
@@ -174,7 +182,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 					    printWarning(pkg, 'library-not-linked-against-libc', i[0])
 					else:
 					    printWarning(pkg, 'program-not-linked-against-libc', i[0])
-			    
+        if has_lib and exec_files != []:
+            for f in exec_files:
+                printError(pkg, 'executable-in-library-package', f)
+                
 # Create an object to enable the auto registration of the test
 check=BinariesCheck()
 
