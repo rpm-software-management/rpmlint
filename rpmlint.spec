@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.62
+%define version 0.63
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -53,6 +53,38 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Sun Dec  5 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.63-1mdk
+- Config.py: o added exceptions for kernel-source.* on
+             devel-file-in-non-devel-package reports.
+             o cleanup exceptions (Michael Scherer)
+             o some code factorisation
+             o fix addCheck ( was not useable since it was a tuple
+             instead-f a list ) (Michael)
+
+- FilesCheck.py: o added dir-or-file-in-usr-local (Michael Scherer).
+                 o Minor nit in the regexp that checks that perl
+                 module rpms should come without the source tarball
+                 MANIFEST (Rafael).
+
+- BinariesCheck.py: allow soname in the form libfoo-X.Y.Z.so too
+  (Guillaume Rousse) [bug #12522].
+
+- NamingPolicyCheck.py: o make exception to the
+  python/perl/ruby/ocaml naming policy when the package contains
+  executable (Guillaume Rousse) [bug #12521].
+                        o ocaml naming policy (Guillaume Rousse)
+
+- I18NCheck.py: Don't tag .mo in webapps (Guillaume Rousse) [bug
+  #12186]
+
+- TagsCheck.py: added summary-ended-with-dot (Guillaume Rousse)
+  [bug #12520]
+
+- rpmlint.py: exit-n C-c (Michael Scherer)
+
+- PostCheck.py: doc for postin-without-ghost-file-creation (Pascal
+  Terjan)
+
 * Fri Aug 27 2004 Frederic Crozat <fcrozat@mandrakesoft.com> 0.62-1mdk
 - MenuCheck.py: Fix missing capitalization
 
