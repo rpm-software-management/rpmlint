@@ -125,7 +125,8 @@ STANDARD_DIRS=(
     '/var/run',
     '/var/spool',
     '/var/spool/mail',
-    '/var/tmp'
+    '/var/tmp',
+    '/etc/profile.d'
     )
 
 DEFAULT_GAMES_GROUPS='Games'
