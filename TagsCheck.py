@@ -570,6 +570,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if url and url != 'none':
             if not url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
+        else:
+            printWarning(pkg, 'no-url-tag')
 
         obs=map(lambda x: x[0], pkg.obsoletes())
         provs=map(lambda x: x[0], pkg.provides())
