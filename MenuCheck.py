@@ -60,7 +60,7 @@ DEFAULT_VALID_SECTIONS=(
     'System/Configuration/Printing',
     'System/Configuration/Users',
     'System/Configuration/Other',
-    'System/File tools',
+    'System/File Tools',
     'System/Monitoring',
     'System/Session/Windowmanagers',
     'System/Terminals',
