@@ -32,7 +32,7 @@ EXCEPTION_DIRS=('C', 'POSIX', 'iso88591', 'iso8859')
 
 class I18NCheck(AbstractCheck.AbstractCheck):
     locale_regex=re.compile("^(/usr/share/locale/([^/]+))/")
-    correct_subdir_regex=re.compile("^([a-z][a-z]($|_[A-Z][A-Z])(\..*$)?)")
+    correct_subdir_regex=re.compile("^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "I18NCheck")
@@ -56,15 +56,13 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 		locale=res.group(2)
 		# checks the same locale only once
 		if not locale in locales:
-		    #print pkg.name, locale
 		    locales.append(locale)
 		    res2=I18NCheck.correct_subdir_regex.search(locale)
 		    if not res2:
 			if not locale in EXCEPTION_DIRS:
 			    printError(pkg, "incorrect-locale-subdir", f)
 		    else:
-			locale_name = res2.group(1)
-			#print "name=", locale_name
+			locale_name = res2.group(2)
 			try:
 			    correct=INCORRECT_LOCALES[locale_name]
 			    printError(pkg, "incorrect-locale-" + correct, f)
