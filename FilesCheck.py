@@ -153,6 +153,7 @@ sofile_regex=re.compile('/lib(64)?/[^/]+\.so$')
 devel_regex=re.compile('-(devel|source)$')
 lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
+depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
 info_regex=re.compile('^/usr/share/info')
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
 perl_temp_file=re.compile('.*perl.*(bs|\.packlist)$')
@@ -162,8 +163,9 @@ games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GR
 source_regex=re.compile('(.c|.cc|.cpp|.ui)$')
 dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
 logrotate_regex=re.compile('^/etc/logrotate.d/(.*)')
-kernel_modules_regex=re.compile('^/lib/modules/')
-kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|secure|BOOT)?')
+module_rpms_ok=Config.getOption('KernelModuleRPMsOK', 1)
+kernel_modules_regex=re.compile('^/lib/modules/(2.[23456].[0-9]+[^/]*?)/')
+kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
 normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$|/__init__.py$')
 perl_regex=re.compile('^/usr/lib/perl5/(?:site_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
@@ -198,7 +200,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         deps=pkg.requires()+pkg.prereq()
         prein=pkg[rpm.RPMTAG_PREIN]
         lib_package=lib_package_regex.search(pkg.name)
-
+        is_kernel_package=kernel_package_regex.search(pkg.name)
+        
         # erport these errors only once
         perl_dep_error=0
         python_dep_error=0
@@ -220,7 +223,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    if not group in Config.STANDARD_GROUPS:
 		printError(pkg, 'non-standard-gid', f, group)
 
-            if kernel_modules_regex.search(f) and not kernel_package_regex.search(pkg.name):
+            if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
                 
             if tmp_regex.search(f):
@@ -317,7 +320,28 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         if not ldconfig_regex.search(postun):
                             printError(pkg, 'postun-without-ldconfig', f)
-                    
+                
+                # check depmod call in %post and %postun
+                res=not is_kernel_package and kernel_modules_regex.search(f)
+                if res:
+                    kernel_version=res.group(1)
+                    kernel_version_regex=re.compile('depmod -a.*-F /boot/System.map-' + kernel_version + '.*' + kernel_version, re.MULTILINE | re.DOTALL)
+                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    if not postin or not depmod_regex.search(postin):
+                        printError(pkg, 'module-without-depmod-postin', f)
+                    # check that we run depmod on the right kernel
+                    else:
+                        if not kernel_version_regex.search(postin):
+                            printError(pkg, 'postin-with-wrong-depmod', f)
+
+                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                    if not postun or not depmod_regex.search(postun):
+                        printError(pkg, 'module-without-depmod-postun', f)
+                    # check that we run depmod on the right kernel
+                    else:
+                        if not kernel_version_regex.search(postun):
+                            printError(pkg, 'postun-with-wrong-depmod', f)
+                
                 # check install-info call in %post and %postun
                 if info_regex.search(f):
                     postin=pkg[rpm.RPMTAG_POSTIN]
@@ -672,7 +696,20 @@ and 32 bits versions of the package to coexist.''',
 
 'hidden-file-or-dir',
 '''The file or directory is hidden. You should see if this is normal, 
-and delete it if needed''',
+and delete it if needed.''',
+
+'module-without-depmod-postin',
+'''This package contains a kernel module but provides no call to depmod in %post.''',
+
+'postin-with-wrong-depmod',
+'''This package contains a kernel module but its %post calls depmod for the wrong kernel.''',
+
+'module-without-depmod-postun',
+'''This package contains a kernel module but provides no call to depmod in %postun.''',
+
+'postun-with-wrong-depmod',
+'''This package contains a kernel module but its %postun calls depmod for the wrong kernel.''',
+
 )
 
 # FilesCheck.py ends here
