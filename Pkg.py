@@ -52,7 +52,7 @@ def grep(regex, filename):
 class Pkg:
     file_regex=re.compile("\.([^:]+):\s+(.*)")
 
-    def __init__(self, filename, dirname):
+    def __init__(self, filename, dirname, header=None):
 	self.filename=filename
 	self.extracted=0
 	self.dirname=dirname
@@ -62,12 +62,17 @@ class Pkg:
 	self._ghost_files=None
 	self._files=None
 	self.required=None
+
+        if header:
+            self.header=header
+            self.is_source=0
+        else:
+            # Create a package object from the file name
+            fd=os.open(filename, os.O_RDONLY)
+            (self.header, self.is_source)=rpm.headerFromPackage(fd)
+            os.close(fd)
+
         self._lang_files=None
-        
-	# Create a package object from the file name
-	fd=os.open(filename, os.O_RDONLY)
-	(self.header, self.is_source)=rpm.headerFromPackage(fd)
-	os.close(fd)
 
 	self.name=self.header[rpm.RPMTAG_NAME]
 
