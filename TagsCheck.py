@@ -401,12 +401,12 @@ BAD_WORDS = {
     }
 DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[^ ]*Linux'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
-DEFAULT_INVALID_REQUIRES=('is', 'not', 'owned', 'by', 'any', 'package')
+DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', 'any', 'package', 'libsafe\.so\.')
 
 distribution=Config.getOption("Distribution", "Mandrake Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
-INVALID_REQUIRES=Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES)
+INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
 packager_regex=re.compile(Config.getOption('Packager', DEFAULT_PACKAGER))
 basename_regex=re.compile('/?([^/]+)$')
 changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
@@ -466,8 +466,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         deps=pkg.requires() + pkg.prereq()
         for d in deps:
-            if d[0] in INVALID_REQUIRES:
-                printError(pkg, 'invalid-dependency', d[0])
+            for r in INVALID_REQUIRES:
+                if r.search(d[0]):
+                    printError(pkg, 'invalid-dependency', d[0])
 
 	name=pkg[rpm.RPMTAG_NAME]
 	if not name:
