@@ -7,8 +7,10 @@
 # Purpose	: Check a binary package to see if some rpm tags are present
 #############################################################################
 
+from Filter import *
 import AbstractCheck
 import rpm
+import string
 
 VALID_GROUPS=(
     "Amusements/Games",
@@ -52,35 +54,36 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 	    return
 	
 	if not pkg[rpm.RPMTAG_PACKAGER]:
-	    print "E:", pkg.name, "no-packager-tag"
+	    printError(pkg, "no-packager-tag")
 
 	if not pkg[rpm.RPMTAG_NAME]:
-	    print "E:", pkg.name, "no-name-tag"
+	    printError(pkg, "no-name-tag")
 
 	if not pkg[rpm.RPMTAG_VERSION]:
-	    print "E:", pkg.name, "no-version-tag"
+	    printError(pkg, "no-version-tag")
 
 	if not pkg[rpm.RPMTAG_RELEASE]:
-	    print "E:", pkg.name, "no-release-tag"
+	    printError(pkg, "no-release-tag")
 
-	if not pkg[rpm.RPMTAG_SUMMARY]:
-	    print "E:", pkg.name, "no-summary-tag"
-
-	if pkg[rpm.RPMTAG_SOURCE]:
-	    print "I:", pkg.name, "source-tag", pkg[rpm.RPMTAG_SOURCE]
-
+	summary=pkg[rpm.RPMTAG_SUMMARY]
+	if not summary:
+	    printError(pkg, "no-summary-tag")
+	elif string.find(summary, "\n") != -1:
+	    printError(pkg, "summary-on-multiple-lines")
+	    print summary
+	    
 	if not pkg[rpm.RPMTAG_DESCRIPTION]:
-	    print "E:", pkg.name, "no-description-tag"
+	    printError(pkg, "no-description-tag")
 	    
 	group=pkg[rpm.RPMTAG_GROUP]
 	if not pkg[rpm.RPMTAG_GROUP]:
-	    print "E:", pkg.name, "no-group-tag"
+	    printError(pkg, "no-group-tag")
 	else:
 	    if not group in VALID_GROUPS:
-		print "W: ", pkg.name, "non-standard-group", group
+		printWarning(pkg, "non-standard-group", group)
 	
 	if not pkg[rpm.RPMTAG_CHANGELOGTEXT]:
-	    print "E:", pkg.name, "no-changelogtext-tag"
+	    printError(pkg, "no-changelogtext-tag")
 
 check=TagsCheck()
 
