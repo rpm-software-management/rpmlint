@@ -15,7 +15,6 @@ import re
 import stat
 import string
 import os
-from setuplist import *
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS=(
@@ -194,6 +193,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	doc_files=pkg.docFiles()
         req_names=pkg.req_names()
         deps=pkg.requires()+pkg.prereq()
+        prein=pkg[rpm.RPMTAG_PREIN]
 
         # erport these errors only once
         perl_dep_error=0
@@ -209,9 +209,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    group=enreg[2]
             size=enreg[4]
             
-	    if not user in STANDARD_USERS:
+	    if not user in Config.STANDARD_USERS:
 		printError(pkg, 'non-standard-uid', f, user)
-	    if not group in STANDARD_GROUPS:
+	    if not group in Config.STANDARD_GROUPS:
 		printError(pkg, 'non-standard-gid', f, group)
 
             if kernel_modules_regex.search(f) and not kernel_package_regex.search(pkg.name):
