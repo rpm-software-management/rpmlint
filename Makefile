@@ -26,9 +26,8 @@ clean:
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
-	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p rpmdiff *.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp -p rpmlint $(DESTDIR)$(BINDIR)
-	cp -p rpmdiff $(DESTDIR)$(BINDIR)/rpmdiff.py
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
 verify:
