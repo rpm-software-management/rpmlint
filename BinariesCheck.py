@@ -63,7 +63,8 @@ class BinaryInfo:
 			self.soname=r.group(1)
 
 path_regex=re.compile('(.*/)([^/]+)')
-versioned_dir_regex=re.compile('[0-9]')
+numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
+versioned_dir_regex=re.compile('[^.][0-9]')
 binary_regex=re.compile('ELF|current ar archive')
 usr_share=re.compile('^/usr/share/')
 etc=re.compile('^/etc/')
@@ -193,7 +194,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 for f in exec_files:
                     printError(pkg, 'executable-in-library-package', f)
             for f in files.keys():
-                if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(f):
+                res=numeric_dir_regex.search(f)
+                fn=res and res.group(1) or f
+                if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
                     
 # Create an object to enable the auto registration of the test
