@@ -59,7 +59,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
     shared_object_regex=re.compile("shared object")
     executable_regex=re.compile("executable")
     libc_regex=re.compile("libc\.")
-    
+    sparc_regex=re.compile("SPARC32PLUS|SPARC V9|UltraSPARC")
+
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "BinariesCheck")
 
@@ -84,6 +85,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 		    # in /etc ?
 		    if BinariesCheck.etc.search(i[0]):
 			printError(pkg, "binary-in-etc", i[0])
+
+                    if arch == 'sparc' and BinariesCheck.sparc_regex.search(i[1]):
+                        printError(pkg, "non-sparc32-binary", i[0])
 
 		    # stripped ?
 		    if not BinariesCheck.unstrippable.search(i[0]):
