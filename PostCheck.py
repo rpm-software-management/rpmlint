@@ -101,12 +101,14 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if ghost_files:
             postin=pkg[rpm.RPMTAG_POSTIN]
             prein=pkg[rpm.RPMTAG_PREIN]
-            if not postin and not prein:
+            triggerin=pkg[rpm.RPMTAG_TRIGGERIN]
+            if not postin and not prein and not triggerin:
                 printWarning(pkg, 'ghost-files-without-postin')
             else:
                 for f in ghost_files:
                     if (not postin or string.find(postin, f) == -1) and \
-                       (not prein or string.find(prein, f) == -1):
+                       (not prein or string.find(prein, f) == -1) and \
+                       (not triggerin or string.find(triggerin, f) == -1):
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
@@ -169,36 +171,40 @@ check=PostCheck()
 if Config.info:
     addDetails(
 'one-line-command-in-%post',
-'''You must use %post -p <command> instead of using:
+'''You should use %post -p <command> instead of using:
 
 %post
 <command>
 
-It will avoid the fork of a shell interpreter to execute your command.''',
+It will avoid the fork of a shell interpreter to execute your command as
+well as allows rpm to automatically mark the dependency on your command.''',
 
 'one-line-command-in-%postun',
-'''You must use %postun -p <command> instead of using:
+'''You should use %postun -p <command> instead of using:
 
 %postun
 <command>
 
-It will avoid the fork of a shell interpreter to execute your command.''',
+It will avoid the fork of a shell interpreter to execute your command as
+well as allows rpm to automatically mark the dependency on your command.''',
 
 'one-line-command-in-%pre',
-'''You must use %pre -p <command> instead of using:
+'''You should use %pre -p <command> instead of using:
 
 %pre
 <command>
 
-It will avoid the fork of a shell interpreter to execute your command.''',
+It will avoid the fork of a shell interpreter to execute your command as
+well as allows rpm to automatically mark the dependency on your command.''',
 
 'one-line-command-in-%preun',
-'''You must use %preun -p <command> instead of using:
+'''You should use %preun -p <command> instead of using:
 
 %preun
 <command>
 
-It will avoid the fork of a shell interpreter to execute your command.''',
+It will avoid the fork of a shell interpreter to execute your command as
+well as allows rpm to automatically mark the dependency on your command.''',
 
 'spurious-bracket-in-%pre',
 '''The %pre scriptlet contains an if [] construction without a space before the
