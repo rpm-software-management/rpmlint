@@ -1,3 +1,7 @@
+2001-10-16 22:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.37-1mdk
+
 2001-10-16 21:59  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* SourceCheck.py: allow 0755 as a valid mode for source.
