@@ -26,6 +26,7 @@ extract_dir=Config.getOption('ExtractDir', '/tmp')
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 
 braces_regex=re.compile('^[^#]*%', re.MULTILINE)
+double_braces_regex=re.compile('%%', re.MULTILINE)
 bracket_regex=re.compile('^[^#]*if.*[^ \]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\$HOME', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|\s|;|/bin/)(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install)\s", re.MULTILINE)
@@ -80,7 +81,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     if not prog in valid_shells:
                         printError(pkg, "invalid-shell-in-" + tag[2], prog)
                 if prog == "/bin/sh" or prog == "/bin/bash" or prog == "/usr/bin/perl":
-                    if braces_regex.search(script):
+                    if braces_regex.search(script) and not double_braces_regex.search(script):
                         printWarning(pkg, "percent-in-" + tag[2])
                     if bracket_regex.search(script):
                         printWarning(pkg, "spurious-bracket-in-" + tag[2])
