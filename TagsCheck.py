@@ -647,6 +647,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for o in obs:
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
+	useless_provides=[]	
+	for p in provs:
+	    if provs.count(p) != 1:
+		if p not in useless_provides:
+			useless_provides.append(p)
+	for p in useless_provides:
+	    printError(pkg, 'useless-explicit-provides',p)
 
         if pkg.isNoSource():
             arch='nosrc'
@@ -826,6 +833,9 @@ This BuildRequires dependency will not be resolved on lib64 platforms (i.e. amd6
 'explicit-lib-dependency',
 '''You must let rpm find the library dependencies by itself. Do not put unneeded
 explicit Requires: tags.''',
+
+'useless-explicit-provides',
+'''This package provides 2 times the same capacity. It should only provides it once.''',
 )
     
 # TagsCheck.py ends here
