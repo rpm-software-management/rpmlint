@@ -1,2 +1,4 @@
 *.pyo
 *.pyc
+*.flog
+*.bz2
