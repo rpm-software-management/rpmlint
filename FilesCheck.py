@@ -203,8 +203,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	ghost_files=pkg.ghostFiles()
 	doc_files=pkg.docFiles()
         req_names=pkg.req_names()
-        deps=pkg.requires()+pkg.prereq()
-        prein=pkg[rpm.RPMTAG_PREIN]
         lib_package=lib_package_regex.search(pkg.name)
         is_kernel_package=kernel_package_regex.search(pkg.name)
         
