@@ -598,6 +598,8 @@ addFilter('explicit-lib-dependency libxslt-proc|libimlib2_1-loaders')
 # don't report errors on debug packages
 addFilter('^.+-debug(info)? [^ ]+ /usr/lib/debug/')
 
+addFilter('dkms-\w+ devel-file-in-non-devel-package /usr/src/')
+
 # exceotuibs fir %multiarch policy
 addFilter('^.+-devel subdir-in-bin .+/multiarch-.+-.+/')
 addFilter('^.+-devel dangling-relative-symlink .+/multiarch-dispatch')
