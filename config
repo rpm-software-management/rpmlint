@@ -48,5 +48,6 @@ addFilter("E: anonftp dir-or-file-in-home /home/ftp/")
 addFilter("E: [^ ]+ dir-or-file-in-home /home/httpd/")
 addFilter("E: sympa dir-or-file-in-home /home/sympa/")
 addFilter("E: menu non-file-in-menu-dir /usr/lib/menu/default")
+addFilter("I: k[^ ]+ strange-needs kde")
 
 # config ends here
