@@ -423,6 +423,8 @@ leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAULT_FORBIDDEN_WORDS_REGEX) + ')', re.IGNORECASE)
 valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost', DEFAULT_VALID_BUILDHOST))
+epoch_regex=re.compile('^[0-9]+:')
+use_epoch=Config.getOption('UseEpoch', 0)
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -465,8 +467,29 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         elif release_ext and not extension_regex.search(release):
             printWarning(pkg, 'not-standard-release-extension', release)
 
+        epoch=pkg[rpm.RPMTAG_EPOCH]
+        if epoch is None:
+            if use_epoch:
+                printError(pkg, 'no-epoch-tag')
+        else:
+            if epoch > 99:
+                printWarning(pkg, 'unreasonable-epoch', epoch)
+
+        if use_epoch:
+            for o in pkg.obsoletes():
+                if o[1] and not epoch_regex.search(o[1]):
+                    printWarning(pkg, 'no-epoch-in-obsoletes', o[0] + ' ' + o[1])
+            for c in pkg.conflicts():
+                if c[1] and not epoch_regex.search(c[1]):
+                    printWarning(pkg, 'no-epoch-in-conflicts', c[0] + ' ' + c[1])
+            for p in pkg.provides():
+                if p[1] and not epoch_regex.search(p[1]):
+                    printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
+
         deps=pkg.requires() + pkg.prereq()
         for d in deps:
+            if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
+                printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
@@ -564,8 +587,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 srpm=pkg[rpm.RPMTAG_SOURCERPM]
                 # only check when source name correspond to name
                 if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
-                    if version + '-' + release != ret.group(1):
-                        printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), version + '-' + release)
+                    expected=version + '-' + release
+                    if use_epoch and epoch is not None:
+                        expected=str(epoch) + ':' + expected
+                    if expected != ret.group(1):
+                        printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
 
 #         provides=pkg.provides()
 #         for (provide_name, provide_version, provide_flags) in provides:
@@ -597,10 +623,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
 
-        if not pkg.isSource():
-            arch=pkg[rpm.RPMTAG_ARCH]
-        else:
+        if pkg.isNoSource():
+            arch='nosrc'
+        elif pkg.isSource():
             arch='src'
+        else:
+            arch=pkg[rpm.RPMTAG_ARCH]
 
         expected='%s-%s-%s.%s.rpm' % (name, version, release, arch)
         basename=string.split(pkg.filename, '/')[-1]
@@ -743,6 +771,25 @@ and not to break depencencies.''',
 'invalid-dependency',
 '''An invalid dependency has been detected. It usually means that the build of the
 package was buggy.''',
+
+'no-epoch-tag',
+'''There is no Epoch tag in your package. You have to specify an epoch using the
+Epoch tag.''',
+
+'unreasonable-epoch',
+'''The value of your Epoch tag is unreasonably large (> 99).''',
+
+'no-epoch-in-obsoletes',
+'''Your package contains a versioned Obsoletes entry without an Epoch.''',
+
+'no-epoch-in-conflicts',
+'''Your package contains a versioned Conflicts entry without an Epoch.''',
+
+'no-epoch-in-provides',
+'''Your package contains a versioned Provides entry without an Epoch.''',
+
+'no-epoch-in-dependency',
+'''Your package contains a versioned dependency without an Epoch.''',
 
 )
     
