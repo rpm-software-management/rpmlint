@@ -1,3 +1,20 @@
+2001-05-18 14:39  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check that a script isn't a oneliner.
+
+2001-05-18 11:21  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check postin and prein instead of postun and preun
+	for ghost files creation.
+
+2001-05-18 11:19  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: don't check NO_XALF in menu command
+
+2001-05-18 11:17  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* check-install.py: factorized checks
+
 2001-04-01 23:19  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* FilesCheck.py: Add rpcuser
