@@ -53,6 +53,24 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Fri Jan 21 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.65-1mdk
+- I18NCheck.py: o recognition of some more languages (bug #12216)
+                o Added language codes (nr, nso, tn, ts) of South
+	  Africa that have efforts on creating localizations for them
+	  (source: http://www.translate.org.za/ ) (Pablo)
+- MenuCheck.py: added missing-menu-command (Michael Scherer)
+- FilesCheck.py: don't report non-conffile-in-etc on executable.
+
+From Ville Skyttä:
+
+- Flag installing files to /var/local as an error.
+- Improved perl temp file regexp.
+- Extended CVS internal file regexp to cover Subversion and GNU Arch.
+- "se" -> "sv" in I18NCheck
+- E:V-R should be consistent in package and changelog regardless if 
+  use_epoch is set or not.
+- Spelling fixes.
+
 * Thu Dec 30 2004 Frederic Lepied <flepied@mandrakesoft.com> 0.64-1mdk
 - FilesCheck.py: o Check that pkg-config files and config script are
                    in devel packages (Guillaume Rousse, bug #12662).
