@@ -39,6 +39,9 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             if rc_regex.search(f):
                 basename=basename_regex.search(f).group(1)
                 list.append(basename)
+		if pkg.files()[f][0] & 0500 != 0500:
+		    printError(pkg, 'init-script-non-executable',f)
+	    
 		if dot_in_name_regex.match(basename):
 			printError(pkg, 'init-script-name-with-dot', f)
                 # check chkconfig call in %post and %preun
@@ -141,6 +144,10 @@ is httpd, you have to put a 'httpd' file in your subsys directory.''',
 
 'init-script-name-with-dot',
 '''The init script name should not contains a dot in the name. 
-it would not be taken in account by chkconfig'''
+it would not be taken in account by chkconfig''',
+
+'init-script-non-executable',
+'''The init script should have at least the execution bit set for root 
+in order to be run during the boot'''
 )
 # InitScriptCheck.py ends here
