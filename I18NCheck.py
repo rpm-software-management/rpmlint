@@ -46,7 +46,7 @@ CORRECT_SUBDIRS = (
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no',
-'oc', 'or', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
+'oc', 'or', 'pa', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
 'ro', 'ru', 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'ss', 'st', 'sv',
 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tr', 'tt', 
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
