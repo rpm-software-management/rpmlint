@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.50
+%define version 0.51
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Mon Aug  4 2003 Frederic Lepied <flepied@mandrakesoft.com> 0.51-1mdk
+- TagsCheck.py: added devel-dependency check
+                fixed English typo (Pablo)
+- SpecCheck.py: allow the following form for a patch instruction:
+%%patch -P 1 (request from Stephan Kulow)
+- NamingPolicyCheck.py: first version from Michael Scherer
+- Pkg.py: in shell_var_value escape the var name to avoid a backtrace (Ville Skyttä)
+- Config.py: don't warn on -debug packages (Ville Skyttä)
+- InitScriptCheck.py: added init-script-name-with-dot check (Michael Scherer)
+- I18NCheck.py: Added 'mn' to list of languages (Pablo)
+                Added some more languages (Pablo)
+
+
 * Thu May  8 2003 Gwenole Beauchesne <gbeauchesne@mandrakesoft.com> 0.50-1mdk
 - Ship with rpmdiff
 - Add Zope Public License
