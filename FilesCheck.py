@@ -35,7 +35,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
     bin_regex=re.compile("^(/usr)?/s?bin/")
     includefile_regex=re.compile("\.h$|\.a$")
     sofile_regex=re.compile("\.so$")
-    devel_regex=re.compile("-devel$")
+    devel_regex=re.compile("-(devel|source)$")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
