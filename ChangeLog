@@ -1,3 +1,48 @@
+2001-02-16 17:40  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: 0.30
+
+2001-02-16 17:40  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: exception for autoconf and libclanlib0-gl.
+
+2001-02-16 17:39  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* InitScriptCheck.py: check if runlevels are set
+
+2001-02-16 17:38  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* LSBCheck.py: also check source packages.
+
+2001-02-16 17:36  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: added support to check launchers.
+
+2001-02-16 17:36  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* Pkg.py: added req_names to retrieve the list of packages names
+	(requires+prereq).
+
+2001-02-16 17:34  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: changed Window Maker to WindowMaker
+
+2001-02-13 07:14  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: check subdirs of /sur/share/man.
+
+2001-02-02 07:51  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: check that the postun creates the ghost files
+
+2001-02-02 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* PostCheck.py: added install to dangerous commands
+
+2001-02-02 07:44  Fredrice Lepied <flepied@mandrakesoft.com>
+
+	* LSBCheck.py: first version
+
 2001-01-23 14:41  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* TagsCheck.py: Add https as valid url.
