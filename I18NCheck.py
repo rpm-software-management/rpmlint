@@ -31,15 +31,15 @@ INCORRECT_LOCALES = {
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 # and /usr/share/man for locale man pages.
 CORRECT_SUBDIRS = (
-'af', 'ar', 'az', 'a3', 'be', 'bg', 'br', 'ca', 'cs', 'cy', 'da', 'de',
+'af', 'ar', 'az', 'be', 'bg', 'br', 'ca', 'cs', 'cy', 'da', 'de',
 'de_AT', 'el', 'en_GB', 'en_RN', 'eo', 'es', 'es_AR', 'es_ES', 'es_DO',
 'es_GT', 'es_HN', 'es_SV', 'es_PE', 'es_PA', 'es_MX', 'et', 'eu', 'fa',
-'fa_IR.iransystem', 'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hr',
-'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'ka_GE.georgian-ps', 'kl', 'ko',
-'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'nb', 'nl', 'nn', 'no', 'no@nynorsk',
-'ny', 'oc', 'pd', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
-'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'ur', 'uk', 'vi',
-'vi_VN.viscii', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_TW.Big5'
+'fi', 'fo', 'fr', 'ga', 'gd', 'gl', 'gv', 'he', 'hr',
+'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'ko',
+'kw', 'lo', 'lt', 'lv', 'ma', 'mk', 'ms', 'nb', 'nl', 'nn', 'no', 
+'oc', 'pd', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'ro', 'ru', 'sk', 'sl',
+'sp', 'sq', 'sr', 'sv', 'ta', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz',
+'vi', 'wa', 'yi', 'zh_CN', 'zh_CN.GB2312', 'zh_TW', 'zh_TW.Big5'
 )
 
 str='-('
@@ -55,7 +55,11 @@ man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
 mo_regex=re.compile('\.mo$')
 
 # list of exceptions
-EXCEPTION_DIRS=('C', 'POSIX', 'iso88591', 'iso8859')
+EXCEPTION_DIRS=('C', 'POSIX', 'CP1251', 'CP1255', 'CP1256',
+'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4', 'ISO-8859-5',
+'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-9E',
+'ISO-8859-10', 'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-15',
+'KOI8-R', 'KOI8-U', 'UTF-8')
 
 class I18NCheck(AbstractCheck.AbstractCheck):
     

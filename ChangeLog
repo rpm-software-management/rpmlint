@@ -1,3 +1,8 @@
+2001-07-04 18:10  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: reviewed the list of acceptable languages and the
+	exception directories
+
 2001-07-02 10:43  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.33-1mdk
