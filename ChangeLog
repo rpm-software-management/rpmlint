@@ -1,3 +1,37 @@
+2005-01-05 23:31  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added dir-or-file-in-var-local to mdk10.2 policy
+
+2005-01-05 23:31  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: - E:V-R should be consistent in package and
+	  changelog regardless if   use_epoch is set or not (Ville Skyttä).
+	  - Spelling fixes (Ville Skyttä).
+
+2005-01-05 23:29  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: - Include rpmlint.bash-completion in dist tarball.	-
+	  Don't install compile.py.
+
+2005-01-05 23:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* I18NCheck.py: - "se" -> "sv" in I18NCheck (Ville Skyttä).
+
+2005-01-05 23:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: - Flag installing files to /var/local as an error
+	  (Ville Skyttä).  - Improved perl temp file regexp (Ville Skyttä).
+	  - Extended CVS internal file regexp to cover Subversion and GNU
+	  Arch (Ville Skyttä).
+
+2005-01-05 23:25  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added missing-menu-command to policy
+
+2005-01-05 21:34  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* MenuCheck.py: added missing-menu-command (Michael Scherer)
+
 2004-12-30 21:23  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* FilesCheck.py: removed unused variables
