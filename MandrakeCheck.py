@@ -17,6 +17,7 @@ class MandrakeCheck(AbstractCheck.AbstractCheck):
 
     man_regex=re.compile("/man./")
     info_regex=re.compile("/info/")
+    info_dir_regex=re.compile("/info/dir$")
     bz2_regex=re.compile(".bz2$")
     gz_regex=re.compile(".gz$")
     vendor=Config.getOption("Vendor", "MandrakeSoft")
@@ -48,7 +49,7 @@ class MandrakeCheck(AbstractCheck.AbstractCheck):
 			    printWarning(pkg, "manpage-not-bzipped", f)
 		    elif not MandrakeCheck.gz_regex.search(f):
 			printWarning(pkg, "manpage-not-gzipped", f)
-		if MandrakeCheck.info_regex.search(f):
+		if MandrakeCheck.info_regex.search(f) and not MandrakeCheck.info_dir_regex.search(f):
 		    if MandrakeCheck.use_bzip2:
 			if not MandrakeCheck.bz2_regex.search(f):
 			    printWarning(pkg, "infopage-not-bzipped", f)
