@@ -1,4 +1,4 @@
-#############################################################################
+it#############################################################################
 # File		: rpmlint.spec
 # Package	: rpmlint
 # Author	: Frederic Lepied
@@ -8,7 +8,7 @@
 #############################################################################
 %define name rpmlint
 %define version 0.4
-%define release 1mdk
+%define release 2mdk
 
 Summary: rpm correctness checker
 Name: %{name}
@@ -57,10 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,0755)
+%doc COPYING ChangeLog INSTALL README 
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
 
 %changelog
+* Fri Oct  8 1999 Chmouel Boudjnah <chmouel@mandrakesoft.com>
+- Add Doc.
 
 * Thu Oct  7 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
