@@ -1,3 +1,7 @@
+2002-01-10 14:00  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py, rpmlint.spec: 0.40-1mdk
+
 2002-01-10 13:55  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* Config.py, MenuCheck.py, README: icons for menu are now png
