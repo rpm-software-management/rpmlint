@@ -25,6 +25,7 @@ DEFAULT_CHECKS=("DistributionCheck",
 		"SourceCheck",
                 "SpecCheck",
                 "NamingPolicyCheck",
+                "ZipCheck",
                 )
 
 info=0
