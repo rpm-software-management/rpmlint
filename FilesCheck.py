@@ -414,6 +414,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		if mode & stat.S_IXUSR and perm != 0755:
 		    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 		    
+                if mode & 0111 != 0 and f in config_files:
+                    printError(pkg, 'executable-marked-as-config-file', f)
+                    
 	    # normal dir check
             elif stat.S_ISDIR(mode):
                 if perm != 0755:
@@ -743,7 +746,13 @@ of a mispelled macro. Please check your spec file.''',
 
 'manifest-in-perl-module',
 '''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
-in the documentation directory.'''
+in the documentation directory.''',
+
+'executable-marked-as-config-file',
+'''Executables must not be marked as config files because it will
+prevent upgrades to work correctly. If you need to be able to
+customize an executable, make it read a config file in /etc/sysconfig
+for example.''',
 
 )
 
