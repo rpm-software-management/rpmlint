@@ -17,13 +17,13 @@ import Config
 import os
 from Filter import *
 
-version="0.31"
+version="0.32"
 
 # Print usage information
 def usage(name):
     print "usage:", name, "[<options>] <rpm files>"
     print "  options in:"
-    print "\t[-c|--check <check>]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]"
+    print "\t[-i|--info]\n\t[-c|--check <check>]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]"
 
 # Print version information
 def printVersion():
@@ -47,7 +47,8 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 
 # parse options
 try:
-    (opt, args)=getopt.getopt(sys.argv[1:], "c:C:hVvE:", ["check=",
+    (opt, args)=getopt.getopt(sys.argv[1:], "ic:C:hVvE:", ["info",
+                                                           "check=",
 							  "checkdir=",
 							  "help",
 							  "version",
@@ -79,6 +80,8 @@ except OSError:
 for o in opt:
     if o[0] == '-c' or o[0] == "--check":
 	Config.addCheck(o[1])
+    elif o[0] == '-i' or o[0] == "--info":
+        Config.info=1
     elif o[0] == '-h' or o[0] == "--help":
 	usage(sys.argv[0])
 	sys.exit(0)
