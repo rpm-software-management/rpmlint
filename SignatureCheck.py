@@ -14,7 +14,7 @@ import re
 import sys
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
-    pgp_regex=re.compile("pgp", re.IGNORECASE)
+    pgp_regex=re.compile("pgp|gpg", re.IGNORECASE)
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "FilesCheck")
