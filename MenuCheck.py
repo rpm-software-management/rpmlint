@@ -44,7 +44,7 @@ DEFAULT_VALID_SECTIONS=(
     "Applications/Archiving/Other",
     "Applications/Monitoring",
     "Applications/Publishing",
-    "Applications/Terminals",
+    "Terminals",
     "Applications/Shells",
     "Applications/File tools",
     "Applications/Text tools",
