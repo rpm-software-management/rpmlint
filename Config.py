@@ -44,13 +44,12 @@ def allChecks():
     global _checks
     
     if _checks == []:
-	_checks=DEFAULT_CHECKS
+	defaultChecks()
     return _checks
 
 def defaultChecks():
-    global _checks
-
-    _checks=DEFAULT_CHECKS
+    resetChecks()
+    _checks.extend(DEFAULT_CHECKS)
     
 def resetChecks():
     global _checks
