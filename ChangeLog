@@ -1,3 +1,21 @@
+2000-02-23  flepied  <flepied@kenobi.mandrakesoft.com>
+
+	* rpmlint.spec:
+		* 0.9.1
+
+	* Makefile:
+		* added README.CVS.
+
+	* rpmlint.py:
+		* 0.9.1
+		* changed copyright year.
+
+	* Pkg.py:
+		* added support for the rpm 3.0.4 way to store file names.
+
+	* README.CVS:
+		* first version.
+
 2000-02-10  flepied  <flepied@kenobi.mandrakesoft.com>
 
 	* rpmlint.py:
