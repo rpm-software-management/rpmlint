@@ -1,0 +1,33 @@
+# bash completion for rpmlint
+# $Id$
+
+_rpmlint()
+{
+	local cur prev
+
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	case $prev in
+		-@(C|E|-@(check|extract)dir))
+			_filedir -d
+			return 0
+			;;
+		-@(f|-file))
+			_filedir
+			return 0
+			;;
+	esac
+
+
+	if [[ "$cur" == -* ]]; then
+		COMPREPLY=( $( compgen -W '-i --info -I -c --check \
+			-a --all -C --checkdir -h --help -v --verbose \
+			-E --extractdir -p --profile -V --version -n \
+			--noexception -P --policy -f --file' -- $cur ) )
+	else
+		_filedir
+	fi
+}
+complete -F _rpmlint $filenames rpmlint
