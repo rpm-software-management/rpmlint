@@ -190,6 +190,7 @@ addFilter("W:.*initscripts no-(status|reload)-entry.*/etc/rc.d/init.d/(killall|h
 addFilter("W: initscripts conffile-without-noreplace-flag /etc/rc.d/rc.*.d/.*(killall|halt|single|local|reboot)")
 addFilter("W: initscripts non-conffile-in-etc /etc/locale/.*")
 addFilter('E: initscripts (no-chkconfig-line|incoherent-subsys)')
+addFilter('E: initscripts obsolete-not-provided (rhsound|sapinit)')
 
 #hotplug
 addFilter('E: hotplug non-standard-dir-perm /var/run/usb 0700')
@@ -259,7 +260,6 @@ addFilter('W: mathplot non-transparent-xpm ')
 # InitScriptCheck exceptions
 addFilter('E: squid incoherent-subsys /etc/rc.d/init.d/squid $SQUID')
 addFilter('E: heartbeat incoherent-subsys /etc/rc.d/init.d/heartbeat $SUBSYS')
-
 
 # non-conffile-in-etc
 addFilter('W: mandrake-release non-conffile-in-etc /etc/mandrake-release')
