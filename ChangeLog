@@ -1,3 +1,16 @@
+2000-07-29 12:38  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* MenuCheck.py: If we use kdesu check in it present in Requires:
+	Prereq:
+
+2000-07-29 12:27  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* MenuCheck.py: Fix again kdesu (i hate python indentation :-()
+
+2000-07-29 12:10  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* MenuCheck.py: Get kdesu check to work :-\
+
 2000-07-29 10:58  Chmouel Boudjnah <chmouel@mandrakesoft.com>
 
 	* Makefile: Add a changelog rules to be used with cvs2cl.
