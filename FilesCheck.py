@@ -207,6 +207,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         python_dep_error=0
         lib_file=0
         non_lib_file=0
+        log_file=0
+        logrotate_file=0
         
         if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
 	    printWarning(pkg, 'no-documentation')
@@ -246,6 +248,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'info-dir-file', f)
 
             res=logrotate_regex.search(f)
+            logrotate_file=res or logrotate_file
             if res and res.group(1) != pkg.name:
                 printError(pkg, 'incoherent-logrotate-file', f)
 	    if etc_regex.search(f) and stat.S_ISREG(mode):
@@ -282,6 +285,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'setgid-binary', f, setgid, oct(perm))
 		    elif mode & 0777 != 0755:
 			printError(pkg, 'non-standard-executable-perm', f, oct(perm))
+
+            if log_regex.search(f):
+                   log_file=f
 
             # normal file check
             if stat.S_ISREG(mode):
@@ -485,6 +491,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 			for linksegment in string.split(mylink, '/'):
 			    if linksegment == '..':
 				printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
+
+        if log_file and not logrotate_file:
+            printWarning(pkg, 'log-files-without-logrotate', log_file)
+
         if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
             
@@ -708,6 +718,10 @@ and delete it if needed.''',
 
 'postun-with-wrong-depmod',
 '''This package contains a kernel module but its %postun calls depmod for the wrong kernel.''',
+
+'log-files-without-logrotate',
+'''This package use files in /var/log/ without adding a entry for 
+logrotate.''',
 
 )
 
