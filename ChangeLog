@@ -1,3 +1,56 @@
+2004-12-30 16:55  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmlint.py: fix double import
+
+2004-12-30 11:35  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: Check that pkg-config files and config script are
+	  in devel packages (Guillaume Rousse, bug #12662).
+
+2004-12-30 11:32  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added htaccess-file check (Guillaume Rousse, bug
+	  #12661).
+
+2004-12-30 11:18  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: first pass to update load_policy.
+
+2004-12-30 11:18  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added executable-marked-as-config-file check.
+
+2004-12-30 11:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added requires-on-release check
+
+2004-12-30 11:16  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Makefile: clean the build
+
+2004-12-19 18:56  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
+
+	* TagsCheck.py: The Lucent Public Licence (Plan9) is
+	  opensource.org-approved.
+
+2004-12-19 00:25  Guillaume Rousse <guillomovitch@mandrake.org>
+
+	* rpmlint.bash-completion: initial import
+
+2004-12-18 17:19  Guillaume Rousse <guillomovitch@mandrake.org>
+
+	* FilesCheck.py: typo
+
+2004-12-06 15:22  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
+
+	* SpecCheck.py: Clarify the use-of-RPM_SOURCE_DIR message
+	  explanation
+
+2004-12-05 02:03  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: lookup .cmi files as devel files too (Guillaume
+	  Rousse) [bug #12186].
+
 2004-12-05 01:52  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.63-1mdk
