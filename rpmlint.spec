@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.43
+%define version 0.44
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -51,6 +51,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir /etc/rpmlint
 
 %changelog
+* Wed May 29 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.44-1mdk
+ o added non-ghost-file check
+ o added non-root-user-log-file and non-root-group-log-file.
+
 * Wed May  1 2002 Frederic Lepied <flepied@mandrakesoft.com> 0.43-1mdk
  o added no-prereq-on check.
 
