@@ -29,10 +29,15 @@ INCORRECT_LOCALES = {
 
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 CORRECT_SUBDIRS = (
-"af", "ar", "bg", "br", "ca", "cs", "cy", "da", "de", "de_AT", "el", "en_GB", "en_RN", "eo", "es", "es_AR", "es_ES", "es_DO",
-"es_GT", "es_HN", "es_SV", "es_PE", "es_PA", "es_MX", "et", "eu", "fa", "fa_IR.iransystem", "fi", "fo", "fr", "ga",
-"gl", "he", "hr", "hu", "hy", "id", "is", "it", "ja", "ka", "ka_GE.georgian-ps", "kl", "ko", "lo", "lt", "lv", "mk", "nl", "no", "no@nynorsk", "oc", "pl", "pt",
-"pt_BR", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tr", "uk", "vi", "vi_VN.viscii", "wa", "zh_CN", "zh_CN.GB2312", "zh_TW.Big5"
+"af", "ar", "az", "a3", "be", "bg", "br", "ca", "cs", "cy", "da", "de",
+"de_AT", "el", "en_GB", "en_RN", "eo", "es", "es_AR", "es_ES", "es_DO",
+"es_GT", "es_HN", "es_SV", "es_PE", "es_PA", "es_MX", "et", "eu", "fa",
+"fa_IR.iransystem", "fi", "fo", "fr", "ga", "gd", "gl", "gv", "he", "hr",
+"hu", "hy", "id", "is", "it", "ja", "ka", "ka_GE.georgian-ps", "kl", "ko",
+"kw", "lo", "lt", "lv", "ma", "mk", "ms", "nb", "nl", "no", "no@nynorsk",
+"ny", "oc", "pd", "ph", "pl", "pp", "pt", "pt_BR", "ro", "ru", "sk", "sl",
+"sp", "sq", "sr", "sv", "ta", "tg", "th", "tr", "tt", "ur", "uk", "vi",
+"vi_VN.viscii", "wa", "yi", "zh_CN", "zh_CN.GB2312", "zh_TW.Big5"
 )
 
 # list of exceptions
