@@ -143,7 +143,7 @@ DEFAULT_VALID_LICENSES = (
     'Charityware'
     )
 
-DEFAULT_PACKAGER = '@mandrakesoft.com|@linux-mandrake.com|https?://qa.mandrakesoft.com|http://www.mandrakeexpert.com'
+DEFAULT_PACKAGER = '@mandrakesoft.com|@linux-mandrake.com|@mandrake.org|https?://qa.mandrakesoft.com|http://www.mandrakeexpert.com'
 
 BAD_WORDS = {
     'alot': 'a lot',
