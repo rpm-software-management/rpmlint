@@ -1,3 +1,7 @@
+2004-08-19 15:03  Pablo Saratxaga <pablo@mandrakesoft.com>
+
+	* I18NCheck.py: Added recognition of "pa" (Punjabi) language code
+
 2004-08-17 02:28  Frederic Crozat <fcrozat@mandrakesoft.com>
 
 	* MenuCheck.py: Fix menu capitalization
