@@ -116,7 +116,7 @@ addFilter("E: filesystem non-standard-dir-perm /root 0750")
 addFilter("E: filesystem non-standard-dir-perm /var/lock 0775")
 addFilter("E: filesystem non-standard-dir-perm /proc 0555")
 addFilter("E: postgresql-test non-standard-[gu]id [^ ]+ postgres")
-addFilter("W: (dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen) devel-file-in-non-devel-package")
+addFilter("W: (binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package")
 addFilter("W: menu devel-file-in-non-devel-package /etc/menu-methods/menu.h")
 addFilter("W: [^ ]+ devel-file-in-non-devel-package /usr/doc/.*\.h$")
 addFilter("W: glibc-profile devel-file-in-non-devel-package .*\.a$")
@@ -127,6 +127,7 @@ addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modu
 addFilter("W: icewm-light menu-command-not-in-package icewm")
 addFilter("E: slocate non-standard-dir-perm /var/lib/slocate 0750")
 addFilter("E: ld.so statically-linked-binary /sbin/ldconfig")
+addFilter("E: ocaml statically-linked-binary /sbin/ldconfig")
 addFilter("W: shadow-utils dangling-symlink /usr/bin/sg newgrp")
 addFilter("E: rpm statically-linked-binary /usr/bin/rpm2cpio|/bin/rpm")
 addFilter("E: info-install info-dir-file /usr/share/info/dir")
@@ -134,6 +135,9 @@ addFilter("E: sympa non-standard-uid [^\s]+ sympa")
 addFilter("E: sympa non-standard-gid [^\s]+ sympa")
 addFilter("E: rpm dangerous-command-in-%post rpm")
 addFilter("W: bcast version-in-menu-title Broadcast 2000")
+
+#ocaml
+addFilter("W: ocaml unstripped-binary-or-object /usr/bin/(ocamldebug|ocamlbrowser)")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
@@ -177,8 +181,8 @@ addFilter("W: reiserfs-utils dangling-symlink /sbin/fsck.reiserfs.*")
 addFilter("W: reiserfs-utils incoherent-version-in-changelog")
 
 #Glibc
-addFilter("W: glibc shared-lib-without-dependency-information /lib/ld-2.*.so")
-addFilter("W: glibc library-not-linked-against-libc /lib/libc-2.*.so")
+addFilter("W: glibc shared-lib-without-dependency-information /lib/ld-.*so")
+addFilter("W: glibc library-not-linked-against-libc /lib/libc-.*so")
 addFilter("E: glibc statically-linked-binary /sbin/sln")
 addFilter("E: glibc setuid-binary /usr/libexec/pt_chown root 04755")
 
@@ -196,5 +200,21 @@ addFilter("W: mandrake-release non-conffile-in-etc /etc/mandrake-release")
 # vixie-cron
 addFilter("E: vixie-cron non-standard-dir-perm /var/spool/cron 0700")
 addFilter("E: vixie-cron setuid-binary /usr/bin/crontab root 04755")
+
+#openssh
+addFilter("W: openssh-clients dangling-symlink /usr/bin/ssh-askpass")
+addFilter("E: openssh-clients setuid-binary /usr/bin/ssh root 04711")
+
+#XFree86
+addFilter("E: XFree86 setuid-binary /usr/X11R6/bin/Xwrapper root 04711")
+
+#emacs
+addFilter("E: emacs setgid-binary /usr/lib/emacs/.*/movemail mail 02755")
+
+#xemacs
+addFilter("E: xemacs setgid-binary /usr/lib/xemacs-.*/movemail mail 02755")
+
+#imwheel
+addFilter("E: imwheel setuid-binary /usr/bin/imwheel-solo root 04755")
 
 # Config.py ends here
