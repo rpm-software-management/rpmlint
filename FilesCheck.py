@@ -175,6 +175,7 @@ log_regex=re.compile('^/var/log/[^/]+$')
 lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex=re.compile('^(lib|.+-libs)')
 hidden_file_regex=re.compile('/\.[^/]*$')
+mispelled_macro_regex=re.compile('%{.*}')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -220,6 +221,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 	    group=enreg[2]
             size=enreg[4]
             
+	    if mispelled_macro_regex.search(f):
+		printWarning(pkg, 'mispelled-macro', f)
 	    if not user in Config.STANDARD_USERS:
 		printError(pkg, 'non-standard-uid', f, user)
 	    if not group in Config.STANDARD_GROUPS:
@@ -722,6 +725,10 @@ and delete it if needed.''',
 'log-files-without-logrotate',
 '''This package use files in /var/log/ without adding a entry for 
 logrotate.''',
+
+'mispelled-macro',
+'''This package contains a file which match %{.*}, this is often the sign
+of a mispelled macro. Please check your spec file.'''
 
 )
 
