@@ -120,7 +120,7 @@ addFilter('E: filesystem non-standard-dir-perm /root 0750')
 addFilter('E: filesystem non-standard-dir-perm /var/lock 0775')
 addFilter('E: filesystem non-standard-dir-perm /proc 0555')
 addFilter('E: postgresql-test non-standard-[gu]id [^ ]+ postgres')
-addFilter('W: (binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package')
+addFilter('W: (binutils|dev86|compat-glibc|alsa|alsa-sourcecompat-libs|gcc|gcc-c\+\+|egcs|egcs-c\+\+|gcc-chill|gcc-f77|egcs-g77|gcc-libgcj|gcc-objc|hackkernel-source|hackkernel-headers|kernel-source|kernel-headers|octave|ghc|mercury|ocaml|gprolog|ruby-extensions|ruby|XFree86-static-libs|libwmf|doxygen|swi-prolog|ghc-prof|perl-(GTK.*|PDL|DBI)) devel-file-in-non-devel-package')
 addFilter('W: menu devel-file-in-non-devel-package /etc/menu-methods/menu.h')
 addFilter('W: [^ ]+ devel-file-in-non-devel-package /usr/doc/.*\.h$')
 addFilter('W: glibc-profile devel-file-in-non-devel-package .*\.a$')
@@ -315,6 +315,6 @@ addFilter('W: dev dangling-relative-symlink /dev/stdout ../proc/self/fd/1')
 addFilter('W: autoconf devel-file-in-non-devel-package /usr/share/autoconf/acconfig.h')
 
 #library policy exceptions
-addFilter('rpm|glibc|anonftp|pam|popt .*in-library-package')
+addFilter('rpm|glibc|anonftp|pam|popt|egcs-c\+\+ .*in-library-package')
 
 # Config.py ends here
