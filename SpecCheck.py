@@ -12,6 +12,7 @@ import AbstractCheck
 import commands
 import re
 import sys
+import rpm
 
 spec_regex=re.compile(".spec$")
 patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
@@ -43,6 +44,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         if not spec_file:
             printError(pkg, "no-spec-file")
         else:
+            if f != pkg[rpm.RPMTAG_NAME] + ".spec":
+                printError(pkg, "invalid-spec-name", f)
+                
             # check content of spec file
             spec=file2string(spec_file)
             patches={}
