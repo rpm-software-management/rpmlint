@@ -21,7 +21,7 @@ clean:
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
-	cp -p rpmlint.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp -p rpmlint $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
 
