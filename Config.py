@@ -156,6 +156,7 @@ addFilter('W: emacs-X11 menu-command-not-in-package emacs')
 
 #freetype
 addFilter('W: freetype-devel no-major-in-name freetype-devel')
+addFilter('freetype non-versioned-file-in-library-package')
 
 #openh323
 addFilter('W: openh323_1-devel no-provides openh323_-devel')
@@ -279,6 +280,9 @@ addFilter('E: openssh-clients setuid-binary /usr/bin/ssh root 04711')
 
 #XFree86
 addFilter('E: XFree86 setuid-binary /usr/X11R6/bin/Xwrapper root 04711')
+addFilter('E: XFree86 incoherent-logrotate-file /etc/logrotate.d/xdm')
+addFilter('W: XFree86-devel no-dependency-on XFree86')
+addFilter('W: XFree86-devel no-provides XFree-devel')
 
 #emacs
 addFilter('E: emacs setgid-binary /usr/lib/emacs/.*/movemail mail 02755')
@@ -366,5 +370,15 @@ addFilter('E: apache-suexec setuid-binary /usr/sbin/suexec root 04710')
 #hylafax
 addFilter('E: hylafax-server non-readable /var/spool/fax/etc/hosts.hfaxd 0600')
 addFilter('E: hylafax-server non-standard-dir-perm /var/spool/fax/(sendq|tmp|doneq|docq|pollq|archive) 0700')
+
+#ctcs
+addFilter('E: ctcs statically-linked-binary /root/ctcs/runin/bin/')
+
+#nss_db
+addFilter('nss_db non-versioned-file-in-library-package')
+addFilter('nss_db executable-in-library-package')
+
+#pwiki
+addFilter('pwiki non-standard-dir-perm /var/www/pwiki/.* 0750')
 
 # Config.py ends here
