@@ -34,6 +34,17 @@ def incorrect_shell_script(shellscript):
     os.remove(tmpfile)
     return ret[0]
 
+def incorrect_perl_script(perlscript):
+    tmpfile = "%s/.perl-script.%d" % (extract_dir, os.getpid())
+    if not perlscript:
+        return 0
+    file=open(tmpfile, 'w')
+    file.write(perlscript)
+    file.close()
+    ret=commands.getstatusoutput("/usr/bin/perl -wc %s" % tmpfile)
+    os.remove(tmpfile)
+    return ret[0]
+
 class PostCheck(AbstractCheck.AbstractCheck):
     braces_regex=re.compile("^[^#]*%", re.MULTILINE)
     bracket_regex=re.compile("^[^#]*if.*[^ \]]\]", re.MULTILINE)
@@ -56,14 +67,20 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if prog:
                     if not prog in valid_shells:
                         printError(pkg, "invalid-shell-in-" + tag[2], prog)
-                if prog == "/bin/sh" or prog == "/bin/bash":
+                if prog == "/bin/sh" or prog == "/bin/bash" or prog == "/usr/bin/perl"
                     if PostCheck.braces_regex.search(script):
                         printWarning(pkg, "percent-in-" + tag[2])
                     if PostCheck.bracket_regex.search(script):
                         printWarning(pkg, "spurious-bracket-in-" + tag[2])
+
+                if prog == "/bin/sh" or prog == "/bin/bash":
                     if incorrect_shell_script(script):
                         printError(pkg, "shell-syntax-error-in-" + tag[2])
-                        
+
+                if prog == "/usr/bin/perl":
+                    if incorrect_perl_script(script):
+                        printError(pkg, "perl-syntax-error-in-" + tag[2])
+                
 # Create an object to enable the auto registration of the test
 check=PostCheck()
 
