@@ -1,3 +1,12 @@
+2004-08-03 08:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added obsolete-on-name
+
+2004-07-29 04:04  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added exceptions for perl and dyalog on
+	  devel-file-in-non-devel-package
+
 2004-07-13 07:15  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
 
 	* FilesCheck.py: Add a warning for MANIFEST* files in perl modules
