@@ -1,4 +1,3 @@
-cvs server: cannot open /root/.cvsignore: Permission denied
 #############################################################################
 # File		: Config.py
 # Package	: rpmlint
