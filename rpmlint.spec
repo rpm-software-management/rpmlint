@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.28
+%define version 0.29
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -49,6 +49,28 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Thu Dec  7 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.29-1mdk
+
+- PostCheck.py: Add /sbin/sash as VALID_SHELLS.
+
+- Config.py: added exceptions for dev.
+
+- FilesCheck.py: check dangling-symlink in the file index too to
+avoid missing special files that aren't created when extracted as a
+user.
+
+- FilesCheck.py: added a generic way to avoid dangling-symlink
+warnings.
+
+- TagsCheck.py: for devel packages, check dependency on lib package
+only when a .so file is present.
+
+- Config.py: add some execptions for pam (0750 dir for /etc/default
+is normal as weel to have gpasswd and chage as suid).
+
+- Config.py: Don't check info-file-with-install-info for bash since
+it's by default in the dir file.
+
 * Fri Nov 24 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.28-1mdk
 - TagsCheck.py: o check -devel package naming scheme only on binary
                 packages.
