@@ -340,7 +340,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 if not is_exception in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
                                     printWarning(pkg, 'no-dependancy-on', is_exception)
                             else:
-                                print is_so
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
 		    pathcomponents=string.split(f, '/')[1:]
 		    r=points_regex.search(link)
