@@ -95,7 +95,7 @@ DEFAULT_VALID_GROUPS=(
     'System/Kernel and hardware',
     'System/Libraries',
     'System/Servers',
-    'System/XFree86',
+    'System/X11',
     'Terminals',
     'Text tools',
     'Toys',
@@ -137,7 +137,8 @@ DEFAULT_VALID_LICENSES = (
     'Eiffel Forum License',
     'W3C License',
     'Zope Public License',
-    'Lucent Public Licence',
+    'Lucent Public License',
+    'Design Science License',
     # non open source licences:
     'Proprietary',
     'Freeware',
