@@ -176,7 +176,7 @@ lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex=re.compile('^(lib|.+-libs)')
 hidden_file_regex=re.compile('/\.[^/]*$')
 mispelled_macro_regex=re.compile('%{.*}')
-manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)$');
+manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
