@@ -1,3 +1,27 @@
+2001-06-19 02:01  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* DistributionCheck.py: Added few descriptions
+
+2001-06-19 00:43  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* DistributionCheck.py: Added few descriptions
+
+2001-06-18 23:16  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* ConfigCheck.py: Added few descriptions
+
+2001-06-18 23:00  Christian Belisle <cbelisle@mandrakesoft.com>
+
+	* FilesCheck.py: Added few descriptions
+
+2001-06-15 17:18  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: Add more filesystem exclude.
+
+2001-06-14 14:25  Chmouel Boudjnah <chmouel@mandrakesoft.com>
+
+	* Config.py: /var/run/usb as 700 is normal.
+
 2001-06-13 08:36  Frederic Lepied <flepied@mandrakesoft.com>
 
 	* rpmlint.spec: 0.32-1mdk
