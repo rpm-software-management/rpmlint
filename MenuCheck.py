@@ -92,7 +92,6 @@ DEFAULT_VALID_SECTIONS=(
     'More applications/Sciences/Numerical analysis/',
     'More applications/Sciences/Other',
     'More applications/Sciences/Parallel Computing/',
-    'More applications/Sciences/Physics',
     'More applications/Sciences/Physics/',
     'More applications/Sciences/Robotics/',
     'More applications/Shells',
