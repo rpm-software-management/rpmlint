@@ -1,3 +1,55 @@
+2005-02-11 09:39  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* SpecCheck.py: added hardcoded-packager-tag, hardcoded-prefix-tag
+	  and redundant-prefix-tag checks (Guillaume Rousse, bug #12725).
+
+2005-02-11 09:33  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: added wrong-script-interpreter, non-executable-script,
+	  script-without-shellbang, wrong-script-end-of-line-encoding and
+	  wrong-file-end-of-line-encoding for 10.2 policy.
+
+2005-02-11 09:32  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* FilesCheck.py: added wrong-script-interpreter,
+	  non-executable-script, script-without-shellbang,
+	  wrong-script-end-of-line-encoding and
+	  wrong-file-end-of-line-encoding. (Guillaume Rousse, bug #12725).
+
+2005-02-11 09:24  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added the 'Graphical desktop/Xfce' group (bug
+	  #13141).
+
+2005-02-11 09:09  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* rpmdiff: filter the provides on name-version-release for the
+	  package itself.
+
+2005-02-08 16:54  Rafael Garcia-Suarez <rgarciasuarez@mandrakesoft.com>
+
+	* Pkg.py: Make check_versioned_dep ignore epoch when comparing
+	  versions (patch by Michael Scherer)
+
+2005-02-08 16:14  Thierry Vignaud <tvignaud@mandrakesoft.com>
+
+	* Config.py: do not complain about explicit dependancy on liblua5
+	  (else b/c of buggy lua, lua users accepted either lua4 or lua5
+	  thus resulting in linkinkg issues at runtime)
+
+2005-02-08 16:05  Thierry Vignaud <tvignaud@mandrakesoft.com>
+
+	* Config.py: update drakconf rule
+
+2005-02-07 14:44  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* TagsCheck.py: added Design Sciences License (Sébastien Savarin)
+	  fixed Lucent Public License
+
+2005-01-30 22:28  Frederic Lepied <flepied@mandrakesoft.com>
+
+	* Config.py: add exceptions for dkms packages
+
 2005-01-25 14:34  Gwenole Beauchesne <gbeauchesne@mandrakesoft.com>
 
 	* rpmlint.spec: 0.66-1mdk
