@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.6
+%define version 0.6.1
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -63,7 +63,11 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/rpmlint/config
 
 %changelog
-* Sat Oct 23 1999 Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
+* Sat Oct 23 1999 Frederic Lepied <flepied@mandrakesoft.com>
+
+- 0.6.1: corrected compilation step.
+
+* Sat Oct 23 1999 Frederic Lepied <flepied@mandrakesoft.com>
 
 - 0.6: filter output, documentation checks.
 
