@@ -52,6 +52,8 @@ addFilter("E: menu non-file-in-menu-dir /usr/lib/menu/default")
 addFilter("I: menu unable-to-parse-menu-command")
 addFilter("W: menu invalid-menu-section")
 addFilter("W: XFree86-server devel-file-in-non-devel-package /usr/X11R6/lib/modules")
+addFilter("I: iceconf strange-needs icewm /usr/lib/menu/iceconf")
+addFilter("W: lftp shared-lib-without-dependency-information /usr/lib/lftp/.*.so")
 
 #initscripts
 addFilter("W: initscripts non-etc-or-var-file-marked-as-conffile /sbin/if(up|down)")
@@ -69,5 +71,6 @@ addFilter("E: procmail setuid-gid-binary /usr/bin/procmail root mail 06755")
 addFilter("E: rsh setuid-binary /usr/bin/rlogin root 04755")
 addFilter("E: rsh setuid-binary /usr/bin/rsh root 04755")
 addFilter("E: rsh setuid-binary /usr/bin/rcp root 04755")
+
 
 # config ends here
