@@ -45,7 +45,7 @@ CORRECT_SUBDIRS = (
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no',
 'oc', 'or', 'ph', 'pl', 'pp', 'pt', 'pt_BR',
 'ro', 'ru', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'ss', 'st', 'sv',
-'ta', 'te', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz', 'uz@Cyrl',
+'ta', 'te', 'tg', 'th', 'tr', 'tt', 'uk', 'ur', 'uz', 'uz@Latn',
 've', 'vi', 'wa', 'wen', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
 # KDE uses 'ven' for 've'; and 'nso' for 'st'
 'ven', 'nso',
