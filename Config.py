@@ -313,4 +313,7 @@ addFilter('W: dev dangling-relative-symlink /dev/stdout ../proc/self/fd/1')
 #autoconf
 addFilter('W: autoconf devel-file-in-non-devel-package /usr/share/autoconf/acconfig.h')
 
+#library policy exceptions
+addFilter('rpm|glibc|anonftp|pam|popt .*in-library-package')
+
 # Config.py ends here
