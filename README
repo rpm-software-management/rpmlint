@@ -62,3 +62,4 @@ ExtraMenuNeeds		list of strings
 XpmIconPath		regexp		"/usr/share/icons"
 ExtractDir		string		"/tmp"
 ValidLicenses		list of strings
+SystemLibPaths		list of string
