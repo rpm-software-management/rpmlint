@@ -19,13 +19,14 @@ import stat
 import rpm
 from Filter import *
 
-version='0.42'
+version='@VERSION@'
+policy=None
 
 # Print usage information
 def usage(name):
     print 'usage:', name, '[<options>] <rpm files>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]'
+    print '\t[-i|--info]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]'
 
 # Print version information
 def printVersion():
@@ -102,16 +103,19 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 
 # parse options
 try:
-    (opt, args)=getopt.getopt(sys.argv[1:], 'ic:C:hVvp:anE:', ['info',
-                                                              'check=',
-                                                              'checkdir=',
-                                                              'help',
-                                                              'version',
-                                                              'verbose',
-                                                              'profile',
-                                                              'all',
-                                                              'noexception',
-                                                              'extractdir='])
+    (opt, args)=getopt.getopt(sys.argv[1:],
+                              'ic:C:hVvp:anP:E:',
+                              ['info',
+                               'check=',
+                               'checkdir=',
+                               'help',
+                               'version',
+                               'verbose',
+                               'profile',
+                               'all',
+                               'noexception',
+                               'policy='
+                               'extractdir='])
 except getopt.error:
     print 'bad option'
     usage(sys.argv[0])
@@ -159,10 +163,14 @@ for o in opt:
         prof=o[1]
     elif o[0] == '-n' or o[0] == '--noexception':
         Config.no_exception=1
+    elif o[0] == '-P' or o[0] == '--policy':
+        policy=o[1]
     elif o[0] == '-a' or o[0] == '--all':
         all=1
     else:
 	print 'unknown option', o
+
+policy and Config.load_policy(policy)
 
 # if no argument print usage
 if args == [] and not all:
