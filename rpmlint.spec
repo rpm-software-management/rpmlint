@@ -7,8 +7,8 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.33
-%define release 2mdk
+%define version 0.34
+%define release 1mdk
 
 Summary: Rpm correctness checker
 Name: %{name}
@@ -49,6 +49,11 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Sun Jul 15 2001 Frederic Lepied <flepied@mandrakesoft.com> 0.34-1mdk
+- added missing descriptions.
+- added -a option to check all the installed packages.
+- TagsCheck.py: handle the libbzip2_1-devel case.
+
 * Fri Jul  6 2001 Christian Belisle <cbelisle@mandrakesoft.com> 0.33-2mdk
 - Added descriptions for the -i option.
 
