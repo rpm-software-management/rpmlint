@@ -93,14 +93,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # check install-info call in %post and %postun
             if stat.S_ISREG(mode) and FilesCheck.info_regex.search(f):
-                postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                postin=pkg[rpm.RPMTAG_POSTIN]
                 if not postin:
                     printError(pkg, "info-files-without-install-info-postin", f)
                 else:
                     if not FilesCheck.install_info_regex.search(postin):
                         printError(pkg, "postin-without-install-info", f)                    
                     
-                postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                postun=pkg[rpm.RPMTAG_POSTUN]
                 if not postun:
                     printError(pkg, "info-files-without-install-info-postun", f)
                 else:
