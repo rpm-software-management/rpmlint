@@ -47,13 +47,15 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
                 details="The name should match this regular expression " + name_re
 				
             addDetails(pkg_name + '-naming-policy-not-applied',
-                       """This package doesn't respect the naming policy.
-                       """ + details)
+                       "This package doesn't respect the naming policy.\n" 
+                       + details + ".\nIt should only be used for separate packages modules.")
             
     def check(self, pkg):
         if pkg.isSource():
             return
         list=pkg[rpm.RPMTAG_FILENAMES]
+        if not list:
+            return
         try:
             for c in self.checks_:
                 for f in list:
