@@ -69,6 +69,9 @@ def main():
                        	raise OSError
                 except OSError:
                     pkg=Pkg.InstalledPkg(f)
+	    except KeyboardInterrupt:	    
+                    sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
+                    sys.exit(2)
             except:
                 sys.stderr.write('Error while reading ' + f + '\n')
                 pkg=None
@@ -85,30 +88,39 @@ def main():
 			try:
                             pkg=Pkg.Pkg(f, extract_dir)
                             runChecks(pkg)
+	    		except KeyboardInterrupt:
+                            sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
+	                    sys.exit(2)
 			except:	
                             sys.stderr.write('Error while reading ' + f + '\n')
                             pkg=None
                             continue
-            except:
+	    except Exception,E:
 		sys.stderr.write('Error while reading ' + d + '\n')
                 pkg=None
                 continue
 
         # if requested, scan all the installed packages
         if all:
-            if Pkg.v42:
-                ts=rpm.TransactionSet('/')
-                for item in ts.IDTXload():
-                    pkg=Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
-                    runChecks(pkg)
-            else:
-                db=rpm.opendb()
-                idx=db.firstkey()
-                while idx:
-                    pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
-                    runChecks(pkg)
-                    idx=db.nextkey(idx)
-                del db
+	    try:
+		if Pkg.v42:
+		    ts=rpm.TransactionSet('/')
+		    for item in ts.IDTXload():
+			pkg=Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
+			runChecks(pkg)
+		else:
+		    try:
+			db=rpm.opendb()
+			idx=db.firstkey()
+			while idx:
+			    pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
+			    runChecks(pkg)
+			    idx=db.nextkey(idx)
+		    finally:	    
+			del db
+	    except KeyboardInterrupt:    
+		    sys.stderr.write('Interrupted, exiting while scanning all packages\n')
+		    sys.exit(2)
 
     finally:
         pkg and pkg.cleanup()
