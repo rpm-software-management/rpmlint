@@ -34,6 +34,13 @@ try:
 except AttributeError:
     v304=0
 
+# check if we use a rpm version compatible with 4.2
+try:
+    if rpm.RPMTAG_SOURCEPACKAGE:
+        v42=1
+except AttributeError:
+    v42=0
+    
 # utilities
 
 def grep(regex, filename):
@@ -93,9 +100,19 @@ class Pkg:
             self.is_source=is_source
         else:
             # Create a package object from the file name
-            fd=os.open(filename, os.O_RDONLY)
-            (self.header, self.is_source)=rpm.headerFromPackage(fd)
-            os.close(fd)
+            if v42:
+                ts=rpm.TransactionSet()
+                fd=os.open(filename, os.O_RDONLY)
+                self.header=ts.hdrFromFdno(fd)
+                os.close(fd)
+                if self.header[rpm.RPMTAG_SOURCEPACKAGE]:
+                    self.is_source=1
+                else:
+                    self.is_source=0
+            else:
+                fd=os.open(filename, os.O_RDONLY)
+                (self.header, self.is_source)=rpm.headerFromPackage(fd)
+                os.close(fd)
 
         self._lang_files=None
 
