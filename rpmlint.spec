@@ -7,7 +7,7 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 %define name rpmlint
-%define version 0.16
+%define version 0.17
 %define release 1mdk
 
 Summary: rpm correctness checker
@@ -20,7 +20,7 @@ Copyright: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
 Prefix: %{_prefix}
-Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep
+Requires: rpm-python, python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep, /bin/bash
 BuildArchitectures: noarch
 BuildRequires: python >= 1.5.2, rpm-devel >= 3.0.3-35mdk, make
 
@@ -46,9 +46,17 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING ChangeLog INSTALL README*
 %{prefix}/bin/*
 %{prefix}/share/rpmlint
-%config /etc/rpmlint/config
+%config(noreplace) /etc/rpmlint/config
 
 %changelog
+* Mon Jul 31 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.17-1mdk
+- PostCheck: check bourne shell syntax (Chmouel).
+- FileCheck: o check chkconfig calls for packages with a file in
+             /etc/rc.d/init.d.
+             o allow the call to install-info to be in %%preun.
+- MenuCheck: o take care of kdesu (Chmouel).
+- various exceptions added.
+
 * Wed Jul 19 2000 Frederic Lepied <flepied@mandrakesoft.com> 0.16-1mdk
 - FHSCheck activated by default.
 - FileCheck: o check dangling symlinks.
