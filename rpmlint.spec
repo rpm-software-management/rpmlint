@@ -54,6 +54,10 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Fri Apr 15 2005 Frederic Lepied <flepied@mandriva.com> 0.69-1mdk
 - Mandriva
+- FilesCheck.py: /etc/cron.d is a configuration directory, not a
+  script directory (Guillaume Rousse)
+- FilesCheck.py: intepreters can also live in /sbin or /usr/sbin (Guillaume Rousse)
+- PostCheck.py, README: add non-empty shell check (Ville Skyttä)
 
 * Thu Mar 10 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.68-1mdk
 - I18NCheck.py: Added recognition of Quechua (qu) language (Pablo)
