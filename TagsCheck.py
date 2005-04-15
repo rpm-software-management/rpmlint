@@ -147,7 +147,7 @@ DEFAULT_VALID_LICENSES = (
     'Charityware'
     )
 
-DEFAULT_PACKAGER = '@mandrakesoft.com|@linux-mandrake.com|@mandrake.org|https?://qa.mandrakesoft.com|http://www.mandrakeexpert.com'
+DEFAULT_PACKAGER = '@mandriva.com|@mandriva.org|https?://qa.mandriva.com|http://www.mandrivaexpert.com'
 
 BAD_WORDS = {
     'alot': 'a lot',
@@ -405,11 +405,11 @@ BAD_WORDS = {
     'wierd': 'weird',
     'xwindows': 'X'
     }
-DEFAULT_FORBIDDEN_WORDS_REGEX='Linux.?Mandrake|Mandrake[ .]'
+DEFAULT_FORBIDDEN_WORDS_REGEX='andrake'
 DEFAULT_VALID_BUILDHOST='\.mandrakesoft\.com$|\.mandrake\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
-distribution=Config.getOption("Distribution", "Mandrakelinux")
+distribution=Config.getOption("Distribution", "Mandriva Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
@@ -699,10 +699,10 @@ you package upgradable. Instead put it in the release tag like 0.alpha8.1''' + r
 
 'no-packager-tag',
 '''There is no Packager tag in your package. You have to specify a packager using
-the Packager tag. Ex: Packager: Christian Belisle <cbelisle@mandrakesoft.com>.''',
+the Packager tag. Ex: Packager: Christian Belisle <cbelisle@mandriva.com>.''',
 
 'invalid-packager',
-'''The packager email must finish with @mandrakesoft.com or must be bugs@linux-mandrake.com.
+'''The packager email must finish with @mandriva.com or must be http://www.mandrivaexpert.com.
 Please change it and rebuild your package.''',
 
 'no-version-tag',

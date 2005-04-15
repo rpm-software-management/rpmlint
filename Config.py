@@ -437,7 +437,7 @@ addFilter('fetchmail-daemon non-readable /etc/fetchmailrc 0600')
 #iptable
 addFilter('iptables shared-lib-without-dependency-information /lib/iptables/')
 
-#Starting from Mandrakelinux 8.1 we let standard menu files in the packages
+#Starting from Mandriva Linux 8.1 we let standard menu files in the packages
 addFilter('old-menu-entry')
 
 #zapping

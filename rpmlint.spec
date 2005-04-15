@@ -8,7 +8,7 @@
 #############################################################################
 
 %define name rpmlint
-%define version 0.68
+%define version 0.69
 %define release 1mdk
 
 Summary: Rpm correctness checker
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Fri Apr 15 2005 Frederic Lepied <flepied@mandriva.com> 0.69-1mdk
+- Mandriva
+
 * Thu Mar 10 2005 Frederic Lepied <flepied@mandrakesoft.com> 0.68-1mdk
 - I18NCheck.py: Added recognition of Quechua (qu) language (Pablo)
 - FilesCheck.py: simplify site_perl regexp (Ville Skytt?).
