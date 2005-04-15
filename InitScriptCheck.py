@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Project         : Mandrakelinux
+# Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : InitScriptCheck.py
 # Version         : $Id$

@@ -1,5 +1,5 @@
 #############################################################################
-# Project         : Mandrakelinux
+# Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : PostCheck.py
 # Version         : $Id$

@@ -1,5 +1,5 @@
 #---------------------------------------------------------------
-# Project         : Mandrake
+# Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : MenuCheck.py
 # Version         : $Id$
