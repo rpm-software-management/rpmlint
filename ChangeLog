@@ -1,3 +1,7 @@
+2005-04-15 22:05  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmlint.spec: 0.69-1mdk
+
 2005-04-15 22:01  Frederic Lepied <flepied at mandriva.com>
 
 	* Config.py, DistributionCheck.py, InitScriptCheck.py, LSBCheck.py,
