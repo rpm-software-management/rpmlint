@@ -1,3 +1,7 @@
+2005-05-23 12:55  Pixel <pixel at mandriva.com>
+
+	* Config.py: whitelist ash statically-linked-binary /sbin/bsh
+
 2005-04-15 22:05  Frederic Lepied <flepied at mandriva.com>
 
 	* rpmlint.spec: 0.69-1mdk
