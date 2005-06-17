@@ -140,6 +140,7 @@ DEFAULT_VALID_LICENSES = (
     'Zope Public License',
     'Lucent Public License',
     'Design Science License',
+    'LaTeX Project Public License',
     # non open source licences:
     'Proprietary',
     'Freeware',
