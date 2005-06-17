@@ -546,26 +546,21 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 		path=pkg.dirName() + '/' + f
 		if os.access(path, os.R_OK) and istextfile(path):
 		    line=open(path).readline();
-		    script=0
 
-		    # check for shellbang presence
 		    res=shellbang_regex.search(line)
-		    if res:
-			if not interpreter_regex.search(res.group(1)):
-			    printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
-			script=1
-		    # otherwise check against usual script locations
-		    else:
-			if script_regex.search(f):
+		    if res or mode & 0111 != 0 or script_regex.search(f):
+			if res:
+			    if not interpreter_regex.search(res.group(1)):
+				printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
+			else:
 			    printError(pkg, 'script-without-shellbang', f)
-			script=1
 		    
-		    if script==1:
-			if mode & stat.S_IXUSR and perm != 0755:
+			if mode & 0111 == 0:
 			    printError(pkg, 'non-executable-script', f, oct(perm))
 			if line.endswith('\r\n'):
 			    printError(pkg, 'wrong-script-end-of-line-encoding', f)
-                    else:
+
+		    elif doc_regex.search(f):
 			if line.endswith('\r\n'):
 			    printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
 
