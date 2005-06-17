@@ -174,7 +174,7 @@ kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|B
 normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$|/__init__.py$')
 perl_regex=re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
-cross_compile_regex=re.compile('-mandrake-linux-[^/]+$')
+cross_compile_regex=re.compile(Config.getOption('CrossCompilation', '-mandriva-linux-[^/]+$'))
 perl_version_trick=Config.getOption('PerlVersionTrick', 1)
 log_regex=re.compile('^/var/log/[^/]+$')
 lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
@@ -706,19 +706,19 @@ configuration file. All the files in /etc MUST be configuration files
 
 'setuid-gid-binary',
 '''The file is setuid and setgid. Usually this is a bug. Otherwise, please contact
-<flepied@mandrakesoft.com> about this so that this error gets included
+<flepied at mandriva.com> about this so that this error gets included
 in the exception file for rpmlint. With that, rpmlint will ignore
 this bug in the future.''',
 
 'setuid-binary',
 '''The file is setuid. Usually this is a bug. Otherwise, please contact
-<flepied@mandrakesoft.com> about this so that this error gets included
+<flepied at mandriva.com> about this so that this error gets included
 in the exception file for rpmlint. With that, rpmlint will ignore
 this bug in the future.''',
 
 'setgid-binary',
 '''The file is setgid. Usually this is a bug. Otherwise, please contact
-<flepied@mandrakesoft.com> about this so that this error gets included
+<flepied at mandriva.com> about this so that this error gets included
 in the exception file for rpmlint. With that, rpmlint will ignore
 this bug in the future.''',
 
@@ -773,7 +773,7 @@ non standard.''',
 
 'non-readable',
 '''The file can't be read by everybody. If this is normal (for security reason), send an
-email to flepied@mandrakesoft.com to add it to the list of exceptions in the next release.''',
+email to <flepied at mandriva.com> to add it to the list of exceptions in the next release.''',
 
 'incoherent-logrotate-file',
 '''Your logrotate file should be named /etc/logrotate.d/<package name>.''',

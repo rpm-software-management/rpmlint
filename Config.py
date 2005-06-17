@@ -316,6 +316,8 @@ addFilter('heartbeat incoherent-subsys /etc/rc.d/init.d/heartbeat $SUBSYS')
 
 # non-conffile-in-etc
 addFilter('mandrake-release non-conffile-in-etc /etc/mandrake-release')
+addFilter('mandriva-release non-conffile-in-etc /etc/mandriva-release')
+addFilter('mandriva-release non-conffile-in-etc /etc/version')
 
 # vixie-cron
 addFilter('vixie-cron non-standard-dir-perm /var/spool/cron 0700')
