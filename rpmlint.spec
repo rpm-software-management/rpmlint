@@ -7,16 +7,12 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 
-%define name rpmlint
-%define version 0.69
-%define release 1mdk
-
 Summary: Rpm correctness checker
-Name: %{name}
-Version: %{version}
-Release: %{release}
+Name: rpmlint
+Version: 0.70
+Release: 1mdk
 Source0: %{name}-%{version}.tar.bz2
-URL: http://people.mandrakesoft.com/~flepied/projects/rpmlint/
+URL: http://people.mandriva.com/~flepied/projects/rpmlint/
 License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
@@ -52,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Fri Jun 17 2005 Frederic Lepied <flepied@mandriva.com> 0.70-1mdk
+- 
+
 * Fri Apr 15 2005 Frederic Lepied <flepied@mandriva.com> 0.69-1mdk
 - Mandriva
 - FilesCheck.py: /etc/cron.d is a configuration directory, not a
