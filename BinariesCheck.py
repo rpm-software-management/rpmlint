@@ -302,7 +302,7 @@ Makefile with a line like: gcc test.o -o test -Wl,--rpath.''',
 '''The package installs a statically linked binary or object file.
 
 Usually this is a bug. Otherwise, please contact
-<flepied@mandrakesoft.com> about this so that this error gets included
+<flepied at mandriva.com> about this so that this error gets included
 in the exception file for rpmlint. With that, rpmlint will ignore
 this bug in the future.''',
 

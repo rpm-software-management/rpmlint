@@ -6,7 +6,7 @@ specific checks can be performed by using command line parameters.
 The idea for rpmlint is from the lintian tool of the Debian project.
 
 Comments and new checks welcome. Send feedback to
-<flepied@mandrakesoft.com>.
+<flepied at mandriva.com>.
 
 Implemented checks:
 
@@ -54,33 +54,29 @@ Available options:
 
 name			type		default
 ========================================================
-Vendor			string		"Mandrakesoft"
+CrossCompilation	regex		'-mandriva-linux-[^/]+$'
+DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 Distribution		string		"Mandriva Linux"
-UseBzip2		boolean		1
-ValidGroups		list of strings
-ValidMenuSections	list of strings
-ReleaseExtension	string or None	"mdk"
-UseVersionInChangelog	boolean		1
 ExtraMenuNeeds		list of strings
 ExtractDir		string		"/tmp"
-ValidLicenses		list of strings
-SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
-ValidShells		list of strings	('/bin/sh', '/bin/bash', '/sbin/sash',
-					 '/usr/bin/perl', '/sbin/ldconfig')
-ValidEmptyShells	list of strings	('/sbin/ldconfig')
-
-Packager		regex		'@mandrakesoft.com|bugs@linux-mandrake.com|https://qa.mandrakesoft.com'
-RpmGamesGroup		regex		'Games'
-DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
-ForbiddenWords		regex		'Linux.?Mandrake|Mandrake[^ ]*Linux'
-ValidBuildHost		regex		'\.mandrakesoft\.com$|\.mandrake\.org$'
-InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any',
-					 'package')
+ForbiddenWords		regex		'mandrake'
 IconFilename		regex		'.*\.png$'
+InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any', 'package')
+KernelModuleRPMsOK	boolean		1
+Packager		regex		'@mandriva.com|@mandriva.org|https://qa.mandriva.com'
 PerlVersionTrick	boolean		1
-CrossCompilation	regex		'-mandrake-linux-[^/]+$'
-UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
+ReleaseExtension	string or None	"mdk"
+RpmGamesGroup		regex		'Games'
+SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
+UseBzip2		boolean		1
 UseEpoch		boolean		0
 UseIndexedJars		boolean		1
+UseVersionInChangelog	boolean		1
+UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
+ValidBuildHost		regex		'\.mandriva\.com$|\.mandriva\.org$'
+ValidGroups		list of strings
+ValidLicenses		list of strings
+ValidMenuSections	list of strings
+ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
 ValidSrcPerms		list of modes	(0644, 0755)
-KernelModuleRPMsOK	boolean		1
+Vendor			string		"Mandriva"
