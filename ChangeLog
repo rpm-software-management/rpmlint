@@ -13,12 +13,12 @@
 	  TagsCheck.py, check-install.py, rpmdiff, rpmlint.py,
 	  rpmlint.spec: Mandriva
 
-2005-04-09 14:38  Guillaume Rousse <guillomovitch at mandrake.org>
+2005-04-09 14:38  Guillaume Rousse <guillomovitch at mandriva.org>
 
 	* FilesCheck.py: /etc/cron.d is a configuration directory, not a
 	  script directory
 
-2005-03-23 01:01  Guillaume Rousse <guillomovitch at mandrake.org>
+2005-03-23 01:01  Guillaume Rousse <guillomovitch at mandriva.org>
 
 	* FilesCheck.py: intepreters can also live in /sbin or /usr/sbin
 
@@ -231,11 +231,11 @@
 	* TagsCheck.py: The Lucent Public Licence (Plan9) is
 	  opensource.org-approved.
 
-2004-12-19 00:25  Guillaume Rousse <guillomovitch at mandrake.org>
+2004-12-19 00:25  Guillaume Rousse <guillomovitch at mandriva.org>
 
 	* rpmlint.bash-completion: initial import
 
-2004-12-18 17:19  Guillaume Rousse <guillomovitch at mandrake.org>
+2004-12-18 17:19  Guillaume Rousse <guillomovitch at mandriva.org>
 
 	* FilesCheck.py: typo
 
@@ -295,7 +295,7 @@
 
 	* rpmlint.py: exit on C-c (Michael Scherer)
 
-2004-11-28 23:56  Guillaume Rousse <guillomovitch at mandrake.org>
+2004-11-28 23:56  Guillaume Rousse <guillomovitch at mandriva.org>
 
 	* NamingPolicyCheck.py: ocaml naming policy
 
