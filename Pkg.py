@@ -34,6 +34,12 @@ try:
 except AttributeError:
     v304=0
 
+try:
+    if rpm.RPMSENSE_SCRIPT_PRE:
+        pass
+except AttributeError:
+    rpm.RPMSENSE_SCRIPT_PRE
+    
 # check if we use a rpm version compatible with 4.2
 try:
     if rpm.RPMTAG_SOURCEPACKAGE:
@@ -332,11 +338,10 @@ class Pkg:
             if type(flags) != types.ListType:
                 flags=[flags]
             for loop in range(len(versions)):
-                if prereq != None and flags[loop] & rpm.RPMSENSE_PREREQ:
-                    prereq.append((names[loop], versions[loop], flags[loop] & (not rpm.RPMSENSE_PREREQ)))
+                if prereq != None and flags[loop] & (rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE):
+                    prereq.append((names[loop], versions[loop], flags[loop] & (not (rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE))))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
-                        
         
     def _gatherDepInfo(self):
         if self.required == None:
