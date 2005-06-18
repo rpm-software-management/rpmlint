@@ -49,7 +49,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Fri Jun 17 2005 Frederic Lepied <flepied@mandriva.com> 0.70-1mdk
-- 
+- Pkg.py: use RPMSENSE_SCRIPT_PRE if available to detect prereq.
+- FilesCheck.py: fix script detection (Guillaume Rousse, bug
+  #15152).
+- TagsCheck.py: added LaTeX Project Public License (Guillaume
+  Rousse, bug #15928).
+- PostCheck.py: adds userdel and groupdel to the list of
+  "dangerous" commands. (Ville Skyttä)
+- BinariesCheck.py, Config.py, FilesCheck.py, README: mandriva
+- TagsCheck.py: check that the url doesn't contain anymore
+  mandrake.
 
 * Fri Apr 15 2005 Frederic Lepied <flepied@mandriva.com> 0.69-1mdk
 - Mandriva
