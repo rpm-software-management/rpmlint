@@ -1,3 +1,7 @@
+2005-06-18 15:07  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmlint.spec: 0.70-1mdk
+
 2005-06-18 15:02  Frederic Lepied <flepied at mandriva.com>
 
 	* Pkg.py: use RPMSENSE_SCRIPT_PRE if available to detect prereq.
