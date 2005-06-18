@@ -1,3 +1,35 @@
+2005-06-18 15:02  Frederic Lepied <flepied at mandriva.com>
+
+	* Pkg.py: use RPMSENSE_SCRIPT_PRE if available to detect prereq.
+
+2005-06-17 11:48  Frederic Lepied <flepied at mandriva.com>
+
+	* FilesCheck.py: fix script detection (Guillaume Rousse, bug
+	  #15152).
+
+2005-06-17 11:45  Frederic Lepied <flepied at mandriva.com>
+
+	* TagsCheck.py: added LaTeX Project Public License (Guillaume
+	  Rousse, bug #15928).
+
+2005-06-17 11:27  Frederic Lepied <flepied at mandriva.com>
+
+	* PostCheck.py: adds userdel and groupdel to the list of
+	  "dangerous" commands. (Ville Skyttä)
+
+2005-06-17 11:10  Frederic Lepied <flepied at mandriva.com>
+
+	* BinariesCheck.py, Config.py, FilesCheck.py, README: mandriva
+
+2005-06-17 11:08  Frederic Lepied <flepied at mandriva.com>
+
+	* TagsCheck.py: check that the url doesn't contain anymore
+	  mandrake.
+
+2005-06-17 11:07  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmlint.spec: fixed url
+
 2005-05-23 12:55  Pixel <pixel at mandriva.com>
 
 	* Config.py: whitelist ash statically-linked-binary /sbin/bsh
