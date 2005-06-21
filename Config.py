@@ -610,6 +610,9 @@ addFilter('dkms-\w+ devel-file-in-non-devel-package /usr/src/')
 addFilter('^.+-devel subdir-in-bin .+/multiarch-.+-.+/')
 addFilter('^.+-devel dangling-relative-symlink .+/multiarch-dispatch')
 
+# kernel-uml
+addFilter('kernel-uml statically-linked-binary /usr/bin/kernel-uml')
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
