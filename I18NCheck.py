@@ -25,7 +25,6 @@ INCORRECT_LOCALES = {
     'gr_GR': 'el_GR',
     'cz': 'cs',
     'cz_CZ': 'cs_CZ',
-    'se': 'sv',
     'sw': 'sv',
     'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
@@ -47,11 +46,11 @@ CORRECT_SUBDIRS = (
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso'
-'oc', 'or', 'pa', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru',
+'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru',
 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st', 'sv',
 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt', 
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
-'ve', 'vi', 'wa', 'wen', 'xh', 'yi', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
+'ve', 'vi', 'wa', 'wen', 'xh', 'yi', 'yo', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
 # KDE uses 'ven' for 've'
 'ven',
 # 
