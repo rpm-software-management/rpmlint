@@ -1,3 +1,37 @@
+2005-08-10 07:05  Frederic Lepied <flepied at mandriva.com>
+
+	* Pkg.py: handle the new Requires(pre) and co syntax.  fixed broken
+	  code that was extracting info from headers multiple times.
+
+2005-08-10 06:56  Frederic Lepied <flepied at mandriva.com>
+
+	* SpecCheck.py: allow to do a symlink to a configure file without
+	  having the configure-without-libdir-spec error. (reported by Hans
+	  de Goede)
+
+2005-08-10 04:05  Frederic Lepied <flepied at mandriva.com>
+
+	* I18NCheck.py: fixed uninitialized variable (reported by Dan
+	  Kegel).
+
+2005-08-10 03:55  Frederic Lepied <flepied at mandriva.com>
+
+	* Config.py: added exception for uucp (Bruno Cornec)
+
+2005-08-10 03:51  Frederic Lepied <flepied at mandriva.com>
+
+	* InitScriptCheck.py: make the "incoherent subsys" check work
+	  properly with trailing " or '. (Ville Skytta)
+
+2005-08-10 03:49  Frederic Lepied <flepied at mandriva.com>
+
+	* I18NCheck.py: typo (Ville Skytta)
+
+2005-08-10 03:46  Frederic Lepied <flepied at mandriva.com>
+
+	* FilesCheck.py: Brings the verbose message about non-config files
+	  in /etc up to date wrt. executables. (Ville Skytta)
+
 2005-07-06 16:33  Pablo Saratxaga <pablo at mandriva.com>
 
 	* I18NCheck.py: new languages to be recognized as valid: 'se' (was
