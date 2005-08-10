@@ -692,9 +692,9 @@ in the package. Move these files out of the package and rebuild it.''',
 Please remove it and rebuild your package.''',
 
 'non-conffile-in-etc',
-'''A file in your package is being installed in /etc, but is not a
-configuration file. All the files in /etc MUST be configuration files
-(add the %config option to the file in the spec file).''',
+'''A non-executable file in your package is being installed in /etc, but is not
+a configuration file. All non-executable files in /etc should be configuration
+files. Mark the file as %config in the spec file.''',
 
 'compressed-symlink-with-wrong-ext',
 '''The symlink points to a compressed file but doesn't use the same extension.''',
