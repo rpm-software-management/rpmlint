@@ -35,7 +35,7 @@ tmp_regex=re.compile('^/')
 clean_regex=re.compile('^%clean')
 changelog_regex=re.compile('^%changelog')
 configure_start_regex=re.compile('\./configure')
-configure_libdir_spec_regex=re.compile('\./configure[^#]*--libdir=([^\s]+)[^#]*')
+configure_libdir_spec_regex=re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex=re.compile('^%package.*\Wlib')
 mklibname_regex=re.compile('%mklibname')
 ifarch_regex=re.compile('%ifn?arch')
@@ -143,7 +143,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         res=configure_libdir_spec_regex.search(configure_cmdline)
                         if not res:
                             printError(pkg, "configure-without-libdir-spec")
-                        else:
+                        elif res.group(1):
                             res=re.match(hardcoded_library_paths, res.group(1))
                             if res:
                                 printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
