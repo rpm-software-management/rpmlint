@@ -1,3 +1,17 @@
+2005-07-06 16:33  Pablo Saratxaga <pablo at mandriva.com>
+
+	* I18NCheck.py: new languages to be recognized as valid: 'se' (was
+	  wrongly assumed to be an error for 'sv'), 'yo', 'pa_IN'
+
+2005-07-01 04:59  Frederic Lepied <flepied at mandriva.com>
+
+	* TagsCheck.py: added the CECILL licence (requested by Sébastion
+	  Savarin).
+
+2005-06-21 11:33  Frederic Lepied <flepied at mandriva.com>
+
+	* Config.py: kernel-uml
+
 2005-06-18 15:07  Frederic Lepied <flepied at mandriva.com>
 
 	* rpmlint.spec: 0.70-1mdk
