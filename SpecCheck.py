@@ -43,6 +43,7 @@ if_regex=re.compile('%if\s+')
 endif_regex=re.compile('%endif')
 biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
+prereq_regex=re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -181,6 +182,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 if lib_package_regex.search(line):
                     lib=1
+
+                res=prereq_regex.search(line)
+                if res:
+                    printError(pkg, 'prereq-use', res.group(1))
                     
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
@@ -264,7 +269,11 @@ coexistence.''',
 '%ifarch-applied-patch',
 '''A patch is applied inside an %ifarch block. Patches must be applied
 on all architectures and may contain necessary configure and/or code
-patch to be effective only on a given arch.'''
+patch to be effective only on a given arch.''',
+
+'prereq-use',
+'''The use of PreReq is deprecated. You should use Requires(pre), Requires(post),
+Requires(preun) or Requires(postun) according to your needs.''',
 
 )
 
