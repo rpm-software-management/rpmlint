@@ -613,6 +613,12 @@ addFilter('^.+-devel dangling-relative-symlink .+/multiarch-dispatch')
 # kernel-uml
 addFilter('kernel-uml statically-linked-binary /usr/bin/kernel-uml')
 
+# uucp
+addFilter("uucp setuid-gid-binary.* uucp uucp")
+addFilter("uucp non-standard-executable-perm")
+addFilter("uucp wrong-script-interpreter.*xchat\"")
+addFilter("uucp only-non-binary-in-usr-lib")
+
 ################################################################################
 # policy decisions. The idea is to be able to run rpmlint as an old version.
 ################################################################################
