@@ -96,7 +96,8 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         
 	files=pkg.files()
 	locales=[]			# list of locales for this packages
-
+        webapp=False
+        
 	i18n_tags = pkg[HEADER_I18NTABLE]
         #i18n_files = pkg.langFiles()
         
