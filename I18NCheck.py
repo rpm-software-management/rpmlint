@@ -46,7 +46,7 @@ CORRECT_SUBDIRS = (
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso'
-'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru',
+'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru', 'rw',
 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st', 'sv',
 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt', 
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
@@ -54,6 +54,8 @@ CORRECT_SUBDIRS = (
 # KDE uses 'ven' for 've'
 'ven',
 # 
+# note: 'pa' should be replaced by 'pa_IN'; but it is still largely used
+'pa',
 # note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
 # are obsolescent, but still widely used; some day however they should
 # be removed from this list.
