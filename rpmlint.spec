@@ -9,7 +9,7 @@
 
 Summary: Rpm correctness checker
 Name: rpmlint
-Version: 0.70
+Version: 0.71
 Release: 1mdk
 Source0: %{name}-%{version}.tar.bz2
 URL: http://people.mandriva.com/~flepied/projects/rpmlint/
@@ -48,6 +48,22 @@ rm -rf $RPM_BUILD_ROOT
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Wed Aug 10 2005 Frederic Lepied <flepied@mandriva.com> 0.71-1mdk
+- Pkg: fixed prereq funtion for new rpm
+- SpecCheck.py: allow to do a symlink to a configure file without
+  having the configure-without-libdir-spec error. (reported by Hans
+  de Goede)
+- I18NCheck.py: o fixed uninitialized variable (reported by Dan Kegel).
+                o new languages to be recognized as valid: 'se' (was
+  wrongly assumed to be an error for 'sv'), 'yo', 'pa_IN'. (Pablo)
+- Config.py: added exception for uucp (Bruno Cornec)
+- InitScriptCheck.py: make the "incoherent subsys" check work
+  properly with trailing " or '. (Ville Skytta)
+- FilesCheck.py: Brings the verbose message about non-config files
+  in /etc up to date wrt. executables. (Ville Skytta)
+- TagsCheck.py: added the CECILL licence (requested by Sebastion
+  Savarin).
+
 * Fri Jun 17 2005 Frederic Lepied <flepied@mandriva.com> 0.70-1mdk
 - Pkg.py: use RPMSENSE_SCRIPT_PRE if available to detect prereq.
 - FilesCheck.py: fix script detection (Guillaume Rousse, bug
