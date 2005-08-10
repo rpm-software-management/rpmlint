@@ -36,9 +36,9 @@ except AttributeError:
 
 try:
     if rpm.RPMSENSE_SCRIPT_PRE:
-        pass
+        PREREQ_FLAG=rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
 except AttributeError:
-    rpm.RPMSENSE_SCRIPT_PRE
+    PREREQ_FLAG=rpm.RPMSENSE_PREREQ
     
 # check if we use a rpm version compatible with 4.2
 try:
@@ -99,7 +99,7 @@ class Pkg:
 	self._doc_files=None
 	self._ghost_files=None
 	self._files=None
-	self.required=None
+	self._requires=None
         self._req_names=-1
         
         if header:
@@ -332,19 +332,19 @@ class Pkg:
         names = header[nametag]
         versions = header[versiontag]
         flags = header[flagstag]
-        
+
         if versions:
             # workaroung buggy rpm python module that doesn't return a list
             if type(flags) != types.ListType:
                 flags=[flags]
             for loop in range(len(versions)):
-                if prereq != None and flags[loop] & (rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE):
-                    prereq.append((names[loop], versions[loop], flags[loop] & (not (rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE))))
+                if prereq != None and flags[loop] & PREREQ_FLAG:
+                    prereq.append((names[loop], versions[loop], flags[loop] & PREREQ_FLAG))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
         
     def _gatherDepInfo(self):
-        if self.required == None:
+        if self._requires == None:
             self._requires = []
             self._prereq = []
             self._provides = []
