@@ -177,7 +177,7 @@ if Config.info:
 """
 """,
 
-'invalid-lc-message-dir',
+'invalid-lc-messages-dir',
 """
 """,
 
