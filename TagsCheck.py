@@ -302,6 +302,7 @@ BAD_WORDS = {
     'loggin': 'login',
     'logile': 'logfile',
     'loggging': 'logging',
+    'mandrivalinux': 'Mandriva Linux',
     'maintainance': 'maintenance',
     'maintainence': 'maintenance',
     'makeing': 'making',
@@ -407,6 +408,7 @@ BAD_WORDS = {
     'wierd': 'weird',
     'xwindows': 'X'
     }
+
 DEFAULT_FORBIDDEN_WORDS_REGEX='mandrake'
 DEFAULT_VALID_BUILDHOST='\.mandriva\.com$|\.mandriva\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
