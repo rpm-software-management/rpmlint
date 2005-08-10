@@ -50,9 +50,10 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Wed Aug 10 2005 Frederic Lepied <flepied@mandriva.com> 0.71-1mdk
 - Pkg: fixed prereq funtion for new rpm
-- SpecCheck.py: allow to do a symlink to a configure file without
+- SpecCheck.py: o allow to do a symlink to a configure file without
   having the configure-without-libdir-spec error. (reported by Hans
   de Goede)
+                o added prereq-use to prevent the use of PreReq.
 - I18NCheck.py: o fixed uninitialized variable (reported by Dan Kegel).
                 o new languages to be recognized as valid: 'se' (was
   wrongly assumed to be an error for 'sv'), 'yo', 'pa_IN'. (Pablo)
