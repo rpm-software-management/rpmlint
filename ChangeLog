@@ -1,3 +1,23 @@
+2005-08-10 08:14  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmlint.spec: real 0.71-1mdk
+
+2005-08-10 08:10  Frederic Lepied <flepied at mandriva.com>
+
+	* SpecCheck.py: added prereq-use
+
+2005-08-10 08:04  Pablo Saratxaga <pablo at mandriva.com>
+
+	* I18NCheck.py: added "ang" (anglo-saxon or old-english) to rpmlint
+
+2005-08-10 07:59  Pablo Saratxaga <pablo at mandriva.com>
+
+	* I18NCheck.py: added 'rw'
+
+2005-08-10 07:14  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmlint.spec: 0.71-1mdk
+
 2005-08-10 07:05  Frederic Lepied <flepied at mandriva.com>
 
 	* Pkg.py: handle the new Requires(pre) and co syntax.  fixed broken
