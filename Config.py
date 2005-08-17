@@ -159,6 +159,19 @@ addFilter('sympa non-standard-gid [^\s]+ sympa')
 addFilter('rpm dangerous-command-in-%post rpm')
 addFilter('menu standard-dir-owned-by-package /usr/lib/menu')
 
+# drakxtools:
+addFilter('drakxtools-newt requires-on-release')
+addFilter('drakxtools-http requires-on-release')
+addFilter('harddrake-ui requires-on-release')
+addFilter('harddrake requires-on-release')
+addFilter('harddrake zero-length /etc/sysconfig/harddrake2/previous_hw')
+addFilter('harddrake no-documentation')
+addFilter('harddrake-ui no-documentation')
+addFilter('drakxtools no-documentation')
+addFilter('drakxtools-http no-documentation')
+addFilter('drakxtools-backend no-documentation')
+addFilter('drakx-finish-install no-documentation')
+
 #XFree86
 addFilter('XFree86-server unstripped-binary-or-object /usr/X11R6/lib/modules/')
 addFilter('XFree86-server statically-linked-binary /usr/X11R6/lib/modules/')
