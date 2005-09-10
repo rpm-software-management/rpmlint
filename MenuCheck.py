@@ -146,6 +146,7 @@ capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
 launchers=Config.getOption('MenuLaunchers', Config.DEFAULT_LAUNCHERS)
 bad_title_regex=re.compile('/')
+menu64_file_regex=re.compile('^/usr/lib64/menu')
 
 # compile regexps
 for l in launchers:
@@ -196,6 +197,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         mode=files[f][0]
                         if stat.S_ISREG(mode) and not Pkg.grep('None",', dirname + '/' + f):
                             printWarning(pkg, 'non-transparent-xpm', f)
+                if menu64_file_regex.search(f):
+                    printError(pkg, 'menu-in-wrong-dir', f)
         if len(menus) > 0:
             dir=pkg.dirName()
             if menus != []:
@@ -418,6 +421,9 @@ of the icon to be found.''',
 
 'missing-menu-command',
 '''The menu file doesn't contain a command.''',
+
+'menu-in-wrong-directory',
+'''The menu files must be under /usr/lib/menu.''',
 
 )
 
