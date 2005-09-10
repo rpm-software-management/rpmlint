@@ -186,6 +186,7 @@ manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 shellbang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(hourly|daily|monthly|weekly)))/')
+lib64python_regex=re.compile('^/usr/lib64/python')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -234,6 +235,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         req_names=pkg.req_names()
         lib_package=lib_package_regex.search(pkg.name)
         is_kernel_package=kernel_package_regex.search(pkg.name)
+        arch=pkg[rpm.RPMTAG_ARCH]
         
         # report these errors only once
         perl_dep_error=0
@@ -452,6 +454,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 elif etc_regex.search(f):
                     if not f in config_files and not f in ghost_files:
                         printWarning(pkg, 'non-conffile-in-etc', f)
+
+                if arch == 'noarch' and lib64python_regex.search(f):
+                    printError(pkg, 'noarch-python-in-64bit-path', f)
                     
 	    # normal dir check
             elif stat.S_ISDIR(mode):
