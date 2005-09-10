@@ -23,6 +23,7 @@ RPMOPT = --clean --rmspec
 
 all:
 	./compile.py "$(LIBDIR)/" [A-Z]*.py
+	@for f in [A-Z]*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
 
 clean:
 	rm -f *~ *.pyc *.pyo
