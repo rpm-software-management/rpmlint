@@ -16,6 +16,7 @@ import commands
 import re
 import string
 import types
+import sys
 
 RPMFILE_CONFIG=(1 << 0)
 RPMFILE_DOC=(1 << 1)
@@ -61,7 +62,7 @@ def grep(regex, filename):
                 break
         fd.close()
     else:
-        print 'unable to open', filename
+        sys.stderr.write('unable to open %s\n' % filename)
     return ret
 
 def shell_var_value(var, script):
@@ -154,7 +155,7 @@ class Pkg:
     def _extract(self):
 	s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
-            print 'unable to access dir', self.dirname
+            sys.stderr.write('unable to access dir %s\n' % self.dirname)
             return None
         else:
             self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
@@ -419,14 +420,13 @@ class InstalledPkg(Pkg):
 	return self.file_info
 
 if __name__ == '__main__':
-    import sys
     for p in sys.argv[1:]:
         pkg=Pkg(sys.argv[1], '/tmp')
-        print 'Requires:', pkg.requires()
-        print 'Prereq:', pkg.prereq()
-        print 'Conflicts:', pkg.conflicts()
-        print 'Provides:', pkg.provides()
-        print 'Obsoletes:', pkg.obsoletes()
+        sys.stdout.write('Requires: %s\n' % pkg.requires())
+        sys.stdout.write('Prereq: %s\n' % pkg.prereq())
+        sys.stdout.write('Conflicts: %s\n' % pkg.conflicts())
+        sys.stdout.write('Provides: %s\n' % pkg.provides())
+        sys.stdout.write('Obsoletes: %s\n' % pkg.obsoletes())
         pkg.cleanup()
     
 # Pkg.py ends here
