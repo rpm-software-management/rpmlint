@@ -45,6 +45,7 @@ FILEIDX = [ ('S', 4),
             ('T', 6)
             ]
 
+DEPFORMAT = '%-11s%s %s %s %s'
 FORMAT = '%-11s%s'
 
 ADDED   = 'added'
@@ -63,22 +64,32 @@ def load_pkg(name, tmpdir='/tmp'):
             pass
     return Pkg.InstalledPkg(name)
 
+# output the right string according to RPMSENSE_* const
+def sense2str(sense):
+    s = ""
+    if sense & rpm.RPMSENSE_LESS:
+        s += "<"
+    if sense & rpm.RPMSENSE_GREATER:
+        s += ">"
+    if sense & rpm.RPMSENSE_EQUAL:
+        s += "="
+    return s
+
 # compares 2 lists
-def cmp_list(old, new, name):
-    if old != new:
-        if not old:
-            print FORMAT % (ADDED, name)
-        elif not new:
-            print FORMAT % (REMOVED, name)
-        else:
-            print FORMAT % (CHANGED, name)
+def cmp_list(o, n, name):
+    for old in o:
+        if not old in n:
+            print DEPFORMAT % (REMOVED, name, old[0], sense2str(old[2]), old[1])
+    for new in n:
+        if not new in o:
+            print DEPFORMAT % (ADDED, name, new[0], sense2str(new[2]), new[1])
 
 # filter the own name of the package
 def get_provides(pkg):
     name = pkg[rpm.RPMTAG_NAME]
     p = []
     for prov in pkg.provides():
-        if prov[0] != name and prov[1] == '%s-%s' % (pkg[rpm.RPMTAG_VERSION], pkg[rpm.RPMTAG_RELEASE]) and prov[2] == rpm.RPMSENSE_EQUAL:
+        if not (prov[0] == name and prov[1] == '%s-%s' % (pkg[rpm.RPMTAG_VERSION], pkg[rpm.RPMTAG_RELEASE]) and prov[2] == rpm.RPMSENSE_EQUAL):
             p.append(prov)
     return p
 
