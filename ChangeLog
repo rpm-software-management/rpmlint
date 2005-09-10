@@ -1,3 +1,23 @@
+2005-09-11 01:00  Frederic Lepied <flepied at mandriva.com>
+
+	* FilesCheck.py: added noarch-python-in-64bit-path
+
+2005-09-11 00:59  Frederic Lepied <flepied at mandriva.com>
+
+	* MenuCheck.py: added menu-in-wrong-dir
+
+2005-09-10 22:13  Frederic Lepied <flepied at mandriva.com>
+
+	* rpmdiff: output details on dependencies
+
+2005-08-17 07:11  Thierry Vignaud <tvignaud at mandriva.com>
+
+	* Config.py: add filter rules for harddrake & drakxtools
+
+2005-08-10 09:42  Frederic Lepied <flepied at mandriva.com>
+
+	* TagsCheck.py: check Mandrivalinux in bad words
+
 2005-08-10 08:14  Frederic Lepied <flepied at mandriva.com>
 
 	* rpmlint.spec: real 0.71-1mdk
