@@ -86,7 +86,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         error=1
                         if name[0] == '$':
                             value=Pkg.substitute_shell_vars(name, content)
-                            if value == basename:
+                            # If value still starts with '$', substitution has
+                            # failed probably due to a more complex shell
+                            # expression than what we can handle; don't blame
+                            # the package for that.
+                            if value == basename or value[0] == '$':
                                 error=0
                         if error:
                             printError(pkg, 'incoherent-subsys', f, name)
