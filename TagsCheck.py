@@ -695,9 +695,10 @@ if Config.info:
 'The "Summary:" must not exceed 80 characters.',
 
 'invalid-version',
-'''The version string must not contain the pre, alpha, beta or rc suffixes because
-when the final version will be out, you will have to use an Epoch tag to make
-you package upgradable. Instead put it in the release tag like 0.alpha8.1''' + release_ext + '.',
+'''The version string must not contain the pre, alpha, beta or rc suffixes
+because when the final version will be out, you will have to use an Epoch tag
+to make the package upgradable. Instead put it in the release tag like
+0.alpha8.1''' + release_ext + '.',
 
 'spelling-error-in-description',
 '''You made a misspelling in the Description. Please double-check.''',
@@ -714,21 +715,23 @@ the Packager tag. Ex: Packager: Christian Belisle <cbelisle@mandriva.com>.''',
 Please change it and rebuild your package.''',
 
 'no-version-tag',
-'''There is no Version tag in your package. You have to specify a version using the
-Version tag.''',
+'''There is no Version tag in your package. You have to specify a version using
+the Version tag.''',
 
 'no-release-tag',
-'''There is no Release tag in your package. You have to specify a release using the
-Release tag.''',
+'''There is no Release tag in your package. You have to specify a release using
+the Release tag.''',
 
 'not-standard-release-extension',
-'Your release number must finish with ' + release_ext + ' and must be valid.',
+'Your release number must end with ' + release_ext + ' and must be valid.',
 
 'no-name-tag',
-'''There is no Name tag in your package. You have to specify a name using the Name tag.''',
+'''There is no Name tag in your package. You have to specify a name using the
+Name tag.''',
 
 'non-coherent-filename',
-'''The file which contains the package should be named <NAME>-<VERSION>-<RELEASE>.<ARCH>.rpm.''',
+'''The file which contains the package should be named
+<NAME>-<VERSION>-<RELEASE>.<ARCH>.rpm.''',
 
 'no-dependency-on',
 '''
@@ -743,7 +746,7 @@ Release tag.''',
 ''',
 
 'no-major-in-name',
-'''The major number of the library isn't contained in the package name.
+'''The major number of the library isn't included in the package's name.
 ''',
 
 'no-provides',
@@ -755,7 +758,8 @@ included.''',
 using this tag. To insert it, just insert a tag 'Summary'.''',
 
 'summary-on-multiple-lines',
-'''Your summary must fit on one line. Please make it shorter and rebuilt your package.''',
+'''Your summary must fit on one line. Please make it shorter and rebuild the
+package.''',
 
 'summary-not-capitalized',
 '''Summary doesn't begin with a capital letter.''',
@@ -764,15 +768,16 @@ using this tag. To insert it, just insert a tag 'Summary'.''',
 '''Summary ends with a dot.''',
 
 'summary-has-leading-spaces',
-'''Summary begins with spaces and that will waste space when displayed.''',
+'''Summary begins with whitespace which will waste space when displayed.''',
 
 'no-description-tag',
-'''There is no %description tag in your spec file. To insert it, just insert a '%tag' in
-your spec file and rebuild it.''',
+'''There is no %description tag in your spec file. To insert it, just insert a
+'%description' tag in your spec file, add a textual description of the package
+after it, and rebuild the package.''',
 
 'description-line-too-long',
-'''Your description lines must no exceed 80 characters. If a line is exceeding this number,
-cut it to fit in two lines.''',
+'''Your description lines must no exceed 80 characters. If a line is exceeding
+this number, cut it to fit in two lines.''',
 
 'no-group-tag',
 '''There is no Group tag in your package. You have to specify a valid group
@@ -783,20 +788,21 @@ in your spec file using the Group tag.''',
 please refer to the ''' + distribution + ' RPM documentation.''',
 
 'no-changelogname-tag',
-'''There is no %changelog tag in your spec file. To insert it, just insert a '%changelog' in
-your spec file and rebuild it.''',
+'''There is no %changelog tag in your spec file. To insert it, just insert a
+'%changelog' in your spec file and rebuild it.''',
 
 'no-version-in-last-changelog',
-'''The last changelog entry doesn't contain a version. Please insert the coherent version and
-rebuild your package.''',
+'''The last changelog entry doesn't contain a version. Please insert the
+version that is coherent with the version of the package and rebuild it.''',
 
 'incoherent-version-in-changelog',
-'''Your last entry in %changelog contains a version that is not coherent with the current
-version of your package.''',
+'''Your last entry in %changelog contains a version that is not coherent with
+the current version of your package.''',
 
 'no-license',
-'''There is no License tag in your spec file. You have to specify one license for your
-program (ie GPL). To insert this tag, just insert a 'License' in your file.''',
+'''There is no License tag in your spec file. You have to specify one license
+for your program (eg. GPL). To insert this tag, just insert a 'License' in
+your specfile.''',
 
 'invalid-license',
 '''The license you specified is invalid. The valid licenses are:
@@ -815,16 +821,16 @@ program (ie GPL). To insert this tag, just insert a 'License' in your file.''',
 if the license is near an existing one, you can use '<license> style'.''',
 
 'invalid-url',
-'''Your URL is not valid. It must begin with http, https or ftp and must not
-contain anymore the word mandrake.''',
+'''Your URL is not valid. It must begin with http, https or ftp and must no
+longer contain the word mandrake.''',
 
 'obsolete-not-provided',
-'''The obsoleted package must also be provided to allow a clean upgrade
+'''The obsoleted package must also be provided to allow clean upgrade paths
 and not to break dependencies.''',
 
 'invalid-dependency',
-'''An invalid dependency has been detected. It usually means that the build of the
-package was buggy.''',
+'''An invalid dependency has been detected. It usually means that the build of
+the package was buggy.''',
 
 'no-epoch-tag',
 '''There is no Epoch tag in your package. You have to specify an epoch using the
@@ -846,18 +852,21 @@ Epoch tag.''',
 '''Your package contains a versioned dependency without an Epoch.''',
 
 'devel-dependency',
-'''Your package has a dependency on a devel package whereas it's not a devel package.''',
+'''Your package has a dependency on a devel package but it's not a devel
+package itself.''',
 
 'invalid-build-requires',
 '''Your source package contains a dependency not compliant with the lib64 naming.
-This BuildRequires dependency will not be resolved on lib64 platforms (i.e. amd64).''',
+This BuildRequires dependency will not be resolved on lib64 platforms
+(eg. amd64).''',
 
 'explicit-lib-dependency',
 '''You must let rpm find the library dependencies by itself. Do not put unneeded
 explicit Requires: tags.''',
 
 'useless-explicit-provides',
-'''This package provides 2 times the same capacity. It should only provide it once.''',
+'''This package provides 2 times the same capacity. It should only provide it
+once.''',
 
 'obsolete-on-name',
 '''A package should not obsolete itself, as it can cause weird errors in tools.''',

@@ -116,38 +116,38 @@ a call to chkconfig.''',
 
 'no-status-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'status' entry, which is necessary for a good functionality.''',
+have a 'status' entry, which is necessary for good functionality.''',
 
 'no-reload-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'reload' entry, which is necessary for a good functionality.''',
+have a 'reload' entry, which is necessary for good functionality.''',
 
 'no-chkconfig-line',
-'''The init script doesn't contain a chkconfig line to specify the runlevels at which
-to start and stop it.''',
+'''The init script doesn't contain a chkconfig line to specify the runlevels
+at which to start and stop it.''',
 
 'no-default-runlevel',
 '''The default runlevel isn't specified in the init script.''',
 
 'subsys-not-used',
-'''While your program is running, you have to put a lock file in
+'''While your daemon is running, you have to put a lock file in
 /var/lock/subsys/. To see an example, look at this directory on your
-machine.''',
+machine and examine the corresponding init scripts.''',
 
 'incoherent-subsys',
 '''The filename of your lock file in /var/lock/subsys/ is incoherent
 with your actual init script name. For example, if your script name
-is httpd, you have to put a 'httpd' file in your subsys directory.''',
+is httpd, you have to use 'httpd' as the filename in your subsys directory.''',
 
 'incoherent-init-script-name',
 '''The init script name should be the same as the package name in lower case.''',
 
 'init-script-name-with-dot',
-'''The init script name should not contains a dot in the name. 
-it would not be taken in account by chkconfig''',
+'''The init script name should not contain a dot in its name. Some versions
+of chkconfig don't work as expected with init script names like that.''',
 
 'init-script-non-executable',
-'''The init script should have at least the execution bit set for root 
-in order to be run during the boot'''
+'''The init script should have at least the execution bit set for root
+in order for it to run at boot time.''',
 )
 # InitScriptCheck.py ends here

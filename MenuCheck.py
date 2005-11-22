@@ -335,7 +335,7 @@ check=MenuCheck()
 if Config.info:
     addDetails(
 'non-file-in-menu-dir',
-'''/usr/lib/menu must not contain something else than normal files.''',
+'''/usr/lib/menu must not contain anything else than normal files.''',
 
 'non-coherent-menu-filename',
 '''The menu file name should be /usr/lib/menu/<package>.''',
@@ -348,38 +348,40 @@ if Config.info:
 ''',
 
 'non-transparent-xpm',
-'''xpm icon should be transparent to used in menus.''',
+'''xpm icon should be transparent for use in menus.''',
 
 'menu-without-postin',
-'''A menu file exists in the package but no %post is present to call
+'''A menu file exists in the package but no %post scriptlet is present to call
 update-menus.''',
 
 'postin-without-update-menus',
-'''A menu file exists in the package but the %post doesn't call update-menus.''',
+'''A menu file exists in the package but its %post scriptlet doesn't call
+update-menus.''',
 
 'menu-without-postun',
-'''A menu file exists in the package but no %postun is present to call
+'''A menu file exists in the package but no %postun scriptlet is present to call
 update-menus.''',
 
 'postun-without-update-menus',
-'''A menu file exists in the package but the %postun doesn't call update-menus.''',
+'''A menu file exists in the package but its %postun scriptlet doesn't call
+update-menus.''',
 
 'incoherent-package-value-in-menu',
 '''The package field of the menu entry isn't the same as the package name.''',
 
 'use-of-launcher-in-menu-but-no-requires-on',
-'''The menu command uses a launcher but there is no require on the package
+'''The menu command uses a launcher but there is no dependency in the package
 that contains it.''',
 
 'menu-command-not-in-package',
-'''The command used in the menu isn't contained in the package.''',
+'''The command used in the menu isn't included in the package.''',
 
 'menu-longtitle-not-capitalized',
 '''The longtitle field of the menu doesn't start with a capital letter.''',
 
 'version-in-menu-longtitle',
-'''A version is contained in the longtitle field of the menu entry. This is bad because
-it will be prone to error when the version of the package changes.''',
+'''The longtitle filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.''',
 
 'no-longtitle-in-menu',
 '''The longtitle field isn't present in the menu entry.''',
@@ -388,8 +390,8 @@ it will be prone to error when the version of the package changes.''',
 '''The title field of the menu entry doesn't start with a capital letter.''',
 
 'version-in-menu-title',
-'''A version is contained in the title field of the menu entry. This is bad because
-it will be prone to error when the version of the package changes.''',
+'''The title filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.''',
 
 'no-title-in-menu',
 '''The title field isn't present in the menu entry.''',
@@ -401,8 +403,8 @@ it will be prone to error when the version of the package changes.''',
 '''rpmlint wasn't able to parse the menu section. Please report.''',
 
 'hardcoded-path-in-menu-icon',
-'''The path of the icon is hardcoded in the menu entry. This prevent multiple sizes
-of the icon to be found.''',
+'''The path of the icon is hardcoded in the menu entry. This prevent multiple
+sizes of the icon from being found.''',
 
 'normal-icon-not-in-package',
 '''The normal icon isn't present in the package.''',
