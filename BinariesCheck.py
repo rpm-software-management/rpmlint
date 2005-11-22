@@ -256,7 +256,7 @@ if Config.info:
     addDetails(
 'arch-independent-package-contains-binary-or-object',
 '''The package contains a binary or object file but is tagged
-Architecture: noarch.''',
+noarch.''',
 
 'arch-dependent-file-in-usr-share',
 '''This package installs an ELF binary in the /usr/share
@@ -270,7 +270,8 @@ FHS and the FSSTND forbid this.''',
 # '',
 
 'invalid-soname',
-'''The soname of the library is neither of the form lib<libname>.so.<major> or lib<libname>-<major>.so.''',
+'''The soname of the library is neither of the form lib<libname>.so.<major> or
+lib<libname>-<major>.so.''',
 
 'invalid-ldconfig-symlink',
 '''The symbolic link references the wrong file. It should reference
@@ -279,10 +280,9 @@ the shared library.''',
 'no-ldconfig-symlink',
 '''The package should not only include the shared library itself, but
 also the symbolic link which ldconfig would produce. (This is
-necessary, so that the link gets removed by dpkg automatically when
-the package gets removed.)  If the symlink is in the package, check
-that the SONAME of the library matches the info in the shlibs
-file.''',
+necessary, so that the link gets removed by rpm automatically when
+the package gets removed, even if for some reason ldconfig would not be
+run at package postinstall phase.)''',
 
 'shlib-with-non-pic-code',
 '''The listed shared libraries contain object code that was compiled
@@ -293,25 +293,26 @@ Another common mistake that causes this problem is linking with
 ``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
 
 'binary-or-shlib-defines-rpath',
-'''The binary or shared library defines the `RPATH'. Usually this is a
-bad thing because it hard codes the path to search libraries and so it
-makes difficult to move libraries around.  Most likely you will find a
-Makefile with a line like: gcc test.o -o test -Wl,--rpath.''',
+'''The binary or shared library defines `RPATH'. Usually this is a
+bad thing because it hardcodes the path to search libraries and so
+makes it difficult to move libraries around.  Most likely you will find a
+Makefile with a line like: gcc test.o -o test -Wl,--rpath.  Also, sometimes
+configure scripts provide a --disable-rpath flag to avoid this.''',
 
 'statically-linked-binary',
 '''The package installs a statically linked binary or object file.
 
-Usually this is a bug. Otherwise, please contact
+Usually this is a packaging bug. If not, please contact
 <flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint. With that, rpmlint will ignore
-this bug in the future.''',
+in the exception file for rpmlint and will not be flagged as a packaging
+bug in the future.''',
 
 'executable-in-library-package',
 '''The package mixes up libraries and executables. Mixing up these
 both types of files makes upgrades quite impossible.''',
 
 'non-versioned-file-in-library-package',
-'''The package contains files in non versioned directories. This makes
+'''The package contains files in non versioned directories. This makes it
 impossible to have multiple major versions of the libraries installed.
 One solution can be to change the directories which contain the files
 to subdirs of /usr/lib/<name>-<version> or /usr/share/<name>-<version>.
@@ -328,7 +329,8 @@ themselves.''',
 'This file contains a reference to /tmp or /home.',
 
 'no-binary',
-'''The package should be of the noarch architecture because it doesn't contain any binary.''',
+'''The package should be of the noarch architecture because it doesn't contain
+any binaries.''',
 
 'only-non-binary-in-usr-lib',
 '''There are only non binary files in /usr/lib so they should be in /usr/share.''',

@@ -218,12 +218,12 @@ if Config.info:
 SPEC file to build a valid RPM package.''',
 
 'invalid-spec-name',
-'''Your spec file must finish with '.spec'. If it's not the case, rename your
+'''Your spec filename must end with '.spec'. If it's not the case, rename your
 file and rebuild your package.''',
 
 'use-of-RPM_SOURCE_DIR',
-'''You use RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
-use a directory for building, use RPM_BUILD_ROOT instead.''',
+'''You use $RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
+use a directory for building, use $RPM_BUILD_ROOT instead.''',
 
 'patch-not-applied',
 '''A patch is included in your package but was not applied. Refer to the patches
@@ -234,29 +234,32 @@ documentation to see what's wrong.''',
 be replaced by License and Epoch respectively.''',
 
 'no-buildroot-tag',
-'''The BuildRoot tag isn't used in your spec. It must be used to
-allow build as non root.''',
+'''The BuildRoot tag isn't used in your spec. It must be used in order to
+allow building the package as non root on some systems.''',
 
 'hardcoded-path-in-buildroot-tag',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
 by something like %{_tmppath}/%name-root.''',
 
 'hardcoded-packager-tag',
-'''The Packager tag is hardcoded in your spec file. It should be removed, so as to use rebuilder's own defaults.''',
+'''The Packager tag is hardcoded in your spec file. It should be removed, so
+as to use rebuilder's own defaults.''',
 
 'hardcoded-prefix-tag',
-'''The Prefix tag is hardcoded in your spec file. It should be removed, so as to allow package relocation.''',
+'''The Prefix tag is hardcoded in your spec file. It should be removed, so as
+to allow package relocation.''',
 
 'redundant-prefix-tag',
-'''The Prefix tag is uselessly defined as %{_prefix} in your spec file. It should be removed, as it is redundant with rpm defaults.''',
+'''The Prefix tag is uselessly defined as %{_prefix} in your spec file. It
+should be removed, as it is redundant with rpm defaults.''',
 
 'hardcoded-library-path',
 '''A library path is hardcoded to one of the following paths: /lib,
 /usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.''',
 
 'configure-without-libdir-spec',
-'''A configure script is run without specifying the libdir. Configure
-options must be augmented with something like libdir=%{_libdir}.''',
+'''A configure script is run without specifying the libdir. configure
+options must be augmented with something like --libdir=%{_libdir}.''',
 
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed

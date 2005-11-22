@@ -625,25 +625,29 @@ Standard groups are:
 - postgres	- rpcuser	- rpm''',
 
 'library-without-ldconfig-postin',
-'''This package contains a library and provides no %post with a call to ldconfig.''',
+'''This package contains a library and provides no %post scriptlet containing
+a call to ldconfig.''',
 
 'postin-without-ldconfig',
-'''This package contains a library and its %post doesn't call ldconfig.''',
+'''This package contains a library and its %post scriptlet doesn't call ldconfig.''',
 
 'library-without-ldconfig-postun',
-'''This package contains a library and provides no %postun with a call to ldconfig.''',
+'''This package contains a library and provides no %postun scriptlet containing
+a call to ldconfig.''',
 
 'postun-without-ldconfig',
 '''This package contains a library and its %postun doesn't call ldconfig.''',
 
 'info-files-without-install-info-postin',
-'''This package contains info files and provides no %post with a call to install-info.''',
+'''This package contains info files and provides no %post scriptlet containing
+a call to install-info.''',
 
 'postin-without-install-info',
 '''This package contains info files and its %post doesn't call install-info.''',
 
 'info-files-without-install-info-postun',
-'''This package contains info files and provides no %postun with a call to install-info.''',
+'''This package contains info files and provides no %postun scriptlet containing
+a call to install-info.''',
 
 'postun-without-install-info',
 '''This package contains info files and its %postun doesn't call install-info.''',
@@ -654,23 +658,23 @@ file is beginning with a dot (.) and contain "perl" in its name.''',
 
 'dir-or-file-in-tmp',
 '''A file in the package is located in /tmp. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'dir-or-file-in-mnt',
 '''A file in the package is located in /mnt. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'dir-or-file-in-opt',
 '''A file in the package is located in /opt. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'dir-or-file-in-usr-local',
 '''A file in the package is located in /usr/local. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'dir-or-file-in-var-local',
 '''A file in the package is located in /var/local. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'subdir-in-bin',
 '''The package contains a subdirectory in /usr/bin. It's not permitted to
@@ -683,18 +687,20 @@ your package.''',
 
 'dir-or-file-in-home',
 '''A file in the package is located in /home. It's not permitted
-to put a file in this directory.''',
+for packages to install files in this directory.''',
 
 'version-control-internal-file',
 '''You have included file(s) internally used by a version control system
 in the package. Move these files out of the package and rebuild it.''',
 
 'htaccess-file',
-'''You have individual apache configuration .htaccess file(s) in your package. Replace them by a central configuration file in /etc/httpd/webapps.d.''',
+'''You have individual apache configuration .htaccess file(s) in your package.
+Replace them by a central configuration file in /etc/httpd/webapps.d.''',
 
 'info-dir-file',
-'''You have /usr/info/dir or /usr/share/info/dir in your package. It's not allowed.
-Please remove it and rebuild your package.''',
+'''You have /usr/info/dir or /usr/share/info/dir in your package. It will cause
+conflicts with other packages and thus is not allowed. Please remove it and
+rebuild your package.''',
 
 'non-conffile-in-etc',
 '''A non-executable file in your package is being installed in /etc, but is not
@@ -705,26 +711,27 @@ files. Mark the file as %config in the spec file.''',
 '''The symlink points to a compressed file but doesn't use the same extension.''',
 
 'setuid-gid-binary',
-'''The file is setuid and setgid. Usually this is a bug. Otherwise, please contact
-<flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint. With that, rpmlint will ignore
-this bug in the future.''',
+'''The file is setuid and setgid. Usually this is a packaging bug. If not, please
+contact <flepied at mandriva.com> about this so that this error gets included
+in the exception file for rpmlint and will not be flagged as a packaging bug
+in the future.''',
 
 'setuid-binary',
-'''The file is setuid. Usually this is a bug. Otherwise, please contact
+'''The file is setuid. Usually this is a packaging bug. If not, please contact
 <flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint. With that, rpmlint will ignore
-this bug in the future.''',
+in the exception file for rpmlint and will not be flagged as a packaging
+bug in the future.''',
 
 'setgid-binary',
-'''The file is setgid. Usually this is a bug. Otherwise, please contact
+'''The file is setgid. Usually this is a packaging bug. If not, please contact
 <flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint. With that, rpmlint will ignore
-this bug in the future.''',
+in the exception file for rpmlint and will not be flagged as a packaging
+bug in the future.''',
 
 'non-standard-executable-perm',
-'''A standard executable should have permission set to 0755. If you get this message,
-that means that you have a wrong executable permission in your package.''',
+'''A standard executable should have permission set to 0755. If you get this
+message, it means that you have a wrong executable permissions in some files
+included in your package.''',
 
 'non-executable-in-bin',
 '''A file is being installed in /usr/bin, but is not an executable. Be sure
@@ -735,15 +742,15 @@ that the file is an executable or that it has executable permissions.''',
 package. If you want to include source code in your package, be sure to
 create a development package.''',
 
-
 'non-standard-dir-perm',
-'''A standard directory should have permission set to 0755. If you get this message,
-that means that you have a wrong directory permission in your package.''',
+'''A standard directory should have permission set to 0755. If you get this
+message, it means that you have a wrong directory permissions in sone dirs
+included in your package.''',
 
 'standard-dir-owned-by-package',
-'''This package owns a directory that is part of the standard hierarchy and this
-can lead to default directory rights, owner or group be changed to something
-non standard.''',
+'''This package owns a directory that is part of the standard hierarchy, which
+can lead to default directory permissions or ownerships being changed to
+something non-standard.''',
 
 'no-dependency-on',
 '''
@@ -772,17 +779,20 @@ non standard.''',
 ''',
 
 'non-readable',
-'''The file can't be read by everybody. If this is normal (for security reason), send an
-email to <flepied at mandriva.com> to add it to the list of exceptions in the next release.''',
+'''The file can't be read by everybody. If this is expected (for security
+reasons), send an email to <flepied at mandriva.com> to get it added to the
+list of exceptions in future rpmlint releases.''',
 
 'incoherent-logrotate-file',
 '''Your logrotate file should be named /etc/logrotate.d/<package name>.''',
 
 'non-root-user-log-file',
-'''If you need non root log file, just create a subdir in /var/log and put your files inside.''',
+'''If you need log files owned by a non-root user, just create a subdir in
+/var/log and put your log files in it.''',
 
 'non-root-group-log-file',
-'''If you need non root log file, just create a subdir in /var/log and put your files inside.''',
+'''If you need log files owned by a non-root group, just create a subdir in
+/var/log and put your log files in it.''',
 
 'non-ghost-file',
 '''File should be tagged %ghost.''',
@@ -793,27 +803,31 @@ and 32 bits versions of the package to coexist.''',
 
 'hidden-file-or-dir',
 '''The file or directory is hidden. You should see if this is normal, 
-and delete it if needed.''',
+and delete it from the package if not.''',
 
 'module-without-depmod-postin',
-'''This package contains a kernel module but provides no call to depmod in %post.''',
+'''This package contains a kernel module but provides no call to depmod in the
+%post scriptlet.''',
 
 'postin-with-wrong-depmod',
-'''This package contains a kernel module but its %post calls depmod for the wrong kernel.''',
+'''This package contains a kernel module but its %post scriptlet calls depmod
+for the wrong kernel.''',
 
 'module-without-depmod-postun',
-'''This package contains a kernel module but provides no call to depmod in %postun.''',
+'''This package contains a kernel module but provides no call to depmod in the
+%postun scriptlet.''',
 
 'postun-with-wrong-depmod',
-'''This package contains a kernel module but its %postun calls depmod for the wrong kernel.''',
+'''This package contains a kernel module but its %postun scriptlet calls depmod
+for the wrong kernel.''',
 
 'log-files-without-logrotate',
-'''This package use files in /var/log/ without adding a entry for 
-logrotate.''',
+'''This package contains files in /var/log/ without adding logrotate
+configuration for them.''',
 
 'mispelled-macro',
-'''This package contains a file which match %{.*}, this is often the sign
-of a mispelled macro. Please check your spec file.''',
+'''This package contains a file which matches %{.*}; this is often the sign
+of a misspelled macro. Please check your spec file.''',
 
 'manifest-in-perl-module',
 '''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
@@ -824,27 +838,36 @@ in the documentation directory.''',
 while they must appear under vendor_perl.''',
 
 'executable-marked-as-config-file',
-'''Executables must not be marked as config files because it will
-prevent upgrades to work correctly. If you need to be able to
-customize an executable, make it read a config file in /etc/sysconfig
-for example.''',
+'''Executables must not be marked as config files because that may
+prevent upgrades from working correctly. If you need to be able to
+customize an executable, make it for example read a config file in
+/etc/sysconfig.''',
 
 'wrong-script-interpreter',
 '''This script uses an incorrect interpreter.''',
 
 'non-executable-script',
-'''This script is not executable.''',
+'''This non-executable text file contains a shebang.  Often this is a sign of a
+spurious shebang in files that are not meant to be executed, but can also be a
+case of missing executable bits for a script.  To fix this error, find out
+which case of the above it is, and either remove the unneeded shebang or add
+the executable bits.''',
 
 'script-without-shellbang',
-'''This script does not begins with a shellbang. It will prevent its execution.''',
+'''This executable text file does not contain a shebang, thus it cannot be
+properly executed.  Often this is a sign of spurious executable bits for a
+non-script file, but can also be a case of a missing shebang.  To fix this
+error, find out which case of the above it is, and either remove the
+executable bits or add the shebang.''',
 
 'wrong-script-end-of-line-encoding',
-'''This script has wrong end-of-line encoding, usually caused by creation on a
-non-Unix system. It will prevent its execution.''',
+'''This script has wrong end-of-line encoding, usually caused by creation or
+modification on a non-Unix system. It will prevent its execution.''',
 
 'wrong-file-end-of-line-encoding',
-'''This file has wrong end-of-line encoding, usually caused by creation on a
-non-Unix system. It could harm its visualisation.'''
+'''This file has wrong end-of-line encoding, usually caused by creation or
+modification on a non-Unix system. It could prevent it from being displayed
+correctly in some circumstances.''',
 
 )
 

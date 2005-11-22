@@ -69,23 +69,25 @@ if Config.info:
 'The distribution value should be "' + distribution + '".',
 
 'manpage-not-bzipped',
-'''Manual Pages are not under the .bz2 extension/format. Please
+'''Manual Pages are not compressed using the .bz2 extension/format. Please
 run bzip2 <man page file> to bzip it in the %install section and
-after, build the package. You can also use the spec-helper package
-that automatizes this task.''',
+rebuild the package. You can also use the spec-helper package
+that automates this task.''',
 
 'manpage-not-gzipped',
-'''Manual Pages are not under the .gz extension/format. Please
-run gzip <man page file> to gzip it and after, build the package.''',
+'''Manual Pages are not compressed using the .gz extension/format. Please
+run gzip <man page file> to gzip it in the %install section and rebuild the
+package.''',
 
 'infopage-not-bzipped',
-'''An info page is not under the .bz2 extension/format. Please
-run bzip2 <info page file> to bzip it and after, build the package.
-You can also use the spec-helper package that automatizes this task.''',
+'''An info page is not compressed using the .bz2 extension/format. Please
+run bzip2 <info page file> to bzip it in the %install section and rebuild the
+package. You can also use the spec-helper package that automates this task.''',
 
 'infopage-not-gzipped',
-'''An info page is not under the .gz extension/format. Please
-run gzip <info page file> to gzip it and after, build the package.''',
+'''An info page is not compressed using the .gz extension/format. Please
+run gzip <info page file> to gzip it in the %install section and rebuild the
+package.''',
 
 )
 # DistributionCheck.py ends here
