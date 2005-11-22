@@ -1,11 +1,9 @@
-To  get  the  last developement  version,  you  may  use CVS  see  the
-http://www.linuxmandrake.com/en/cvs.php3 page for more information how
-to use cvs.
+To get the latest developement version, you may use CVS.  See the
+http://qa.mandriva.com/twiki/bin/view/Main/CvsGuide page for more information.
 
 Then just checkout the rpmlint module from the base.
 
-The trick to use it locally is to run the following command
-line:
+The trick to use it locally is to run the following command line:
 
 $ python -O -u rpmlint.py -C . <rpms>
 
@@ -13,4 +11,4 @@ and to run only a single check, for example to test only FHSCheck:
 
 $ python -O -u rpmlint.py -C . -c FHSCheck <rpms>
 
-Frederic Lepied <flepied@mandrakesoft.com>.
+Frederic Lepied <flepied at mandriva.com>
