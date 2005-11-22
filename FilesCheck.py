@@ -477,7 +477,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
 		# absolute link
 		if r:
-                    if (not is_so) and link not in files.keys():
+                    if (not is_so) and link not in files.keys() and link not in req_names:
                         is_exception=0
                         for e in dangling_exceptions:
                             if e[0].search(link):
@@ -502,14 +502,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         file = os.path.normpath(file)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
-                        if not (files.has_key(pkgfile) or os.path.exists(file)):
+                        if not (files.has_key(pkgfile) or os.path.exists(file) or pkgfile in req_names):
                             is_exception=0
                             for e in dangling_exceptions:
                                 if e[0].search(link):
                                     is_exception=e[1]
                                     break
                             if is_exception:
-                                if not is_exception in map(lambda x: x[0], pkg.requires() + pkg.prereq()):
+                                if not is_exception in req_names:
                                     printWarning(pkg, 'no-dependency-on', is_exception)
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
