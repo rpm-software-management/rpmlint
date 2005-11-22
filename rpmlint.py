@@ -71,6 +71,10 @@ def main():
 	    except KeyboardInterrupt:	    
                     sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
                     sys.exit(2)
+            except rpm.error, e:
+                sys.stderr.write('Error while reading %s: %s\n' % (f, e))
+                pkg=None
+                continue
             except:
                 sys.stderr.write('Error while reading ' + f + '\n')
                 pkg=None
