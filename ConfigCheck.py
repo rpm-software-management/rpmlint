@@ -15,7 +15,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
     games_regex=re.compile("^/var/lib/games")
     usr_regex=re.compile("^/usr/")
     etc_var_regex=re.compile("^/etc/|^/var/")
-    appdefaults_regex=re.compile("^/usr/X11R6/lib/X11/app-defaults/")
+    appdefaults_regex=re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
     
     def __init__(self):
 	AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
