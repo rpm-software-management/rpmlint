@@ -86,14 +86,13 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         error=1
                         if name[0] == '$':
                             value=Pkg.substitute_shell_vars(name, content)
-                            # If value still starts with '$', substitution has
-                            # failed probably due to a more complex shell
-                            # expression than what we can handle; don't blame
-                            # the package for that.
-                            if value == basename or value[0] == '$':
+                            if value == basename:
                                 error=0
                         if error:
-                            printError(pkg, 'incoherent-subsys', f, name)
+                            if name[0] == '$':
+                                printWarning(pkg, 'incoherent-subsys', f, name)
+                            else:
+                                printError(pkg, 'incoherent-subsys', f, name)
 
         if len(list) == 1 and string.lower(pkg[rpm.RPMTAG_NAME]) != list[0]:
             printWarning(pkg, 'incoherent-init-script-name', list[0])
@@ -141,7 +140,12 @@ machine and examine the corresponding init scripts.''',
 'incoherent-subsys',
 '''The filename of your lock file in /var/lock/subsys/ is incoherent
 with your actual init script name. For example, if your script name
-is httpd, you have to use 'httpd' as the filename in your subsys directory.''',
+is httpd, you have to use 'httpd' as the filename in your subsys directory.
+It is also possible that rpmlint gets this wrong, especially if the init
+script contains nontrivial shell variables and/or assignments.  These
+cases usually manifest themselves when rpmlint reports that the subsys name
+starts a with '$'; in these cases a warning instead of an error is reported
+and you should check the script manually.''',
 
 'incoherent-init-script-name',
 '''The init script name should be the same as the package name in lower case.''',
