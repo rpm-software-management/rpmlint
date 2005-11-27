@@ -19,7 +19,7 @@ def check_name(db, name):
         return db.findbyname(name)
     except:
         return None
-    
+
 def check_provides(db, name):
     if name[0:7] == 'rpmlib(':
         return 1
@@ -27,13 +27,13 @@ def check_provides(db, name):
         return db.findbyprovides(name)
     except:
         return None
-    
+
 def check_file(db, name):
     try:
         return db.findbyfile(name)
     except:
         return None
-    
+
 while idx:
     pkg=Pkg.Pkg(None, None, db[idx])
     for (dep,ver,flags) in pkg.requires() + pkg.prereq():

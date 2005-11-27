@@ -1,10 +1,10 @@
 #############################################################################
-# File		: SpecCheck.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Thu Oct  7 17:06:14 1999
-# Version	: $Id$
-# Purpose	: check the spec file of a source rpm.
+# File          : SpecCheck.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Thu Oct  7 17:06:14 1999
+# Version       : $Id$
+# Purpose       : check the spec file of a source rpm.
 #############################################################################
 
 from Filter import *
@@ -55,11 +55,11 @@ def file2string(file):
     content=fd.readlines()
     fd.close()
     return content
-    
+
 class SpecCheck(AbstractCheck.AbstractCheck):
-    
+
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
+        AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
 
     def check(self, pkg):
         if not pkg.isSource():
@@ -67,9 +67,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         # lookup spec file
         files=pkg.files()
-	spec_file=None
-	for f in files.keys():
-	    if spec_regex.search(f):
+        spec_file=None
+        for f in files.keys():
+            if spec_regex.search(f):
                 spec_file=pkg.dirName() + "/" + f
                 break
         if not spec_file:
@@ -77,7 +77,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         else:
             if f != pkg[rpm.RPMTAG_NAME] + ".spec":
                 printError(pkg, "invalid-spec-name", f)
-                
+
             # check content of spec file
             spec=file2string(spec_file)
             patches={}
@@ -93,7 +93,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             lib=0
             if_depth=0
             ifarch_depth=-1
-            
+
             # gather info from spec lines
             for line in spec:
 
@@ -116,7 +116,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if ifarch_depth == if_depth:
                         ifarch_depth = -1
                     if_depth = if_depth - 1
-                
+
                 res=patch_regex.search(line)
                 if res:
                     patches[res.group(1)]=res.group(2)
@@ -131,11 +131,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         if res:
                             source_dir=1
                             printError(pkg, "use-of-RPM_SOURCE_DIR")
-                            
+
                 res=obsolete_tags_regex.search(line)
                 if res:
                     printWarning(pkg, "obsolete-tag", res.group(1))
-				
+
                 if configure:
                     if configure_cmdline[-1] == "\\":
                         configure_cmdline=configure_cmdline[:-1] + string.strip(line)
@@ -148,30 +148,30 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                             res=re.match(hardcoded_library_paths, res.group(1))
                             if res:
                                 printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
-                
+
                 res=configure_start_regex.search(line)
                 if not changelog and res:
                     configure=1
                     configure_cmdline=string.strip(line)
-                
+
                 res=hardcoded_library_path_regex.search(line)
                 if not changelog and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
                     printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
-                
+
                 res=buildroot_regex.search(line)
                 if res:
                     buildroot=1
                     if tmp_regex.search(res.group(1)):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
-		res=packager_regex.search(line)
+                res=packager_regex.search(line)
                 if res:
-                        printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
-		res=prefix_regex.search(line)
+                    printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
+                res=prefix_regex.search(line)
                 if res:
                     if res.group(1) == '%{_prefix}':
                         printWarning(pkg, 'redundant-prefix-tag')
-		    else:
+                    else:
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
                 if not clean and clean_regex.search(line):
@@ -186,7 +186,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 res=prereq_regex.search(line)
                 if res:
                     printError(pkg, 'prereq-use', res.group(1))
-                    
+
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
 
@@ -195,7 +195,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if lib and not mklibname:
                 printError(pkg, 'lib-package-without-%mklibname')
-                
+
             # process gathered info
             for p in patches.keys():
                 if p in applied_patches_ifarch:

@@ -16,7 +16,7 @@ import Config
 
 # could be added.
 #
-# zope 
+# zope
 # abiword2
 # alsaplayer-plugin-input
 # emacs
@@ -24,34 +24,34 @@ import Config
 # nautilus
 # vlc-plugin
 # XFree
-# xine 
+# xine
 
 executable_re=re.compile('^(/usr)?/(s?bin|games)/\S+')
 simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-_]*$');
 
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     checks_=[]
-    
+
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "NamingPolicyCheck")
-        
+
     def add_check(self,pkg_name,name_re,file_re,exception):
         c={}
         c['pkg_name']=pkg_name
         c['name_re']=re.compile(name_re)
         c['file_re']=re.compile(file_re)
-	c['exception']=exception
+        c['exception']=exception
         self.checks_.append(c)
         if Config.info:
             if simple_naming_policy_re.search(name_re):
                 details="The name sould begin with " + name_re[1:]
             else:
                 details="The name should match this regular expression " + name_re
-				
+
             addDetails(pkg_name + '-naming-policy-not-applied',
-                       "This package doesn't respect the naming policy.\n" 
+                       "This package doesn't respect the naming policy.\n"
                        + details + ".\nIt should only be used for separate packages modules.")
-            
+
     def check(self, pkg):
         if pkg.isSource():
             return
@@ -59,30 +59,30 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         if not list:
             return
         try:
-	    # check for binaries first
-	    executables=0
-	    for f in list:
-		if executable_re.search(f):
-		    executables=1
-		    break
+            # check for binaries first
+            executables=0
+            for f in list:
+                if executable_re.search(f):
+                    executables=1
+                    break
 
             # check for files then
             for c in self.checks_:
-		exception=0
-		if c['exception'] and executables:
-		    exception=1
+                exception=0
+                if c['exception'] and executables:
+                    exception=1
 
                 for f in list:
-		    if c['file_re'].search(f) and not c['name_re'].search(pkg[rpm.RPMTAG_NAME]) and not exception:
+                    if c['file_re'].search(f) and not c['name_re'].search(pkg[rpm.RPMTAG_NAME]) and not exception:
                         raise 'naming-policy-not-applied'
-        except 'naming-policy-not-applied':	
+        except 'naming-policy-not-applied':
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
 
 check=NamingPolicyCheck()
 
 #
 # these are the check currently impleted.
-#  
+#
 # first argument is the name of the check, printed by the warning.
 #   ex : xmms.
 #
@@ -110,7 +110,7 @@ check.add_check('php', '^php-', '/usr/lib/php/extensions/', 1)
 check.add_check('ruby', '^ruby-', '/usr/lib/ruby/[1-9](-[1-9])?/', 1)
 check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/', 1)
 
-# these exception should be added 
+# these exception should be added
 # apache2 => apache2-devel
 #            apache2-modules
 # ruby => apache2-mod_ruby

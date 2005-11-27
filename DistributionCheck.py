@@ -1,10 +1,10 @@
 #############################################################################
-# File		: DistributionCheck.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Tue Sep 28 00:05:33 1999
-# Version	: $Id$
-# Purpose	: check the Distribution specificities in a binary rpm package.
+# File          : DistributionCheck.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Tue Sep 28 00:05:33 1999
+# Version       : $Id$
+# Purpose       : check the Distribution specificities in a binary rpm package.
 #############################################################################
 
 from Filter import *
@@ -24,38 +24,38 @@ use_bzip2=Config.getOption("UseBzip2", 1)
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
 
-    
+
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, "DistributionCheck")
+        AbstractCheck.AbstractCheck.__init__(self, "DistributionCheck")
 
     def check(self, pkg):
-	# Check only binary package
-	if pkg.isSource():
-	    return
-	
-	if pkg[rpm.RPMTAG_VENDOR] != vendor:
-	    printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
+        # Check only binary package
+        if pkg.isSource():
+            return
 
-	if pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
-	    printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
+        if pkg[rpm.RPMTAG_VENDOR] != vendor:
+            printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
 
-	# Check the listing of files
-	list=pkg[rpm.RPMTAG_FILENAMES]
-	
-	if list:
-	    for f in list:
-		if man_regex.search(f):
-		    if use_bzip2:
-			if not bz2_regex.search(f):
-			    printWarning(pkg, "manpage-not-bzipped", f)
-		    elif not gz_regex.search(f):
-			printWarning(pkg, "manpage-not-gzipped", f)
-		if info_regex.search(f) and not info_dir_regex.search(f):
-		    if use_bzip2:
-			if not bz2_regex.search(f):
-			    printWarning(pkg, "infopage-not-bzipped", f)
-		    elif not gz_regex.search(f):
-			    printWarning(pkg, "infopage-not-gzipped", f)
+        if pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
+            printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
+
+        # Check the listing of files
+        list=pkg[rpm.RPMTAG_FILENAMES]
+
+        if list:
+            for f in list:
+                if man_regex.search(f):
+                    if use_bzip2:
+                        if not bz2_regex.search(f):
+                            printWarning(pkg, "manpage-not-bzipped", f)
+                    elif not gz_regex.search(f):
+                        printWarning(pkg, "manpage-not-gzipped", f)
+                if info_regex.search(f) and not info_dir_regex.search(f):
+                    if use_bzip2:
+                        if not bz2_regex.search(f):
+                            printWarning(pkg, "infopage-not-bzipped", f)
+                    elif not gz_regex.search(f):
+                        printWarning(pkg, "infopage-not-gzipped", f)
 
 # Create an object to enable the auto registration of the test
 check=DistributionCheck()

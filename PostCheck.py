@@ -50,7 +50,7 @@ prereq_assoc = (
 
 for p in prereq_assoc:
     p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)
-    
+
 def incorrect_shell_script(shellscript):
     tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
     if not shellscript:
@@ -74,19 +74,19 @@ def incorrect_perl_script(perlscript):
     return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):
-    
+
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'PostCheck')
 
     def check(self, pkg):
-	# Check only binary package
-	if pkg.isSource():
-	    return
+        # Check only binary package
+        if pkg.isSource():
+            return
 
         menu_error=0
         prereq=map(lambda x: x[0], pkg.prereq())
         files=pkg.files().keys()
-        
+
         for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, '%pre'),
                     (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, '%post'),
                     (rpm.RPMTAG_PREUN, rpm.RPMTAG_PREUNPROG, '%preun'),
@@ -101,7 +101,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
             else:
                 for idx in range(0, len(prog)):
                     self.check_aux(pkg, files, prog[idx], script[idx], tag, prereq)
-                     
+
         ghost_files=pkg.ghostFiles()
         if ghost_files:
             postin=pkg[rpm.RPMTAG_POSTIN]
@@ -148,7 +148,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                                 break
                         if not found:
                             printError(pkg, 'no-prereq-on', c[1][0])
-                            
+
             if prog == '/bin/sh' or prog == '/bin/bash':
                 if incorrect_shell_script(script):
                     printError(pkg, 'shell-syntax-error-in-' + tag[2])
@@ -161,7 +161,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
             if prog == '/usr/bin/perl':
                 if incorrect_perl_script(script):
                     printError(pkg, 'perl-syntax-error-in-' + tag[2])
-                    
+
             res=single_command_regex.search(script)
             if res:
                 printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))

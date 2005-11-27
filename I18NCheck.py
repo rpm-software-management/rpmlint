@@ -1,10 +1,10 @@
 #############################################################################
-# File		: I18NCheck.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Mon Nov 22 20:02:56 1999
-# Version	: $Id$
-# Purpose	: checks i18n bugs.
+# File          : I18NCheck.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Mon Nov 22 20:02:56 1999
+# Version       : $Id$
+# Purpose       : checks i18n bugs.
 #############################################################################
 
 from Filter import *
@@ -35,25 +35,25 @@ INCORRECT_LOCALES = {
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
 'af', 'am', 'ang', 'ar', 'as', 'az', 'az_IR', 'be', 'bg', 'bn', 'br', 'bs',
-'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el', 
-'en_AU', 'en_CA', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA', 
+'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el',
+'en_AU', 'en_CA', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA',
 'eo', 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu',
 'fa', 'fi', 'fo', 'fr', 'fur', 'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
 'he', 'hi', 'hr', 'hu', 'hy',
 'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'kn', 'ko', 'ku', 'kw', 'ky',
-# 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code 
+# 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso'
 'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru', 'rw',
 'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st', 'sv',
-'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt', 
+'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt',
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
 've', 'vi', 'wa', 'wen', 'xh', 'yi', 'yo', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
 # KDE uses 'ven' for 've'
 'ven',
-# 
+#
 # note: 'pa' should be replaced by 'pa_IN'; but it is still largely used
 'pa',
 # note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
@@ -87,54 +87,54 @@ EXCEPTION_DIRS=('C', 'POSIX', 'CP1251', 'CP1255', 'CP1256',
 'KOI8-R', 'KOI8-U', 'UTF-8')
 
 class I18NCheck(AbstractCheck.AbstractCheck):
-    
+
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
+        AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
 
     def check(self, pkg):
 
         if pkg.isSource():
             return
-        
-	files=pkg.files()
-	locales=[]			# list of locales for this packages
-        webapp=False
-        
-	i18n_tags = pkg[HEADER_I18NTABLE]
-        #i18n_files = pkg.langFiles()
-        
-	for i in i18n_tags:
-	    try:
-		correct=INCORRECT_LOCALES[i]
-		printError(pkg, 'incorrect-i18n-tag-' + correct, i)
-	    except KeyError:
-		pass
 
-	# as some webapps have their files under /var/www/html, and
-	# others in /usr/share or /usr/lib, the only reliable way
-	# sofar to detect them is to look for an apache configuration file
-	for f in files.keys():
-	    if mo_regex.search(f):
-		webapp=True
-	    
-	for f in files.keys():
-	    res=locale_regex.search(f)
-	    if res:
-		locale=res.group(2)
-		# checks the same locale only once
-		if not locale in locales:
-		    locales.append(locale)
-		    res2=correct_subdir_regex.search(locale)
-		    if not res2:
-			if not locale in EXCEPTION_DIRS:
-			    printError(pkg, 'incorrect-locale-subdir', f)
-		    else:
-			locale_name = res2.group(2)
-			try:
-			    correct=INCORRECT_LOCALES[locale_name]
-			    printError(pkg, 'incorrect-locale-' + correct, f)
-			except KeyError:
-			    pass
+        files=pkg.files()
+        locales=[]                      # list of locales for this packages
+        webapp=False
+
+        i18n_tags = pkg[HEADER_I18NTABLE]
+        #i18n_files = pkg.langFiles()
+
+        for i in i18n_tags:
+            try:
+                correct=INCORRECT_LOCALES[i]
+                printError(pkg, 'incorrect-i18n-tag-' + correct, i)
+            except KeyError:
+                pass
+
+        # as some webapps have their files under /var/www/html, and
+        # others in /usr/share or /usr/lib, the only reliable way
+        # sofar to detect them is to look for an apache configuration file
+        for f in files.keys():
+            if mo_regex.search(f):
+                webapp=True
+
+        for f in files.keys():
+            res=locale_regex.search(f)
+            if res:
+                locale=res.group(2)
+                # checks the same locale only once
+                if not locale in locales:
+                    locales.append(locale)
+                    res2=correct_subdir_regex.search(locale)
+                    if not res2:
+                        if not locale in EXCEPTION_DIRS:
+                            printError(pkg, 'incorrect-locale-subdir', f)
+                    else:
+                        locale_name = res2.group(2)
+                        try:
+                            correct=INCORRECT_LOCALES[locale_name]
+                            printError(pkg, 'incorrect-locale-' + correct, f)
+                        except KeyError:
+                            pass
             res=lc_messages_regex.search(f)
             subdir=None
             if res:

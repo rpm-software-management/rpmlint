@@ -1,10 +1,10 @@
 #############################################################################
-# File		: TagsCheck.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Tue Sep 28 00:03:24 1999
-# Version	: $Id$
-# Purpose	: Check a package to see if some rpm tags are present
+# File          : TagsCheck.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Tue Sep 28 00:03:24 1999
+# Version       : $Id$
+# Purpose       : Check a package to see if some rpm tags are present
 #############################################################################
 
 from Filter import *
@@ -448,36 +448,36 @@ def spell_check(pkg, str, tagname):
                     if word[0] == '\'':
                         word=word[1:]
                     if word[-1] == '\'':
-                        word=word[:-1]                
+                        word=word[:-1]
                     correct=BAD_WORDS[word]
                     printWarning(pkg, 'spelling-error-in-' + tagname, word, correct)
                 except KeyError:
                     pass
 
 class TagsCheck(AbstractCheck.AbstractCheck):
-    
+
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
+        AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
 
     def check(self, pkg):
 
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
-	    printError(pkg, 'no-packager-tag')
+            printError(pkg, 'no-packager-tag')
         elif not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
-            
-	version=pkg[rpm.RPMTAG_VERSION]
-	if not version:
-	    printError(pkg, 'no-version-tag')
+
+        version=pkg[rpm.RPMTAG_VERSION]
+        if not version:
+            printError(pkg, 'no-version-tag')
         else:
             res=invalid_version_regex.search(version)
             if res:
                 printError(pkg, 'invalid-version', version)
-                
+
         release=pkg[rpm.RPMTAG_RELEASE]
-	if not release:
-	    printError(pkg, 'no-release-tag')
+        if not release:
+            printError(pkg, 'no-release-tag')
         elif release_ext and not extension_regex.search(release):
             printWarning(pkg, 'not-standard-release-extension', release)
 
@@ -500,7 +500,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if p[1] and not epoch_regex.search(p[1]):
                     printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
 
-	name=pkg[rpm.RPMTAG_NAME]
+        name=pkg[rpm.RPMTAG_NAME]
         deps=pkg.requires() + pkg.prereq()
         devel_depend=0
         is_devel=devel_regex.search(name)
@@ -512,9 +512,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
 
-	    if requires_in_usr_local_regex.search(d[0]):
-                    printError(pkg, 'invalid-dependency', d[0])
-		
+            if requires_in_usr_local_regex.search(d[0]):
+                printError(pkg, 'invalid-dependency', d[0])
+
             if not devel_depend and not is_devel and not is_source:
                 if devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
@@ -527,10 +527,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and string.find(d[1], '-') != -1:
                 printError(pkg, 'requires-on-release', d[0], d[1])
-            
-	if not name:
-	    printError(pkg, 'no-name-tag')
-	else:
+
+        if not name:
+            printError(pkg, 'no-name-tag')
+        else:
             if is_devel and not is_source:
                 base=is_devel.group(1)
                 dep=None
@@ -564,14 +564,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             prov=res.group(1) + res.group(2) + '-devel'
                         else:
                             prov=res.group(1) + '-devel'
-                            
+
                         if not prov in map(lambda x: x[0], pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
-                    
-	summary=pkg[rpm.RPMTAG_SUMMARY]
-	if not summary:
-	    printError(pkg, 'no-summary-tag')
-	else:
+
+        summary=pkg[rpm.RPMTAG_SUMMARY]
+        if not summary:
+            printError(pkg, 'no-summary-tag')
+        else:
             spell_check(pkg, summary, 'summary')
             if string.find(summary, '\n') != -1:
                 printError(pkg, 'summary-on-multiple-lines')
@@ -588,8 +588,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
 
         description=pkg[rpm.RPMTAG_DESCRIPTION]
-	if not description:
-	    printError(pkg, 'no-description-tag')
+        if not description:
+            printError(pkg, 'no-description-tag')
         else:
             spell_check(pkg, description, 'description')
             for l in string.split(description, "\n"):
@@ -598,14 +598,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res=forbidden_words_regex.search(l)
                 if res:
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
-                
-                    
-	group=pkg[rpm.RPMTAG_GROUP]
+
+
+        group=pkg[rpm.RPMTAG_GROUP]
         if not group:
-	    printError(pkg, 'no-group-tag')
-	else:
-	    if not group in VALID_GROUPS:
-		printWarning(pkg, 'non-standard-group', group)
+            printError(pkg, 'no-group-tag')
+        else:
+            if not group in VALID_GROUPS:
+                printWarning(pkg, 'non-standard-group', group)
 
         buildhost=pkg[rpm.RPMTAG_BUILDHOST]
         if not buildhost:
@@ -613,10 +613,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             if not valid_buildhost_regex.search(buildhost):
                 printWarning(pkg, 'invalid-buildhost', buildhost)
-                
-	changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
+
+        changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
-	    printError(pkg, 'no-changelogname-tag')
+            printError(pkg, 'no-changelogname-tag')
         elif use_version_in_changelog and not pkg.isSource():
             ret=changelog_version_regex.search(changelog[0])
             if not ret:
@@ -659,19 +659,19 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         obs=map(lambda x: x[0], pkg.obsoletes())
         provs=map(lambda x: x[0], pkg.provides())
-	if pkg.name in obs:
-		printError(pkg, 'obsolete-on-name')
-		
+        if pkg.name in obs:
+            printError(pkg, 'obsolete-on-name')
+
         for o in obs:
             if not o in provs:
                 printError(pkg, 'obsolete-not-provided', o)
-	useless_provides=[]	
-	for p in provs:
-	    if provs.count(p) != 1:
-		if p not in useless_provides:
-			useless_provides.append(p)
-	for p in useless_provides:
-	    printError(pkg, 'useless-explicit-provides',p)
+        useless_provides=[]
+        for p in provs:
+            if provs.count(p) != 1:
+                if p not in useless_provides:
+                    useless_provides.append(p)
+        for p in useless_provides:
+            printError(pkg, 'useless-explicit-provides',p)
 
         if pkg.isNoSource():
             arch='nosrc'
@@ -807,16 +807,16 @@ your specfile.''',
 'invalid-license',
 '''The license you specified is invalid. The valid licenses are:
 
--GPL					-LGPL
--Artistic				-BSD
--MIT					-QPL
--MPL					-IBM Public License
--Apache License				-PHP License
--Public Domain				-Modified CNRI Open Source License
--zlib License				-CVW License
--Ricoh Source Code Public License	-Python license
--Vovida Software License		-Sun Internet Standards Source License
--Intel Open Source License		-Jabber Open Source License
+-GPL                                    -LGPL
+-Artistic                               -BSD
+-MIT                                    -QPL
+-MPL                                    -IBM Public License
+-Apache License                         -PHP License
+-Public Domain                          -Modified CNRI Open Source License
+-zlib License                           -CVW License
+-Ricoh Source Code Public License       -Python license
+-Vovida Software License                -Sun Internet Standards Source License
+-Intel Open Source License              -Jabber Open Source License
 
 if the license is near an existing one, you can use '<license> style'.''',
 
@@ -871,5 +871,5 @@ once.''',
 'obsolete-on-name',
 '''A package should not obsolete itself, as it can cause weird errors in tools.''',
 )
-    
+
 # TagsCheck.py ends here

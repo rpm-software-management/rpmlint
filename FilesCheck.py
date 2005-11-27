@@ -1,11 +1,11 @@
 #############################################################################
-# File		: FilesCheck.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Mon Oct  4 19:32:49 1999
-# Version	: $Id$
-# Purpose	: test various aspects on files: locations, owner, groups,
-#		permission, setuid, setgid...
+# File          : FilesCheck.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Mon Oct  4 19:32:49 1999
+# Version       : $Id$
+# Purpose       : test various aspects on files: locations, owner, groups,
+#               permission, setuid, setgid...
 #############################################################################
 
 from Filter import *
@@ -201,7 +201,7 @@ def istextfile(f):
 
     if "\0" in s:
         return 0
-    
+
     if not s:  # Empty files are considered text
         return 1
 
@@ -218,25 +218,25 @@ def istextfile(f):
 class FilesCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, 'FilesCheck')
+        AbstractCheck.AbstractCheck.__init__(self, 'FilesCheck')
 
     def check(self, pkg):
-	# Check only binary package
-	if pkg.isSource():
-	    return
+        # Check only binary package
+        if pkg.isSource():
+            return
 
         # Check if the package is a development package
-	devel_pkg=devel_regex.search(pkg.name)
+        devel_pkg=devel_regex.search(pkg.name)
 
-	files=pkg.files()
-	config_files=pkg.configFiles()
-	ghost_files=pkg.ghostFiles()
-	doc_files=pkg.docFiles()
+        files=pkg.files()
+        config_files=pkg.configFiles()
+        ghost_files=pkg.ghostFiles()
+        doc_files=pkg.docFiles()
         req_names=pkg.req_names()
         lib_package=lib_package_regex.search(pkg.name)
         is_kernel_package=kernel_package_regex.search(pkg.name)
         arch=pkg[rpm.RPMTAG_ARCH]
-        
+
         # report these errors only once
         perl_dep_error=0
         python_dep_error=0
@@ -244,53 +244,53 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         non_lib_file=0
         log_file=0
         logrotate_file=0
-        
+
         if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
-	    printWarning(pkg, 'no-documentation')
-	    
-	for f in files.keys():
-	    enreg=files[f]
-	    mode=enreg[0]
-	    user=enreg[1]
-	    group=enreg[2]
+            printWarning(pkg, 'no-documentation')
+
+        for f in files.keys():
+            enreg=files[f]
+            mode=enreg[0]
+            user=enreg[1]
+            group=enreg[2]
             size=enreg[4]
-            
-	    if mispelled_macro_regex.search(f):
-		printWarning(pkg, 'mispelled-macro', f)
-	    if not user in Config.STANDARD_USERS:
-		printError(pkg, 'non-standard-uid', f, user)
-	    if not group in Config.STANDARD_GROUPS:
-		printError(pkg, 'non-standard-gid', f, group)
+
+            if mispelled_macro_regex.search(f):
+                printWarning(pkg, 'mispelled-macro', f)
+            if not user in Config.STANDARD_USERS:
+                printError(pkg, 'non-standard-uid', f, user)
+            if not group in Config.STANDARD_GROUPS:
+                printError(pkg, 'non-standard-gid', f, group)
 
             if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
-                
+
             if tmp_regex.search(f):
-		printError(pkg, 'dir-or-file-in-tmp', f)
-	    elif mnt_regex.search(f):
-		printError(pkg, 'dir-or-file-in-mnt', f)
-	    elif opt_regex.search(f):
-		printError(pkg, 'dir-or-file-in-opt', f)
-	    elif usr_local_regex.search(f):
-		printError(pkg, 'dir-or-file-in-usr-local', f)
-	    elif var_local_regex.search(f):
-		printError(pkg, 'dir-or-file-in-var-local', f)
-	    elif sub_bin_regex.search(f):
-		printError(pkg, 'subdir-in-bin', f)
-	    elif backup_regex.search(f):
-		printError(pkg, 'backup-file-in-package', f)
+                printError(pkg, 'dir-or-file-in-tmp', f)
+            elif mnt_regex.search(f):
+                printError(pkg, 'dir-or-file-in-mnt', f)
+            elif opt_regex.search(f):
+                printError(pkg, 'dir-or-file-in-opt', f)
+            elif usr_local_regex.search(f):
+                printError(pkg, 'dir-or-file-in-usr-local', f)
+            elif var_local_regex.search(f):
+                printError(pkg, 'dir-or-file-in-var-local', f)
+            elif sub_bin_regex.search(f):
+                printError(pkg, 'subdir-in-bin', f)
+            elif backup_regex.search(f):
+                printError(pkg, 'backup-file-in-package', f)
             elif home_regex.search(f):
-		printError(pkg, 'dir-or-file-in-home', f)
+                printError(pkg, 'dir-or-file-in-home', f)
             elif scm_regex.search(f):
-		printError(pkg, 'version-control-internal-file', f)
+                printError(pkg, 'version-control-internal-file', f)
             elif htaccess_regex.search(f):
-		printError(pkg, 'htaccess-file', f)
-	    elif hidden_file_regex.search(f):	
-		printWarning(pkg, 'hidden-file-or-dir', f)
-	    elif manifest_perl_regex.search(f):
-		printWarning(pkg, 'manifest-in-perl-module', f)
-	    elif siteperl_perl_regex.search(f):
-		printWarning(pkg, 'siteperl-in-perl-module', f)
+                printError(pkg, 'htaccess-file', f)
+            elif hidden_file_regex.search(f):
+                printWarning(pkg, 'hidden-file-or-dir', f)
+            elif manifest_perl_regex.search(f):
+                printWarning(pkg, 'manifest-in-perl-module', f)
+            elif siteperl_perl_regex.search(f):
+                printWarning(pkg, 'siteperl-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
@@ -298,40 +298,40 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             logrotate_file=res or logrotate_file
             if res and res.group(1) != pkg.name:
                 printError(pkg, 'incoherent-logrotate-file', f)
-	    link=enreg[3]
-	    if link != '':
-		ext=compr_regex.search(link)
-		if ext:
-		    if not re.compile('\.' + ext.group(1) + '$').search(f):
-			printError(pkg, 'compressed-symlink-with-wrong-ext', f, link)
+            link=enreg[3]
+            if link != '':
+                ext=compr_regex.search(link)
+                if ext:
+                    if not re.compile('\.' + ext.group(1) + '$').search(f):
+                        printError(pkg, 'compressed-symlink-with-wrong-ext', f, link)
 
-	    perm=mode & 07777
+            perm=mode & 07777
 
-	    # bit s check
-	    if stat.S_ISGID & mode or stat.S_ISUID & mode:
-		# check only normal files
-		if stat.S_ISREG(mode):
-		    user=enreg[1]
-		    group=enreg[2]
-		    setuid=None
-		    setgid=None
-		    if stat.S_ISUID & mode:
-			setuid=user
-		    if stat.S_ISGID & mode:
-			setgid=group
-		    if setuid and setgid:
-			printError(pkg, 'setuid-gid-binary', f, setuid, setgid, oct(perm))
-		    elif setuid:
-			printError(pkg, 'setuid-binary', f, setuid, oct(perm))
-		    elif setgid:
+            # bit s check
+            if stat.S_ISGID & mode or stat.S_ISUID & mode:
+                # check only normal files
+                if stat.S_ISREG(mode):
+                    user=enreg[1]
+                    group=enreg[2]
+                    setuid=None
+                    setgid=None
+                    if stat.S_ISUID & mode:
+                        setuid=user
+                    if stat.S_ISGID & mode:
+                        setgid=group
+                    if setuid and setgid:
+                        printError(pkg, 'setuid-gid-binary', f, setuid, setgid, oct(perm))
+                    elif setuid:
+                        printError(pkg, 'setuid-binary', f, setuid, oct(perm))
+                    elif setgid:
                         if not (group == 'games' and
                                 (games_path_regex.search(f) or games_group_regex.search(pkg[rpm.RPMTAG_GROUP]))):
                             printError(pkg, 'setgid-binary', f, setgid, oct(perm))
-		    elif mode & 0777 != 0755:
-			printError(pkg, 'non-standard-executable-perm', f, oct(perm))
+                    elif mode & 0777 != 0755:
+                        printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 
             if log_regex.search(f):
-                   log_file=f
+                log_file=f
 
             # normal file check
             if stat.S_ISREG(mode):
@@ -349,7 +349,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-root-group-log-file', f, group)
                     if not f in ghost_files:
                         printError(pkg, 'non-ghost-file', f)
-                        
+
                 if doc_regex.search(f) and not f in doc_files:
                     printError(pkg, 'not-listed-as-documentation', f)
                 #elif cross_compile_regex.search(f):
@@ -362,15 +362,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'library-without-ldconfig-postin', f)
                     else:
                         if not ldconfig_regex.search(postin):
-                            printError(pkg, 'postin-without-ldconfig', f)                    
-                        
+                            printError(pkg, 'postin-without-ldconfig', f)
+
                     postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun:
                         printError(pkg, 'library-without-ldconfig-postun', f)
                     else:
                         if not ldconfig_regex.search(postun):
                             printError(pkg, 'postun-without-ldconfig', f)
-                
+
                 # check depmod call in %post and %postun
                 res=not is_kernel_package and kernel_modules_regex.search(f)
                 if res:
@@ -391,7 +391,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         if not kernel_version_regex.search(postun):
                             printError(pkg, 'postun-with-wrong-depmod', f)
-                
+
                 # check install-info call in %post and %postun
                 if info_regex.search(f):
                     postin=pkg[rpm.RPMTAG_POSTIN]
@@ -399,8 +399,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'info-files-without-install-info-postin', f)
                     else:
                         if not install_info_regex.search(postin):
-                            printError(pkg, 'postin-without-install-info', f)                    
-                        
+                            printError(pkg, 'postin-without-install-info', f)
+
                     postun=pkg[rpm.RPMTAG_POSTUN]
                     preun=pkg[rpm.RPMTAG_PREUN]
                     if not postun and not preun:
@@ -409,8 +409,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if (not postun or not install_info_regex.search(postun)) and \
                            (not preun or not install_info_regex.search(preun)):
                             printError(pkg, 'postin-without-install-info', f)
-    
-               
+
+
                 # check perl temp file
                 if perl_temp_file.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
@@ -443,11 +443,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 pkg.check_versioned_dep('python', res.group(1))):
                             printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
                             python_dep_error=1
-                
+
                 # normal executable check
-		if mode & stat.S_IXUSR and perm != 0755:
-		    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
-		    
+                if mode & stat.S_IXUSR and perm != 0755:
+                    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
+
                 if mode & 0111 != 0:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
@@ -457,26 +457,26 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if arch == 'noarch' and lib64python_regex.search(f):
                     printError(pkg, 'noarch-python-in-64bit-path', f)
-                    
-	    # normal dir check
+
+            # normal dir check
             elif stat.S_ISDIR(mode):
                 if perm != 0755:
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
                 if pkg[rpm.RPMTAG_NAME] != 'filesystem':
                     if f in STANDARD_DIRS:
                         printError(pkg, 'standard-dir-owned-by-package', f)
-		if hidden_file_regex.search(f):	
-			printWarning(pkg, 'hidden-file-or-dir', f)
- 	
+                if hidden_file_regex.search(f):
+                    printWarning(pkg, 'hidden-file-or-dir', f)
 
-	    # symbolic link check
-	    elif stat.S_ISLNK(mode):
-		r=absolute_regex.search(link)
+
+            # symbolic link check
+            elif stat.S_ISLNK(mode):
+                r=absolute_regex.search(link)
                 is_so=sofile_regex.search(f)
                 if not devel_pkg and is_so:
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
-		# absolute link
-		if r:
+                # absolute link
+                if r:
                     if (not is_so) and link not in files.keys() and link not in req_names:
                         is_exception=0
                         for e in dangling_exceptions:
@@ -488,15 +488,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printWarning(pkg, 'no-dependency-on', is_exception)
                         else:
                             printWarning(pkg, 'dangling-symlink', f, link)
-		    linktop=r.group(1)
-		    r=absolute_regex.search(f)
-		    if r:
-			filetop=r.group(1)
-			if filetop == linktop:
-			    # absolute links within one toplevel directory are _not_ ok!
-			    printWarning(pkg ,'symlink-should-be-relative', f, link)
-		# relative link
-		else:
+                    linktop=r.group(1)
+                    r=absolute_regex.search(f)
+                    if r:
+                        filetop=r.group(1)
+                        if filetop == linktop:
+                            # absolute links within one toplevel directory are _not_ ok!
+                            printWarning(pkg ,'symlink-should-be-relative', f, link)
+                # relative link
+                else:
                     if not is_so:
                         file = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
                         file = os.path.normpath(file)
@@ -513,68 +513,68 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     printWarning(pkg, 'no-dependency-on', is_exception)
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
-		    pathcomponents=string.split(f, '/')[1:]
-		    r=points_regex.search(link)
-		    lastpop=None
-		    mylink=None
-		    
-		    while r:
-			mylink=r.group(1)
-			if len(pathcomponents) == 0:
-			    printError(pkg, 'symlink-has-too-many-up-segments', f, link)
-			    break
-			else:
-			    lastpop=pathcomponents[0]
-			    pathcomponents=pathcomponents[1:]
-			    r=points_regex.search(mylink)
+                    pathcomponents=string.split(f, '/')[1:]
+                    r=points_regex.search(link)
+                    lastpop=None
+                    mylink=None
 
-		    if mylink and lastpop:
-			r=absolute2_regex.search(mylink)
-			linktop=r.group(1)
-			
-			# does the link go up and then down into the same directory?
-			#if linktop == lastpop:
-			#    printWarning(pkg, 'lengthy-symlink', f, link)
-		    
-			if len(pathcomponents) == 0:
-			    # we've reached the root directory
-			    if linktop != lastpop:
-				# relative link into other toplevel directory
-				printWarning(pkg, 'symlink-should-be-absolute', f, link)
-			# check additional segments for mistakes like `foo/../bar/'
-			for linksegment in string.split(mylink, '/'):
-			    if linksegment == '..':
-				printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
+                    while r:
+                        mylink=r.group(1)
+                        if len(pathcomponents) == 0:
+                            printError(pkg, 'symlink-has-too-many-up-segments', f, link)
+                            break
+                        else:
+                            lastpop=pathcomponents[0]
+                            pathcomponents=pathcomponents[1:]
+                            r=points_regex.search(mylink)
 
-	    # check text file
-	    if stat.S_ISREG(mode):
-		path=pkg.dirName() + '/' + f
-		if os.access(path, os.R_OK) and istextfile(path):
-		    line=open(path).readline();
+                    if mylink and lastpop:
+                        r=absolute2_regex.search(mylink)
+                        linktop=r.group(1)
 
-		    res=shellbang_regex.search(line)
-		    if res or mode & 0111 != 0 or script_regex.search(f):
-			if res:
-			    if not interpreter_regex.search(res.group(1)):
-				printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
-			else:
-			    printError(pkg, 'script-without-shellbang', f)
-		    
-			if mode & 0111 == 0:
-			    printError(pkg, 'non-executable-script', f, oct(perm))
-			if line.endswith('\r\n'):
-			    printError(pkg, 'wrong-script-end-of-line-encoding', f)
+                        # does the link go up and then down into the same directory?
+                        #if linktop == lastpop:
+                        #    printWarning(pkg, 'lengthy-symlink', f, link)
 
-		    elif doc_regex.search(f):
-			if line.endswith('\r\n'):
-			    printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
+                        if len(pathcomponents) == 0:
+                            # we've reached the root directory
+                            if linktop != lastpop:
+                                # relative link into other toplevel directory
+                                printWarning(pkg, 'symlink-should-be-absolute', f, link)
+                        # check additional segments for mistakes like `foo/../bar/'
+                        for linksegment in string.split(mylink, '/'):
+                            if linksegment == '..':
+                                printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
+
+            # check text file
+            if stat.S_ISREG(mode):
+                path=pkg.dirName() + '/' + f
+                if os.access(path, os.R_OK) and istextfile(path):
+                    line=open(path).readline();
+
+                    res=shellbang_regex.search(line)
+                    if res or mode & 0111 != 0 or script_regex.search(f):
+                        if res:
+                            if not interpreter_regex.search(res.group(1)):
+                                printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
+                        else:
+                            printError(pkg, 'script-without-shellbang', f)
+
+                        if mode & 0111 == 0:
+                            printError(pkg, 'non-executable-script', f, oct(perm))
+                        if line.endswith('\r\n'):
+                            printError(pkg, 'wrong-script-end-of-line-encoding', f)
+
+                    elif doc_regex.search(f):
+                        if line.endswith('\r\n'):
+                            printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
 
         if log_file and not logrotate_file:
             printWarning(pkg, 'log-files-without-logrotate', log_file)
 
         if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
-            
+
 # Create an object to enable the auto registration of the test
 check=FilesCheck()
 
@@ -592,37 +592,37 @@ the standard %doc tag.''',
 '''A file in this package is owned by a non standard owner.
 Standard owners are:
 
-- root		- bin
-- daemon	- adm
-- lp		- sync
-- shutdown	- halt
-- mail		- news
-- uucp		- operator
-- games		- gopher
-- ftp		- nobody
-- nobody	- lists
-- gdm		- xfs
-- apache	- postgres
-- rpcuser	- rpm''',
+- root          - bin
+- daemon        - adm
+- lp            - sync
+- shutdown      - halt
+- mail          - news
+- uucp          - operator
+- games         - gopher
+- ftp           - nobody
+- nobody        - lists
+- gdm           - xfs
+- apache        - postgres
+- rpcuser       - rpm''',
 
 'non-standard-gid',
 '''A file in this package is owned by a non standard group.
 Standard groups are:
 
-- root		- bin		- dip
-- daemon	- sys		- ftp
-- adm		- tty		- smb
-- disk		- lp		- cdrom
-- mem		- kmem		- pppusers
-- wheel		- floppy	- cdwriter
-- mail		- news		- audio
-- uucp		- man		- dos
-- games		- gopher	- nobody
-- users		- console	- utmp
-- lists		- gdm		- xfs
-- popusers	- slipusers	- slocate
-- x10		- urpmi		- apache
-- postgres	- rpcuser	- rpm''',
+- root          - bin           - dip
+- daemon        - sys           - ftp
+- adm           - tty           - smb
+- disk          - lp            - cdrom
+- mem           - kmem          - pppusers
+- wheel         - floppy        - cdwriter
+- mail          - news          - audio
+- uucp          - man           - dos
+- games         - gopher        - nobody
+- users         - console       - utmp
+- lists         - gdm           - xfs
+- popusers      - slipusers     - slocate
+- x10           - urpmi         - apache
+- postgres      - rpcuser       - rpm''',
 
 'library-without-ldconfig-postin',
 '''This package contains a library and provides no %post scriptlet containing
@@ -802,7 +802,7 @@ list of exceptions in future rpmlint releases.''',
 and 32 bits versions of the package to coexist.''',
 
 'hidden-file-or-dir',
-'''The file or directory is hidden. You should see if this is normal, 
+'''The file or directory is hidden. You should see if this is normal,
 and delete it from the package if not.''',
 
 'module-without-depmod-postin',

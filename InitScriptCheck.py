@@ -27,31 +27,31 @@ dot_in_name_regex=re.compile('.*\..*')
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, 'InitScriptCheck')
-    
+        AbstractCheck.AbstractCheck.__init__(self, 'InitScriptCheck')
+
     def check(self, pkg):
-	# Check only binary package
-	if pkg.isSource():
-	    return
+        # Check only binary package
+        if pkg.isSource():
+            return
 
         list=[]
         for f in pkg.files().keys():
             if rc_regex.search(f):
                 basename=basename_regex.search(f).group(1)
                 list.append(basename)
-		if pkg.files()[f][0] & 0500 != 0500:
-		    printError(pkg, 'init-script-non-executable',f)
-	    
-		if dot_in_name_regex.match(basename):
-			printError(pkg, 'init-script-name-with-dot', f)
+                if pkg.files()[f][0] & 0500 != 0500:
+                    printError(pkg, 'init-script-non-executable',f)
+
+                if dot_in_name_regex.match(basename):
+                    printError(pkg, 'init-script-name-with-dot', f)
                 # check chkconfig call in %post and %preun
                 postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
                     printError(pkg, 'init-script-without-chkconfig-postin', f)
                 else:
                     if not chkconfig_regex.search(postin):
-                        printError(pkg, 'postin-without-chkconfig', f)                    
-                    
+                        printError(pkg, 'postin-without-chkconfig', f)
+
                 preun=pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
                 if not preun:
                     printError(pkg, 'init-script-without-chkconfig-preun', f)
@@ -63,20 +63,20 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 fd=open(pkg.dirName() + '/' + f, 'r')
                 content=fd.read(-1)
                 fd.close()
-                
+
                 if not status_regex.search(content):
                     printError(pkg, 'no-status-entry', f)
-                    
+
                 if not reload_regex.search(content):
                     printWarning(pkg, 'no-reload-entry', f)
-                    
+
                 res=chkconfig_content_regex.search(content)
                 if not res:
                     printError(pkg, 'no-chkconfig-line', f)
                 else:
                     if res.group(1) == '-':
                         printWarning(pkg, 'no-default-runlevel')
-                        
+
                 res=subsys_regex.search(content)
                 if not res:
                     printError(pkg, 'subsys-not-used', f)
@@ -97,8 +97,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
         if len(list) == 1 and string.lower(pkg[rpm.RPMTAG_NAME]) != list[0]:
             printWarning(pkg, 'incoherent-init-script-name', list[0])
-	    
-                
+
+
 # Create an object to enable the auto registration of the test
 check=InitScriptCheck()
 

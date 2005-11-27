@@ -1,10 +1,10 @@
 #############################################################################
-# File		: Filter.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Sat Oct 23 15:52:27 1999
-# Version	: $Id$
-# Purpose	: filter the output of rpmlint to allow exceptions.
+# File          : Filter.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Sat Oct 23 15:52:27 1999
+# Version       : $Id$
+# Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 
 import sys
@@ -13,7 +13,7 @@ import Config
 def printInfo(pkg, reason, *details):
     if _print("I", pkg, reason, details) and Config.info:
         printDescriptions(reason)
-        
+
 def printWarning(pkg, reason, *details):
     if _print("W", pkg, reason, details) and Config.info:
         printDescriptions(reason)
@@ -25,11 +25,11 @@ def printError(pkg, reason, *details):
 def _print(type, pkg, reason, details):
     s="%s: %s %s" % (type, pkg.name, reason)
     for d in details:
-	s = s + " %s" % d
-    
+        s = s + " %s" % d
+
     if not Config.isFiltered(s):
-	sys.stdout.write(s)
-	sys.stdout.write("\n")
+        sys.stdout.write(s)
+        sys.stdout.write("\n")
         return 1
 
     return 0
@@ -42,11 +42,11 @@ def printDescriptions(reason):
             sys.stdout.write("\n\n")
     except KeyError:
         pass
-    
+
 _details={}
 
 def addDetails(*details):
     for idx in range(len(details)/2):
         _details[details[idx*2]]=details[idx*2+1]
-    
+
 # Filter.py ends here

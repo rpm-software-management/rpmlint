@@ -151,22 +151,22 @@ menu64_file_regex=re.compile('^/usr/lib64/menu')
 # compile regexps
 for l in launchers:
     l[0]=re.compile(l[0])
-    
+
 class MenuCheck(AbstractCheck.AbstractCheck):
-    
+
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'MenuCheck')
 
     def check(self, pkg):
-	# Check only binary package
-	if pkg.isSource():
-	    return
+        # Check only binary package
+        if pkg.isSource():
+            return
 
         files=pkg.files()
         pkgname=pkg[rpm.RPMTAG_NAME]
         menus=[]
         dirname=pkg.dirName()
-        
+
         for f in files.keys():
             # Check menu files
             res=menu_file_regex.search(f)
@@ -207,8 +207,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'menu-without-postin')
                 else:
                     if not update_menus_regex.search(postin):
-                        printError(pkg, 'postin-without-update-menus')                    
-                    
+                        printError(pkg, 'postin-without-update-menus')
+
                 postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                 if not postun:
                     printError(pkg, 'menu-without-postun')
@@ -277,7 +277,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     else:
                         printError(pkg, 'no-longtitle-in-menu', f)
                         title=None
-                        
+
                     res=title_regex.search(line)
                     if res:
                         grp=res.groups()
@@ -292,7 +292,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     else:
                         printError(pkg, 'no-title-in-menu', f)
                         title=None
-                        
+
                     res=needs_regex.search(line)
                     if res:
                         grp=res.groups()
@@ -328,7 +328,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
-                        
+
 # Create an object to enable the auto registration of the test
 check=MenuCheck()
 
