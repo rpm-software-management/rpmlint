@@ -1,12 +1,12 @@
 #!/bin/sh
 #############################################################################
-# File		: rpmlint
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Mon Sep 27 19:20:18 1999
-# Version	: $Id$
-# Purpose	: main entry point: process options, load the checks and run
-#		the checks.
+# File          : rpmlint
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Mon Sep 27 19:20:18 1999
+# Version       : $Id$
+# Purpose       : main entry point: process options, load the checks and run
+#                 the checks.
 #############################################################################
 
 PYTHONPATH=${PYTHONPATH=.}

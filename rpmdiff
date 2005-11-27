@@ -6,8 +6,8 @@
 # Version         : $Id$
 # Author          : Frederic Lepied
 # Created On      : Sat Feb  9 21:24:33 2002
-# Purpose         : rewritting of rpmdiff to show the use of the
-#                 Pkg lib.
+# Purpose         : rewriting of rpmdiff to show the use of the
+#                   Pkg lib.
 #---------------------------------------------------------------
 
 import rpm
@@ -126,7 +126,7 @@ def main():
 
     old_files = old.files()
     new_files = new.files()
-    
+
     for f in files:
         diff = 0
         if f == previous:
@@ -140,7 +140,7 @@ def main():
             new_file = new_files[f]
         except KeyError:
             new_file = None
-            
+
         if not old_file:
             print FORMAT % (ADDED, f)
         elif not new_file:
@@ -159,7 +159,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
+
 # rpmdiff ends here
 #
 # Local variables:

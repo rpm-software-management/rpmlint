@@ -1,10 +1,10 @@
 #############################################################################
-# File		: Config.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Fri Oct 15 20:04:25 1999
-# Version	: $Id$
-# Purpose	: handle configuration options. To be used from config files.
+# File          : Config.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Fri Oct 15 20:04:25 1999
+# Version       : $Id$
+# Purpose       : handle configuration options. To be used from config files.
 #############################################################################
 
 import os.path
@@ -12,17 +12,17 @@ import re
 from setuplist import *
 
 DEFAULT_CHECKS=("DistributionCheck",
-		"TagsCheck",
-		"BinariesCheck",
-		"ConfigCheck",
-		"FilesCheck",
-		"FHSCheck",
-		"SignatureCheck",
-		"I18NCheck",
+                "TagsCheck",
+                "BinariesCheck",
+                "ConfigCheck",
+                "FilesCheck",
+                "FHSCheck",
+                "SignatureCheck",
+                "I18NCheck",
                 "MenuCheck",
                 "PostCheck",
                 "InitScriptCheck",
-		"SourceCheck",
+                "SourceCheck",
                 "SpecCheck",
                 "NamingPolicyCheck",
                 "ZipCheck",
@@ -36,26 +36,26 @@ _checks=[]
 
 def addCheck(check):
     global _checks
-    
+
     if not check in _checks:
-	_checks.append(check)
+        _checks.append(check)
 
 def allChecks():
     global _checks
-    
+
     if _checks == []:
-	defaultChecks()
+        defaultChecks()
     return _checks
 
 def defaultChecks():
     resetChecks()
     _checks.extend(DEFAULT_CHECKS)
-    
+
 def resetChecks():
     global _checks
 
     _checks=[]
-    
+
 # handle the list of directories to look for checks
 
 _dirs=["/usr/share/rpmlint"]
@@ -64,9 +64,9 @@ def addCheckDir(dir):
     global _dirs
 
     dir=os.path.expanduser(dir)
-    
+
     if not dir in _dirs:
-	_dirs.insert(0, dir)
+        _dirs.insert(0, dir)
 
 def checkDirs():
     global _dirs
@@ -84,11 +84,11 @@ def setOption(name, value):
 
 def getOption(name, default):
     global _options
-    
+
     try:
-	return _options[name]
+        return _options[name]
     except:
-	return default
+        return default
 
 # List of filters
 _filters=[]
@@ -100,7 +100,7 @@ def addFilter(s):
 
     _filters.append(s)
     _filters_re=None
-    
+
 def isFiltered(s):
     global _filters
     global _filters_re
@@ -110,16 +110,16 @@ def isFiltered(s):
         if len(_filters) == 0:
             return 0
         _filters_re = '(?:' + _filters[0] + ')'
-        
+
         for idx in range(1, len(_filters)):
             _filters_re = _filters_re + '|(?:' + _filters[idx] +')'
         _filters_re = re.compile(_filters_re)
-        
+
     if not no_exception:
         if _filters_re.search(s):
             return 1
     return 0
-    
+
 # Standard exceptions:
 addFilter('rootfiles non-etc-or-var-file-marked-as-conffile /root/.*')
 addFilter('(rootfiles|etcskel) non-standard-dir-perm /(root|etc/skel)/tmp')
@@ -463,7 +463,7 @@ addFilter('zapping devel-file-in-non-devel-package /usr/lib/zapping/plugins/.*\.
 addFilter('libsane1 non-versioned-file-in-library-package /usr/lib/sane')
 
 #mgetty
-addFilter('mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing 01777')        
+addFilter('mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing 01777')
 addFilter('mgetty-sendfax non-standard-dir-perm /var/spool/fax/outgoing/locks 0777')
 addFilter('mgetty-sendfax incoherent-logrotate-file /etc/logrotate.d/sendfax')
 
@@ -544,7 +544,7 @@ addFilter('(hack)?kernel.*source hidden-file-or-dir /usr/share/linux.*/(\.config
 addFilter('bash hidden-file-or-dir /etc/skel/.bash(rc|_profile|_logout)')
 addFilter('etcskel hidden-file-or-dir /etc/skel/.mailcap')
 
-# koffice 
+# koffice
 addFilter('koffice hidden-file-or-dir /usr/share/apps/.*(.autoforms|.icon|.source)')
 
 # root preferences
@@ -666,5 +666,5 @@ def load_policy(policy):
                             DEFAULT_LAUNCHERS = DEFAULT_LAUNCHERS_OLD
                             STANDARD_GROUPS = STANDARD_GROUPS_OLD
                             STANDARD_USERS = STANDARD_USERS_OLD
-                            
+
 # Config.py ends here

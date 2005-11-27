@@ -1,11 +1,11 @@
 #############################################################################
-# File		: Pkg.py
-# Package	: rpmlint
-# Author	: Frederic Lepied
-# Created on	: Tue Sep 28 07:18:06 1999
-# Version	: $Id$
-# Purpose	: provide an API to handle a rpm package either by accessing
-#		the rpm file or by accessing the files contained inside.
+# File          : Pkg.py
+# Package       : rpmlint
+# Author        : Frederic Lepied
+# Created on    : Tue Sep 28 07:18:06 1999
+# Version       : $Id$
+# Purpose       : provide an API to handle a rpm package either by accessing
+#               the rpm file or by accessing the files contained inside.
 #############################################################################
 
 import os
@@ -40,14 +40,14 @@ try:
         PREREQ_FLAG=rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
 except AttributeError:
     PREREQ_FLAG=rpm.RPMSENSE_PREREQ
-    
+
 # check if we use a rpm version compatible with 4.2
 try:
     if rpm.RPMTAG_SOURCEPACKAGE:
         v42=1
 except AttributeError:
     v42=0
-    
+
 # utilities
 
 def grep(regex, filename):
@@ -55,7 +55,7 @@ def grep(regex, filename):
     ret=0
     if fd:
         reg=re.compile(regex)
-        
+
         for line in fd.readlines():
             if reg.search(line):
                 ret=1
@@ -92,17 +92,17 @@ class Pkg:
     file_regex=re.compile('(?:\.)?([^:]+):\s+(.*)')
 
     def __init__(self, filename, dirname, header=None, is_source=0):
-	self.filename=filename
-	self.extracted=0
-	self.dirname=dirname
-	self.file_info=None
-	self._config_files=None
-	self._doc_files=None
-	self._ghost_files=None
-	self._files=None
-	self._requires=None
+        self.filename=filename
+        self.extracted=0
+        self.dirname=dirname
+        self.file_info=None
+        self._config_files=None
+        self._doc_files=None
+        self._ghost_files=None
+        self._files=None
+        self._requires=None
         self._req_names=-1
-        
+
         if header:
             self.header=header
             self.is_source=is_source
@@ -126,11 +126,11 @@ class Pkg:
 
         self._lang_files=None
 
-	self.name=self.header[rpm.RPMTAG_NAME]
+        self.name=self.header[rpm.RPMTAG_NAME]
 
     # Return true if the package is a source package
     def isSource(self):
-	return self.is_source
+        return self.is_source
 
     # Return true if the package is a nosource package.
     # NoSource files are ghosts in source packages.
@@ -139,7 +139,7 @@ class Pkg:
 
     # access the tags like an array
     def __getitem__(self, key):
-	val = self.header[key]
+        val = self.header[key]
         if val == []:
             return None
         else:
@@ -147,13 +147,13 @@ class Pkg:
 
     # return the name of the directory where the package is extracted
     def dirName(self):
-	if not self.extracted:
-	    self._extract()
-	return self.dirname
+        if not self.extracted:
+            self._extract()
+        return self.dirname
 
     # handle the extract phasis
     def _extract(self):
-	s=os.stat(self.dirname)
+        s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
             sys.stderr.write('unable to access dir %s\n' % self.dirname)
             return None
@@ -162,84 +162,84 @@ class Pkg:
             os.mkdir(self.dirname)
             str='rpm2cpio %s | (cd %s; cpio -id); chmod -R +rX %s' % (self.filename, self.dirname, self.dirname)
             cmd=commands.getstatusoutput(str)
-	    self.extracted=1
+            self.extracted=1
             return cmd
-        
+
     def checkSignature(self):
         return commands.getstatusoutput('rpm -K ' + self.filename)
-    
+
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
-	if self.file_info == None:
-	    self.file_info=[]
-	    lines=commands.getoutput('cd %s; find . -type f -print0 | xargs -0r file' % (self.dirName()))
-	    lines=string.split(lines, '\n')
-	    for l in lines:
-		#print l
-		res=Pkg.file_regex.search(l)
-		if res:
-		    self.file_info.append([res.group(1), res.group(2)])
-	    #print self.file_info
-	return self.file_info
+        if self.file_info == None:
+            self.file_info=[]
+            lines=commands.getoutput('cd %s; find . -type f -print0 | xargs -0r file' % (self.dirName()))
+            lines=string.split(lines, '\n')
+            for l in lines:
+                #print l
+                res=Pkg.file_regex.search(l)
+                if res:
+                    self.file_info.append([res.group(1), res.group(2)])
+            #print self.file_info
+        return self.file_info
 
     # remove the extracted files from the package
     def cleanup(self):
-	if self.extracted:
-	    commands.getstatusoutput('rm -rf ' + self.dirname)
+        if self.extracted:
+            commands.getstatusoutput('rm -rf ' + self.dirname)
 
     # return the associative array indexed on file names with
     # the values as: (file perm, file owner, file group, file link to)
     def files(self):
-	if self._files != None:
-	    return self._files
-	self._gatherFilesInfo()
-	return self._files
+        if self._files != None:
+            return self._files
+        self._gatherFilesInfo()
+        return self._files
 
     # return the list of config files
     def configFiles(self):
-	if self._config_files != None:
-	    return self._config_files
-	self._gatherFilesInfo()
-	return self._config_files
+        if self._config_files != None:
+            return self._config_files
+        self._gatherFilesInfo()
+        return self._config_files
 
     # return the list of noreplace files
     def noreplaceFiles(self):
-	if self._noreplace_files != None:
-	    return self._noreplace_files
-	self._gatherFilesInfo()
-	return self._noreplace_files
+        if self._noreplace_files != None:
+            return self._noreplace_files
+        self._gatherFilesInfo()
+        return self._noreplace_files
 
     # return the list of documentation files
     def docFiles(self):
-	if self._doc_files != None:
-	    return self._doc_files
-	self._gatherFilesInfo()
-	return self._doc_files
+        if self._doc_files != None:
+            return self._doc_files
+        self._gatherFilesInfo()
+        return self._doc_files
 
     # return the list of ghost files
     def ghostFiles(self):
-	if self._ghost_files != None:
-	    return self._ghost_files
-	self._gatherFilesInfo()
-	return self._ghost_files
+        if self._ghost_files != None:
+            return self._ghost_files
+        self._gatherFilesInfo()
+        return self._ghost_files
 
     # extract information about the files
     def _gatherFilesInfo(self):
         global v304
-        
-	self._config_files=[]
-	self._doc_files=[]
-	self._noreplace_files=[]
-	self._ghost_files=[]
-	self._files={}
+
+        self._config_files=[]
+        self._doc_files=[]
+        self._noreplace_files=[]
+        self._ghost_files=[]
+        self._files={}
         self._files_array=[]
-	flags=self.header[rpm.RPMTAG_FILEFLAGS]
-	modes=self.header[rpm.RPMTAG_FILEMODES]
-	users=self.header[rpm.RPMTAG_FILEUSERNAME]
-	groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
-	links=self.header[rpm.RPMTAG_FILELINKTOS]
-	sizes=self.header[rpm.RPMTAG_FILESIZES]
-	md5s=self.header[rpm.RPMTAG_FILEMD5S]
+        flags=self.header[rpm.RPMTAG_FILEFLAGS]
+        modes=self.header[rpm.RPMTAG_FILEMODES]
+        users=self.header[rpm.RPMTAG_FILEUSERNAME]
+        groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
+        links=self.header[rpm.RPMTAG_FILELINKTOS]
+        sizes=self.header[rpm.RPMTAG_FILESIZES]
+        md5s=self.header[rpm.RPMTAG_FILEMD5S]
         mtimes=self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs=self.header[rpm.RPMTAG_FILERDEVS]
         # Get files according to rpm version
@@ -261,22 +261,22 @@ class Pkg:
         else:
             files=self.header[rpm.RPMTAG_FILENAMES]
 
-	if files:
+        if files:
             self._files_array=files
-	    for idx in range(0, len(files)):
-		if flags[idx] & RPMFILE_CONFIG:
-		    self._config_files.append(files[idx])
-		if flags[idx] & RPMFILE_DOC:
-		    self._doc_files.append(files[idx])
-		if flags[idx] & RPMFILE_NOREPLACE:
-		    self._noreplace_files.append(files[idx])
-		if flags[idx] & RPMFILE_GHOST:
-		    self._ghost_files.append(files[idx])
-		self._files[files[idx]]=(modes[idx], users[idx],
-					 groups[idx], links[idx],
+            for idx in range(0, len(files)):
+                if flags[idx] & RPMFILE_CONFIG:
+                    self._config_files.append(files[idx])
+                if flags[idx] & RPMFILE_DOC:
+                    self._doc_files.append(files[idx])
+                if flags[idx] & RPMFILE_NOREPLACE:
+                    self._noreplace_files.append(files[idx])
+                if flags[idx] & RPMFILE_GHOST:
+                    self._ghost_files.append(files[idx])
+                self._files[files[idx]]=(modes[idx], users[idx],
+                                         groups[idx], links[idx],
                                          sizes[idx], md5s[idx],
                                          mtimes[idx], rdevs[idx])
-                
+
     def langFiles(self):
         if self._lang_files == None:
             self._lang_files={}
@@ -284,7 +284,7 @@ class Pkg:
             if array:
                 for idx in range(0, len(array)):
                     self._lang_files[self._files_array[idx]] = array[idx]
-                    
+
         return self._lang_files
 
     def fileLang(self, f):
@@ -294,11 +294,11 @@ class Pkg:
     def obsoletes(self):
         self._gatherDepInfo()
         return self._obsoletes
-    
+
     def requires(self):
         self._gatherDepInfo()
         return self._requires
-    
+
     def prereq(self):
         self._gatherDepInfo()
         return self._prereq
@@ -313,7 +313,7 @@ class Pkg:
             if d[0] == name:
                 current_version=d[1]
                 if current_version.find(':') > 0:
-		    current_version=''.join(current_version.split(':')[1:])
+                    current_version=''.join(current_version.split(':')[1:])
                 if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or current_version != version:
                     return 0
                 else:
@@ -323,7 +323,7 @@ class Pkg:
     def conflicts(self):
         self._gatherDepInfo()
         return self._conflicts
-        
+
     def provides(self):
         self._gatherDepInfo()
         return self._provides
@@ -343,7 +343,7 @@ class Pkg:
                     prereq.append((names[loop], versions[loop], flags[loop] & PREREQ_FLAG))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
-        
+
     def _gatherDepInfo(self):
         if self._requires == None:
             self._requires = []
@@ -394,7 +394,7 @@ class InstalledPkg(Pkg):
         self.extracted = 1
         # create a fake filename to satisfy some checks on the filename
         self.filename = '%s-%s-%s.%s.rpm' % (self[rpm.RPMTAG_NAME], self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
-        
+
     def cleanup(self):
         pass
 
@@ -403,21 +403,21 @@ class InstalledPkg(Pkg):
 
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
-	if self.file_info == None:
-	    self.file_info=[]
+        if self.file_info == None:
+            self.file_info=[]
             cmd='file'
             for f in self.files().keys():
                 cmd=cmd + ' ' + f
             lines=commands.getoutput(cmd)
             #print lines
-	    lines=string.split(lines, '\n')
-	    for l in lines:
-		#print l
-		res=Pkg.file_regex.search(l)
-		if res:
-		    self.file_info.append([res.group(1), res.group(2)])
+            lines=string.split(lines, '\n')
+            for l in lines:
+                #print l
+                res=Pkg.file_regex.search(l)
+                if res:
+                    self.file_info.append([res.group(1), res.group(2)])
             #print self.file_info
-	return self.file_info
+        return self.file_info
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:
@@ -428,5 +428,5 @@ if __name__ == '__main__':
         sys.stdout.write('Provides: %s\n' % pkg.provides())
         sys.stdout.write('Obsoletes: %s\n' % pkg.obsoletes())
         pkg.cleanup()
-    
+
 # Pkg.py ends here
