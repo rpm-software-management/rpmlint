@@ -10,7 +10,7 @@
 Summary: Rpm correctness checker
 Name: rpmlint
 Version: 0.71
-Release: 1mdk
+Release: %mkrel 1
 Source0: %{name}-%{version}.tar.bz2
 URL: http://people.mandriva.com/~flepied/projects/rpmlint/
 License: GPL
