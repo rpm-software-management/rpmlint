@@ -28,11 +28,11 @@ class BinaryInfo:
     soname_regex=re.compile('^\s*SONAME\s*(\S+)')
     comment_regex=re.compile('^\s*\d+\s+\.comment\s+')
     dynsyms_regex=re.compile('^DYNAMIC SYMBOL TABLE:')
-    unrecognized_regex=re.compile('^objdump: (.*?): File format not recognized$')
     pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
 
-    def __init__(self, path, file):
+    def __init__(self, pkg, path, file):
+        self.error=0
         self.needed=[]
         self.rpath=[]
         self.comment=0
@@ -40,9 +40,9 @@ class BinaryInfo:
         self.soname=0
         self.non_pic=1
 
-        res=commands.getoutput('LC_ALL=C objdump --headers --private-headers -T ' + path)
-        if res:
-            for l in string.split(res, '\n'):
+        res=commands.getstatusoutput('LC_ALL=C objdump --headers --private-headers -T ' + path)
+        if not res[0]:
+            for l in string.split(res[1], '\n'):
                 needed=BinaryInfo.needed_regex.search(l)
                 if needed:
                     self.needed.append(needed.group(1))
@@ -57,16 +57,14 @@ class BinaryInfo:
                         self.dynsyms=1
                     elif BinaryInfo.pic_regex.search(l):
                         self.non_pic=0
-                    else:
-                        r=BinaryInfo.unrecognized_regex.search(l)
-                        if r:
-                            sys.stderr.write('file format not recognized for %s in %s\n' % (r.group(1), file))
-                            #sys.exit(1)
                     r=BinaryInfo.soname_regex.search(l)
                     if r:
                         self.soname=r.group(1)
             if self.non_pic:
-                self.non_pic=BinaryInfo.non_pic_regex.search(res)
+                self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
+        else:
+            self.error=1
+            printWarning(pkg, 'objdump-failed', res[1])
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
@@ -156,12 +154,14 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
                         # inspect binary file
-                        bin_info=BinaryInfo(pkg.dirName()+i[0], i[0])
+                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0])
 
                         # so name in library
                         if so_regex.search(i[0]):
                             has_lib.append(i[0])
-                            if not bin_info.soname:
+                            if bin_info.error:
+                                pass
+                            elif not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
                             else:
                                 if not validso_regex.search(bin_info.soname):
@@ -201,7 +201,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             if is_exec and bin_regex.search(i[0]):
                                 exec_files.append(i[0])
 
-                            if not bin_info.needed and \
+                            if bin_info.error:
+                                pass
+                            elif not bin_info.needed and \
                                not (bin_info.soname and \
                                     ldso_soname_regex.search(bin_info.soname)):
                                 if shared_object_regex.search(i[1]):
@@ -335,6 +337,8 @@ any binaries.''',
 'only-non-binary-in-usr-lib',
 '''There are only non binary files in /usr/lib so they should be in /usr/share.''',
 
+'objdump-failed',
+'''Executing objdump on this file failed, all checks could not be run.''',
 )
 
 # BinariesCheck.py ends here
