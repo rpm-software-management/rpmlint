@@ -166,13 +166,13 @@ class Pkg:
             return cmd
 
     def checkSignature(self):
-        return commands.getstatusoutput('rpm -K ' + self.filename)
+        return commands.getstatusoutput('LC_ALL=C rpm -K ' + self.filename)
 
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
         if self.file_info == None:
             self.file_info=[]
-            lines=commands.getoutput('cd %s; find . -type f -print0 | xargs -0r file' % (self.dirName()))
+            lines=commands.getoutput('cd %s; find . -type f -print0 | LC_ALL=C xargs -0r file' % (self.dirName()))
             lines=string.split(lines, '\n')
             for l in lines:
                 #print l
@@ -405,7 +405,7 @@ class InstalledPkg(Pkg):
     def getFilesInfo(self):
         if self.file_info == None:
             self.file_info=[]
-            cmd='file'
+            cmd='LC_ALL=C file'
             for f in self.files().keys():
                 cmd=cmd + ' ' + f
             lines=commands.getoutput(cmd)
