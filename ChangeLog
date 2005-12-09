@@ -1,3 +1,85 @@
+2005-12-09 01:56  vskytta
+
+	* BinariesCheck.py: Skip some checks and output better warning
+	  message if objdump fails.
+
+2005-12-09 01:35  vskytta
+
+	* BinariesCheck.py, Pkg.py: Ensure English output for commands
+	  whose output is parsed.
+
+2005-12-06 09:23  Michael Scherer <mscherer at mandrake.org>
+
+	* rpmlint.spec: - use mkrel macro
+
+2005-11-27 23:18  vskytta
+
+	* InitScriptCheck.py: Report incoherent subsys starting with "$" as
+	  a warning instead of an error.
+
+2005-11-27 22:49  vskytta
+
+	* AbstractCheck.py, BinariesCheck.py, Config.py, ConfigCheck.py,
+	  DistributionCheck.py, FHSCheck.py, FilesCheck.py, Filter.py,
+	  I18NCheck.py, InitScriptCheck.py, LSBCheck.py, MenuCheck.py,
+	  NamingPolicyCheck.py, Pkg.py, PostCheck.py, SignatureCheck.py,
+	  SourceCheck.py, SpecCheck.py, TagsCheck.py, check-install.py,
+	  compile.py, rpmdiff, rpmlint, rpmlint.py: Fix indentation,
+	  untabify, trim trailing whitespace.
+
+2005-11-24 22:52  vskytta
+
+	* ConfigCheck.py: Recognize app-defaults in /usr/share/X11/.
+
+2005-11-22 21:25  vskytta
+
+	* COPYING: Update FSF's address, copy current GPL from gnu.org
+	  as-is.
+
+2005-11-22 21:22  vskytta
+
+	* FilesCheck.py: Don't warn about dangling symlinks whose target is
+	  a file-based dependency.
+
+2005-11-22 21:04  vskytta
+
+	* InitScriptCheck.py: Don't blame the package if our shell
+	  expansion  for subsys filename fails.
+
+2005-11-22 20:57  vskytta
+
+	* FilesCheck.py: Only non-empty perl *.bs files are unneeded (see
+	  DynaLoader.pm), and empty ones are already caught by the empty
+	  file check.
+
+2005-11-22 20:54  vskytta
+
+	* FilesCheck.py: Improve accuracy of doc, info, and games path
+	  regexps.
+
+2005-11-22 20:37  vskytta
+
+	* rpmlint.py: Improve error message when invoked on non-rpm files.
+
+2005-11-22 17:45  vskytta
+
+	* AUTHORS, README.CVS: Update URLs and addresses.
+
+2005-11-22 17:36  vskytta
+
+	* BinariesCheck.py, DistributionCheck.py, FHSCheck.py,
+	  FilesCheck.py, InitScriptCheck.py, MenuCheck.py, SourceCheck.py,
+	  SpecCheck.py, TagsCheck.py: Improve and fix spelling of error
+	  descriptions.
+
+2005-09-11 01:24  Frederic Lepied <flepied at mandriva.com>
+
+	* Makefile: add a check to avoid releasing with print statements.
+
+2005-09-11 01:23  Frederic Lepied <flepied at mandriva.com>
+
+	* Pkg.py: use stderr for error messages.
+
 2005-09-11 01:00  Frederic Lepied <flepied at mandriva.com>
 
 	* FilesCheck.py: added noarch-python-in-64bit-path
