@@ -40,7 +40,7 @@ class BinaryInfo:
         self.soname=0
         self.non_pic=1
 
-        res=commands.getoutput('objdump --headers --private-headers -T ' + path)
+        res=commands.getoutput('LC_ALL=C objdump --headers --private-headers -T ' + path)
         if res:
             for l in string.split(res, '\n'):
                 needed=BinaryInfo.needed_regex.search(l)
