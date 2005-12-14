@@ -64,7 +64,7 @@ class BinaryInfo:
                 self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
         else:
             self.error=1
-            printWarning(pkg, 'objdump-failed', res[1])
+            printWarning(pkg, 'objdump-failed', re.sub('\n.*', '', res[1]))
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
