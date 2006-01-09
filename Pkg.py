@@ -139,7 +139,10 @@ class Pkg:
 
     # access the tags like an array
     def __getitem__(self, key):
-        val = self.header[key]
+        try:
+            val = self.header[key]
+        except:
+            val = []
         if val == []:
             return None
         else:
