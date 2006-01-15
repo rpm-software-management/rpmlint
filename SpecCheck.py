@@ -9,6 +9,7 @@
 
 from Filter import *
 import AbstractCheck
+from Pkg import is_utf8
 import re
 import sys
 import rpm
@@ -44,6 +45,7 @@ endif_regex=re.compile('%endif')
 biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
 prereq_regex=re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
+use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -93,6 +95,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             lib=0
             if_depth=0
             ifarch_depth=-1
+
+            if use_utf8 and not is_utf8(spec_file):
+                printError(pkg, "non-utf8-spec-file", f)
 
             # gather info from spec lines
             for line in spec:
@@ -220,6 +225,10 @@ SPEC file to build a valid RPM package.''',
 'invalid-spec-name',
 '''Your spec filename must end with '.spec'. If it's not the case, rename your
 file and rebuild your package.''',
+
+'non-utf8-spec-file',
+'''The character encoding of the spec file is not UTF-8.  Convert it for
+example using iconv(1).''',
 
 'use-of-RPM_SOURCE_DIR',
 '''You use $RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to

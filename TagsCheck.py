@@ -9,6 +9,7 @@
 
 from Filter import *
 import AbstractCheck
+from Pkg import is_utf8_str
 import rpm
 import string
 import re
@@ -438,6 +439,7 @@ forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAUL
 valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost', DEFAULT_VALID_BUILDHOST))
 epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
+use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 requires_in_usr_local_regex=re.compile('^/usr/local/bin')
 
 def spell_check(pkg, str, tagname):
@@ -586,6 +588,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             res=forbidden_words_regex.search(summary)
             if res:
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
+            if use_utf8 and not is_utf8_str(summary):
+                printError(pkg, 'tag-not-utf8', 'Summary')
 
         description=pkg[rpm.RPMTAG_DESCRIPTION]
         if not description:
@@ -598,7 +602,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res=forbidden_words_regex.search(l)
                 if res:
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
-
+            if use_utf8 and not is_utf8_str(description):
+                printError(pkg, 'tag-not-utf8', '%description')
 
         group=pkg[rpm.RPMTAG_GROUP]
         if not group:
@@ -617,19 +622,25 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
             printError(pkg, 'no-changelogname-tag')
-        elif use_version_in_changelog and not pkg.isSource():
-            ret=changelog_version_regex.search(changelog[0])
-            if not ret:
-                printWarning(pkg, 'no-version-in-last-changelog')
-            elif version and release:
-                srpm=pkg[rpm.RPMTAG_SOURCERPM]
-                # only check when source name correspond to name
-                if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
-                    expected=version + '-' + release
-                    if epoch is not None:
-                        expected=str(epoch) + ':' + expected
-                    if expected != ret.group(1):
-                        printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
+        else:
+            if use_version_in_changelog and not pkg.isSource():
+                ret=changelog_version_regex.search(changelog[0])
+                if not ret:
+                    printWarning(pkg, 'no-version-in-last-changelog')
+                elif version and release:
+                    srpm=pkg[rpm.RPMTAG_SOURCERPM]
+                    # only check when source name correspond to name
+                    if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
+                        expected=version + '-' + release
+                        if epoch is not None:
+                            expected=str(epoch) + ':' + expected
+                        if expected != ret.group(1):
+                            printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
+
+            clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
+            if clt: changelog=changelog + clt
+            if use_utf8 and not is_utf8_str(' '.join(changelog)):
+                printError(pkg, 'tag-not-utf8', '%changelog')
 
 #         provides=pkg.provides()
 #         for (provide_name, provide_version, provide_flags) in provides:
@@ -870,6 +881,10 @@ once.''',
 
 'obsolete-on-name',
 '''A package should not obsolete itself, as it can cause weird errors in tools.''',
+
+'tag-not-utf8',
+'''The character encoding of the value of this tag is not UTF-8.''',
+
 )
 
 # TagsCheck.py ends here

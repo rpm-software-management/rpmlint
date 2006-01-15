@@ -10,6 +10,7 @@
 
 from Filter import *
 import AbstractCheck
+from Pkg import is_utf8
 import rpm
 import re
 import stat
@@ -187,6 +188,7 @@ shellbang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(hourly|daily|monthly|weekly)))/')
 lib64python_regex=re.compile('^/usr/lib64/python')
+use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -549,25 +551,35 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             # check text file
             if stat.S_ISREG(mode):
                 path=pkg.dirName() + '/' + f
-                if os.access(path, os.R_OK) and istextfile(path):
-                    line=open(path).readline();
+                if os.access(path, os.R_OK):
+                    if istextfile(path):
+                        line=open(path).readline();
 
-                    res=shellbang_regex.search(line)
-                    if res or mode & 0111 != 0 or script_regex.search(f):
-                        if res:
-                            if not interpreter_regex.search(res.group(1)):
-                                printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
-                        else:
-                            printError(pkg, 'script-without-shellbang', f)
+                        res=shellbang_regex.search(line)
+                        if res or mode & 0111 != 0 or script_regex.search(f):
+                            if res:
+                                if not interpreter_regex.search(res.group(1)):
+                                    printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
+                            else:
+                                printError(pkg, 'script-without-shellbang', f)
 
-                        if mode & 0111 == 0:
-                            printError(pkg, 'non-executable-script', f, oct(perm))
-                        if line.endswith('\r\n'):
-                            printError(pkg, 'wrong-script-end-of-line-encoding', f)
+                            if mode & 0111 == 0:
+                                printError(pkg, 'non-executable-script', f, oct(perm))
+                            if line.endswith('\r\n'):
+                                printError(pkg, 'wrong-script-end-of-line-encoding', f)
 
-                    elif doc_regex.search(f):
-                        if line.endswith('\r\n'):
-                            printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
+                        elif doc_regex.search(f):
+                            if line.endswith('\r\n'):
+                                printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
+
+                        # potentially slow and may generate lots of unwanted noise:
+                        #if use_utf8 and not is_utf8(path):
+                        #    printWarning(pkg, 'file-not-utf8', f)
+
+                    elif doc_regex.search(f) and compr_regex.search(f):
+                        # compressed docs, eg. info and man files etc
+                        if use_utf8 and not is_utf8(path):
+                            printWarning(pkg, 'file-not-utf8', f)
 
         if log_file and not logrotate_file:
             printWarning(pkg, 'log-files-without-logrotate', log_file)
@@ -868,6 +880,10 @@ modification on a non-Unix system. It will prevent its execution.''',
 '''This file has wrong end-of-line encoding, usually caused by creation or
 modification on a non-Unix system. It could prevent it from being displayed
 correctly in some circumstances.''',
+
+'file-not-utf8',
+'''The character encoding of this file is not UTF-8.  Consider converting it
+in the specfile for example using iconv(1).''',
 
 )
 
