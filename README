@@ -69,6 +69,7 @@ ReleaseExtension	string or None	"mdk"
 RpmGamesGroup		regex		'Games'
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
 UseBzip2		boolean		1
+UseDefaultRunlevels	boolean		1
 UseEpoch		boolean		0
 UseIndexedJars		boolean		1
 UseVersionInChangelog	boolean		1
