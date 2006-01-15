@@ -29,6 +29,17 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "ZipCheck",
                 )
 
+USEUTF8_DEFAULT=0
+try:
+    from locale import getpreferredencoding
+    if getpreferredencoding() == 'UTF-8': USEUTF8_DEFAULT=1
+except:
+    try:
+        from locale import getdefaultlocale
+        if re.match('utf', getdefaultlocale()[1], re.I): USEUTF8_DEFAULT=1
+    except:
+        pass
+
 info=0
 no_exception=0
 

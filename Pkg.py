@@ -86,6 +86,23 @@ def substitute_shell_vars(val, script):
     else:
         return val
 
+bz2_regex=re.compile('\.t?bz2?$')
+
+# TODO: is_utf8* could probably be implemented natively without iconv...
+
+def is_utf8(fname):
+    print "is_utf8 called"
+    cat='gzip -dcf'
+    if bz2_regex.search(fname): cat='bzip2 -dcf'
+    cmd = commands.getstatusoutput('%s %s | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
+    return not cmd[0]
+
+def is_utf8_str(s):
+    print "is_utf8_str called"
+    f=os.popen('iconv -f utf-8 -t utf-8 -o /dev/null 2>/dev/null', 'w')
+    f.write(s)
+    return not f.close()
+
 # classes representing package
 
 class Pkg:
