@@ -10,6 +10,7 @@
 
 from Filter import *
 import AbstractCheck
+import Config
 import re
 import rpm
 import Pkg
@@ -23,6 +24,7 @@ status_regex=re.compile('^[^#]*status', re.MULTILINE)
 reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
 basename_regex=re.compile('([^/]+)$')
 dot_in_name_regex=re.compile('.*\..*')
+use_deflevels=Config.getOption('UseDefaultRunlevels', 1)
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -74,8 +76,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 if not res:
                     printError(pkg, 'no-chkconfig-line', f)
                 else:
-                    if res.group(1) == '-':
-                        printWarning(pkg, 'no-default-runlevel')
+                    if use_deflevels:
+                        if res.group(1) == '-':
+                            printWarning(pkg, 'no-default-runlevel', f)
+                    else:
+                        if res.group(1) != '-':
+                            printWarning(pkg, 'service-default-enabled', f)
 
                 res=subsys_regex.search(content)
                 if not res:
@@ -131,6 +137,11 @@ at which to start and stop it.''',
 
 'no-default-runlevel',
 '''The default runlevel isn't specified in the init script.''',
+
+'service-default-enabled',
+'''The service is enabled by default after "chkconfig --add"; for security
+reasons, most services should not be. Use "-" as the default runlevel in the
+init script's chkconfig line to fix this if appropriate for this service.''',
 
 'subsys-not-used',
 '''While your daemon is running, you have to put a lock file in
