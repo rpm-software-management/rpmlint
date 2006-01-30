@@ -142,6 +142,7 @@ DEFAULT_VALID_LICENSES = (
     'Lucent Public License',
     'Design Science License',
     'LaTeX Project Public License',
+    'Mozart License',
     'CECILL',
     # non open source licences:
     'Proprietary',
