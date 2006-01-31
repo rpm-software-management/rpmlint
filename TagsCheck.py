@@ -37,6 +37,7 @@ DEFAULT_VALID_GROUPS=(
     'Development/Kernel',
     'Development/Other',
     'Development/Perl',
+    'Development/PHP',
     'Development/Python',
     'Editors',
     'Education',
