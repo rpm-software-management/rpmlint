@@ -52,6 +52,9 @@ use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 hardcoded_library_paths='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
 hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
 
+# Requires(pre,post) is broken in rpm
+scriptlet_requires_regex=re.compile('Requires\([^\)]*,')
+
 def file2string(file):
     fd=open(file, "r")
     content=fd.readlines()
@@ -192,6 +195,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printError(pkg, 'prereq-use', res.group(1))
 
+                scriptlet_requires_regex.search(line)
+                if res:
+                    printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
+
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
 
@@ -286,6 +293,10 @@ patch to be effective only on a given arch.''',
 'prereq-use',
 '''The use of PreReq is deprecated. You should use Requires(pre), Requires(post),
 Requires(preun) or Requires(postun) according to your needs.''',
+
+'broken-syntax-in-scriptlet-requires',
+'''Requires(pre,post) is accepted by rpm but leads to strange behaviour.
+You should use Requires(pre) and Requires(post) instead.''',
 
 )
 
