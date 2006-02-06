@@ -1,3 +1,61 @@
+2006-02-06 14:57  Michael Scherer <misc at mandriva.org>
+
+	* FilesCheck.py: Add file-in-meta-package check, to detect if a
+	  meta package contains files ( rgs request )
+
+2006-02-02 16:16  Rafael Garcia-Suarez <rgarciasuarez at mandriva.com>
+
+	* SpecCheck.py: Patch by Pascal Terjan to warn against the faulty
+	  Requires(pre,post) syntax in spec files.
+
+2006-01-31 11:49  Rafael Garcia-Suarez <rgarciasuarez at mandriva.com>
+
+	* TagsCheck.py: Add Development/PHP to the list of default allowed
+	  rpm groups
+
+2006-01-30 11:22  Michael Scherer <misc at mandriva.org>
+
+	* TagsCheck.py: - add the Mozart Licence ( bug #16416 ), thanks to
+	  guillaume rousse.
+
+2006-01-15 11:36  Ville Skyttä <ville.skytta@iki.fi>
+
+	* InitScriptCheck.py, README: Add option for warning services being
+	  on by default after chkconfig --add.
+
+2006-01-15 11:35  Ville Skyttä <ville.skytta@iki.fi>
+
+	* Pkg.py: Remove accidentally included debug outputs.
+
+2006-01-15 10:59  Ville Skyttä <ville.skytta@iki.fi>
+
+	* Config.py, FilesCheck.py, Pkg.py, README, SpecCheck.py,
+	  TagsCheck.py: Add optional UTF-8 checks for docs, specfiles and
+	  header field values.
+
+2006-01-15 10:45  Ville Skyttä <ville.skytta@iki.fi>
+
+	* FilesCheck.py: Recognize docs in /usr/X11R6 too.
+
+2006-01-09 14:19  Michael Scherer <misc at mandriva.org>
+
+	* Pkg.py: Fix backtrace when there is a missing tag ( bug #20518 on
+	  mdv bugzilla )
+
+2005-12-20 16:39  Frederic Lepied <flepied at mandriva.com>
+
+	* I18NCheck.py: fixed typo making the nso and oc ISO codes not
+	  reported as valid (Dirk Mueller).
+
+2005-12-14 21:32  Ville Skyttä <ville.skytta@iki.fi>
+
+	* Config.py, DocFilesCheck.py: New check for dependencies caused by
+	  %doc files (Enrico Scholz).
+
+2005-12-14 21:30  Ville Skyttä <ville.skytta@iki.fi>
+
+	* BinariesCheck.py: Clean up failed objdump output.
+
 2005-12-09 01:56  vskytta
 
 	* BinariesCheck.py: Skip some checks and output better warning
@@ -8,7 +66,7 @@
 	* BinariesCheck.py, Pkg.py: Ensure English output for commands
 	  whose output is parsed.
 
-2005-12-06 09:23  Michael Scherer <mscherer at mandrake.org>
+2005-12-06 09:23  Michael Scherer <misc at mandriva.org>
 
 	* rpmlint.spec: - use mkrel macro
 
@@ -510,7 +568,7 @@
 	* PostCheck.py: doc for postin-without-ghost-file-creation (Pascal
 	  Terjan)
 
-2004-09-22 16:22  Michael Scherer <mscherer at mandrake.org>
+2004-09-22 16:22  Michael Scherer <misc at mandriva.org>
 
 	* Config.py: - some code factorisation - fix addCheck ( was not
 	  useable since it was a tuple instead of a list )
@@ -565,17 +623,17 @@
 
 	* BinariesCheck.py: add ruby exceptions like perl and python.
 
-2004-07-05 04:25  Michael Scherer <mscherer at mandrake.org>
+2004-07-05 04:25  Michael Scherer <misc at mandriva.org>
 
 	* TagsCheck.py: - added useless-explicit-provides ( check if there
 	  is 2 times the same provides )
 
-2004-05-17 11:47  Michael Scherer <mscherer at mandrake.org>
+2004-05-17 11:47  Michael Scherer <misc at mandriva.org>
 
 	* rpmlint.py: - fix -I, rpmlint didn't work f run without the
 	  option.
 
-2004-05-07 17:28  Michael Scherer <mscherer at mandrake.org>
+2004-05-07 17:28  Michael Scherer <misc at mandriva.org>
 
 	* rpmlint.py: added option -I, to print description of the error
 	  passed on commandline
@@ -588,7 +646,7 @@
 
 	* rpmlint.spec: 0.59-1mdk
 
-2004-04-30 10:53  Michael Scherer <mscherer at mandrake.org>
+2004-04-30 10:53  Michael Scherer <misc at mandriva.org>
 
 	* TagsCheck.py: check if a package requires a interpreter in
 	  /usr/local/bin/
