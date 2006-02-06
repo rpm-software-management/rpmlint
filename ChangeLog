@@ -1,3 +1,11 @@
+2006-02-06 15:31  Michael Scherer <misc at mandriva.org>
+
+	* README: Add MetaPackageRegexp option in README
+
+2006-02-06 15:08  Rafael Garcia-Suarez <rgarciasuarez at mandriva.com>
+
+	* FilesCheck.py: Fix english spelling in new warning
+
 2006-02-06 14:57  Michael Scherer <misc at mandriva.org>
 
 	* FilesCheck.py: Add file-in-meta-package check, to detect if a
