@@ -19,6 +19,10 @@ VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
 RELEASE:=$(shell rpm -q --qf %{RELEASE} --specfile $(PACKAGE).spec)
 TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
 
+# for the [A-Z]* part 
+LC_ALL:=C  
+export LC_ALL
+
 RPMOPT = --clean --rmspec
 
 all:
