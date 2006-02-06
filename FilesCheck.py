@@ -890,8 +890,8 @@ correctly in some circumstances.''',
 in the specfile for example using iconv(1).''',
 
 'file-in-meta-package',
-'''This package seems to be a meta-package ( a empty package used to requires 
-other packages ), but it is not empty. You should remove or rename it, see the 
+'''This package seems to be a meta-package (an empty package used to require
+other packages), but it is not empty. You should remove or rename it, see the
 option MetaPackageRegexp.''',
 
 )
