@@ -1,3 +1,17 @@
+2006-02-06 17:26  Michael Scherer <misc at mandriva.org>
+
+	* rpmlint.spec: - release 0.75-1mdk
+
+2006-02-06 16:09  Michael Scherer <misc at mandriva.org>
+
+	* Makefile: - Remove spurious spaces after setting the locales
+
+2006-02-06 16:08  Michael Scherer <misc at mandriva.org>
+
+	* Makefile: - force C locales in the shell subcommand, as it will
+	  otherwise includes lowercase filenames in the   check for print
+	  statement in Makefile
+
 2006-02-06 15:31  Michael Scherer <misc at mandriva.org>
 
 	* README: Add MetaPackageRegexp option in README
