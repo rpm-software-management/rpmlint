@@ -9,16 +9,16 @@
 
 Summary: Rpm correctness checker
 Name: rpmlint
-Version: 0.71
+Version: 0.75
 Release: %mkrel 1
 Source0: %{name}-%{version}.tar.bz2
 URL: http://people.mandriva.com/~flepied/projects/rpmlint/
 License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
-Requires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, binutils, file, findutils, cpio, /lib/cpp, grep, /bin/bash
-BuildArchitectures: noarch
-BuildRequires: python >= 1.5.2, rpm-python >= 3.0.3-35mdk, make
+Requires: python rpm-python binutils gcc-cpp 
+BuildArch: noarch
+BuildRequires: python rpm-python
 
 %description
 Rpmlint is a tool to check common errors on rpm packages.
@@ -41,13 +41,20 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,0755)
 %doc COPYING ChangeLog INSTALL README*
 %{_bindir}/*
-%{_datadir}/rpmlint
-%config(noreplace) /etc/rpmlint/config
-%dir /etc/rpmlint
+%{_datadir}/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}/config
+%dir %{_sysconfdir}/%{name}/
 
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 
 %changelog
+* Mon Feb 06 2006 Michael Scherer <misc@mandriva.org> 0.75-1mdk
+- 0.75, see Changelog for full details ( close #20518, #16416 ) 
+- clean Requires and BuildRequires, remove everything part of basesystem, 
+  and remove version that date back to 7.2 
+- use macros
+- use mkrel
+
 * Wed Aug 10 2005 Frederic Lepied <flepied@mandriva.com> 0.71-1mdk
 - Pkg: fixed prereq funtion for new rpm
 - SpecCheck.py: o allow to do a symlink to a configure file without
