@@ -189,6 +189,7 @@ interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(hourly|daily|monthly|weekly)))/')
 lib64python_regex=re.compile('^/usr/lib64/python')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -249,6 +250,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
         if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
             printWarning(pkg, 'no-documentation')
+
+        if len(files.keys()) and meta_package_re.search(pkg.name):
+            printWarning(pkg, 'file-in-meta-package')
 
         for f in files.keys():
             enreg=files[f]
@@ -884,6 +888,11 @@ correctly in some circumstances.''',
 'file-not-utf8',
 '''The character encoding of this file is not UTF-8.  Consider converting it
 in the specfile for example using iconv(1).''',
+
+'file-in-meta-package',
+'''This package seems to be a meta-package ( a empty package used to requires 
+other packages ), but it is not empty. You should remove or rename it, see the 
+option MetaPackageRegexp.''',
 
 )
 
