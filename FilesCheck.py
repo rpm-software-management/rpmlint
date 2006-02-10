@@ -187,6 +187,7 @@ manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 shellbang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(hourly|daily|monthly|weekly)))/')
+perl_module_regex=re.compile('\.pm$')
 lib64python_regex=re.compile('^/usr/lib64/python')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
@@ -557,9 +558,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 path=pkg.dirName() + '/' + f
                 if os.access(path, os.R_OK):
                     if istextfile(path):
-                        line=open(path).readline();
-
-                        res=shellbang_regex.search(line)
+			if not perl_module_regex.search(f):
+			    line=open(path).readline()
+			    res=shellbang_regex.search(line)
                         if res or mode & 0111 != 0 or script_regex.search(f):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
