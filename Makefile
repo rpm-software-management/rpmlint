@@ -33,7 +33,7 @@ clean:
 	rm -f *~ *.pyc *.pyo
 
 install:
-	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)
+	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)/bash_completion.d
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
 	if [ -z "$(POLICY)" ]; then \
@@ -43,6 +43,7 @@ install:
 	fi
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
+	cp -p rpmlint.bash-completion  $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
 
 verify:
 	pychecker *.py
