@@ -569,7 +569,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             else:
                                 printError(pkg, 'script-without-shellbang', f)
 
-                            if mode & 0111 == 0:
+                            if mode & 0111 == 0 and not doc_regex.search(f):
                                 printError(pkg, 'non-executable-script', f, oct(perm))
                             if line.endswith('\r\n'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
