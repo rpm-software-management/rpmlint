@@ -45,6 +45,7 @@ endif_regex=re.compile('%endif')
 biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
 prereq_regex=re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
+buildprereq_regex=re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
@@ -193,7 +194,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res=prereq_regex.search(line)
                 if res:
-                    printError(pkg, 'prereq-use', res.group(1))
+                    printWarning(pkg, 'prereq-use', res.group(1))
+
+                res=buildprereq_regex.search(line)
+                if res:
+                    printWarning(pkg, 'buildprereq-use', res.group(1))
 
                 scriptlet_requires_regex.search(line)
                 if res:
@@ -291,8 +296,13 @@ on all architectures and may contain necessary configure and/or code
 patch to be effective only on a given arch.''',
 
 'prereq-use',
-'''The use of PreReq is deprecated. You should use Requires(pre), Requires(post),
-Requires(preun) or Requires(postun) according to your needs.''',
+'''The use of PreReq is deprecated. In the majority of cases, a plain Requires
+is enough and the right thing to do. Sometimes Requires(pre), Requires(post),
+Requires(preun) and/or Requires(postun) can also be used instead of PreReq.''',
+
+'buildprereq-use',
+'''The use of BuildPreReq is deprecated, build dependencies are always required
+before a package can be built.  Use plain BuildRequires instead.''',
 
 'broken-syntax-in-scriptlet-requires',
 '''Requires(pre,post) is accepted by rpm but leads to strange behaviour.
