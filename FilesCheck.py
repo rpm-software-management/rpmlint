@@ -558,9 +558,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 path=pkg.dirName() + '/' + f
                 if os.access(path, os.R_OK):
                     if istextfile(path):
-			if not perl_module_regex.search(f):
-			    line=open(path).readline()
-			    res=shellbang_regex.search(line)
+                        line=open(path).readline()
+                        res=None
+                        if not perl_module_regex.search(f):
+                            res=shellbang_regex.search(line)
                         if res or mode & 0111 != 0 or script_regex.search(f):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
