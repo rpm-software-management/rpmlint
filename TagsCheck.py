@@ -551,7 +551,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     if not dep:
                         printWarning(pkg, 'no-dependency-on', base)
                     elif version:
-                        if use_epoch:
+                        if epoch is not None: # regardless of use_epoch
                             expected=str(epoch) + ":" + version
                         else:
                             expected=version
@@ -634,7 +634,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     # only check when source name correspond to name
                     if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
                         expected=version + '-' + release
-                        if epoch is not None:
+                        if epoch is not None: # regardless of use_epoch
                             expected=str(epoch) + ':' + expected
                         if expected != ret.group(1):
                             printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
