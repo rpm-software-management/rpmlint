@@ -41,7 +41,7 @@ CORRECT_SUBDIRS = (
 'es_PA', 'es_MX', 'et', 'eu',
 'fa', 'fi', 'fo', 'fr', 'fur', 'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
 'he', 'hi', 'hr', 'hu', 'hy',
-'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'kn', 'ko', 'ku', 'kw', 'ky',
+'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'km', 'kn', 'ko', 'ku', 'kw', 'ky',
 # 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code
 'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
 'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
