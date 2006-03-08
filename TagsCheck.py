@@ -443,6 +443,7 @@ epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 requires_in_usr_local_regex=re.compile('^/usr/local/bin')
+max_line_len=79
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -583,7 +584,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'summary-not-capitalized', summary)
             if summary[-1] == '.':
                 printWarning(pkg, 'summary-ended-with-dot', summary)
-            if len(summary) >= 80:
+            if len(summary) > max_line_len:
                 printError(pkg, 'summary-too-long', summary)
             if leading_space_regex.search(summary):
                 printError(pkg, 'summary-has-leading-spaces', summary)
@@ -599,7 +600,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             spell_check(pkg, description, 'description')
             for l in string.split(description, "\n"):
-                if len(l) >= 80:
+                if len(l) > max_line_len:
                     printError(pkg, 'description-line-too-long', l)
                 res=forbidden_words_regex.search(l)
                 if res:
@@ -705,7 +706,7 @@ check=TagsCheck()
 if Config.info:
     addDetails(
 'summary-too-long',
-'The "Summary:" must not exceed 80 characters.',
+'The "Summary:" must not exceed %d characters.' % max_line_len,
 
 'invalid-version',
 '''The version string must not contain the pre, alpha, beta or rc suffixes
@@ -789,8 +790,8 @@ package.''',
 after it, and rebuild the package.''',
 
 'description-line-too-long',
-'''Your description lines must no exceed 80 characters. If a line is exceeding
-this number, cut it to fit in two lines.''',
+'''Your description lines must not exceed %d characters. If a line is exceeding
+this number, cut it to fit in two lines.''' % max_line_len,
 
 'no-group-tag',
 '''There is no Group tag in your package. You have to specify a valid group
@@ -831,7 +832,7 @@ your specfile.''',
 -Vovida Software License                -Sun Internet Standards Source License
 -Intel Open Source License              -Jabber Open Source License
 
-if the license is near an existing one, you can use '<license> style'.''',
+if the license is close to an existing one, you can use '<license> style'.''',
 
 'invalid-url',
 '''Your URL is not valid. It must begin with http, https or ftp and must no
