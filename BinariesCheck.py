@@ -30,6 +30,7 @@ class BinaryInfo:
     dynsyms_regex=re.compile('^DYNAMIC SYMBOL TABLE:')
     pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
+    debug_file_regex=re.compile('\.debug$')
 
     def __init__(self, pkg, path, file):
         self.error=0
@@ -40,7 +41,8 @@ class BinaryInfo:
         self.soname=0
         self.non_pic=1
 
-        res=commands.getstatusoutput('LC_ALL=C objdump --headers --private-headers -T ' + path)
+        topt=not BinaryInfo.debug_file_regex.search(path) and '-T' or ''
+        res=commands.getstatusoutput('LC_ALL=C objdump --headers --private-headers %s %s' % (topt, path))
         if not res[0]:
             for l in string.split(res[1], '\n'):
                 needed=BinaryInfo.needed_regex.search(l)
