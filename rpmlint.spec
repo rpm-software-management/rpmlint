@@ -44,6 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}
 %config(noreplace) %{_sysconfdir}/%{name}/config
 %dir %{_sysconfdir}/%{name}/
+%{_mandir}/man1/*
 
 # MAKE THE CHANGES IN CVS: NO PATCH OR SOURCE ALLOWED
 

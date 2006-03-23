@@ -10,9 +10,10 @@
 BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
+MANDIR=/usr/share/man
 
-FILES= rpmlint *.py AUTHORS INSTALL README README.CVS COPYING ChangeLog Makefile \
-       config rpmlint.spec rpmdiff rpmlint.bash-completion
+FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog Makefile \
+       config rpmlint.spec rpmdiff rpmlint.bash-completion rpmlint.1
 
 PACKAGE=rpmlint
 VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
@@ -33,7 +34,7 @@ clean:
 	rm -f *~ *.pyc *.pyo
 
 install:
-	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)/bash_completion.d
+	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
 	if [ -z "$(POLICY)" ]; then \
@@ -44,6 +45,7 @@ install:
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config  $(DESTDIR)$(ETCDIR)
 	cp -p rpmlint.bash-completion  $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
+	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
 verify:
 	pychecker *.py
