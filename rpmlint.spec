@@ -12,7 +12,7 @@ Name: rpmlint
 Version: 0.75
 Release: %mkrel 1
 Source0: %{name}-%{version}.tar.bz2
-URL: http://people.mandriva.com/~flepied/projects/rpmlint/
+URL: http://rpmlint.zarb.org/
 License: GPL
 Group: Development/Other
 BuildRoot: %{_tmppath}/%{name}-buildroot
