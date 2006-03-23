@@ -5,8 +5,9 @@ specific checks can be performed by using command line parameters.
 
 The idea for rpmlint is from the lintian tool of the Debian project.
 
-Comments and new checks welcome. Send feedback to
-<flepied at mandriva.com>.
+Comments and new checks welcome. See the project home page at
+http://rpmlint.zarb.org/ for mailing list information, bug tracking
+system and other project resources.
 
 Implemented checks:
 
