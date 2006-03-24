@@ -1,0 +1,13 @@
+The latest development version can be retrieved from anonymous Subversion:
+
+$ svn checkout http://rpmlint.zarb.org/svn/trunk/
+
+To run rpmlint from the working tree:
+
+$ python -O -u rpmlint.py -C . <rpms>
+
+...and to run only a single check, for example to test only FHSCheck:
+
+$ python -O -u rpmlint.py -C . -c FHSCheck <rpms>
+
+Frederic Lepied <flepied at mandriva.com>
