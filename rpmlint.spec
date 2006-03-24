@@ -7,6 +7,8 @@
 # Purpose	: rules to create the rpmlint binary package.
 #############################################################################
 
+%{!?mkrel: %global mkrel() %(echo %1)}
+
 Summary: Rpm correctness checker
 Name: rpmlint
 Version: 0.75
