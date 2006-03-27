@@ -15,10 +15,15 @@ MANDIR=/usr/share/man
 FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog Makefile \
        config rpmlint.spec rpmdiff rpmlint.bash-completion rpmlint.1
 
+# TODO: shouldn't we drop $(RELEASE) everywhere because its value varies
+#       between systems (due to the %mkrel macro in the specfile) and
+#       causes problems with tag handling?
+
 PACKAGE=rpmlint
 VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
 RELEASE:=$(shell rpm -q --qf %{RELEASE} --specfile $(PACKAGE).spec)
 TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
+SVNBASE = $(shell svn info . | grep URL | cut -d ' ' -f 2 | sed -e 's,/\(trunk\|tags/.\+\)$$,,')
 
 # for the [A-Z]* part 
 LC_ALL:=C
@@ -83,7 +88,7 @@ rpm: changelog cvstag dist buildrpm
 dist: cleandist dir export tar
 
 export:
-	cvs export -d $(PACKAGE)-$(VERSION) -r $(TAG) $(PACKAGE)
+	svn export $(SVNBASE)/tags/$(TAG) $(PACKAGE)-$(VERSION)
 
 cvstag:
 	cvs tag $(CVSTAGOPT) $(TAG)
