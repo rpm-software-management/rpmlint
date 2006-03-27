@@ -83,15 +83,15 @@ buildrpm:
 
 # rules to build a distributable rpm
 
-rpm: changelog cvstag dist buildrpm
+rpm: changelog tag dist buildrpm
 
 dist: cleandist dir export tar
 
 export:
 	svn export $(SVNBASE)/tags/$(TAG) $(PACKAGE)-$(VERSION)
 
-cvstag:
-	cvs tag $(CVSTAGOPT) $(TAG)
+tag:
+	svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG)
 
 changelog:
 	svn2cl --authors=authors.xml
