@@ -73,7 +73,7 @@ dir:
 localcopy:
 	tar c $(FILES) | tar x -C $(PACKAGE)-$(VERSION)
 
-tar: changelog
+tar:
 	tar cvf $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	bzip2 -9vf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
