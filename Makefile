@@ -83,7 +83,8 @@ buildrpm:
 
 # rules to build a distributable rpm
 
-rpm: changelog tag dist buildrpm
+# TODO: dangerous, easily tags same stuff multiple times (kind of)...
+#rpm: changelog tag dist buildrpm
 
 dist: cleandist dir export tar
 
