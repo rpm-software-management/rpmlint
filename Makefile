@@ -92,7 +92,13 @@ export:
 	svn export $(SVNBASE)/tags/$(TAG) $(PACKAGE)-$(VERSION)
 
 tag:
-	svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG)
+	@if svn list $(SVNBASE)/tags/$(TAG) &>/dev/null ; then \
+	    echo "ERROR: tag \"$(TAG)\" probably already exists" ; \
+	    exit 1 ; \
+	else \
+	    echo 'svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG)' ; \
+	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
+	fi
 
 changelog:
 	svn2cl --authors=authors.xml
