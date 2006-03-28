@@ -324,8 +324,8 @@ addFilter('kernel-source zero-length .*\.stamp$')
 addFilter('kernel-source hidden-file-or-dir .*\.depend$')
 
 #Glibc
-addFilter('glibc shared-lib-without-dependency-information /lib/ld-.*so')
-addFilter('glibc library-not-linked-against-libc /lib/libc-.*so')
+addFilter('glibc shared-lib-without-dependency-information /lib.*/ld-.*so')
+addFilter('glibc library-not-linked-against-libc /lib.*/libc-.*so')
 addFilter('glibc statically-linked-binary /sbin/sln')
 addFilter('glibc setuid-binary /usr/libexec/pt_chown root 04755')
 addFilter('glibc invalid-soname /lib/libmemusage.so libmemusage.so')
