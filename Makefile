@@ -15,21 +15,16 @@ MANDIR=/usr/share/man
 FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog Makefile \
        config rpmlint.spec rpmdiff rpmlint.bash-completion rpmlint.1
 
-# TODO: shouldn't we drop $(RELEASE) everywhere because its value varies
-#       between systems (due to the %mkrel macro in the specfile) and
-#       causes problems with tag handling?
-
 PACKAGE=rpmlint
-VERSION:=$(shell rpm -q --qf %{VERSION} --specfile $(PACKAGE).spec)
-RELEASE:=$(shell rpm -q --qf %{RELEASE} --specfile $(PACKAGE).spec)
-TAG := $(shell echo "V$(VERSION)_$(RELEASE)" | tr -- '-.' '__')
+
+# update this variable to create a new release
+VERSION := 0.75
+TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | cut -d ' ' -f 2 | sed -e 's,/\(trunk\|tags/.\+\)$$,,')
 
 # for the [A-Z]* part 
 LC_ALL:=C
 export LC_ALL
-
-RPMOPT = --clean --rmspec
 
 all:
 	./compile.py "$(LIBDIR)/" [A-Z]*.py
@@ -56,13 +51,10 @@ verify:
 	pychecker *.py
 
 version:
-	@echo "$(VERSION)-$(RELEASE)"
+	@echo "$(VERSION)"
 
-# rules to build a test rpm
 
-localrpm: localdist buildrpm
-
-localdist: cleandist dir localcopy tar
+dist: cleandist dir localcopy tar
 
 cleandist:
 	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.bz2
@@ -77,16 +69,6 @@ tar:
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	bzip2 -9vf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
-
-buildrpm:
-	rpm -ta $(RPMOPT) $(PACKAGE)-$(VERSION).tar.bz2
-
-# rules to build a distributable rpm
-
-# TODO: dangerous, easily tags same stuff multiple times (kind of)...
-#rpm: changelog tag dist buildrpm
-
-dist: cleandist dir export tar
 
 export:
 	svn export $(SVNBASE)/tags/$(TAG) $(PACKAGE)-$(VERSION)
