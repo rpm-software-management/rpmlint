@@ -15,6 +15,6 @@ class AbstractCheck:
         self.name = name
 
     def check(self, pkg):
-        pass
+        raise NotImplementedError('check must be implemented in subclass')
 
 # AbstractCheck.py ends here
