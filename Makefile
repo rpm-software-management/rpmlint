@@ -12,8 +12,8 @@ LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc/rpmlint
 MANDIR=/usr/share/man
 
-FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog Makefile \
-       config rpmlint.spec rpmdiff rpmlint.bash-completion rpmlint.1
+FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog \
+	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1
 
 PACKAGE=rpmlint
 
