@@ -888,6 +888,8 @@ once.''',
 'tag-not-utf8',
 '''The character encoding of the value of this tag is not UTF-8.''',
 
+'requires-on-release',
+'''This rpm requires a specific release of another package.''',
 )
 
 # TagsCheck.py ends here
