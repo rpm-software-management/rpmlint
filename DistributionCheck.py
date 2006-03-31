@@ -18,8 +18,8 @@ info_regex=re.compile("(/usr/share|/usr)/info/")
 info_dir_regex=re.compile("/info/dir$")
 bz2_regex=re.compile(".bz2$")
 gz_regex=re.compile(".gz$")
-vendor=Config.getOption("Vendor", "Mandriva")
-distribution=Config.getOption("Distribution", "Mandriva Linux")
+vendor=Config.getOption("Vendor", "")
+distribution=Config.getOption("Distribution", "")
 use_bzip2=Config.getOption("UseBzip2", 1)
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
@@ -33,10 +33,10 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        if pkg[rpm.RPMTAG_VENDOR] != vendor:
+        if vendor and pkg[rpm.RPMTAG_VENDOR] != vendor:
             printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
 
-        if pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
+        if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
             printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
         # Check the listing of files
