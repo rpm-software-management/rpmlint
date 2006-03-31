@@ -56,7 +56,7 @@ Available options:
 name			type		default
 ========================================================
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
-Distribution		string		"Mandriva Linux"
+Distribution		string		""
 ExtraMenuNeeds		list of strings
 ExtractDir		string		"/tmp"
 ForbiddenWords		regex		'mandrake'
@@ -82,4 +82,4 @@ ValidLicenses		list of strings
 ValidMenuSections	list of strings
 ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
 ValidSrcPerms		list of modes	(0644, 0755)
-Vendor			string		"Mandriva"
+Vendor			string		""
