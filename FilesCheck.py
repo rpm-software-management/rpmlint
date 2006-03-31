@@ -175,7 +175,6 @@ kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|B
 normal_zero_length_regex=re.compile('^/etc/security/console.apps/|/.nosearch$|/__init__.py$')
 perl_regex=re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
-cross_compile_regex=re.compile(Config.getOption('CrossCompilation', '-mandriva-linux-[^/]+$'))
 perl_version_trick=Config.getOption('PerlVersionTrick', 1)
 log_regex=re.compile('^/var/log/[^/]+$')
 lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
@@ -360,8 +359,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if doc_regex.search(f) and not f in doc_files:
                     printError(pkg, 'not-listed-as-documentation', f)
-                #elif cross_compile_regex.search(f):
-                #    printError(pkg, 'cross-compile-name', f)
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):

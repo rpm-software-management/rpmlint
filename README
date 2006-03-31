@@ -55,7 +55,6 @@ Available options:
 
 name			type		default
 ========================================================
-CrossCompilation	regex		'-mandriva-linux-[^/]+$'
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 Distribution		string		"Mandriva Linux"
 ExtraMenuNeeds		list of strings
