@@ -169,4 +169,11 @@ of chkconfig don't work as expected with init script names like that.''',
 '''The init script should have at least the execution bit set for root
 in order for it to run at boot time.''',
 )
+
 # InitScriptCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

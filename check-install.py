@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -tt
 #---------------------------------------------------------------
 # Project         : Mandriva Linux
 # Module          : rpmlint
@@ -44,3 +44,9 @@ while idx:
 del db
 
 # check-install ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

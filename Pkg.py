@@ -5,7 +5,7 @@
 # Created on    : Tue Sep 28 07:18:06 1999
 # Version       : $Id$
 # Purpose       : provide an API to handle a rpm package either by accessing
-#               the rpm file or by accessing the files contained inside.
+#                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
 import os
@@ -448,3 +448,9 @@ if __name__ == '__main__':
         pkg.cleanup()
 
 # Pkg.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

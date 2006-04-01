@@ -199,3 +199,9 @@ if Config.info:
 )
 
 # I18NCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

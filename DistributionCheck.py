@@ -90,4 +90,11 @@ run gzip <info page file> to gzip it in the %install section and rebuild the
 package.''',
 
 )
+
 # DistributionCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

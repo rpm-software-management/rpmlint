@@ -50,3 +50,9 @@ def addDetails(*details):
         _details[details[idx*2]]=details[idx*2+1]
 
 # Filter.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et
