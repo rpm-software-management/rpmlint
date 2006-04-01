@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -tt
 #---------------------------------------------------------------
 # Project         : Mandriva Linux
 # Module          : rpmlint
@@ -161,7 +161,9 @@ if __name__ == '__main__':
     main()
 
 # rpmdiff ends here
-#
+
 # Local variables:
-# mode: python
+# indent-tabs-mode: nil
+# py-indent-offset: 4
 # End:
+# ex: ts=4 sw=4 et

@@ -1,14 +1,14 @@
 # Copyright (C) 2005 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
-#  
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; version 2 of the License.
-#  
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#  
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -33,12 +33,12 @@ def _stripVersionedDeps(deps):
 
 class DocFilesCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
-	AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
+        AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
 
     def __checkRequirements(this, pkg):
         file_reqs = pkg.header[rpm.RPMTAG_FILEREQUIRE]
         files     = pkg.header[rpm.RPMTAG_FILENAMES]
-	doc_files = pkg.docFiles()
+        doc_files = pkg.docFiles()
 
         assert(len(file_reqs) == len(files))
 
@@ -48,8 +48,8 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             tmp            = _stripVersionedDeps(tmp)
             reqs[files[i]] = tmp
 
-        core_reqs = {}	# dependencies of non-doc files
-        doc_reqs  = {}	# dependencies of doc files
+        core_reqs = {}  # dependencies of non-doc files
+        doc_reqs  = {}  # dependencies of doc files
 
         for dep in pkg.header.dsFromHeader():
             # skip deps which were found by find-requires
@@ -61,7 +61,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             core_reqs[i] = []
 
         for i in files:
-            if not reqs[i]:      continue	# skip empty dependencies
+            if not reqs[i]:      continue       # skip empty dependencies
             elif i in doc_files: target = doc_reqs
             else:                target = core_reqs
 
@@ -79,8 +79,8 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, "doc-file-dependency", f, dep)
 
     def check(self, pkg):
-	if pkg.isSource():
-	    return
+        if pkg.isSource():
+            return
         try:
             foo = rpm.RPMTAG_FILEREQUIRE # need rpm >= 4.1.1
         except:
@@ -109,3 +109,11 @@ def test():
                       (['a','>', '0', 'b', '>', '0'], ['a', 'b']),
                       ):
         assert(_stripVersionedDeps(arg) == exp)
+
+# DocFilesCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

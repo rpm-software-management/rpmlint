@@ -74,4 +74,11 @@ have the .gz extension). To gzip it, use the gzip command.''',
 permissions. Usually, a file should have 0644 permissions.''',
 
 )
+
 # SourceCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

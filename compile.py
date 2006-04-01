@@ -1,4 +1,4 @@
-#!/usr/bin/python -O
+#!/usr/bin/python -O -tt
 #############################################################################
 # File          : compile.py
 # Package       : rpmlint
@@ -15,3 +15,9 @@ for f in sys.argv[2:]:
     py_compile.compile(f, f + 'o', sys.argv[1] + f)
 
 # compile.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

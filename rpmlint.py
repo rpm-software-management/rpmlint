@@ -5,7 +5,7 @@
 # Created on    : Mon Sep 27 19:20:18 1999
 # Version       : $Id$
 # Purpose       : main entry point: process options, load the checks and run
-#               the checks.
+#                 the checks.
 #############################################################################
 
 import sys
@@ -248,3 +248,9 @@ else:
     main()
 
 # rpmlint.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

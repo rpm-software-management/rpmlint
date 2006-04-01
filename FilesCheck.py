@@ -5,7 +5,7 @@
 # Created on    : Mon Oct  4 19:32:49 1999
 # Version       : $Id$
 # Purpose       : test various aspects on files: locations, owner, groups,
-#               permission, setuid, setgid...
+#                 permission, setuid, setgid...
 #############################################################################
 
 from Filter import *
@@ -897,3 +897,9 @@ option MetaPackageRegexp.''',
 )
 
 # FilesCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

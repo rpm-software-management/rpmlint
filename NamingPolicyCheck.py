@@ -116,5 +116,10 @@ check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/', 1)
 # ruby => apache2-mod_ruby
 #         ruby
 
-
 # NamingPolicyCheck.py ends here
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et
