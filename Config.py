@@ -94,7 +94,7 @@ def setOption(name, value):
 
     _options[name]=value
 
-def getOption(name, default):
+def getOption(name, default=""):
     global _options
 
     try:
