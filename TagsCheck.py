@@ -411,7 +411,6 @@ BAD_WORDS = {
     }
 
 DEFAULT_FORBIDDEN_WORDS_REGEX='mandrake'
-DEFAULT_VALID_BUILDHOST='\.mandriva\.com$|\.mandriva\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
 distribution=Config.getOption("Distribution", "Mandriva Linux")
@@ -435,7 +434,7 @@ lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAULT_FORBIDDEN_WORDS_REGEX) + ')', re.IGNORECASE)
-valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost', DEFAULT_VALID_BUILDHOST))
+valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost'))
 epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
@@ -616,7 +615,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not buildhost:
             printError(pkg, 'no-buildhost-tag')
         else:
-            if not valid_buildhost_regex.search(buildhost):
+            if Config.getOption('ValidBuildHost') and not valid_buildhost_regex.search(buildhost):
                 printWarning(pkg, 'invalid-buildhost', buildhost)
 
         changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
