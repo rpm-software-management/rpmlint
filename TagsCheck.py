@@ -152,7 +152,7 @@ DEFAULT_VALID_LICENSES = (
     'Charityware'
     )
 
-DEFAULT_PACKAGER = '@mandriva.com|@mandriva.org|http://www.mandrivaexpert.com'
+DEFAULT_PACKAGER = ''
 
 BAD_WORDS = {
     'alot': 'a lot',
@@ -469,7 +469,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
             printError(pkg, 'no-packager-tag')
-        elif not packager_regex.search(packager):
+        elif Config.getOption('Packager', DEFAULT_PACKAGER) and not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
 
         version=pkg[rpm.RPMTAG_VERSION]
