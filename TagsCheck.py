@@ -718,11 +718,11 @@ to make the package upgradable. Instead put it in the release tag like
 
 'no-packager-tag',
 '''There is no Packager tag in your package. You have to specify a packager using
-the Packager tag. Ex: Packager: Christian Belisle <cbelisle@mandriva.com>.''',
+the Packager tag. Ex: Packager: John Doo <john.doo@example.com>.''',
 
 'invalid-packager',
-'''The packager email must finish with @mandriva.com or must be @mandriva.org.
-Please change it and rebuild your package.''',
+'''The packager email must finish with a email compatible with the Packager option
+of rpmlint. Please change it and rebuild your package.''',
 
 'no-version-tag',
 '''There is no Version tag in your package. You have to specify a version using
