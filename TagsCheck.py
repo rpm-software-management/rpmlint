@@ -152,8 +152,6 @@ DEFAULT_VALID_LICENSES = (
     'Charityware'
     )
 
-DEFAULT_PACKAGER = ''
-
 BAD_WORDS = {
     'alot': 'a lot',
     'accesnt': 'accent',
@@ -420,7 +418,7 @@ distribution=Config.getOption("Distribution", "Mandriva Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
-packager_regex=re.compile(Config.getOption('Packager', DEFAULT_PACKAGER))
+packager_regex=re.compile(Config.getOption('Packager'))
 basename_regex=re.compile('/?([^/]+)$')
 changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
 release_ext=Config.getOption('ReleaseExtension', 'mdk')
