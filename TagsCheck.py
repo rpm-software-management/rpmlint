@@ -415,7 +415,6 @@ BAD_WORDS = {
 DEFAULT_FORBIDDEN_WORDS_REGEX='mandrake'
 DEFAULT_VALID_BUILDHOST='\.mandriva\.com$|\.mandriva\.org$'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
-DEFAULT_INVALID_URL='mandrake'
 
 distribution=Config.getOption("Distribution", "Mandriva Linux")
 VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
@@ -432,7 +431,7 @@ devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
-invalid_url_regex=re.compile(Config.getOption('InvalidURL', DEFAULT_INVALID_URL), re.IGNORECASE)
+invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 so_regex=re.compile('\.so$')
 lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
@@ -666,7 +665,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if url and url != 'none':
             if not url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
-            elif invalid_url_regex.search(url):
+            elif Config.getOption('InvalidURL') and invalid_url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
         else:
             printWarning(pkg, 'no-url-tag')
