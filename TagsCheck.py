@@ -410,7 +410,6 @@ BAD_WORDS = {
     'xwindows': 'X'
     }
 
-DEFAULT_FORBIDDEN_WORDS_REGEX='mandrake'
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
 distribution=Config.getOption("Distribution")
@@ -433,7 +432,8 @@ so_regex=re.compile('\.so$')
 lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
-forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords', DEFAULT_FORBIDDEN_WORDS_REGEX) + ')', re.IGNORECASE)
+# () are here for grouping purpose in the regexp
+forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
 valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost'))
 epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
