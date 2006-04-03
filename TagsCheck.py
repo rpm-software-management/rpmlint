@@ -465,7 +465,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         packager=pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
             printError(pkg, 'no-packager-tag')
-        elif Config.getOption('Packager', DEFAULT_PACKAGER) and not packager_regex.search(packager):
+        elif Config.getOption('Packager') and not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
 
         version=pkg[rpm.RPMTAG_VERSION]
