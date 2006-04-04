@@ -15,95 +15,16 @@ import string
 import re
 import Config
 
-DEFAULT_VALID_GROUPS=(
-    'Accessibility',
-    'Archiving/Backup',
-    'Archiving/Cd burning',
-    'Archiving/Compression',
-    'Archiving/Other',
-    'Books/Computer books',
-    'Books/Faqs',
-    'Books/Howtos',
-    'Books/Literature',
-    'Books/Other',
-    'Communications',
-    'Databases',
-    'Development/C',
-    'Development/C++',
-    'Development/Databases',
-    'Development/GNOME and GTK+',
-    'Development/Java',
-    'Development/KDE and Qt',
-    'Development/Kernel',
-    'Development/Other',
-    'Development/Perl',
-    'Development/PHP',
-    'Development/Python',
-    'Editors',
-    'Education',
-    'Emulators',
-    'File tools',
-    'Games/Adventure',
-    'Games/Arcade',
-    'Games/Boards',
-    'Games/Cards',
-    'Games/Other',
-    'Games/Puzzles',
-    'Games/Sports',
-    'Games/Strategy',
-    'Graphical desktop/Enlightenment',
-    'Graphical desktop/FVWM based',
-    'Graphical desktop/GNOME',
-    'Graphical desktop/Icewm',
-    'Graphical desktop/KDE',
-    'Graphical desktop/Other',
-    'Graphical desktop/Sawfish',
-    'Graphical desktop/WindowMaker',
-    'Graphical desktop/Xfce',
-    'Graphics',
-    'Monitoring',
-    'Networking/Chat',
-    'Networking/File transfer',
-    'Networking/IRC',
-    'Networking/Instant messaging',
-    'Networking/Mail',
-    'Networking/News',
-    'Networking/Other',
-    'Networking/Remote access',
-    'Networking/WWW',
-    'Office',
-    'Publishing',
-    'Sciences/Astronomy',
-    'Sciences/Biology',
-    'Sciences/Chemistry',
-    'Sciences/Computer science',
-    'Sciences/Geosciences',
-    'Sciences/Mathematics',
-    'Sciences/Other',
-    'Sciences/Physics',
-    'Shells',
-    'Sound',
-    'System/Base',
-    'System/Configuration/Boot and Init',
-    'System/Configuration/Hardware',
-    'System/Configuration/Networking',
-    'System/Configuration/Other',
-    'System/Configuration/Packaging',
-    'System/Configuration/Printing',
-    'System/Fonts/Console',
-    'System/Fonts/True type',
-    'System/Fonts/Type1',
-    'System/Fonts/X11 bitmap',
-    'System/Internationalization',
-    'System/Kernel and hardware',
-    'System/Libraries',
-    'System/Servers',
-    'System/X11',
-    'Terminals',
-    'Text tools',
-    'Toys',
-    'Video',
-    )
+
+def get_default_valid_rpmgroups(filename=""):
+    """ Get the default rpm group from filename, or from rpm package if no
+    filename is given"""
+    if not filename:
+        import Pkg
+        p = Pkg.InstalledPkg('rpm')
+        filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
+    return open(filename).read().split('\n')
+
 
 # liste grabbed from www.opensource.org/licenses
 
@@ -413,7 +334,7 @@ BAD_WORDS = {
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
 distribution=Config.getOption("Distribution")
-VALID_GROUPS=Config.getOption('ValidGroups', DEFAULT_VALID_GROUPS)
+VALID_GROUPS=Config.getOption('ValidGroups', get_default_valid_rpmgroups())
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
 packager_regex=re.compile(Config.getOption('Packager'))
