@@ -506,7 +506,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if leading_space_regex.search(summary):
                 printError(pkg, 'summary-has-leading-spaces', summary)
             res=forbidden_words_regex.search(summary)
-            if res:
+            if res and Config.getOption('ForbiddenWords'):
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
             if use_utf8 and not is_utf8_str(summary):
                 printError(pkg, 'tag-not-utf8', 'Summary')
@@ -520,7 +520,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if len(l) > max_line_len:
                     printError(pkg, 'description-line-too-long', l)
                 res=forbidden_words_regex.search(l)
-                if res:
+                if res and Config.getOption('ForbiddenWords'):
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
             if use_utf8 and not is_utf8_str(description):
                 printError(pkg, 'tag-not-utf8', '%description')
