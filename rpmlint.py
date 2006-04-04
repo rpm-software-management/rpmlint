@@ -175,10 +175,12 @@ all=0
 conf_file='~/.rpmlintrc'
 info_error=0
 # load global config file
-try:
-    loadFile('/etc/rpmlint/config')
-except OSError:
-    pass
+for f in ('/usr/share/rpmlint/config','/etc/rpmlint/config'):
+    try:
+        loadFile(f)
+    except OSError:
+        pass
+
 
 # process command line options
 for o in opt:
