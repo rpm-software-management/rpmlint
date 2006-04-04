@@ -9,7 +9,7 @@
 
 BINDIR=/usr/bin
 LIBDIR=/usr/share/rpmlint
-ETCDIR=/etc/rpmlint
+ETCDIR=/etc/
 MANDIR=/usr/share/man
 
 FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog \
@@ -18,7 +18,7 @@ FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog \
 PACKAGE=rpmlint
 
 # update this variable to create a new release
-VERSION := 0.75
+VERSION := 0.76
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | cut -d ' ' -f 2 | sed -e 's,/\(trunk\|tags/.\+\)$$,,')
 
@@ -34,7 +34,7 @@ clean:
 	rm -f *~ *.pyc *.pyo ChangeLog
 
 install:
-	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
+	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)$(PACKAGE)/ $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
 	if [ -z "$(POLICY)" ]; then \
@@ -43,7 +43,7 @@ install:
 	  sed -e 's/@VERSION@/$(VERSION)/' -e 's/policy=None/policy="$(POLICY)"/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py; \
 	fi
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
-	cp -p config  $(DESTDIR)$(ETCDIR)
+	cp -p config  $(DESTDIR)$(ETCDIR)$(PACKAGE)/
 	cp -p rpmlint.bash-completion  $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
 	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
