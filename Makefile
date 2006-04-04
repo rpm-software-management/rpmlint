@@ -65,7 +65,7 @@ dir:
 localcopy:
 	tar c $(FILES) | tar x -C $(PACKAGE)-$(VERSION)
 
-tar:
+tar: dir
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	bzip2 -9vf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
