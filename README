@@ -59,14 +59,14 @@ DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 Distribution		string		""
 ExtraMenuNeeds		list of strings
 ExtractDir		string		"/tmp"
-ForbiddenWords		regex		'mandrake'
+ForbiddenWords		regex		''
 IconFilename		regex		'.*\.png$'
 InvalidRequires		list of strings ('is', 'not', 'owned', 'by', 'any', 'package')
 KernelModuleRPMsOK	boolean		1
 MetaPackageRegexp   regex       '^(bundle|task)-' 
-Packager		regex		'@mandriva.com|@mandriva.org|https://qa.mandriva.com'
+Packager		regex		''
 PerlVersionTrick	boolean		1
-ReleaseExtension	string or None	"mdk"
+ReleaseExtension	string or None	""
 RpmGamesGroup		regex		'Games'
 StandardGroups      list of strings see DEFAULT_STANDARD_GROUPS in FilesChecks.py
 StandardUsers       list of strings see DEFAULT_STANDARD_USERS in FilesChecks.py 
@@ -78,7 +78,7 @@ UseIndexedJars		boolean		1
 UseVersionInChangelog	boolean		1
 UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
 UseUTF8			boolean		(autodetected with python >= 2.0, 0 otherwise)
-ValidBuildHost		regex		'\.mandriva\.com$|\.mandriva\.org$'
+ValidBuildHost		regex		''
 ValidGroups		list of strings
 ValidLicenses		list of strings
 ValidMenuSections	list of strings
