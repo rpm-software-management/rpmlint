@@ -137,6 +137,9 @@ DEFAULT_GAMES_GROUPS='Games'
 DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
+DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'sys', 'adm', 'tty', 'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail', 'news', 'uucp', 'man', 'games', 'cdrom', 'users', 'cdwriter', 'audio')
+DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync', 'shutdown', 'halt', 'mail', 'news', 'uucp', 'operator', 'games')
+
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
 mnt_regex=re.compile('^/mnt/')
 opt_regex=re.compile('^/opt/')
@@ -264,9 +267,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
-            if not user in Config.STANDARD_USERS:
+            if not user in Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS):
                 printError(pkg, 'non-standard-uid', f, user)
-            if not group in Config.STANDARD_GROUPS:
+            if not group in Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS):
                 printError(pkg, 'non-standard-gid', f, group)
 
             if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
