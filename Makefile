@@ -31,7 +31,7 @@ all:
 	@for f in [A-Z]*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
 
 clean:
-	rm -f *~ *.pyc *.pyo ChangeLog
+	rm -f *~ *.pyc *.pyo AUTHORS ChangeLog
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
