@@ -54,16 +54,14 @@ version:
 	@echo "$(VERSION)"
 
 
-dist: cleandist dir localcopy tar
+dist: cleandist localcopy tar
 
 cleandist:
 	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.bz2
 
-dir:
+localcopy: $(FILES)
 	mkdir $(PACKAGE)-$(VERSION)
-
-localcopy: dir
-	tar c $(FILES) | tar x -C $(PACKAGE)-$(VERSION)
+	cp -p $(FILES) $(PACKAGE)-$(VERSION)
 
 tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
@@ -82,7 +80,7 @@ tag:
 	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
 	fi
 
-changelog:
+ChangeLog:
 	svn2cl --authors=authors.xml
 
 # Makefile ends here
