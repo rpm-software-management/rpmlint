@@ -80,6 +80,9 @@ tag:
 	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
 	fi
 
+AUTHORS:
+	xsltproc authors.xsl authors.xml | sort -u > $@
+
 ChangeLog:
 	svn2cl --authors=authors.xml
 
