@@ -62,10 +62,10 @@ cleandist:
 dir:
 	mkdir $(PACKAGE)-$(VERSION)
 
-localcopy:
+localcopy: dir
 	tar c $(FILES) | tar x -C $(PACKAGE)-$(VERSION)
 
-tar: dir
+tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	bzip2 -9vf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
