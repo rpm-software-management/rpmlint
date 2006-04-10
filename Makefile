@@ -12,8 +12,9 @@ LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc
 MANDIR=/usr/share/man
 
-FILES= rpmlint *.py AUTHORS INSTALL README README.devel COPYING ChangeLog \
+FILES = rpmlint *.py INSTALL README README.devel COPYING \
 	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1
+GENERATED = AUTHORS ChangeLog
 
 PACKAGE=rpmlint
 
@@ -59,9 +60,9 @@ dist: cleandist localcopy tar
 cleandist:
 	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.bz2
 
-localcopy: $(FILES)
+localcopy: $(FILES) $(GENERATED)
 	mkdir $(PACKAGE)-$(VERSION)
-	cp -p $(FILES) $(PACKAGE)-$(VERSION)
+	cp -p $(FILES) $(GENERATED) $(PACKAGE)-$(VERSION)
 
 tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
@@ -80,10 +81,10 @@ tag:
 	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
 	fi
 
-AUTHORS:
+AUTHORS: authors.xml authors.xsl
 	xsltproc authors.xsl authors.xml | sort -u > $@
 
-ChangeLog:
+ChangeLog: $(FILES) authors.xml
 	svn2cl --authors=authors.xml
 
 # Makefile ends here
