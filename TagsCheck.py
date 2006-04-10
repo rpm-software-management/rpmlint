@@ -14,6 +14,10 @@ import rpm
 import string
 import re
 import Config
+try:
+    from textwrap import fill # python >= 2.3
+except ImportError:
+    def fill(text, width=70): return text
 
 
 def get_default_valid_rpmgroups(filename=""):
@@ -736,20 +740,10 @@ for your program (eg. GPL). To insert this tag, just insert a 'License' in
 your specfile.''',
 
 'invalid-license',
-'''The license you specified is invalid. The valid licenses are:
-
--GPL                                    -LGPL
--Artistic                               -BSD
--MIT                                    -QPL
--MPL                                    -IBM Public License
--Apache License                         -PHP License
--Public Domain                          -Modified CNRI Open Source License
--zlib License                           -CVW License
--Ricoh Source Code Public License       -Python license
--Vovida Software License                -Sun Internet Standards Source License
--Intel Open Source License              -Jabber Open Source License
-
-if the license is close to an existing one, you can use '<license> style'.''',
+'''The value of the License tag is invalid.  Valid values are:
+%s
+If the license is close to an existing one, you can use '<license> style'.''' \
+% fill('"' + '", "'.join(VALID_LICENSES) + '".', 78),
 
 'invalid-url',
 '''Your URL is not valid. It must begin with http, https or ftp and must no
