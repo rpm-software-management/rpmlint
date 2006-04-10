@@ -20,7 +20,7 @@ PACKAGE=rpmlint
 # update this variable to create a new release
 VERSION := 0.76
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
-SVNBASE = $(shell svn info . | grep URL | cut -d ' ' -f 2 | sed -e 's,/\(trunk\|tags/.\+\)$$,,')
+SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
 # for the [A-Z]* part 
 LC_ALL:=C
