@@ -337,7 +337,6 @@ BAD_WORDS = {
 
 DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
-distribution=Config.getOption("Distribution")
 VALID_GROUPS=Config.getOption('ValidGroups', get_default_valid_rpmgroups())
 VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
@@ -719,8 +718,8 @@ this number, cut it to fit in two lines.''' % max_line_len,
 in your spec file using the Group tag.''',
 
 'non-standard-group',
-'''The group specified in your spec file is not valid. To find a valid group,
-please refer to the ''' + distribution + ' RPM documentation.''',
+'''The value of the Group tag in the package is not valid.  Valid groups are:
+%s''' % fill('"' + '", "'.join(VALID_GROUPS) + '".', 78),
 
 'no-changelogname-tag',
 '''There is no %changelog tag in your spec file. To insert it, just insert a
