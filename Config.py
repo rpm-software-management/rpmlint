@@ -28,6 +28,7 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "NamingPolicyCheck",
                 "ZipCheck",
                 "PamCheck",
+                "RpmFileCheck",
                 )
 
 USEUTF8_DEFAULT=0
