@@ -329,15 +329,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         setuid=user
                     if stat.S_ISGID & mode:
                         setgid=group
-                    if setuid and setgid:
-                        printError(pkg, 'setuid-gid-binary', f, setuid, setgid, oct(perm))
-                    elif setuid:
+                    if setuid:
                         printError(pkg, 'setuid-binary', f, setuid, oct(perm))
-                    elif setgid:
+                    if setgid:
                         if not (group == 'games' and
                                 (games_path_regex.search(f) or games_group_regex.search(pkg[rpm.RPMTAG_GROUP]))):
                             printError(pkg, 'setgid-binary', f, setgid, oct(perm))
-                    elif mode & 0777 != 0755:
+                    if mode & 0777 != 0755:
                         printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 
             if log_regex.search(f):
@@ -730,23 +728,13 @@ files. Mark the file as %config in the spec file.''',
 'compressed-symlink-with-wrong-ext',
 '''The symlink points to a compressed file but doesn't use the same extension.''',
 
-'setuid-gid-binary',
-'''The file is setuid and setgid. Usually this is a packaging bug. If not, please
-contact <flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint and will not be flagged as a packaging bug
-in the future.''',
-
 'setuid-binary',
-'''The file is setuid. Usually this is a packaging bug. If not, please contact
-<flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint and will not be flagged as a packaging
-bug in the future.''',
+'''The file is setuid, this may be dangerous, especially if this 
+file is setuid root.''',
 
 'setgid-binary',
-'''The file is setgid. Usually this is a packaging bug. If not, please contact
-<flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint and will not be flagged as a packaging
-bug in the future.''',
+'''The file is setgid. Usually this is a packaging bug. If this is a game, 
+then, you should use the proper rpm group, or location.''',
 
 'non-standard-executable-perm',
 '''A standard executable should have permission set to 0755. If you get this
