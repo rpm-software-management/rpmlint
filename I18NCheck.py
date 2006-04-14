@@ -73,7 +73,6 @@ correct_subdir_regex=re.compile('^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex=re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
 man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
 mo_regex=re.compile('\.mo$')
-webapp_regex=re.compile('/etc/httpd/webapps.d/[^/]+$/')
 
 # list of exceptions
 #

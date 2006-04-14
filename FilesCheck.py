@@ -714,7 +714,8 @@ in the package. Move these files out of the package and rebuild it.''',
 
 'htaccess-file',
 '''You have individual apache configuration .htaccess file(s) in your package.
-Replace them by a central configuration file in /etc/httpd/webapps.d.''',
+Replace them by a central configuration file in /etc/, according to the web 
+application packaging policy for your distribution.''',
 
 'info-dir-file',
 '''You have /usr/info/dir or /usr/share/info/dir in your package. It will cause
