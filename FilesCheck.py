@@ -381,7 +381,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res=not is_kernel_package and kernel_modules_regex.search(f)
                 if res:
                     kernel_version=res.group(1)
-                    kernel_version_regex=re.compile('depmod -a.*-F /boot/System.map-' + kernel_version + '.*' + kernel_version, re.MULTILINE | re.DOTALL)
+                    kernel_version_regex=re.compile('depmod -a.*F /boot/System.map-' + kernel_version + '.*' + kernel_version, re.MULTILINE | re.DOTALL)
                     postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                     if not postin or not depmod_regex.search(postin):
                         printError(pkg, 'module-without-depmod-postin', f)
