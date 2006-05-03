@@ -788,8 +788,9 @@ something non-standard.''',
 
 'non-readable',
 '''The file can't be read by everybody. If this is expected (for security
-reasons), send an email to <flepied at mandriva.com> to get it added to the
-list of exceptions in future rpmlint releases.''',
+reasons), contact your rpmlint distributor to get it added to the list of
+exceptions for your distro (or add it to your local configuration if you
+installed rpmlint from the source tarball).''',
 
 'incoherent-logrotate-file',
 '''Your logrotate file should be named /etc/logrotate.d/<package name>.''',

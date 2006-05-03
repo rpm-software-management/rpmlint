@@ -306,10 +306,10 @@ configure scripts provide a --disable-rpath flag to avoid this.''',
 'statically-linked-binary',
 '''The package installs a statically linked binary or object file.
 
-Usually this is a packaging bug. If not, please contact
-<flepied at mandriva.com> about this so that this error gets included
-in the exception file for rpmlint and will not be flagged as a packaging
-bug in the future.''',
+Usually this is a packaging bug. If not, contact your rpmlint distributor
+about this so that this error gets included in the exception file for rpmlint
+and will not be flagged as a packaging bug in the future (or add it to your
+local configuration if you installed rpmlint from the source tarball).''',
 
 'executable-in-library-package',
 '''The package mixes up libraries and executables. Mixing up these
