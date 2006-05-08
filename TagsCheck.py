@@ -30,51 +30,82 @@ def get_default_valid_rpmgroups(filename=""):
     return open(filename).read().strip().split('\n')
 
 
-# liste grabbed from www.opensource.org/licenses
-
 DEFAULT_VALID_LICENSES = (
-    'GPL',
-    'LGPL',
-    'GFDL',
-    'OPL',
-    'Artistic',
-    'BSD',
-    'MIT',
-    'QPL',
-    'MPL',
-    'IBM Public License',
+    # OSI approvied licenses, http://www.opensource.org/licenses/ (unversioned,
+    # trailing "license" dropped based on fuzzy logic, and in well-known cases,
+    # the abbreviation used instead of the full name, but list kept sorted by
+    # the full name).  Updated 2006-05-08.
+    'Academic Free License',
+    'Adaptive Public License',
     'Apache License',
-    'PHP License',
-    'Public Domain',
-    'Modified CNRI Open Source License',
-    'zlib License',
-    'CVW License',
-    'Ricoh Source Code Public License',
-    'Python license',
-    'Vovida Software License',
-    'Sun Internet Standards Source License',
+    'Apache Software License',
+    'Apple Public Source License',
+    'Artistic',
+    'Attribution Assurance License',
+    'BSD',
+    'Computer Associates Trusted Open Source License',
+    'CDDL', # Common Development and Distribution License
+    'CPL', # Common Public License
+    'CUA Office Public License',
+    'EU DataGrid Software License',
+    'Eclipse Public License',
+    'Educational Community License',
+    'Eiffel Forum License',
+    'Entessa Public License',
+    'Fair License',
+    'Frameworx License',
+    'GPL', # GNU General Public License
+    'LGPL', # GNU Lesser General Public License
+    'Historical Permission Notice and Disclaimer',
+    'IBM Public License',
     'Intel Open Source License',
     'Jabber Open Source License',
-    'Nokia Open Source License',
-    'Sleepycat License',
-    'Nethack General Public License',
-    'Common Public License',
-    'Apple Public Source License',
-    'X.Net License',
-    'Sun Public License',
-    'Eiffel Forum License',
-    'W3C License',
-    'Zope Public License',
     'Lucent Public License',
-    'Design Science License',
+    'MIT',
+    'CVW License', # MITRE Collaborative Virtual Workspace License
+    'Motosoto License',
+    'MPL', # Mozilla Public License
+    'NASA Open Source Agreement',
+    'Naumen Public License',
+    'Nethack General Public License',
+    'Nokia Open Source License',
+    'OCLC Research Public License',
+    'Open Group Test Suite License',
+    'Open Software License',
+    'PHP License',
+    'Python license', # CNRI Python License
+    'Python Software Foundation License',
+    'QPL', # Qt Public License
+    'RealNetworks Public Source License',
+    'Reciprocal Public License',
+    'Ricoh Source Code Public License',
+    'Sleepycat License',
+    'Sun Industry Standards Source License',
+    'Sun Public License',
+    'Sybase Open Watcom Public License',
+    'University of Illinois/NCSA Open Source License',
+    'Vovida Software License',
+    'W3C License',
+    'wxWindows Library License',
+    'X.Net License',
+    'Zope Public License',
+    'zlib License',
+    # Others:
+    'Design Public License', # ???
+    'GFDL', # GNU Free Documentation License
     'LaTeX Project Public License',
-    'Mozart License',
-    'CECILL',
-    # non open source licences:
-    'Proprietary',
+    'OPL', # Open Publication License
+    'Public Domain',
+    'Ruby License',
+    'SIL Open Font License',
+    # Non open source licences:
+    'Charityware',
+    'Commercial',
+    'Distributable',
     'Freeware',
+    'Non-distributable',
+    'Proprietary',
     'Shareware',
-    'Charityware'
     )
 
 BAD_WORDS = {
