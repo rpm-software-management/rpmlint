@@ -27,7 +27,13 @@ def get_default_valid_rpmgroups(filename=""):
         import Pkg
         p = Pkg.InstalledPkg('rpm')
         filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
-    return open(filename).read().strip().split('\n')
+    fobj = open(filename)
+    groups = fobj.read().strip().split('\n')
+    fobj.close()
+    if not 'Development/Debug' in groups:
+        groups.append('Development/Debug')
+    groups.sort()
+    return groups
 
 
 DEFAULT_VALID_LICENSES = (
