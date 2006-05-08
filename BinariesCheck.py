@@ -326,9 +326,6 @@ themselves.''',
 'incoherent-version-in-name',
 '''The package name should contain the major version of the library.''',
 
-'la-file-with-invalid-dir-reference',
-'The .la file contains a reference to /tmp or /home.',
-
 'invalid-directory-reference',
 'This file contains a reference to /tmp or /home.',
 
