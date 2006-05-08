@@ -94,7 +94,8 @@ DEFAULT_VALID_LICENSES = (
     'Design Public License', # ???
     'GFDL', # GNU Free Documentation License
     'LaTeX Project Public License',
-    'OPL', # Open Publication License
+    'OpenContent License',
+    'Open Publication License',
     'Public Domain',
     'Ruby License',
     'SIL Open Font License',
