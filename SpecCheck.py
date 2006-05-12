@@ -108,20 +108,18 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 # I assume that the changelog section is at the end of the spec
                 # to avoid wrong warnings
-                res = changelog_regex.search(line)
-                if res:
+                if changelog_regex.search(line):
                     changelog = 1
                     break
 
-                res = ifarch_regex.search(line)
-                if res:
+                if ifarch_regex.search(line):
                     if_depth = if_depth + 1
                     ifarch_depth = if_depth
-                res = if_regex.search(line)
-                if res:
+
+                if if_regex.search(line):
                     if_depth = if_depth + 1
-                res = endif_regex.search(line)
-                if res:
+
+                if endif_regex.search(line):
                     if ifarch_depth == if_depth:
                         ifarch_depth = -1
                     if_depth = if_depth - 1
@@ -158,8 +156,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                             if res:
                                 printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
 
-                res = configure_start_regex.search(line)
-                if not changelog and res:
+                if not changelog and configure_start_regex.search(line):
                     configure = 1
                     configure_cmdline = string.strip(line)
 
@@ -200,8 +197,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printWarning(pkg, 'buildprereq-use', res.group(1))
 
-                scriptlet_requires_regex.search(line)
-                if res:
+                if scriptlet_requires_regex.search(line):
                     printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
 
             if not buildroot:
