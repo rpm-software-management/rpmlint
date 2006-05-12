@@ -17,48 +17,48 @@ import string
 import Config
 
 # Don't check for hardcoded library paths in biarch packages
-DEFAULT_BIARCH_PACKAGES='^(gcc|glibc)'
+DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 # Don't check for hardcoded library paths in packages which can have
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
-DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS='/lib/(modules|cpp|perl5|rpm|hotplug)($|[\s/,])'
+DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug)($|[\s/,])'
 
-spec_regex=re.compile(".spec$")
-patch_regex=re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
-applied_patch_regex=re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
-source_dir_regex=re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
-obsolete_tags_regex=re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
-buildroot_regex=re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
-prefix_regex=re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
-packager_regex=re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
-tmp_regex=re.compile('^/')
-clean_regex=re.compile('^%clean')
-changelog_regex=re.compile('^%changelog')
-configure_start_regex=re.compile('\./configure')
-configure_libdir_spec_regex=re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
-lib_package_regex=re.compile('^%package.*\Wlib')
-mklibname_regex=re.compile('%mklibname')
-ifarch_regex=re.compile('%ifn?arch')
-if_regex=re.compile('%if\s+')
-endif_regex=re.compile('%endif')
-biarch_package_regex=re.compile(DEFAULT_BIARCH_PACKAGES)
-hardcoded_lib_path_exceptions_regex=re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
-prereq_regex=re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
-buildprereq_regex=re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
-use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+spec_regex = re.compile(".spec$")
+patch_regex = re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
+applied_patch_regex = re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
+source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
+obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
+buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
+prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
+packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
+tmp_regex = re.compile('^/')
+clean_regex = re.compile('^%clean')
+changelog_regex = re.compile('^%changelog')
+configure_start_regex = re.compile('\./configure')
+configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
+lib_package_regex = re.compile('^%package.*\Wlib')
+mklibname_regex = re.compile('%mklibname')
+ifarch_regex = re.compile('%ifn?arch')
+if_regex = re.compile('%if\s+')
+endif_regex = re.compile('%endif')
+biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
+hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
+prereq_regex = re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
+buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
+use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
-hardcoded_library_paths='(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
-hardcoded_library_path_regex=re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
+hardcoded_library_paths = '(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
+hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
 
 # Requires(pre,post) is broken in rpm
-scriptlet_requires_regex=re.compile('Requires\([^\)]*,')
+scriptlet_requires_regex = re.compile('Requires\([^\)]*,')
 
 def file2string(file):
-    fd=open(file, "r")
-    content=fd.readlines()
+    fd = open(file, "r")
+    content = fd.readlines()
     fd.close()
     return content
 
@@ -72,11 +72,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             return
 
         # lookup spec file
-        files=pkg.files()
-        spec_file=None
+        files = pkg.files()
+        spec_file = None
         for f in files.keys():
             if spec_regex.search(f):
-                spec_file=pkg.dirName() + "/" + f
+                spec_file = pkg.dirName() + "/" + f
                 break
         if not spec_file:
             printError(pkg, "no-spec-file")
@@ -85,20 +85,20 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "invalid-spec-name", f)
 
             # check content of spec file
-            spec=file2string(spec_file)
-            patches={}
-            applied_patches=[]
-            applied_patches_ifarch=[]
-            source_dir=None
-            buildroot=0
-            clean=0
-            changelog=0
-            configure=0
-            configure_cmdline=""
-            mklibname=0
-            lib=0
-            if_depth=0
-            ifarch_depth=-1
+            spec = file2string(spec_file)
+            patches = {}
+            applied_patches = []
+            applied_patches_ifarch = []
+            source_dir = None
+            buildroot = 0
+            clean = 0
+            changelog = 0
+            configure = 0
+            configure_cmdline = ""
+            mklibname = 0
+            lib = 0
+            if_depth = 0
+            ifarch_depth = -1
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
@@ -108,19 +108,19 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 # I assume that the changelog section is at the end of the spec
                 # to avoid wrong warnings
-                res=changelog_regex.search(line)
+                res = changelog_regex.search(line)
                 if res:
-                    changelog=1
+                    changelog = 1
                     break
 
-                res=ifarch_regex.search(line)
+                res = ifarch_regex.search(line)
                 if res:
                     if_depth = if_depth + 1
                     ifarch_depth = if_depth
-                res=if_regex.search(line)
+                res = if_regex.search(line)
                 if res:
                     if_depth = if_depth + 1
-                res=endif_regex.search(line)
+                res = endif_regex.search(line)
                 if res:
                     if ifarch_depth == if_depth:
                         ifarch_depth = -1
@@ -128,17 +128,17 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res=patch_regex.search(line)
                 if res:
-                    patches[res.group(1)]=res.group(2)
+                    patches[res.group(1)] = res.group(2)
                 else:
-                    res=applied_patch_regex.search(line)
+                    res = applied_patch_regex.search(line)
                     if res:
                         applied_patches.append(res.group(1) or res.group(2))
                         if ifarch_depth > 0:
                             applied_patches_ifarch.append(res.group(1))
                     elif not source_dir:
-                        res=source_dir_regex.search(line)
+                        res = source_dir_regex.search(line)
                         if res:
-                            source_dir=1
+                            source_dir = 1
                             printError(pkg, "use-of-RPM_SOURCE_DIR")
 
                 res=obsolete_tags_regex.search(line)
@@ -149,31 +149,31 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if configure_cmdline[-1] == "\\":
                         configure_cmdline=configure_cmdline[:-1] + string.strip(line)
                     else:
-                        configure=0
-                        res=configure_libdir_spec_regex.search(configure_cmdline)
+                        configure = 0
+                        res = configure_libdir_spec_regex.search(configure_cmdline)
                         if not res:
                             printError(pkg, "configure-without-libdir-spec")
                         elif res.group(1):
-                            res=re.match(hardcoded_library_paths, res.group(1))
+                            res = re.match(hardcoded_library_paths, res.group(1))
                             if res:
                                 printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
 
-                res=configure_start_regex.search(line)
+                res = configure_start_regex.search(line)
                 if not changelog and res:
-                    configure=1
-                    configure_cmdline=string.strip(line)
+                    configure = 1
+                    configure_cmdline = string.strip(line)
 
-                res=hardcoded_library_path_regex.search(line)
+                res = hardcoded_library_path_regex.search(line)
                 if not changelog and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
                     printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
 
-                res=buildroot_regex.search(line)
+                res = buildroot_regex.search(line)
                 if res:
                     buildroot=1
                     if tmp_regex.search(res.group(1)):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
-                res=packager_regex.search(line)
+                res = packager_regex.search(line)
                 if res:
                     printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
                 res=prefix_regex.search(line)
@@ -184,19 +184,19 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
                 if not clean and clean_regex.search(line):
-                    clean=1
+                    clean = 1
 
                 if mklibname_regex.search(line):
-                    mklibname=1
+                    mklibname = 1
 
                 if lib_package_regex.search(line):
-                    lib=1
+                    lib = 1
 
-                res=prereq_regex.search(line)
+                res = prereq_regex.search(line)
                 if res:
                     printWarning(pkg, 'prereq-use', res.group(1))
 
-                res=buildprereq_regex.search(line)
+                res = buildprereq_regex.search(line)
                 if res:
                     printWarning(pkg, 'buildprereq-use', res.group(1))
 
@@ -225,7 +225,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, "patch-not-applied", "Patch" + p + ":", patches[p])
 
 # Create an object to enable the auto registration of the test
-check=SpecCheck()
+check = SpecCheck()
 
 # Add information about checks
 if Config.info:
