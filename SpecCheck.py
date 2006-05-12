@@ -33,8 +33,10 @@ buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex = re.compile('^/')
-clean_regex = re.compile('^%clean')
-changelog_regex = re.compile('^%changelog')
+section = {}
+for sec in ['description', 'prep', 'build', 'install', 'clean', 'files', 'changelog', 'package', 'check']:
+	section[sec] = {}
+	section[sec]['re'] = re.compile('^%' + sec)
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex = re.compile('^%package.*\Wlib')
@@ -92,25 +94,23 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             source_dir = None
             buildroot = 0
             clean = 0
-            changelog = 0
             configure = 0
             configure_cmdline = ""
             mklibname = 0
             lib = 0
             if_depth = 0
             ifarch_depth = -1
+            current_section = 'package'       
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
 
             # gather info from spec lines
             for line in spec:
-
-                # I assume that the changelog section is at the end of the spec
-                # to avoid wrong warnings
-                if changelog_regex.search(line):
-                    changelog = 1
-                    break
+            
+                for i in section.keys():
+                    if section[i]['re'].search(line):
+                        current_section = i
 
                 if ifarch_regex.search(line):
                     if_depth = if_depth + 1
@@ -156,12 +156,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                             if res:
                                 printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
 
-                if not changelog and configure_start_regex.search(line):
+                if current_section != 'changelog' and configure_start_regex.search(line):
                     configure = 1
                     configure_cmdline = string.strip(line)
 
                 res = hardcoded_library_path_regex.search(line)
-                if not changelog and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
+                if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
                     printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
 
                 res = buildroot_regex.search(line)
@@ -180,7 +180,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     else:
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
-                if not clean and clean_regex.search(line):
+                if current_section =='clean':
                     clean = 1
 
                 if mklibname_regex.search(line):
