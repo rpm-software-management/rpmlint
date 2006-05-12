@@ -33,6 +33,7 @@ buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 tmp_regex = re.compile('^/')
+setup_regex = re.compile('^%setup')
 section = {}
 for sec in ['description', 'prep', 'build', 'install', 'clean', 'files', 'changelog', 'package', 'check']:
 	section[sec] = {}
@@ -119,6 +120,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if if_regex.search(line):
                     if_depth = if_depth + 1
 
+                if setup_regex.search(line):
+                    if line.find(' -q') < 1:
+                        printWarning(pkg, 'setup-not-quiet')
+            
                 if endif_regex.search(line):
                     if ifarch_depth == if_depth:
                         ifarch_depth = -1
@@ -303,6 +308,10 @@ before a package can be built.  Use plain BuildRequires instead.''',
 'broken-syntax-in-scriptlet-requires',
 '''Requires(pre,post) is accepted by rpm but leads to strange behaviour.
 You should use Requires(pre) and Requires(post) instead.''',
+
+'setup-not-quiet',
+'''You should use -q to have a quiet extraction of the source tarball, as this
+generate useless lines of log ( for buildbot, for example )''',
 
 )
 
