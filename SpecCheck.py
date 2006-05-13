@@ -331,16 +331,16 @@ You should use Requires(pre) and Requires(post) instead.''',
 generate useless lines of log ( for buildbot, for example )''',
 
 'no-cleaning-of-buildroot',
-'''You should clean $RPM_BUILD_ROOT in the %clean section and just after the beginning of
-%install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
+'''You should clean $RPM_BUILD_ROOT in the %clean section and just after the
+beginning of %install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
 
 'rpm-buildroot-usage',
 '''$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
 will break short circuiting.''',
 
 'make-check-outside-check-section',
-'''Make check or other automated regression test should be run in %check, as they can
-be disabled with a rpm macro for short circuiting purposes.'''
+'''Make check or other automated regression test should be run in %check, as
+they can be disabled with a rpm macro for short circuiting purposes.'''
 )
 
 # SpecCheck.py ends here
