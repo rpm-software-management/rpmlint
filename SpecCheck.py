@@ -115,6 +115,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if section[i]['re'].search(line):
                         current_section = i
 
+                if current_section in ('prep', 'build'):
+                    if rpm_buildroot_regex.search(line):
+                        printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1])
+
+
                 if current_section in buildroot_clean.keys():
                     if rpm_buildroot_regex.search(line) and line.find('rm ') >= 0:
                         buildroot_clean[current_section] = 1
@@ -325,6 +330,10 @@ generate useless lines of log ( for buildbot, for example )''',
 'no-cleaning-of-buildroot',
 '''You should clean $RPM_BUILD_ROOT in the %clean section and just after the beginning of
 %install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
+
+'rpm-buildroot-usage',
+'''$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
+will break short circuiting.''',
 
 )
 
