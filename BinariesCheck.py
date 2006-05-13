@@ -30,18 +30,22 @@ class BinaryInfo:
     dynsyms_regex=re.compile('^DYNAMIC SYMBOL TABLE:')
     pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
+    undef_regex=re.compile('^undefined symbol:\s+(\S+)')
     debug_file_regex=re.compile('\.debug$')
 
     def __init__(self, pkg, path, file):
-        self.error=0
+        self.objdump_error=0
         self.needed=[]
         self.rpath=[]
+        self.undef=[]
         self.comment=0
         self.dynsyms=0
         self.soname=0
         self.non_pic=1
 
-        topt=not BinaryInfo.debug_file_regex.search(path) and '-T' or ''
+        is_debug=BinaryInfo.debug_file_regex.search(path)
+
+        topt=not is_debug and '-T' or ''
         res=commands.getstatusoutput('LC_ALL=C objdump --headers --private-headers %s %s' % (topt, path))
         if not res[0]:
             for l in string.split(res[1], '\n'):
@@ -65,8 +69,21 @@ class BinaryInfo:
             if self.non_pic:
                 self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
         else:
-            self.error=1
+            self.objdump_error=1
             printWarning(pkg, 'objdump-failed', re.sub('\n.*', '', res[1]))
+
+        # undefined symbol check makes sense only for installed packages
+        # skip debuginfo: https://bugzilla.redhat.com/190599
+        if not is_debug and isinstance(pkg, Pkg.InstalledPkg):
+            # We could do this with objdump, but it's _much_ simpler with ldd.
+            res=commands.getstatusoutput('LC_ALL=C ldd -d -r %s' % path)
+            if not res[0]:
+                for l in string.split(res[1], '\n'):
+                    undef=BinaryInfo.undef_regex.search(l)
+                    if undef:
+                        self.undef.append(undef.group(1))
+            else:
+                printWarning(pkg, 'ldd-failed')
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
@@ -161,7 +178,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         # so name in library
                         if so_regex.search(i[0]):
                             has_lib.append(i[0])
-                            if bin_info.error:
+                            if bin_info.objdump_error:
                                 pass
                             elif not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
@@ -203,7 +220,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             if is_exec and bin_regex.search(i[0]):
                                 exec_files.append(i[0])
 
-                            if bin_info.error:
+                            if bin_info.objdump_error:
                                 pass
                             elif not bin_info.needed and \
                                not (bin_info.soname and \
@@ -228,6 +245,12 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                             printError(pkg, 'library-not-linked-against-libc', i[0])
                                         else:
                                             printError(pkg, 'program-not-linked-against-libc', i[0])
+                            # It could be useful to check this for
+                            # non-shared-libs too, but that has potential to
+                            # generate lots of false positives and noise.
+                            if bin_info.undef and so_regex.search(i[0]):
+                                for s in bin_info.undef:
+                                    printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
             else:
                 if reference_regex.search(i[0]):
                     if Pkg.grep('tmp|home', pkg.dirname + '/' + i[0]):
@@ -333,11 +356,19 @@ themselves.''',
 '''The package should be of the noarch architecture because it doesn't contain
 any binaries.''',
 
+# http://sources.redhat.com/ml/libc-alpha/2003-05/msg00034.html
+'undefined-non-weak-symbol',
+'''The binary contains undefined non-weak symbols.  This may indicate improper
+linkage; check that the binary has been linked as expected.''',
+
 'only-non-binary-in-usr-lib',
 '''There are only non binary files in /usr/lib so they should be in /usr/share.''',
 
 'objdump-failed',
 '''Executing objdump on this file failed, all checks could not be run.''',
+
+'ldd-failed',
+'''Executing ldd on this file failed, all checks could not be run.''',
 )
 
 # BinariesCheck.py ends here
