@@ -39,7 +39,7 @@ section = {}
 for sec in ['description', 'prep', 'build', 'install', 'clean', 'files', 'changelog', 'package', 'check']:
 	section[sec] = {}
 	section[sec]['re'] = re.compile('^%' + sec)
-rpm_buildroot_regex = re.compile('\$RPM_BUILD_ROOT|%{rpm_build_root}', re.IGNORECASE)
+rpm_buildroot_regex = re.compile('\${?RPM_BUILD_ROOT}?|%{?buildroot}?')
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex = re.compile('^%package.*\Wlib')
