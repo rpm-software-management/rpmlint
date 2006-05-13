@@ -38,6 +38,7 @@ section = {}
 for sec in ['description', 'prep', 'build', 'install', 'clean', 'files', 'changelog', 'package', 'check']:
 	section[sec] = {}
 	section[sec]['re'] = re.compile('^%' + sec)
+rpm_buildroot_regex = re.compile('\$RPM_BUILD_ROOT|%{rpm_build_root}', re.IGNORECASE)
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex = re.compile('^%package.*\Wlib')
@@ -102,6 +103,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if_depth = 0
             ifarch_depth = -1
             current_section = 'package'       
+            buildroot_clean={'clean':0 , 'install':0}
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
@@ -112,6 +114,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 for i in section.keys():
                     if section[i]['re'].search(line):
                         current_section = i
+
+                if current_section in buildroot_clean.keys():
+                    if rpm_buildroot_regex.search(line) and line.find('rm ') >= 0:
+                        buildroot_clean[current_section] = 1
 
                 if ifarch_regex.search(line):
                     if_depth = if_depth + 1
@@ -204,6 +210,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 if scriptlet_requires_regex.search(line):
                     printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
+
+            if 0 in buildroot_clean.values():
+                printError(pkg, 'no-cleaning-of-buildroot')
 
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
@@ -312,6 +321,10 @@ You should use Requires(pre) and Requires(post) instead.''',
 'setup-not-quiet',
 '''You should use -q to have a quiet extraction of the source tarball, as this
 generate useless lines of log ( for buildbot, for example )''',
+
+'no-cleaning-of-buildroot',
+'''You should clean $RPM_BUILD_ROOT in the %clean section and just after the beginning of
+%install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
 
 )
 
