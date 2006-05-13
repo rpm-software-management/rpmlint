@@ -33,6 +33,7 @@ buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 make_check_regexp = re.compile('make\s+(check|test)', re.IGNORECASE)
+rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 tmp_regex = re.compile('^/')
 setup_regex = re.compile('^%setup')
 section = {}
@@ -124,7 +125,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
                 if current_section in buildroot_clean.keys():
-                    if rpm_buildroot_regex.search(line) and line.find('rm ') >= 0:
+                    if rpm_buildroot_regex.search(line) and rm_regex.search(line):
                         buildroot_clean[current_section] = 1
 
                 if ifarch_regex.search(line):
