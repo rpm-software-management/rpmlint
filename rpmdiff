@@ -106,7 +106,8 @@ def main():
     ignore_times = False
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht", ["help", "ignore-times"])
-    except:
+    except getopt.GetoptError, e:
+        print "Error: %s" % e
         usage()
 
     for option, argument in opts:
