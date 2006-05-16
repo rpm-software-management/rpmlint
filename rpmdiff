@@ -95,25 +95,28 @@ def get_provides(pkg):
             p.append(prov)
     return p
 
-def usage(prog=sys.argv[0], exit=1):
-    print "Usage: %s [<options>] <old package> <new package>" % prog
+def usage(exit=1):
+    print "Usage: %s [<options>] <old package> <new package>" % sys.argv[0]
     print "Options:"
+    print "  -h, --help            Output this message and exit"
     print "  -t, --ignore-times    Ignore differences in file timestamps"
     sys.exit(exit)
 
 def main():
     ignore_times = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "t", ["ignore-times"])
+        opts, args = getopt.getopt(sys.argv[1:], "ht", ["help", "ignore-times"])
     except:
         usage()
 
-    if len(args) != 2:
-        usage()
-
     for option, argument in opts:
+        if option in ("-h", "--help"):
+            usage(0)
         if option in ("-t", "--ignore-times"):
             ignore_times = True
+
+    if len(args) != 2:
+        usage()
 
     if not ignore_times:
         FILEIDX[7] = FILEIDX_T
