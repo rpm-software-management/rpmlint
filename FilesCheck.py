@@ -159,6 +159,7 @@ includefile_regex=re.compile('\.(c|h|a|cmi)$')
 buildconfigfile_regex=re.compile('(\.pc|/bin/.+-config)$')
 sofile_regex=re.compile('/lib(64)?/[^/]+\.so$')
 devel_regex=re.compile('-(debug(info)?|devel|source)$')
+debuginfo_package_regex=re.compile('-debug(info)?$')
 lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
@@ -257,6 +258,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
         if len(files.keys()) and meta_package_re.search(pkg.name):
             printWarning(pkg, 'file-in-meta-package')
+
+        if debuginfo_package_regex.search(pkg.name) and not files:
+            printError(pkg, 'empty-debuginfo-package')
 
         for f in files.keys():
             enreg=files[f]
@@ -887,6 +891,13 @@ in the specfile for example using iconv(1).''',
 other packages), but it is not empty. You should remove or rename it, see the
 option MetaPackageRegexp.''',
 
+'empty-debuginfo-package',
+'''This debuginfo package contains no files.  This is often a sign of binaries
+being unexpectedly stripped too early during the build, rpmbuild not being able
+to strip the binaries, the package actually being a noarch one but erratically
+packaged as arch dependent, or something else.  Verify what the case is, and
+if there's no way to produce useful debuginfo out of it, disable creation of
+the debuginfo package.''',
 )
 
 # FilesCheck.py ends here
