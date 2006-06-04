@@ -253,7 +253,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         log_file=0
         logrotate_file=0
 
-        if doc_files == [] and not (pkg.name[:3] == 'lib' and string.find(pkg.name, '-devel')):
+        if not doc_files:
             printWarning(pkg, 'no-documentation')
 
         if len(files.keys()) and meta_package_re.search(pkg.name):
