@@ -388,6 +388,27 @@ class Pkg:
                              rpm.RPMTAG_OBSOLETEVERSION,
                              rpm.RPMTAG_OBSOLETEFLAGS)
 
+def getInstalledPkgs(name):
+    """Get list of installed package objects by name."""
+    pkgs = []
+    if v42:
+        ts = rpm.TransactionSet()
+        tab = ts.dbMatch("name", name)
+        if not tab:
+            raise KeyError, name
+        for hdr in tab:
+            pkgs.append(InstalledPkg(name, hdr))
+    else:
+        db = rpm.opendb()
+        ixs = db.findbyname(name)
+        if not ixs:
+            del db
+            raise KeyError, name
+        for ix in ixs:
+            pkgs.append(InstalledPkg(name, db[ix]))
+        del db
+    return pkgs
+
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
     def __init__(self, name, h=None):
