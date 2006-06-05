@@ -53,6 +53,7 @@ hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibP
 prereq_regex = re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
 buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+macro_regex = re.compile('(%+)[{(]?(\w+)')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -221,6 +222,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if scriptlet_requires_regex.search(line):
                     printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
 
+                if current_section == 'changelog':
+                    res = macro_regex.search(line)
+                    if res and len(res.group(1)) % 2:
+                        printWarning(pkg, 'macro-in-%changelog', res.group(2))
+
             if 0 in buildroot_clean.values():
                 printError(pkg, 'no-cleaning-of-buildroot')
 
@@ -342,7 +348,15 @@ will break short circuiting.''',
 
 'make-check-outside-check-section',
 '''Make check or other automated regression test should be run in %check, as
-they can be disabled with a rpm macro for short circuiting purposes.'''
+they can be disabled with a rpm macro for short circuiting purposes.''',
+
+'macro-in-%changelog',
+'''Macros are expanded in %changelog too, which can in unfortunate cases lead
+to the package not building at all, or other subtle unexpected conditions that
+affect the build.  Even when that doesn\'t happen, the expansion results in
+possibly "rewriting history" on subsequent package revisions and generally
+odd entries eg. in source rpms, which is rarely wanted.  Avoid use of macros
+in %changelog altogether, or use two '%'s to escape them, like '%%foo'.''',
 )
 
 # SpecCheck.py ends here
