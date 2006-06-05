@@ -268,6 +268,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             user=enreg[1]
             group=enreg[2]
             size=enreg[4]
+            is_doc = f in doc_files
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
@@ -351,7 +352,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if not devel_pkg:
                     if lib_path_regex.search(f):
                         lib_file=1
-                    elif f not in doc_files:
+                    elif not is_doc:
                         non_lib_file=f
 
                 if log_regex.search(f):
@@ -362,7 +363,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not f in ghost_files:
                         printError(pkg, 'non-ghost-file', f)
 
-                if doc_regex.search(f) and not f in doc_files:
+                if doc_regex.search(f) and not is_doc:
                     printError(pkg, 'not-listed-as-documentation', f)
 
                 # check ldconfig call in %post and %postun
@@ -427,7 +428,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
-                if not devel_pkg and (includefile_regex.search(f) or buildconfigfile_regex.search(f)) and not f in doc_files:
+                if not devel_pkg and (includefile_regex.search(f) or buildconfigfile_regex.search(f)) and not is_doc:
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
                     printError(pkg, 'non-readable', f, oct(perm))
@@ -572,12 +573,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             elif not (lib_path_regex.search(f) and libtool_archive_regex.search(f)):
                                 printError(pkg, 'script-without-shellbang', f)
 
-                            if mode & 0111 == 0 and not doc_regex.search(f):
+                            if mode & 0111 == 0 and not is_doc:
                                 printError(pkg, 'non-executable-script', f, oct(perm))
                             if line.endswith('\r\n'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
 
-                        elif doc_regex.search(f):
+                        elif is_doc:
                             if line.endswith('\r\n'):
                                 printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
 
@@ -585,7 +586,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         #if use_utf8 and not is_utf8(path):
                         #    printWarning(pkg, 'file-not-utf8', f)
 
-                    elif doc_regex.search(f) and compr_regex.search(f):
+                    elif is_doc and compr_regex.search(f):
                         # compressed docs, eg. info and man files etc
                         if use_utf8 and not is_utf8(path):
                             printWarning(pkg, 'file-not-utf8', f)
