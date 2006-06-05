@@ -30,6 +30,8 @@ DEFAULT_EMPTY_SHELLS=('/sbin/ldconfig',
 extract_dir=Config.getOption('ExtractDir', '/tmp')
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
+# shells that grok the -n switch for debugging
+syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
 braces_regex=re.compile('^[^#]*%', re.MULTILINE)
 double_braces_regex=re.compile('%%', re.MULTILINE)
@@ -51,14 +53,15 @@ prereq_assoc = (
 for p in prereq_assoc:
     p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)
 
-def incorrect_shell_script(shellscript):
+def incorrect_shell_script(prog, shellscript):
     tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
     if not shellscript:
         return 0
+    # TODO: test that "prog" is available/executable
     file=open(tmpfile, 'w')
     file.write(shellscript)
     file.close()
-    ret=commands.getstatusoutput('/bin/bash -n %s' % tmpfile)
+    ret=commands.getstatusoutput('%s -n %s' % (prog, tmpfile))
     os.remove(tmpfile)
     return ret[0]
 
@@ -66,10 +69,11 @@ def incorrect_perl_script(perlscript):
     tmpfile = '%s/.perl-script.%d' % (extract_dir, os.getpid())
     if not perlscript:
         return 0
+    # TODO: test that "prog" is available/executable
     file=open(tmpfile, 'w')
     file.write(perlscript)
     file.close()
-    ret=commands.getstatusoutput('/usr/bin/perl -wc %s' % tmpfile)
+    ret=commands.getstatusoutput('%s -wc %s' % (prog, tmpfile))
     os.remove(tmpfile)
     return ret[0]
 
@@ -121,7 +125,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'invalid-shell-in-' + tag[2], prog)
                 if prog in empty_shells:
                     printError(pkg, 'non-empty-' + tag[2], prog)
-            if prog == '/bin/sh' or prog == '/bin/bash' or prog == '/usr/bin/perl':
+            if prog in syntaxcheck_shells or prog == '/usr/bin/perl':
                 if braces_regex.search(script) and not double_braces_regex.search(script):
                     printWarning(pkg, 'percent-in-' + tag[2])
                 if bracket_regex.search(script):
@@ -149,8 +153,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                         if not found:
                             printError(pkg, 'no-prereq-on', c[1][0])
 
-            if prog == '/bin/sh' or prog == '/bin/bash':
-                if incorrect_shell_script(script):
+            if prog in syntaxcheck_shells:
+                if incorrect_shell_script(prog, script):
                     printError(pkg, 'shell-syntax-error-in-' + tag[2])
                 if home_regex.search(script):
                     printError(pkg, 'use-of-home-in-' + tag[2])
@@ -159,7 +163,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'bogus-variable-use-in-' + tag[2], res.group(1))
 
             if prog == '/usr/bin/perl':
-                if incorrect_perl_script(script):
+                if incorrect_perl_script(prog, script):
                     printError(pkg, 'perl-syntax-error-in-' + tag[2])
 
             res=single_command_regex.search(script)
