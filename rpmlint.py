@@ -169,7 +169,7 @@ except getopt.error:
 # process options
 checkdir='/usr/share/rpmlint'
 verbose=0
-extract_dir=Config.getOption('ExtractDir', '/tmp')
+extract_dir=None
 prof=0
 all=0
 conf_file='~/.rpmlintrc'
@@ -225,6 +225,9 @@ except IOError:
     pass
 except:
     sys.stderr.write('Error loading %s, skipping\n' % conf_file)
+
+if not extract_dir:
+    extract_dir=Config.getOption('ExtractDir', '/tmp')
 
 policy and Config.load_policy(policy)
 
