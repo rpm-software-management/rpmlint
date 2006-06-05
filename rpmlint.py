@@ -37,7 +37,7 @@ def loadCheck(name):
     (file, pathname, description)=imp.find_module(name, Config.checkDirs())
     imp.load_module(name, file, pathname, description)
 
-# Load a file
+# Load a file -- deprecated, use the execfile() builtin instead
 def loadFile(name):
     file=os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
     imp.load_source('', name, file)
@@ -174,13 +174,15 @@ prof=0
 all=0
 conf_file='~/.rpmlintrc'
 info_error=0
-# load global config file
+
+# load global config files
 for f in ('/usr/share/rpmlint/config','/etc/rpmlint/config'):
     try:
-        loadFile(f)
-    except OSError:
+        execfile(f)
+    except IOError:
         pass
-
+    except:
+        sys.stderr.write('Error loading %s, skipping\n' % conf_file)
 
 # process command line options
 for o in opt:
@@ -218,8 +220,8 @@ for o in opt:
 
 # load user config file
 try:
-    loadFile(conf_file)
-except OSError:
+    execfile(os.path.expanduser(conf_file))
+except IOError:
     pass
 except:
     sys.stderr.write('Error loading %s, skipping\n' % conf_file)
