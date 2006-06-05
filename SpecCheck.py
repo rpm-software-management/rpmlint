@@ -113,11 +113,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             # gather info from spec lines
             for line in spec:
-            
+
+                section_marker = 0
                 for i in section.keys():
                     if section[i]['re'].search(line):
                         current_section = i
-                        continue
+                        section_marker = 1
+
+                if section_marker:
+                    continue
 
                 if current_section in ('prep', 'build'):
                     if rpm_buildroot_regex.search(line):
