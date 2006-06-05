@@ -197,7 +197,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
                 res=prefix_regex.search(line)
                 if res:
-                    if res.group(1) == '%{_prefix}':
+                    if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
                         printWarning(pkg, 'redundant-prefix-tag')
                     else:
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
