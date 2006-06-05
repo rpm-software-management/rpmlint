@@ -116,6 +116,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 for i in section.keys():
                     if section[i]['re'].search(line):
                         current_section = i
+                        continue
 
                 if current_section in ('prep', 'build'):
                     if rpm_buildroot_regex.search(line):
