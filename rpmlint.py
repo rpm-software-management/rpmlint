@@ -56,31 +56,34 @@ def main():
         # Loop over all file names given in arguments
         dirs=[]
         for f in args:
+            pkgs = []
             try:
                 try:
                     st=os.stat(f)
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        pkg=Pkg.Pkg(f, extract_dir)
+                        pkgs.append(Pkg.Pkg(f, extract_dir))
                     elif stat.S_ISDIR(st[stat.ST_MODE]) and (f.index('/') >=0):
                         dirs.append(f)
                         continue
                     else:
                         raise OSError
                 except OSError:
-                    pkg=Pkg.InstalledPkg(f)
+                    pkgs.extend(Pkg.getInstalledPkgs(f))
             except KeyboardInterrupt:
                 sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
                 sys.exit(2)
             except rpm.error, e:
                 sys.stderr.write('Error while reading %s: %s\n' % (f, e))
-                pkg=None
+                pkgs = []
                 continue
             except:
                 sys.stderr.write('Error while reading ' + f + '\n')
-                pkg=None
+                pkgs = []
                 continue
 
-            runChecks(pkg)
+            for pkg in pkgs:
+                runChecks(pkg)
+                pkg.cleanup()
 
         for d in dirs:
             try:
