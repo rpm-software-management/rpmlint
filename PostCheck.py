@@ -65,7 +65,7 @@ def incorrect_shell_script(prog, shellscript):
     os.remove(tmpfile)
     return ret[0]
 
-def incorrect_perl_script(perlscript):
+def incorrect_perl_script(prog, perlscript):
     tmpfile = '%s/.perl-script.%d' % (extract_dir, os.getpid())
     if not perlscript:
         return 0
