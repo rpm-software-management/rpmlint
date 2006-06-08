@@ -18,7 +18,7 @@ import string
 
 rc_regex=re.compile('^/etc(/rc.d)?/init.d/')
 chkconfig_content_regex=re.compile('# +chkconfig: +([-0-9]+) +[-0-9]+ +[-0-9]+', re.MULTILINE)
-subsys_regex=re.compile('/var/lock/subsys/([^/"\'\n ]+)', re.MULTILINE)
+subsys_regex=re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
 chkconfig_regex=re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
 status_regex=re.compile('^[^#]*status', re.MULTILINE)
 reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
