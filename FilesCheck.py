@@ -195,6 +195,7 @@ libtool_archive_regex=re.compile('\.la$')
 lib64python_regex=re.compile('^/usr/lib64/python')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
+filesys_packages = ['filesystem'] # TODO: make configurable?
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
@@ -473,7 +474,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             elif stat.S_ISDIR(mode):
                 if perm != 0755:
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
-                if pkg[rpm.RPMTAG_NAME] != 'filesystem':
+                if pkg[rpm.RPMTAG_NAME] not in filesys_packages:
                     if f in STANDARD_DIRS:
                         printError(pkg, 'standard-dir-owned-by-package', f)
                 if hidden_file_regex.search(f):
