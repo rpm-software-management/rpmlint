@@ -10,7 +10,6 @@
 
 from Filter import *
 import AbstractCheck
-import rpm
 import re
 import Config
 
@@ -55,7 +54,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        list=pkg[rpm.RPMTAG_FILENAMES]
+        list = pkg.files().keys()
         if not list:
             return
         try:
@@ -73,7 +72,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
                     exception=1
 
                 for f in list:
-                    if c['file_re'].search(f) and not c['name_re'].search(pkg[rpm.RPMTAG_NAME]) and not exception:
+                    if c['file_re'].search(f) and not c['name_re'].search(pkg.name) and not exception:
                         raise 'naming-policy-not-applied'
         except 'naming-policy-not-applied':
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)

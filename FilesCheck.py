@@ -474,7 +474,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             elif stat.S_ISDIR(mode):
                 if perm != 0755:
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
-                if pkg[rpm.RPMTAG_NAME] not in filesys_packages:
+                if pkg.name not in filesys_packages:
                     if f in STANDARD_DIRS:
                         printError(pkg, 'standard-dir-owned-by-package', f)
                 if hidden_file_regex.search(f):

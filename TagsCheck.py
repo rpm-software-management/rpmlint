@@ -463,7 +463,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if p[1] and not epoch_regex.search(p[1]):
                     printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
 
-        name=pkg[rpm.RPMTAG_NAME]
+        name=pkg.name
         deps=pkg.requires() + pkg.prereq()
         devel_depend=0
         is_devel=devel_regex.search(name)

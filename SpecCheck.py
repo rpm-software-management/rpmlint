@@ -12,7 +12,6 @@ import AbstractCheck
 from Pkg import is_utf8
 import re
 import sys
-import rpm
 import string
 import Config
 
@@ -88,7 +87,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         if not spec_file:
             printError(pkg, "no-spec-file")
         else:
-            if f != pkg[rpm.RPMTAG_NAME] + ".spec":
+            if f != pkg.name + ".spec":
                 printError(pkg, "invalid-spec-name", f)
 
             # check content of spec file
@@ -187,7 +186,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     configure_cmdline = string.strip(line)
 
                 res = hardcoded_library_path_regex.search(line)
-                if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg[rpm.RPMTAG_NAME]) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
+                if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
                     printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
 
                 res = buildroot_regex.search(line)

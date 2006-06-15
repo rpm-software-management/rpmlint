@@ -167,7 +167,6 @@ class MenuCheck(AbstractCheck.AbstractCheck):
             return
 
         files=pkg.files()
-        pkgname=pkg[rpm.RPMTAG_NAME]
         menus=[]
         dirname=pkg.dirName()
 
@@ -180,7 +179,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 if not stat.S_ISREG(mode):
                     printError(pkg, 'non-file-in-menu-dir', f)
                 else:
-                    if basename != pkgname:
+                    if basename != pkg.name:
                         printWarning(pkg, 'non-coherent-menu-filename', f)
                     if mode & 0444 != 0444:
                         printError(pkg, 'non-readable-menu-file', f)
@@ -228,7 +227,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=package_regex.search(line)
                     if res:
                         package=res.group(1)
-                        if package != pkgname:
+                        if package != pkg.name:
                             printWarning(pkg, 'incoherent-package-value-in-menu', package, f)
                     else:
                         printInfo(pkg, 'unable-to-parse-menu-entry', line)
