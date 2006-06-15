@@ -83,7 +83,7 @@ class BinaryInfo:
                     if undef:
                         self.undef.append(undef.group(1))
             else:
-                printWarning(pkg, 'ldd-failed')
+                printWarning(pkg, 'ldd-failed', file)
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
