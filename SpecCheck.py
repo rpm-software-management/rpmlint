@@ -62,6 +62,9 @@ hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD
 # Requires(pre,post) is broken in rpm
 scriptlet_requires_regex = re.compile('Requires\([^\)]*,')
 
+depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
+depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
+
 def file2string(file):
     fd = open(file, "r")
     content = fd.readlines()
@@ -106,6 +109,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             ifarch_depth = -1
             current_section = 'package'       
             buildroot_clean={'clean':0 , 'install':0}
+            depscript_override = 0
+            depgen_disabled = 0
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
@@ -229,6 +234,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     res = macro_regex.search(line)
                     if res and len(res.group(1)) % 2:
                         printWarning(pkg, 'macro-in-%changelog', res.group(2))
+                else:
+                    if not depscript_override:
+                        depscript_override = depscript_override_regex.search(line)
+                    if not depgen_disabled:
+                        depgen_disabled = depgen_disable_regex.search(line)
 
             if 0 in buildroot_clean.values():
                 printError(pkg, 'no-cleaning-of-buildroot')
@@ -241,6 +251,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if lib and not mklibname:
                 printError(pkg, 'lib-package-without-%mklibname')
+
+            if depscript_override and not depgen_disabled:
+                printWarning(pkg, 'depscript-without-disabling-depgen')
 
             # process gathered info
             for p in patches.keys():
@@ -360,6 +373,12 @@ affect the build.  Even when that doesn\'t happen, the expansion results in
 possibly "rewriting history" on subsequent package revisions and generally
 odd entries eg. in source rpms, which is rarely wanted.  Avoid use of macros
 in %changelog altogether, or use two '%'s to escape them, like '%%foo'.''',
+
+'depscript-without-disabling-depgen',
+'''In some common rpm configurations/versions, defining __find_provides and/or
+__find_requires has no effect if rpm's internal dependency generator has not
+been disabled for the build.  %define _use_internal_dependency_generator to 0
+to disable it in the specfile, or don't define __find_provides/requires.''',
 )
 
 # SpecCheck.py ends here
