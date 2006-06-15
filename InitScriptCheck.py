@@ -100,7 +100,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             else:
                                 printError(pkg, 'incoherent-subsys', f, name)
 
-        if len(list) == 1 and string.lower(pkg[rpm.RPMTAG_NAME]) != list[0]:
+        if len(list) == 1 and string.lower(pkg.name) != list[0]:
             printWarning(pkg, 'incoherent-init-script-name', list[0])
 
 

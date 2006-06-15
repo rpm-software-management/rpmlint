@@ -39,23 +39,19 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
         if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
             printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
-        # Check the listing of files
-        list=pkg[rpm.RPMTAG_FILENAMES]
-
-        if list:
-            for f in list:
-                if man_regex.search(f):
-                    if use_bzip2:
-                        if not bz2_regex.search(f):
-                            printWarning(pkg, "manpage-not-bzipped", f)
-                    elif not gz_regex.search(f):
-                        printWarning(pkg, "manpage-not-gzipped", f)
-                if info_regex.search(f) and not info_dir_regex.search(f):
-                    if use_bzip2:
-                        if not bz2_regex.search(f):
-                            printWarning(pkg, "infopage-not-bzipped", f)
-                    elif not gz_regex.search(f):
-                        printWarning(pkg, "infopage-not-gzipped", f)
+        for f in pkg.files().keys():
+            if man_regex.search(f):
+                if use_bzip2:
+                    if not bz2_regex.search(f):
+                        printWarning(pkg, "manpage-not-bzipped", f)
+                elif not gz_regex.search(f):
+                    printWarning(pkg, "manpage-not-gzipped", f)
+            if info_regex.search(f) and not info_dir_regex.search(f):
+                if use_bzip2:
+                    if not bz2_regex.search(f):
+                        printWarning(pkg, "infopage-not-bzipped", f)
+                elif not gz_regex.search(f):
+                    printWarning(pkg, "infopage-not-gzipped", f)
 
 # Create an object to enable the auto registration of the test
 check=DistributionCheck()

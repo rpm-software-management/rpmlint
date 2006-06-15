@@ -10,7 +10,6 @@
 from Filter import *
 import AbstractCheck
 import re
-import rpm
 
 # Defined in header.h
 HEADER_I18NTABLE=100
@@ -153,7 +152,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                 if pkg.fileLang(f) == '' and not webapp:
                     printWarning(pkg, 'file-not-in-%lang', f)
 
-        name=pkg[rpm.RPMTAG_NAME]
+        name=pkg.name
         res=package_regex.search(name)
         if res:
             locales='locales-' + res.group(1)

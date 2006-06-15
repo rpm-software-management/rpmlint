@@ -23,7 +23,7 @@ class LSBCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        name=pkg[rpm.RPMTAG_NAME]
+        name=pkg.name
         if name and not name_regex.search(name):
             printError(pkg, 'non-lsb-compliant-package-name', name)
 

@@ -432,7 +432,7 @@ class InstalledPkg(Pkg):
             Pkg.__init__(self, name, '/', theHdr)
         self.extracted = 1
         # create a fake filename to satisfy some checks on the filename
-        self.filename = '%s-%s-%s.%s.rpm' % (self[rpm.RPMTAG_NAME], self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
+        self.filename = '%s-%s-%s.%s.rpm' % (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
 
     def cleanup(self):
         pass

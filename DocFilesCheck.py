@@ -37,7 +37,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
     def __checkRequirements(this, pkg):
         file_reqs = pkg.header[rpm.RPMTAG_FILEREQUIRE]
-        files     = pkg.header[rpm.RPMTAG_FILENAMES]
+        files     = pkg.files().keys()
         doc_files = pkg.docFiles()
 
         assert(len(file_reqs) == len(files))
