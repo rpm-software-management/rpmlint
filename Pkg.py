@@ -42,11 +42,16 @@ except AttributeError:
     PREREQ_FLAG=rpm.RPMSENSE_PREREQ
 
 # check if we use a rpm version compatible with 4.2
+v42 = 0
 try:
-    if rpm.RPMTAG_SOURCEPACKAGE:
-        v42=1
+    if rpm.RPMTAG_DISTTAG: # in >= 4.4
+        v42 = 1
 except AttributeError:
-    v42=0
+    try:
+        if rpm.RPMTAG_SOURCEPACKAGE: # in 4.2 but not in 4.4.something (6?)
+            v42 = 1
+    except AttributeError:
+        pass
 
 # utilities
 
@@ -130,10 +135,7 @@ class Pkg:
                 fd=os.open(filename, os.O_RDONLY)
                 self.header=ts.hdrFromFdno(fd)
                 os.close(fd)
-                if self.header[rpm.RPMTAG_SOURCEPACKAGE]:
-                    self.is_source=1
-                else:
-                    self.is_source=0
+                self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
             else:
                 fd=os.open(filename, os.O_RDONLY)
                 (self.header, self.is_source)=rpm.headerFromPackage(fd)
