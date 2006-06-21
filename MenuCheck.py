@@ -151,6 +151,7 @@ version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
 launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
 bad_title_regex=re.compile('/')
 menu64_file_regex=re.compile('^/usr/lib64/menu')
+xdg_migrated_regex=re.compile('xdg=\"?([^\" ]+)')
 
 # compile regexps
 for l in launchers:
@@ -331,6 +332,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
+                    
+                    res=xdg_migrated_regex.search(line)
+                    if res:
+                        if not res.group(1).lower() == "true":
+                            printError(pkg, 'non-xdg-migrated-menu')
+                    else:
+                        printError(pkg, 'non-xdg-migrated-menu')
+
 
 # Create an object to enable the auto registration of the test
 check=MenuCheck()
@@ -429,6 +438,9 @@ sizes of the icon from being found.''',
 
 'menu-in-wrong-directory',
 '''The menu files must be under /usr/lib/menu.''',
+
+'non-xdg-migrated-menu',
+'''The menu file has not been migrated to new XDG menu system.''',
 
 )
 
