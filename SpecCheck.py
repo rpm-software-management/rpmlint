@@ -173,6 +173,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printWarning(pkg, "obsolete-tag", res.group(1))
 
+                if current_section == 'changelog':
+                    if single_percent_regex.search(line) and not section['changelog']['re'].search(line):
+                        printWarning(pkg, 'single-percent-in-changelog')
+
                 if configure:
                     if configure_cmdline[-1] == "\\":
                         configure_cmdline=configure_cmdline[:-1] + string.strip(line)
@@ -353,6 +357,10 @@ You should use Requires(pre) and Requires(post) instead.''',
 'setup-not-quiet',
 '''You should use -q to have a quiet extraction of the source tarball, as this
 generate useless lines of log ( for buildbot, for example )''',
+
+'single-percent-in-changelog',
+'''You should not use a single % in %changelog, as it may trigger macro expansion.
+Use %% if you need to write a macro name in changelog.''',
 
 'no-cleaning-of-buildroot',
 '''You should clean $RPM_BUILD_ROOT in the %clean section and just after the
