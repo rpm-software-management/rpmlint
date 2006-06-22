@@ -66,6 +66,9 @@ scriptlet_requires_regex = re.compile('Requires\([^\)]*,')
 depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
 depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
 
+indent_spaces_regex = re.compile(' {3}.*\S')
+indent_tabs_regex = re.compile('\t.*\S')
+
 def file2string(file):
     fd = open(file, "r")
     content = fd.readlines()
@@ -112,6 +115,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             buildroot_clean={'clean':0 , 'install':0}
             depscript_override = 0
             depgen_disabled = 0
+            indent_spaces = 0
+            indent_tabs = 0
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
@@ -245,6 +250,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if not depgen_disabled:
                         depgen_disabled = depgen_disable_regex.search(line)
 
+                if not indent_tabs and indent_tabs_regex.search(line):
+                    indent_tabs = 1
+                if not indent_spaces and indent_spaces_regex.search(line):
+                    indent_spaces = 1
+
             if 0 in buildroot_clean.values():
                 printError(pkg, 'no-cleaning-of-buildroot')
 
@@ -259,6 +269,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if depscript_override and not depgen_disabled:
                 printWarning(pkg, 'depscript-without-disabling-depgen')
+
+            if indent_spaces and indent_tabs:
+                printWarning(pkg, 'mixed-use-of-spaces-and-tabs')
 
             # process gathered info
             for p in patches.keys():
@@ -388,6 +401,10 @@ in %changelog altogether, or use two '%'s to escape them, like '%%foo'.''',
 __find_requires has no effect if rpm's internal dependency generator has not
 been disabled for the build.  %define _use_internal_dependency_generator to 0
 to disable it in the specfile, or don't define __find_provides/requires.''',
+
+'mixed-use-of-spaces-and-tabs',
+'''The specfile mixes use of spaces and tabs for indentation, which is a
+cosmetic annoyance.  Use either spaces or tabs for indentation, not both.''',
 )
 
 # SpecCheck.py ends here
