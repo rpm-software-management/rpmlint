@@ -217,6 +217,8 @@ filesys_packages = ['filesystem'] # TODO: make configurable?
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
 
+use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
+
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
@@ -521,8 +523,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     r=absolute_regex.search(f)
                     if r:
                         filetop=r.group(1)
-                        if filetop == linktop:
-                            # absolute links within one toplevel directory are _not_ ok!
+                        if filetop == linktop or use_relative_symlinks:
                             printWarning(pkg ,'symlink-should-be-relative', f, link)
                 # relative link
                 else:
@@ -567,7 +568,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                         if len(pathcomponents) == 0:
                             # we've reached the root directory
-                            if linktop != lastpop:
+                            if linktop != lastpop and not use_relative_symlinks:
                                 # relative link into other toplevel directory
                                 printWarning(pkg, 'symlink-should-be-absolute', f, link)
                         # check additional segments for mistakes like `foo/../bar/'
@@ -791,8 +792,7 @@ something non-standard.''',
 '''The symbolic link points nowhere.''',
 
 'symlink-should-be-relative',
-'''
-''',
+'''Absolute symlinks are problematic eg. when working with chroot environments.''',
 
 'dangling-relative-symlink',
 '''The relative symbolic link points nowhere.''',
