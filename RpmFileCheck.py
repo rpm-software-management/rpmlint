@@ -20,7 +20,6 @@
 
 from Filter import *
 import AbstractCheck
-import rpm
 import os
 import Config
 
