@@ -77,6 +77,7 @@ UseBzip2		boolean		1
 UseDefaultRunlevels	boolean		1
 UseEpoch		boolean		0
 UseIndexedJars		boolean		1
+UseRelativeSymlinks	boolean		1
 UseVersionInChangelog	boolean		1
 UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
 UseUTF8			boolean		(autodetected with python >= 2.0, 0 otherwise)
