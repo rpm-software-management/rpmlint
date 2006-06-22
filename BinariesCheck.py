@@ -186,9 +186,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 if not validso_regex.search(bin_info.soname):
                                     printError(pkg, 'invalid-soname', i[0], bin_info.soname)
                                 else:
-                                    (dir, base) = dir_base(i[0])
+                                    (directory, base) = dir_base(i[0])
                                     try:
-                                        symlink = dir + bin_info.soname
+                                        symlink = directory + bin_info.soname
                                         (perm, owner, group, link, size, md5, mtime, rdev) = files[symlink]
                                         if link != i[0] and link != base and link != '':
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)

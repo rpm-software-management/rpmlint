@@ -58,9 +58,9 @@ def incorrect_shell_script(prog, shellscript):
     if not shellscript:
         return 0
     # TODO: test that "prog" is available/executable
-    file=open(tmpfile, 'w')
-    file.write(shellscript)
-    file.close()
+    f = open(tmpfile, 'w')
+    f.write(shellscript)
+    f.close()
     ret=commands.getstatusoutput('%s -n %s' % (prog, tmpfile))
     os.remove(tmpfile)
     return ret[0]
@@ -70,9 +70,9 @@ def incorrect_perl_script(prog, perlscript):
     if not perlscript:
         return 0
     # TODO: test that "prog" is available/executable
-    file=open(tmpfile, 'w')
-    file.write(perlscript)
-    file.close()
+    f = open(tmpfile, 'w')
+    f.write(perlscript)
+    f.close()
     ret=commands.getstatusoutput('%s -wc %s' % (prog, tmpfile))
     os.remove(tmpfile)
     return ret[0]
@@ -87,7 +87,6 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        menu_error=0
         prereq=map(lambda x: x[0], pkg.prereq())
         files=pkg.files().keys()
 

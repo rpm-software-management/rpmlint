@@ -32,14 +32,14 @@ class ZipCheck(AbstractCheck.AbstractCheck):
             if zip_regex.search(f) and \
                    stat.S_ISREG(os.lstat(f)[stat.ST_MODE]) and \
                    zipfile.is_zipfile(f):
-                zip = None
+                z = None
                 try:
-                    zip = zipfile.ZipFile(f, 'r')
-                    badcrc = zip.testzip()
+                    z = zipfile.ZipFile(f, 'r')
+                    badcrc = z.testzip()
                     if badcrc:
                         printError(pkg, 'bad-crc-in-zip: %s' % badcrc, i[0])
                     compressed = 0
-                    for zinfo in zip.infolist():
+                    for zinfo in z.infolist():
                         if zinfo.compress_type != zipfile.ZIP_STORED:
                             compressed = 1
                             break
@@ -49,13 +49,13 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                     # additional jar checks
                     if jar_regex.search(f):
                         try:
-                            mf = zip.read('META-INF/MANIFEST.MF')
+                            mf = z.read('META-INF/MANIFEST.MF')
                             if classpath_regex.search(mf):
                                 printWarning(pkg, 'class-path-in-manifest', i[0])
                         except KeyError:
                             printError(pkg, 'no-jar-manifest', i[0])
                         try:
-                            zinfo = zip.getinfo('META-INF/INDEX.LIST')
+                            zinfo = z.getinfo('META-INF/INDEX.LIST')
                             if not want_indexed_jars:
                                 printWarning(pkg, 'jar-indexed', i[0])
                         except KeyError:
@@ -65,7 +65,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                 except:
                     sys.stderr.write('%s: unable-to-read-zip %s "%s"\n' % (pkg.name, i[0], sys.exc_info()[1]))
 
-                zip and zip.close()
+                z and z.close()
 
 
 check = ZipCheck()

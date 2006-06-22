@@ -35,7 +35,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
 
-    def __checkRequirements(this, pkg):
+    def __checkRequirements(self, pkg):
         file_reqs = pkg.header[rpm.RPMTAG_FILEREQUIRE]
         files     = pkg.header[rpm.RPMTAG_FILENAMES] # not files().keys()!
         doc_files = pkg.docFiles()
@@ -81,9 +81,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        try:
-            foo = rpm.RPMTAG_FILEREQUIRE # need rpm >= 4.1.1
-        except:
+        if not 'RPMTAG_FILEREQUIRE' in dir(rpm): # need rpm >= 4.1.1
             return
 
         self.__checkRequirements(pkg)

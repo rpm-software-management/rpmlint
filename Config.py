@@ -77,10 +77,10 @@ _dirs=["/usr/share/rpmlint"]
 def addCheckDir(dir):
     global _dirs
 
-    dir=os.path.expanduser(dir)
+    d = os.path.expanduser(dir)
 
-    if not dir in _dirs:
-        _dirs.insert(0, dir)
+    if not d in _dirs:
+        _dirs.insert(0, d)
 
 def checkDirs():
     global _dirs
