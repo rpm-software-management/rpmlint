@@ -28,6 +28,9 @@ import Config
 executable_re=re.compile('^(/usr)?/(s?bin|games)/\S+')
 simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-_]*$');
 
+class NamingPolicyNotAppliedException(Exception):
+    pass
+
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     checks_=[]
 
@@ -54,13 +57,13 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        list = pkg.files().keys()
-        if not list:
+        files = pkg.files().keys()
+        if not files:
             return
         try:
             # check for binaries first
             executables=0
-            for f in list:
+            for f in files:
                 if executable_re.search(f):
                     executables=1
                     break
@@ -71,10 +74,10 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
                 if c['exception'] and executables:
                     exception=1
 
-                for f in list:
+                for f in files:
                     if c['file_re'].search(f) and not c['name_re'].search(pkg.name) and not exception:
-                        raise 'naming-policy-not-applied'
-        except 'naming-policy-not-applied':
+                        raise NamingPolicyNotAppliedException
+        except NamingPolicyNotAppliedException:
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
 
 check=NamingPolicyCheck()

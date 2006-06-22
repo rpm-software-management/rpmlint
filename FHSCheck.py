@@ -33,23 +33,23 @@ class FHSCheck(AbstractCheck.AbstractCheck):
         for f in files.keys():
             s=FHSCheck.usr_regex.search(f)
             if s:
-                dir=s.group(1)
-                if not FHSCheck.usr_subdir_regex.search(dir):
-                    if not dir in usr_list:
-                        printWarning(pkg, "non-standard-dir-in-usr", dir)
-                        usr_list.append(dir)
+                d = s.group(1)
+                if not FHSCheck.usr_subdir_regex.search(d):
+                    if not d in usr_list:
+                        printWarning(pkg, "non-standard-dir-in-usr", d)
+                        usr_list.append(d)
             else:
                 s=FHSCheck.var_regex.search(f)
                 if s:
-                    dir=s.group(1)
-                    if FHSCheck.var_fsstnd_regex.search(dir):
-                        if not dir in var_list:
+                    d = s.group(1)
+                    if FHSCheck.var_fsstnd_regex.search(d):
+                        if not d in var_list:
                             printWarning(pkg, "FSSTND-dir-in-var", f)
-                            var_list.append(dir)
-                    elif not FHSCheck.var_subdir_regex.search(dir):
-                        if not dir in var_list:
-                            printWarning(pkg, "non-standard-dir-in-var", dir)
-                            var_list.append(dir)
+                            var_list.append(d)
+                    elif not FHSCheck.var_subdir_regex.search(d):
+                        if not d in var_list:
+                            printWarning(pkg, "non-standard-dir-in-var", d)
+                            var_list.append(d)
 
 # Create an object to enable the auto registration of the test
 check=FHSCheck()

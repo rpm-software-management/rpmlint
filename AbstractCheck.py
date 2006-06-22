@@ -27,7 +27,6 @@ class AbstractFilesCheck(AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        dirname = pkg.dirName()
         files = []
         for f in pkg.files().keys():
             if self.__files_re.match(f):

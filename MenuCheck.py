@@ -326,9 +326,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
                         else:
                             for path in icon_paths:
-                                try:
-                                    files[path[0] + icon]
-                                except KeyError:
+                                if not (path[0] + icon) in files.keys():
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
