@@ -10,8 +10,7 @@
 
 from Filter import *
 import AbstractCheck
-import rpm
-import re,os,time,subprocess
+import re
 import Config
 pam_stack_re=re.compile('pam_stack.so\s*service')
 
