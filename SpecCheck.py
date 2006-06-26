@@ -47,7 +47,6 @@ mklibname_regex = re.compile('%mklibname')
 ifarch_regex = re.compile('%ifn?arch')
 if_regex = re.compile('%if\s+')
 endif_regex = re.compile('%endif')
-single_percent_regex = re.compile('%[^%]')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
 prereq_regex = re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
@@ -178,10 +177,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 res=obsolete_tags_regex.search(line)
                 if res:
                     printWarning(pkg, "obsolete-tag", res.group(1))
-
-                if current_section == 'changelog':
-                    if single_percent_regex.search(line) and not section['changelog']['re'].search(line):
-                        printWarning(pkg, 'single-percent-in-changelog')
 
                 if configure:
                     if configure_cmdline[-1] == "\\":
@@ -371,10 +366,6 @@ You should use Requires(pre) and Requires(post) instead.''',
 'setup-not-quiet',
 '''You should use -q to have a quiet extraction of the source tarball, as this
 generate useless lines of log ( for buildbot, for example )''',
-
-'single-percent-in-changelog',
-'''You should not use a single % in %changelog, as it may trigger macro expansion.
-Use %% if you need to write a macro name in changelog.''',
 
 'no-cleaning-of-buildroot',
 '''You should clean $RPM_BUILD_ROOT in the %clean section and just after the
