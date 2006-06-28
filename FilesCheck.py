@@ -16,6 +16,10 @@ import re
 import stat
 import string
 import os
+try:
+    from textwrap import fill # python >= 2.3
+except ImportError:
+    def fill(text, width=70): return text
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -154,8 +158,13 @@ DEFAULT_GAMES_GROUPS='Games'
 DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
-DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'sys', 'adm', 'tty', 'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail', 'news', 'uucp', 'man', 'games', 'cdrom', 'users', 'cdwriter', 'audio')
-DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync', 'shutdown', 'halt', 'mail', 'news', 'uucp', 'operator', 'games')
+DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'sys', 'adm', 'tty',
+                           'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail',
+                           'news', 'uucp', 'man', 'games', 'cdrom', 'users',
+                           'cdwriter', 'audio',)
+DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
+                          'shutdown', 'halt', 'mail', 'news', 'uucp',
+                          'operator', 'games',)
 
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
 mnt_regex=re.compile('^/mnt/')
@@ -218,6 +227,9 @@ for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
 
 use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
+
+standard_groups = Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS)
+standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
@@ -292,9 +304,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
-            if not user in Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS):
+            if standard_users and not user in standard_users:
                 printError(pkg, 'non-standard-uid', f, user)
-            if not group in Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS):
+            if standard_groups and not group in standard_groups:
                 printError(pkg, 'non-standard-gid', f, group)
 
             if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
@@ -630,40 +642,14 @@ You have to include documentation files.''',
 the standard %doc tag.''',
 
 'non-standard-uid',
-'''A file in this package is owned by a non standard owner.
-Standard owners are:
-
-- root          - bin
-- daemon        - adm
-- lp            - sync
-- shutdown      - halt
-- mail          - news
-- uucp          - operator
-- games         - gopher
-- ftp           - nobody
-- nobody        - lists
-- gdm           - xfs
-- apache        - postgres
-- rpcuser       - rpm''',
+'''A file in this package is owned by a non standard user.
+Standard users are:
+%s''' % fill(", ".join(standard_users)),
 
 'non-standard-gid',
 '''A file in this package is owned by a non standard group.
 Standard groups are:
-
-- root          - bin           - dip
-- daemon        - sys           - ftp
-- adm           - tty           - smb
-- disk          - lp            - cdrom
-- mem           - kmem          - pppusers
-- wheel         - floppy        - cdwriter
-- mail          - news          - audio
-- uucp          - man           - dos
-- games         - gopher        - nobody
-- users         - console       - utmp
-- lists         - gdm           - xfs
-- popusers      - slipusers     - slocate
-- x10           - urpmi         - apache
-- postgres      - rpcuser       - rpm''',
+%s''' % fill(", ".join(standard_groups)),
 
 'library-without-ldconfig-postin',
 '''This package contains a library and provides no %post scriptlet containing
