@@ -1,5 +1,0 @@
-STANDARD_GROUPS_NEW=('root', 'bin', 'daemon', 'sys', 'adm', 'tty', 'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail', 'news', 'uucp', 'man', 'games', 'cdrom', 'users', 'cdwriter', 'audio')
-STANDARD_USERS_NEW=('root', 'bin', 'daemon', 'adm', 'lp', 'sync', 'shutdown', 'halt', 'mail', 'news', 'uucp', 'operator', 'games')
-
-STANDARD_GROUPS_OLD=('root', 'bin', 'daemon', 'sys', 'adm', 'tty', 'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail', 'news', 'uucp', 'man', 'fileshare', 'wnn', 'dhcpd', 'games', 'slocate', 'cdrom', 'squid', 'utmp', 'named', 'postfix', 'xgrp', 'snort', 'nscd', 'rpcuser', 'gopher', 'wine', 'rpc', 'ntools', 'ctools', 'dip', 'postgres', 'gdm', 'usb', 'rpm', 'apache', 'ftp', 'htdig', 'cdwriter', 'audio', 'x10', 'sympa', 'gica', 'radio', 'ldap', 'floppy', 'users')
-STANDARD_USERS_OLD=('root', 'bin', 'daemon', 'adm', 'lp', 'sync', 'shutdown', 'halt', 'mail', 'news', 'uucp', 'operator', 'games', 'gopher', 'postgres', 'ftp', 'squid', 'gdm', 'htdig', 'dhcpd', 'named', 'postfix', 'snort', 'nscd', 'rpm', 'apache', 'rpcuser', 'rpc', 'sympa', 'gica', 'ldap', )
