@@ -184,8 +184,8 @@ for f in ('/usr/share/rpmlint/config','/etc/rpmlint/config'):
         execfile(f)
     except IOError:
         pass
-    except:
-        sys.stderr.write('Error loading %s, skipping\n' % conf_file)
+    except Exception, E:
+        sys.stderr.write('Error loading %s, skipping\n' % (f, E))
 # pychecker fix
 del f
 
@@ -228,8 +228,8 @@ try:
     execfile(os.path.expanduser(conf_file))
 except IOError:
     pass
-except:
-    sys.stderr.write('Error loading %s, skipping\n' % conf_file)
+except Exception,E:
+    sys.stderr.write('Error loading %s, skipping : %s\n' % (conf_file, E ))
 
 if not extract_dir:
     extract_dir=Config.getOption('ExtractDir', '/tmp')
