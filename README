@@ -70,8 +70,8 @@ Packager		regex		''
 PerlVersionTrick	boolean		1
 ReleaseExtension	string or None	""
 RpmGamesGroup		regex		'Games'
-StandardGroups      list of strings see DEFAULT_STANDARD_GROUPS in FilesChecks.py
-StandardUsers       list of strings see DEFAULT_STANDARD_USERS in FilesChecks.py 
+StandardGroups      list of strings see DEFAULT_STANDARD_GROUPS in FilesCheck.py
+StandardUsers       list of strings see DEFAULT_STANDARD_USERS in FilesCheck.py 
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
 UseBzip2		boolean		1
 UseDefaultRunlevels	boolean		1
