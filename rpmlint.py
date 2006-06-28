@@ -34,14 +34,14 @@ def printVersion():
 
 # Load a python module from its file name
 def loadCheck(name):
-    (file, pathname, description)=imp.find_module(name, Config.checkDirs())
-    imp.load_module(name, file, pathname, description)
+    (f, pathname, description) = imp.find_module(name, Config.checkDirs())
+    imp.load_module(name, f, pathname, description)
 
 # Load a file -- deprecated, use the execfile() builtin instead
 def loadFile(name):
-    file=os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
-    imp.load_source('', name, file)
-    file.close()
+    f = os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
+    imp.load_source('', name, f)
+    f.close()
 
 #############################################################################
 # main program
@@ -101,7 +101,7 @@ def main():
                             sys.stderr.write('Error while reading ' + f + '\n')
                             pkg=None
                             continue
-            except Exception,E:
+            except Exception:
                 sys.stderr.write('Error while reading ' + d + '\n')
                 pkg=None
                 continue
@@ -186,6 +186,8 @@ for f in ('/usr/share/rpmlint/config','/etc/rpmlint/config'):
         pass
     except:
         sys.stderr.write('Error loading %s, skipping\n' % conf_file)
+# pychecker fix
+del f
 
 # process command line options
 for o in opt:

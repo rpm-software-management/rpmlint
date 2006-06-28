@@ -53,6 +53,9 @@ prereq_assoc = (
 for p in prereq_assoc:
     p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)
 
+# pychecker fix
+del p
+
 def incorrect_shell_script(prog, shellscript):
     tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
     if not shellscript:
