@@ -158,13 +158,13 @@ DEFAULT_GAMES_GROUPS='Games'
 DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
-DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'sys', 'adm', 'tty',
-                           'disk', 'lp', 'mem', 'kmem', 'wheel', 'mail',
-                           'news', 'uucp', 'man', 'games', 'cdrom', 'users',
-                           'cdwriter', 'audio',)
-DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
-                          'shutdown', 'halt', 'mail', 'news', 'uucp',
-                          'operator', 'games',)
+# Standard users and groups from LSB 3.1: 21.2 User & Group Names
+DEFAULT_STANDARD_USERS  = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
+                           'shutdown', 'halt', 'mail', 'news', 'uucp',
+                           'operator', 'man', 'nobody',)
+DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
+                           'shutdown', 'halt', 'mail', 'news', 'uucp',
+                           'man', 'nobody',)
 
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
 mnt_regex=re.compile('^/mnt/')
