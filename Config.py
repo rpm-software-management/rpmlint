@@ -9,7 +9,6 @@
 
 import os.path
 import re
-from setuplist import *
 
 DEFAULT_CHECKS=("DistributionCheck",
                 "TagsCheck",
