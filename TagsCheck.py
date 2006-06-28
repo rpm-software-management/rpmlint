@@ -9,7 +9,7 @@
 
 from Filter import *
 import AbstractCheck
-from Pkg import is_utf8_str
+import Pkg 
 import rpm
 import string
 import re
@@ -24,7 +24,6 @@ def get_default_valid_rpmgroups(filename=""):
     """ Get the default rpm group from filename, or from rpm package if no
     filename is given"""
     if not filename:
-        import Pkg
         p = Pkg.InstalledPkg('rpm')
         filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
     fobj = open(filename)
@@ -549,7 +548,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             res=forbidden_words_regex.search(summary)
             if res and Config.getOption('ForbiddenWords'):
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
-            if use_utf8 and not is_utf8_str(summary):
+            if use_utf8 and not Pkg.is_utf8_str(summary):
                 printError(pkg, 'tag-not-utf8', 'Summary')
 
         description=pkg[rpm.RPMTAG_DESCRIPTION]
@@ -563,7 +562,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res=forbidden_words_regex.search(l)
                 if res and Config.getOption('ForbiddenWords'):
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
-            if use_utf8 and not is_utf8_str(description):
+            if use_utf8 and not Pkg.is_utf8_str(description):
                 printError(pkg, 'tag-not-utf8', '%description')
 
         group=pkg[rpm.RPMTAG_GROUP]
@@ -600,7 +599,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
             clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if clt: changelog=changelog + clt
-            if use_utf8 and not is_utf8_str(' '.join(changelog)):
+            if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
 
 #         provides=pkg.provides()
@@ -609,15 +608,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 #                 printWarning(pkg, 'package-provides-itself')
 #                 break
 
-        license=pkg[rpm.RPMTAG_LICENSE]
-        if not license:
+        rpm_license = pkg[rpm.RPMTAG_LICENSE]
+        if not rpm_license:
             printError(pkg, 'no-license')
         else:
-            if license not in VALID_LICENSES:
-                licenses=re.split('(?:[- ]like|/|ish|[- ]style|[- ]Style|and|or|&|\s|-)+', license)
+            if rpm_license not in VALID_LICENSES:
+                licenses = re.split('(?:[- ]like|/|ish|[- ]style|[- ]Style|and|or|&|\s|-)+', rpm_license)
                 for l in licenses:
                     if l != '' and not l in VALID_LICENSES:
-                        printWarning(pkg, 'invalid-license', license)
+                        printWarning(pkg, 'invalid-license', rpm_license)
                         break
 
         url=pkg[rpm.RPMTAG_URL]
