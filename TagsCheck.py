@@ -767,8 +767,8 @@ in your spec file using the Group tag.''',
 version that is coherent with the version of the package and rebuild it.''',
 
 'incoherent-version-in-changelog',
-'''Your last entry in %changelog contains a version that is not coherent with
-the current version of your package.''',
+'''The last entry in %changelog contains a version identifier that is not
+coherent with the epoch:version-release tuple of the package.''',
 
 'no-license',
 '''There is no License tag in your spec file. You have to specify one license
