@@ -123,8 +123,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "non-utf8-spec-file", f)
 
             # gather info from spec lines
+
+            linenum = 0
             for line in spec:
 
+                linenum += 1
                 section_marker = 0
                 for i in section.keys():
                     if section[i]['re'].search(line):
@@ -246,9 +249,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         depgen_disabled = depgen_disable_regex.search(line)
 
                 if not indent_tabs and indent_tabs_regex.search(line):
-                    indent_tabs = 1
+                    indent_tabs = linenum
                 if not indent_spaces and indent_spaces_regex.search(line):
-                    indent_spaces = 1
+                    indent_spaces = linenum
 
             if 0 in buildroot_clean.values():
                 printError(pkg, 'no-cleaning-of-buildroot')
@@ -269,7 +272,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'depscript-without-disabling-depgen')
 
             if indent_spaces and indent_tabs:
-                printWarning(pkg, 'mixed-use-of-spaces-and-tabs')
+                printWarning(pkg, 'mixed-use-of-spaces-and-tabs',
+                             '(spaces: line %d, tab: line %d)' %
+                             (indent_spaces, indent_tabs))
 
             # process gathered info
             for p in patches.keys():
