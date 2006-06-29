@@ -13,6 +13,7 @@ import Pkg
 import rpm
 import string
 import re
+import os.path
 import Config
 try:
     from textwrap import fill # python >= 2.3
@@ -23,15 +24,17 @@ except ImportError:
 def get_default_valid_rpmgroups(filename=""):
     """ Get the default rpm group from filename, or from rpm package if no
     filename is given"""
+    groups = []
     if not filename:
         p = Pkg.InstalledPkg('rpm')
         filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
-    fobj = open(filename)
-    groups = fobj.read().strip().split('\n')
-    fobj.close()
-    if not 'Development/Debug' in groups:
-        groups.append('Development/Debug')
-    groups.sort()
+    if filename and os.path.exists(filename):
+        fobj = open(filename)
+        groups = fobj.read().strip().split('\n')
+        fobj.close()
+        if not 'Development/Debug' in groups:
+            groups.append('Development/Debug')
+            groups.sort()
     return groups
 
 
@@ -569,7 +572,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not group:
             printError(pkg, 'no-group-tag')
         else:
-            if not group in VALID_GROUPS:
+            if VALID_GROUPS and group not in VALID_GROUPS:
                 printWarning(pkg, 'non-standard-group', group)
 
         buildhost=pkg[rpm.RPMTAG_BUILDHOST]
