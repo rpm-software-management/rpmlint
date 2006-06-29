@@ -35,10 +35,6 @@ make_check_regexp = re.compile('make\s+(check|test)', re.IGNORECASE)
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 tmp_regex = re.compile('^/')
 setup_regex = re.compile('^%setup')
-section = {}
-for sec in ['description', 'prep', 'build', 'install', 'clean', 'files', 'changelog', 'package', 'check']:
-	section[sec] = {}
-	section[sec]['re'] = re.compile('^%' + sec + '(?:\s|$)')
 rpm_buildroot_regex = re.compile('\${?RPM_BUILD_ROOT}?|%{?buildroot}?')
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
@@ -103,7 +99,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             applied_patches_ifarch = []
             source_dir = None
             buildroot = 0
-            clean = 0
             configure = 0
             configure_cmdline = ""
             mklibname = 0
@@ -116,6 +111,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             depgen_disabled = 0
             indent_spaces = 0
             indent_tabs = 0
+            section = {}
+            for sec in ['description', 'prep', 'build', 'install', 'clean',
+                        'files', 'changelog', 'package', 'check']:
+                section[sec] = {
+                    'count': 0,
+                    're': re.compile('^%' + sec + '(?:\s|$)'),
+                    }
 
             if use_utf8 and not is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
@@ -128,6 +130,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if section[i]['re'].search(line):
                         current_section = i
                         section_marker = 1
+                        section[i]['count'] = section[i]['count'] + 1
 
                 if section_marker:
                     continue
@@ -215,9 +218,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     else:
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
-                if current_section =='clean':
-                    clean = 1
-
                 if mklibname_regex.search(line):
                     mklibname = 1
 
@@ -256,7 +256,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
 
-            if not clean:
+            for sec in ('prep', 'build', 'install'):
+                if not section[sec]['count']:
+                    printWarning(pkg, 'no-%%%s-section' % sec)
+            if not section['clean']['count']:
                 printError(pkg, 'no-%clean-section')
 
             if lib and not mklibname:
@@ -336,6 +339,25 @@ should be removed, as it is redundant with rpm defaults.''',
 'configure-without-libdir-spec',
 '''A configure script is run without specifying the libdir. configure
 options must be augmented with something like --libdir=%{_libdir}.''',
+
+'no-%prep-section',
+'''The spec file does not contain a %prep section.  Even if some packages don't
+directly need it, section markers may be overridden in rpm's configuration
+to provide additional "under the hood" functionality.  Add the section, even
+if empty.''',
+
+'no-%build-section',
+'''The spec file does not contain a %build section.  Even if some packages
+don't directly need it, section markers may be overridden in rpm's
+configuration to provide additional "under the hood" functionality, such as
+injection of automatic -debuginfo subpackages.  Add the section, even if
+empty.''',
+
+'no-%install-section',
+'''The spec file does not contain an %install section.  Even if some packages
+don't directly need it, section markers may be overridden in rpm's
+configuration to provide additional "under the hood" functionality.  Add the
+section, even if empty.''',
 
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed
