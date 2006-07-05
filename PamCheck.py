@@ -21,6 +21,7 @@ class PamCheck(AbstractCheck.AbstractFilesCheck):
     def check_file(self, pkg, filename):
         f = open(pkg.dirName() + filename)
         for l in f.readlines():
+            l = re.sub('#.*', '', l)
             if pam_stack_re.search(l):
                 printError(pkg, 'use-old-pam-stack',filename)
         f.close()
