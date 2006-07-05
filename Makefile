@@ -51,6 +51,11 @@ install:
 verify:
 	pychecker *.py
 
+.PHONY: test
+
+test:
+	./test.sh
+
 version:
 	@echo "$(VERSION)"
 
