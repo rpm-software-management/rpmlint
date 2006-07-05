@@ -9,6 +9,7 @@
 
 import sys
 import Config
+import Testing
 
 def printInfo(pkg, reason, *details):
     if _print("I", pkg, reason, details) and Config.info:
@@ -26,11 +27,13 @@ def _print(type, pkg, reason, details):
     s="%s: %s %s" % (type, pkg.name, reason)
     for d in details:
         s = s + " %s" % d
-
-    if not Config.isFiltered(s):
-        sys.stdout.write(s)
-        sys.stdout.write("\n")
-        return 1
+    if Testing.isTest():
+        Testing.addOutput(s)
+    else:
+        if not Config.isFiltered(s):
+            sys.stdout.write(s)
+            sys.stdout.write("\n")
+            return 1
 
     return 0
 
