@@ -392,7 +392,6 @@ lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
-so_regex=re.compile('\.so$')
 lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
@@ -402,7 +401,6 @@ valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost'))
 epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
-requires_in_usr_local_regex=re.compile('^/usr/local/bin')
 max_line_len=79
 
 def spell_check(pkg, str, tagname):
@@ -477,7 +475,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
 
-            if requires_in_usr_local_regex.search(d[0]):
+            if d[0].startswith('/usr/local/'):
                 printError(pkg, 'invalid-dependency', d[0])
 
             if not devel_depend and not is_devel and not is_source:
@@ -501,7 +499,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 dep=None
                 has_so=0
                 for f in pkg.files().keys():
-                    if so_regex.search(f):
+                    if f.endswith('.so'):
                         has_so=1
                         break
                 if has_so:
