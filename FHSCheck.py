@@ -13,10 +13,10 @@ import re
 
 class FHSCheck(AbstractCheck.AbstractCheck):
     usr_regex=re.compile("^/usr/([^/]+)/")
-    usr_subdir_regex=re.compile("^(X11R6|X386|bin|games|include|lib|lib64|local|sbin|share|src|spool|tmp)$")
+    usr_subdir = ('X11R6','X386','bin','games','include','lib','lib64','local','sbin','share','src','spool','tmp')
     var_regex=re.compile("^/var/([^/]+)/")
-    var_fsstnd_regex=re.compile("^(adm|catman|local|named|nis|preserve)$")
-    var_subdir_regex=re.compile("^(account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|yp|www|ftp)$")
+    var_fsstnd = ('adm','catman','local','named','nis','preserve')
+    var_subdir = ('account','lib','cache','crash','games','lock','log','opt','run','spool','state','tmp','yp','www','ftp')
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")
@@ -34,7 +34,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
             s=FHSCheck.usr_regex.search(f)
             if s:
                 d = s.group(1)
-                if not FHSCheck.usr_subdir_regex.search(d):
+                if not d in FHSCheck.usr_subdir:
                     if not d in usr_list:
                         printWarning(pkg, "non-standard-dir-in-usr", d)
                         usr_list.append(d)
@@ -42,11 +42,11 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                 s=FHSCheck.var_regex.search(f)
                 if s:
                     d = s.group(1)
-                    if FHSCheck.var_fsstnd_regex.search(d):
+                    if d in FHSCheck.var_fsstnd:
                         if not d in var_list:
                             printWarning(pkg, "FSSTND-dir-in-var", f)
                             var_list.append(d)
-                    elif not FHSCheck.var_subdir_regex.search(d):
+                    elif not d in FHSCheck.var_subdir:
                         if not d in var_list:
                             printWarning(pkg, "non-standard-dir-in-var", d)
                             var_list.append(d)
