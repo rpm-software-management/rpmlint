@@ -167,12 +167,6 @@ DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'man', 'nobody',)
 
 tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
-mnt_regex=re.compile('^/mnt/')
-opt_regex=re.compile('^/opt/')
-home_regex=re.compile('^/home/')
-etc_regex=re.compile('^/etc/')
-usr_local_regex=re.compile('^/usr/local/')
-var_local_regex=re.compile('^/var/local/')
 sub_bin_regex=re.compile('^(/usr)?/s?bin/\S+/')
 backup_regex=re.compile('~$|\#[^/]+\#$')
 compr_regex=re.compile('\.(gz|z|Z|zip|bz2)$')
@@ -189,7 +183,6 @@ debuginfo_package_regex=re.compile('-debug(info)?$')
 lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
 ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
-info_regex=re.compile('^/usr/share/info/')
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
 perl_temp_file=re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
 scm_regex=re.compile('/CVS/[^/]+$|/.cvsignore$|/\.svn/|/(\.arch-ids|{arch})/')
@@ -216,9 +209,6 @@ manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 shellbang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc.d/init.d|profile.d|X11/xinit.d|cron.(hourly|daily|monthly|weekly)))/')
-perl_module_regex=re.compile('\.pm$')
-libtool_archive_regex=re.compile('\.la$')
-lib64python_regex=re.compile('^/usr/lib64/python')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
@@ -315,23 +305,23 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             if tmp_regex.search(f):
                 printError(pkg, 'dir-or-file-in-tmp', f)
-            elif mnt_regex.search(f):
+            elif f.startswith('/mnt/'):
                 printError(pkg, 'dir-or-file-in-mnt', f)
-            elif opt_regex.search(f):
+            elif f.startswith('/opt/'):
                 printError(pkg, 'dir-or-file-in-opt', f)
-            elif usr_local_regex.search(f):
+            elif f.startswith('/usr/local/'):
                 printError(pkg, 'dir-or-file-in-usr-local', f)
-            elif var_local_regex.search(f):
+            elif f.startswith('/var/local/'):
                 printError(pkg, 'dir-or-file-in-var-local', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
             elif backup_regex.search(f):
                 printError(pkg, 'backup-file-in-package', f)
-            elif home_regex.search(f):
+            elif f.startswith('/home/'):
                 printError(pkg, 'dir-or-file-in-home', f)
             elif scm_regex.search(f):
                 printError(pkg, 'version-control-internal-file', f)
-            elif htaccess_regex.search(f):
+            elif f.endswith('/.htaccess'):
                 printError(pkg, 'htaccess-file', f)
             elif hidden_file_regex.search(f):
                 printWarning(pkg, 'hidden-file-or-dir', f)
@@ -437,7 +427,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'postun-with-wrong-depmod', f)
 
                 # check install-info call in %post and %postun
-                if info_regex.search(f):
+                if f.startswith('/usr/share/info/'):
                     postin=pkg[rpm.RPMTAG_POSTIN]
                     if not postin:
                         printError(pkg, 'info-files-without-install-info-postin', f)
@@ -495,11 +485,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if mode & 0111 != 0:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
-                elif etc_regex.search(f):
+                elif f.startswith('/etc/'):
                     if not f in config_files and not f in ghost_files:
                         printWarning(pkg, 'non-conffile-in-etc', f)
 
-                if arch == 'noarch' and lib64python_regex.search(f):
+                if arch == 'noarch' and f.startswith('/usr/lib64/python'):
                     printError(pkg, 'noarch-python-in-64bit-path', f)
 
             # normal dir check
@@ -596,13 +586,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if istextfile(path):
                         line=open(path).readline()
                         res=None
-                        if not perl_module_regex.search(f):
+                        if not f.endswith('.pm'):
                             res=shellbang_regex.search(line)
                         if res or mode & 0111 != 0 or script_regex.search(f):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
                                     printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
-                            elif not (lib_path_regex.search(f) and libtool_archive_regex.search(f)):
+                            elif not (lib_path_regex.search(f) and f.endswith('.la')):
                                 printError(pkg, 'script-without-shellbang', f)
 
                             if mode & 0111 == 0 and not is_doc:
