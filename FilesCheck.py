@@ -225,6 +225,7 @@ filesys_packages = ['filesystem'] # TODO: make configurable?
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
+del idx
 
 use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
 
