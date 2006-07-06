@@ -23,7 +23,6 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug)($|[\s/,])'
 
-spec_regex = re.compile(".spec$")
 patch_regex = re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
 applied_patch_regex = re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
@@ -33,8 +32,6 @@ prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 make_check_regexp = re.compile('make\s+(check|test)', re.IGNORECASE)
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
-tmp_regex = re.compile('^/')
-setup_regex = re.compile('^%setup')
 rpm_buildroot_regex = re.compile('\${?RPM_BUILD_ROOT}?|%{?buildroot}?')
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
@@ -83,7 +80,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         files = pkg.files()
         spec_file = None
         for f in files.keys():
-            if spec_regex.search(f):
+            if f.endswith('.spec'):
                 spec_file = pkg.dirName() + "/" + f
                 break
         if not spec_file:
@@ -156,7 +153,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if if_regex.search(line):
                     if_depth = if_depth + 1
 
-                if setup_regex.search(line):
+                if line.startswith('%setup'):
                     if line.find(' -q') < 1:
                         printWarning(pkg, 'setup-not-quiet')
             
@@ -208,7 +205,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 res = buildroot_regex.search(line)
                 if res:
                     buildroot=1
-                    if tmp_regex.search(res.group(1)):
+                    if res.group(1).startswith('/'):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
                 res = packager_regex.search(line)

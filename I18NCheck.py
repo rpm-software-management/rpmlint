@@ -71,7 +71,6 @@ locale_regex=re.compile('^(/usr/share/locale/([^/]+))/')
 correct_subdir_regex=re.compile('^(([a-z][a-z](_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex=re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
 man_regex=re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
-mo_regex=re.compile('\.mo$')
 
 # list of exceptions
 #
@@ -112,7 +111,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         # others in /usr/share or /usr/lib, the only reliable way
         # sofar to detect them is to look for an apache configuration file
         for f in files.keys():
-            if mo_regex.search(f):
+            if f.endswith('.mo'):
                 webapp=True
 
         for f in files.keys():
@@ -148,7 +147,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                     else:
                         subdir=None
 
-            if mo_regex.search(f) or subdir:
+            if f.endswith('.mo') or subdir:
                 if pkg.fileLang(f) == '' and not webapp:
                     printWarning(pkg, 'file-not-in-%lang', f)
 
