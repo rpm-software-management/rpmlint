@@ -36,11 +36,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        list=[]
+        initscript_list = []
         for f in pkg.files().keys():
             if rc_regex.search(f):
                 basename=basename_regex.search(f).group(1)
-                list.append(basename)
+                initscript_list.append(basename)
                 if pkg.files()[f][0] & 0500 != 0500:
                     printError(pkg, 'init-script-non-executable',f)
 
@@ -100,8 +100,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             else:
                                 printError(pkg, 'incoherent-subsys', f, name)
 
-        if len(list) == 1 and string.lower(pkg.name) != list[0]:
-            printWarning(pkg, 'incoherent-init-script-name', list[0])
+        if len(initscript_list) == 1 and string.lower(pkg.name) != initscript_list[0]:
+            printWarning(pkg, 'incoherent-init-script-name', initscript_list[0])
 
 
 # Create an object to enable the auto registration of the test
