@@ -28,6 +28,7 @@ DEFAULT_CHECKS=("DistributionCheck",
                 "ZipCheck",
                 "PamCheck",
                 "RpmFileCheck",
+                "MenuXDGCheck",
                 )
 
 USEUTF8_DEFAULT=0
