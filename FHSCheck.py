@@ -10,6 +10,11 @@
 from Filter import *
 import AbstractCheck
 import re
+try:
+    from textwrap import fill # python >= 2.3
+except ImportError:
+    def fill(text, width=70): return text
+
 
 class FHSCheck(AbstractCheck.AbstractCheck):
     usr_regex=re.compile("^/usr/([^/]+)/")
@@ -59,35 +64,17 @@ if Config.info:
 'non-standard-dir-in-usr',
 """Your package is creating a non-standard subdirectory in /usr. The standard
 directories are:
-        -X11R6          -X386
-        -bin            -games
-        -include        -lib
-        -local          -sbin
-        -share          -src
-        -spool          -tmp
-        -lib64
-""",
+%s""" % fill(", ".join(FHSCheck.usr_subdir)),
 
 'FSSTND-dir-in-var',
 """Your package is creating an illegal directory in /var. The FSSTND (illegal)
 ones are:
-        -adm            -catman
-        -local          -named
-        -nis            -preserve
-""",
+%s""" % fill(", ".join(FHSCheck.var_fsstnd)),
 
 'non-standard-dir-in-var',
 """Your package is creating a non-standard subdirectory in /var. The standard
 directories are:
-        -account        -lib
-        -cache          -crash
-        -games          -lock
-        -log            -opt
-        -run            -spool
-        -state          -tmp
-        -yp             -www
-        -ftp
-""",
+%s""" % fill(", ".join(FHSCheck.var_subdir)),
 )
 
 # FHSCheck.py ends here
