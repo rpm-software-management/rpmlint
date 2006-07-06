@@ -13,7 +13,6 @@ import rpm
 import re
 import commands
 import string
-import sys
 import stat
 import Pkg
 
