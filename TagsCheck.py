@@ -383,6 +383,7 @@ INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires'
 packager_regex=re.compile(Config.getOption('Packager'))
 basename_regex=re.compile('/?([^/]+)$')
 changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
+changelog_text_version_regex=re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 release_ext=Config.getOption('ReleaseExtension')
 extension_regex=release_ext and re.compile(release_ext + '$')
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
@@ -584,8 +585,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not changelog:
             printError(pkg, 'no-changelogname-tag')
         else:
+            clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if use_version_in_changelog and not pkg.isSource():
                 ret=changelog_version_regex.search(changelog[0])
+                if not ret and clt:
+                    # we also allow the version specified as the first
+                    # thing on the first line of the text
+                    ret=changelog_text_version_regex.search(clt[0])
                 if not ret:
                     printWarning(pkg, 'no-version-in-last-changelog')
                 elif version and release:
@@ -598,7 +604,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if expected != ret.group(1):
                             printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
 
-            clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if clt: changelog=changelog + clt
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
