@@ -541,11 +541,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # relative link
                 else:
                     if not is_so:
-                        file = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
-                        file = os.path.normpath(file)
+                        extractedfile = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
+                        extractedfile = os.path.normpath(extractedfile)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
-                        if not (files.has_key(pkgfile) or os.path.exists(file) or pkgfile in req_names):
+                        if not (files.has_key(pkgfile) or os.path.exists(extractedfile) or pkgfile in req_names):
                             is_exception=0
                             for e in dangling_exceptions:
                                 if e[0].search(link):
