@@ -180,8 +180,8 @@ class Pkg:
         else:
             self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
-            str='rpm2cpio %s | (cd %s; cpio -id); chmod -R +rX %s' % (self.filename, self.dirname, self.dirname)
-            cmd=commands.getstatusoutput(str)
+            command_str='rpm2cpio %s | (cd %s; cpio -id); chmod -R +rX %s' % (self.filename, self.dirname, self.dirname)
+            cmd=commands.getstatusoutput(command_str)
             self.extracted=1
             return cmd
 
