@@ -42,15 +42,15 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
         for f in pkg.files().keys():
             if man_regex.search(f):
                 if use_bzip2:
-                    if not bz2_regex.search(f):
+                    if not f.endswith('.bz2'):
                         printWarning(pkg, "manpage-not-bzipped", f)
-                elif not gz_regex.search(f):
+                elif not f.endswith('.gz'):
                     printWarning(pkg, "manpage-not-gzipped", f)
             if info_regex.search(f) and not info_dir_regex.search(f):
                 if use_bzip2:
-                    if not bz2_regex.search(f):
+                    if not f.endswith('.bz2'):
                         printWarning(pkg, "infopage-not-bzipped", f)
-                elif not gz_regex.search(f):
+                elif not f.endswith('.gz'):
                     printWarning(pkg, "infopage-not-gzipped", f)
 
 # Create an object to enable the auto registration of the test
