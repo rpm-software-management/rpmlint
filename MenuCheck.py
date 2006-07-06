@@ -156,6 +156,7 @@ xdg_migrated_regex=re.compile('xdg=\"?([^\" ]+)')
 # compile regexps
 for l in launchers:
     l[0]=re.compile(l[0])
+del l
 
 class MenuCheck(AbstractCheck.AbstractCheck):
 
@@ -204,7 +205,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 if menu64_file_regex.search(f):
                     printError(pkg, 'menu-in-wrong-dir', f)
         if len(menus) > 0:
-            dir=pkg.dirName()
+            directory = pkg.dirName()
             if menus != []:
                 postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
@@ -222,8 +223,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                str='/lib/cpp %s%s 2>/dev/null| grep ^\?' % (dir, f)
-                cmd=commands.getoutput(str)
+                command_str='/lib/cpp %s%s 2>/dev/null| grep ^\?' % (directory, f)
+                cmd=commands.getoutput(command_str)
                 for line in string.split(cmd, '\n'):
                     res=package_regex.search(line)
                     if res:
@@ -255,16 +256,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                         printError(pkg, 'use-of-launcher-in-menu-but-no-requires-on', launcher[1][0])
                                 command=command_line[1]
                                 break
-                        try:
-                            if command[0] == '/':
-                                files[command]
-                            else:
-                                if not (files.has_key('/bin/' + command) or
-                                        files.has_key('/usr/bin/' + command) or
-                                        files.has_key('/usr/X11R6/bin/' + command)):
-                                    raise KeyError, command
-                        except KeyError:
-                            printWarning(pkg, 'menu-command-not-in-package', command)
+                        if command[0] == '/':
+                            if not command in files.keys():
+                                printWarning(pkg, 'menu-command-not-in-package', command)
+                        else:
+                            if not (files.has_key('/bin/' + command) or
+                                    files.has_key('/usr/bin/' + command) or
+                                    files.has_key('/usr/X11R6/bin/' + command)):
+                                printWarning(pkg, 'menu-command-not-in-package', command)
                     else:
                         printWarning(pkg, 'missing-menu-command')
                         command=0
