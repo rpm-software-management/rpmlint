@@ -2,6 +2,8 @@
 
 #
 # check xdg file format violation
+# 
+# http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
 from Filter import *
@@ -11,7 +13,10 @@ import subprocess
 
 class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
-        AbstractCheck.AbstractFilesCheck.__init__(self, "MenuXDGCheck", ".*\.desktop$")
+        # desktop file need to be in $XDG_DATA_DIRS
+        # $ echo $XDG_DATA_DIRS/applications
+        # /var/lib/menu-xdg:/usr/share
+        AbstractCheck.AbstractFilesCheck.__init__(self, "MenuXDGCheck", "/usr/share/applications/.*\.desktop$")
 
     def check_file(self, pkg, filename):
         f = open(pkg.dirName() + filename)
