@@ -7,6 +7,7 @@
 #
 
 from Filter import *
+from Pkg import is_utf8
 import AbstractCheck
 import Config
 import subprocess
@@ -22,11 +23,16 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         f = open(pkg.dirName() + filename)
         if subprocess.call("desktop-file-validate %s" % f):
                 printError(pkg, 'invalid-desktopfile', f)
+        if not is_utf8(f):
+                printError(pkg, 'non-utf8-desktopfile', f)
+                
 
 check=MenuXDGCheck()
 
 if Config.info:
     addDetails(
         'invalid-desktopfile',
-        '''.desktop file is not valid, check with desktop-file-validate''',)
+        '''.desktop file is not valid, check with desktop-file-validate''',
+        'non-utf8-desktopfile',
+        '''.desktop file is not encoded in UTF-8''',)
 
