@@ -61,44 +61,53 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     if not chkconfig_regex.search(preun):
                         printError(pkg, 'preun-without-chkconfig', f)
 
+                status_found = 0
+                reload_found = 0
+                chkconfig_content_found = 0
+                subsys_regex_found = 0
                 # check common error in file content
                 fd=open(pkg.dirName() + '/' + f, 'r')
-                content=fd.read(-1)
-                fd.close()
+                for line in fd.readlines():
+                    if status_regex.search(line):
+                        status_found = 1
 
-                if not status_regex.search(content):
-                    printError(pkg, 'no-status-entry', f)
+                    if reload_regex.search(line):
+                        reload_found = 1
 
-                if not reload_regex.search(content):
-                    printWarning(pkg, 'no-reload-entry', f)
+                    res = chkconfig_content_regex.search(line)
+                    if res:
+                        chkconfig_content_found = 1
+                        if use_deflevels:
+                            if res.group(1) == '-':
+                                printWarning(pkg, 'no-default-runlevel', f)
+                        else:
+                            if res.group(1) != '-':
+                                printWarning(pkg, 'service-default-enabled', f)
 
-                res=chkconfig_content_regex.search(content)
-                if not res:
-                    printError(pkg, 'no-chkconfig-line', f)
-                else:
-                    if use_deflevels:
-                        if res.group(1) == '-':
-                            printWarning(pkg, 'no-default-runlevel', f)
-                    else:
-                        if res.group(1) != '-':
-                            printWarning(pkg, 'service-default-enabled', f)
-
-                res=subsys_regex.search(content)
-                if not res:
-                    printError(pkg, 'subsys-not-used', f)
-                else:
-                    name=res.group(1)
-                    if name != basename:
-                        error=1
-                        if name[0] == '$':
-                            value=Pkg.substitute_shell_vars(name, content)
-                            if value == basename:
-                                error=0
-                        if error:
+                    res = subsys_regex.search(line)
+                    if res:
+                        subsys_regex_found = 1
+                        name=res.group(1)
+                        if name != basename:
+                            error=1
                             if name[0] == '$':
-                                printWarning(pkg, 'incoherent-subsys', f, name)
-                            else:
-                                printError(pkg, 'incoherent-subsys', f, name)
+                                value=Pkg.substitute_shell_vars(name, line)
+                                if value == basename:
+                                    error=0
+                            if error:
+                                if name[0] == '$':
+                                    printWarning(pkg, 'incoherent-subsys', f, name)
+                                else:
+                                    printError(pkg, 'incoherent-subsys', f, name)
+
+                if not status_found:
+                    printError(pkg, 'no-status-entry', f)
+                if not reload_found:
+                    printWarning(pkg, 'no-reload-entry', f)
+                if not chkconfig_content_found:
+                    printError(pkg, 'no-chkconfig-line', f)
+                if not subsys_regex_found:
+                    printError(pkg, 'subsys-not-used', f)
 
         if len(initscript_list) == 1 and string.lower(pkg.name) != initscript_list[0]:
             printWarning(pkg, 'incoherent-init-script-name', initscript_list[0])
