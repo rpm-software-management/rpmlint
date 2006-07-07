@@ -25,6 +25,7 @@ reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
 basename_regex=re.compile('([^/]+)$')
 dot_in_name_regex=re.compile('.*\..*')
 use_deflevels=Config.getOption('UseDefaultRunlevels', 1)
+lsb_tags_regex = re.compile('# ([\w-]*):')
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -65,9 +66,48 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 reload_found = 0
                 chkconfig_content_found = 0
                 subsys_regex_found = 0
+                in_lsb_tag = 0
+                lastline = ''
+                lsb_tags = {}
                 # check common error in file content
                 fd=open(pkg.dirName() + '/' + f, 'r')
                 for line in fd.readlines():
+                    line = line[:-1] # chomp
+                    # TODO check if there is only one line like this
+                    if line.startswith('### BEGIN INIT INFO'):
+                        in_lsb_tag = 1
+                        continue
+                    if line.endswith('### END INIT INFO'):
+                        in_lsb_tag = 0
+                        for i in lsb_tags.keys():
+                            if lsb_tags[i] != 1:
+                                printError(pkg, 'redundant-lsb-tag', i)
+                                
+                        for i in ('Provides', 'Description', 'Short-Description'):
+                            if i not in lsb_tags.keys():
+                                printError(pkg, 'missing-mandatory-lsb-tag', i)
+                    if in_lsb_tag:
+                        # TODO maybe we do not have to handle this ?
+                        if lastline.endswith('\\'):
+                            line = lastline + line
+                        else:
+                            res = lsb_tags_regex.search(line)
+                            if not res:
+                                printError(pkg, 'wrong-line-in-lsb-tag', line)
+                            else:
+                                tag = res.group(1)
+                                if not tag in ('Provides', 'Required-Start', 'Required-Stop',
+                                                       'Should-Stop', 'Should-Start', 'Default-Stop',
+                                                       'Default-Start', 'Description', 'Short-Description'):
+                                    printError(pkg, 'unknow-lsb-tag', line)
+                                else:
+                                    if not tag in lsb_tags.keys():
+                                        lsb_tags[tag] = 0
+                                    lsb_tags[tag] += 1
+                        lastline = line
+
+                         
+
                     if status_regex.search(line):
                         status_found = 1
 
