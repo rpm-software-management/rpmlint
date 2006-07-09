@@ -139,7 +139,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if rpm_buildroot_regex.search(line):
                         printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1])
 
-                if make_check_regexp.search(line) and current_section != 'check':
+                if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package'):
                     printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
                 if current_section in buildroot_clean.keys():
