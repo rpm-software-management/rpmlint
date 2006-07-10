@@ -115,6 +115,17 @@ def addFilter(s):
     _filters.append(s)
     _filters_re=None
 
+def removeFilter(s):
+    global _filters
+    global _filters_re
+
+    try:
+        _filters.remove(s)
+    except:
+        pass
+    else:
+        _filters_re = None
+
 _non_named_group_re = re.compile('[^\\](\()[^:]')
 def isFiltered(s):
     global _filters
