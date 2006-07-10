@@ -51,7 +51,9 @@ addCheckDir(path) adds a path to look for checks.
 setOption(name, value) sets the value of the configuration option.
 See below for the list of available options.
 
-addFilter(regexp) adds a filter to remove the output of a check.
+addFilter(regexp) adds a filter to remove the output of a check, and
+removeFilter(regexp) removes one (for use eg. in per-user configuration
+files to remove filters added in system config files).
 
 Available options:
 
