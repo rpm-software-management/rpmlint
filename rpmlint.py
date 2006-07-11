@@ -57,27 +57,34 @@ def main():
         dirs=[]
         for f in args:
             pkgs = []
+            isfile = False
             try:
                 try:
                     st=os.stat(f)
+                    isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         pkgs.append(Pkg.Pkg(f, extract_dir))
-                    elif stat.S_ISDIR(st[stat.ST_MODE]) and (f.index('/') >=0):
+                    elif stat.S_ISDIR(st[stat.ST_MODE]):
                         dirs.append(f)
                         continue
                     else:
                         raise OSError
                 except OSError:
-                    pkgs.extend(Pkg.getInstalledPkgs(f))
+                    ipkgs = Pkg.getInstalledPkgs(f)
+                    if not ipkgs:
+                        sys.stderr.write(
+                            'Error: no installed packages by name %s\n' % f)
+                    else:
+                        pkgs.extend(ipkgs)
             except KeyboardInterrupt:
-                sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
+                if isfile:
+                    f = os.path.abspath(f)
+                sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
                 sys.exit(2)
-            except rpm.error, e:
+            except Exception, e:
+                if isfile:
+                    f = os.path.abspath(f)
                 sys.stderr.write('Error while reading %s: %s\n' % (f, e))
-                pkgs = []
-                continue
-            except:
-                sys.stderr.write('Error while reading ' + f + '\n')
                 pkgs = []
                 continue
 
@@ -88,21 +95,22 @@ def main():
         for d in dirs:
             try:
                 for i in os.listdir(d):
-                    f=d+'/'+i
+                    f=os.path.abspath(os.path.join(d, i))
                     st=os.stat(f)
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         try:
                             pkg=Pkg.Pkg(f, extract_dir)
                             runChecks(pkg)
                         except KeyboardInterrupt:
-                            sys.stderr.write('Interrupted, exiting while reading ' + f + '\n')
+                            sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
                             sys.exit(2)
-                        except:
-                            sys.stderr.write('Error while reading ' + f + '\n')
+                        except Exception, e:
+                            sys.stderr.write('Error while reading %s: %s\n' %
+                                             (f, e))
                             pkg=None
                             continue
-            except Exception:
-                sys.stderr.write('Error while reading ' + d + '\n')
+            except Exception, e:
+                sys.stderr.write('Error while reading dir %s: %s' % (d, e))
                 pkg=None
                 continue
 
