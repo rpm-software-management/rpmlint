@@ -97,7 +97,7 @@ DEFAULT_VALID_LICENSES = (
     'wxWindows Library License',
     'X.Net License',
     'Zope Public License',
-    'zlib License',
+    'zlib/libpng License',
     # Others:
     'Design Public License', # ???
     'GFDL', # GNU Free Documentation License
