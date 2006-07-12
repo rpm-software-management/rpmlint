@@ -30,7 +30,7 @@ obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
-make_check_regexp = re.compile('make\s+(check|test)', re.IGNORECASE)
+make_check_regexp = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('\${?RPM_BUILD_ROOT}?|%{?buildroot}?')
 configure_start_regex = re.compile('\./configure')
@@ -139,7 +139,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if rpm_buildroot_regex.search(line):
                         printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1])
 
-                if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package'):
+                if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
                     printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
                 if current_section in buildroot_clean.keys():
