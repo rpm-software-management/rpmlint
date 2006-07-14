@@ -41,7 +41,7 @@ dangerous_command_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln
 single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
 update_menu_regex=re.compile('update-menus', re.MULTILINE)
 tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
-menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/')
+menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
 bogus_var_regex=re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 prereq_assoc = (
