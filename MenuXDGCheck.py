@@ -20,8 +20,8 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         AbstractCheck.AbstractFilesCheck.__init__(self, "MenuXDGCheck", "/usr/share/applications/.*\.desktop$")
 
     def check_file(self, pkg, filename):
-        f = open(pkg.dirName() + filename)
-        if subprocess.call("desktop-file-validate %s" % f):
+        f = pkg.dirName() + filename
+        if subprocess.call('desktop-file-validate', f):
                 printError(pkg, 'invalid-desktopfile', f)
         if not is_utf8(f):
                 printError(pkg, 'non-utf8-desktopfile', f)
