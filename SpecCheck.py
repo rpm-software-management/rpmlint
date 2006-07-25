@@ -62,6 +62,7 @@ indent_spaces_regex = re.compile(' {3}.*\S')
 indent_tabs_regex = re.compile('\t.*\S')
 
 def file2string(file):
+    # TODO: file I/O error handling
     fd = open(file, "r")
     content = fd.readlines()
     fd.close()

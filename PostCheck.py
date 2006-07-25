@@ -57,10 +57,12 @@ for p in prereq_assoc:
 del p
 
 def incorrect_shell_script(prog, shellscript):
+    # TODO: better temp file, perhaps using tempfile.mk(s)temp
     tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
     if not shellscript:
         return 0
     # TODO: test that "prog" is available/executable
+    # TODO: tmpfile I/O error handling
     f = open(tmpfile, 'w')
     f.write(shellscript)
     f.close()
@@ -69,10 +71,12 @@ def incorrect_shell_script(prog, shellscript):
     return ret[0]
 
 def incorrect_perl_script(prog, perlscript):
+    # TODO: better temp file, perhaps using tempfile.mk(s)temp
     tmpfile = '%s/.perl-script.%d' % (extract_dir, os.getpid())
     if not perlscript:
         return 0
     # TODO: test that "prog" is available/executable
+    # TODO: tmpfile I/O error handling
     f = open(tmpfile, 'w')
     f.write(perlscript)
     f.close()
