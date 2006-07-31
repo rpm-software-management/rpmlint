@@ -458,6 +458,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if size == 0 and not normal_zero_length_regex.search(f) and f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
+                if mode & 0002 != 0:
+                    printError(pkg, 'world-writable', f, oct(perm))
+
                 if not perl_dep_error:
                     res=perl_regex.search(f)
                     if res:
@@ -494,6 +497,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal dir check
             elif stat.S_ISDIR(mode):
+                if mode & 01002 == 2: # world writable without sticky bit
+                    printError(pkg, 'world-writable', f, oct(perm))
                 if perm != 0755:
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
                 if pkg.name not in filesys_packages:
@@ -755,6 +760,10 @@ create a development package.''',
 '''A standard directory should have permission set to 0755. If you get this
 message, it means that you have a wrong directory permissions in sone dirs
 included in your package.''',
+
+'world-writable',
+'''A file or directory in the package is installed with world writable
+permissions, which is most likely a security issue.''',
 
 'standard-dir-owned-by-package',
 '''This package owns a directory that is part of the standard hierarchy, which
