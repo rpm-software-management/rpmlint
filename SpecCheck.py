@@ -53,7 +53,7 @@ hardcoded_library_paths = '(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([
 hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
 
 # Requires(pre,post) is broken in rpm
-scriptlet_requires_regex = re.compile('Requires\([^\)]*,')
+scriptlet_requires_regex = re.compile('^Requires\([^\)]*,', re.IGNORECASE)
 
 depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
 depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
