@@ -233,7 +233,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printWarning(pkg, 'buildprereq-use', res.group(1))
 
-                if scriptlet_requires_regex.search(line):
+                if scriptlet_requires_regex.search(line) and current_section == 'package':
                     printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
 
                 if current_section == 'changelog':
