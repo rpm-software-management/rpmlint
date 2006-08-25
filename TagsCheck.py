@@ -782,7 +782,7 @@ for your program (eg. GPL). To insert this tag, just insert a 'License' in
 your specfile.''',
 
 'invalid-license',
-'''The value of the License tag is invalid.  Valid values are:
+'''The value of the License tag was not recognized.  Known values are:
 %s
 If the license is close to an existing one, you can use '<license> style'.''' \
 % fill('"' + '", "'.join(VALID_LICENSES) + '".', 78),
