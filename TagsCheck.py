@@ -843,6 +843,9 @@ once.''',
 
 'requires-on-release',
 '''This rpm requires a specific release of another package.''',
+
+'no-url-tag',
+'''The URL tag is missing.''',
 )
 
 # TagsCheck.py ends here
