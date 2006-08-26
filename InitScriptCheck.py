@@ -149,7 +149,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 if not subsys_regex_found:
                     printError(pkg, 'subsys-not-used', f)
 
-        if len(initscript_list) == 1 and string.lower(pkg.name) != initscript_list[0]:
+        goodnames = (string.lower(pkg.name), string.lower(pkg.name) + 'd')
+        if len(initscript_list) == 1 and initscript_list[0] not in goodnames:
             printWarning(pkg, 'incoherent-init-script-name', initscript_list[0])
 
 
@@ -208,7 +209,8 @@ starts a with '$'; in these cases a warning instead of an error is reported
 and you should check the script manually.''',
 
 'incoherent-init-script-name',
-'''The init script name should be the same as the package name in lower case.''',
+'''The init script name should be the same as the package name in lower case,
+or one with 'd' appended if it invokes a process by that name.''',
 
 'init-script-name-with-dot',
 '''The init script name should not contain a dot in its name. Some versions
