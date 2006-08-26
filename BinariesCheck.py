@@ -253,8 +253,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
             else:
                 if reference_regex.search(i[0]):
-                    if Pkg.grep('tmp|home', pkg.dirname + '/' + i[0]):
-                        printError(pkg, 'invalid-directory-reference', i[0])
+                    lines = pkg.grep(re.compile('tmp|home'), i[0])
+                    if lines:
+                        printError(pkg, 'invalid-directory-reference', i[0],
+                                   '(line %s)' % ", ".join(lines))
 
         if has_lib != []:
             if exec_files != []:

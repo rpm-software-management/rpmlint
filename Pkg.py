@@ -18,6 +18,8 @@ import string
 import types
 import sys
 
+from Filter import printWarning
+
 RPMFILE_CONFIG=(1 << 0)
 RPMFILE_DOC=(1 << 1)
 RPMFILE_DONOTUSE=(1 << 2)
@@ -54,21 +56,6 @@ except AttributeError:
         pass
 
 # utilities
-
-def grep(regex, filename):
-    fd=open(filename, 'r')
-    ret=0
-    if fd:
-        reg=re.compile(regex)
-
-        for line in fd.readlines():
-            if reg.search(line):
-                ret=1
-                break
-        fd.close()
-    else:
-        sys.stderr.write('unable to open %s\n' % filename)
-    return ret
 
 def shell_var_value(var, script):
     assign_regex=re.compile(re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
@@ -206,6 +193,28 @@ class Pkg:
     def cleanup(self):
         if self.extracted:
             commands.getstatusoutput('rm -rf ' + self.dirname)
+
+    def grep(self, regex, filename):
+        """Grep regex from a file, return matching line numbers."""
+        ret = []
+        lineno = 0
+        in_file = None
+        try:
+            try:
+                in_file = open(self.dirName() + '/' + filename)
+                line = in_file.readline()
+                while line:
+                    lineno += 1
+                    if regex.search(line):
+                        ret.append(str(lineno))
+                        break
+                    line = in_file.readline()
+            except Exception, e:
+                printWarning(self, 'read-error', filename, e)
+        finally:
+            if in_file:
+                in_file.close()
+        return ret
 
     # return the associative array indexed on file names with
     # the values as: (file perm, file owner, file group, file link to)
