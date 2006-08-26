@@ -107,6 +107,7 @@ soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
 usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
 srcname_regex=re.compile('(.*?)-[0-9]')
+invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -253,7 +254,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
             else:
                 if reference_regex.search(i[0]):
-                    lines = pkg.grep(re.compile('tmp|home'), i[0])
+                    lines = pkg.grep(invalid_dir_ref_regex, i[0])
                     if lines:
                         printError(pkg, 'invalid-directory-reference', i[0],
                                    '(line %s)' % ", ".join(lines))
