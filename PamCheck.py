@@ -12,19 +12,18 @@ from Filter import *
 import AbstractCheck
 import re
 import Config
-pam_stack_re=re.compile('pam_stack.so\s*service')
+
+pam_stack_re = re.compile('^\s*[^#].*pam_stack.so\s*service')
 
 class PamCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
         AbstractCheck.AbstractFilesCheck.__init__(self, "PamCheck", "/etc/pam\.d/.*")
     
     def check_file(self, pkg, filename):
-        f = open(pkg.dirName() + filename)
-        for l in f.readlines():
-            l = re.sub('#.*', '', l)
-            if pam_stack_re.search(l):
-                printError(pkg, 'use-old-pam-stack',filename)
-        f.close()
+        lines = pkg.grep(pam_stack_re, filename)
+        if lines:
+            printError(pkg, 'use-old-pam-stack', filename,
+                       '(line %s)' % ", ".join(lines))
 
 check=PamCheck()
 
