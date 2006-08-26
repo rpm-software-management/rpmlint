@@ -14,7 +14,6 @@ import re
 import commands
 import string
 import stat
-import Pkg
 
 DEFAULT_VALID_SECTIONS=(
     'Office/Accessories',
@@ -169,7 +168,6 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
         files=pkg.files()
         menus=[]
-        dirname=pkg.dirName()
 
         for f in files.keys():
             # Check menu files
@@ -199,7 +197,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=xpm_ext_regex.search(f)
                     if res:
                         mode=files[f][0]
-                        if stat.S_ISREG(mode) and not Pkg.grep('None",', dirname + '/' + f):
+                        if stat.S_ISREG(mode) and not pkg.grep('None",', f):
                             printWarning(pkg, 'non-transparent-xpm', f)
                 if menu64_file_regex.search(f):
                     printError(pkg, 'menu-in-wrong-dir', f)
