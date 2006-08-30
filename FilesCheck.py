@@ -210,6 +210,7 @@ manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
 shebang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
+sourced_script_regex=re.compile('^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
@@ -595,7 +596,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         # ignore perl module shebang -- TODO: disputed...
                         if not f.endswith('.pm'):
                             res=shebang_regex.search(line)
-                        if res or mode & 0111 != 0 or script_regex.search(f):
+                        # sourced scripts should not be executable
+                        if sourced_script_regex.search(f):
+                            if res:
+                                printError(pkg, 'sourced-script-with-shebang', f)
+                            if mode & 0111 != 0:
+                                printError(pkg, 'executable-sourced-script', f, oct(perm))
+                        # ...but executed ones should
+                        elif res or mode & 0111 != 0 or script_regex.search(f):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
                                     printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
@@ -863,22 +871,27 @@ prevent upgrades from working correctly. If you need to be able to
 customize an executable, make it for example read a config file in
 /etc/sysconfig.''',
 
+'sourced-script-with-shebang',
+'''This text file contains a shebang, but is meant to be sourced, not executed.''',
+
+'executable-sourced-script',
+'''This text file has executable bit set, but is meant to be sourced, not
+executed.''',
+
 'wrong-script-interpreter',
 '''This script uses an incorrect interpreter.''',
 
 'non-executable-script',
-'''This non-executable text file contains a shebang.  Often this is a sign of a
-spurious shebang in files that are not meant to be executed, but can also be a
-case of missing executable bits for a script.  To fix this error, find out
-which case of the above it is, and either remove the unneeded shebang or add
-the executable bits.''',
+'''This text file contains a shebang or is located in a path dedicated for
+executables, but lacks the executable bits and cannot thus be executed.  If
+the file is meant to be an executable script, add the executable bits,
+otherwise remove the shebang or move the file elsewhere.''',
 
 'script-without-shebang',
-'''This executable text file does not contain a shebang, thus it cannot be
-properly executed.  Often this is a sign of spurious executable bits for a
-non-script file, but can also be a case of a missing shebang.  To fix this
-error, find out which case of the above it is, and either remove the
-executable bits or add the shebang.''',
+'''This text file has executable bits set or is located in a path dedicated
+for executables, but lacks a shebang and cannot thus be executed.  If the file
+is meant to be an executable script, add the shebang, otherwise remove the
+executable bits or move the file elsewhere.''',
 
 'wrong-script-end-of-line-encoding',
 '''This script has wrong end-of-line encoding, usually caused by creation or
