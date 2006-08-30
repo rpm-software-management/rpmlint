@@ -185,6 +185,7 @@ ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
 install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
 perl_temp_file=re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
+# TODO: .git, .gitignore, mercurial stuff?
 scm_regex=re.compile('/CVS/[^/]+$|/\.cvsignore$|/\.svn/|/(\.arch-ids|{arch})/')
 htaccess_regex=re.compile('\.htaccess$')
 games_path_regex=re.compile('^/usr(/lib(64)?)?/games/')
@@ -206,7 +207,7 @@ hidden_file_regex=re.compile('/\.[^/]*$')
 mispelled_macro_regex=re.compile('%{.*}')
 siteperl_perl_regex=re.compile('/site_perl/')
 manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
-shellbang_regex=re.compile('^#!\s*(\S*)')
+shebang_regex=re.compile('^#!\s*(\S*)')
 interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
@@ -592,13 +593,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         line=open(path).readline()
                         res=None
                         if not f.endswith('.pm'):
-                            res=shellbang_regex.search(line)
+                            res=shebang_regex.search(line)
                         if res or mode & 0111 != 0 or script_regex.search(f):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
                                     printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
                             elif not (lib_path_regex.search(f) and f.endswith('.la')):
-                                printError(pkg, 'script-without-shellbang', f)
+                                printError(pkg, 'script-without-shebang', f)
 
                             if mode & 0111 == 0 and not is_doc:
                                 printError(pkg, 'non-executable-script', f, oct(perm))
@@ -871,7 +872,7 @@ case of missing executable bits for a script.  To fix this error, find out
 which case of the above it is, and either remove the unneeded shebang or add
 the executable bits.''',
 
-'script-without-shellbang',
+'script-without-shebang',
 '''This executable text file does not contain a shebang, thus it cannot be
 properly executed.  Often this is a sign of spurious executable bits for a
 non-script file, but can also be a case of a missing shebang.  To fix this
