@@ -592,6 +592,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if istextfile(path):
                         line=open(path).readline()
                         res=None
+                        # ignore perl module shebang -- TODO: disputed...
                         if not f.endswith('.pm'):
                             res=shebang_regex.search(line)
                         if res or mode & 0111 != 0 or script_regex.search(f):
