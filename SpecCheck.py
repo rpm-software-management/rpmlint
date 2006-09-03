@@ -61,12 +61,53 @@ depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_depend
 indent_spaces_regex = re.compile(' {3}.*\S')
 indent_tabs_regex = re.compile('\t.*\S')
 
+provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
+obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
+
 def file2string(file):
     # TODO: file I/O error handling
     fd = open(file, "r")
     content = fd.readlines()
     fd.close()
     return content
+
+def deptokens(line):
+    '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
+    prco = []
+    tmp = ''
+    wantmore = 0
+    for tok in re.split('[\s,]+', line.strip()):
+        if len(tmp) == 0:
+            tmp = tok
+        elif wantmore:
+            tmp += ' ' + tok
+            wantmore = 0
+        elif tok[0] in ('=', '<', '>'):
+            tmp += ' ' + tok
+            wantmore = 1
+        else:
+            prco.append(tmp)
+            wantmore = 0
+            tmp = tok
+    if len(tmp) != 0:
+        prco.append(tmp)
+    return prco
+
+def versioned(toks):
+    '''Return versioned dependency tokens from the given list.'''
+    res = []
+    for tok in toks:
+        if tok.find('=') > 0 or tok.find('<') > 0 or tok.find('>') > 0:
+            res.append(tok)
+    return res
+
+def unversioned(toks):
+    '''Return unversioned dependency tokens from the given list.'''
+    res = []
+    for tok in toks:
+        if tok.find(' ') < 0:
+            res.append(tok)
+    return res
 
 class SpecCheck(AbstractCheck.AbstractCheck):
 
@@ -246,6 +287,16 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if not depgen_disabled:
                         depgen_disabled = depgen_disable_regex.search(line)
 
+                    res = provides_regex.search(line)
+                    if res:
+                        for prov in unversioned(deptokens(res.group(1))):
+                            printWarning(pkg, 'unversioned-explicit-provides', prov)
+
+                    res = obsoletes_regex.search(line)
+                    if res:
+                        for obs in unversioned(deptokens(res.group(1))):
+                            printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+
                 if not indent_tabs and indent_tabs_regex.search(line):
                     indent_tabs = linenum
                 if not indent_spaces and indent_spaces_regex.search(line):
@@ -421,6 +472,19 @@ to disable it in the specfile, or don't define __find_provides/requires.''',
 'mixed-use-of-spaces-and-tabs',
 '''The specfile mixes use of spaces and tabs for indentation, which is a
 cosmetic annoyance.  Use either spaces or tabs for indentation, not both.''',
+
+'unversioned-explicit-provides',
+'''The specfile contains an unversioned Provides: token, which will match all
+older, equal, and newer versions of the provided thing.  This may cause
+update problems and will make versioned dependencies, obsoletions and conflicts
+on the provided thing useless -- make the Provides versioned if possible.''',
+
+'unversioned-explicit-obsoletes',
+'''The specfile contains an unversioned Obsoletes: token, which will match all
+older, equal and newer versions of the obsoleted thing.  This may cause update
+problems, restrict future package/provides naming, and may match something it
+was originally not inteded to match -- make the Obsoletes versioned if
+possible.''',
 )
 
 # SpecCheck.py ends here
