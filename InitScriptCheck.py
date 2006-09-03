@@ -16,7 +16,7 @@ import rpm
 import Pkg
 import string
 
-rc_regex=re.compile('^/etc(/rc.d)?/init.d/')
+rc_regex=re.compile('^/etc(/rc\.d)?/init\.d/')
 chkconfig_content_regex=re.compile('# +chkconfig: +([-0-9]+) +[-0-9]+ +[-0-9]+', re.MULTILINE)
 subsys_regex=re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
 chkconfig_regex=re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
