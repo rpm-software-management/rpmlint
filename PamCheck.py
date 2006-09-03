@@ -13,7 +13,7 @@ import AbstractCheck
 import re
 import Config
 
-pam_stack_re = re.compile('^\s*[^#].*pam_stack.so\s*service')
+pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')
 
 class PamCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
