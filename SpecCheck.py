@@ -32,7 +32,7 @@ prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 make_check_regexp = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
-rpm_buildroot_regex = re.compile('\${?RPM_BUILD_ROOT}?|%{?buildroot}?')
+rpm_buildroot_regex = re.compile('(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?')
 configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex = re.compile('^%package.*\Wlib')
@@ -109,6 +109,15 @@ def unversioned(toks):
             res.append(tok)
     return res
 
+def contains_buildroot(line):
+    '''Check if the given line contains use of rpm buildroot.'''
+    res = rpm_buildroot_regex.search(line)
+    if res and \
+           (not res.group(1) or len(res.group(1)) % 2 == 0) and \
+           (not res.group(2) or len(res.group(2)) % 2 != 0):
+        return 1
+    return 0
+
 class SpecCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
@@ -178,14 +187,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     continue
 
                 if current_section in ('prep', 'build'):
-                    if rpm_buildroot_regex.search(line):
-                        printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1])
+                    if contains_buildroot(line):
+                        printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1].strip())
 
                 if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
                     printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
                 if current_section in buildroot_clean.keys():
-                    if rpm_buildroot_regex.search(line) and rm_regex.search(line):
+                    if contains_buildroot(line) and rm_regex.search(line):
                         buildroot_clean[current_section] = 1
 
                 if ifarch_regex.search(line):
