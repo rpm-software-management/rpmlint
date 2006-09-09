@@ -302,8 +302,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if not indent_spaces and indent_spaces_regex.search(line):
                     indent_spaces = linenum
 
-            if 0 in buildroot_clean.values():
-                printError(pkg, 'no-cleaning-of-buildroot')
+            for sect in buildroot_clean:
+                if not buildroot_clean[sect]:
+                    printError(pkg, 'no-cleaning-of-buildroot', '%' + sect)
 
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
