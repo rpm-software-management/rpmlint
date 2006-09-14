@@ -9,9 +9,9 @@
 
 from Filter import *
 import AbstractCheck
+import Pkg
 import rpm
 import re
-import commands
 import string
 import stat
 
@@ -220,9 +220,10 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                command_str='/lib/cpp %s%s 2>/dev/null| grep ^\?' % (directory, f)
-                cmd=commands.getoutput(command_str)
+                sts, cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)
+                                                  
                 for line in string.split(cmd, '\n'):
+                    if not line.startswith('?'): continue
                     res=package_regex.search(line)
                     if res:
                         package=res.group(1)

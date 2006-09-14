@@ -11,7 +11,6 @@ from Filter import *
 import AbstractCheck
 import rpm
 import re
-import commands
 import string
 import sys
 import Config
@@ -45,8 +44,10 @@ class BinaryInfo:
 
         is_debug=BinaryInfo.debug_file_regex.search(path)
 
-        topt=not is_debug and '-T' or ''
-        res=commands.getstatusoutput('LC_ALL=C objdump --headers --private-headers %s %s' % (topt, path))
+        cmd = ['env', 'LC_ALL=C', 'objdump', '--headers', '--private-headers']
+        if not is_debug: cmd.append('-T')
+        cmd.append(path)
+        res = Pkg.getstatusoutput(cmd)
         if not res[0]:
             for l in string.split(res[1], '\n'):
                 needed=BinaryInfo.needed_regex.search(l)
@@ -76,7 +77,7 @@ class BinaryInfo:
         # skip debuginfo: https://bugzilla.redhat.com/190599
         if not is_debug and isinstance(pkg, Pkg.InstalledPkg):
             # We could do this with objdump, but it's _much_ simpler with ldd.
-            res=commands.getstatusoutput('LC_ALL=C ldd -d -r %s' % path)
+            res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'ldd', '-d', '-r', path))
             if not res[0]:
                 for l in string.split(res[1], '\n'):
                     undef=BinaryInfo.undef_regex.search(l)

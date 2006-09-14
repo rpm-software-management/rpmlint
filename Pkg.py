@@ -13,6 +13,7 @@ import rpm
 import os.path
 import stat
 import commands
+import popen2
 import re
 import string
 import types
@@ -78,6 +79,20 @@ def substitute_shell_vars(val, script):
     else:
         return val
 
+def getstatusoutput(cmd, stdoutonly=0):
+    '''A version of commands.getstatusoutput() which can take cmd as a
+       sequence, thus making it potentially more secure.  See popen2.'''
+    if stdoutonly:
+        proc = popen2.Popen3(cmd)
+    else:
+        proc = popen2.Popen4(cmd)
+    proc.tochild.close()
+    text = proc.fromchild.read()
+    sts = proc.wait()
+    if sts is None: sts = 0
+    if text[-1:] == '\n': text = text[:-1]
+    return sts, text
+
 bz2_regex=re.compile('\.t?bz2?$')
 
 # TODO: is_utf8* could probably be implemented natively without iconv...
@@ -85,7 +100,8 @@ bz2_regex=re.compile('\.t?bz2?$')
 def is_utf8(fname):
     cat='gzip -dcf'
     if bz2_regex.search(fname): cat='bzip2 -dcf'
-    cmd = commands.getstatusoutput('%s %s | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
+    # TODO: better shell escaping or sequence based command invocation
+    cmd = commands.getstatusoutput('%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
     return not cmd[0]
 
 def is_utf8_str(s):
@@ -167,19 +183,23 @@ class Pkg:
         else:
             self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
-            command_str='rpm2cpio %s | (cd %s; cpio -id); chmod -R +rX %s' % (self.filename, self.dirname, self.dirname)
+            # TODO: better shell escaping or sequence based command invocation
+            command_str='rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
             cmd=commands.getstatusoutput(command_str)
             self.extracted=1
             return cmd
 
     def checkSignature(self):
-        return commands.getstatusoutput('LC_ALL=C rpm -K ' + self.filename)
+        return getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-K', self.filename))
 
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
         if self.file_info == None:
             self.file_info=[]
-            lines=commands.getoutput('cd %s; find . -type f -print0 | LC_ALL=C xargs -0r file' % (self.dirName()))
+            olddir = os.getcwd()
+            os.chdir(self.dirName())
+            lines = commands.getoutput('find . -type f -print0 | LC_ALL=C xargs -0r file')
+            os.chdir(olddir)
             lines=string.split(lines, '\n')
             for l in lines:
                 #print l
@@ -191,8 +211,8 @@ class Pkg:
 
     # remove the extracted files from the package
     def cleanup(self):
-        if self.extracted:
-            commands.getstatusoutput('rm -rf ' + self.dirname)
+        if self.extracted and self.dirname:
+            getstatusoutput(('rm', '-rf', self.dirname))
 
     def grep(self, regex, filename):
         """Grep regex from a file, return matching line numbers."""
@@ -455,10 +475,9 @@ class InstalledPkg(Pkg):
     def getFilesInfo(self):
         if self.file_info == None:
             self.file_info=[]
-            cmd='LC_ALL=C file'
-            for f in self.files().keys():
-                cmd=cmd + ' ' + f
-            lines=commands.getoutput(cmd)
+            cmd = ['env', 'LC_ALL=C', 'file']
+            cmd.extend(self.files().keys())
+            sts, lines = getstatusoutput(cmd)
             #print lines
             lines=string.split(lines, '\n')
             for l in lines:

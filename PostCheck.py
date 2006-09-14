@@ -13,7 +13,7 @@ import AbstractCheck
 import rpm
 import re
 import os
-import commands
+import Pkg
 import string
 import types
 
@@ -66,7 +66,7 @@ def incorrect_shell_script(prog, shellscript):
     f = open(tmpfile, 'w')
     f.write(shellscript)
     f.close()
-    ret=commands.getstatusoutput('%s -n %s' % (prog, tmpfile))
+    ret = Pkg.getstatusoutput((prog, '-n', tmpfile))
     os.remove(tmpfile)
     return ret[0]
 
@@ -80,7 +80,7 @@ def incorrect_perl_script(prog, perlscript):
     f = open(tmpfile, 'w')
     f.write(perlscript)
     f.close()
-    ret=commands.getstatusoutput('%s -wc %s' % (prog, tmpfile))
+    ret = Pkg.getstatusoutput((prog, '-wc', tmpfile))
     os.remove(tmpfile)
     return ret[0]
 
