@@ -24,12 +24,14 @@ INCORRECT_LOCALES = {
     'gr_GR': 'el_GR',
     'cz': 'cs',
     'cz_CZ': 'cs_CZ',
-    'sw': 'sv',
     'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
 
 # Correct subdirs of /usr/share/local for LC_MESSAGES
 # and /usr/share/man for locale man pages.
+#
+# TODO: what makes a subdir "correct"?  This list is missing quite a few
+# entries from eg. ISO 639.
 #
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
