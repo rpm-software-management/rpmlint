@@ -36,3 +36,8 @@ if Config.info:
         'non-utf8-desktopfile',
         '''.desktop file is not encoded in UTF-8''',)
 
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et

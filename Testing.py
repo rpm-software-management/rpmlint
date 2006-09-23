@@ -25,3 +25,9 @@ def getOutput():
 def getTestedPackage(name):
     pkg_path = glob.glob(os.environ['TESTPATH'] + '/' + name + '-*.rpm')[0]
     return Pkg.Pkg(pkg_path, '/tmp')
+
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et
