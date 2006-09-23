@@ -32,3 +32,8 @@ if Config.info:
         'use-old-pam-stack',
         '''Update pam file to use include instead of pam_stack.''',)
 
+# Local variables:
+# indent-tabs-mode: nil
+# py-indent-offset: 4
+# End:
+# ex: ts=4 sw=4 et
