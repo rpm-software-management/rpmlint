@@ -318,11 +318,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if not buildroot:
                 printError(pkg, 'no-buildroot-tag')
 
-            for sec in ('prep', 'build', 'install'):
+            for sec in ('prep', 'build', 'install', 'clean'):
                 if not section[sec]['count']:
                     printWarning(pkg, 'no-%%%s-section' % sec)
-            if not section['clean']['count']:
-                printError(pkg, 'no-%clean-section')
 
             if lib and not mklibname:
                 printError(pkg, 'lib-package-without-%mklibname')
