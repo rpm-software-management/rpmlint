@@ -264,7 +264,7 @@ if prof:
     profile.run('main()', prof)
     p = pstats.Stats(prof)
     p.print_stats('time').print_stats(20)
-else:
+elif __name__ == '__main__':
     main()
 
 # rpmlint.py ends here
