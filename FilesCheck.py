@@ -228,8 +228,12 @@ standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
 _null_trans = string.maketrans("", "")
 
-def istextfile(f):
-    s=open(f).read(512)
+def istextfile(f, pkg):
+    try:
+        s = open(f).read(512)
+    except Exception, e: # eg. https://bugzilla.redhat.com/209876
+        printWarning(pkg, 'read-error', e)
+        return 0
 
     if "\0" in s:
         return 0
@@ -589,7 +593,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if stat.S_ISREG(mode):
                 path=pkg.dirName() + '/' + f
                 if os.access(path, os.R_OK):
-                    if istextfile(path):
+                    if istextfile(path, pkg):
                         line=open(path).readline()
                         res=None
                         # ignore perl module shebang -- TODO: disputed...
@@ -917,6 +921,12 @@ to strip the binaries, the package actually being a noarch one but erratically
 packaged as arch dependent, or something else.  Verify what the case is, and
 if there's no way to produce useful debuginfo out of it, disable creation of
 the debuginfo package.''',
+
+'read-error',
+'''This file could not be read.  A reason for this could be that the info about
+it in the rpm header indicates that it is supposed to be a readable normal file
+but it actually is not in the filesystem.  Because of this, some checks will
+be skipped.''',
 )
 
 # FilesCheck.py ends here
