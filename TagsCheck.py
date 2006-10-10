@@ -595,7 +595,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if not ret:
                     printWarning(pkg, 'no-version-in-last-changelog')
                 elif version and release:
-                    srpm=pkg[rpm.RPMTAG_SOURCERPM]
+                    srpm = pkg[rpm.RPMTAG_SOURCERPM] or ''
                     # only check when source name correspond to name
                     if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
                         expected=version + '-' + release
