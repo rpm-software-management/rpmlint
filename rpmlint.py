@@ -98,6 +98,8 @@ def main():
                     f=os.path.abspath(os.path.join(d, i))
                     st=os.stat(f)
                     if stat.S_ISREG(st[stat.ST_MODE]):
+                        if f[-4:] != '.rpm' and f[-4:] != '.spm':
+                            continue
                         try:
                             pkg=Pkg.Pkg(f, extract_dir)
                             runChecks(pkg)
