@@ -137,7 +137,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         binary_in_usr_lib=0
         has_usr_lib_file=0
 
-        res=srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM])
+        res = srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM] or '')
         if res:
             multi_pkg=(pkg.name != res.group(1))
         else:
