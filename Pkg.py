@@ -59,7 +59,7 @@ except AttributeError:
 # utilities
 
 def shell_var_value(var, script):
-    assign_regex=re.compile(re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
+    assign_regex=re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
                             re.MULTILINE)
     res=assign_regex.search(script)
     if res:
