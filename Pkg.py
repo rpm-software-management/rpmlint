@@ -58,16 +58,20 @@ except AttributeError:
 
 # utilities
 
+var_regex=re.compile('^(.*)\${?(\w+)}?(.*)$')
+
 def shell_var_value(var, script):
     assign_regex=re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
                             re.MULTILINE)
     res=assign_regex.search(script)
     if res:
+        res2 = var_regex.search(res.group(1))
+        if res2:
+            if res2.group(2) == var: # infinite loop
+                return None
         return substitute_shell_vars(res.group(1), script)
     else:
         return None
-
-var_regex=re.compile('^(.*)\${?([^}]+)}?(.*)$')
 
 def substitute_shell_vars(val, script):
     res=var_regex.search(val)
