@@ -71,7 +71,10 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 lsb_tags = {}
                 # check common error in file content
                 fd=open(pkg.dirName() + '/' + f, 'r')
-                for line in fd.readlines():
+                content = fd.readlines()
+                fd.close()
+                content_str = "".join(content)
+                for line in content:
                     line = line[:-1] # chomp
                     # TODO check if there is only one line like this
                     if line.startswith('### BEGIN INIT INFO'):
@@ -131,7 +134,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         if name != basename:
                             error=1
                             if name[0] == '$':
-                                value=Pkg.substitute_shell_vars(name, line)
+                                value = Pkg.substitute_shell_vars(name, content_str)
                                 if value == basename:
                                     error=0
                             if error:
