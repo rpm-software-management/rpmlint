@@ -32,7 +32,7 @@ class BinaryInfo:
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
     debug_file_regex=re.compile('\.debug$')
 
-    def __init__(self, pkg, path, file):
+    def __init__(self, pkg, path, file, is_ar):
         self.objdump_error=0
         self.needed=[]
         self.rpath=[]
@@ -75,7 +75,7 @@ class BinaryInfo:
 
         # undefined symbol check makes sense only for installed packages
         # skip debuginfo: https://bugzilla.redhat.com/190599
-        if not is_debug and isinstance(pkg, Pkg.InstalledPkg):
+        if not is_ar and not is_debug and isinstance(pkg, Pkg.InstalledPkg):
             # We could do this with objdump, but it's _much_ simpler with ldd.
             res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'ldd', '-d', '-r', path))
             if not res[0]:
@@ -89,7 +89,6 @@ class BinaryInfo:
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex=re.compile('[^.][0-9]')
-binary_regex=re.compile('ELF|current ar archive')
 usr_share=re.compile('^/usr/share/')
 etc=re.compile('^/etc/')
 not_stripped=re.compile('not stripped')
@@ -149,7 +148,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 break
 
         for i in info:
-            is_binary=binary_regex.search(i[1])
+            is_elf = string.find(i[1], 'ELF') != -1
+            is_ar = string.find(i[1], 'current ar archive') != -1
+            is_binary = is_elf or is_ar
 
             if is_binary:
                 binary=binary+1
@@ -175,7 +176,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
                         # inspect binary file
-                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0])
+                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar)
 
                         # so name in library
                         if so_regex.search(i[0]):
