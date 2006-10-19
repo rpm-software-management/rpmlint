@@ -205,7 +205,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     elif version != soversion:
                                         version = -1
 
-                            if bin_info.non_pic:
+                            if bin_info.non_pic and not bin_info.objdump_error:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
                         # rpath ?
                         if bin_info.rpath:
