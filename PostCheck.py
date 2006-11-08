@@ -185,60 +185,24 @@ check=PostCheck()
 # Add information about checks
 if Config.info:
     addDetails(
-'one-line-command-in-%post',
-'''You should use %post -p <command> instead of using:
-
-%post
-<command>
-
-It will avoid the fork of a shell interpreter to execute your command as
-well as allows rpm to automatically mark the dependency on your command.''',
-
-'one-line-command-in-%postun',
-'''You should use %postun -p <command> instead of using:
-
-%postun
-<command>
-
-It will avoid the fork of a shell interpreter to execute your command as
-well as allows rpm to automatically mark the dependency on your command.''',
-
-'one-line-command-in-%pre',
-'''You should use %pre -p <command> instead of using:
-
-%pre
-<command>
-
-It will avoid the fork of a shell interpreter to execute your command as
-well as allows rpm to automatically mark the dependency on your command.''',
-
-'one-line-command-in-%preun',
-'''You should use %preun -p <command> instead of using:
-
-%preun
-<command>
-
-It will avoid the fork of a shell interpreter to execute your command as
-well as allows rpm to automatically mark the dependency on your command.''',
-
-'spurious-bracket-in-%pre',
-'''The %pre scriptlet contains an if [] construction without a space before the
-].''',
-
-'spurious-bracket-in-%post',
-'''The %post scriptlet contains an if [] construction without a space before the
-].''',
-
-'spurious-bracket-in-%preun',
-'''The %preun scriptlet contains an if [] construction without a space before the
-].''',
-
-'spurious-bracket-in-%postun',
-'''The %postun scriptlet contains an if [] construction without a space before the
-].''',
-
 'postin-without-ghost-file-creation',
 '''A file tagged as ghost is not created during %prein nor during %postin.''',
+)
+    for scriptlet in ('%pre', '%post', '%preun', '%postun'):
+        addDetails(
+'one-line-command-in-%s' % scriptlet,
+'''You should use %s -p <command> instead of using:
+
+%s
+<command>
+
+It will avoid the fork of a shell interpreter to execute your command as
+well as allows rpm to automatically mark the dependency on your command
+for the excecution of the scriptlet.''' % (scriptlet, scriptlet),
+
+'spurious-bracket-in-%s' % scriptlet,
+'''The %s scriptlet contains an "if []" construct without a space before
+the "]".''' % scriptlet,
 )
 
 # PostCheck.py ends here
