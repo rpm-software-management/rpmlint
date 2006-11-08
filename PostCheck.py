@@ -38,6 +38,7 @@ double_braces_regex=re.compile('%%', re.MULTILINE)
 bracket_regex=re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
+selinux_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
 single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
 update_menu_regex=re.compile('update-menus', re.MULTILINE)
 tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
@@ -139,6 +140,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 res=dangerous_command_regex.search(script)
                 if res:
                     printWarning(pkg, 'dangerous-command-in-' + tag[2], res.group(2))
+                res=selinux_regex.search(script)
+                if res:
+                    printError(pkg, 'forbidden-selinux-command-in-' + tag[2], res.group(2))
+
                 if update_menu_regex.search(script):
                     menu_error=1
                     for f in files:
@@ -203,6 +208,12 @@ for the excecution of the scriptlet.''' % (scriptlet, scriptlet),
 'spurious-bracket-in-%s' % scriptlet,
 '''The %s scriptlet contains an "if []" construct without a space before
 the "]".''' % scriptlet,
+
+'forbidden-selinux-command-in-%s' % scriptlet,
+'''A command which requires intimate knowledge about a specific SELinux
+policy type was found in the scriptlet. These types are subject to change
+on a policy version upgrade. Use the restorecon command which queries the
+currently loaded policy for the correct type.''',
 )
 
 # PostCheck.py ends here
