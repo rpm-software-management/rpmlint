@@ -213,7 +213,7 @@ the "]".''' % scriptlet,
 '''A command which requires intimate knowledge about a specific SELinux
 policy type was found in the scriptlet. These types are subject to change
 on a policy version upgrade. Use the restorecon command which queries the
-currently loaded policy for the correct type.''',
+currently loaded policy for the correct type instead.''',
 )
 
 # PostCheck.py ends here
