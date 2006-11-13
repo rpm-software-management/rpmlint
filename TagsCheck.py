@@ -42,7 +42,7 @@ DEFAULT_VALID_LICENSES = (
     # OSI approvied licenses, http://www.opensource.org/licenses/ (unversioned,
     # trailing "license" dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
-    # the full name).  Updated 2006-05-08.
+    # the full name).  Updated 2006-11-14.
     'Academic Free License',
     'Adaptive Public License',
     'Apache License',
@@ -98,6 +98,13 @@ DEFAULT_VALID_LICENSES = (
     'X.Net License',
     'Zope Public License',
     'zlib/libpng License',
+    # Creative commons licenses, http://creativecommons.org/licenses/:
+    'Creative Commons Attribution',
+    'Creative Commons Attribution-NoDerivs',
+    'Creative Commons Attribution-NonCommercial-NoDerivs',
+    'Creative Commons Attribution-NonCommercial',
+    'Creative Commons Attribution-NonCommercial-ShareAlike',
+    'Creative Commons Attribution-ShareAlike',
     # Others:
     'Design Public License', # ???
     'GFDL', # GNU Free Documentation License
