@@ -42,7 +42,7 @@ if_regex = re.compile('%if\s+')
 endif_regex = re.compile('%endif')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
-prereq_regex = re.compile('^PreReq:\s*(.+?)\s*$', re.IGNORECASE)
+prereq_regex = re.compile('^PreReq(\(.*\))?:\s*(.+?)\s*$', re.IGNORECASE)
 buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 macro_regex = re.compile('(%+)[{(]?(\w+)')
@@ -52,8 +52,9 @@ macro_regex = re.compile('(%+)[{(]?(\w+)')
 hardcoded_library_paths = '(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
 hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
 
-# Requires(pre,post) is broken in rpm
-scriptlet_requires_regex = re.compile('^Requires\([^\)]*,', re.IGNORECASE)
+# Requires(pre,post) is broken in some rpm versions, see
+# https://bugzilla.redhat.com/118780 and bugs linked to that one.
+scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
 
 depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
 depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
@@ -277,7 +278,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = prereq_regex.search(line)
                 if res:
-                    printWarning(pkg, 'prereq-use', res.group(1))
+                    printWarning(pkg, 'prereq-use', res.group(2))
 
                 res = buildprereq_regex.search(line)
                 if res:
@@ -444,8 +445,10 @@ Requires(preun) and/or Requires(postun) can also be used instead of PreReq.''',
 before a package can be built.  Use plain BuildRequires instead.''',
 
 'broken-syntax-in-scriptlet-requires',
-'''Requires(pre,post) is accepted by rpm but leads to strange behaviour.
-You should use Requires(pre) and Requires(post) instead.''',
+'''Comma separated context marked dependencies are silently broken in some
+versions of rpm.  One way to work around it is to split them into several ones,
+eg. replace "Requires(post,preun): foo" with "Requires(post): foo" and
+"Requires(preun): foo".''',
 
 'setup-not-quiet',
 '''You should use -q to have a quiet extraction of the source tarball, as this
