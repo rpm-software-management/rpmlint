@@ -771,7 +771,7 @@ create a development package.''',
 
 'non-standard-dir-perm',
 '''A standard directory should have permission set to 0755. If you get this
-message, it means that you have a wrong directory permissions in sone dirs
+message, it means that you have wrong directory permissions in some dirs
 included in your package.''',
 
 'world-writable',
