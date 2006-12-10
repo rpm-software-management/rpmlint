@@ -322,6 +322,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             for sec in ('prep', 'build', 'install', 'clean'):
                 if not section[sec]['count']:
                     printWarning(pkg, 'no-%%%s-section' % sec)
+            for sec in ('changelog',):
+                # prep, build, install, clean, check prevented by rpmbuild
+                if section[sec]['count'] > 1:
+                    printWarning(pkg, 'more-than-one-%%%s-section' % sec)
 
             if lib and not mklibname:
                 printError(pkg, 'lib-package-without-%mklibname')
@@ -425,6 +429,10 @@ section, even if empty.''',
 'no-%clean-section',
 '''The spec file doesn't contain a %clean section to remove the files installed
 by the %install section.''',
+
+'more-than-one-%changelog-section',
+'''The spec file unnecessarily contains more than one %changelog section;
+remove the extra ones.''',
 
 'lib-package-without-%mklibname',
 '''The package name must be built using %mklibname to allow lib64 and lib32
