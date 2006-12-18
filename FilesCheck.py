@@ -247,7 +247,7 @@ def istextfile(f, pkg):
 
     # If more than 30% non-text characters, then
     # this is considered a binary file
-    if len(t)/len(s) > 0.30:
+    if float(len(t))/len(s) > 0.30:
         return 0
     return 1
 
