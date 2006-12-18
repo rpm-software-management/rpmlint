@@ -241,6 +241,10 @@ def istextfile(f, pkg):
     if not s:  # Empty files are considered text
         return 1
 
+    # PDF's are binary but often detected as text by the algorithm below
+    if f.lower().endswith('.pdf') and s.startswith('%PDF-'):
+        return 0
+
     # Get the non-text characters (maps a character to itself then
     # use the 'remove' option to get rid of the text characters.)
     t = s.translate(_null_trans, text_characters)
