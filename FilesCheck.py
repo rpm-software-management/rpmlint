@@ -621,9 +621,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'non-executable-script', f, oct(perm))
                             if line.endswith('\r\n'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
-
                         elif is_doc:
-                            if line.endswith('\r\n'):
+                            fl = f.lower()
+                            if fl.endswith('.rtf'): # TODO: others, eg. HTML?
+                                pass
+                            elif line.endswith('\r\n'):
                                 printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
 
                         # potentially slow and may generate lots of unwanted noise:
