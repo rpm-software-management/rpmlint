@@ -7,10 +7,9 @@
 #
 
 from Filter import *
-from Pkg import is_utf8
+from Pkg import getstatusoutput, is_utf8
 import AbstractCheck
 import Config
-import subprocess
 
 class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
@@ -21,7 +20,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
 
     def check_file(self, pkg, filename):
         f = pkg.dirName() + filename
-        if subprocess.call(['desktop-file-validate', f]):
+        if getstatusoutput(('desktop-file-validate', f), 1)[0]:
                 printError(pkg, 'invalid-desktopfile', f)
         if not is_utf8(f):
                 printError(pkg, 'non-utf8-desktopfile', f)
