@@ -381,6 +381,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             # normal file check
             if stat.S_ISREG(mode):
 
+                nonexec_file = 0
+
                 if not devel_pkg:
                     if lib_path_regex.search(f):
                         lib_file=1
@@ -388,6 +390,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         non_lib_file=f
 
                 if log_regex.search(f):
+                    nonexec_file = 1
                     if user != 'root':
                         printError(pkg, 'non-root-user-log-file', f, user)
                     if group != 'root':
@@ -395,8 +398,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not f in ghost_files:
                         printError(pkg, 'non-ghost-file', f)
 
-                if doc_regex.search(f) and not is_doc:
-                    printError(pkg, 'not-listed-as-documentation', f)
+                if doc_regex.search(f):
+                    nonexec_file = 1
+                    if not is_doc:
+                        printError(pkg, 'not-listed-as-documentation', f)
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
@@ -497,6 +502,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if mode & 0111 != 0:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
+                    if not nonexec_file:
+                        # doc_regex and log_regex checked earlier, no match,
+                        # check rest of usual cases here.  Sourced scripts have
+                        # their own check, so disregard them here.
+                        nonexec_file = f.endswith('.pc') or \
+                                       compr_regex.search(f) or \
+                                       includefile_regex.search(f) or \
+                                       logrotate_regex.search(f)
+                    if nonexec_file:
+                        printWarning(pkg, 'spurious-executable-perm', f)
                 elif f.startswith('/etc/'):
                     if not f in config_files and not f in ghost_files:
                         printWarning(pkg, 'non-conffile-in-etc', f)
@@ -779,6 +794,11 @@ create a development package.''',
 '''A standard directory should have permission set to 0755. If you get this
 message, it means that you have wrong directory permissions in some dirs
 included in your package.''',
+
+'spurious-executable-perm',
+'''The file is installed with executable permissions, but was identified as one
+that probably should not be executable.  Verify if the executable bits are
+desired, and remove if not.''',
 
 'world-writable',
 '''A file or directory in the package is installed with world writable
