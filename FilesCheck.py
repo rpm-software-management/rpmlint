@@ -301,6 +301,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             group=enreg[2]
             size=enreg[4]
             is_doc = f in doc_files
+            nonexec_file = 0
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
@@ -380,8 +381,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal file check
             if stat.S_ISREG(mode):
-
-                nonexec_file = 0
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
@@ -629,7 +628,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             if res:
                                 if not interpreter_regex.search(res.group(1)):
                                     printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
-                            elif not (lib_path_regex.search(f) and f.endswith('.la')):
+                            elif not nonexec_file and not (lib_path_regex.search(f) and f.endswith('.la')):
                                 printError(pkg, 'script-without-shebang', f)
 
                             if mode & 0111 == 0 and not is_doc:
