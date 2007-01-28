@@ -30,6 +30,7 @@ class BinaryInfo:
     pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
+    unused_regex=re.compile('^\s+(\S+)')
     debug_file_regex=re.compile('\.debug$')
 
     def __init__(self, pkg, path, file, is_ar):
@@ -37,6 +38,7 @@ class BinaryInfo:
         self.needed=[]
         self.rpath=[]
         self.undef=[]
+        self.unused=[]
         self.comment=0
         self.dynsyms=0
         self.soname=0
@@ -73,11 +75,12 @@ class BinaryInfo:
             self.objdump_error=1
             printWarning(pkg, 'objdump-failed', re.sub('\n.*', '', res[1]))
 
-        # undefined symbol check makes sense only for installed packages
+        # Undefined symbol and unused direct dependency checks make sense only
+        # for installed packages.
         # skip debuginfo: https://bugzilla.redhat.com/190599
         if not is_ar and not is_debug and isinstance(pkg, Pkg.InstalledPkg):
             # We could do this with objdump, but it's _much_ simpler with ldd.
-            res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'ldd', '-d', '-r', path))
+            res = Pkg.getstatusoutput(('env','LC_ALL=C','ldd','-d','-r',path))
             if not res[0]:
                 for l in string.split(res[1], '\n'):
                     undef=BinaryInfo.undef_regex.search(l)
@@ -85,6 +88,22 @@ class BinaryInfo:
                         self.undef.append(undef.group(1))
             else:
                 printWarning(pkg, 'ldd-failed', file)
+            res = Pkg.getstatusoutput(('env','LC_ALL=C','ldd','-r','-u',path))
+            if res[0]:
+                # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
+                # unused direct dependencies
+                in_unused = 0
+                for l in string.split(res[1], '\n'):
+                    if not l.rstrip():
+                        pass
+                    elif l.startswith('Unused direct dependencies'):
+                        in_unused = 1
+                    elif in_unused:
+                        unused = BinaryInfo.unused_regex.search(l)
+                        if unused:
+                            self.unused.append(unused.group(1))
+                        else:
+                            in_unused = 0
 
 path_regex=re.compile('(.*/)([^/]+)')
 numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
@@ -248,12 +267,14 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                             printError(pkg, 'library-not-linked-against-libc', i[0])
                                         else:
                                             printError(pkg, 'program-not-linked-against-libc', i[0])
-                            # It could be useful to check this for
-                            # non-shared-libs too, but that has potential to
+                            # It could be useful to check these for others than
+                            # shared libs only, but that has potential to
                             # generate lots of false positives and noise.
-                            if bin_info.undef and so_regex.search(i[0]):
+                            if so_regex.search(i[0]):
                                 for s in bin_info.undef:
                                     printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
+                                for s in bin_info.unused:
+                                    printWarning(pkg, 'unused-direct-shlib-dependency', i[0], s)
             else:
                 if reference_regex.search(i[0]):
                     lines = pkg.grep(invalid_dir_ref_regex, i[0])
@@ -365,6 +386,12 @@ any binaries.''',
 'undefined-non-weak-symbol',
 '''The binary contains undefined non-weak symbols.  This may indicate improper
 linkage; check that the binary has been linked as expected.''',
+
+# http://www.redhat.com/archives/fedora-maintainers/2006-June/msg00176.html
+'unused-direct-shlib-dependency',
+'''The binary contains unused direct shared library dependencies.  This may
+indicate gratuitously bloated linkage; check that the binary has been linked
+with the intended shared libraries only.''',
 
 'only-non-binary-in-usr-lib',
 '''There are only non binary files in /usr/lib so they should be in /usr/share.''',
