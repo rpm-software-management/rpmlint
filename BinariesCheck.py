@@ -169,7 +169,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         for i in info:
             is_elf = string.find(i[1], 'ELF') != -1
             is_ar = string.find(i[1], 'current ar archive') != -1
-            is_binary = is_elf or is_ar
+            is_ocaml_native = string.find(i[1], 'Objective caml native') != -1
+            is_binary = is_elf or is_ar or is_ocaml_native
 
             if is_binary:
                 binary=binary+1
@@ -190,7 +191,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-sparc32-binary', i[0])
 
                     # stripped ?
-                    if not unstrippable.search(i[0]):
+                    if not unstrippable.search(i[0]) and not is_ocaml_native:
                         if not_stripped.search(i[1]):
                             printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
