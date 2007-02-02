@@ -54,7 +54,7 @@ verify:
 .PHONY: test
 
 test:
-	./test.sh
+	sh test.sh
 
 version:
 	@echo "$(VERSION)"
