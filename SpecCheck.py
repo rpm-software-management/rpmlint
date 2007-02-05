@@ -65,6 +65,10 @@ indent_tabs_regex = re.compile('\t.*\S')
 provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
 
+setup_q_regex = re.compile(' -[A-Za-z]*q')
+setup_t_regex = re.compile(' -[A-Za-z]*T')
+setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
+
 def file2string(file):
     # TODO: file I/O error handling
     fd = open(file, "r")
@@ -206,8 +210,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if_depth = if_depth + 1
 
                 if line.startswith('%setup'):
-                    if line.find(' -q') < 1:
-                        printWarning(pkg, 'setup-not-quiet')
+                    if not setup_q_regex.search(line):
+                        # Don't warn if there's a -T without -a or -b
+                        if setup_t_regex.search(line):
+                            if setup_ab_regex.search(line):
+                                printWarning(pkg, 'setup-not-quiet')
+                        else:
+                            printWarning(pkg, 'setup-not-quiet')
             
                 if endif_regex.search(line):
                     if ifarch_depth == if_depth:
@@ -459,8 +468,8 @@ eg. replace "Requires(post,preun): foo" with "Requires(post): foo" and
 "Requires(preun): foo".''',
 
 'setup-not-quiet',
-'''You should use -q to have a quiet extraction of the source tarball, as this
-generate useless lines of log ( for buildbot, for example )''',
+'''Use the -q option to the %setup macro to avoid useless build output from
+unpacking the sources.''',
 
 'no-cleaning-of-buildroot',
 '''You should clean $RPM_BUILD_ROOT in the %clean section and just after the
