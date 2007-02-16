@@ -397,7 +397,6 @@ use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_regex=re.compile('(.*)-devel')
 devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
-capital_regex=re.compile('[0-9A-Z]')
 url_regex=re.compile('^(ftp|http|https)://')
 invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_regex=re.compile('^lib.*?(\.so.*)?$')
@@ -546,7 +545,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             spell_check(pkg, summary, 'summary')
             if string.find(summary, '\n') != -1:
                 printError(pkg, 'summary-on-multiple-lines')
-            if not capital_regex.search(summary[0]):
+            if summary[0] != summary[0].upper():
                 printWarning(pkg, 'summary-not-capitalized', summary)
             if summary[-1] == '.':
                 printWarning(pkg, 'summary-ended-with-dot', summary)

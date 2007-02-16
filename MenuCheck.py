@@ -144,7 +144,6 @@ standard_needs=Config.getOption('ExtraMenuNeeds', DEFAULT_EXTRA_MENU_NEEDS)
 icon_paths=Config.getOption('IconPath', DEFAULT_ICON_PATH)
 xpm_ext_regex=re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
 icon_ext_regex=re.compile(Config.getOption('IconFilename', '.*\.png$'))
-capital_regex=re.compile('[0-9A-Z]')
 version_regex=re.compile('([0-9.][0-9.]+)($|\s)')
 launchers=Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
 bad_title_regex=re.compile('/')
@@ -270,7 +269,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         grp=res.groups()
                         title=grp[1] or grp[2]
-                        if not capital_regex.search(title[0]):
+                        if title[0] != title[0].upper():
                             printWarning(pkg, 'menu-longtitle-not-capitalized', title)
                         res=version_regex.search(title)
                         if res:
@@ -283,7 +282,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         grp=res.groups()
                         title=grp[1] or grp[2]
-                        if not capital_regex.search(title[0]):
+                        if title[0] != title[0].upper():
                             printWarning(pkg, 'menu-title-not-capitalized', title)
                         res=version_regex.search(title)
                         if res:
