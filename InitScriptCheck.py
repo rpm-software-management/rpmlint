@@ -25,7 +25,8 @@ reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
 basename_regex=re.compile('([^/]+)$')
 dot_in_name_regex=re.compile('.*\..*')
 use_deflevels=Config.getOption('UseDefaultRunlevels', 1)
-lsb_tags_regex = re.compile('# ([\w-]*):')
+lsb_tags_regex = re.compile('^# ([\w-]+):')
+lsb_cont_regex = re.compile('^#(\t|  )')
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -67,6 +68,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 chkconfig_content_found = 0
                 subsys_regex_found = 0
                 in_lsb_tag = 0
+                in_lsb_description = 0
                 lastline = ''
                 lsb_tags = {}
                 # check common error in file content
@@ -96,7 +98,9 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         else:
                             res = lsb_tags_regex.search(line)
                             if not res:
-                                printError(pkg, 'wrong-line-in-lsb-tag', line)
+                                if not (in_lsb_description and lsb_cont_regex.search(line)):
+                                    in_lsb_description = 0
+                                    printError(pkg, 'wrong-line-in-lsb-tag', line)
                             else:
                                 tag = res.group(1)
                                 if not tag in ('Provides', 'Required-Start', 'Required-Stop',
@@ -104,6 +108,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                                        'Default-Start', 'Description', 'Short-Description'):
                                     printError(pkg, 'unknown-lsb-tag', line)
                                 else:
+                                    in_lsb_description = (tag == 'Description')
                                     if not tag in lsb_tags.keys():
                                         lsb_tags[tag] = 0
                                     lsb_tags[tag] += 1
