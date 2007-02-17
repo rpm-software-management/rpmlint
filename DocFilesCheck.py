@@ -17,6 +17,7 @@ from Filter import *
 
 import sys
 import rpm
+from types import TupleType
 
 import AbstractCheck
 
@@ -52,9 +53,16 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         doc_reqs  = {}  # dependencies of doc files
 
         for dep in pkg.header.dsFromHeader():
+            if isinstance(dep, TupleType): # rpm-python < 4.3.2
+                name = dep[0]
+                flags = dep[2]
+            else:
+                name = dep.N()
+                flags = dep.Flags()
             # skip deps which were found by find-requires
-            if (dep.Flags() & (rpm.RPMSENSE_FIND_REQUIRES))!=0: continue
-            core_reqs[dep.N()] = []
+            if flags & rpm.RPMSENSE_FIND_REQUIRES != 0:
+                continue
+            core_reqs[name] = []
 
         # register things which are provided by the package
         for i in pkg.header[rpm.RPMTAG_PROVIDES] + files:
