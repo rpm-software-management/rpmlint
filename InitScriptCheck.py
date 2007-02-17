@@ -102,7 +102,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 if not tag in ('Provides', 'Required-Start', 'Required-Stop',
                                                        'Should-Stop', 'Should-Start', 'Default-Stop',
                                                        'Default-Start', 'Description', 'Short-Description'):
-                                    printError(pkg, 'unknow-lsb-tag', line)
+                                    printError(pkg, 'unknown-lsb-tag', line)
                                 else:
                                     if not tag in lsb_tags.keys():
                                         lsb_tags[tag] = 0
