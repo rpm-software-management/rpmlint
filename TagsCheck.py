@@ -9,6 +9,7 @@
 
 from Filter import *
 import AbstractCheck
+import FilesCheck
 import Pkg 
 import rpm
 import string
@@ -394,7 +395,6 @@ changelog_text_version_regex=re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 release_ext=Config.getOption('ReleaseExtension')
 extension_regex=release_ext and re.compile(release_ext + '$')
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
-devel_regex=re.compile('(.*)-devel')
 devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 url_regex=re.compile('^(ftp|http|https)://')
@@ -473,7 +473,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         name=pkg.name
         deps=pkg.requires() + pkg.prereq()
         devel_depend=0
-        is_devel=devel_regex.search(name)
+        is_devel=FilesCheck.devel_regex.search(name)
         is_source=pkg.isSource()
         for d in deps:
             if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
@@ -486,7 +486,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'invalid-dependency', d[0])
 
             if not devel_depend and not is_devel and not is_source:
-                if devel_regex.search(d[0]):
+                if FilesCheck.devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
                     devel_depend=1
             if is_source and lib_devel_number_regex.search(d[0]):
