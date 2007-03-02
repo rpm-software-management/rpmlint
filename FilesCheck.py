@@ -651,6 +651,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if use_utf8 and not is_utf8(path):
                             printWarning(pkg, 'file-not-utf8', f)
 
+
+        if f.startswith('/etc/cron/.d/'):
+                if stat.S_ISLNK(mode):
+                    printError(pkg, 'symlink-crontab-file', f)
+
+                if mode & 0111:
+                    printError(pkg, 'executable-crontab-file', f)
+
+                if stat.S_IWGRP & mode or stat.S_IWOTH & mode:
+                    printError(pkg, 'non-owner-writeable-only-crontab-file', f)
+
         if log_file and not logrotate_file:
             printWarning(pkg, 'log-files-without-logrotate', log_file)
 
@@ -952,6 +963,18 @@ the debuginfo package.''',
 it in the rpm header indicates that it is supposed to be a readable normal file
 but it actually is not in the filesystem.  Because of this, some checks will
 be skipped.''',
+
+'executable-crontab-file',
+'''This crontab file has executable bit set, which is refused by newer version 
+of cron''',
+
+'non-owner-writeable-only-crontab-file',
+'''This crontab file is writeable by other users as its owner, which is refused 
+by newer version of cron and insecure''',
+
+'symlink-crontab-file',
+'''This crontab file is a symbolic link, which is insecure and refused by newer 
+version of cron''',
 )
 
 # FilesCheck.py ends here
