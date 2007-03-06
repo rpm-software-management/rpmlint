@@ -652,7 +652,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'file-not-utf8', f)
 
 
-        if f.startswith('/etc/cron.d/'):
+            if f.startswith('/etc/cron.d/'):
                 if stat.S_ISLNK(mode):
                     printError(pkg, 'symlink-crontab-file', f)
 
