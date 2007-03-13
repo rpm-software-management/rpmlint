@@ -647,7 +647,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         for o in obs:
             if not o in provs:
-                printError(pkg, 'obsolete-not-provided', o)
+                printWarning(pkg, 'obsolete-not-provided', o)
         useless_provides=[]
         for p in provs:
             if provs.count(p) != 1:
@@ -798,8 +798,10 @@ If the license is close to an existing one, you can use '<license> style'.''' \
 longer contain the word mandrake.''',
 
 'obsolete-not-provided',
-'''The obsoleted package must also be provided to allow clean upgrade paths
-and not to break dependencies.''',
+'''If a package is obsoleted by a compatible replacement, the obsoleted package
+must also be provided in order to provide clean upgrade paths and not cause
+unnecessary dependency breakage.  If the obsoleting package is not a compatible
+replacement for the old one, leave out the provides.''',
 
 'invalid-dependency',
 '''An invalid dependency has been detected. It usually means that the build of
