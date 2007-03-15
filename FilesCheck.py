@@ -10,7 +10,7 @@
 
 from Filter import *
 import AbstractCheck
-from Pkg import is_utf8
+from Pkg import is_utf8, is_utf8_str
 import rpm
 import re
 import stat
@@ -261,14 +261,21 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, 'FilesCheck')
 
     def check(self, pkg):
-        # Check only binary package
+
+        files = pkg.files()
+
+        if use_utf8:
+            for filename in files:
+                if not is_utf8_str(filename):
+                    printError(pkg, 'filename-not-utf8', filename)
+
+        # Rest of the checks are for binary packages only
         if pkg.isSource():
             return
 
         # Check if the package is a development package
         devel_pkg=devel_regex.search(pkg.name)
 
-        files=pkg.files()
         config_files=pkg.configFiles()
         ghost_files=pkg.ghostFiles()
         doc_files=pkg.docFiles()
@@ -944,6 +951,9 @@ correctly in some circumstances.''',
 'file-not-utf8',
 '''The character encoding of this file is not UTF-8.  Consider converting it
 in the specfile for example using iconv(1).''',
+
+'filename-not-utf8',
+'''The character encoding of the name of this file is not UTF-8.  Rename it.''',
 
 'file-in-meta-package',
 '''This package seems to be a meta-package (an empty package used to require
