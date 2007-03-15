@@ -99,7 +99,7 @@ def getstatusoutput(cmd, stdoutonly=0):
 
 bz2_regex=re.compile('\.t?bz2?$')
 
-# TODO: is_utf8* could probably be implemented natively without iconv...
+# TODO: is_utf8 could probably be implemented natively without iconv...
 
 def is_utf8(fname):
     cat='gzip -dcf'
@@ -109,9 +109,11 @@ def is_utf8(fname):
     return not cmd[0]
 
 def is_utf8_str(s):
-    f=os.popen('iconv -f utf-8 -t utf-8 -o /dev/null 2>/dev/null', 'w')
-    f.write(s)
-    return not f.close()
+    try:
+        s.decode('UTF-8')
+    except:
+        return 0
+    return 1
 
 # classes representing package
 

@@ -1,6 +1,6 @@
 You need the following utilities to run rpmlint:
 
-	o python 2.0 or better
+	o python 2.2 or newer
 	o python rpm support
 	o find and xargs
 	o objdump
@@ -9,7 +9,7 @@ You need the following utilities to run rpmlint:
 
 and the following programs to install it:
 
-	o python 2.0 or better
+	o python 2.2 or newer
 	o sed
 
 You can change the default policy by calling make install with a
