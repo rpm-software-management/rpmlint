@@ -148,6 +148,9 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 else:
                                     printError(pkg, 'incoherent-subsys', f, name)
 
+                if "Default-Start" in lsb_tags.keys():
+                    printWarning(pkg, 'service-default-enabled', f)
+
                 if not status_found:
                     printError(pkg, 'no-status-entry', f)
                 if not reload_found:
@@ -199,7 +202,8 @@ at which to start and stop it.''',
 'service-default-enabled',
 '''The service is enabled by default after "chkconfig --add"; for security
 reasons, most services should not be. Use "-" as the default runlevel in the
-init script's chkconfig line to fix this if appropriate for this service.''',
+init script's "chkconfig:" line and/or remove the "Default-Start:" LSB keyword
+to fix this if appropriate for this service.''',
 
 'subsys-not-used',
 '''While your daemon is running, you have to put a lock file in
