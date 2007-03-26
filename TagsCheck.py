@@ -409,6 +409,7 @@ epoch_regex=re.compile('^[0-9]+:')
 use_epoch=Config.getOption('UseEpoch', 0)
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len=79
+tag_regex=re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|Release|RHNPlatform|Serial|Source\d*|Summary|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 
 def spell_check(pkg, str, tagname):
     for seq in string.split(str, ' '):
@@ -570,6 +571,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res=forbidden_words_regex.search(l)
                 if res and Config.getOption('ForbiddenWords'):
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
+                res = tag_regex.search(l)
+                if res:
+                    printWarning(pkg, 'tag-in-description', res.group(1))
             if use_utf8 and not Pkg.is_utf8_str(description):
                 printError(pkg, 'tag-not-utf8', '%description')
 
@@ -761,6 +765,13 @@ after it, and rebuild the package.''',
 'description-line-too-long',
 '''Your description lines must not exceed %d characters. If a line is exceeding
 this number, cut it to fit in two lines.''' % max_line_len,
+
+'tag-in-description',
+'''Something that looks like a tag was found in the package's description.
+This may indicate a problem where the tag was not actually parsed as a tag
+but just textual description content, thus being a no-op.  Verify if this is
+the case, and move the tag to a place in the specfile where %description
+won't fool the specfile parser, and rebuild the package.''',
 
 'no-group-tag',
 '''There is no Group tag in your package. You have to specify a valid group
