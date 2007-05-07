@@ -108,9 +108,10 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                     printError(pkg, 'wrong-line-in-lsb-tag', line)
                             else:
                                 tag = res.group(1)
-                                if not tag in ('Provides', 'Required-Start', 'Required-Stop',
-                                                       'Should-Stop', 'Should-Start', 'Default-Stop',
-                                                       'Default-Start', 'Description', 'Short-Description'):
+                                if not tag.startswith('X-') and \
+                                   tag not in ('Provides', 'Required-Start', 'Required-Stop',
+                                               'Should-Stop', 'Should-Start', 'Default-Stop',
+                                               'Default-Start', 'Description', 'Short-Description'):
                                     printError(pkg, 'unknown-lsb-tag', line)
                                 else:
                                     in_lsb_description = (tag == 'Description')
