@@ -33,8 +33,7 @@ empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging
 syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
-braces_regex=re.compile('^[^#]*%', re.MULTILINE)
-double_braces_regex=re.compile('%%', re.MULTILINE)
+percent_regex = re.compile('%{?\w', re.MULTILINE)
 bracket_regex=re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
@@ -133,7 +132,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if prog in empty_shells:
                     printError(pkg, 'non-empty-' + tag[2], prog)
             if prog in syntaxcheck_shells or prog == '/usr/bin/perl':
-                if braces_regex.search(script) and not double_braces_regex.search(script):
+                if percent_regex.search(script):
                     printWarning(pkg, 'percent-in-' + tag[2])
                 if bracket_regex.search(script):
                     printWarning(pkg, 'spurious-bracket-in-' + tag[2])
@@ -204,6 +203,11 @@ if Config.info:
 It will avoid the fork of a shell interpreter to execute your command as
 well as allows rpm to automatically mark the dependency on your command
 for the excecution of the scriptlet.''' % (scriptlet, scriptlet),
+
+'percent-in-%s' % scriptlet,
+'''The %s scriptlet contains a "%%" in a context which might indicate it being
+fallout from an rpm macro/variable which was not expanded during build.
+Investigate whether this is the case and fix if appropriate.''' % scriptlet,
 
 'spurious-bracket-in-%s' % scriptlet,
 '''The %s scriptlet contains an "if []" construct without a space before
