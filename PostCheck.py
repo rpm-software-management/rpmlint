@@ -56,6 +56,20 @@ for p in prereq_assoc:
 # pychecker fix
 del p
 
+script_tags = [
+    (rpm.RPMTAG_PREIN,          rpm.RPMTAG_PREINPROG,         '%pre'),
+    (rpm.RPMTAG_POSTIN,         rpm.RPMTAG_POSTINPROG,        '%post'),
+    (rpm.RPMTAG_PREUN,          rpm.RPMTAG_PREUNPROG,         '%preun'),
+    (rpm.RPMTAG_POSTUN,         rpm.RPMTAG_POSTUNPROG,        '%postun'),
+    (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
+    ]
+if hasattr(rpm, "RPMTAG_PRETRANS"):
+    script_tags.append(
+        (rpm.RPMTAG_PRETRANS,   rpm.RPMTAG_PRETRANSPROG,      '%pretrans'))
+if hasattr(rpm, "RPMTAG_POSTTRANS"):
+    script_tags.append(
+        (rpm.RPMTAG_POSTTRANS,  rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'))
+
 def incorrect_shell_script(prog, shellscript):
     # TODO: better temp file, perhaps using tempfile.mk(s)temp
     tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
@@ -97,12 +111,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
         prereq=map(lambda x: x[0], pkg.prereq())
         files=pkg.files().keys()
 
-        for tag in ((rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, '%pre'),
-                    (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, '%post'),
-                    (rpm.RPMTAG_PREUN, rpm.RPMTAG_PREUNPROG, '%preun'),
-                    (rpm.RPMTAG_POSTUN, rpm.RPMTAG_POSTUNPROG, '%postun'),
-                    (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
-                    ):
+        for tag in script_tags:
             script = pkg[tag[0]]
             prog = pkg[tag[1]]
 
@@ -192,7 +201,9 @@ if Config.info:
 'postin-without-ghost-file-creation',
 '''A file tagged as ghost is not created during %prein nor during %postin.''',
 )
-    for scriptlet in ('%pre', '%post', '%preun', '%postun'):
+    for scriptlet in ('%pre', '%post', '%preun', '%postun', '%trigger', \
+        '%triggerin', '%triggerprein', '%triggerun', '%triggerpostun', \
+        '%pretrans', '%posttrans'):
         addDetails(
 'one-line-command-in-%s' % scriptlet,
 '''You should use %s -p <command> instead of using:
