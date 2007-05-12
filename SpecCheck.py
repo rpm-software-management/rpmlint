@@ -23,8 +23,9 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
 
-patch_regex = re.compile("^\s*Patch(.*?)\s*:\s*([^\s]+)")
-applied_patch_regex = re.compile("^\s*%patch.*-P\s*([^\s]*)|^\s*%patch([^\s]*)\s")
+patch_regex = re.compile("^Patch(\d*)\s*:\s*([^\s]+)", re.IGNORECASE)
+# TODO: http://rpmlint.zarb.org/cgi-bin/trac.cgi/ticket/59
+applied_patch_regex = re.compile("^%patch.*-P\s+(\d+)|^%patch(\d*)\s")
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
@@ -225,13 +226,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res=patch_regex.search(line)
                 if res:
-                    patches[res.group(1)] = res.group(2)
+                    pnum = int(res.group(1) or 0)
+                    patches[pnum] = res.group(2)
                 else:
                     res = applied_patch_regex.search(line)
                     if res:
-                        applied_patches.append(res.group(1) or res.group(2))
+                        pnum = int(res.group(1) or res.group(2) or 0)
+                        applied_patches.append(pnum)
                         if ifarch_depth > 0:
-                            applied_patches_ifarch.append(res.group(1))
+                            applied_patches_ifarch.append(pnum)
                     elif not source_dir:
                         res = source_dir_regex.search(line)
                         if res:
@@ -350,13 +353,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # process gathered info
             for p in patches.keys():
                 if p in applied_patches_ifarch:
-                    printWarning(pkg, "%ifarch-applied-patch", "Patch" + p + ":", patches[p])
+                    printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % p, patches[p])
                 if p not in applied_patches:
-                    if p == "" and "0" in applied_patches:
-                        continue
-                    if p == "0" and "" in applied_patches:
-                        continue
-                    printWarning(pkg, "patch-not-applied", "Patch" + p + ":", patches[p])
+                    printWarning(pkg, "patch-not-applied", "Patch%d:" % p, patches[p])
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()
