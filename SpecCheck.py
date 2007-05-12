@@ -71,11 +71,11 @@ setup_t_regex = re.compile(' -[A-Za-z]*T')
 setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
 
 def file2string(file):
-    # TODO: file I/O error handling
     fd = open(file, "r")
-    content = fd.readlines()
-    fd.close()
-    return content
+    try:
+        return fd.readlines()
+    finally:
+        fd.close()
 
 def deptokens(line):
     '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
