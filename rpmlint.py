@@ -37,12 +37,6 @@ def loadCheck(name):
     (f, pathname, description) = imp.find_module(name, Config.checkDirs())
     imp.load_module(name, f, pathname, description)
 
-# Load a file -- deprecated, use the execfile() builtin instead
-def loadFile(name):
-    f = os.fdopen(os.open(os.path.expanduser(name), os.O_RDONLY))
-    imp.load_source('', name, f)
-    f.close()
-
 #############################################################################
 # main program
 #############################################################################
