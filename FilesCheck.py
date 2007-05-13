@@ -648,10 +648,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 pass
                             elif line.endswith('\r\n'):
                                 printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
-
-                        # potentially slow and may generate lots of unwanted noise:
-                        #if use_utf8 and not is_utf8(path):
-                        #    printWarning(pkg, 'file-not-utf8', f)
+                            # We check only doc text files for UTF-8-ness;
+                            # checking everything may be slow and can generate
+                            # lots of unwanted noise.
+                            if use_utf8 and not is_utf8(path):
+                                printWarning(pkg, 'file-not-utf8', f)
 
                     elif is_doc and compr_regex.search(f):
                         # compressed docs, eg. info and man files etc
