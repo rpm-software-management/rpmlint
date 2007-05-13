@@ -9,7 +9,7 @@
 
 from Filter import *
 import AbstractCheck
-from Pkg import is_utf8
+import Pkg
 import re
 import sys
 import string
@@ -166,7 +166,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     're': re.compile('^%' + sec + '(?:\s|$)'),
                     }
 
-            if use_utf8 and not is_utf8(spec_file):
+            if use_utf8 and not Pkg.is_utf8(spec_file):
                 printError(pkg, "non-utf8-spec-file", f)
 
             # gather info from spec lines
