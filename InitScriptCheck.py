@@ -74,7 +74,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 # check common error in file content
                 content = None
                 try:
-                    content = Pkg.readlines(pkg, pkg.dirName() + '/' + f)
+                    content = Pkg.readlines(pkg.dirName() + '/' + f)
                 except Exception, e:
                     printWarning(pkg, 'read-error', e)
                     continue
