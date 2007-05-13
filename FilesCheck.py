@@ -228,11 +228,16 @@ standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
 _null_trans = string.maketrans("", "")
 
-def istextfile(f, pkg):
+def istextfile(filename, pkg):
+    fobj = None
     try:
-        s = open(f).read(512)
+        fobj = open(filename, 'r')
+        s = fobj.read(512)
+        fobj.close()
     except Exception, e: # eg. https://bugzilla.redhat.com/209876
         printWarning(pkg, 'read-error', e)
+        if fobj:
+            fobj.close()
         return 0
 
     if "\0" in s:
@@ -242,7 +247,7 @@ def istextfile(f, pkg):
         return 1
 
     # PDF's are binary but often detected as text by the algorithm below
-    if f.lower().endswith('.pdf') and s.startswith('%PDF-'):
+    if filename.lower().endswith('.pdf') and s.startswith('%PDF-'):
         return 0
 
     # Get the non-text characters (maps a character to itself then
@@ -619,7 +624,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 path=pkg.dirName() + '/' + f
                 if os.access(path, os.R_OK):
                     if istextfile(path, pkg):
-                        line=open(path).readline()
+                        fobj = open(path, 'r')
+                        try:
+                            line = fobj.readline()
+                        finally:
+                            fobj.close()
                         res=None
                         # ignore perl module shebang -- TODO: disputed...
                         if not f.endswith('.pm'):

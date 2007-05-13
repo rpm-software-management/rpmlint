@@ -72,14 +72,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 lastline = ''
                 lsb_tags = {}
                 # check common error in file content
-                fd = None
+                content = None
                 try:
-                    fd = open(pkg.dirName() + '/' + f, 'r')
+                    content = Pkg.readlines(pkg, pkg.dirName() + '/' + f)
                 except Exception, e:
                     printWarning(pkg, 'read-error', e)
                     continue
-                content = fd.readlines()
-                fd.close()
                 content_str = "".join(content)
                 for line in content:
                     line = line[:-1] # chomp
