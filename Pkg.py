@@ -117,7 +117,7 @@ def is_utf8_str(s):
     return 1
 
 def readlines(path):
-    fobj = open(file, "r")
+    fobj = open(path, "r")
     try:
         return fobj.readlines()
     finally:
