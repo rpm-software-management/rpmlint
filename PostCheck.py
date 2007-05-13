@@ -71,31 +71,31 @@ if hasattr(rpm, "RPMTAG_POSTTRANS"):
         (rpm.RPMTAG_POSTTRANS,  rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'))
 
 def incorrect_shell_script(prog, shellscript):
-    # TODO: better temp file, perhaps using tempfile.mk(s)temp
-    tmpfile = '%s/.bash-script.%d' % (extract_dir, os.getpid())
     if not shellscript:
         return 0
     # TODO: test that "prog" is available/executable
-    # TODO: tmpfile I/O error handling
-    f = open(tmpfile, 'w')
-    f.write(shellscript)
-    f.close()
-    ret = Pkg.getstatusoutput((prog, '-n', tmpfile))
-    os.remove(tmpfile)
+    tmpfile, tmpname = Pkg.mktemp()
+    try:
+        tmpfile.write(shellscript)
+        tmpfile.close()
+        ret = Pkg.getstatusoutput((prog, '-n', tmpname))
+    finally:
+        tmpfile.close()
+        os.remove(tmpname)
     return ret[0]
 
 def incorrect_perl_script(prog, perlscript):
-    # TODO: better temp file, perhaps using tempfile.mk(s)temp
-    tmpfile = '%s/.perl-script.%d' % (extract_dir, os.getpid())
     if not perlscript:
         return 0
     # TODO: test that "prog" is available/executable
-    # TODO: tmpfile I/O error handling
-    f = open(tmpfile, 'w')
-    f.write(perlscript)
-    f.close()
-    ret = Pkg.getstatusoutput((prog, '-wc', tmpfile))
-    os.remove(tmpfile)
+    tmpfile, tmpname = Pkg.mktemp()
+    try:
+        tmpfile.write(perlscript)
+        tmpfile.close()
+        ret = Pkg.getstatusoutput((prog, '-wc', tmpname))
+    finally:
+        tmpfile.close()
+        os.remove(tmpname)
     return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):

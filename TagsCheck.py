@@ -31,8 +31,10 @@ def get_default_valid_rpmgroups(filename=""):
         filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
     if filename and os.path.exists(filename):
         fobj = open(filename)
-        groups = fobj.read().strip().split('\n')
-        fobj.close()
+        try:
+            groups = fobj.read().strip().split('\n')
+        finally:
+            fobj.close()
         if not 'Development/Debug' in groups:
             groups.append('Development/Debug')
             groups.sort()

@@ -70,13 +70,6 @@ setup_q_regex = re.compile(' -[A-Za-z]*q')
 setup_t_regex = re.compile(' -[A-Za-z]*T')
 setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
 
-def file2string(file):
-    fd = open(file, "r")
-    try:
-        return fd.readlines()
-    finally:
-        fd.close()
-
 def deptokens(line):
     '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
     prco = []
@@ -147,7 +140,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "invalid-spec-name", f)
 
             # check content of spec file
-            spec = file2string(spec_file)
+            spec = Pkg.readlines(spec_file)
             patches = {}
             applied_patches = []
             applied_patches_ifarch = []

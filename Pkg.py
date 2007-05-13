@@ -16,6 +16,7 @@ import commands
 import popen2
 import re
 import string
+import tempfile
 import types
 import sys
 
@@ -115,6 +116,23 @@ def is_utf8_str(s):
         return 0
     return 1
 
+def readlines(path):
+    fobj = open(file, "r")
+    try:
+        return fobj.readlines()
+    finally:
+        fobj.close()
+
+def mktemp():
+    suffix = ".rpmlint%s" % os.getpid()
+    if hasattr(tempfile, "mkstemp"): # Python >= 2.3
+        tmpfd, tmpname = tempfile.mkstemp(suffix)
+        tmpfile = os.fdopen(tmpfd, 'w')
+    else:
+        tmpname = tempfile.mktemp(suffix)
+        tmpfile = open(tmpname, 'w')
+    return tmpfile, tmpname
+
 # classes representing package
 
 class Pkg:
@@ -141,14 +159,18 @@ class Pkg:
                 ts=rpm.TransactionSet()
                 # Don't check signatures here...
                 ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
-                fd=os.open(filename, os.O_RDONLY)
-                self.header=ts.hdrFromFdno(fd)
-                os.close(fd)
+                fd = os.open(filename, os.O_RDONLY)
+                try:
+                    self.header = ts.hdrFromFdno(fd)
+                finally:
+                    os.close(fd)
                 self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
             else:
-                fd=os.open(filename, os.O_RDONLY)
-                (self.header, self.is_source)=rpm.headerFromPackage(fd)
-                os.close(fd)
+                fd = os.open(filename, os.O_RDONLY)
+                try:
+                    (self.header, self.is_source) = rpm.headerFromPackage(fd)
+                finally:
+                    os.close(fd)
 
         self._lang_files=None
 
