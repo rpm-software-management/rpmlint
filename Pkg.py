@@ -143,6 +143,7 @@ class Pkg:
         self.extracted=0
         self.dirname=dirname
         self.file_info=None
+        self.current_linenum=None
         self._config_files=None
         self._doc_files=None
         self._ghost_files=None
@@ -521,6 +522,15 @@ class InstalledPkg(Pkg):
                     self.file_info.append([res.group(1), res.group(2)])
             #print self.file_info
         return self.file_info
+
+# Class to provide an API to a "fake" package, eg. for specfile-only checks
+class FakePkg:
+    def __init__(self, name):
+        self.name = name
+        self.arch = None
+
+    def cleanup(self):
+        pass
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:

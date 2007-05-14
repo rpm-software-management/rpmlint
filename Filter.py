@@ -24,7 +24,13 @@ def printError(pkg, reason, *details):
         printDescriptions(reason)
 
 def _print(type, pkg, reason, details):
-    s="%s: %s %s" % (type, pkg.name, reason)
+    ln = ""
+    if pkg.current_linenum is not None:
+        ln = "%s:" % pkg.current_linenum
+    arch = ""
+    if pkg.arch is not None:
+        arch = ".%s" % pkg.arch
+    s = "%s%s:%s %s: %s" % (pkg.name, arch, ln, type, reason)
     for d in details:
         s = s + " %s" % d
     if Testing.isTest():
