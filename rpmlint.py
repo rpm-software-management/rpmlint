@@ -18,13 +18,14 @@ import os
 import stat
 import rpm
 from Filter import *
+import SpecCheck
 
 version='@VERSION@'
 policy=None
 
 # Print usage information
 def usage(name):
-    print 'usage:', name, '[<options>] <rpm files>'
+    print 'usage:', name, '[<options>] <rpm files|specfile>'
     print '  options in:'
     print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
@@ -57,7 +58,14 @@ def main():
                     st=os.stat(f)
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        pkgs.append(Pkg.Pkg(f, extract_dir))
+                        if not f.endswith(".spec"):
+                            pkgs.append(Pkg.Pkg(f, extract_dir))
+                        else:
+                            # Short-circuit spec file checks
+                            pkg = Pkg.FakePkg(f)
+                            check = SpecCheck.SpecCheck()
+                            check.check_spec(pkg, Pkg.readlines(f))
+                            
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
                         dirs.append(f)
                         continue

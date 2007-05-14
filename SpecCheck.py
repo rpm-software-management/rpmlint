@@ -121,6 +121,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
+        self._spec_file = None
 
     def check(self, pkg):
         if not pkg.isSource():
@@ -128,227 +129,230 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         # lookup spec file
         files = pkg.files()
-        spec_file = None
         for f in files.keys():
             if f.endswith('.spec'):
-                spec_file = pkg.dirName() + "/" + f
+                self._spec_file = pkg.dirName() + "/" + f
                 break
-        if not spec_file:
+        if not self._spec_file:
             printError(pkg, "no-spec-file")
         else:
             if f != pkg.name + ".spec":
                 printError(pkg, "invalid-spec-name", f)
 
             # check content of spec file
-            spec = Pkg.readlines(spec_file)
-            patches = {}
-            applied_patches = []
-            applied_patches_ifarch = []
-            source_dir = None
-            buildroot = 0
-            configure = 0
-            configure_cmdline = ""
-            mklibname = 0
-            lib = 0
-            if_depth = 0
-            ifarch_depth = -1
-            current_section = 'package'       
-            buildroot_clean={'clean':0 , 'install':0}
-            depscript_override = 0
-            depgen_disabled = 0
-            indent_spaces = 0
-            indent_tabs = 0
-            section = {}
-            for sec in ['description', 'prep', 'build', 'install', 'clean',
-                        'files', 'changelog', 'package', 'check']:
-                section[sec] = {
-                    'count': 0,
-                    're': re.compile('^%' + sec + '(?:\s|$)'),
-                    }
+            spec_lines = Pkg.readlines(self._spec_file)
+            self.check_spec(pkg, spec_lines)
 
-            if use_utf8 and not Pkg.is_utf8(spec_file):
-                printError(pkg, "non-utf8-spec-file", f)
+    def check_spec(self, pkg, spec_lines):
+        patches = {}
+        applied_patches = []
+        applied_patches_ifarch = []
+        source_dir = None
+        buildroot = 0
+        configure = 0
+        configure_cmdline = ""
+        mklibname = 0
+        lib = 0
+        if_depth = 0
+        ifarch_depth = -1
+        current_section = 'package'       
+        buildroot_clean={'clean':0 , 'install':0}
+        depscript_override = 0
+        depgen_disabled = 0
+        indent_spaces = 0
+        indent_tabs = 0
+        section = {}
+        for sec in ['description', 'prep', 'build', 'install', 'clean',
+                    'files', 'changelog', 'package', 'check']:
+            section[sec] = {
+                'count': 0,
+                're': re.compile('^%' + sec + '(?:\s|$)'),
+                }
 
-            # gather info from spec lines
+        if self._spec_file:
+            if use_utf8 and not Pkg.is_utf8(self._spec_file):
+                printError(pkg, "non-utf8-spec-file", self._spec_file)
 
-            linenum = 0
-            for line in spec:
+        # gather info from spec lines
 
-                linenum += 1
-                section_marker = 0
-                for i in section.keys():
-                    if section[i]['re'].search(line):
-                        current_section = i
-                        section_marker = 1
-                        section[i]['count'] = section[i]['count'] + 1
+        pkg.current_linenum = 0
+        for line in spec_lines:
 
-                if section_marker:
-                    continue
+            pkg.current_linenum += 1
+            section_marker = 0
+            for i in section.keys():
+                if section[i]['re'].search(line):
+                    current_section = i
+                    section_marker = 1
+                    section[i]['count'] = section[i]['count'] + 1
 
-                if current_section in ('prep', 'build'):
-                    if contains_buildroot(line):
-                        printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1].strip())
+            if section_marker:
+                continue
 
-                if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
-                    printWarning(pkg, 'make-check-outside-check-section', line[:-1])
+            if current_section in ('prep', 'build'):
+                if contains_buildroot(line):
+                    printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1].strip())
 
-                if current_section in buildroot_clean.keys():
-                    if contains_buildroot(line) and rm_regex.search(line):
-                        buildroot_clean[current_section] = 1
+            if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
+                printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
-                if ifarch_regex.search(line):
-                    if_depth = if_depth + 1
-                    ifarch_depth = if_depth
+            if current_section in buildroot_clean.keys():
+                if contains_buildroot(line) and rm_regex.search(line):
+                    buildroot_clean[current_section] = 1
 
-                if if_regex.search(line):
-                    if_depth = if_depth + 1
+            if ifarch_regex.search(line):
+                if_depth = if_depth + 1
+                ifarch_depth = if_depth
 
-                if line.startswith('%setup'):
-                    if not setup_q_regex.search(line):
-                        # Don't warn if there's a -T without -a or -b
-                        if setup_t_regex.search(line):
-                            if setup_ab_regex.search(line):
-                                printWarning(pkg, 'setup-not-quiet')
-                        else:
+            if if_regex.search(line):
+                if_depth = if_depth + 1
+
+            if line.startswith('%setup'):
+                if not setup_q_regex.search(line):
+                    # Don't warn if there's a -T without -a or -b
+                    if setup_t_regex.search(line):
+                        if setup_ab_regex.search(line):
                             printWarning(pkg, 'setup-not-quiet')
-            
-                if endif_regex.search(line):
-                    if ifarch_depth == if_depth:
-                        ifarch_depth = -1
-                    if_depth = if_depth - 1
+                    else:
+                        printWarning(pkg, 'setup-not-quiet')
 
-                res=patch_regex.search(line)
+            if endif_regex.search(line):
+                if ifarch_depth == if_depth:
+                    ifarch_depth = -1
+                if_depth = if_depth - 1
+
+            res=patch_regex.search(line)
+            if res:
+                pnum = int(res.group(1) or 0)
+                patches[pnum] = res.group(2)
+            else:
+                res = applied_patch_regex.search(line)
                 if res:
-                    pnum = int(res.group(1) or 0)
-                    patches[pnum] = res.group(2)
-                else:
-                    res = applied_patch_regex.search(line)
+                    pnum = int(res.group(1) or res.group(2) or 0)
+                    applied_patches.append(pnum)
+                    if ifarch_depth > 0:
+                        applied_patches_ifarch.append(pnum)
+                elif not source_dir:
+                    res = source_dir_regex.search(line)
                     if res:
-                        pnum = int(res.group(1) or res.group(2) or 0)
-                        applied_patches.append(pnum)
-                        if ifarch_depth > 0:
-                            applied_patches_ifarch.append(pnum)
-                    elif not source_dir:
-                        res = source_dir_regex.search(line)
+                        source_dir = 1
+                        printError(pkg, "use-of-RPM_SOURCE_DIR")
+
+            res=obsolete_tags_regex.search(line)
+            if res:
+                printWarning(pkg, "obsolete-tag", res.group(1))
+
+            if configure:
+                if configure_cmdline[-1] == "\\":
+                    configure_cmdline=configure_cmdline[:-1] + string.strip(line)
+                else:
+                    configure = 0
+                    res = configure_libdir_spec_regex.search(configure_cmdline)
+                    if not res:
+                        printError(pkg, "configure-without-libdir-spec")
+                    elif res.group(1):
+                        res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
-                            source_dir = 1
-                            printError(pkg, "use-of-RPM_SOURCE_DIR")
+                            printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
 
-                res=obsolete_tags_regex.search(line)
-                if res:
-                    printWarning(pkg, "obsolete-tag", res.group(1))
+            if current_section != 'changelog' and configure_start_regex.search(line):
+                configure = 1
+                configure_cmdline = string.strip(line)
 
-                if configure:
-                    if configure_cmdline[-1] == "\\":
-                        configure_cmdline=configure_cmdline[:-1] + string.strip(line)
-                    else:
-                        configure = 0
-                        res = configure_libdir_spec_regex.search(configure_cmdline)
-                        if not res:
-                            printError(pkg, "configure-without-libdir-spec")
-                        elif res.group(1):
-                            res = re.match(hardcoded_library_paths, res.group(1))
-                            if res:
-                                printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
+            res = hardcoded_library_path_regex.search(line)
+            if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
+                printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
 
-                if current_section != 'changelog' and configure_start_regex.search(line):
-                    configure = 1
-                    configure_cmdline = string.strip(line)
+            res = buildroot_regex.search(line)
+            if res:
+                buildroot=1
+                if res.group(1).startswith('/'):
+                    printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
-                res = hardcoded_library_path_regex.search(line)
-                if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
-                    printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
-
-                res = buildroot_regex.search(line)
-                if res:
-                    buildroot=1
-                    if res.group(1).startswith('/'):
-                        printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
-
-                res = packager_regex.search(line)
-                if res:
-                    printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
-                res=prefix_regex.search(line)
-                if res:
-                    if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
-                        printWarning(pkg, 'redundant-prefix-tag')
-                    else:
-                        printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
-
-                if mklibname_regex.search(line):
-                    mklibname = 1
-
-                if lib_package_regex.search(line):
-                    lib = 1
-
-                res = prereq_regex.search(line)
-                if res:
-                    printWarning(pkg, 'prereq-use', res.group(2))
-
-                res = buildprereq_regex.search(line)
-                if res:
-                    printWarning(pkg, 'buildprereq-use', res.group(1))
-
-                if scriptlet_requires_regex.search(line) and current_section == 'package':
-                    printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
-
-                if current_section == 'changelog':
-                    res = macro_regex.search(line)
-                    if res and len(res.group(1)) % 2:
-                        printWarning(pkg, 'macro-in-%changelog', res.group(2))
+            res = packager_regex.search(line)
+            if res:
+                printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
+            res=prefix_regex.search(line)
+            if res:
+                if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
+                    printWarning(pkg, 'redundant-prefix-tag')
                 else:
-                    if not depscript_override:
-                        depscript_override = depscript_override_regex.search(line)
-                    if not depgen_disabled:
-                        depgen_disabled = depgen_disable_regex.search(line)
+                    printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
-                    res = provides_regex.search(line)
-                    if res:
-                        for prov in unversioned(deptokens(res.group(1))):
-                            printWarning(pkg, 'unversioned-explicit-provides', prov)
+            if mklibname_regex.search(line):
+                mklibname = 1
 
-                    res = obsoletes_regex.search(line)
-                    if res:
-                        for obs in unversioned(deptokens(res.group(1))):
-                            printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+            if lib_package_regex.search(line):
+                lib = 1
 
-                if not indent_tabs and indent_tabs_regex.search(line):
-                    indent_tabs = linenum
-                if not indent_spaces and indent_spaces_regex.search(line):
-                    indent_spaces = linenum
+            res = prereq_regex.search(line)
+            if res:
+                printWarning(pkg, 'prereq-use', res.group(2))
 
-            for sect in buildroot_clean:
-                if not buildroot_clean[sect]:
-                    printError(pkg, 'no-cleaning-of-buildroot', '%' + sect)
+            res = buildprereq_regex.search(line)
+            if res:
+                printWarning(pkg, 'buildprereq-use', res.group(1))
 
-            if not buildroot:
-                printError(pkg, 'no-buildroot-tag')
+            if scriptlet_requires_regex.search(line) and current_section == 'package':
+                printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
 
-            for sec in ('prep', 'build', 'install', 'clean'):
-                if not section[sec]['count']:
-                    printWarning(pkg, 'no-%%%s-section' % sec)
-            for sec in ('changelog',):
-                # prep, build, install, clean, check prevented by rpmbuild
-                if section[sec]['count'] > 1:
-                    printWarning(pkg, 'more-than-one-%%%s-section' % sec)
+            if current_section == 'changelog':
+                res = macro_regex.search(line)
+                if res and len(res.group(1)) % 2:
+                    printWarning(pkg, 'macro-in-%changelog', res.group(2))
+            else:
+                if not depscript_override:
+                    depscript_override = depscript_override_regex.search(line)
+                if not depgen_disabled:
+                    depgen_disabled = depgen_disable_regex.search(line)
 
-            if lib and not mklibname:
-                printError(pkg, 'lib-package-without-%mklibname')
+                res = provides_regex.search(line)
+                if res:
+                    for prov in unversioned(deptokens(res.group(1))):
+                        printWarning(pkg, 'unversioned-explicit-provides', prov)
 
-            if depscript_override and not depgen_disabled:
-                printWarning(pkg, 'depscript-without-disabling-depgen')
+                res = obsoletes_regex.search(line)
+                if res:
+                    for obs in unversioned(deptokens(res.group(1))):
+                        printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
 
-            if indent_spaces and indent_tabs:
-                printWarning(pkg, 'mixed-use-of-spaces-and-tabs',
-                             '(spaces: line %d, tab: line %d)' %
-                             (indent_spaces, indent_tabs))
+            if not indent_tabs and indent_tabs_regex.search(line):
+                indent_tabs = pkg.current_linenum
+            if not indent_spaces and indent_spaces_regex.search(line):
+                indent_spaces = pkg.current_linenum
 
-            # process gathered info
-            for p in patches.keys():
-                if p in applied_patches_ifarch:
-                    printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % p, patches[p])
-                if p not in applied_patches:
-                    printWarning(pkg, "patch-not-applied", "Patch%d:" % p, patches[p])
+        for sect in buildroot_clean:
+            if not buildroot_clean[sect]:
+                printError(pkg, 'no-cleaning-of-buildroot', '%' + sect)
+
+        if not buildroot:
+            printError(pkg, 'no-buildroot-tag')
+
+        for sec in ('prep', 'build', 'install', 'clean'):
+            if not section[sec]['count']:
+                printWarning(pkg, 'no-%%%s-section' % sec)
+        for sec in ('changelog',):
+            # prep, build, install, clean, check prevented by rpmbuild
+            if section[sec]['count'] > 1:
+                printWarning(pkg, 'more-than-one-%%%s-section' % sec)
+
+        if lib and not mklibname:
+            printError(pkg, 'lib-package-without-%mklibname')
+
+        if depscript_override and not depgen_disabled:
+            printWarning(pkg, 'depscript-without-disabling-depgen')
+
+        if indent_spaces and indent_tabs:
+            printWarning(pkg, 'mixed-use-of-spaces-and-tabs',
+                         '(spaces: line %d, tab: line %d)' %
+                         (indent_spaces, indent_tabs))
+
+        # process gathered info
+        for p in patches.keys():
+            if p in applied_patches_ifarch:
+                printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % p, patches[p])
+            if p not in applied_patches:
+                printWarning(pkg, "patch-not-applied", "Patch%d:" % p, patches[p])
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()
