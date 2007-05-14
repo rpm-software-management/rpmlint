@@ -175,6 +175,12 @@ class Pkg:
         self._lang_files=None
 
         self.name=self.header[rpm.RPMTAG_NAME]
+        if self.isNoSource():
+            self.arch = 'nosrc'
+        elif self.isSource():
+            self.arch = 'src'
+        else:
+            self.arch = self.header[rpm.RPMTAG_ARCH]
 
     # Return true if the package is a source package
     def isSource(self):
