@@ -287,7 +287,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         req_names=pkg.req_names()
         lib_package=lib_package_regex.search(pkg.name)
         is_kernel_package=kernel_package_regex.search(pkg.name)
-        arch=pkg[rpm.RPMTAG_ARCH]
 
         # report these errors only once
         perl_dep_error=0
@@ -527,7 +526,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not f in config_files and not f in ghost_files:
                         printWarning(pkg, 'non-conffile-in-etc', f)
 
-                if arch == 'noarch' and f.startswith('/usr/lib64/python'):
+                if pkg.arch == 'noarch' and f.startswith('/usr/lib64/python'):
                     printError(pkg, 'noarch-python-in-64bit-path', f)
 
             # normal dir check

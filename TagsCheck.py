@@ -662,14 +662,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for p in useless_provides:
             printError(pkg, 'useless-explicit-provides',p)
 
-        if pkg.isNoSource():
-            arch='nosrc'
-        elif pkg.isSource():
-            arch='src'
-        else:
-            arch=pkg[rpm.RPMTAG_ARCH]
-
-        expected='%s-%s-%s.%s.rpm' % (name, version, release, arch)
+        expected='%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
         basename=string.split(pkg.filename, '/')[-1]
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename)

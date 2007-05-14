@@ -146,7 +146,6 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             return
 
         info=pkg.getFilesInfo()
-        arch=pkg[rpm.RPMTAG_ARCH]
         files=pkg.files()
         exec_files=[]
         has_lib=[]
@@ -177,7 +176,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
                     binary_in_usr_lib=1
 
-                if arch == 'noarch':
+                if pkg.arch == 'noarch':
                     printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
                 else:
                     # in /usr/share ?
@@ -187,7 +186,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     if etc.search(i[0]):
                         printError(pkg, 'binary-in-etc', i[0])
 
-                    if arch == 'sparc' and sparc_regex.search(i[1]):
+                    if pkg.arch == 'sparc' and sparc_regex.search(i[1]):
                         printError(pkg, 'non-sparc32-binary', i[0])
 
                     # stripped ?
@@ -295,7 +294,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if version and version != -1 and string.find(pkg.name, version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)
 
-        if arch != 'noarch' and not multi_pkg:
+        if pkg.arch != 'noarch' and not multi_pkg:
             if binary == 0:
                 printError(pkg, 'no-binary')
 
