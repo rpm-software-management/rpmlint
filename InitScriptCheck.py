@@ -93,7 +93,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 
                         for i in ('Provides', 'Description', 'Short-Description'):
                             if i not in lsb_tags.keys():
-                                printError(pkg, 'missing-mandatory-lsb-tag', i)
+                                printError(pkg, 'missing-mandatory-lsb-tag', "%s in %s" % (i, f))
                     if in_lsb_tag:
                         # TODO maybe we do not have to handle this ?
                         if lastline.endswith('\\'):
@@ -187,6 +187,10 @@ a call to chkconfig.''',
 
 'preun-without-chkconfig',
 '''The package contains an init script but doesn't call chkconfig in its %preun.''',
+
+'missing-mandatory-lsb-tag',
+'''The package contains an init script that does not contain one of the LSB
+runlevel tags that are mandatory.''',
 
 'no-status-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
