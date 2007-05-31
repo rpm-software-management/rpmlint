@@ -76,6 +76,8 @@ def deptokens(line):
     tmp = ''
     wantmore = 0
     for tok in re.split('[\s,]+', line.strip()):
+        if len(tok) == 0:
+            continue
         if len(tmp) == 0:
             tmp = tok
         elif wantmore:
