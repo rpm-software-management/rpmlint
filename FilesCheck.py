@@ -175,7 +175,8 @@ absolute2_regex=re.compile('^/?([^/]+)')
 points_regex=re.compile('^\.\./(.*)')
 doc_regex=re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
 bin_regex=re.compile('^(/usr)?/s?bin/')
-includefile_regex=re.compile('\.((c|h)(pp|xx)?|a|cmi)$')
+includefile_regex = re.compile('\.(c|h)(pp|xx)?$')
+develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
 buildconfigfile_regex=re.compile('(\.pc|/bin/.+-config)$')
 sofile_regex=re.compile('/lib(64)?/[^/]+\.so$')
 devel_regex=re.compile('(.*)-(debug(info)?|devel|source|static)$')
@@ -475,7 +476,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
-                if not devel_pkg and (includefile_regex.search(f) or buildconfigfile_regex.search(f)) and not is_doc:
+                if not devel_pkg and not is_doc and \
+                       (includefile_regex.search(f) or \
+                        develfile_regex.search(f) or \
+                        buildconfigfile_regex.search(f)):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
                     printError(pkg, 'non-readable', f, oct(perm))
@@ -519,6 +523,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         nonexec_file = f.endswith('.pc') or \
                                        compr_regex.search(f) or \
                                        includefile_regex.search(f) or \
+                                       develfile_regex.search(f) or \
                                        logrotate_regex.search(f)
                     if nonexec_file:
                         printWarning(pkg, 'spurious-executable-perm', f)
