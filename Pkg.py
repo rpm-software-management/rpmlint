@@ -231,10 +231,7 @@ class Pkg:
     def getFilesInfo(self):
         if self.file_info == None:
             self.file_info=[]
-            olddir = os.getcwd()
-            os.chdir(self.dirName())
-            lines = commands.getoutput('find . -type f -print0 | LC_ALL=C xargs -0r file')
-            os.chdir(olddir)
+            lines = commands.getoutput('cd %s ; find . -type f -print0 | LC_ALL=C xargs -0r file' % self.dirName())
             lines=string.split(lines, '\n')
             for l in lines:
                 #print l
