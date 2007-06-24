@@ -89,11 +89,13 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         in_lsb_tag = 0
                         for i in lsb_tags.keys():
                             if lsb_tags[i] != 1:
-                                printError(pkg, 'redundant-lsb-tag', i)
+                                printError(pkg, 'redundant-lsb-keyword', i)
                                 
+                        # TODO: where is it specified that these (or some)
+                        #       keywords are mandatory?
                         for i in ('Provides', 'Description', 'Short-Description'):
                             if i not in lsb_tags.keys():
-                                printError(pkg, 'missing-mandatory-lsb-tag', "%s in %s" % (i, f))
+                                printError(pkg, 'missing-mandatory-lsb-keyword', "%s in %s" % (i, f))
                     if in_lsb_tag:
                         # TODO maybe we do not have to handle this ?
                         if lastline.endswith('\\'):
@@ -103,14 +105,14 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             if not res:
                                 if not (in_lsb_description and lsb_cont_regex.search(line)):
                                     in_lsb_description = 0
-                                    printError(pkg, 'wrong-line-in-lsb-tag', line)
+                                    printError(pkg, 'malformed-line-in-lsb-comment-block', line)
                             else:
                                 tag = res.group(1)
                                 if not tag.startswith('X-') and \
                                    tag not in ('Provides', 'Required-Start', 'Required-Stop',
                                                'Should-Stop', 'Should-Start', 'Default-Stop',
                                                'Default-Start', 'Description', 'Short-Description'):
-                                    printError(pkg, 'unknown-lsb-tag', line)
+                                    printError(pkg, 'unknown-lsb-keyword', line)
                                 else:
                                     in_lsb_description = (tag == 'Description')
                                     if not tag in lsb_tags.keys():
@@ -188,9 +190,9 @@ a call to chkconfig.''',
 'preun-without-chkconfig',
 '''The package contains an init script but doesn't call chkconfig in its %preun.''',
 
-'missing-mandatory-lsb-tag',
+'missing-mandatory-lsb-keyword',
 '''The package contains an init script that does not contain one of the LSB
-runlevel tags that are mandatory.''',
+comment block convention keywords that are mandatory.''',
 
 'no-status-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
