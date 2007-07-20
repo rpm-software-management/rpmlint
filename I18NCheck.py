@@ -35,21 +35,21 @@ INCORRECT_LOCALES = {
 #
 # 'en_RN' and 'en@IPA' are not real language bu funny variations on english
 CORRECT_SUBDIRS = (
-'af', 'am', 'ang', 'ar', 'as', 'az', 'az_IR', 'be', 'bg', 'bn', 'br', 'bs',
-'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el',
+'af', 'am', 'ang', 'ar', 'as', 'az', 'az_IR', 'be', 'bg', 'bn', 'bn_IN', 'br',
+'bs', 'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el',
 'en_AU', 'en_CA', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA',
 'eo', 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
 'es_PA', 'es_MX', 'et', 'eu',
 'fa', 'fi', 'fo', 'fr', 'fur', 'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
 'he', 'hi', 'hr', 'hu', 'hy',
-'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'km', 'kn', 'ko', 'ku', 'kw', 'ky',
+'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'km', 'kn', 'ko', 'ku', 'kw',
 # 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code
-'li', 'lo', 'lt', 'ltg', 'lg', 'lv',
-'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt',
+'ky', 'lg', 'li', 'lo', 'lt', 'ltg', 'lv',
+'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt', 'my',
 'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso',
 'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru', 'rw',
-'sc', 'se', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st', 'sv',
-'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt',
+'sc', 'se', 'si', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st',
+'sv', 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt',
 'ug', 'uk', 'ur', 'uz', 'uz@Latn',
 've', 'vi', 'wa', 'wen', 'xh', 'yi', 'yo', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
 # KDE uses 'ven' for 've'
