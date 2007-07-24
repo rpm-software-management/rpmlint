@@ -17,7 +17,8 @@ import Pkg
 import string
 import types
 
-DEFAULT_VALID_SHELLS=('/bin/sh',
+DEFAULT_VALID_SHELLS=('<lua>',
+                      '/bin/sh',
                       '/bin/bash',
                       '/sbin/sash',
                       '/usr/bin/perl',
