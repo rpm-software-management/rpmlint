@@ -42,7 +42,7 @@ def get_default_valid_rpmgroups(filename=""):
 
 
 DEFAULT_VALID_LICENSES = (
-    # OSI approvied licenses, http://www.opensource.org/licenses/ (unversioned,
+    # OSI approved licenses, http://www.opensource.org/licenses/ (unversioned,
     # trailing "license" dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
     # the full name).  Updated 2006-11-14.
