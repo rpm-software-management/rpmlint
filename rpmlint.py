@@ -31,7 +31,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print 'rpmlint version', version, 'Copyright (C) 1999-2006 Frederic Lepied, Mandriva'
+    print 'rpmlint version', version, 'Copyright (C) 1999-2007 Frederic Lepied, Mandriva'
 
 # Load a python module from its file name
 def loadCheck(name):
