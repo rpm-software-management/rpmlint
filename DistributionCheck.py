@@ -13,7 +13,7 @@ import rpm
 import re
 import Config
 
-man_regex=re.compile("/man./")
+man_regex=re.compile("/man(?:\d[px]?|n)/")
 info_regex=re.compile("(/usr/share|/usr)/info/")
 info_dir_regex=re.compile("/info/dir$")
 vendor=Config.getOption("Vendor")
