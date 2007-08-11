@@ -551,7 +551,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             elif stat.S_ISLNK(mode):
                 r=absolute_regex.search(link)
                 is_so=sofile_regex.search(f)
-                if not devel_pkg and is_so:
+                if not devel_pkg and is_so and not link.endswith('.so'):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 # absolute link
                 if r:
