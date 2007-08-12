@@ -254,13 +254,11 @@ class Pkg:
         try:
             try:
                 in_file = open(self.dirName() + '/' + filename)
-                line = in_file.readline()
-                while line:
+                for line in in_file:
                     lineno += 1
                     if regex.search(line):
                         ret.append(str(lineno))
                         break
-                    line = in_file.readline()
             except Exception, e:
                 printWarning(self, 'read-error', filename, e)
         finally:
