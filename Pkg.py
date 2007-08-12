@@ -147,6 +147,7 @@ class Pkg:
         self._config_files=None
         self._doc_files=None
         self._ghost_files=None
+        self._missing_ok_files=None
         self._files=None
         self._requires=None
         self._req_names=-1
@@ -302,6 +303,12 @@ class Pkg:
         self._gatherFilesInfo()
         return self._ghost_files
 
+    def missingOkFiles(self):
+        if self._missing_ok_files != None:
+            return self._missing_ok_files
+        self._gatherFilesInfo()
+        return self._missing_ok_files
+
     # extract information about the files
     def _gatherFilesInfo(self):
         global v304
@@ -310,6 +317,7 @@ class Pkg:
         self._doc_files=[]
         self._noreplace_files=[]
         self._ghost_files=[]
+        self._missing_ok_files=[]
         self._files={}
         self._files_array=[]
         flags=self.header[rpm.RPMTAG_FILEFLAGS]
@@ -351,6 +359,8 @@ class Pkg:
                     self._noreplace_files.append(files[idx])
                 if flags[idx] & RPMFILE_GHOST:
                     self._ghost_files.append(files[idx])
+                if flags[idx] & RPMFILE_MISSINGOK:
+                    self._missing_ok_files.append(files[idx])
                 self._files[files[idx]]=(modes[idx], users[idx],
                                          groups[idx], links[idx],
                                          sizes[idx], md5s[idx],
