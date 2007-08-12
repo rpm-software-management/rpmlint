@@ -14,7 +14,6 @@ import rpm
 import re
 import os
 import Pkg
-import string
 import types
 
 DEFAULT_VALID_SHELLS=('<lua>',
@@ -130,8 +129,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'ghost-files-without-postin')
             else:
                 for f in ghost_files:
-                    if (not postin or string.find(postin, f) == -1) and \
-                       (not prein or string.find(prein, f) == -1):
+                    if (not postin or postin.find(f) == -1) and \
+                       (not prein or prein.find(f) == -1) and \
+                       not f in pkg.missingOkFiles():
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
