@@ -26,7 +26,6 @@ class BinaryInfo:
     rpath_regex=re.compile('^\s*RPATH\s*(\S+)')
     soname_regex=re.compile('^\s*SONAME\s*(\S+)')
     comment_regex=re.compile('^\s*\d+\s+\.comment\s+')
-    dynsyms_regex=re.compile('^DYNAMIC SYMBOL TABLE:')
     pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
@@ -40,7 +39,6 @@ class BinaryInfo:
         self.undef=[]
         self.unused=[]
         self.comment=0
-        self.dynsyms=0
         self.soname=0
         self.non_pic=1
 
@@ -62,8 +60,6 @@ class BinaryInfo:
                             self.rpath.append(p)
                     elif BinaryInfo.comment_regex.search(l):
                         self.comment=1
-                    elif BinaryInfo.dynsyms_regex.search(l):
-                        self.dynsyms=1
                     elif BinaryInfo.pic_regex.search(l):
                         self.non_pic=0
                     r=BinaryInfo.soname_regex.search(l)
