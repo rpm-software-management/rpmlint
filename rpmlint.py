@@ -100,11 +100,17 @@ def main():
                     f=os.path.abspath(os.path.join(d, i))
                     st=os.stat(f)
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        if f[-4:] != '.rpm' and f[-4:] != '.spm':
+                        if not (f.endswith('.rpm') or f.endswith('.spm') or \
+                                f.endswith('.spec')):
                             continue
                         try:
-                            pkg=Pkg.Pkg(f, extract_dir)
-                            runChecks(pkg)
+                            if f.endswith('.spec'):
+                                pkg = Pkg.FakePkg(f)
+                                check = SpecCheck.SpecCheck()
+                                check.check_spec(pkg, Pkg.readlines(f))
+                            else:
+                                pkg = Pkg.Pkg(f, extract_dir)
+                                runChecks(pkg)
                         except KeyboardInterrupt:
                             sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
                             sys.exit(2)
