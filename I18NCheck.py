@@ -95,7 +95,8 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        files=pkg.files()
+        files=pkg.files().keys()
+        files.sort()
         locales=[]                      # list of locales for this packages
         webapp=False
 
@@ -112,11 +113,11 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         # as some webapps have their files under /var/www/html, and
         # others in /usr/share or /usr/lib, the only reliable way
         # sofar to detect them is to look for an apache configuration file
-        for f in files.keys():
+        for f in files:
             if f.endswith('.mo'):
                 webapp=True
 
-        for f in files.keys():
+        for f in files:
             res=locale_regex.search(f)
             if res:
                 locale=res.group(2)
@@ -153,6 +154,14 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                 if pkg.fileLang(f) == '' and not webapp:
                     printWarning(pkg, 'file-not-in-%lang', f)
 
+        main_dir, main_lang = ("", "")
+        for f in files:
+            lang = pkg.fileLang(f)
+            if main_lang and lang == "" and is_prefix(main_dir, f):
+                printError(pkg, 'subfile-not-in-%lang', f)
+            if main_lang != lang:
+                main_dir, main_lang = f, lang
+
         name=pkg.name
         res=package_regex.search(name)
         if res:
@@ -160,6 +169,9 @@ class I18NCheck(AbstractCheck.AbstractCheck):
             if locales != name:
                 if not locales in map(lambda x: x[0], pkg.requires()):
                     printError(pkg, 'no-dependency-on', locales)
+
+def is_prefix(p, s):
+    return len(p) <= len(s) and p == s[:len(p)]
 
 # Create an object to enable the auto registration of the test
 check=I18NCheck()
@@ -194,6 +206,9 @@ if Config.info:
 'no-dependency-on',
 """
 """,
+
+'subfile-not-in-%lang',
+""" If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be installable if XX is not in %_install_langs""",
 
 )
 
