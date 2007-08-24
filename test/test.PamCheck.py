@@ -10,7 +10,7 @@ class TestPamCheck(unittest.TestCase):
         Testing.startTest()
     def testcheck(self):
         PamCheck.check.check(self.pkg)
-        self.assertEqual( Testing.getOutput(), ['E: PamCheck use-old-pam-stack /etc/pam.d/PamCheck (line 1)'])
+        self.assertEqual( Testing.getOutput(), ['PamCheck.i586: E: use-old-pam-stack /etc/pam.d/PamCheck (line 1)'])
 
 # enjoy \o/
 if __name__ == '__main__':
