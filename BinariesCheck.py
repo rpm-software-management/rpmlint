@@ -156,7 +156,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         else:
             multi_pkg=0
 
-        for f in files.keys():
+        for f in files:
             if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f][0]):
                 has_usr_lib_file=f
                 break
@@ -282,7 +282,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if exec_files != []:
                 for f in exec_files:
                     printError(pkg, 'executable-in-library-package', f)
-            for f in files.keys():
+            for f in files:
                 res=numeric_dir_regex.search(f)
                 fn=res and res.group(1) or f
                 if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
