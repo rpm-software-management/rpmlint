@@ -873,19 +873,19 @@ once.''',
 
 'percent-in-dependency',
 '''This rpm has a dependency whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.'''
+It could be an unexpanded macro, please double check.''',
 
 'percent-in-obsoletes',
 '''This rpm has an Obsoletes whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.'''
+It could be an unexpanded macro, please double check.''',
 
 'percent-in-provides',
 '''This rpm has a Provides whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.'''
+It could be an unexpanded macro, please double check.''',
 
 'percent-in-conflicts',
 '''This rpm has a Conflicts whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.'''
+It could be an unexpanded macro, please double check.''',
 
 'no-url-tag',
 '''The URL tag is missing.''',
