@@ -3,7 +3,7 @@ You need the following utilities to run rpmlint:
 	o python 2.2 or newer
 	o python rpm support
 	o find and xargs
-	o objdump
+	o readelf
 	o file
 	o cpio
 

@@ -22,18 +22,18 @@ DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib',
 
 class BinaryInfo:
 
-    needed_regex=re.compile('^\s*NEEDED\s*(\S+)')
-    rpath_regex=re.compile('^\s*RPATH\s*(\S+)')
-    soname_regex=re.compile('^\s*SONAME\s*(\S+)')
-    comment_regex=re.compile('^\s*\d+\s+\.comment\s+')
-    pic_regex=re.compile('^\s+\d+\s+\.rela?\.(data|text)')
+    needed_regex=re.compile('\s+\(NEEDED\).*\[(\S+)\]')
+    rpath_regex=re.compile('\s+\(RPATH\).*\[(\S+)\]')
+    soname_regex=re.compile('\s+\(SONAME\).*\[(\S+)\]')
+    comment_regex=re.compile('^\s+\[\d+\]\s+\.comment\s+')
+    pic_regex=re.compile('^\s+\[\d+\]\s+\.rela?\.(data|text)')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
     unused_regex=re.compile('^\s+(\S+)')
     debug_file_regex=re.compile('\.debug$')
 
     def __init__(self, pkg, path, file, is_ar):
-        self.objdump_error=0
+        self.had_error=0
         self.needed=[]
         self.rpath=[]
         self.undef=[]
@@ -44,8 +44,7 @@ class BinaryInfo:
 
         is_debug=BinaryInfo.debug_file_regex.search(path)
 
-        cmd = ['env', 'LC_ALL=C', 'objdump', '--headers', '--private-headers']
-        if not is_debug: cmd.append('-T')
+        cmd = ['env', 'LC_ALL=C', 'readelf', '-S', '-d']
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
@@ -68,8 +67,9 @@ class BinaryInfo:
             if self.non_pic:
                 self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
         else:
-            self.objdump_error=1
-            printWarning(pkg, 'objdump-failed', re.sub('\n.*', '', res[1]))
+            self.had_error=1
+            printWarning(pkg, 'binaryinfo-readelf-failed',
+                         re.sub('\n.*', '', res[1]))
 
         # Undefined symbol and unused direct dependency checks make sense only
         # for installed packages.
@@ -196,7 +196,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         # so name in library
                         if so_regex.search(i[0]):
                             has_lib.append(i[0])
-                            if bin_info.objdump_error:
+                            if bin_info.had_error:
                                 pass
                             elif not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
@@ -220,7 +220,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     elif version != soversion:
                                         version = -1
 
-                            if bin_info.non_pic and not bin_info.objdump_error:
+                            if bin_info.non_pic and not bin_info.had_error:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
                         # rpath ?
                         if bin_info.rpath:
@@ -238,7 +238,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             if is_exec and bin_regex.search(i[0]):
                                 exec_files.append(i[0])
 
-                            if bin_info.objdump_error:
+                            if bin_info.had_error:
                                 pass
                             elif not bin_info.needed and \
                                not (bin_info.soname and \
@@ -392,8 +392,8 @@ with the intended shared libraries only.''',
 'only-non-binary-in-usr-lib',
 '''There are only non binary files in /usr/lib so they should be in /usr/share.''',
 
-'objdump-failed',
-'''Executing objdump on this file failed, all checks could not be run.''',
+'binaryinfo-readelf-failed',
+'''Executing readelf on this file failed, all checks could not be run.''',
 
 'ldd-failed',
 '''Executing ldd on this file failed, all checks could not be run.''',
