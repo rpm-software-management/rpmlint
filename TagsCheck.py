@@ -500,6 +500,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and string.find(d[1], '-') != -1:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
+            if string.find(d[1], '%') != -1:
+                printError(pkg, 'percent-in-dependency', d[0], d[1])
 
         if not name:
             printError(pkg, 'no-name-tag')
@@ -650,10 +652,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         provs=map(lambda x: x[0], pkg.provides())
         if pkg.name in obs:
             printError(pkg, 'obsolete-on-name')
-
         for o in obs:
             if not o in provs:
                 printWarning(pkg, 'obsolete-not-provided', o)
+        for o in pkg.obsoletes():
+            if string.find(o[1], '%') != -1:
+                printError(pkg, 'percent-in-obsoletes', o[0], o[1])
+
         useless_provides=[]
         for p in provs:
             if provs.count(p) != 1:
@@ -661,6 +666,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     useless_provides.append(p)
         for p in useless_provides:
             printError(pkg, 'useless-explicit-provides',p)
+
+        for p in pkg.provides():
+            if string.find(p[1], '%') != -1:
+                printError(pkg, 'percent-in-provides', p[0], p[1])
+
+        for c in pkg.conflicts():
+            if string.find(c[1], '%') != -1:
+                printError(pkg, 'percent-in-conflicts', c[0], c[1])
 
         expected='%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
         basename=string.split(pkg.filename, '/')[-1]
@@ -857,6 +870,22 @@ once.''',
 
 'requires-on-release',
 '''This rpm requires a specific release of another package.''',
+
+'percent-in-dependency',
+'''This rpm has a dependency whose version part contains the '%' character.
+It could be an unexpanded macro, please double check.'''
+
+'percent-in-obsoletes',
+'''This rpm has an Obsoletes whose version part contains the '%' character.
+It could be an unexpanded macro, please double check.'''
+
+'percent-in-provides',
+'''This rpm has a Provides whose version part contains the '%' character.
+It could be an unexpanded macro, please double check.'''
+
+'percent-in-conflicts',
+'''This rpm has a Conflicts whose version part contains the '%' character.
+It could be an unexpanded macro, please double check.'''
 
 'no-url-tag',
 '''The URL tag is missing.''',
