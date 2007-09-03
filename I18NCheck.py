@@ -157,7 +157,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         main_dir, main_lang = ("", "")
         for f in files:
             lang = pkg.fileLang(f)
-            if main_lang and lang == "" and is_prefix(main_dir, f):
+            if main_lang and lang == "" and is_prefix(main_dir + '/', f):
                 printError(pkg, 'subfile-not-in-%lang', f)
             if main_lang != lang:
                 main_dir, main_lang = f, lang
