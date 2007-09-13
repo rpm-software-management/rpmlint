@@ -655,11 +655,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'non-executable-script', f, oct(perm))
                             if line.endswith('\r\n'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
-                        elif is_doc:
-                            fl = f.lower()
-                            if fl.endswith('.rtf'): # TODO: others, eg. HTML?
-                                pass
-                            elif line.endswith('\r\n'):
+                        elif is_doc and not re.search('\.(?:rtf|x?html?)$', f, re.I):
+                            if line.endswith('\r\n'):
                                 printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
                             # We check only doc text files for UTF-8-ness;
                             # checking everything may be slow and can generate
