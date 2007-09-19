@@ -678,7 +678,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         expected='%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
         basename=string.split(pkg.filename, '/')[-1]
         if basename != expected:
-            printWarning(pkg, 'non-coherent-filename', basename)
+            printWarning(pkg, 'non-coherent-filename', basename, expected)
 
 # Create an object to enable the auto registration of the test
 check=TagsCheck()
