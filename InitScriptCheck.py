@@ -25,8 +25,8 @@ reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
 basename_regex=re.compile('([^/]+)$')
 dot_in_name_regex=re.compile('.*\..*')
 use_deflevels=Config.getOption('UseDefaultRunlevels', 1)
-lsb_tags_regex = re.compile('^# ([\w-]+):')
-lsb_cont_regex = re.compile('^#(\t|  )')
+lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
+lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -88,7 +88,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     if line.endswith('### END INIT INFO'):
                         in_lsb_tag = 0
                         for i in lsb_tags.keys():
-                            if lsb_tags[i] != 1:
+                            if len(lsb_tags[i]) != 1:
                                 printError(pkg, 'redundant-lsb-keyword', i)
                                 
                         # TODO: where is it specified that these (or some)
@@ -103,9 +103,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         else:
                             res = lsb_tags_regex.search(line)
                             if not res:
-                                if not (in_lsb_description and lsb_cont_regex.search(line)):
+                                cres = lsb_cont_regex.search(line)
+                                if not (in_lsb_description and cres):
                                     in_lsb_description = 0
                                     printError(pkg, 'malformed-line-in-lsb-comment-block', line)
+                                else:
+                                    lsb_tags["Description"][-1] += " " + cres.group(1)
                             else:
                                 tag = res.group(1)
                                 if not tag.startswith('X-') and \
@@ -116,8 +119,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 else:
                                     in_lsb_description = (tag == 'Description')
                                     if not tag in lsb_tags.keys():
-                                        lsb_tags[tag] = 0
-                                    lsb_tags[tag] += 1
+                                        lsb_tags[tag] = []
+                                    lsb_tags[tag].append(res.group(2))
                         lastline = line
 
                          
@@ -155,7 +158,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                     printError(pkg, 'incoherent-subsys', f, name)
 
                 if "Default-Start" in lsb_tags.keys():
-                    printWarning(pkg, 'service-default-enabled', f)
+                    if "".join(lsb_tags["Default-Start"]):
+                        printWarning(pkg, 'service-default-enabled', f)
 
                 if not status_found:
                     printError(pkg, 'no-status-entry', f)
