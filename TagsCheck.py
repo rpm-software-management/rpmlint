@@ -547,6 +547,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not summary:
             printError(pkg, 'no-summary-tag')
         else:
+            utf8summary = summary
+            if use_utf8:
+                utf8summary = Pkg.to_utf8(summary).decode('utf-8')
             spell_check(pkg, summary, 'summary')
             if string.find(summary, '\n') != -1:
                 printError(pkg, 'summary-on-multiple-lines')
@@ -554,7 +557,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'summary-not-capitalized', summary)
             if summary[-1] == '.':
                 printWarning(pkg, 'summary-ended-with-dot', summary)
-            if len(summary) > max_line_len:
+            if len(utf8summary) > max_line_len:
                 printError(pkg, 'summary-too-long', summary)
             if leading_space_regex.search(summary):
                 printError(pkg, 'summary-has-leading-spaces', summary)
@@ -570,7 +573,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             spell_check(pkg, description, 'description')
             for l in string.split(description, "\n"):
-                if len(l) > max_line_len:
+                utf8l = l
+                if use_utf8:
+                    utf8l = Pkg.to_utf8(l).decode('utf-8')
+                if len(utf8l) > max_line_len:
                     printError(pkg, 'description-line-too-long', l)
                 res=forbidden_words_regex.search(l)
                 if res and Config.getOption('ForbiddenWords'):

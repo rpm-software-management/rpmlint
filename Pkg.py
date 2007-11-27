@@ -116,6 +116,32 @@ def is_utf8_str(s):
         return 0
     return 1
 
+def to_utf8(string):
+    if string is None:
+        return ''
+    elif isinstance(string, unicode):
+        return string
+    try:
+        x = unicode(string, 'ascii')
+        return string
+    except UnicodeError:
+        encodings = ['utf-8', 'iso-8859-1', 'iso-8859-15', 'iso-8859-2']
+        for enc in encodings:
+            try:
+                x = unicode(string, enc)
+            except UnicodeError:
+                pass
+            else:
+                if x.encode(enc) == string:
+                    return x.encode('utf-8')
+    newstring = ''
+    for char in string:
+        if ord(char) > 127:
+            newstring = newstring + '?'
+        else:
+            newstring = newstring + char
+    return newstring
+
 def readlines(path):
     fobj = open(path, "r")
     try:
