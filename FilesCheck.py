@@ -434,22 +434,24 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res=not is_kernel_package and kernel_modules_regex.search(f)
                 if res:
                     kernel_version=res.group(1)
-                    kernel_version_regex=re.compile('depmod -a.*F /boot/System.map-' + kernel_version + '.*' + kernel_version, re.MULTILINE | re.DOTALL)
+                    kernel_version_regex = re.compile(
+                        '\\bdepmod\s+-a.*F\s+/boot/System\.map-' +
+                        re.escape(kernel_version) + '\\b.*\\b' +
+                        re.escape(kernel_version) + '\\b',
+                        re.MULTILINE | re.DOTALL)
                     postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                     if not postin or not depmod_regex.search(postin):
                         printError(pkg, 'module-without-depmod-postin', f)
                     # check that we run depmod on the right kernel
-                    else:
-                        if not kernel_version_regex.search(postin):
-                            printError(pkg, 'postin-with-wrong-depmod', f)
+                    elif not kernel_version_regex.search(postin):
+                        printError(pkg, 'postin-with-wrong-depmod', f)
 
                     postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun or not depmod_regex.search(postun):
                         printError(pkg, 'module-without-depmod-postun', f)
                     # check that we run depmod on the right kernel
-                    else:
-                        if not kernel_version_regex.search(postun):
-                            printError(pkg, 'postun-with-wrong-depmod', f)
+                    elif not kernel_version_regex.search(postun):
+                        printError(pkg, 'postun-with-wrong-depmod', f)
 
                 # check install-info call in %post and %postun
                 if f.startswith('/usr/share/info/'):
