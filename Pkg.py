@@ -455,7 +455,7 @@ class Pkg:
                 flags=[flags]
             for loop in range(len(versions)):
                 if prereq != None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((names[loop], versions[loop], flags[loop] & PREREQ_FLAG))
+                    prereq.append((names[loop], versions[loop], flags[loop] & (~PREREQ_FLAG)))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
 
