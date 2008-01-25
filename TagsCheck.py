@@ -403,6 +403,7 @@ url_regex=re.compile('^(ftp|http|https)://')
 invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_regex=re.compile('^lib.*?(\.so.*)?$')
 leading_space_regex=re.compile('^\s+')
+license_regex=re.compile('\(([^)]+)\)|\s(?:and|or)\s')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
 forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
@@ -634,16 +635,20 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 #                 printWarning(pkg, 'package-provides-itself')
 #                 break
 
+        def split_license(license):
+            return map(string.strip, [l for l in license_regex.split(license) if l])
+
         rpm_license = pkg[rpm.RPMTAG_LICENSE]
         if not rpm_license:
             printError(pkg, 'no-license')
         else:
             if rpm_license not in VALID_LICENSES:
-                licenses = re.split('(?:[- ]like|/|ish|[- ]style|[- ]Style|and|or|&|\s|-)+', rpm_license)
-                for l in licenses:
-                    if l != '' and not l in VALID_LICENSES:
-                        printWarning(pkg, 'invalid-license', rpm_license)
-                        break
+                for l1 in split_license(rpm_license):
+                    if l1 in VALID_LICENSES:
+                        continue
+                    for l2 in split_license(l1):
+                        if l2 not in VALID_LICENSES:
+                            printWarning(pkg, 'invalid-license', l2)
 
         url=pkg[rpm.RPMTAG_URL]
         if url and url != 'none':
@@ -814,9 +819,7 @@ your specfile.''',
 
 'invalid-license',
 '''The value of the License tag was not recognized.  Known values are:
-%s
-If the license is close to an existing one, you can use '<license> style'.''' \
-% fill('"' + '", "'.join(VALID_LICENSES) + '".', 78),
+%s''' % fill('"' + '", "'.join(VALID_LICENSES) + '".', 78),
 
 'invalid-url',
 '''Your URL is not valid. It must begin with http, https or ftp and must no
