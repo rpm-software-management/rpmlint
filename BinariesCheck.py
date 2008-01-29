@@ -27,6 +27,9 @@ class BinaryInfo:
     soname_regex=re.compile('\s+\(SONAME\).*\[(\S+)\]')
     comment_regex=re.compile('^\s+\[\d+\]\s+\.comment\s+')
     pic_regex=re.compile('^\s+\[\d+\]\s+\.rela?\.(data|text)')
+    #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
+    stack_regex = re.compile('^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
+    stack_exec_regex = re.compile('^..E$')
     non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
     unused_regex=re.compile('^\s+(\S+)')
@@ -41,10 +44,12 @@ class BinaryInfo:
         self.comment=0
         self.soname=0
         self.non_pic=1
+        self.stack = 0
+        self.exec_stack = 0
 
         is_debug=BinaryInfo.debug_file_regex.search(path)
 
-        cmd = ['env', 'LC_ALL=C', 'readelf', '-S', '-d']
+        cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d']
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
@@ -72,6 +77,14 @@ class BinaryInfo:
                 r = BinaryInfo.soname_regex.search(l)
                 if r:
                     self.soname = r.group(1)
+                    continue
+
+                r = BinaryInfo.stack_regex.search(l)
+                if r:
+                    self.stack = 1
+                    flags = r.group(1)
+                    if flags and BinaryInfo.stack_exec_regex.search(flags):
+                        self.exec_stack = 1
                     continue
 
             if self.non_pic:
@@ -283,6 +296,13 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
                                 for s in bin_info.unused:
                                     printWarning(pkg, 'unused-direct-shlib-dependency', i[0], s)
+
+                            if bin_info.stack:
+                                if bin_info.exec_stack:
+                                    printWarning(pkg, 'executable-stack', i[0])
+                            else:
+                                printError(pkg, 'missing-PT_GNU_STACK-section', i[0])
+
             else:
                 if reference_regex.search(i[0]):
                     lines = pkg.grep(invalid_dir_ref_regex, i[0])
@@ -409,6 +429,18 @@ with the intended shared libraries only.''',
 
 'ldd-failed',
 '''Executing ldd on this file failed, all checks could not be run.''',
+
+'executable-stack',
+'''The binary declares the stack as executable.  Executable stack is usually an
+error as it is only needed if the code contains GCC trampolines or similar
+constructs which uses code on the stack.  One possible source for false
+positives are object files built from assembler files which don\'t define a
+proper .note.GNU-stack section.''',
+
+'missing-PT_GNU_STACK-section',
+'''The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
+make the stack executable.  Usual suspects include use of a non-GNU linker or
+an old GNU linker version.''',
 )
 
 # BinariesCheck.py ends here
