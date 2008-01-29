@@ -49,21 +49,31 @@ class BinaryInfo:
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
             for l in string.split(res[1], '\n'):
-                needed=BinaryInfo.needed_regex.search(l)
-                if needed:
-                    self.needed.append(needed.group(1))
-                else:
-                    rpath=BinaryInfo.rpath_regex.search(l)
-                    if rpath:
-                        for p in string.split(rpath.group(1), ':'):
-                            self.rpath.append(p)
-                    elif BinaryInfo.comment_regex.search(l):
-                        self.comment=1
-                    elif BinaryInfo.pic_regex.search(l):
-                        self.non_pic=0
-                    r=BinaryInfo.soname_regex.search(l)
-                    if r:
-                        self.soname=r.group(1)
+
+                r = BinaryInfo.needed_regex.search(l)
+                if r:
+                    self.needed.append(r.group(1))
+                    continue
+
+                r = BinaryInfo.rpath_regex.search(l)
+                if r:
+                    for p in string.split(r.group(1), ':'):
+                        self.rpath.append(p)
+                    continue
+
+                if BinaryInfo.comment_regex.search(l):
+                    self.comment = 1
+                    continue
+
+                if BinaryInfo.pic_regex.search(l):
+                    self.non_pic = 0
+                    continue
+
+                r = BinaryInfo.soname_regex.search(l)
+                if r:
+                    self.soname = r.group(1)
+                    continue
+
             if self.non_pic:
                 self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
         else:
@@ -222,6 +232,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
                             if bin_info.non_pic and not bin_info.had_error:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
+
                         # rpath ?
                         if bin_info.rpath:
                             for p in bin_info.rpath:
@@ -263,6 +274,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                             printError(pkg, 'library-not-linked-against-libc', i[0])
                                         else:
                                             printError(pkg, 'program-not-linked-against-libc', i[0])
+
                             # It could be useful to check these for others than
                             # shared libs only, but that has potential to
                             # generate lots of false positives and noise.
