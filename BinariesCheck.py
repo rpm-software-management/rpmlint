@@ -433,9 +433,9 @@ with the intended shared libraries only.''',
 'executable-stack',
 '''The binary declares the stack as executable.  Executable stack is usually an
 error as it is only needed if the code contains GCC trampolines or similar
-constructs which uses code on the stack.  One possible source for false
-positives are object files built from assembler files which don\'t define a
-proper .note.GNU-stack section.''',
+constructs which uses code on the stack.  One common source for needlessly
+executable stack cases are object files built from assembler files which
+don\'t define a proper .note.GNU-stack section.''',
 
 'missing-PT_GNU_STACK-section',
 '''The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
