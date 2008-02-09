@@ -607,7 +607,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'no-changelogname-tag')
         else:
             clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
-            if use_version_in_changelog and not pkg.isSource():
+            if use_version_in_changelog:
                 ret=changelog_version_regex.search(changelog[0])
                 if not ret and clt:
                     # we also allow the version specified as the first
