@@ -44,7 +44,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         self.checks_.append(c)
         if Config.info:
             if simple_naming_policy_re.search(name_re):
-                details="Its name sould begin with " + name_re[1:]
+                details="Its name should begin with " + name_re[1:]
             else:
                 details="Its name should match the regular expression " + name_re
 
