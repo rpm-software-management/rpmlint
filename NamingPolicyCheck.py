@@ -44,13 +44,13 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         self.checks_.append(c)
         if Config.info:
             if simple_naming_policy_re.search(name_re):
-                details="The name sould begin with " + name_re[1:]
+                details="Its name sould begin with " + name_re[1:]
             else:
-                details="The name should match this regular expression " + name_re
+                details="Its name should match the regular expression " + name_re
 
             addDetails(pkg_name + '-naming-policy-not-applied',
-                       "This package doesn't respect the naming policy.\n"
-                       + details + ".\nIt should only be used for separate packages modules.")
+                       "This package doesn't respect the naming policy for %s "
+                       "packages.\n%s." % (pkg_name, details))
 
     def check(self, pkg):
         if pkg.isSource():
