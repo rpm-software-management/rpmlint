@@ -85,14 +85,14 @@ check=NamingPolicyCheck()
 # if somone as a elegant solution, I will be happy to implement and test it.
 
 
-check.add_check('xmms', '^xmms-', '^/usr/lib/xmms/')
-check.add_check('python', '^python-', '^/usr/lib/python[1-9](-[1-9])?')
-check.add_check('perl5', '^perl-', '^/usr/lib/perl5/vendor_perl')
-check.add_check('apache2', '^apache2-mod_', '^/usr/lib/apache2-')
+check.add_check('xmms', '^xmms-', '^/usr/lib(64)?/xmms/')
+check.add_check('python', '^python-', '^/usr/lib(64)?/python[1-9](-[1-9])?')
+check.add_check('perl5', '^perl-', '^/usr/lib(64)?/perl5/vendor_perl')
+check.add_check('apache2', '^apache2-mod_', '^/usr/lib(64)?/apache2-')
 check.add_check('fortune', '^fortune-', '^/usr/share/games/fortunes/')
-check.add_check('php', '^php-', '/usr/lib/php/extensions/')
-check.add_check('ruby', '^ruby-', '/usr/lib/ruby/[1-9](-[1-9])?/')
-check.add_check('ocaml', '^ocaml-', '/usr/lib/ocaml/')
+check.add_check('php', '^php-', '/usr/lib(64)?/php/extensions/')
+check.add_check('ruby', '^ruby-', '/usr/lib(64)?/ruby/[1-9](-[1-9])?/')
+check.add_check('ocaml', '^ocaml-', '/usr/lib(64)?/ocaml/')
 
 # these exception should be added
 # apache2 => apache2-devel
