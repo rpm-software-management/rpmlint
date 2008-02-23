@@ -251,7 +251,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     configure = 0
                     res = configure_libdir_spec_regex.search(configure_cmdline)
                     if not res:
-                        printError(pkg, "configure-without-libdir-spec")
+                        printWarning(pkg, "configure-without-libdir-spec")
                     elif res.group(1):
                         res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
@@ -415,7 +415,8 @@ should be removed, as it is redundant with rpm defaults.''',
 
 'configure-without-libdir-spec',
 '''A configure script is run without specifying the libdir. configure
-options must be augmented with something like --libdir=%{_libdir}.''',
+options must be augmented with something like --libdir=%{_libdir} whenever
+the script supports it.''',
 
 'no-%prep-section',
 '''The spec file does not contain a %prep section.  Even if some packages don't
