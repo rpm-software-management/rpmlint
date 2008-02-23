@@ -143,7 +143,7 @@ usr_lib_regex=re.compile('^/usr/lib(64)?/')
 bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex=re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
-usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
+usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
 srcname_regex=re.compile('(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
 
