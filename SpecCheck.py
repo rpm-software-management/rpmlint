@@ -129,17 +129,22 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         if not pkg.isSource():
             return
 
+        wrong_spec = False
         # lookup spec file
         files = pkg.files()
         for f in files.keys():
             if f.endswith('.spec'):
-                self._spec_file = pkg.dirName() + "/" + f
-                break
+                if f == pkg.name + ".spec":
+                        self._spec_file = pkg.dirName() + "/" + f
+                        wrong_spec = False
+                        break
+                else:
+                        wrong_spec = True
         if not self._spec_file:
             printError(pkg, "no-spec-file")
         else:
-            if f != pkg.name + ".spec":
-                printError(pkg, "invalid-spec-name", f)
+            if wrong_spec:
+                printError(pkg, "invalid-spec-name")
 
             # check content of spec file
             spec_lines = Pkg.readlines(self._spec_file)
