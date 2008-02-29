@@ -80,12 +80,12 @@ sign of a corrupt zip file.''',
 '''The zip file is not compressed.''',
 
 'class-path-in-manifest',
-'''The META-INF/MANIFEST file in the jar contains a hardcoded Class-Path.
+'''The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
 These entries do not work with older Java versions and even if they do work,
 they are inflexible and usually cause nasty surprises.''',
 
 'no-jar-manifest',
-'''The jar file does not contain a META-INF/MANIFEST file.''',
+'''The jar file does not contain a META-INF/MANIFEST.MF file.''',
 
 'jar-indexed',
 '''The jar file is indexed, ie. it contains the META-INF/INDEX.LIST file.
