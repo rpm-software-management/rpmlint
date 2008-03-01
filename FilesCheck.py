@@ -212,6 +212,7 @@ interpreter_regex=re.compile('^/(usr/)?s?bin/[^/]+$')
 script_regex=re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex=re.compile('^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|ml[ily]?)$'), re.IGNORECASE)
 meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
 
@@ -657,7 +658,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'non-executable-script', f, oct(perm))
                             if line.endswith('\r\n') or line.endswith('\r'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
-                        elif is_doc and not re.search('\.(?:rtf|x?html?)$', f, re.I):
+                        elif is_doc and not skipdocs_regex.search(f):
                             if line.endswith('\r\n') or line.endswith('\r'):
                                 printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
                             # We check only doc text files for UTF-8-ness;
@@ -667,9 +668,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printWarning(pkg, 'file-not-utf8', f)
 
                     elif is_doc and compr_regex.search(f):
-                        # compressed docs, eg. info and man files etc
-                        if use_utf8 and not is_utf8(path):
-                            printWarning(pkg, 'file-not-utf8', f)
+                        ff = compr_regex.sub('', f)
+                        if not skipdocs_regex.search(ff):
+                            # compressed docs, eg. info and man files etc
+                            if use_utf8 and not is_utf8(path):
+                                printWarning(pkg, 'file-not-utf8', f)
 
 
             if f.startswith('/etc/cron.d/'):
