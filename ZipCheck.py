@@ -53,7 +53,9 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                             if classpath_regex.search(mf):
                                 printWarning(pkg, 'class-path-in-manifest', i[0])
                         except KeyError:
-                            printError(pkg, 'no-jar-manifest', i[0])
+                            # META-INF/* are optional:
+                            # http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html
+                            pass
                         try:
                             zinfo = z.getinfo('META-INF/INDEX.LIST')
                             if not want_indexed_jars:
@@ -83,9 +85,6 @@ sign of a corrupt zip file.''',
 '''The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
 These entries do not work with older Java versions and even if they do work,
 they are inflexible and usually cause nasty surprises.''',
-
-'no-jar-manifest',
-'''The jar file does not contain a META-INF/MANIFEST.MF file.''',
 
 'jar-indexed',
 '''The jar file is indexed, ie. it contains the META-INF/INDEX.LIST file.
