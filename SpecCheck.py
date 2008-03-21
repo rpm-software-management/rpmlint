@@ -184,8 +184,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         pkg.current_linenum = 0
         for line in spec_lines:
-
             pkg.current_linenum += 1
+            if chr(0xA0) in line:
+                printWarning(pkg, "non-break-space", "line %s" % (pkg.current_linenum)) 
             section_marker = 0
             for i in section.keys():
                 if section[i]['re'].search(line):
@@ -520,6 +521,11 @@ older, equal and newer versions of the obsoleted thing.  This may cause update
 problems, restrict future package/provides naming, and may match something it
 was originally not inteded to match -- make the Obsoletes versioned if
 possible.''',
+
+'non-break-space',
+'''The spec file contains a non-break space, which can be seen as a regular space with
+some editors and lead to weird and strange errors. It should be replaced by a regular
+space.'''
 )
 
 # SpecCheck.py ends here
