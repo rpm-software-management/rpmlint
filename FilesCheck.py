@@ -16,10 +16,6 @@ import re
 import stat
 import string
 import os
-try:
-    from textwrap import fill # python >= 2.3
-except ImportError:
-    def fill(text, width=70): return text
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -707,12 +703,12 @@ the standard %doc tag.''',
 'non-standard-uid',
 '''A file in this package is owned by a non standard user.
 Standard users are:
-%s''' % fill(", ".join(standard_users)),
+%s.''' % ", ".join(standard_users),
 
 'non-standard-gid',
 '''A file in this package is owned by a non standard group.
 Standard groups are:
-%s''' % fill(", ".join(standard_groups)),
+%s.''' % ", ".join(standard_groups),
 
 'library-without-ldconfig-postin',
 '''This package contains a library and provides no %post scriptlet containing

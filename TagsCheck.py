@@ -16,10 +16,6 @@ import string
 import re
 import os.path
 import Config
-try:
-    from textwrap import fill # python >= 2.3
-except ImportError:
-    def fill(text, width=70): return text
 
 
 def get_default_valid_rpmgroups(filename=""):
@@ -798,7 +794,7 @@ in your spec file using the Group tag.''',
 
 'non-standard-group',
 '''The value of the Group tag in the package is not valid.  Valid groups are:
-%s''' % fill('"' + '", "'.join(VALID_GROUPS) + '".', 78),
+"%s".''' % '", "'.join(VALID_GROUPS),
 
 'no-changelogname-tag',
 '''There is no %changelog tag in your spec file. To insert it, just insert a
@@ -819,7 +815,7 @@ your specfile.''',
 
 'invalid-license',
 '''The value of the License tag was not recognized.  Known values are:
-%s''' % fill('"' + '", "'.join(VALID_LICENSES) + '".', 78),
+"%s".''' % '", "'.join(VALID_LICENSES),
 
 'invalid-url',
 '''Your URL is not valid. It must begin with http, https or ftp and must no

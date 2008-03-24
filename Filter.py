@@ -10,6 +10,10 @@
 import sys
 import Config
 import Testing
+try:
+    from textwrap import fill # python >= 2.3
+except ImportError:
+    def fill(text, width=70): return text
 
 def printInfo(pkg, reason, *details):
     if _print("I", pkg, reason, details) and Config.info:
@@ -47,7 +51,7 @@ def printDescriptions(reason):
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
-            sys.stdout.write(d)
+            sys.stdout.write(fill(d, 78))
             sys.stdout.write("\n\n")
     except KeyError:
         pass
