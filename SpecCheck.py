@@ -544,9 +544,9 @@ on all architectures at runtime. Investigate whether the package is really
 architecture independent or if some other dir/macro should be instead.''',
 
 'non-break-space',
-'''The spec file contains a non-break space, which can be seen as a regular space with
-some editors and lead to weird and strange errors. It should be replaced by a regular
-space.'''
+'''The spec file contains a non-break space, which looks like a regular space
+in some editors but can lead to obscure errors. It should be replaced by a
+regular space.''',
 )
 
 # SpecCheck.py ends here
