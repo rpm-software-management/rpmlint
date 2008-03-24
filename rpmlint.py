@@ -259,7 +259,7 @@ if info_error:
     for c in Config.allChecks():
         loadCheck(c)
     for e in info_error.split(','):
-        print "%s :" % e
+        print "%s:" % e
         printDescriptions(e)
     sys.exit(0)
 
