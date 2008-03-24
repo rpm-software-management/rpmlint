@@ -10,10 +10,6 @@
 from Filter import *
 import AbstractCheck
 import re
-try:
-    from textwrap import fill # python >= 2.3
-except ImportError:
-    def fill(text, width=70): return text
 
 
 class FHSCheck(AbstractCheck.AbstractCheck):
@@ -64,17 +60,17 @@ if Config.info:
 'non-standard-dir-in-usr',
 """Your package is creating a non-standard subdirectory in /usr. The standard
 directories are:
-%s""" % fill(", ".join(FHSCheck.usr_subdir)),
+%s.""" % ", ".join(FHSCheck.usr_subdir),
 
 'FSSTND-dir-in-var',
 """Your package is creating an illegal directory in /var. The FSSTND (illegal)
 ones are:
-%s""" % fill(", ".join(FHSCheck.var_fsstnd)),
+%s.""" % ", ".join(FHSCheck.var_fsstnd),
 
 'non-standard-dir-in-var',
 """Your package is creating a non-standard subdirectory in /var. The standard
 directories are:
-%s""" % fill(", ".join(FHSCheck.var_subdir)),
+%s.""" % ", ".join(FHSCheck.var_subdir),
 )
 
 # FHSCheck.py ends here
