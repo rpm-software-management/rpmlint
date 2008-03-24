@@ -31,6 +31,7 @@ obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
+noarch_regex = re.compile('^BuildArch(?:itectures)?\s*:\s*\\bnoarch\\b', re.IGNORECASE)
 make_check_regexp = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?')
@@ -47,6 +48,7 @@ prereq_regex = re.compile('^PreReq(\(.*\))?:\s*(.+?)\s*$', re.IGNORECASE)
 buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 macro_regex = re.compile('(%+)[{(]?(\w+)')
+libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -156,6 +158,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         applied_patches_ifarch = []
         source_dir = None
         buildroot = 0
+        noarch = 0
         configure = 0
         configure_cmdline = ""
         mklibname = 0
@@ -287,6 +290,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 else:
                     printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
+            res = noarch_regex.search(line)
+            if res:
+                noarch = 1
+
             if mklibname_regex.search(line):
                 mklibname = 1
 
@@ -323,6 +330,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     for obs in unversioned(deptokens(res.group(1))):
                         printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+
+            # TODO: check scriptlets for these too
+            if current_section == 'files' and noarch:
+                res = libdir_regex.search(line)
+                if res:
+                    printWarning(pkg, 'libdir-macro-in-noarch-package', line.rstrip())
 
             if not indent_tabs and indent_tabs_regex.search(line):
                 indent_tabs = pkg.current_linenum
@@ -521,6 +534,14 @@ older, equal and newer versions of the obsoleted thing.  This may cause update
 problems, restrict future package/provides naming, and may match something it
 was originally not inteded to match -- make the Obsoletes versioned if
 possible.''',
+
+'libdir-macro-in-noarch-package',
+'''The %{_libdir} or %{_lib} macro was found in a noarch package in a section
+that gets included in binary packages.  This is most likely an error because
+these macros are expanded on the build host and their values vary between
+architectures, probably resulting in a package that does not work properly
+on all architectures at runtime. Investigate whether the package is really
+architecture independent or if some other dir/macro should be instead.''',
 
 'non-break-space',
 '''The spec file contains a non-break space, which can be seen as a regular space with
