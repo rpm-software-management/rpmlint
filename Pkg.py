@@ -236,7 +236,7 @@ class Pkg:
             self._extract()
         return self.dirname
 
-    # handle the extract phasis
+    # extract rpm contents
     def _extract(self):
         s=os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
