@@ -342,7 +342,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 printError(pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f):
+            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/"):
                 printWarning(pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 printWarning(pkg, 'manifest-in-perl-module', f)
