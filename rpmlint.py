@@ -155,6 +155,10 @@ def main():
                 sys.stderr.write('Interrupted, exiting while scanning all packages\n')
                 sys.exit(2)
 
+        if printAllReasons():
+            sys.stderr.write('rpmlint: E: badness %d exceeds threshold %d, aborting.\n' % (badnessScore(), badnessThreshold()))
+            sys.exit(66)
+
     finally:
         pkg and pkg.cleanup()
         print "%d packages and %d specfiles checked; %d errors, %d warnings." \
