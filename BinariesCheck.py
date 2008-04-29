@@ -25,8 +25,8 @@ class BinaryInfo:
     needed_regex=re.compile('\s+\(NEEDED\).*\[(\S+)\]')
     rpath_regex=re.compile('\s+\(RPATH\).*\[(\S+)\]')
     soname_regex=re.compile('\s+\(SONAME\).*\[(\S+)\]')
-    comment_regex=re.compile('^\s+\[\d+\]\s+\.comment\s+')
-    pic_regex=re.compile('^\s+\[\d+\]\s+\.rela?\.(data|text)')
+    comment_regex=re.compile('^\s+\[\s*\d+\]\s+\.comment\s+')
+    pic_regex=re.compile('^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
     #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
     stack_regex = re.compile('^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
     stack_exec_regex = re.compile('^..E$')
