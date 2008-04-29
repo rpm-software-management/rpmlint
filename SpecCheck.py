@@ -49,6 +49,9 @@ buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 macro_regex = re.compile('(%+)[{(]?(\w+)')
 libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
+comment_or_empty_regex = re.compile('^\s*(#|$)')
+defattr_regex = re.compile('^\s*%defattr\\b')
+attr_regex = re.compile('^\s*%attr\\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -171,6 +174,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         depgen_disabled = 0
         indent_spaces = 0
         indent_tabs = 0
+        files_has_defattr = 0
         section = {}
         for sec in ['description', 'prep', 'build', 'install', 'clean',
                     'files', 'changelog', 'package', 'check']:
@@ -198,6 +202,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     section[i]['count'] = section[i]['count'] + 1
 
             if section_marker:
+                if current_section == 'files':
+                    files_has_defattr = 0
                 continue
 
             if current_section in ('prep', 'build'):
@@ -330,6 +336,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     for obs in unversioned(deptokens(res.group(1))):
                         printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+
+            if current_section == 'files':
+                if not comment_or_empty_regex.search(line) and not \
+                   (ifarch_regex.search(line) or if_regex.search(line) or
+                    endif_regex.search(line)):
+                    if defattr_regex.search(line):
+            	        files_has_defattr = 1;
+                    elif not (files_has_defattr or attr_regex.search(line)):
+    	    	        printError(pkg, 'files-attr-not-set')
 
             # TODO: check scriptlets for these too
             if current_section == 'files' and noarch:
@@ -547,6 +562,12 @@ architecture independent or if some other dir/macro should be instead.''',
 '''The spec file contains a non-break space, which looks like a regular space
 in some editors but can lead to obscure errors. It should be replaced by a
 regular space.''',
+
+'files-attr-not-set',
+'''A file or a directory entry in a %files section does not have attributes
+set which may result in security issues in the resulting binary package
+depending on the system where the package is built.  Add default attributes
+using %defattr before it in the %files section, or use per line %attr's.''',
 )
 
 # SpecCheck.py ends here
