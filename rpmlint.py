@@ -157,10 +157,9 @@ def main():
 
     finally:
         pkg and pkg.cleanup()
-
-    print "%d packages and %d specfiles checked; %d errors, %d warnings." % \
-          (packages_checked, specfiles_checked,
-           printed_messages["E"], printed_messages["W"])
+        print "%d packages and %d specfiles checked; %d errors, %d warnings." \
+              % (packages_checked, specfiles_checked,
+                 printed_messages["E"], printed_messages["W"])
 
     if printed_messages["E"] > 0:
         sys.exit(64)
