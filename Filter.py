@@ -15,6 +15,8 @@ try:
 except ImportError:
     def fill(text, width=70): return text
 
+printed_messages = { "I": 0, "W": 0, "E": 0 }
+
 def printInfo(pkg, reason, *details):
     if _print("I", pkg, reason, details) and Config.info:
         printDescriptions(reason)
@@ -41,6 +43,7 @@ def _print(type, pkg, reason, details):
         Testing.addOutput(s)
     else:
         if not Config.isFiltered(s):
+            printed_messages[type] = printed_messages[type] + 1
             sys.stdout.write(s)
             sys.stdout.write("\n")
             return 1
