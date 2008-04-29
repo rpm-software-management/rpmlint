@@ -182,8 +182,8 @@ try:
                                'extractdir=',
                                'file=',
                                ])
-except getopt.error:
-    print 'bad option'
+except getopt.error, e:
+    sys.stderr.write("%s: %s\n" % (sys.argv[0], e))
     usage(sys.argv[0])
     sys.exit(1)
 
