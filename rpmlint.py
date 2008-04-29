@@ -68,7 +68,7 @@ def main():
                             pkg = Pkg.FakePkg(f)
                             check = SpecCheck.SpecCheck()
                             check.check_spec(pkg, Pkg.readlines(f))
-                            specfiles_checked = specfiles_checked + 1
+                            specfiles_checked += 1
                             
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
                         dirs.append(f)
@@ -96,7 +96,7 @@ def main():
 
             for pkg in pkgs:
                 runChecks(pkg)
-                packages_checked = packages_checked + 1
+                packages_checked += 1
                 pkg.cleanup()
 
         for d in dirs:
@@ -113,11 +113,11 @@ def main():
                                 pkg = Pkg.FakePkg(f)
                                 check = SpecCheck.SpecCheck()
                                 check.check_spec(pkg, Pkg.readlines(f))
-                                specfiles_checked = specfiles_checked + 1
+                                specfiles_checked += 1
                             else:
                                 pkg = Pkg.Pkg(f, extract_dir)
                                 runChecks(pkg)
-                                packages_checked = packages_checked + 1
+                                packages_checked += 1
                         except KeyboardInterrupt:
                             sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
                             sys.exit(2)
@@ -139,7 +139,7 @@ def main():
                     for item in ts.IDTXload():
                         pkg=Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
                         runChecks(pkg)
-                        packages_checked = packages_checked + 1
+                        packages_checked += 1
                 else:
                     try:
                         db=rpm.opendb()
@@ -147,7 +147,7 @@ def main():
                         while idx:
                             pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
                             runChecks(pkg)
-                            packages_checked = packages_checked + 1
+                            packages_checked += 1
                             idx=db.nextkey(idx)
                     finally:
                         del db
