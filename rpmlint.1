@@ -63,6 +63,17 @@ System wide configuration.
 .TP
 \fB~/.rpmlintrc\fR
 User configuration.
+.SH EXIT CODES
+.IP 0
+No errors.
+.IP 1
+Unspecified error.
+.IP 2
+Interrupted.
+.IP 64
+One or more error message printed.
+.IP 65
+One or more warning message printed (and no error messages).
 .SH AUTHOR
 Originally written by Frédéric Lepied, see the file AUTHORS for (probably
 incomplete) list of additional contributors.
