@@ -126,6 +126,16 @@ def removeFilter(s):
     else:
         _filters_re = None
 
+_scoring={}
+
+def setBadness(s, score):
+    _scoring[s] = score
+
+def badness(s):
+    if _scoring.has_key(s):
+        return _scoring[s]
+    return 0
+
 _non_named_group_re = re.compile('[^\\](\()[^:]')
 def isFiltered(s):
     global _filters
