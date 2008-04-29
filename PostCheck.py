@@ -33,7 +33,7 @@ empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging
 syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
-percent_regex = re.compile('%{?\w{3,}', re.MULTILINE)
+percent_regex = re.compile('^[^#]*%{?\w{3,}', re.MULTILINE)
 bracket_regex=re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
 home_regex=re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
 dangerous_command_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
