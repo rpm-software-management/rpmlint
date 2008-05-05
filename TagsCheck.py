@@ -512,12 +512,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         has_so=1
                         break
                 if has_so:
+                    base_or_libs = base + '/' + base + '-libs/lib' + base
                     for d in deps:
-                        if d[0] == base:
+                        if d[0] == base or d[0] == base + '-libs' or d[0] == 'lib' + base:
                             dep=d
                             break
                     if not dep:
-                        printWarning(pkg, 'no-dependency-on', base)
+                        printWarning(pkg, 'no-dependency-on', base_or_libs)
                     elif version:
                         if epoch is not None: # regardless of use_epoch
                             expected=str(epoch) + ":" + version
@@ -525,9 +526,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             expected=version
                         if dep[1][:len(expected)] != expected:
                             if dep[1] != '':
-                                printWarning(pkg, 'incoherent-version-dependency-on', base, dep[1], expected)
+                                printWarning(pkg, 'incoherent-version-dependency-on', base_or_libs, dep[1], expected)
                             else:
-                                printWarning(pkg, 'no-version-dependency-on', base, expected)
+                                printWarning(pkg, 'no-version-dependency-on', base_or_libs, expected)
                     res=devel_number_regex.search(name)
                     if not res:
                         printWarning(pkg, 'no-major-in-name', name)
