@@ -61,8 +61,16 @@ DEFAULT_VALID_LICENSES = (
     'Entessa Public License',
     'Fair License',
     'Frameworx License',
-    'GPL', # GNU General Public License
-    'LGPL', # GNU Lesser General Public License
+    'GPLv1',
+    'GPLv1+',
+    'GPLv2',
+    'GPLv2+',
+    'GPLv3',
+    'GPLv3+',
+    'LGPLv2',
+    'LGPLv2+',
+    'LGPLv3',
+    'LGPLv3+',
     'Historical Permission Notice and Disclaimer',
     'IBM Public License',
     'Intel Open Source License',
