@@ -315,9 +315,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
             if standard_users and not user in standard_users:
-                printError(pkg, 'non-standard-uid', f, user)
+                printWarning(pkg, 'non-standard-uid', f, user)
             if standard_groups and not group in standard_groups:
-                printError(pkg, 'non-standard-gid', f, group)
+                printWarning(pkg, 'non-standard-gid', f, group)
 
             if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
