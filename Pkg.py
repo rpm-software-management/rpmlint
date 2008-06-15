@@ -43,13 +43,19 @@ try:
     if rpm.RPMSENSE_SCRIPT_PRE:
         PREREQ_FLAG=rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
 except AttributeError:
-    PREREQ_FLAG=rpm.RPMSENSE_PREREQ
-
+    try:
+        PREREQ_FLAG=rpm.RPMSENSE_PREREQ
+    except:
+        #(proyvind): This seems ugly, but then again so does this whole check as well.
+        PREREQ_FLAG=False
 # check if we use a rpm version compatible with 4.2
 v42 = 0
 try:
     if rpm.RPMTAG_DISTTAG: # in >= 4.4
         v42 = 1
+        #(proyvind): Don't use RPMTAG_OLDFILENAMES with rpm 4.4, especially since
+        #            it's put to rest with rpm5.org.
+        v304 = 0
 except AttributeError:
     try:
         if rpm.RPMTAG_SOURCEPACKAGE: # in 4.2 but not in 4.4.something (6?)
