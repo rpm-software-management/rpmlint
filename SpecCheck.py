@@ -308,11 +308,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             res = prereq_regex.search(line)
             if res:
-                printWarning(pkg, 'prereq-use', res.group(2))
+                printError(pkg, 'prereq-use', res.group(2))
 
             res = buildprereq_regex.search(line)
             if res:
-                printWarning(pkg, 'buildprereq-use', res.group(1))
+                printError(pkg, 'buildprereq-use', res.group(1))
 
             if scriptlet_requires_regex.search(line) and current_section == 'package':
                 printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
