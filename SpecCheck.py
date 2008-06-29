@@ -342,9 +342,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                    (ifarch_regex.search(line) or if_regex.search(line) or
                     endif_regex.search(line)):
                     if defattr_regex.search(line):
-            	        files_has_defattr = 1;
+                        files_has_defattr = 1;
                     elif not (files_has_defattr or attr_regex.search(line)):
-    	    	        printError(pkg, 'files-attr-not-set')
+                        printError(pkg, 'files-attr-not-set')
 
             # TODO: check scriptlets for these too
             if current_section == 'files' and noarch:
