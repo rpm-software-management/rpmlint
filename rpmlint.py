@@ -167,8 +167,6 @@ def main():
 
     if printed_messages["E"] > 0:
         sys.exit(64)
-    elif printed_messages["W"] > 0:
-        sys.exit(65)
     sys.exit(0)
 
 def runChecks(pkg):
