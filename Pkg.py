@@ -364,7 +364,7 @@ class Pkg:
         # Get files according to rpm version
         if v304:
             files=self.header[rpm.RPMTAG_OLDFILENAMES]
-            if files == None:
+            if not files:
                 basenames=self.header[rpm.RPMTAG_BASENAMES]
                 if basenames:
                     dirnames=self.header[rpm.RPMTAG_DIRNAMES]
