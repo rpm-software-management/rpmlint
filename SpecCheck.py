@@ -184,17 +184,28 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 're': re.compile('^%' + sec + '(?:\s|$)'),
                 }
 
-        if self._spec_file:
-            if use_utf8 and not Pkg.is_utf8(self._spec_file):
+        is_utf8 = 0
+        if self._spec_file and use_utf8:
+            if Pkg.is_utf8(self._spec_file):
+                is_utf8 = 1
+            else:
                 printError(pkg, "non-utf8-spec-file", self._spec_file)
 
         # gather info from spec lines
 
         pkg.current_linenum = 0
         for line in spec_lines:
+
             pkg.current_linenum += 1
-            if chr(0xA0) in line:
-                printWarning(pkg, "non-break-space", "line %s" % (pkg.current_linenum)) 
+
+            nbsp = chr(0xA0)
+            if is_utf8:
+                line = unicode(line, "utf-8", "replace")
+                nbsp = unichr(0xA0)
+
+            if line.find(nbsp) != -1:
+                printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
+
             section_marker = 0
             for i in section.keys():
                 if section[i]['re'].search(line):
