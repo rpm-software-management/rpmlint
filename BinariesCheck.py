@@ -34,8 +34,10 @@ class BinaryInfo:
     undef_regex=re.compile('^undefined symbol:\s+(\S+)')
     unused_regex=re.compile('^\s+(\S+)')
     debug_file_regex=re.compile('\.debug$')
+    exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
+    fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
 
-    def __init__(self, pkg, path, file, is_ar):
+    def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.had_error=0
         self.needed=[]
         self.rpath=[]
@@ -46,10 +48,12 @@ class BinaryInfo:
         self.non_pic=1
         self.stack = 0
         self.exec_stack = 0
+        self.exit_calls = []
+        fork_called = 0
 
         is_debug=BinaryInfo.debug_file_regex.search(path)
 
-        cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d']
+        cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d', '-s']
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
@@ -87,8 +91,25 @@ class BinaryInfo:
                         self.exec_stack = 1
                     continue
 
+                if is_shlib:
+                    r = BinaryInfo.exit_call_regex.search(l)
+                    if r:
+                        self.exit_calls.append(r.group(1))
+                        continue
+                    r = BinaryInfo.fork_call_regex.search(l)
+                    if r:
+                        fork_called = 1
+                        continue
+
             if self.non_pic:
                 self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
+
+            # Ignore all exit() calls if fork() is being called.
+            # Does not have any context at all but without this kludge, the
+            # number of false positives would probably be intolerable.
+            if fork_called:
+                self.exit_calls = []
+
         else:
             self.had_error=1
             printWarning(pkg, 'binaryinfo-readelf-failed',
@@ -215,7 +236,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
                         # inspect binary file
-                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar)
+                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar, is_shlib)
 
                         # so name in library
                         if is_shlib:
@@ -254,6 +275,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                    not usr_lib_regex.search(p):
                                     printError(pkg, 'binary-or-shlib-defines-rpath', i[0], bin_info.rpath)
                                     break
+
+                        # shared lib calls exit() or _exit()?
+                        if is_shlib and bin_info.exit_calls:
+                            for ec in bin_info.exit_calls:
+                                printWarning(pkg, 'shared-lib-calls-exit', i[0], ec)
 
                         # statically linked ?
                         is_exec=executable_regex.search(i[1])
@@ -442,6 +468,15 @@ don\'t define a proper .note.GNU-stack section.''',
 '''The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
 make the stack executable.  Usual suspects include use of a non-GNU linker or
 an old GNU linker version.''',
+
+'shared-lib-calls-exit',
+'''This library package calls exit() or _exit(), probably in a non-fork()
+context. Doing so from a library is strongly discouraged - when a library
+function calls exit(), it prevents the calling program from handling the
+error, reporting it to the user, closing files properly, and cleaning up any
+state that the program has. It is preferred for the library to return an
+actual error code and let the calling program decide how to handle the
+situation.''',
 )
 
 # BinariesCheck.py ends here
