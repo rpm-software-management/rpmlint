@@ -152,10 +152,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "invalid-spec-name")
 
             # check content of spec file
-            spec_lines = Pkg.readlines(self._spec_file)
-            self.check_spec(pkg, spec_lines)
+            self.check_spec(pkg, self._spec_file)
 
-    def check_spec(self, pkg, spec_lines):
+    def check_spec(self, pkg, spec_file):
+        self._spec_file = spec_file
+        spec_lines = Pkg.readlines(spec_file)
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
