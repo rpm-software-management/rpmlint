@@ -67,7 +67,7 @@ def main():
                             # Short-circuit spec file checks
                             pkg = Pkg.FakePkg(f)
                             check = SpecCheck.SpecCheck()
-                            check.check_spec(pkg, Pkg.readlines(f))
+                            check.check_spec(pkg, f)
                             specfiles_checked += 1
                             
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
@@ -112,7 +112,7 @@ def main():
                             if f.endswith('.spec'):
                                 pkg = Pkg.FakePkg(f)
                                 check = SpecCheck.SpecCheck()
-                                check.check_spec(pkg, Pkg.readlines(f))
+                                check.check_spec(pkg, f)
                                 specfiles_checked += 1
                             else:
                                 pkg = Pkg.Pkg(f, extract_dir)
