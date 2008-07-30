@@ -80,7 +80,18 @@ def deptokens(line):
     prco = []
     tmp = ''
     wantmore = 0
-    for tok in re.split('[\s,]+', line.strip()):
+    toks = re.split('[\s,]+', line.strip())
+
+    # Drop line continuation backslash in multiline macro definition, eg.
+    # [...] \
+    # Obsoletes: foo-%1 <= 1.0.0 \
+    # [...] \
+    # (yes, this is an ugly hack and we probably have other problems with
+    #  multiline macro definitions elsewhere...)
+    if toks[-1] == '\\':
+        del toks[-1]
+
+    for tok in toks:
         if len(tok) == 0:
             continue
         if len(tmp) == 0:
