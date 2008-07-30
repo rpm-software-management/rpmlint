@@ -189,6 +189,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_ar = string.find(i[1], 'current ar archive') != -1
             is_ocaml_native = string.find(i[1], 'Objective caml native') != -1
             is_binary = is_elf or is_ar or is_ocaml_native
+            is_shlib = so_regex.search(i[0])
 
             if is_binary:
                 binary=binary+1
@@ -217,7 +218,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar)
 
                         # so name in library
-                        if so_regex.search(i[0]):
+                        if is_shlib:
                             has_lib.append(i[0])
                             if bin_info.had_error:
                                 pass
@@ -291,7 +292,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             # It could be useful to check these for others than
                             # shared libs only, but that has potential to
                             # generate lots of false positives and noise.
-                            if so_regex.search(i[0]):
+                            if is_shlib:
                                 for s in bin_info.undef:
                                     printWarning(pkg, 'undefined-non-weak-symbol', i[0], s)
                                 for s in bin_info.unused:
