@@ -205,14 +205,17 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         # gather info from spec lines
 
         pkg.current_linenum = 0
+
+        nbsp = chr(0xA0)
+        if is_utf8:
+            nbsp = unichr(0xA0)
+        
         for line in spec_lines:
 
             pkg.current_linenum += 1
 
-            nbsp = chr(0xA0)
             if is_utf8:
                 line = unicode(line, "utf-8", "replace")
-                nbsp = unichr(0xA0)
 
             if line.find(nbsp) != -1:
                 printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
