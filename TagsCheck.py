@@ -405,7 +405,7 @@ devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 url_regex=re.compile('^(ftp|http|https)://')
 invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
-lib_regex=re.compile('^lib.*?(\.so.*)?$')
+lib_package_regex = re.compile('(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex=re.compile('^\s+')
 license_regex=re.compile('\(([^)]+)\)|\s(?:and|or)\s')
 invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
@@ -500,7 +500,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if is_source and lib_devel_number_regex.search(d[0]):
                 printError(pkg, 'invalid-build-requires', d[0])
             if not is_source and not is_devel:
-                res=lib_regex.search(d[0])
+                res = lib_package_regex.search(d[0])
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and string.find(d[1], '-') != -1:
