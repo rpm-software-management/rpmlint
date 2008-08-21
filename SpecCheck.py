@@ -150,8 +150,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         files = pkg.files()
         for f in files.keys():
             if f.endswith('.spec'):
+                self._spec_file = pkg.dirName() + "/" + f
                 if f == pkg.name + ".spec":
-                        self._spec_file = pkg.dirName() + "/" + f
                         wrong_spec = False
                         break
                 else:
