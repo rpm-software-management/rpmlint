@@ -664,20 +664,23 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             printWarning(pkg, 'no-url-tag')
 
-        obs=map(lambda x: x[0], pkg.obsoletes())
-        provs=map(lambda x: x[0], pkg.provides())
-        if pkg.name in obs:
+        obs_names = map(lambda x: x[0], pkg.obsoletes())
+        prov_names = map(lambda x: x[0], pkg.provides())
+
+        if pkg.name in obs_names:
             printError(pkg, 'obsolete-on-name')
-        for o in obs:
-            if not o in provs:
+        for o in obs_names:
+            if not o in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
             if string.find(o[1], '%') != -1:
                 printError(pkg, 'percent-in-obsoletes', o[0], o[1])
 
+        # TODO: should take versions, <, <=, =, >=, > into account here
+        #       https://bugzilla.redhat.com/460872
         useless_provides=[]
-        for p in provs:
-            if provs.count(p) != 1:
+        for p in prov_names:
+            if prov_names.count(p) != 1:
                 if p not in useless_provides:
                     useless_provides.append(p)
         for p in useless_provides:
