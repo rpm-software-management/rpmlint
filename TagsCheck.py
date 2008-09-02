@@ -684,7 +684,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if p not in useless_provides:
                     useless_provides.append(p)
         for p in useless_provides:
-            printError(pkg, 'useless-explicit-provides',p)
+            printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
             if string.find(p[1], '%') != -1:
@@ -875,7 +875,7 @@ This BuildRequires dependency will not be resolved on lib64 platforms
 '''You must let rpm find the library dependencies by itself. Do not put unneeded
 explicit Requires: tags.''',
 
-'useless-explicit-provides',
+'useless-provides',
 '''This package provides 2 times the same capacity. It should only provide it
 once.''',
 
