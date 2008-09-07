@@ -289,17 +289,22 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if configure_cmdline[-1] == "\\":
                     configure_cmdline=configure_cmdline[:-1] + string.strip(line)
                 else:
-                    configure = 0
                     res = configure_libdir_spec_regex.search(configure_cmdline)
                     if not res:
+                        # Hack to get the correct (start of ./configure) line
+                        # number displayed:
+                        real_linenum = pkg.current_linenum
+                        pkg.current_linenum = configure
                         printWarning(pkg, "configure-without-libdir-spec")
+                        pkg.current_linenum = real_linenum
                     elif res.group(1):
                         res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
                             printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
+                    configure = 0
 
             if current_section != 'changelog' and configure_start_regex.search(line):
-                configure = 1
+                configure = pkg.current_linenum # store line where it started
                 configure_cmdline = string.strip(line)
 
             res = hardcoded_library_path_regex.search(line)
