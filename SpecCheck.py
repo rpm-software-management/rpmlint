@@ -228,8 +228,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     section[i]['count'] = section[i]['count'] + 1
 
             if section_marker:
+
                 if current_section == 'files':
                     files_has_defattr = 0
+
+                if lib_package_regex.search(line):
+                    lib = 1
+
                 continue
 
             if current_section in ('prep', 'build'):
@@ -304,9 +309,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if mklibname_regex.search(line):
                 mklibname = 1
-
-            if lib_package_regex.search(line):
-                lib = 1
 
             if current_section == 'package':
 
