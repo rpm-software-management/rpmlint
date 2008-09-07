@@ -264,26 +264,17 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     ifarch_depth = -1
                 if_depth = if_depth - 1
 
-            res=patch_regex.search(line)
+            res = applied_patch_regex.search(line)
             if res:
-                pnum = int(res.group(1) or 0)
-                patches[pnum] = res.group(2)
-            else:
-                res = applied_patch_regex.search(line)
+                pnum = int(res.group(1) or res.group(2) or 0)
+                applied_patches.append(pnum)
+                if ifarch_depth > 0:
+                    applied_patches_ifarch.append(pnum)
+            elif not source_dir:
+                res = source_dir_regex.search(line)
                 if res:
-                    pnum = int(res.group(1) or res.group(2) or 0)
-                    applied_patches.append(pnum)
-                    if ifarch_depth > 0:
-                        applied_patches_ifarch.append(pnum)
-                elif not source_dir:
-                    res = source_dir_regex.search(line)
-                    if res:
-                        source_dir = 1
-                        printError(pkg, "use-of-RPM_SOURCE_DIR")
-
-            res=obsolete_tags_regex.search(line)
-            if res:
-                printWarning(pkg, "obsolete-tag", res.group(1))
+                    source_dir = 1
+                    printError(pkg, "use-of-RPM_SOURCE_DIR")
 
             if configure:
                 if configure_cmdline[-1] == "\\":
@@ -311,52 +302,54 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
                 printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
 
-            res = buildroot_regex.search(line)
-            if res:
-                buildroot=1
-                if res.group(1).startswith('/'):
-                    printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
-
-            res = packager_regex.search(line)
-            if res:
-                printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
-            res=prefix_regex.search(line)
-            if res:
-                if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
-                    printWarning(pkg, 'redundant-prefix-tag')
-                else:
-                    printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
-
-            res = noarch_regex.search(line)
-            if res:
-                noarch = 1
-
             if mklibname_regex.search(line):
                 mklibname = 1
 
             if lib_package_regex.search(line):
                 lib = 1
 
-            res = prereq_regex.search(line)
-            if res:
-                printError(pkg, 'prereq-use', res.group(2))
+            if current_section == 'package':
 
-            res = buildprereq_regex.search(line)
-            if res:
-                printError(pkg, 'buildprereq-use', res.group(1))
+                res = patch_regex.search(line)
+                if res:
+                    pnum = int(res.group(1) or 0)
+                    patches[pnum] = res.group(2)
 
-            if scriptlet_requires_regex.search(line) and current_section == 'package':
-                printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
+                res = obsolete_tags_regex.search(line)
+                if res:
+                    printWarning(pkg, "obsolete-tag", res.group(1))
 
-            if current_section == 'changelog':
-                res = macro_regex.search(line)
-                if res and len(res.group(1)) % 2:
-                    printWarning(pkg, 'macro-in-%changelog', res.group(2))
-            else:
-                if not depscript_override:
-                    depscript_override = depscript_override_regex.search(line)
-                if not depgen_disabled:
-                    depgen_disabled = depgen_disable_regex.search(line)
+                res = buildroot_regex.search(line)
+                if res:
+                    buildroot = 1
+                    if res.group(1).startswith('/'):
+                        printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
+
+                res = packager_regex.search(line)
+                if res:
+                    printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
+
+                res = prefix_regex.search(line)
+                if res:
+                    if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
+                        printWarning(pkg, 'redundant-prefix-tag')
+                    else:
+                        printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
+
+                res = noarch_regex.search(line)
+                if res:
+                    noarch = 1
+
+                res = prereq_regex.search(line)
+                if res:
+                    printError(pkg, 'prereq-use', res.group(2))
+
+                res = buildprereq_regex.search(line)
+                if res:
+                    printError(pkg, 'buildprereq-use', res.group(1))
+
+                if scriptlet_requires_regex.search(line):
+                    printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
 
                 res = provides_regex.search(line)
                 if res:
@@ -367,6 +360,16 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     for obs in unversioned(deptokens(res.group(1))):
                         printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+
+            if current_section == 'changelog':
+                res = macro_regex.search(line)
+                if res and len(res.group(1)) % 2:
+                    printWarning(pkg, 'macro-in-%changelog', res.group(2))
+            else:
+                if not depscript_override:
+                    depscript_override = depscript_override_regex.search(line)
+                if not depgen_disabled:
+                    depgen_disabled = depgen_disable_regex.search(line)
 
             if current_section == 'files':
                 if not comment_or_empty_regex.search(line) and not \
