@@ -38,7 +38,7 @@ class BinaryInfo:
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
-        self.had_error=0
+        self.readelf_error = 0
         self.needed=[]
         self.rpath=[]
         self.undef=[]
@@ -50,6 +50,7 @@ class BinaryInfo:
         self.exec_stack = 0
         self.exit_calls = []
         fork_called = 0
+        self.tail = ''
 
         is_debug=BinaryInfo.debug_file_regex.search(path)
 
@@ -111,8 +112,17 @@ class BinaryInfo:
                 self.exit_calls = []
 
         else:
-            self.had_error=1
+            self.readelf_error = 1
             printWarning(pkg, 'binaryinfo-readelf-failed',
+                         re.sub('\n.*', '', res[1]))
+
+        cmd = ['env', 'LC_ALL=C', 'tail', '-c', '12']
+        cmd.append(path)
+        res = Pkg.getstatusoutput(cmd)
+        if not res[0]:
+            self.tail = res[1]
+        else:
+            printWarning(pkg, 'binaryinfo-tail-failed',
                          re.sub('\n.*', '', res[1]))
 
         # Undefined symbol and unused direct dependency checks make sense only
@@ -167,6 +177,7 @@ reference_regex=re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
 usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
 srcname_regex=re.compile('(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
+ocaml_mixed_regex = re.compile('^Caml1999X0\d\d$')
 
 def dir_base(path):
     res=path_regex.search(path)
@@ -241,7 +252,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         # so name in library
                         if is_shlib:
                             has_lib.append(i[0])
-                            if bin_info.had_error:
+                            if bin_info.readelf_error:
                                 pass
                             elif not bin_info.soname:
                                 printWarning(pkg, 'no-soname', i[0])
@@ -265,7 +276,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     elif version != soversion:
                                         version = -1
 
-                            if bin_info.non_pic and not bin_info.had_error:
+                            if bin_info.non_pic and not bin_info.readelf_error:
                                 printError(pkg, 'shlib-with-non-pic-code', i[0])
 
                         # rpath ?
@@ -281,15 +292,19 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             for ec in bin_info.exit_calls:
                                 printWarning(pkg, 'shared-lib-calls-exit', i[0], ec)
 
-                        # statically linked ?
                         is_exec=executable_regex.search(i[1])
                         if shared_object_regex.search(i[1]) or \
                            is_exec:
 
-                            if is_exec and bin_regex.search(i[0]):
-                                exec_files.append(i[0])
+                            if is_exec:
 
-                            if bin_info.had_error:
+                                if bin_regex.search(i[0]):
+                                    exec_files.append(i[0])
+
+                                if ocaml_mixed_regex.search(bin_info.tail):
+                                    printWarning(pkg, 'ocaml-mixed-executable', i[0])
+
+                            if bin_info.readelf_error:
                                 pass
                             elif not bin_info.needed and \
                                not (bin_info.soname and \
@@ -454,6 +469,9 @@ with the intended shared libraries only.''',
 'binaryinfo-readelf-failed',
 '''Executing readelf on this file failed, all checks could not be run.''',
 
+'binaryinfo-tail-failed',
+'''Executing tail on this file failed, all checks could not be run.''',
+
 'ldd-failed',
 '''Executing ldd on this file failed, all checks could not be run.''',
 
@@ -477,6 +495,15 @@ error, reporting it to the user, closing files properly, and cleaning up any
 state that the program has. It is preferred for the library to return an
 actual error code and let the calling program decide how to handle the
 situation.''',
+
+'ocaml-mixed-executable',
+'''Executables built with ocamlc -custom are deprecated.  Packagers should ask
+upstream maintainers to build these executables without the -custom option.  If
+this cannot be changed and the executable needs to be packaged in its current
+form, make sure that rpmbuild does not strip it during the build, and on setups
+that use prelink, make sure that prelink does not strip it either, usually by
+placing a blacklist file in /etc/prelink.conf.d.  For more information, see
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 )
 
 # BinariesCheck.py ends here
