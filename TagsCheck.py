@@ -711,8 +711,8 @@ if Config.info:
 'invalid-version',
 '''The version string must not contain the pre, alpha, beta or rc suffixes
 because when the final version will be out, you will have to use an Epoch tag
-to make the package upgradable. Instead put it in the release tag like
-0.alpha8.1''' + release_ext + '.',
+to make the package upgradable. Instead put it in the release tag, prefixed
+with something you have control over.''',
 
 'spelling-error-in-description',
 '''You made a misspelling in the Description. Please double-check.''',
