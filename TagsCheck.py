@@ -835,9 +835,9 @@ longer contain the word mandrake.''',
 
 'obsolete-not-provided',
 '''If a package is obsoleted by a compatible replacement, the obsoleted package
-must also be provided in order to provide clean upgrade paths and not cause
-unnecessary dependency breakage.  If the obsoleting package is not a compatible
-replacement for the old one, leave out the provides.''',
+should also be provided in order to not cause unnecessary dependency breakage.
+If the obsoleting package is not a compatible replacement for the old one,
+leave out the Provides.''',
 
 'invalid-dependency',
 '''An invalid dependency has been detected. It usually means that the build of
