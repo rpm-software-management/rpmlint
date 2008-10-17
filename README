@@ -26,8 +26,8 @@ Implemented checks:
 	o /etc/rc.d/init.d checks (InitScriptCheck).
 	o Spec file checks (SpecCheck).
 	o Zip/Jar file checks (ZipCheck).
-    o Pam configuration file checks (PamCheck).
-    o Rpm file checks ( RpmFileCheck).
+	o Pam configuration file checks (PamCheck).
+	o Rpm file checks (RpmFileCheck).
 
 If you want to change configuration options or the list of checks, use
 the global configuration file /etc/rpmlint/config or in the user
