@@ -333,9 +333,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = prefix_regex.search(line)
                 if res:
-                    if res.group(1) == '%{_prefix}' or res.group(1) == '%_prefix':
-                        printWarning(pkg, 'redundant-prefix-tag')
-                    else:
+                    if not res.group(1).startswith('%'):
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
 
                 res = noarch_regex.search(line)
@@ -474,10 +472,6 @@ as to use rebuilder's own defaults.''',
 'hardcoded-prefix-tag',
 '''The Prefix tag is hardcoded in your spec file. It should be removed, so as
 to allow package relocation.''',
-
-'redundant-prefix-tag',
-'''The Prefix tag is uselessly defined as %{_prefix} in your spec file. It
-should be removed, as it is redundant with rpm defaults.''',
 
 'hardcoded-library-path',
 '''A library path is hardcoded to one of the following paths: /lib,
