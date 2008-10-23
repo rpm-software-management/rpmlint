@@ -399,7 +399,7 @@ basename_regex=re.compile('/?([^/]+)$')
 changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
 changelog_text_version_regex=re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 release_ext=Config.getOption('ReleaseExtension')
-extension_regex=release_ext and re.compile(release_ext + '$')
+extension_regex=release_ext and re.compile(release_ext)
 use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
 devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
@@ -624,10 +624,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     srpm = pkg[rpm.RPMTAG_SOURCERPM] or ''
                     # only check when source name correspond to name
                     if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
-                        expected=version + '-' + release
+                        expected = [version + '-' + release]
                         if epoch is not None: # regardless of use_epoch
-                            expected=str(epoch) + ':' + expected
-                        if expected != ret.group(1):
+                            expected[0] = str(epoch) + ':' + expected[0]
+                        # Allow EVR in changelog without release extension,
+                        # the extension is often a macro or otherwise dynamic.
+                        if release_ext:
+                            expected.append(extension_regex.sub('', expected[0]))
+                        if ret.group(1) not in expected:
+                            if len(expected) == 1: expected = expected[0]
                             printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
 
             if clt: changelog=changelog + clt
@@ -737,7 +742,7 @@ the Version tag.''',
 the Release tag.''',
 
 'not-standard-release-extension',
-'Your release number must end with ' + release_ext + ' and must be valid.',
+'Your release tag must match the regular expression ' + release_ext + '.',
 
 'no-name-tag',
 '''There is no Name tag in your package. You have to specify a name using the
