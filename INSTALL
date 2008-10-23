@@ -11,9 +11,3 @@ and the following programs to install it:
 
 	o python 2.2 or newer
 	o sed
-
-You can change the default policy by calling make install with a
-POLICY argument like that: make install POLICY=mdk8.2
-
-The policy is defined in the load_policy function in the Config.py
-file. This way, we can manage sets of exceptions.

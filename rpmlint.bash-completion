@@ -25,7 +25,7 @@ _rpmlint()
 		COMPREPLY=( $( compgen -W '-i --info -I -c --check \
 			-a --all -C --checkdir -h --help -v --verbose \
 			-E --extractdir -p --profile -V --version -n \
-			--noexception -P --policy -f --file' -- $cur ) )
+			--noexception -f --file' -- $cur ) )
 	else
 		_filedir
 	fi

@@ -38,11 +38,7 @@ install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
-	if [ -z "$(POLICY)" ]; then \
-	  sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py ; \
-	else \
-	  sed -e 's/@VERSION@/$(VERSION)/' -e 's/policy=None/policy="$(POLICY)"/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py; \
-	fi
+	sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
 	cp -p rpmlint.bash-completion $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint

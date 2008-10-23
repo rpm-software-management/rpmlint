@@ -21,13 +21,12 @@ from Filter import *
 import SpecCheck
 
 version='@VERSION@'
-policy=None
 
 # Print usage information
 def usage(name):
     print 'usage:', name, '[<options>] <rpm files|specfile>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-P|--policy <policy>]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
+    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
 # Print version information
 def printVersion():
@@ -187,7 +186,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args)=getopt.getopt(sys.argv[1:],
-                              'iI:c:C:hVvp:anP:E:f:',
+                              'iI:c:C:hVvp:anE:f:',
                               ['info',
                                'check=',
                                'checkdir=',
@@ -197,7 +196,6 @@ try:
                                'profile',
                                'all',
                                'noexception',
-                               'policy='
                                'extractdir=',
                                'file=',
                                ])
@@ -251,8 +249,6 @@ for o in opt:
         prof=o[1]
     elif o[0] == '-n' or o[0] == '--noexception':
         Config.no_exception=1
-    elif o[0] == '-P' or o[0] == '--policy':
-        policy=o[1]
     elif o[0] == '-a' or o[0] == '--all':
         all=1
     elif o[0] == '-f' or o[0] == '--file':
@@ -270,8 +266,6 @@ except Exception,E:
 
 if not extract_dir:
     extract_dir=Config.getOption('ExtractDir', '/tmp')
-
-policy and Config.load_policy(policy)
 
 if info_error:
     Config.info=1
