@@ -962,7 +962,7 @@ correctly in some circumstances.''',
 
 'file-not-utf8',
 '''The character encoding of this file is not UTF-8.  Consider converting it
-in the specfile for example using iconv(1).''',
+in the specfile's %prep section for example using iconv(1).''',
 
 'filename-not-utf8',
 '''The character encoding of the name of this file is not UTF-8.  Rename it.''',
