@@ -72,7 +72,7 @@ KernelModuleRPMsOK	boolean		1
 MetaPackageRegexp	regex		'^(bundle|task)-' 
 Packager		regex		''
 PerlVersionTrick	boolean		1
-ReleaseExtension	string or None	""
+ReleaseExtension	regex or None	''
 RpmGamesGroup		regex		'Games'
 SkipDocsRegexp		regex		'\.(rtf|x?html?|ml[ily]?)$'
 StandardGroups		list of strings	see DEFAULT_STANDARD_GROUPS in
