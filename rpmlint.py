@@ -80,18 +80,18 @@ def main():
                     ipkgs = Pkg.getInstalledPkgs(f)
                     if not ipkgs:
                         sys.stderr.write(
-                            'Error: no installed packages by name %s\n' % f)
+                            '(none): E: no installed packages by name %s\n' % f)
                     else:
                         pkgs.extend(ipkgs)
             except KeyboardInterrupt:
                 if isfile:
                     f = os.path.abspath(f)
-                sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
+                sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % f)
                 sys.exit(2)
             except Exception, e:
                 if isfile:
                     f = os.path.abspath(f)
-                sys.stderr.write('Error while reading %s: %s\n' % (f, e))
+                sys.stderr.write('(none): E: error while reading %s: %s\n' % (f, e))
                 pkgs = []
                 continue
 
@@ -120,15 +120,16 @@ def main():
                                 runChecks(pkg)
                                 packages_checked += 1
                         except KeyboardInterrupt:
-                            sys.stderr.write('Interrupted, exiting while reading %s\n' % f)
+                            sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % f)
                             sys.exit(2)
                         except Exception, e:
-                            sys.stderr.write('Error while reading %s: %s\n' %
-                                             (f, e))
+                            sys.stderr.write(
+                                '(none): E: while reading %s: %s\n' % (f, e))
                             pkg=None
                             continue
             except Exception, e:
-                sys.stderr.write('Error while reading dir %s: %s' % (d, e))
+                sys.stderr.write(
+                    '(none): E: error while reading dir %s: %s' % (d, e))
                 pkg=None
                 continue
 
@@ -153,11 +154,11 @@ def main():
                     finally:
                         del db
             except KeyboardInterrupt:
-                sys.stderr.write('Interrupted, exiting while scanning all packages\n')
+                sys.stderr.write('(none): E: interrupted, exiting while scanning all packages\n')
                 sys.exit(2)
 
         if printAllReasons():
-            sys.stderr.write('rpmlint: E: badness %d exceeds threshold %d, aborting.\n' % (badnessScore(), badnessThreshold()))
+            sys.stderr.write('(none): E: badness %d exceeds threshold %d, aborting.\n' % (badnessScore(), badnessThreshold()))
             sys.exit(66)
 
     finally:
@@ -225,7 +226,7 @@ for f in configs:
     except IOError:
         pass
     except Exception, E:
-        sys.stderr.write('Error loading %s, skipping: %s\n' % (f, E))
+        sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (f, E))
 # pychecker fix
 del f
 
@@ -267,7 +268,7 @@ try:
 except IOError:
     pass
 except Exception,E:
-    sys.stderr.write('Error loading %s, skipping: %s\n' % (conf_file, E ))
+    sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (conf_file, E))
 
 if not extract_dir:
     extract_dir=Config.getOption('ExtractDir', tempfile.gettempdir())
