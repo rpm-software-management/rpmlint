@@ -29,7 +29,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
         for i in pkg.getFilesInfo():
             f = pkg.dirName() + i[0]
-            if zip_regex.search(f) and \
+            if zip_regex.search(f) and os.path.exists(f) and \
                    stat.S_ISREG(os.lstat(f)[stat.ST_MODE]) and \
                    zipfile.is_zipfile(f):
                 z = None
