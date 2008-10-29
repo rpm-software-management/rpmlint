@@ -31,15 +31,17 @@ class AbstractFilesCheck(AbstractCheck):
         if pkg.isSource():
             return
         files = []
-        for f in pkg.files().keys():
-            if self.__files_re.match(f):
-                files.append(f)
-        for i in files:
-            self.check_file(pkg, i)
+        for filename in pkg.files().keys():
+            if self.__files_re.match(filename):
+                files.append(filename)
+        for filename in files:
+            self.check_file(pkg, filename)
 
  
-    def check_file(self, pkg, file):
-        """ Virtual method called for each file that match the regexp passed to the constructor """
+    def check_file(self, pkg, filename):
+        """Virtual method called for each file that match the regexp passed
+        to the constructor.
+        """
         raise NotImplementedError('check must be implemented in subclass')
         
 # AbstractCheck.py ends here
