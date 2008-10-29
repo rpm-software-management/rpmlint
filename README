@@ -63,7 +63,7 @@ BadnessThreshold	integer		-1 (< 0 means disabled)
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 Distribution		string		""
 ExtraMenuNeeds		list of strings
-ExtractDir		string		"/tmp"
+ExtractDir		string		tempfile.gettempdir()
 ForbiddenWords		regex		''
 IconFilename		regex		'.*\.png$'
 InvalidRequires		list of regexps see DEFAULT_INVALID_REQUIRES in

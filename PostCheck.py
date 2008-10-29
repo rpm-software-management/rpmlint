@@ -14,6 +14,7 @@ import rpm
 import re
 import os
 import Pkg
+import tempfile
 import types
 
 DEFAULT_VALID_SHELLS=('<lua>',
@@ -27,7 +28,7 @@ DEFAULT_VALID_SHELLS=('<lua>',
 DEFAULT_EMPTY_SHELLS=('/sbin/ldconfig',
                      )
 
-extract_dir=Config.getOption('ExtractDir', '/tmp')
+extract_dir=Config.getOption('ExtractDir', tempfile.gettempdir())
 valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
 empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging

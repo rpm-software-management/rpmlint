@@ -572,7 +572,7 @@ class FakePkg:
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:
-        pkg=Pkg(sys.argv[1], '/tmp')
+        pkg=Pkg(sys.argv[1], tempfile.gettempdir())
         sys.stdout.write('Requires: %s\n' % pkg.requires())
         sys.stdout.write('Prereq: %s\n' % pkg.prereq())
         sys.stdout.write('Conflicts: %s\n' % pkg.conflicts())

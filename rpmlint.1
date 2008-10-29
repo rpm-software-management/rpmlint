@@ -33,7 +33,8 @@ Display summary of command line options and exit.
 Operate in verbose mode.
 .TP
 \fB\-E\fR, \fB\-\-extractdir\fR=\fIdir\fR
-Base directory for extracted temporary files, default is /tmp
+Base directory for extracted temporary files, default is what Python's
+tempfile.gettempdir() returns.
 .TP
 \fB\-p\fR, \fB\-\-profile\fR
 Display profiling information.
