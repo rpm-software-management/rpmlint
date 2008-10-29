@@ -589,7 +589,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     printWarning(pkg, 'no-dependency-on', is_exception)
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
-                    pathcomponents=string.split(f, '/')[1:]
+                    pathcomponents = f.split('/')[1:]
                     r=points_regex.search(link)
                     lastpop=None
                     mylink=None
@@ -618,7 +618,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 # relative link into other toplevel directory
                                 printWarning(pkg, 'symlink-should-be-absolute', f, link)
                         # check additional segments for mistakes like `foo/../bar/'
-                        for linksegment in string.split(mylink, '/'):
+                        for linksegment in mylink.split('/'):
                             if linksegment == '..':
                                 printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
 

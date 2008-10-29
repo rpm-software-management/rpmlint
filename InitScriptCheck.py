@@ -14,7 +14,6 @@ import Config
 import re
 import rpm
 import Pkg
-import string
 
 rc_regex=re.compile('^/etc(/rc\.d)?/init\.d/')
 chkconfig_content_regex=re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
@@ -170,7 +169,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 if not subsys_regex_found:
                     printError(pkg, 'subsys-not-used', f)
 
-        goodnames = (string.lower(pkg.name), string.lower(pkg.name) + 'd')
+        goodnames = (pkg.name.lower(), pkg.name.lower() + 'd')
         if len(initscript_list) == 1 and initscript_list[0] not in goodnames:
             printWarning(pkg, 'incoherent-init-script-name', initscript_list[0])
 
