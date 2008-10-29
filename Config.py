@@ -10,43 +10,43 @@
 import os.path
 import re
 
-DEFAULT_CHECKS=("DistributionCheck",
-                "TagsCheck",
-                "BinariesCheck",
-                "ConfigCheck",
-                "FilesCheck",
-                "DocFilesCheck",
-                "FHSCheck",
-                "SignatureCheck",
-                "I18NCheck",
-                "MenuCheck",
-                "PostCheck",
-                "InitScriptCheck",
-                "SourceCheck",
-                "SpecCheck",
-                "NamingPolicyCheck",
-                "ZipCheck",
-                "PamCheck",
-                "RpmFileCheck",
-                "MenuXDGCheck",
-                )
+DEFAULT_CHECKS = ("DistributionCheck",
+                  "TagsCheck",
+                  "BinariesCheck",
+                  "ConfigCheck",
+                  "FilesCheck",
+                  "DocFilesCheck",
+                  "FHSCheck",
+                  "SignatureCheck",
+                  "I18NCheck",
+                  "MenuCheck",
+                  "PostCheck",
+                  "InitScriptCheck",
+                  "SourceCheck",
+                  "SpecCheck",
+                  "NamingPolicyCheck",
+                  "ZipCheck",
+                  "PamCheck",
+                  "RpmFileCheck",
+                  "MenuXDGCheck",
+                  )
 
-USEUTF8_DEFAULT=0
+USEUTF8_DEFAULT = 0
 try:
     from locale import getpreferredencoding
-    if getpreferredencoding() == 'UTF-8': USEUTF8_DEFAULT=1
+    if getpreferredencoding() == 'UTF-8': USEUTF8_DEFAULT = 1
 except:
     try:
         from locale import getdefaultlocale
-        if re.match('utf', getdefaultlocale()[1], re.I): USEUTF8_DEFAULT=1
+        if re.match('utf', getdefaultlocale()[1], re.I): USEUTF8_DEFAULT = 1
     except:
         pass
 
-info=0
-no_exception=0
+info = 0
+no_exception = 0
 
 # handle the list of checks to load
-_checks=[]
+_checks = []
 
 def addCheck(check):
     global _checks
@@ -68,11 +68,11 @@ def defaultChecks():
 def resetChecks():
     global _checks
 
-    _checks=[]
+    _checks = []
 
 # handle the list of directories to look for checks
 
-_dirs=["/usr/share/rpmlint"]
+_dirs = ["/usr/share/rpmlint"]
 
 def addCheckDir(dir):
     global _dirs
@@ -89,14 +89,14 @@ def checkDirs():
 
 # handle options
 
-_options={}
+_options = {}
 
 def setOption(name, value):
     global _options
 
-    _options[name]=value
+    _options[name] = value
 
-def getOption(name, default=""):
+def getOption(name, default = ""):
     global _options
 
     try:
@@ -105,15 +105,15 @@ def getOption(name, default=""):
         return default
 
 # List of filters
-_filters=[]
-_filters_re=None
+_filters = []
+_filters_re = None
 
 def addFilter(s):
     global _filters
     global _filters_re
 
     _filters.append(s)
-    _filters_re=None
+    _filters_re = None
 
 def removeFilter(s):
     global _filters
@@ -126,7 +126,7 @@ def removeFilter(s):
     else:
         _filters_re = None
 
-_scoring={}
+_scoring = {}
 
 def setBadness(s, score):
     _scoring[s] = score

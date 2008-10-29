@@ -180,7 +180,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         if_depth = 0
         ifarch_depth = -1
         current_section = 'package'       
-        buildroot_clean={'clean':0 , 'install':0}
+        buildroot_clean = {'clean': 0, 'install' : 0}
         depscript_override = 0
         depgen_disabled = 0
         indent_spaces = 0
@@ -284,7 +284,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if configure:
                 if configure_cmdline[-1] == "\\":
-                    configure_cmdline=configure_cmdline[:-1] + line.strip()
+                    configure_cmdline = configure_cmdline[:-1] + line.strip()
                 else:
                     res = configure_libdir_spec_regex.search(configure_cmdline)
                     if not res:

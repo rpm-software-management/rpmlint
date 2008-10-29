@@ -16,42 +16,43 @@ import Config
 import Pkg
 import stat
 
-DEFAULT_SYSTEM_LIB_PATHS=('/lib', '/usr/lib', '/usr/X11R6/lib',
-                          '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
+DEFAULT_SYSTEM_LIB_PATHS = (
+    '/lib', '/usr/lib', '/usr/X11R6/lib',
+    '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
 
 class BinaryInfo:
 
-    needed_regex=re.compile('\s+\(NEEDED\).*\[(\S+)\]')
-    rpath_regex=re.compile('\s+\(RPATH\).*\[(\S+)\]')
-    soname_regex=re.compile('\s+\(SONAME\).*\[(\S+)\]')
-    comment_regex=re.compile('^\s+\[\s*\d+\]\s+\.comment\s+')
-    pic_regex=re.compile('^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
+    needed_regex = re.compile('\s+\(NEEDED\).*\[(\S+)\]')
+    rpath_regex = re.compile('\s+\(RPATH\).*\[(\S+)\]')
+    soname_regex = re.compile('\s+\(SONAME\).*\[(\S+)\]')
+    comment_regex = re.compile('^\s+\[\s*\d+\]\s+\.comment\s+')
+    pic_regex = re.compile('^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
     #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
     stack_regex = re.compile('^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
     stack_exec_regex = re.compile('^..E$')
-    non_pic_regex=re.compile('TEXTREL', re.MULTILINE)
-    undef_regex=re.compile('^undefined symbol:\s+(\S+)')
-    unused_regex=re.compile('^\s+(\S+)')
-    debug_file_regex=re.compile('\.debug$')
+    non_pic_regex = re.compile('TEXTREL', re.MULTILINE)
+    undef_regex = re.compile('^undefined symbol:\s+(\S+)')
+    unused_regex = re.compile('^\s+(\S+)')
+    debug_file_regex = re.compile('\.debug$')
     exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.readelf_error = 0
-        self.needed=[]
-        self.rpath=[]
-        self.undef=[]
-        self.unused=[]
-        self.comment=0
-        self.soname=0
-        self.non_pic=1
+        self.needed = []
+        self.rpath = []
+        self.undef = []
+        self.unused = []
+        self.comment = 0
+        self.soname = 0
+        self.non_pic = 1
         self.stack = 0
         self.exec_stack = 0
         self.exit_calls = []
         fork_called = 0
         self.tail = ''
 
-        is_debug=BinaryInfo.debug_file_regex.search(path)
+        is_debug = BinaryInfo.debug_file_regex.search(path)
 
         cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d', '-s']
         cmd.append(path)
@@ -102,7 +103,7 @@ class BinaryInfo:
                         continue
 
             if self.non_pic:
-                self.non_pic=BinaryInfo.non_pic_regex.search(res[1])
+                self.non_pic = BinaryInfo.non_pic_regex.search(res[1])
 
             # Ignore all exit() calls if fork() is being called.
             # Does not have any context at all but without this kludge, the
@@ -129,15 +130,17 @@ class BinaryInfo:
         # skip debuginfo: https://bugzilla.redhat.com/190599
         if not is_ar and not is_debug and isinstance(pkg, Pkg.InstalledPkg):
             # We could do this with objdump, but it's _much_ simpler with ldd.
-            res = Pkg.getstatusoutput(('env','LC_ALL=C','ldd','-d','-r',path))
+            res = Pkg.getstatusoutput(
+                ('env', 'LC_ALL=C', 'ldd', '-d', '-r', path))
             if not res[0]:
                 for l in res[1].splitlines():
-                    undef=BinaryInfo.undef_regex.search(l)
+                    undef = BinaryInfo.undef_regex.search(l)
                     if undef:
                         self.undef.append(undef.group(1))
             else:
                 printWarning(pkg, 'ldd-failed', file)
-            res = Pkg.getstatusoutput(('env','LC_ALL=C','ldd','-r','-u',path))
+            res = Pkg.getstatusoutput(
+                ('env', 'LC_ALL=C', 'ldd', '-r', '-u', path))
             if res[0]:
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
                 # unused direct dependencies
@@ -154,32 +157,32 @@ class BinaryInfo:
                         else:
                             in_unused = 0
 
-path_regex=re.compile('(.*/)([^/]+)')
-numeric_dir_regex=re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
-versioned_dir_regex=re.compile('[^.][0-9]')
-usr_share=re.compile('^/usr/share/')
-etc=re.compile('^/etc/')
-not_stripped=re.compile('not stripped')
-unstrippable=re.compile('\.o$|\.static$')
-shared_object_regex=re.compile('shared object')
-executable_regex=re.compile('executable')
-libc_regex=re.compile('libc\.')
-ldso_soname_regex=re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
-so_regex=re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-validso_regex=re.compile('(\.so\.\d+(\.\d+)*|\d\.so)$')
-sparc_regex=re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
-system_lib_paths=Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
-usr_lib_regex=re.compile('^/usr/lib(64)?/')
-bin_regex=re.compile('^(/usr(/X11R6)?)?/s?bin/')
-soversion_regex=re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
-reference_regex=re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
-usr_lib_exception_regex=re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
-srcname_regex=re.compile('(.*?)-[0-9]')
+path_regex = re.compile('(.*/)([^/]+)')
+numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
+versioned_dir_regex = re.compile('[^.][0-9]')
+usr_share = re.compile('^/usr/share/')
+etc = re.compile('^/etc/')
+not_stripped = re.compile('not stripped')
+unstrippable = re.compile('\.o$|\.static$')
+shared_object_regex = re.compile('shared object')
+executable_regex = re.compile('executable')
+libc_regex = re.compile('libc\.')
+ldso_soname_regex = re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
+so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
+validso_regex = re.compile('(\.so\.\d+(\.\d+)*|\d\.so)$')
+sparc_regex = re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
+system_lib_paths = Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
+usr_lib_regex = re.compile('^/usr/lib(64)?/')
+bin_regex = re.compile('^(/usr(/X11R6)?)?/s?bin/')
+soversion_regex = re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
+reference_regex = re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
+usr_lib_exception_regex = re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
+srcname_regex = re.compile('(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
 ocaml_mixed_regex = re.compile('^Caml1999X0\d\d$')
 
 def dir_base(path):
-    res=path_regex.search(path)
+    res = path_regex.search(path)
     if res:
         return res.group(1), res.group(2)
     else:
@@ -195,24 +198,24 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        info=pkg.getFilesInfo()
-        files=pkg.files()
-        exec_files=[]
-        has_lib=[]
-        version=None
-        binary=0
-        binary_in_usr_lib=0
-        has_usr_lib_file=0
+        info = pkg.getFilesInfo()
+        files = pkg.files()
+        exec_files = []
+        has_lib = []
+        version = None
+        binary = 0
+        binary_in_usr_lib = 0
+        has_usr_lib_file = 0
 
         res = srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM] or '')
         if res:
-            multi_pkg=(pkg.name != res.group(1))
+            multi_pkg = (pkg.name != res.group(1))
         else:
-            multi_pkg=0
+            multi_pkg = 0
 
         for f in files:
             if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f][0]):
-                has_usr_lib_file=f
+                has_usr_lib_file = f
                 break
 
         for i in info:
@@ -223,9 +226,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_shlib = so_regex.search(i[0])
 
             if is_binary:
-                binary=binary+1
+                binary = binary+1
                 if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
-                    binary_in_usr_lib=1
+                    binary_in_usr_lib = 1
 
                 if pkg.arch == 'noarch':
                     printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
@@ -246,7 +249,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'unstripped-binary-or-object', i[0])
 
                         # inspect binary file
-                        bin_info=BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar, is_shlib)
+                        bin_info = BinaryInfo(pkg, pkg.dirName()+i[0], i[0], is_ar, is_shlib)
 
                         # so name in library
                         if is_shlib:
@@ -267,9 +270,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
                                         printError(pkg, 'no-ldconfig-symlink', i[0])
-                                res=soversion_regex.search(bin_info.soname)
+                                res = soversion_regex.search(bin_info.soname)
                                 if res:
-                                    soversion=res.group(1) or res.group(2)
+                                    soversion = res.group(1) or res.group(2)
                                     if version == None:
                                         version = soversion
                                     elif version != soversion:
@@ -291,7 +294,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             for ec in bin_info.exit_calls:
                                 printWarning(pkg, 'shared-lib-calls-exit', i[0], ec)
 
-                        is_exec=executable_regex.search(i[1])
+                        is_exec = executable_regex.search(i[1])
                         if shared_object_regex.search(i[1]) or \
                            is_exec:
 
@@ -318,10 +321,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                    ( not bin_info.soname or \
                                      ( not libc_regex.search(bin_info.soname) and \
                                        not ldso_soname_regex.search(bin_info.soname))):
-                                    found_libc=0
+                                    found_libc = 0
                                     for lib in bin_info.needed:
                                         if libc_regex.search(lib):
-                                            found_libc=1
+                                            found_libc = 1
                                             break
                                     if not found_libc:
                                         if shared_object_regex.search(i[1]):
@@ -356,8 +359,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 for f in exec_files:
                     printError(pkg, 'executable-in-library-package', f)
             for f in files:
-                res=numeric_dir_regex.search(f)
-                fn=res and res.group(1) or f
+                res = numeric_dir_regex.search(f)
+                fn = res and res.group(1) or f
                 if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
             if version and version != -1 and pkg.name.find(version) == -1:
@@ -371,7 +374,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'only-non-binary-in-usr-lib')
 
 # Create an object to enable the auto registration of the test
-check=BinariesCheck()
+check = BinariesCheck()
 
 # Add information about checks
 if Config.info:

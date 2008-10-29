@@ -25,28 +25,28 @@ import Config
 # XFree
 # xine
 
-simple_naming_policy_re=re.compile('\^[a-zA-Z1-9-_]*$');
+simple_naming_policy_re = re.compile('\^[a-zA-Z1-9-_]*$');
 
 class NamingPolicyNotAppliedException(Exception):
     pass
 
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
-    checks_=[]
+    checks_ = []
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "NamingPolicyCheck")
 
-    def add_check(self,pkg_name,name_re,file_re):
-        c={}
-        c['pkg_name']=pkg_name
-        c['name_re']=re.compile(name_re)
-        c['file_re']=re.compile(file_re)
+    def add_check(self, pkg_name, name_re, file_re):
+        c = {}
+        c['pkg_name'] = pkg_name
+        c['name_re'] = re.compile(name_re)
+        c['file_re'] = re.compile(file_re)
         self.checks_.append(c)
         if Config.info:
             if simple_naming_policy_re.search(name_re):
-                details="Its name should begin with " + name_re[1:]
+                details = "Its name should begin with " + name_re[1:]
             else:
-                details="Its name should match the regular expression " + name_re
+                details = "Its name should match the regular expression " + name_re
 
             addDetails(pkg_name + '-naming-policy-not-applied',
                        "This package doesn't respect the naming policy for %s "
@@ -67,7 +67,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         except NamingPolicyNotAppliedException:
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
 
-check=NamingPolicyCheck()
+check = NamingPolicyCheck()
 
 #
 # these are the check currently impleted.

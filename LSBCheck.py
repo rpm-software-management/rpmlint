@@ -13,8 +13,8 @@ import AbstractCheck
 import rpm
 import re
 
-version_regex=re.compile('^[a-zA-Z0-9.+]+$')
-name_regex=re.compile('^[a-z0-9.+-]+$')
+version_regex = re.compile('^[a-zA-Z0-9.+]+$')
+name_regex = re.compile('^[a-z0-9.+-]+$')
 
 class LSBCheck(AbstractCheck.AbstractCheck):
 
@@ -23,20 +23,20 @@ class LSBCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        name=pkg.name
+        name = pkg.name
         if name and not name_regex.search(name):
             printError(pkg, 'non-lsb-compliant-package-name', name)
 
-        version=pkg[rpm.RPMTAG_VERSION]
+        version = pkg[rpm.RPMTAG_VERSION]
         if version and not version_regex.search(version):
             printError(pkg, 'non-lsb-compliant-version', version)
 
-        release=pkg[rpm.RPMTAG_RELEASE]
+        release = pkg[rpm.RPMTAG_RELEASE]
         if release and not version_regex.search(release):
             printError(pkg, 'non-lsb-compliant-release', release)
 
 # Create an object to enable the auto registration of the test
-check=LSBCheck()
+check = LSBCheck()
 
 if Config.info:
     addDetails(

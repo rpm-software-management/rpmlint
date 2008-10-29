@@ -17,7 +17,7 @@ import os.path
 import Config
 
 
-def get_default_valid_rpmgroups(filename=""):
+def get_default_valid_rpmgroups(filename = ""):
     """ Get the default rpm group from filename, or from rpm package if no
     filename is given"""
     groups = []
@@ -388,34 +388,34 @@ BAD_WORDS = {
     'xwindows': 'X'
     }
 
-DEFAULT_INVALID_REQUIRES=('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
+DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
-VALID_GROUPS=Config.getOption('ValidGroups', get_default_valid_rpmgroups())
-VALID_LICENSES=Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
-INVALID_REQUIRES=map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
-packager_regex=re.compile(Config.getOption('Packager'))
-basename_regex=re.compile('/?([^/]+)$')
-changelog_version_regex=re.compile('[^>]([^ >]+)\s*$')
-changelog_text_version_regex=re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
-release_ext=Config.getOption('ReleaseExtension')
-extension_regex=release_ext and re.compile(release_ext)
-use_version_in_changelog=Config.getOption('UseVersionInChangelog', 1)
-devel_number_regex=re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
-lib_devel_number_regex=re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
-url_regex=re.compile('^(ftp|http|https)://')
-invalid_url_regex=re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
+VALID_GROUPS = Config.getOption('ValidGroups', get_default_valid_rpmgroups())
+VALID_LICENSES = Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
+INVALID_REQUIRES = map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
+packager_regex = re.compile(Config.getOption('Packager'))
+basename_regex = re.compile('/?([^/]+)$')
+changelog_version_regex = re.compile('[^>]([^ >]+)\s*$')
+changelog_text_version_regex = re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
+release_ext = Config.getOption('ReleaseExtension')
+extension_regex = release_ext and re.compile(release_ext)
+use_version_in_changelog = Config.getOption('UseVersionInChangelog', 1)
+devel_number_regex = re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+lib_devel_number_regex = re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+url_regex = re.compile('^(ftp|http|https)://')
+invalid_url_regex = re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_package_regex = re.compile('(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
-leading_space_regex=re.compile('^\s+')
-license_regex=re.compile('\(([^)]+)\)|\s(?:and|or)\s')
-invalid_version_regex=re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
+leading_space_regex = re.compile('^\s+')
+license_regex = re.compile('\(([^)]+)\)|\s(?:and|or)\s')
+invalid_version_regex = re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
-forbidden_words_regex=re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
-valid_buildhost_regex=re.compile(Config.getOption('ValidBuildHost'))
-epoch_regex=re.compile('^[0-9]+:')
-use_epoch=Config.getOption('UseEpoch', 0)
-use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
-max_line_len=79
-tag_regex=re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|Release|RHNPlatform|Serial|Source\d*|Summary|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
+forbidden_words_regex = re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
+valid_buildhost_regex = re.compile(Config.getOption('ValidBuildHost'))
+epoch_regex = re.compile('^[0-9]+:')
+use_epoch = Config.getOption('UseEpoch', 0)
+use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+max_line_len = 79
+tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|Release|RHNPlatform|Serial|Source\d*|Summary|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 
 def spell_check(pkg, str, tagname):
     for seq in str.split():
@@ -423,10 +423,10 @@ def spell_check(pkg, str, tagname):
             if len(word) > 0:
                 try:
                     if word[0] == '\'':
-                        word=word[1:]
+                        word = word[1:]
                     if word[-1] == '\'':
-                        word=word[:-1]
-                    correct=BAD_WORDS[word]
+                        word = word[:-1]
+                    correct = BAD_WORDS[word]
                     printWarning(pkg, 'spelling-error-in-' + tagname, word, correct)
                 except KeyError:
                     pass
@@ -438,27 +438,27 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        packager=pkg[rpm.RPMTAG_PACKAGER]
+        packager = pkg[rpm.RPMTAG_PACKAGER]
         if not packager:
             printError(pkg, 'no-packager-tag')
         elif Config.getOption('Packager') and not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
 
-        version=pkg[rpm.RPMTAG_VERSION]
+        version = pkg[rpm.RPMTAG_VERSION]
         if not version:
             printError(pkg, 'no-version-tag')
         else:
-            res=invalid_version_regex.search(version)
+            res = invalid_version_regex.search(version)
             if res:
                 printError(pkg, 'invalid-version', version)
 
-        release=pkg[rpm.RPMTAG_RELEASE]
+        release = pkg[rpm.RPMTAG_RELEASE]
         if not release:
             printError(pkg, 'no-release-tag')
         elif release_ext and not extension_regex.search(release):
             printWarning(pkg, 'not-standard-release-extension', release)
 
-        epoch=pkg[rpm.RPMTAG_EPOCH]
+        epoch = pkg[rpm.RPMTAG_EPOCH]
         if epoch is None:
             if use_epoch:
                 printError(pkg, 'no-epoch-tag')
@@ -477,11 +477,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if p[1] and not epoch_regex.search(p[1]):
                     printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
 
-        name=pkg.name
-        deps=pkg.requires() + pkg.prereq()
-        devel_depend=0
-        is_devel=FilesCheck.devel_regex.search(name)
-        is_source=pkg.isSource()
+        name = pkg.name
+        deps = pkg.requires() + pkg.prereq()
+        devel_depend = 0
+        is_devel = FilesCheck.devel_regex.search(name)
+        is_source = pkg.isSource()
         for d in deps:
             if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
                 printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
@@ -495,7 +495,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not devel_depend and not is_devel and not is_source:
                 if FilesCheck.devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
-                    devel_depend=1
+                    devel_depend = 1
             if is_source and lib_devel_number_regex.search(d[0]):
                 printError(pkg, 'invalid-build-requires', d[0])
             if not is_source and not is_devel:
@@ -511,44 +511,44 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'no-name-tag')
         else:
             if is_devel and not is_source:
-                base=is_devel.group(1)
-                dep=None
-                has_so=0
+                base = is_devel.group(1)
+                dep = None
+                has_so = 0
                 for f in pkg.files().keys():
                     if f.endswith('.so'):
-                        has_so=1
+                        has_so = 1
                         break
                 if has_so:
                     base_or_libs = base + '/' + base + '-libs/lib' + base
                     for d in deps:
                         if d[0] == base or d[0] == base + '-libs' or d[0] == 'lib' + base:
-                            dep=d
+                            dep = d
                             break
                     if not dep:
                         printWarning(pkg, 'no-dependency-on', base_or_libs)
                     elif version:
                         if epoch is not None: # regardless of use_epoch
-                            expected=str(epoch) + ":" + version
+                            expected = str(epoch) + ":" + version
                         else:
-                            expected=version
+                            expected = version
                         if dep[1][:len(expected)] != expected:
                             if dep[1] != '':
                                 printWarning(pkg, 'incoherent-version-dependency-on', base_or_libs, dep[1], expected)
                             else:
                                 printWarning(pkg, 'no-version-dependency-on', base_or_libs, expected)
-                    res=devel_number_regex.search(name)
+                    res = devel_number_regex.search(name)
                     if not res:
                         printWarning(pkg, 'no-major-in-name', name)
                     else:
                         if res.group(3):
-                            prov=res.group(1) + res.group(2) + '-devel'
+                            prov = res.group(1) + res.group(2) + '-devel'
                         else:
-                            prov=res.group(1) + '-devel'
+                            prov = res.group(1) + '-devel'
 
                         if not prov in map(lambda x: x[0], pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
 
-        summary=pkg[rpm.RPMTAG_SUMMARY]
+        summary = pkg[rpm.RPMTAG_SUMMARY]
         if not summary:
             printError(pkg, 'no-summary-tag')
         else:
@@ -566,13 +566,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'summary-too-long', summary)
             if leading_space_regex.search(summary):
                 printError(pkg, 'summary-has-leading-spaces', summary)
-            res=forbidden_words_regex.search(summary)
+            res = forbidden_words_regex.search(summary)
             if res and Config.getOption('ForbiddenWords'):
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
             if use_utf8 and not Pkg.is_utf8_str(summary):
                 printError(pkg, 'tag-not-utf8', 'Summary')
 
-        description=pkg[rpm.RPMTAG_DESCRIPTION]
+        description = pkg[rpm.RPMTAG_DESCRIPTION]
         if not description:
             printError(pkg, 'no-description-tag')
         else:
@@ -583,7 +583,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     utf8l = Pkg.to_utf8(l).decode('utf-8')
                 if len(utf8l) > max_line_len:
                     printError(pkg, 'description-line-too-long', l)
-                res=forbidden_words_regex.search(l)
+                res = forbidden_words_regex.search(l)
                 if res and Config.getOption('ForbiddenWords'):
                     printWarning(pkg, 'description-use-invalid-word', res.group(1))
                 res = tag_regex.search(l)
@@ -592,31 +592,31 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if use_utf8 and not Pkg.is_utf8_str(description):
                 printError(pkg, 'tag-not-utf8', '%description')
 
-        group=pkg[rpm.RPMTAG_GROUP]
+        group = pkg[rpm.RPMTAG_GROUP]
         if not group:
             printError(pkg, 'no-group-tag')
         else:
             if VALID_GROUPS and group not in VALID_GROUPS:
                 printWarning(pkg, 'non-standard-group', group)
 
-        buildhost=pkg[rpm.RPMTAG_BUILDHOST]
+        buildhost = pkg[rpm.RPMTAG_BUILDHOST]
         if not buildhost:
             printError(pkg, 'no-buildhost-tag')
         else:
             if Config.getOption('ValidBuildHost') and not valid_buildhost_regex.search(buildhost):
                 printWarning(pkg, 'invalid-buildhost', buildhost)
 
-        changelog=pkg[rpm.RPMTAG_CHANGELOGNAME]
+        changelog = pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
             printError(pkg, 'no-changelogname-tag')
         else:
-            clt=pkg[rpm.RPMTAG_CHANGELOGTEXT]
+            clt = pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if use_version_in_changelog:
-                ret=changelog_version_regex.search(changelog[0])
+                ret = changelog_version_regex.search(changelog[0])
                 if not ret and clt:
                     # we also allow the version specified as the first
                     # thing on the first line of the text
-                    ret=changelog_text_version_regex.search(clt[0])
+                    ret = changelog_text_version_regex.search(clt[0])
                 if not ret:
                     printWarning(pkg, 'no-version-in-last-changelog')
                 elif version and release:
@@ -634,11 +634,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             if len(expected) == 1: expected = expected[0]
                             printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
 
-            if clt: changelog=changelog + clt
+            if clt: changelog = changelog + clt
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
 
-#         provides=pkg.provides()
+#         provides = pkg.provides()
 #         for (provide_name, provide_version, provide_flags) in provides:
 #             if name == provide_name:
 #                 printWarning(pkg, 'package-provides-itself')
@@ -660,7 +660,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if l2 not in VALID_LICENSES:
                             printWarning(pkg, 'invalid-license', l2)
 
-        url=pkg[rpm.RPMTAG_URL]
+        url = pkg[rpm.RPMTAG_URL]
         if url and url != 'none':
             if not url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
@@ -683,7 +683,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
-        useless_provides=[]
+        useless_provides = []
         for p in prov_names:
             if prov_names.count(p) != 1:
                 if p not in useless_provides:
@@ -699,13 +699,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if c[1].find('%') != -1:
                 printError(pkg, 'percent-in-conflicts', c[0], c[1])
 
-        expected='%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
+        expected = '%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
         basename = pkg.filename.split('/')[-1]
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
 
 # Create an object to enable the auto registration of the test
-check=TagsCheck()
+check = TagsCheck()
 
 # Add information about checks
 if Config.info:

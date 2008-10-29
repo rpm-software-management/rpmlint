@@ -22,7 +22,7 @@ import tempfile
 from Filter import *
 import SpecCheck
 
-version='@VERSION@'
+version = '@VERSION@'
 
 # Print usage information
 def usage(name):
@@ -50,16 +50,16 @@ def main():
     packages_checked = 0
     specfiles_checked = 0
 
-    pkg=None
+    pkg = None
     try:
         # Loop over all file names given in arguments
-        dirs=[]
+        dirs = []
         for f in args:
             pkgs = []
             isfile = False
             try:
                 try:
-                    st=os.stat(f)
+                    st = os.stat(f)
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if not f.endswith(".spec"):
@@ -103,8 +103,8 @@ def main():
         for d in dirs:
             try:
                 for i in os.listdir(d):
-                    f=os.path.abspath(os.path.join(d, i))
-                    st=os.stat(f)
+                    f = os.path.abspath(os.path.join(d, i))
+                    st = os.stat(f)
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if not (f.endswith('.rpm') or f.endswith('.spm') or \
                                 f.endswith('.spec')):
@@ -125,32 +125,32 @@ def main():
                         except Exception, e:
                             sys.stderr.write(
                                 '(none): E: while reading %s: %s\n' % (f, e))
-                            pkg=None
+                            pkg = None
                             continue
             except Exception, e:
                 sys.stderr.write(
                     '(none): E: error while reading dir %s: %s' % (d, e))
-                pkg=None
+                pkg = None
                 continue
 
         # if requested, scan all the installed packages
         if all:
             try:
                 if Pkg.v42:
-                    ts=rpm.TransactionSet('/')
+                    ts = rpm.TransactionSet('/')
                     for item in ts.IDTXload():
-                        pkg=Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
+                        pkg = Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
                         runChecks(pkg)
                         packages_checked += 1
                 else:
                     try:
-                        db=rpm.opendb()
-                        idx=db.firstkey()
+                        db = rpm.opendb()
+                        idx = db.firstkey()
                         while idx:
-                            pkg=Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
+                            pkg = Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
                             runChecks(pkg)
                             packages_checked += 1
-                            idx=db.nextkey(idx)
+                            idx = db.nextkey(idx)
                     finally:
                         del db
             except KeyboardInterrupt:
@@ -188,7 +188,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 
 # parse options
 try:
-    (opt, args)=getopt.getopt(sys.argv[1:],
+    (opt, args) = getopt.getopt(sys.argv[1:],
                               'iI:c:C:hVvp:anE:f:',
                               ['info',
                                'check=',
@@ -208,13 +208,13 @@ except getopt.error, e:
     sys.exit(1)
 
 # process options
-checkdir='/usr/share/rpmlint'
-verbose=0
-extract_dir=None
-prof=0
-all=0
-conf_file='~/.rpmlintrc'
-info_error=0
+checkdir = '/usr/share/rpmlint'
+verbose = 0
+extract_dir = None
+prof = 0
+all = 0
+conf_file = '~/.rpmlintrc'
+info_error = 0
 
 # load global config files
 configs = glob.glob('/etc/rpmlint/*config')
@@ -235,30 +235,30 @@ for o in opt:
     if o[0] == '-c' or o[0] == '--check':
         Config.addCheck(o[1])
     elif o[0] == '-i' or o[0] == '--info':
-        Config.info=1
+        Config.info = 1
     elif o[0] == '-I':
-        info_error=o[1]
+        info_error = o[1]
     elif o[0] == '-h' or o[0] == '--help':
         usage(sys.argv[0])
         sys.exit(0)
     elif o[0] == '-C' or o[0] == '--checkdir':
         Config.addCheckDir(o[1])
     elif o[0] == '-v' or o[0] == '--verbose':
-        verbose=1
+        verbose = 1
     elif o[0] == '-V' or o[0] == '--version':
         printVersion()
         sys.exit(0)
     elif o[0] == '-E' or o[0] == '--extractdir':
-        extract_dir=o[1]
+        extract_dir = o[1]
         Config.setOption('ExtractDir', extract_dir)
     elif o[0] == '-p' or o[0] == '--profile':
-        prof=o[1]
+        prof = o[1]
     elif o[0] == '-n' or o[0] == '--noexception':
-        Config.no_exception=1
+        Config.no_exception = 1
     elif o[0] == '-a' or o[0] == '--all':
-        all=1
+        all = 1
     elif o[0] == '-f' or o[0] == '--file':
-        conf_file=o[1]
+        conf_file = o[1]
     else:
         print 'unknown option', o
 
@@ -271,10 +271,10 @@ except Exception,E:
     sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (conf_file, E))
 
 if not extract_dir:
-    extract_dir=Config.getOption('ExtractDir', tempfile.gettempdir())
+    extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
 
 if info_error:
-    Config.info=1
+    Config.info = 1
     for c in Config.allChecks():
         loadCheck(c)
     for e in info_error.split(','):

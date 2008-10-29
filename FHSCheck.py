@@ -13,9 +13,9 @@ import re
 
 
 class FHSCheck(AbstractCheck.AbstractCheck):
-    usr_regex=re.compile("^/usr/([^/]+)/")
+    usr_regex = re.compile("^/usr/([^/]+)/")
     usr_subdir = ('X11R6','X386','bin','games','include','lib','lib64','local','sbin','share','src','spool','tmp')
-    var_regex=re.compile("^/var/([^/]+)/")
+    var_regex = re.compile("^/var/([^/]+)/")
     var_fsstnd = ('adm','catman','local','named','nis','preserve')
     var_subdir = ('account','lib','cache','crash','games','lock','log','opt','run','spool','state','tmp','yp','www','ftp')
 
@@ -27,12 +27,12 @@ class FHSCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        files=pkg.files()
-        var_list=[]
-        usr_list=[]
+        files = pkg.files()
+        var_list = []
+        usr_list = []
 
         for f in files.keys():
-            s=FHSCheck.usr_regex.search(f)
+            s = FHSCheck.usr_regex.search(f)
             if s:
                 d = s.group(1)
                 if not d in FHSCheck.usr_subdir:
@@ -40,7 +40,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "non-standard-dir-in-usr", d)
                         usr_list.append(d)
             else:
-                s=FHSCheck.var_regex.search(f)
+                s = FHSCheck.var_regex.search(f)
                 if s:
                     d = s.group(1)
                     if d in FHSCheck.var_fsstnd:
@@ -53,7 +53,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                             var_list.append(d)
 
 # Create an object to enable the auto registration of the test
-check=FHSCheck()
+check = FHSCheck()
 
 if Config.info:
     addDetails(

@@ -17,33 +17,33 @@ import Pkg
 import tempfile
 import types
 
-DEFAULT_VALID_SHELLS=('<lua>',
-                      '/bin/sh',
-                      '/bin/bash',
-                      '/sbin/sash',
-                      '/usr/bin/perl',
-                      '/sbin/ldconfig',
-                      )
+DEFAULT_VALID_SHELLS = ('<lua>',
+                        '/bin/sh',
+                        '/bin/bash',
+                        '/sbin/sash',
+                        '/usr/bin/perl',
+                        '/sbin/ldconfig',
+                        )
 
-DEFAULT_EMPTY_SHELLS=('/sbin/ldconfig',
-                     )
+DEFAULT_EMPTY_SHELLS = ('/sbin/ldconfig',
+                        )
 
-extract_dir=Config.getOption('ExtractDir', tempfile.gettempdir())
-valid_shells=Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
-empty_shells=Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
+extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
+valid_shells = Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
+empty_shells = Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging
 syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
 percent_regex = re.compile('^[^#]*%{?\w{3,}', re.MULTILINE)
-bracket_regex=re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
-home_regex=re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
-dangerous_command_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
-selinux_regex=re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
-single_command_regex=re.compile("^[ \n]*([^ \n]+)[ \n]*$")
-update_menu_regex=re.compile('update-menus', re.MULTILINE)
-tmp_regex=re.compile('\s(/var)?/tmp', re.MULTILINE)
-menu_regex=re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
-bogus_var_regex=re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
+bracket_regex = re.compile('^[^#]*if.*[^ :\]]\]', re.MULTILINE)
+home_regex = re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
+dangerous_command_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
+selinux_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
+single_command_regex = re.compile("^[ \n]*([^ \n]+)[ \n]*$")
+update_menu_regex = re.compile('update-menus', re.MULTILINE)
+tmp_regex = re.compile('\s(/var)?/tmp', re.MULTILINE)
+menu_regex = re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
+bogus_var_regex = re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 prereq_assoc = (
 #    ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
@@ -109,8 +109,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        prereq=map(lambda x: x[0], pkg.prereq())
-        files=pkg.files().keys()
+        prereq = map(lambda x: x[0], pkg.prereq())
+        files = pkg.files().keys()
 
         for tag in script_tags:
             script = pkg[tag[0]]
@@ -122,10 +122,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 for idx in range(0, len(prog)):
                     self.check_aux(pkg, files, prog[idx], script[idx], tag, prereq)
 
-        ghost_files=pkg.ghostFiles()
+        ghost_files = pkg.ghostFiles()
         if ghost_files:
-            postin=pkg[rpm.RPMTAG_POSTIN]
-            prein=pkg[rpm.RPMTAG_PREIN]
+            postin = pkg[rpm.RPMTAG_POSTIN]
+            prein = pkg[rpm.RPMTAG_PREIN]
             if not postin and not prein:
                 printWarning(pkg, 'ghost-files-without-postin')
             else:
@@ -147,18 +147,18 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'percent-in-' + tag[2])
                 if bracket_regex.search(script):
                     printWarning(pkg, 'spurious-bracket-in-' + tag[2])
-                res=dangerous_command_regex.search(script)
+                res = dangerous_command_regex.search(script)
                 if res:
                     printWarning(pkg, 'dangerous-command-in-' + tag[2], res.group(2))
-                res=selinux_regex.search(script)
+                res = selinux_regex.search(script)
                 if res:
                     printError(pkg, 'forbidden-selinux-command-in-' + tag[2], res.group(2))
 
                 if update_menu_regex.search(script):
-                    menu_error=1
+                    menu_error = 1
                     for f in files:
                         if menu_regex.search(f):
-                            menu_error=0
+                            menu_error = 0
                             break
                     if menu_error:
                         printError(pkg, 'update-menus-without-menu-file-in-' + tag[2])
@@ -166,10 +166,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'use-tmp-in-' + tag[2])
                 for c in prereq_assoc:
                     if c[0].search(script):
-                        found=0
+                        found = 0
                         for p in c[1]:
                             if p in prereq or p in files:
-                                found=1
+                                found = 1
                                 break
                         if not found:
                             printError(pkg, 'no-prereq-on', c[1][0])
@@ -179,7 +179,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'shell-syntax-error-in-' + tag[2])
                 if home_regex.search(script):
                     printError(pkg, 'use-of-home-in-' + tag[2])
-                res=bogus_var_regex.search(script)
+                res = bogus_var_regex.search(script)
                 if res:
                     printWarning(pkg, 'bogus-variable-use-in-' + tag[2], res.group(1))
 
@@ -187,7 +187,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if incorrect_perl_script(prog, script):
                     printError(pkg, 'perl-syntax-error-in-' + tag[2])
 
-            res=single_command_regex.search(script)
+            res = single_command_regex.search(script)
             if res:
                 printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))
         else:
@@ -195,7 +195,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'empty-' + tag[2])
 
 # Create an object to enable the auto registration of the test
-check=PostCheck()
+check = PostCheck()
 
 # Add information about checks
 if Config.info:

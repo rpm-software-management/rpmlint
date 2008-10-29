@@ -12,10 +12,10 @@ import AbstractCheck
 import re
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
-    games_regex=re.compile("^/var/lib/games")
-    usr_regex=re.compile("^/usr/")
-    etc_var_regex=re.compile("^/etc/|^/var/")
-    appdefaults_regex=re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
+    games_regex = re.compile("^/var/lib/games")
+    usr_regex = re.compile("^/usr/")
+    etc_var_regex = re.compile("^/etc/|^/var/")
+    appdefaults_regex = re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
@@ -25,8 +25,8 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        config_files=pkg.configFiles()
-        noreplace_files=pkg.noreplaceFiles()
+        config_files = pkg.configFiles()
+        noreplace_files = pkg.noreplaceFiles()
 
         for c in config_files:
             if ConfigCheck.appdefaults_regex.search(c):
@@ -42,7 +42,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "conffile-without-noreplace-flag", c)
 
 # Create an object to enable the auto registration of the test
-check=ConfigCheck()
+check = ConfigCheck()
 
 # Add information about checks
 if Config.info:

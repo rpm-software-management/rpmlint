@@ -21,32 +21,32 @@ import sys
 
 from Filter import printWarning
 
-RPMFILE_CONFIG=(1 << 0)
-RPMFILE_DOC=(1 << 1)
-RPMFILE_DONOTUSE=(1 << 2)
-RPMFILE_MISSINGOK=(1 << 3)
-RPMFILE_NOREPLACE=(1 << 4)
-RPMFILE_SPECFILE=(1 << 5)
-RPMFILE_GHOST=(1 << 6)
-RPMFILE_LICENSE=(1 << 7)
-RPMFILE_README=(1 << 8)
+RPMFILE_CONFIG = (1 << 0)
+RPMFILE_DOC = (1 << 1)
+RPMFILE_DONOTUSE = (1 << 2)
+RPMFILE_MISSINGOK = (1 << 3)
+RPMFILE_NOREPLACE = (1 << 4)
+RPMFILE_SPECFILE = (1 << 5)
+RPMFILE_GHOST = (1 << 6)
+RPMFILE_LICENSE = (1 << 7)
+RPMFILE_README = (1 << 8)
 
 # check if we use a rpm version compatible with 3.0.4
 try:
     if rpm.RPMTAG_OLDFILENAMES:
-        v304=1
+        v304 = 1
 except AttributeError:
-    v304=0
+    v304 = 0
 
 try:
     if rpm.RPMSENSE_SCRIPT_PRE:
-        PREREQ_FLAG=rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
+        PREREQ_FLAG = rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
 except AttributeError:
     try:
-        PREREQ_FLAG=rpm.RPMSENSE_PREREQ
+        PREREQ_FLAG = rpm.RPMSENSE_PREREQ
     except:
         #(proyvind): This seems ugly, but then again so does this whole check as well.
-        PREREQ_FLAG=False
+        PREREQ_FLAG = False
 # check if we use a rpm version compatible with 4.2
 v42 = 0
 try:
@@ -64,12 +64,12 @@ except AttributeError:
 
 # utilities
 
-var_regex=re.compile('^(.*)\${?(\w+)}?(.*)$')
+var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
 def shell_var_value(var, script):
-    assign_regex=re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
-                            re.MULTILINE)
-    res=assign_regex.search(script)
+    assign_regex = re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
+                              re.MULTILINE)
+    res = assign_regex.search(script)
     if res:
         res2 = var_regex.search(res.group(1))
         if res2:
@@ -80,16 +80,16 @@ def shell_var_value(var, script):
         return None
 
 def substitute_shell_vars(val, script):
-    res=var_regex.search(val)
+    res = var_regex.search(val)
     if res:
-        value=shell_var_value(res.group(2), script)
+        value = shell_var_value(res.group(2), script)
         if not value:
-            value=''
+            value = ''
         return res.group(1) + value + substitute_shell_vars(res.group(3), script)
     else:
         return val
 
-def getstatusoutput(cmd, stdoutonly=0):
+def getstatusoutput(cmd, stdoutonly = 0):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.  See popen2.'''
     if stdoutonly:
@@ -103,14 +103,14 @@ def getstatusoutput(cmd, stdoutonly=0):
     if text[-1:] == '\n': text = text[:-1]
     return sts, text
 
-bz2_regex=re.compile('\.t?bz2?$')
+bz2_regex = re.compile('\.t?bz2?$')
 
 # TODO: is_utf8 could probably be implemented natively without iconv...
 
 def is_utf8(fname):
-    cat='gzip -dcf'
-    if bz2_regex.search(fname): cat='bzip2 -dcf'
-    if fname.endswith('lzma'): cat='lzma -dc'
+    cat = 'gzip -dcf'
+    if bz2_regex.search(fname): cat = 'bzip2 -dcf'
+    if fname.endswith('lzma'): cat = 'lzma -dc'
     # TODO: better shell escaping or sequence based command invocation
     cmd = commands.getstatusoutput('%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
     return not cmd[0]
@@ -164,29 +164,29 @@ def mktemp():
 # classes representing package
 
 class Pkg:
-    file_regex=re.compile('(?:\.)?([^:]+):\s+(.*)')
+    file_regex = re.compile('(?:\.)?([^:]+):\s+(.*)')
 
-    def __init__(self, filename, dirname, header=None, is_source=0):
-        self.filename=filename
-        self.extracted=0
-        self.dirname=dirname
-        self.file_info=None
-        self.current_linenum=None
-        self._config_files=None
-        self._doc_files=None
-        self._ghost_files=None
-        self._missing_ok_files=None
-        self._files=None
-        self._requires=None
-        self._req_names=-1
+    def __init__(self, filename, dirname, header = None, is_source = 0):
+        self.filename = filename
+        self.extracted = 0
+        self.dirname = dirname
+        self.file_info = None
+        self.current_linenum = None
+        self._config_files = None
+        self._doc_files = None
+        self._ghost_files = None
+        self._missing_ok_files = None
+        self._files = None
+        self._requires = None
+        self._req_names = -1
 
         if header:
-            self.header=header
-            self.is_source=is_source
+            self.header = header
+            self.is_source = is_source
         else:
             # Create a package object from the file name
             if v42:
-                ts=rpm.TransactionSet()
+                ts = rpm.TransactionSet()
                 # Don't check signatures here...
                 ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
                 fd = os.open(filename, os.O_RDONLY)
@@ -202,9 +202,9 @@ class Pkg:
                 finally:
                     os.close(fd)
 
-        self._lang_files=None
+        self._lang_files = None
 
-        self.name=self.header[rpm.RPMTAG_NAME]
+        self.name = self.header[rpm.RPMTAG_NAME]
         if self.isNoSource():
             self.arch = 'nosrc'
         elif self.isSource():
@@ -240,7 +240,7 @@ class Pkg:
 
     # extract rpm contents
     def _extract(self):
-        s=os.stat(self.dirname)
+        s = os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
             sys.stderr.write('unable to access dir %s\n' % self.dirname)
             return None
@@ -248,9 +248,9 @@ class Pkg:
             self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
             os.mkdir(self.dirname)
             # TODO: better shell escaping or sequence based command invocation
-            command_str='rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
-            cmd=commands.getstatusoutput(command_str)
-            self.extracted=1
+            command_str = 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
+            cmd = commands.getstatusoutput(command_str)
+            self.extracted = 1
             return cmd
 
     def checkSignature(self):
@@ -259,12 +259,12 @@ class Pkg:
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
         if self.file_info == None:
-            self.file_info=[]
+            self.file_info = []
             lines = commands.getoutput('cd %s ; find . -type f -print0 | LC_ALL=C xargs -0r file' % self.dirName())
             lines = lines.splitlines()
             for l in lines:
                 #print l
-                res=Pkg.file_regex.search(l)
+                res = Pkg.file_regex.search(l)
                 if res:
                     self.file_info.append([res.group(1), res.group(2)])
             #print self.file_info
@@ -341,31 +341,31 @@ class Pkg:
     def _gatherFilesInfo(self):
         global v304
 
-        self._config_files=[]
-        self._doc_files=[]
-        self._noreplace_files=[]
-        self._ghost_files=[]
-        self._missing_ok_files=[]
-        self._files={}
-        self._files_array=[]
-        flags=self.header[rpm.RPMTAG_FILEFLAGS]
-        modes=self.header[rpm.RPMTAG_FILEMODES]
-        users=self.header[rpm.RPMTAG_FILEUSERNAME]
-        groups=self.header[rpm.RPMTAG_FILEGROUPNAME]
-        links=self.header[rpm.RPMTAG_FILELINKTOS]
-        sizes=self.header[rpm.RPMTAG_FILESIZES]
-        md5s=self.header[rpm.RPMTAG_FILEMD5S]
-        mtimes=self.header[rpm.RPMTAG_FILEMTIMES]
-        rdevs=self.header[rpm.RPMTAG_FILERDEVS]
+        self._config_files = []
+        self._doc_files = []
+        self._noreplace_files = []
+        self._ghost_files = []
+        self._missing_ok_files = []
+        self._files = {}
+        self._files_array = []
+        flags = self.header[rpm.RPMTAG_FILEFLAGS]
+        modes = self.header[rpm.RPMTAG_FILEMODES]
+        users = self.header[rpm.RPMTAG_FILEUSERNAME]
+        groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
+        links = self.header[rpm.RPMTAG_FILELINKTOS]
+        sizes = self.header[rpm.RPMTAG_FILESIZES]
+        md5s = self.header[rpm.RPMTAG_FILEMD5S]
+        mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
+        rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         # Get files according to rpm version
         if v304:
-            files=self.header[rpm.RPMTAG_OLDFILENAMES]
+            files = self.header[rpm.RPMTAG_OLDFILENAMES]
             if not files:
-                basenames=self.header[rpm.RPMTAG_BASENAMES]
+                basenames = self.header[rpm.RPMTAG_BASENAMES]
                 if basenames:
-                    dirnames=self.header[rpm.RPMTAG_DIRNAMES]
-                    dirindexes=self.header[rpm.RPMTAG_DIRINDEXES]
-                    files=[]
+                    dirnames = self.header[rpm.RPMTAG_DIRNAMES]
+                    dirindexes = self.header[rpm.RPMTAG_DIRINDEXES]
+                    files = []
                     # The rpmlib or the python module doesn't report a list for RPMTAG_DIRINDEXES
                     # if the list has one element...
                     if type(dirindexes) == types.IntType:
@@ -374,10 +374,10 @@ class Pkg:
                         for idx in range(0, len(dirindexes)):
                             files.append(dirnames[dirindexes[idx]] + basenames[idx])
         else:
-            files=self.header[rpm.RPMTAG_FILENAMES]
+            files = self.header[rpm.RPMTAG_FILENAMES]
 
         if files:
-            self._files_array=files
+            self._files_array = files
             for idx in range(0, len(files)):
                 if flags[idx] & RPMFILE_CONFIG:
                     self._config_files.append(files[idx])
@@ -389,15 +389,15 @@ class Pkg:
                     self._ghost_files.append(files[idx])
                 if flags[idx] & RPMFILE_MISSINGOK:
                     self._missing_ok_files.append(files[idx])
-                self._files[files[idx]]=(modes[idx], users[idx],
-                                         groups[idx], links[idx],
-                                         sizes[idx], md5s[idx],
-                                         mtimes[idx], rdevs[idx])
+                self._files[files[idx]] = (modes[idx], users[idx],
+                                           groups[idx], links[idx],
+                                           sizes[idx], md5s[idx],
+                                           mtimes[idx], rdevs[idx])
 
     def langFiles(self):
         if self._lang_files == None:
-            self._lang_files={}
-            array=self.header[rpm.RPMTAG_FILELANGS]
+            self._lang_files = {}
+            array = self.header[rpm.RPMTAG_FILELANGS]
             if array:
                 for idx in range(0, len(array)):
                     self._lang_files[self._files_array[idx]] = array[idx]
@@ -426,11 +426,11 @@ class Pkg:
         return self._req_names
 
     def check_versioned_dep(self, name, version):
-        for d in self.requires()+self.prereq():
+        for d in self.requires() + self.prereq():
             if d[0] == name:
-                current_version=d[1]
+                current_version = d[1]
                 if current_version.find(':') > 0:
-                    current_version=''.join(current_version.split(':')[1:])
+                    current_version = ''.join(current_version.split(':')[1:])
                 if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or current_version != version:
                     return 0
                 else:
@@ -446,7 +446,7 @@ class Pkg:
         return self._provides
 
     # internal function to gather dependency info used by the above ones
-    def _gather_aux(self, header, list, nametag, versiontag, flagstag, prereq=None):
+    def _gather_aux(self, header, list, nametag, versiontag, flagstag, prereq = None):
         names = header[nametag]
         versions = header[versiontag]
         flags = header[flagstag]
@@ -454,7 +454,7 @@ class Pkg:
         if versions:
             # workaroung buggy rpm python module that doesn't return a list
             if type(flags) != types.ListType:
-                flags=[flags]
+                flags = [flags]
             for loop in range(len(versions)):
                 if prereq != None and flags[loop] & PREREQ_FLAG:
                     prereq.append((names[loop], versions[loop], flags[loop] & (~PREREQ_FLAG)))
@@ -510,7 +510,7 @@ def getInstalledPkgs(name):
 
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
-    def __init__(self, name, h=None):
+    def __init__(self, name, h = None):
         if h:
             Pkg.__init__(self, name, '/', h)
         else:
@@ -542,7 +542,7 @@ class InstalledPkg(Pkg):
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
         if self.file_info == None:
-            self.file_info=[]
+            self.file_info = []
             cmd = ['env', 'LC_ALL=C', 'file']
             cmd.extend(self.files().keys())
             sts, lines = getstatusoutput(cmd)
@@ -550,7 +550,7 @@ class InstalledPkg(Pkg):
             lines = lines.splitlines()
             for l in lines:
                 #print l
-                res=Pkg.file_regex.search(l)
+                res = Pkg.file_regex.search(l)
                 if res:
                     self.file_info.append([res.group(1), res.group(2)])
             #print self.file_info
@@ -567,7 +567,7 @@ class FakePkg:
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:
-        pkg=Pkg(sys.argv[1], tempfile.gettempdir())
+        pkg = Pkg(sys.argv[1], tempfile.gettempdir())
         sys.stdout.write('Requires: %s\n' % pkg.requires())
         sys.stdout.write('Prereq: %s\n' % pkg.prereq())
         sys.stdout.write('Conflicts: %s\n' % pkg.conflicts())

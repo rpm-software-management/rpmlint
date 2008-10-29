@@ -149,7 +149,7 @@ STANDARD_DIRS = (
     '/var/tmp',
     )
 
-DEFAULT_GAMES_GROUPS='Games'
+DEFAULT_GAMES_GROUPS = 'Games'
 
 DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
@@ -162,58 +162,58 @@ DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'shutdown', 'halt', 'mail', 'news', 'uucp',
                            'man', 'nobody',)
 
-tmp_regex=re.compile('^/tmp/|^(/var|/usr)/tmp/')
-sub_bin_regex=re.compile('^(/usr)?/s?bin/\S+/')
-backup_regex=re.compile('~$|\#[^/]+\#$')
-compr_regex=re.compile('\.(gz|z|Z|zip|bz2|lzma)$')
-absolute_regex=re.compile('^/([^/]+)')
-absolute2_regex=re.compile('^/?([^/]+)')
-points_regex=re.compile('^\.\./(.*)')
-doc_regex=re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
-bin_regex=re.compile('^(/usr)?/s?bin/')
+tmp_regex = re.compile('^/tmp/|^(/var|/usr)/tmp/')
+sub_bin_regex = re.compile('^(/usr)?/s?bin/\S+/')
+backup_regex = re.compile('~$|\#[^/]+\#$')
+compr_regex = re.compile('\.(gz|z|Z|zip|bz2|lzma)$')
+absolute_regex = re.compile('^/([^/]+)')
+absolute2_regex = re.compile('^/?([^/]+)')
+points_regex = re.compile('^\.\./(.*)')
+doc_regex = re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
+bin_regex = re.compile('^(/usr)?/s?bin/')
 includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
-buildconfigfile_regex=re.compile('(\.pc|/bin/.+-config)$')
-sofile_regex=re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
-devel_regex=re.compile('(.*)-(debug(info)?|devel|source|static)$')
-debuginfo_package_regex=re.compile('-debug(info)?$')
-lib_regex=re.compile('lib(64)?/lib[^/]*\.so\..*')
-ldconfig_regex=re.compile('^[^#]*ldconfig', re.MULTILINE)
-depmod_regex=re.compile('^[^#]*depmod', re.MULTILINE)
-install_info_regex=re.compile('^[^#]*install-info', re.MULTILINE)
-perl_temp_file=re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
-scm_regex=re.compile('/CVS/[^/]+$|/\.(cvs|git|hg)ignore$|/\.hgtags$|/\.(git|hg|svn)/|/(\.arch-ids|{arch})/')
-htaccess_regex=re.compile('\.htaccess$')
-games_path_regex=re.compile('^/usr(/lib(64)?)?/games/')
-games_group_regex=re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
-source_regex=re.compile('\.(c|cc|cpp|ui)$')
-dangling_exceptions=Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
-logrotate_regex=re.compile('^/etc/logrotate\.d/(.*)')
-module_rpms_ok=Config.getOption('KernelModuleRPMsOK', 1)
-kernel_modules_regex=re.compile('^/lib/modules/(2\.[23456]\.[0-9]+[^/]*?)/')
-kernel_package_regex=re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
-normal_zero_length_regex=re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
-perl_regex=re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
-python_regex=re.compile('^/usr/lib/python([.0-9]+)/')
-perl_version_trick=Config.getOption('PerlVersionTrick', 1)
-log_regex=re.compile('^/var/log/[^/]+$')
-lib_path_regex=re.compile('^(/usr(/X11R6)?)?/lib(64)?')
-lib_package_regex=re.compile('^(lib|.+-libs)')
-hidden_file_regex=re.compile('/\.[^/]*$')
-mispelled_macro_regex=re.compile('%{.*}')
-siteperl_perl_regex=re.compile('/site_perl/')
-manifest_perl_regex=re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
-shebang_regex=re.compile('^#!\s*(\S*)')
+buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
+sofile_regex = re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
+devel_regex = re.compile('(.*)-(debug(info)?|devel|source|static)$')
+debuginfo_package_regex = re.compile('-debug(info)?$')
+lib_regex = re.compile('lib(64)?/lib[^/]*\.so\..*')
+ldconfig_regex = re.compile('^[^#]*ldconfig', re.MULTILINE)
+depmod_regex = re.compile('^[^#]*depmod', re.MULTILINE)
+install_info_regex = re.compile('^[^#]*install-info', re.MULTILINE)
+perl_temp_file = re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
+scm_regex = re.compile('/CVS/[^/]+$|/\.(cvs|git|hg)ignore$|/\.hgtags$|/\.(git|hg|svn)/|/(\.arch-ids|{arch})/')
+htaccess_regex = re.compile('\.htaccess$')
+games_path_regex = re.compile('^/usr(/lib(64)?)?/games/')
+games_group_regex = re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
+source_regex = re.compile('\.(c|cc|cpp|ui)$')
+dangling_exceptions = Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
+logrotate_regex = re.compile('^/etc/logrotate\.d/(.*)')
+module_rpms_ok = Config.getOption('KernelModuleRPMsOK', 1)
+kernel_modules_regex = re.compile('^/lib/modules/(2\.[23456]\.[0-9]+[^/]*?)/')
+kernel_package_regex = re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
+normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
+perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
+python_regex = re.compile('^/usr/lib/python([.0-9]+)/')
+perl_version_trick = Config.getOption('PerlVersionTrick', 1)
+log_regex = re.compile('^/var/log/[^/]+$')
+lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
+lib_package_regex = re.compile('^(lib|.+-libs)')
+hidden_file_regex = re.compile('/\.[^/]*$')
+mispelled_macro_regex = re.compile('%{.*}')
+siteperl_perl_regex = re.compile('/site_perl/')
+manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
+shebang_regex = re.compile('^#!\s*(\S*)')
 interpreter_regex = re.compile('^/(usr/)?(s?bin|games|libexec(/.+)?|(lib(64)?|share)/.+)/[^/]+$')
-script_regex=re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
-sourced_script_regex=re.compile('^/etc/(bash_completion\.d|profile\.d)/')
-use_utf8=Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
+script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
+sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
+use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|ml[ily]?)$'), re.IGNORECASE)
-meta_package_re=re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
+meta_package_re = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
 
 for idx in range(0, len(dangling_exceptions)):
-    dangling_exceptions[idx][0]=re.compile(dangling_exceptions[idx][0])
+    dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
 del idx
 
 use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
@@ -277,22 +277,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             return
 
         # Check if the package is a development package
-        devel_pkg=devel_regex.search(pkg.name)
+        devel_pkg = devel_regex.search(pkg.name)
 
-        config_files=pkg.configFiles()
-        ghost_files=pkg.ghostFiles()
-        doc_files=pkg.docFiles()
-        req_names=pkg.req_names()
-        lib_package=lib_package_regex.search(pkg.name)
-        is_kernel_package=kernel_package_regex.search(pkg.name)
+        config_files = pkg.configFiles()
+        ghost_files = pkg.ghostFiles()
+        doc_files = pkg.docFiles()
+        req_names = pkg.req_names()
+        lib_package = lib_package_regex.search(pkg.name)
+        is_kernel_package = kernel_package_regex.search(pkg.name)
 
         # report these errors only once
-        perl_dep_error=0
-        python_dep_error=0
-        lib_file=0
-        non_lib_file=0
-        log_file=0
-        logrotate_file=0
+        perl_dep_error = 0
+        python_dep_error = 0
+        lib_file = 0
+        non_lib_file = 0
+        log_file = 0
+        logrotate_file = 0
 
         if not doc_files:
             printWarning(pkg, 'no-documentation')
@@ -304,11 +304,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'empty-debuginfo-package')
 
         for f in files.keys():
-            enreg=files[f]
-            mode=enreg[0]
-            user=enreg[1]
-            group=enreg[2]
-            size=enreg[4]
+            enreg = files[f]
+            mode = enreg[0]
+            user = enreg[1]
+            group = enreg[2]
+            size = enreg[4]
             is_doc = f in doc_files
             nonexec_file = 0
 
@@ -351,31 +351,31 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
-            res=logrotate_regex.search(f)
-            logrotate_file=res or logrotate_file
+            res = logrotate_regex.search(f)
+            logrotate_file = res or logrotate_file
             if res and res.group(1) != pkg.name:
                 printError(pkg, 'incoherent-logrotate-file', f)
-            link=enreg[3]
+            link = enreg[3]
             if link != '':
-                ext=compr_regex.search(link)
+                ext = compr_regex.search(link)
                 if ext:
                     if not re.compile('\.' + ext.group(1) + '$').search(f):
                         printError(pkg, 'compressed-symlink-with-wrong-ext', f, link)
 
-            perm=mode & 07777
+            perm = mode & 07777
 
             # bit s check
             if stat.S_ISGID & mode or stat.S_ISUID & mode:
                 # check only normal files
                 if stat.S_ISREG(mode):
-                    user=enreg[1]
-                    group=enreg[2]
-                    setuid=None
-                    setgid=None
+                    user = enreg[1]
+                    group = enreg[2]
+                    setuid = None
+                    setgid = None
                     if stat.S_ISUID & mode:
-                        setuid=user
+                        setuid = user
                     if stat.S_ISGID & mode:
-                        setgid=group
+                        setgid = group
                     if setuid:
                         printError(pkg, 'setuid-binary', f, setuid, oct(perm))
                     if setgid:
@@ -386,16 +386,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-standard-executable-perm', f, oct(perm))
 
             if log_regex.search(f):
-                log_file=f
+                log_file = f
 
             # normal file check
             if stat.S_ISREG(mode):
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
-                        lib_file=1
+                        lib_file = 1
                     elif not is_doc:
-                        non_lib_file=f
+                        non_lib_file = f
 
                 if log_regex.search(f):
                     nonexec_file = 1
@@ -413,14 +413,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
-                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                     if not postin:
                         printError(pkg, 'library-without-ldconfig-postin', f)
                     else:
                         if not ldconfig_regex.search(postin):
                             printError(pkg, 'postin-without-ldconfig', f)
 
-                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                    postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun:
                         printError(pkg, 'library-without-ldconfig-postun', f)
                     else:
@@ -428,22 +428,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'postun-without-ldconfig', f)
 
                 # check depmod call in %post and %postun
-                res=not is_kernel_package and kernel_modules_regex.search(f)
+                res = not is_kernel_package and kernel_modules_regex.search(f)
                 if res:
-                    kernel_version=res.group(1)
+                    kernel_version = res.group(1)
                     kernel_version_regex = re.compile(
                         '\\bdepmod\s+-a.*F\s+/boot/System\.map-' +
                         re.escape(kernel_version) + '\\b.*\\b' +
                         re.escape(kernel_version) + '\\b',
                         re.MULTILINE | re.DOTALL)
-                    postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                    postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                     if not postin or not depmod_regex.search(postin):
                         printError(pkg, 'module-without-depmod-postin', f)
                     # check that we run depmod on the right kernel
                     elif not kernel_version_regex.search(postin):
                         printError(pkg, 'postin-with-wrong-depmod', f)
 
-                    postun=pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                    postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun or not depmod_regex.search(postun):
                         printError(pkg, 'module-without-depmod-postun', f)
                     # check that we run depmod on the right kernel
@@ -452,15 +452,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check install-info call in %post and %postun
                 if f.startswith('/usr/share/info/'):
-                    postin=pkg[rpm.RPMTAG_POSTIN]
+                    postin = pkg[rpm.RPMTAG_POSTIN]
                     if not postin:
                         printError(pkg, 'info-files-without-install-info-postin', f)
                     else:
                         if not install_info_regex.search(postin):
                             printError(pkg, 'postin-without-install-info', f)
 
-                    postun=pkg[rpm.RPMTAG_POSTUN]
-                    preun=pkg[rpm.RPMTAG_PREUN]
+                    postun = pkg[rpm.RPMTAG_POSTUN]
+                    preun = pkg[rpm.RPMTAG_PREUN]
                     if not postun and not preun:
                         printError(pkg, 'info-files-without-install-info-postun', f)
                     else:
@@ -489,7 +489,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'world-writable', f, oct(perm))
 
                 if not perl_dep_error:
-                    res=perl_regex.search(f)
+                    res = perl_regex.search(f)
                     if res:
                         if perl_version_trick:
                             vers = res.group(1) + '.' + res.group(2)
@@ -498,15 +498,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if not (pkg.check_versioned_dep('perl-base', vers) or
                                 pkg.check_versioned_dep('perl', vers)):
                             printError(pkg, 'no-dependency-on', 'perl-base', vers)
-                            perl_dep_error=1
+                            perl_dep_error = 1
 
                 if not python_dep_error:
-                    res=python_regex.search(f)
+                    res = python_regex.search(f)
                     if res:
                         if not (pkg.check_versioned_dep('python-base', res.group(1)) or
                                 pkg.check_versioned_dep('python', res.group(1))):
                             printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
-                            python_dep_error=1
+                            python_dep_error = 1
 
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != 0755:
@@ -548,27 +548,27 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # symbolic link check
             elif stat.S_ISLNK(mode):
-                r=absolute_regex.search(link)
-                is_so=sofile_regex.search(f)
+                r = absolute_regex.search(link)
+                is_so = sofile_regex.search(f)
                 if not devel_pkg and is_so and not link.endswith('.so'):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 # absolute link
                 if r:
                     if (not is_so) and link not in files.keys() and link not in req_names:
-                        is_exception=0
+                        is_exception = 0
                         for e in dangling_exceptions:
                             if e[0].search(link):
-                                is_exception=e[1]
+                                is_exception = e[1]
                                 break
                         if is_exception:
                             if is_exception not in req_names:
                                 printWarning(pkg, 'no-dependency-on', is_exception)
                         else:
                             printWarning(pkg, 'dangling-symlink', f, link)
-                    linktop=r.group(1)
-                    r=absolute_regex.search(f)
+                    linktop = r.group(1)
+                    r = absolute_regex.search(f)
                     if r:
-                        filetop=r.group(1)
+                        filetop = r.group(1)
                         if filetop == linktop or use_relative_symlinks:
                             printWarning(pkg ,'symlink-should-be-relative', f, link)
                 # relative link
@@ -579,10 +579,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
                         if not (files.has_key(pkgfile) or os.path.exists(extractedfile) or pkgfile in req_names):
-                            is_exception=0
+                            is_exception = 0
                             for e in dangling_exceptions:
                                 if e[0].search(link):
-                                    is_exception=e[1]
+                                    is_exception = e[1]
                                     break
                             if is_exception:
                                 if not is_exception in req_names:
@@ -590,23 +590,23 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)
                     pathcomponents = f.split('/')[1:]
-                    r=points_regex.search(link)
-                    lastpop=None
-                    mylink=None
+                    r = points_regex.search(link)
+                    lastpop = None
+                    mylink = None
 
                     while r:
-                        mylink=r.group(1)
+                        mylink = r.group(1)
                         if len(pathcomponents) == 0:
                             printError(pkg, 'symlink-has-too-many-up-segments', f, link)
                             break
                         else:
-                            lastpop=pathcomponents[0]
-                            pathcomponents=pathcomponents[1:]
-                            r=points_regex.search(mylink)
+                            lastpop = pathcomponents[0]
+                            pathcomponents = pathcomponents[1:]
+                            r = points_regex.search(mylink)
 
                     if mylink and lastpop:
-                        r=absolute2_regex.search(mylink)
-                        linktop=r.group(1)
+                        r = absolute2_regex.search(mylink)
+                        linktop = r.group(1)
 
                         # does the link go up and then down into the same directory?
                         #if linktop == lastpop:
@@ -624,7 +624,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # check text file
             if stat.S_ISREG(mode):
-                path=pkg.dirName() + '/' + f
+                path = pkg.dirName() + '/' + f
                 if os.access(path, os.R_OK):
                     if istextfile(path, pkg):
                         fobj = open(path, 'r')
@@ -632,10 +632,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             line = fobj.readline()
                         finally:
                             fobj.close()
-                        res=None
+                        res = None
                         # ignore perl module shebang -- TODO: disputed...
                         if not f.endswith('.pm'):
-                            res=shebang_regex.search(line)
+                            res = shebang_regex.search(line)
                         # sourced scripts should not be executable
                         if sourced_script_regex.search(f):
                             if res:
@@ -688,7 +688,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'outside-libdir-files', non_lib_file)
 
 # Create an object to enable the auto registration of the test
-check=FilesCheck()
+check = FilesCheck()
 
 if Config.info:
     addDetails(

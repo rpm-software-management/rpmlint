@@ -99,14 +99,14 @@ def printAllReasons():
 
     global _badness_score, _diagnostic
     _diagnostic.sort(_diag_compare)
-    last_reason=''
+    last_reason = ''
     for diag in _diagnostic:
         if Config.info:
             reason = diag.split()[2]
             if reason != last_reason:
                 if len(last_reason):
                     printDescriptions(last_reason)
-                last_reason=reason
+                last_reason = reason
         sys.stdout.write(diag)
     if Config.info and len(last_reason):
         printDescriptions(last_reason)
@@ -114,11 +114,11 @@ def printAllReasons():
     return _badness_score > threshold
 
 
-_details={}
+_details = {}
 
 def addDetails(*details):
     for idx in range(len(details)/2):
-        _details[details[idx*2]]=details[idx*2+1]
+        _details[details[idx*2]] = details[idx*2+1]
 
 def badnessScore():
     global _badness_score

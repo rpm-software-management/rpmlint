@@ -15,15 +15,15 @@ import re
 import rpm
 import Pkg
 
-rc_regex=re.compile('^/etc(/rc\.d)?/init\.d/')
-chkconfig_content_regex=re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
-subsys_regex=re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
-chkconfig_regex=re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
-status_regex=re.compile('^[^#]*status', re.MULTILINE)
-reload_regex=re.compile('^[^#]*reload', re.MULTILINE)
-basename_regex=re.compile('([^/]+)$')
-dot_in_name_regex=re.compile('.*\..*')
-use_deflevels=Config.getOption('UseDefaultRunlevels', 1)
+rc_regex = re.compile('^/etc(/rc\.d)?/init\.d/')
+chkconfig_content_regex = re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
+subsys_regex = re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
+chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
+status_regex = re.compile('^[^#]*status', re.MULTILINE)
+reload_regex = re.compile('^[^#]*reload', re.MULTILINE)
+basename_regex = re.compile('([^/]+)$')
+dot_in_name_regex = re.compile('.*\..*')
+use_deflevels = Config.getOption('UseDefaultRunlevels', 1)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
 
@@ -40,22 +40,22 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
         initscript_list = []
         for f in pkg.files().keys():
             if rc_regex.search(f):
-                basename=basename_regex.search(f).group(1)
+                basename = basename_regex.search(f).group(1)
                 initscript_list.append(basename)
                 if pkg.files()[f][0] & 0500 != 0500:
-                    printError(pkg, 'init-script-non-executable',f)
+                    printError(pkg, 'init-script-non-executable', f)
 
                 if dot_in_name_regex.match(basename):
                     printError(pkg, 'init-script-name-with-dot', f)
                 # check chkconfig call in %post and %preun
-                postin=pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
                     printError(pkg, 'init-script-without-chkconfig-postin', f)
                 else:
                     if not chkconfig_regex.search(postin):
                         printError(pkg, 'postin-without-chkconfig', f)
 
-                preun=pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
+                preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
                 if not preun:
                     printError(pkg, 'init-script-without-chkconfig-preun', f)
                 else:
@@ -143,13 +143,13 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     res = subsys_regex.search(line)
                     if res:
                         subsys_regex_found = 1
-                        name=res.group(1)
+                        name = res.group(1)
                         if name != basename:
-                            error=1
+                            error = 1
                             if name[0] == '$':
                                 value = Pkg.substitute_shell_vars(name, content_str)
                                 if value == basename:
-                                    error=0
+                                    error = 0
                             if error:
                                 if name[0] == '$':
                                     printWarning(pkg, 'incoherent-subsys', f, name)
@@ -175,7 +175,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
 
 # Create an object to enable the auto registration of the test
-check=InitScriptCheck()
+check = InitScriptCheck()
 
 if Config.info:
     addDetails(

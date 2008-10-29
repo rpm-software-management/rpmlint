@@ -15,9 +15,9 @@ import re
 import stat
 import zipfile
 
-zip_regex=re.compile('\.(zip|[ewj]ar)$')
-jar_regex=re.compile('\.[ewj]ar$')
-classpath_regex=re.compile('^\s*Class-Path\s*:', re.M | re.I)
+zip_regex = re.compile('\.(zip|[ewj]ar)$')
+jar_regex = re.compile('\.[ewj]ar$')
+classpath_regex = re.compile('^\s*Class-Path\s*:', re.M | re.I)
 
 want_indexed_jars = Config.getOption('UseIndexedJars', 1)
 
