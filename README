@@ -30,7 +30,7 @@ Implemented checks:
 	o Rpm file checks (RpmFileCheck).
 
 If you want to change configuration options or the list of checks, use
-the global configuration file /etc/rpmlint/config or in the user
+the global configuration files /etc/rpmlint/*config or the user
 configuration file ~/.rpmlintrc.
 
 Configuration files are Python source files and should begin with the

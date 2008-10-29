@@ -12,6 +12,7 @@ import sys
 import AbstractCheck
 import imp
 import getopt
+import glob
 import Pkg
 import Config
 import os
@@ -214,7 +215,10 @@ conf_file='~/.rpmlintrc'
 info_error=0
 
 # load global config files
-for f in ('/usr/share/rpmlint/config','/etc/rpmlint/config'):
+configs = glob.glob('/etc/rpmlint/*config')
+configs.sort()
+configs.insert(0, '/usr/share/rpmlint/config')
+for f in configs:
     try:
         execfile(f)
     except IOError:
