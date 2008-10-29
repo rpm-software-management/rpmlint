@@ -158,12 +158,8 @@ def readlines(path):
 
 def mktemp():
     suffix = ".rpmlint%s" % os.getpid()
-    if hasattr(tempfile, "mkstemp"): # Python >= 2.3
-        tmpfd, tmpname = tempfile.mkstemp(suffix)
-        tmpfile = os.fdopen(tmpfd, 'w')
-    else:
-        tmpname = tempfile.mktemp(suffix)
-        tmpfile = open(tmpname, 'w')
+    tmpfd, tmpname = tempfile.mkstemp(suffix)
+    tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
 
 # classes representing package
