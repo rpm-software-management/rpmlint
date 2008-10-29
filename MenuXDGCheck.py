@@ -26,7 +26,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
                 printError(pkg, 'non-utf8-desktopfile', filename)
                 
 
-check=MenuXDGCheck()
+check = MenuXDGCheck()
 
 if Config.info:
     addDetails(

@@ -13,19 +13,19 @@ import re
 import sys
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
-    pgp_regex=re.compile("pgp|gpg", re.IGNORECASE)
-    unknown_key_regex=re.compile("\(MISSING KEYS:\s+([^\)]+)\)")
+    pgp_regex = re.compile("pgp|gpg", re.IGNORECASE)
+    unknown_key_regex = re.compile("\(MISSING KEYS:\s+([^\)]+)\)")
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
 
     def check(self, pkg):
-        res=pkg.checkSignature()
+        res = pkg.checkSignature()
         if not res or res[0] != 0:
             if res and res[1]:
-                kres=SignatureCheck.unknown_key_regex.search(res[1])
+                kres = SignatureCheck.unknown_key_regex.search(res[1])
             else:
-                kres=None
+                kres = None
             if kres:
                 printError(pkg, "unknown-key", kres.group(1))
             else:
@@ -35,7 +35,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "no-signature")
 
 # Create an object to enable the auto registration of the test
-check=SignatureCheck()
+check = SignatureCheck()
 
 if Config.info:
     addDetails(

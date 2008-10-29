@@ -25,7 +25,7 @@ import AbstractCheck
 def _stripVersionedDeps(deps):
     deps = deps[:]
     j    = len(deps)
-    while j>=3:
+    while j >= 3:
         j = j-1
         if deps[j-1] in ('<', '<=', '=', '>=', '>'):
             del deps[j-1:j+1]
@@ -44,7 +44,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         assert(len(file_reqs) == len(files))
 
         reqs      = {}
-        for i in xrange(0,len(files)):
+        for i in xrange(0, len(files)):
             tmp            = file_reqs[i].split()
             tmp            = _stripVersionedDeps(tmp)
             reqs[files[i]] = tmp
@@ -81,7 +81,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
 
         # go through the calculated requirements of the %doc files
-        for (dep,req_files) in doc_reqs.items():
+        for (dep, req_files) in doc_reqs.items():
             if dep not in core_reqs:
                 for f in req_files:
                     printWarning(pkg, "doc-file-dependency", f, dep)

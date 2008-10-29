@@ -13,13 +13,13 @@ import rpm
 import re
 import Config
 
-man_regex=re.compile("/man(?:\d[px]?|n)/")
-info_regex=re.compile("(/usr/share|/usr)/info/")
-info_dir_regex=re.compile("/info/dir$")
-vendor=Config.getOption("Vendor")
-distribution=Config.getOption("Distribution")
-use_bzip2=Config.getOption("UseBzip2", 1)
-use_lzma=Config.getOption("UseLzma", 0)
+man_regex = re.compile("/man(?:\d[px]?|n)/")
+info_regex = re.compile("(/usr/share|/usr)/info/")
+info_dir_regex = re.compile("/info/dir$")
+vendor = Config.getOption("Vendor")
+distribution = Config.getOption("Distribution")
+use_bzip2 = Config.getOption("UseBzip2", 1)
+use_lzma = Config.getOption("UseLzma", 0)
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
 
@@ -60,7 +60,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, "infopage-not-gzipped", f)
 
 # Create an object to enable the auto registration of the test
-check=DistributionCheck()
+check = DistributionCheck()
 
 if Config.info:
     addDetails(
