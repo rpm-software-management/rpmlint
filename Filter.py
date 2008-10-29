@@ -8,12 +8,9 @@
 #############################################################################
 
 import sys
+import textwrap
 import Config
 import Testing
-try:
-    from textwrap import fill # python >= 2.3
-except ImportError:
-    def fill(text, width=70): return text
 
 _diagnostic = list()
 _badness_score = 0
@@ -69,7 +66,7 @@ def printDescriptions(reason):
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
-            sys.stdout.write(fill(d, 78))
+            sys.stdout.write(textwrap.fill(d, 78))
             sys.stdout.write("\n\n")
     except KeyError:
         pass
