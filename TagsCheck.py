@@ -12,7 +12,6 @@ import AbstractCheck
 import FilesCheck
 import Pkg 
 import rpm
-import string
 import re
 import os.path
 import Config
@@ -28,7 +27,7 @@ def get_default_valid_rpmgroups(filename=""):
     if filename and os.path.exists(filename):
         fobj = open(filename)
         try:
-            groups = fobj.read().strip().split('\n')
+            groups = fobj.read().strip().splitlines()
         finally:
             fobj.close()
         if not 'Development/Debug' in groups:
@@ -419,8 +418,8 @@ max_line_len=79
 tag_regex=re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|Release|RHNPlatform|Serial|Source\d*|Summary|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 
 def spell_check(pkg, str, tagname):
-    for seq in string.split(str, ' '):
-        for word in re.split('[^a-z]+', string.lower(seq)):
+    for seq in str.split():
+        for word in re.split('[^a-z]+', seq.lower()):
             if len(word) > 0:
                 try:
                     if word[0] == '\'':
@@ -503,9 +502,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res = lib_package_regex.search(d[0])
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
-            if d[2] == rpm.RPMSENSE_EQUAL and string.find(d[1], '-') != -1:
+            if d[2] == rpm.RPMSENSE_EQUAL and d[1].find('-') != -1:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
-            if string.find(d[1], '%') != -1:
+            if d[1].find('%') != -1:
                 printError(pkg, 'percent-in-dependency', d[0], d[1])
 
         if not name:
@@ -557,7 +556,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if use_utf8:
                 utf8summary = Pkg.to_utf8(summary).decode('utf-8')
             spell_check(pkg, summary, 'summary')
-            if string.find(summary, '\n') != -1:
+            if summary.find('\n') != -1:
                 printError(pkg, 'summary-on-multiple-lines')
             if summary[0] != summary[0].upper():
                 printWarning(pkg, 'summary-not-capitalized', summary)
@@ -578,7 +577,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'no-description-tag')
         else:
             spell_check(pkg, description, 'description')
-            for l in string.split(description, "\n"):
+            for l in description.splitlines():
                 utf8l = l
                 if use_utf8:
                     utf8l = Pkg.to_utf8(l).decode('utf-8')
@@ -646,7 +645,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 #                 break
 
         def split_license(license):
-            return map(string.strip, [l for l in license_regex.split(license) if l])
+            return map(lambda x: x.strip(),
+                       [l for l in license_regex.split(license) if l])
 
         rpm_license = pkg[rpm.RPMTAG_LICENSE]
         if not rpm_license:
@@ -678,7 +678,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not o in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
-            if string.find(o[1], '%') != -1:
+            if o[1].find('%') != -1:
                 printError(pkg, 'percent-in-obsoletes', o[0], o[1])
 
         # TODO: should take versions, <, <=, =, >=, > into account here
@@ -692,15 +692,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
-            if string.find(p[1], '%') != -1:
+            if p[1].find('%') != -1:
                 printError(pkg, 'percent-in-provides', p[0], p[1])
 
         for c in pkg.conflicts():
-            if string.find(c[1], '%') != -1:
+            if c[1].find('%') != -1:
                 printError(pkg, 'percent-in-conflicts', c[0], c[1])
 
         expected='%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
-        basename=string.split(pkg.filename, '/')[-1]
+        basename = pkg.filename.split('/')[-1]
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
 

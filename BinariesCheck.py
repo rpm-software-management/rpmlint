@@ -11,7 +11,6 @@ from Filter import *
 import AbstractCheck
 import rpm
 import re
-import string
 import sys
 import Config
 import Pkg
@@ -58,7 +57,7 @@ class BinaryInfo:
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
-            for l in string.split(res[1], '\n'):
+            for l in res[1].splitlines():
 
                 r = BinaryInfo.needed_regex.search(l)
                 if r:
@@ -67,7 +66,7 @@ class BinaryInfo:
 
                 r = BinaryInfo.rpath_regex.search(l)
                 if r:
-                    for p in string.split(r.group(1), ':'):
+                    for p in r.group(1).split(':'):
                         self.rpath.append(p)
                     continue
 
@@ -132,7 +131,7 @@ class BinaryInfo:
             # We could do this with objdump, but it's _much_ simpler with ldd.
             res = Pkg.getstatusoutput(('env','LC_ALL=C','ldd','-d','-r',path))
             if not res[0]:
-                for l in string.split(res[1], '\n'):
+                for l in res[1].splitlines():
                     undef=BinaryInfo.undef_regex.search(l)
                     if undef:
                         self.undef.append(undef.group(1))
@@ -143,7 +142,7 @@ class BinaryInfo:
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
                 # unused direct dependencies
                 in_unused = 0
-                for l in string.split(res[1], '\n'):
+                for l in res[1].splitlines():
                     if not l.rstrip():
                         pass
                     elif l.startswith('Unused direct dependencies'):
@@ -217,9 +216,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 break
 
         for i in info:
-            is_elf = string.find(i[1], 'ELF') != -1
-            is_ar = string.find(i[1], 'current ar archive') != -1
-            is_ocaml_native = string.find(i[1], 'Objective caml native') != -1
+            is_elf = i[1].find('ELF') != -1
+            is_ar = i[1].find('current ar archive') != -1
+            is_ocaml_native = i[1].find('Objective caml native') != -1
             is_binary = is_elf or is_ar or is_ocaml_native
             is_shlib = so_regex.search(i[0])
 
@@ -361,7 +360,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 fn=res and res.group(1) or f
                 if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
-            if version and version != -1 and string.find(pkg.name, version) == -1:
+            if version and version != -1 and pkg.name.find(version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)
 
         if pkg.arch != 'noarch' and not multi_pkg:

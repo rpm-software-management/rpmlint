@@ -15,7 +15,6 @@ import stat
 import commands
 import popen2
 import re
-import string
 import tempfile
 import types
 import sys
@@ -262,7 +261,7 @@ class Pkg:
         if self.file_info == None:
             self.file_info=[]
             lines = commands.getoutput('cd %s ; find . -type f -print0 | LC_ALL=C xargs -0r file' % self.dirName())
-            lines=string.split(lines, '\n')
+            lines = lines.splitlines()
             for l in lines:
                 #print l
                 res=Pkg.file_regex.search(l)
@@ -548,7 +547,7 @@ class InstalledPkg(Pkg):
             cmd.extend(self.files().keys())
             sts, lines = getstatusoutput(cmd)
             #print lines
-            lines=string.split(lines, '\n')
+            lines = lines.splitlines()
             for l in lines:
                 #print l
                 res=Pkg.file_regex.search(l)

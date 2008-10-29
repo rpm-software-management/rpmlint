@@ -12,7 +12,6 @@ import AbstractCheck
 import Pkg
 import rpm
 import re
-import string
 import stat
 
 DEFAULT_VALID_SECTIONS=(
@@ -221,7 +220,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 # remove comments and handle cpp continuation lines
                 sts, cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)
                                                   
-                for line in string.split(cmd, '\n'):
+                for line in cmd.splitlines():
                     if not line.startswith('?'): continue
                     res=package_regex.search(line)
                     if res:
@@ -234,7 +233,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     command=1
                     res=command_regex.search(line)
                     if res:
-                        command_line=string.split(res.group(1) or res.group(2))
+                        command_line = (res.group(1) or res.group(2)).split()
                         command=command_line[0]
                         for launcher in launchers:
                             if launcher[0].search(command):
@@ -296,7 +295,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     res=needs_regex.search(line)
                     if res:
                         grp=res.groups()
-                        needs=string.lower(grp[1] or grp[2])
+                        needs = (grp[1] or grp[2]).lower()
                         if needs in ('x11', 'text' ,'wm'):
                             res=section_regex.search(line)
                             if res:

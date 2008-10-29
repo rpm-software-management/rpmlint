@@ -12,7 +12,6 @@ import AbstractCheck
 import Pkg
 import re
 import sys
-import string
 import Config
 
 # Don't check for hardcoded library paths in biarch packages
@@ -283,7 +282,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if configure:
                 if configure_cmdline[-1] == "\\":
-                    configure_cmdline=configure_cmdline[:-1] + string.strip(line)
+                    configure_cmdline=configure_cmdline[:-1] + line.strip()
                 else:
                     res = configure_libdir_spec_regex.search(configure_cmdline)
                     if not res:
@@ -301,11 +300,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if current_section != 'changelog' and configure_start_regex.search(line):
                 configure = pkg.current_linenum # store line where it started
-                configure_cmdline = string.strip(line)
+                configure_cmdline = line.strip()
 
             res = hardcoded_library_path_regex.search(line)
-            if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(string.lstrip(res.group(1)))):
-                printError(pkg, "hardcoded-library-path", "in", string.lstrip(res.group(1)))
+            if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(res.group(1).lstrip())):
+                printError(pkg, "hardcoded-library-path", "in", res.group(1).lstrip())
 
             if mklibname_regex.search(line):
                 mklibname = 1
@@ -349,7 +348,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'buildprereq-use', res.group(1))
 
                 if scriptlet_requires_regex.search(line):
-                    printError(pkg, 'broken-syntax-in-scriptlet-requires', string.strip(line))
+                    printError(pkg, 'broken-syntax-in-scriptlet-requires', line.strip())
 
                 res = provides_regex.search(line)
                 if res:
