@@ -262,6 +262,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'setup-not-quiet')
                     else:
                         printWarning(pkg, 'setup-not-quiet')
+                if current_section != 'prep':
+                    printWarning(pkg, 'setup-not-in-prep')
 
             if endif_regex.search(line):
                 if ifarch_depth == if_depth:
@@ -531,6 +533,11 @@ before a package can be built.  Use plain BuildRequires instead.''',
 versions of rpm.  One way to work around it is to split them into several ones,
 eg. replace "Requires(post,preun): foo" with "Requires(post): foo" and
 "Requires(preun): foo".''',
+
+'setup-not-in-prep',
+'''The %setup macro should only be used within the %prep section because it may
+not expand to anything outside of it and can break the build in unpredictable
+ways.''',
 
 'setup-not-quiet',
 '''Use the -q option to the %setup macro to avoid useless build output from
