@@ -18,6 +18,7 @@ import Config
 import os
 import stat
 import rpm
+import tempfile
 from Filter import *
 import SpecCheck
 
@@ -269,7 +270,7 @@ except Exception,E:
     sys.stderr.write('Error loading %s, skipping: %s\n' % (conf_file, E ))
 
 if not extract_dir:
-    extract_dir=Config.getOption('ExtractDir', '/tmp')
+    extract_dir=Config.getOption('ExtractDir', tempfile.gettempdir())
 
 if info_error:
     Config.info=1

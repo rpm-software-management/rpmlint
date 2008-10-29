@@ -1,6 +1,6 @@
 You need the following utilities to run rpmlint:
 
-	o python 2.2 or newer
+	o python 2.3 or newer
 	o python rpm support
 	o find and xargs
 	o readelf
@@ -9,5 +9,5 @@ You need the following utilities to run rpmlint:
 
 and the following programs to install it:
 
-	o python 2.2 or newer
+	o python 2.3 or newer
 	o sed

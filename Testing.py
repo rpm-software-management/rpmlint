@@ -1,6 +1,7 @@
 import os
 import Pkg
 import glob
+import tempfile
 
 currently_testing = 0
 output = []
@@ -24,7 +25,7 @@ def getOutput():
 
 def getTestedPackage(name):
     pkg_path = glob.glob(os.environ['TESTPATH'] + '/' + name + '-*.rpm')[0]
-    return Pkg.Pkg(pkg_path, '/tmp')
+    return Pkg.Pkg(pkg_path, tempfile.gettempdir())
 
 # Local variables:
 # indent-tabs-mode: nil
