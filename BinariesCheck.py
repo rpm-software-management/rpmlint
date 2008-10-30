@@ -114,7 +114,7 @@ class BinaryInfo:
         else:
             self.readelf_error = 1
             printWarning(pkg, 'binaryinfo-readelf-failed',
-                         re.sub('\n.*', '', res[1]))
+                         file, re.sub('\n.*', '', res[1]))
 
         cmd = ['env', 'LC_ALL=C', 'tail', '-c', '12']
         cmd.append(path)
@@ -123,7 +123,7 @@ class BinaryInfo:
             self.tail = res[1]
         else:
             printWarning(pkg, 'binaryinfo-tail-failed',
-                         re.sub('\n.*', '', res[1]))
+                         file, re.sub('\n.*', '', res[1]))
 
         # Undefined symbol and unused direct dependency checks make sense only
         # for installed packages.
