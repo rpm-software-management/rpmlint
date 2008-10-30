@@ -71,7 +71,7 @@ def printDescriptions(reason):
     except KeyError:
         pass
 
-def _diag_compare(x,y):
+def _diag_compare(x, y):
 
     where_a = x.split()[1]
     level_a = x.split()[2]

@@ -570,7 +570,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if r:
                         filetop = r.group(1)
                         if filetop == linktop or use_relative_symlinks:
-                            printWarning(pkg ,'symlink-should-be-relative', f, link)
+                            printWarning(pkg, 'symlink-should-be-relative', f, link)
                 # relative link
                 else:
                     if not is_so:
