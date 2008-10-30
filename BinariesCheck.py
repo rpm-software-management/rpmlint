@@ -226,7 +226,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_shlib = so_regex.search(i[0])
 
             if is_binary:
-                binary = binary+1
+                binary += 1
                 if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
                     binary_in_usr_lib = 1
 
