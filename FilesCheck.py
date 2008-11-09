@@ -781,7 +781,7 @@ in the package. Move these files out of the package and rebuild it.''',
 
 'htaccess-file',
 '''You have individual apache configuration .htaccess file(s) in your package.
-Replace them by a central configuration file in /etc/, according to the web 
+Replace them by a central configuration file in /etc/, according to the web
 application packaging policy for your distribution.''',
 
 'info-dir-file',
@@ -798,11 +798,11 @@ files. Mark the file as %config in the spec file.''',
 '''The symlink points to a compressed file but doesn't use the same extension.''',
 
 'setuid-binary',
-'''The file is setuid, this may be dangerous, especially if this 
+'''The file is setuid, this may be dangerous, especially if this
 file is setuid root.''',
 
 'setgid-binary',
-'''The file is setgid. Usually this is a packaging bug. If this is a game, 
+'''The file is setgid. Usually this is a packaging bug. If this is a game,
 then, you should use the proper rpm group, or location.''',
 
 'non-standard-executable-perm',
@@ -987,15 +987,15 @@ but it actually is not in the filesystem.  Because of this, some checks will
 be skipped.''',
 
 'executable-crontab-file',
-'''This crontab file has executable bit set, which is refused by newer version 
+'''This crontab file has executable bit set, which is refused by newer version
 of cron''',
 
 'non-owner-writeable-only-crontab-file',
-'''This crontab file is writeable by other users as its owner, which is refused 
+'''This crontab file is writeable by other users as its owner, which is refused
 by newer version of cron and insecure''',
 
 'symlink-crontab-file',
-'''This crontab file is a symbolic link, which is insecure and refused by newer 
+'''This crontab file is a symbolic link, which is insecure and refused by newer
 version of cron''',
 )
 

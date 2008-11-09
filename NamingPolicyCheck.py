@@ -80,7 +80,7 @@ check = NamingPolicyCheck()
 #
 # third is the path of the file that should contains a package to be related to the naming scheme.
 #   ex: xmms plugin are put under /usr/lib/xmms/
-# 
+#
 # the module is far from being perfect since you need to check this file for the naming file.
 # if somone as a elegant solution, I will be happy to implement and test it.
 

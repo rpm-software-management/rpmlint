@@ -89,7 +89,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         for i in lsb_tags.keys():
                             if len(lsb_tags[i]) != 1:
                                 printError(pkg, 'redundant-lsb-keyword', i)
-                                
+
                         # TODO: where is it specified that these (or some)
                         #       keywords are mandatory?
                         for i in ('Provides', 'Description', 'Short-Description'):
@@ -122,7 +122,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                     lsb_tags[tag].append(res.group(2))
                         lastline = line
 
-                         
+
 
                     if status_regex.search(line):
                         status_found = 1

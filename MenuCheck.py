@@ -219,7 +219,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
             for f in menus:
                 # remove comments and handle cpp continuation lines
                 sts, cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)
-                                                  
+
                 for line in cmd.splitlines():
                     if not line.startswith('?'): continue
                     res = package_regex.search(line)
@@ -325,7 +325,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
-                    
+
                     res = xdg_migrated_regex.search(line)
                     if res:
                         if not res.group(1).lower() == "true":

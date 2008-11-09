@@ -46,7 +46,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
                 if use_lzma:
                     if not f.endswith('.lzma'):
                         printWarning(pkg, "manpage-not-compressed-wth-lzma", f)
-     
+
                 elif not f.endswith('.gz'):
                     printWarning(pkg, "manpage-not-gzipped", f)
             if info_regex.search(f) and not info_dir_regex.search(f):

@@ -18,7 +18,7 @@ pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')
 class PamCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
         AbstractCheck.AbstractFilesCheck.__init__(self, "PamCheck", "/etc/pam\.d/.*")
-    
+
     def check_file(self, pkg, filename):
         lines = pkg.grep(pam_stack_re, filename)
         if lines:

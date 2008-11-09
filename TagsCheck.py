@@ -10,7 +10,7 @@
 from Filter import *
 import AbstractCheck
 import FilesCheck
-import Pkg 
+import Pkg
 import rpm
 import re
 import os.path

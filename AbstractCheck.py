@@ -37,13 +37,13 @@ class AbstractFilesCheck(AbstractCheck):
         for filename in files:
             self.check_file(pkg, filename)
 
- 
+
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed
         to the constructor.
         """
         raise NotImplementedError('check must be implemented in subclass')
-        
+
 # AbstractCheck.py ends here
 
 # Local variables:

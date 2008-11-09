@@ -179,7 +179,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         lib = 0
         if_depth = 0
         ifarch_depth = -1
-        current_section = 'package'       
+        current_section = 'package'
         buildroot_clean = {'clean': 0, 'install' : 0}
         depscript_override = 0
         depgen_disabled = 0
@@ -208,7 +208,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         nbsp = chr(0xA0)
         if is_utf8:
             nbsp = unichr(0xA0)
-        
+
         for line in spec_lines:
 
             pkg.current_linenum += 1
