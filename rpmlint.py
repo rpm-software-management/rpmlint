@@ -70,7 +70,7 @@ def main():
                             check = SpecCheck.SpecCheck()
                             check.check_spec(pkg, f)
                             specfiles_checked += 1
-                            
+
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
                         dirs.append(f)
                         continue

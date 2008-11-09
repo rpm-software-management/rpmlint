@@ -2,7 +2,7 @@
 
 #
 # check xdg file format violation
-# 
+#
 # http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
@@ -24,7 +24,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
                 printError(pkg, 'invalid-desktopfile', filename)
         if not is_utf8(f):
                 printError(pkg, 'non-utf8-desktopfile', filename)
-                
+
 
 check = MenuXDGCheck()
 
