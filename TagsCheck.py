@@ -416,6 +416,7 @@ use_epoch = Config.getOption('UseEpoch', 0)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = 79
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|Release|RHNPlatform|Serial|Source\d*|Summary|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
+punct = '.,:;!?'
 
 def spell_check(pkg, str, tagname):
     for seq in str.split():
@@ -569,6 +570,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             res = forbidden_words_regex.search(summary)
             if res and Config.getOption('ForbiddenWords'):
                 printWarning(pkg, 'summary-use-invalid-word', res.group(1))
+            if name:
+                sepchars = '[\s' + punct + ']'
+                res = re.search('(?:^|\s)(%s)(?:%s|$)' %
+                                (re.escape(name), sepchars),
+                                summary, re.IGNORECASE | re.UNICODE)
+                if res:
+                    printWarning(pkg, 'name-repeated-in-summary', res.group(1))
             if use_utf8 and not Pkg.is_utf8_str(summary):
                 printError(pkg, 'tag-not-utf8', 'Summary')
 
@@ -911,6 +919,11 @@ It could be an unexpanded macro, please double check.''',
 
 'no-url-tag',
 '''The URL tag is missing.''',
+
+'name-repeated-in-summary',
+'''The name of the package is repeated in its summary.  This is often redundant
+information and looks silly in various programs' output.  Make the summary
+brief and to the point without including redundant information in it.''',
 )
 
 # TagsCheck.py ends here
