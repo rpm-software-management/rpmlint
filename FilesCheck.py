@@ -846,7 +846,9 @@ something non-standard.''',
 '''The symbolic link points nowhere.''',
 
 'symlink-should-be-relative',
-'''Absolute symlinks are problematic eg. when working with chroot environments.''',
+'''Absolute symlinks are problematic eg. when working with chroot environments.
+symlinks(8) is a tool that can be useful for creating/dealing with relative
+symlinks at package build time.''',
 
 'dangling-relative-symlink',
 '''The relative symbolic link points nowhere.''',
