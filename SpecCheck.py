@@ -8,6 +8,7 @@
 #############################################################################
 
 from Filter import *
+from Util import get_default_valid_rpmgroups
 import AbstractCheck
 import Pkg
 import re
@@ -21,7 +22,7 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
-
+VALID_GROUPS = Config.getOption('ValidGroups', get_default_valid_rpmgroups())
 patch_regex = re.compile("^Patch(\d*)\s*:\s*([^\s]+)", re.IGNORECASE)
 # TODO: http://rpmlint.zarb.org/cgi-bin/trac.cgi/ticket/59
 applied_patch_regex = re.compile("^%patch.*-P\s+(\d+)|^%patch(\d*)\s")
@@ -133,6 +134,7 @@ def contains_buildroot(line):
            (not res.group(2) or len(res.group(2)) % 2 != 0):
         return 1
     return 0
+
 
 class SpecCheck(AbstractCheck.AbstractCheck):
 
@@ -391,6 +393,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 indent_tabs = pkg.current_linenum
             if not indent_spaces and indent_spaces_regex.search(line):
                 indent_spaces = pkg.current_linenum
+            if line.startswith("Group:"):
+                group = line[6:].strip()
+                if VALID_GROUPS and group not in VALID_GROUPS:
+                    printWarning(pkg, 'non-standard-group', group)
 
         # No useful line number info beyond this point.
         pkg.current_linenum = None
@@ -604,6 +610,10 @@ regular space.''',
 set which may result in security issues in the resulting binary package
 depending on the system where the package is built.  Add default attributes
 using %defattr before it in the %files section, or use per line %attr's.''',
+
+'non-standard-group',
+'''The value of the Group tag in the package is not valid.  Valid groups are:
+"%s".''' % '", "'.join(VALID_GROUPS),
 )
 
 # SpecCheck.py ends here
