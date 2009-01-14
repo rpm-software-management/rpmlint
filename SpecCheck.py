@@ -168,6 +168,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
     def check_spec(self, pkg, spec_file):
         self._spec_file = spec_file
+        spec_only = isinstance(pkg, Pkg.FakePkg)
         spec_lines = Pkg.readlines(spec_file)
         patches = {}
         applied_patches = []
@@ -395,7 +396,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 indent_tabs = pkg.current_linenum
             if not indent_spaces and indent_spaces_regex.search(line):
                 indent_spaces = pkg.current_linenum
-            if VALID_GROUPS and line.lower().startswith("group:"):
+
+            # If not checking spec file only, we're checking one inside a
+            # SRPM -> skip this check to avoid duplicate warnings (#167)
+            if spec_only and VALID_GROUPS and \
+                   line.lower().startswith("group:"):
                 group = line[6:].strip()
                 if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
