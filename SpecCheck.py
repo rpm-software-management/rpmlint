@@ -395,9 +395,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 indent_tabs = pkg.current_linenum
             if not indent_spaces and indent_spaces_regex.search(line):
                 indent_spaces = pkg.current_linenum
-            if line.startswith("Group:"):
+            if VALID_GROUPS and line.lower().startswith("group:"):
                 group = line[6:].strip()
-                if VALID_GROUPS and group not in VALID_GROUPS:
+                if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
 
         # No useful line number info beyond this point.
