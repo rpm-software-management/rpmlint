@@ -1,4 +1,4 @@
-export PYTHONPATH=$(pwd)
+export PYTHONPATH=$(pwd)/tools:$(pwd)
 export TESTPATH="$(pwd)/test/"
 
 for i in $TESTPATH/test.*.py; do

@@ -12,7 +12,7 @@ LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc
 MANDIR=/usr/share/man
 
-FILES = rpmlint *.py INSTALL README README.devel COPYING \
+FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1
 GENERATED = AUTHORS ChangeLog
 
@@ -28,7 +28,7 @@ LC_ALL:=C
 export LC_ALL
 
 all:
-	python ./compile.py "$(LIBDIR)/" [A-Z]*.py
+	python ./tools/compile.py "$(LIBDIR)/" [A-Z]*.py
 	@for f in [A-Z]*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
 
 clean:
@@ -37,7 +37,6 @@ clean:
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
-	rm -f $(DESTDIR)$(LIBDIR)/compile.py*
 	sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
@@ -63,7 +62,7 @@ cleandist:
 
 localcopy: $(FILES) $(GENERATED)
 	mkdir $(PACKAGE)-$(VERSION)
-	cp -p $(FILES) $(GENERATED) $(PACKAGE)-$(VERSION)
+	cp -p --parents $(FILES) $(GENERATED) $(PACKAGE)-$(VERSION)
 
 tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
