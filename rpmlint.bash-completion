@@ -1,5 +1,8 @@
-# bash completion for rpmlint
-# $Id$
+# -*- mode: shell-script; sh-basic-offset: 8; indent-tabs-mode: t -*-
+# ex: ts=8 sw=8 et filetype=sh
+#
+# bash-completion add-on for rpmlint(1)
+# http://bash-completion.alioth.debian.org/
 
 _rpmlint()
 {
