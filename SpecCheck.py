@@ -24,8 +24,8 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
 VALID_GROUPS = Config.getOption('ValidGroups', get_default_valid_rpmgroups())
 patch_regex = re.compile("^Patch(\d*)\s*:\s*([^\s]+)", re.IGNORECASE)
-# TODO: http://rpmlint.zarb.org/cgi-bin/trac.cgi/ticket/59
-applied_patch_regex = re.compile("^%patch.*-P\s+(\d+)|^%patch(\d*)\s")
+applied_patch_regex = re.compile("^%patch(\d*)")
+applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*([^\s]+)")
 buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
@@ -274,10 +274,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             res = applied_patch_regex.search(line)
             if res:
-                pnum = int(res.group(1) or res.group(2) or 0)
-                applied_patches.append(pnum)
-                if ifarch_depth > 0:
-                    applied_patches_ifarch.append(pnum)
+                pnum = res.group(1) or 0
+                for tmp in applied_patch_p_regex.findall(line) or [pnum]:
+                    pnum = int(tmp);
+                    applied_patches.append(pnum)
+                    if ifarch_depth > 0:
+                        applied_patches_ifarch.append(pnum)
             elif not source_dir:
                 res = source_dir_regex.search(line)
                 if res:
