@@ -30,7 +30,9 @@ _rpmlint()
 			-E --extractdir -p --profile -V --version -n \
 			--noexception -f --file' -- $cur ) )
 	else
-		_filedir
+		type _rpm_installed_packages &>/dev/null && \
+			_rpm_installed_packages
+		_filedir '@(rpm|spec)'
 	fi
 }
 complete -F _rpmlint $filenames rpmlint
