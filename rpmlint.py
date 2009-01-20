@@ -138,8 +138,8 @@ def main():
             try:
                 if Pkg.v42:
                     ts = rpm.TransactionSet('/')
-                    for item in ts.IDTXload():
-                        pkg = Pkg.InstalledPkg(item[1][rpm.RPMTAG_NAME], item[1])
+                    for item in ts.dbMatch():
+                        pkg = Pkg.InstalledPkg(item[rpm.RPMTAG_NAME], item)
                         runChecks(pkg)
                         packages_checked += 1
                 else:
