@@ -10,4 +10,8 @@ $ python -O -u rpmlint.py -C . <rpms>
 
 $ python -O -u rpmlint.py -C . -c FHSCheck <rpms>
 
+For profiling, use something like:
+
+$ python -O -u -m cProfile -s cumulative rpmlint.py -C . [...]
+
 Frederic Lepied <flepied at mandriva.com>

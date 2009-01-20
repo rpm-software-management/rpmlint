@@ -28,7 +28,7 @@ version = '@VERSION@'
 def usage(name):
     print 'usage:', name, '[<options>] <rpm files|specfile>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-p|--profile]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
+    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
 # Print version information
 def printVersion():
@@ -189,14 +189,13 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args) = getopt.getopt(sys.argv[1:],
-                              'iI:c:C:hVvp:anE:f:',
+                              'iI:c:C:hVvanE:f:',
                               ['info',
                                'check=',
                                'checkdir=',
                                'help',
                                'version',
                                'verbose',
-                               'profile',
                                'all',
                                'noexception',
                                'extractdir=',
@@ -211,7 +210,6 @@ except getopt.error, e:
 checkdir = '/usr/share/rpmlint'
 verbose = 0
 extract_dir = None
-prof = 0
 all = 0
 conf_file = '~/.rpmlintrc'
 info_error = 0
@@ -251,8 +249,6 @@ for o in opt:
     elif o[0] == '-E' or o[0] == '--extractdir':
         extract_dir = o[1]
         Config.setOption('ExtractDir', extract_dir)
-    elif o[0] == '-p' or o[0] == '--profile':
-        prof = o[1]
     elif o[0] == '-n' or o[0] == '--noexception':
         Config.no_exception = 1
     elif o[0] == '-a' or o[0] == '--all':
@@ -287,13 +283,7 @@ if args == [] and not all:
     usage(sys.argv[0])
     sys.exit(0)
 
-if prof:
-    import profile
-    import pstats
-    profile.run('main()', prof)
-    p = pstats.Stats(prof)
-    p.print_stats('time').print_stats(20)
-elif __name__ == '__main__':
+if __name__ == '__main__':
     main()
 
 # rpmlint.py ends here
