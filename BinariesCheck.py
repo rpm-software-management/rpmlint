@@ -9,6 +9,7 @@
 
 from Filter import *
 import AbstractCheck
+import os
 import rpm
 import re
 import sys
@@ -116,14 +117,15 @@ class BinaryInfo:
             printWarning(pkg, 'binaryinfo-readelf-failed',
                          file, re.sub('\n.*', '', res[1]))
 
-        cmd = ['env', 'LC_ALL=C', 'tail', '-c', '12']
-        cmd.append(path)
-        res = Pkg.getstatusoutput(cmd)
-        if not res[0]:
-            self.tail = res[1]
-        else:
-            printWarning(pkg, 'binaryinfo-tail-failed',
-                         file, re.sub('\n.*', '', res[1]))
+        fobj = None
+        try:
+            fobj = open(path)
+            fobj.seek(-12, os.SEEK_END)
+            self.tail = fobj.read()
+        except Exception, e:
+            printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
+        if fobj:
+            fobj.close()
 
         # Undefined symbol and unused direct dependency checks make sense only
         # for installed packages.
@@ -472,7 +474,7 @@ with the intended shared libraries only.''',
 '''Executing readelf on this file failed, all checks could not be run.''',
 
 'binaryinfo-tail-failed',
-'''Executing tail on this file failed, all checks could not be run.''',
+'''Reading trailing bytes of this file failed, all checks could not be run.''',
 
 'ldd-failed',
 '''Executing ldd on this file failed, all checks could not be run.''',
