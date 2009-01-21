@@ -27,31 +27,31 @@ class ZipCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, "ZipCheck")
 
     def check(self, pkg):
-        for i in pkg.getFilesInfo():
-            f = pkg.dirName() + i[0]
-            if zip_regex.search(f) and os.path.exists(f) and \
-                   stat.S_ISREG(os.lstat(f)[stat.ST_MODE]) and \
-                   zipfile.is_zipfile(f):
+        for f in pkg.files().keys():
+            path = pkg.dirName() + f
+            if zip_regex.search(f) and os.path.exists(path) and \
+                   stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
+                   zipfile.is_zipfile(path):
                 z = None
                 try:
-                    z = zipfile.ZipFile(f, 'r')
+                    z = zipfile.ZipFile(path, 'r')
                     badcrc = z.testzip()
                     if badcrc:
-                        printError(pkg, 'bad-crc-in-zip: %s' % badcrc, i[0])
+                        printError(pkg, 'bad-crc-in-zip: %s' % badcrc, f)
                     compressed = 0
                     for zinfo in z.infolist():
                         if zinfo.compress_type != zipfile.ZIP_STORED:
                             compressed = 1
                             break
                     if not compressed:
-                        printWarning(pkg, 'uncompressed-zip', i[0])
+                        printWarning(pkg, 'uncompressed-zip', f)
 
                     # additional jar checks
                     if jar_regex.search(f):
                         try:
                             mf = z.read('META-INF/MANIFEST.MF')
                             if classpath_regex.search(mf):
-                                printWarning(pkg, 'class-path-in-manifest', i[0])
+                                printWarning(pkg, 'class-path-in-manifest', f)
                         except KeyError:
                             # META-INF/* are optional:
                             # http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html
@@ -59,13 +59,14 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                         try:
                             zinfo = z.getinfo('META-INF/INDEX.LIST')
                             if not want_indexed_jars:
-                                printWarning(pkg, 'jar-indexed', i[0])
+                                printWarning(pkg, 'jar-indexed', f)
                         except KeyError:
                             if want_indexed_jars:
-                                printWarning(pkg, 'jar-not-indexed', i[0])
+                                printWarning(pkg, 'jar-not-indexed', f)
                             pass
                 except:
-                    sys.stderr.write('%s: unable-to-read-zip %s "%s"\n' % (pkg.name, i[0], sys.exc_info()[1]))
+                    printWarning(pkg, 'unable-to-read-zip %s: %s' %
+                                 (f, sys.exc_info()[1]))
 
                 z and z.close()
 
