@@ -161,6 +161,24 @@ def mktemp():
     tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
 
+def get_default_valid_rpmgroups(filename = ""):
+    """ Get the default rpm group from filename, or from the rpm package if no
+    filename is given"""
+    groups = []
+    if not filename:
+        p = InstalledPkg('rpm')
+        filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
+    if filename and os.path.exists(filename):
+        fobj = open(filename)
+        try:
+            groups = fobj.read().strip().splitlines()
+        finally:
+            fobj.close()
+        if not 'Development/Debug' in groups:
+            groups.append('Development/Debug')
+            groups.sort()
+    return groups
+
 # classes representing package
 
 class Pkg:

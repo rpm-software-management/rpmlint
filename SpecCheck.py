@@ -8,12 +8,12 @@
 #############################################################################
 
 from Filter import *
-from Util import get_default_valid_rpmgroups
 import AbstractCheck
 import Pkg
 import re
 import sys
 import Config
+from TagsCheck import VALID_GROUPS
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -22,7 +22,6 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
-VALID_GROUPS = Config.getOption('ValidGroups', get_default_valid_rpmgroups())
 patch_regex = re.compile("^Patch(\d*)\s*:\s*([^\s]+)", re.IGNORECASE)
 applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
