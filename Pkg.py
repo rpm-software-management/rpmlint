@@ -164,7 +164,7 @@ def mktemp():
 # classes representing package
 
 class Pkg:
-    file_regex = re.compile('(?:\.)?([^:]+):\s+(.*)')
+    file_regex = re.compile('\.?([^:]+):\s+(.*)')
 
     def __init__(self, filename, dirname, header = None, is_source = 0):
         self.filename = filename
