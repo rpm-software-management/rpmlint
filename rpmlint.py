@@ -34,16 +34,27 @@ def usage(name):
 def printVersion():
     print 'rpmlint version', version, 'Copyright (C) 1999-2007 Frederic Lepied, Mandriva'
 
-# Load a python module from its file name
 def loadCheck(name):
-    (f, pathname, description) = imp.find_module(name, Config.checkDirs())
-    imp.load_module(name, f, pathname, description)
+    '''Load a (check) module by its name, unless it is already loaded.'''
+    # Avoid loading more than once (initialization costs)
+    loaded = sys.modules.get(name)
+    if loaded:
+        return loaded 
+    (fobj, pathname, description) = imp.find_module(name)
+    try:
+        imp.load_module(name, fobj, pathname, description)
+    finally:
+        fobj.close()
 
 #############################################################################
 # main program
 #############################################################################
 def main():
-    # Load all the tests
+
+    # Add check dirs to the front of load path
+    sys.path[0:0] = Config.checkDirs()
+
+    # Load all checks
     for c in Config.allChecks():
         loadCheck(c)
 
