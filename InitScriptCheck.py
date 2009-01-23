@@ -11,6 +11,7 @@
 from Filter import *
 import AbstractCheck
 import Config
+import os
 import re
 import rpm
 import Pkg
@@ -21,7 +22,6 @@ subsys_regex = re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
 chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
 status_regex = re.compile('^[^#]*status', re.MULTILINE)
 reload_regex = re.compile('^[^#]*reload', re.MULTILINE)
-basename_regex = re.compile('([^/]+)$')
 dot_in_name_regex = re.compile('.*\..*')
 use_deflevels = Config.getOption('UseDefaultRunlevels', 1)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
@@ -40,7 +40,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
         initscript_list = []
         for f in pkg.files().keys():
             if rc_regex.search(f):
-                basename = basename_regex.search(f).group(1)
+                basename = os.path.basename(f)
                 initscript_list.append(basename)
                 if pkg.files()[f][0] & 0500 != 0500:
                     printError(pkg, 'init-script-non-executable', f)
