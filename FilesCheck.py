@@ -181,7 +181,7 @@ lib_regex = re.compile('lib(64)?/lib[^/]*\.so\..*')
 ldconfig_regex = re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex = re.compile('^[^#]*depmod', re.MULTILINE)
 install_info_regex = re.compile('^[^#]*install-info', re.MULTILINE)
-perl_temp_file = re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
+perl_temp_file_regex = re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
 scm_regex = re.compile('/CVS/[^/]+$|/\.(bzr|cvs|git|hg)ignore$|/\.hgtags$|/\.(bzr|git|hg|svn)/|/(\.arch-ids|{arch})/')
 htaccess_regex = re.compile('\.htaccess$')
 games_path_regex = re.compile('^/usr(/lib(64)?)?/games/')
@@ -209,7 +209,7 @@ script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|ml[ily]?)$'), re.IGNORECASE)
-meta_package_re = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
+meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
 
 for idx in range(0, len(dangling_exceptions)):
@@ -297,7 +297,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         if not doc_files:
             printWarning(pkg, 'no-documentation')
 
-        if len(files.keys()) and meta_package_re.search(pkg.name):
+        if len(files.keys()) and meta_package_regex.search(pkg.name):
             printWarning(pkg, 'file-in-meta-package')
 
         if debuginfo_package_regex.search(pkg.name) and not files:
@@ -470,7 +470,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
 
                 # check perl temp file
-                if perl_temp_file.search(f):
+                if perl_temp_file_regex.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
 
                 if bin_regex.search(f) and mode & 0111 == 0:
