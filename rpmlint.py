@@ -146,7 +146,7 @@ def main():
                 continue
 
         # if requested, scan all the installed packages
-        if all:
+        if allpkgs:
             try:
                 if Pkg.v42:
                     ts = rpm.TransactionSet('/')
@@ -222,7 +222,7 @@ except getopt.error, e:
 checkdir = '/usr/share/rpmlint'
 verbose = 0
 extract_dir = None
-all = 0
+allpkgs = 0
 conf_file = '~/.rpmlintrc'
 info_error = 0
 
@@ -264,7 +264,7 @@ for o in opt:
     elif o[0] == '-n' or o[0] == '--noexception':
         Config.no_exception = 1
     elif o[0] == '-a' or o[0] == '--all':
-        all = 1
+        allpkgs = 1
     elif o[0] == '-f' or o[0] == '--file':
         conf_file = o[1]
     else:
@@ -291,7 +291,7 @@ if info_error:
     sys.exit(0)
 
 # if no argument print usage
-if args == [] and not all:
+if args == [] and not allpkgs:
     usage(sys.argv[0])
     sys.exit(0)
 

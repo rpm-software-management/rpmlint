@@ -30,7 +30,7 @@ def printWarning(pkg, reason, *details):
 def printError(pkg, reason, *details):
     _print("E", pkg, reason, details)
 
-def _print(type, pkg, reason, details):
+def _print(msgtype, pkg, reason, details):
     global printed_messages, _badness_score, _diagnostics
 
     threshold = badnessThreshold()
@@ -38,7 +38,7 @@ def _print(type, pkg, reason, details):
     badness = 0
     if threshold >= 0:
         badness = Config.badness(reason)
-        type = badness and "E" or "W"
+        msgtype = badness and "E" or "W"
 
     ln = ""
     if pkg.current_linenum is not None:
@@ -46,7 +46,7 @@ def _print(type, pkg, reason, details):
     arch = ""
     if pkg.arch is not None:
         arch = ".%s" % pkg.arch
-    s = "%s%s:%s %s: %s" % (pkg.name, arch, ln, type, reason)
+    s = "%s%s:%s %s: %s" % (pkg.name, arch, ln, msgtype, reason)
     if badness:
         s = s + " (Badness: %d)" % badness
     for d in details:
@@ -55,7 +55,7 @@ def _print(type, pkg, reason, details):
         Testing.addOutput(s)
     else:
         if not Config.isFiltered(s):
-            printed_messages[type] += 1
+            printed_messages[msgtype] += 1
             _badness_score += badness
             if threshold >= 0:
                 _diagnostic.append(s + "\n")
