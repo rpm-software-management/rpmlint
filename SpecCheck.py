@@ -31,7 +31,7 @@ buildroot_regex = re.compile('Buildroot\s*:\s*([^\s]+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*([^\s]+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*([^\s]+)', re.IGNORECASE)
 noarch_regex = re.compile('^BuildArch(?:itectures)?\s*:\s*\\bnoarch\\b', re.IGNORECASE)
-make_check_regexp = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
+make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?')
 configure_start_regex = re.compile('\./configure')
@@ -242,7 +242,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if contains_buildroot(line):
                     printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1].strip())
 
-            if make_check_regexp.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
+            if make_check_regex.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
                 printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
             if current_section in buildroot_clean.keys():
