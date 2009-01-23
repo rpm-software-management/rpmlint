@@ -2,7 +2,7 @@
 # $Id$
 
 # Copyright (C) 2006 Michael Scherer <misc@zarb.org>
-#                    Ville Skytta <scop@zarb.org>
+#                    Ville Skyttä <ville.skytta@iki.fi>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

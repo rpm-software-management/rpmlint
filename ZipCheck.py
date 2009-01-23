@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # File          : ZipCheck.py
 # Package       : rpmlint
-# Author        : Ville Skytta
+# Author        : Ville Skyttä
 # Created on    : Thu Oct 30 00:14:45 EET 2003
 # Version       : $Id$
 # Purpose       : Verify Zip/Jar file correctness
