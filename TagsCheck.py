@@ -20,7 +20,7 @@ DEFAULT_VALID_LICENSES = (
     # OSI approved licenses, http://www.opensource.org/licenses/ (unversioned,
     # trailing "license" dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
-    # the full name).  Updated 2006-11-14.
+    # the full name).  Updated 2009-01-23.
     'Academic Free License',
     'Adaptive Public License',
     'Apache License',
@@ -40,6 +40,8 @@ DEFAULT_VALID_LICENSES = (
     'Entessa Public License',
     'Fair License',
     'Frameworx License',
+    'GNU Affero GPLv3',
+    'GNU Affero GPLv3+',
     'GPLv1',
     'GPLv1+',
     'GPLv2',
@@ -53,16 +55,22 @@ DEFAULT_VALID_LICENSES = (
     'Historical Permission Notice and Disclaimer',
     'IBM Public License',
     'Intel Open Source License',
+    'ISC License',
     'Jabber Open Source License',
     'Lucent Public License',
+    'Microsoft Public License',
+    'Microsoft Reciprocal License',
     'MIT',
     'CVW License', # MITRE Collaborative Virtual Workspace License
     'Motosoto License',
     'MPL', # Mozilla Public License
+    'Multics License',
     'NASA Open Source Agreement',
     'Naumen Public License',
     'Nethack General Public License',
     'Nokia Open Source License',
+    'Non-profit Open Software License',
+    'NTP License',
     'OCLC Research Public License',
     'Open Group Test Suite License',
     'Open Software License',
