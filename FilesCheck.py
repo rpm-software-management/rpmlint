@@ -351,9 +351,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'info-dir-file', f)
 
             res = logrotate_regex.search(f)
-            logrotate_file = res or logrotate_file
-            if res and res.group(1) != pkg.name:
-                printError(pkg, 'incoherent-logrotate-file', f)
+            if res:
+                logrotate_file += 1
+                if res.group(1) != pkg.name:
+                    printError(pkg, 'incoherent-logrotate-file', f)
+
             link = enreg[3]
             if link != '':
                 ext = compr_regex.search(link)

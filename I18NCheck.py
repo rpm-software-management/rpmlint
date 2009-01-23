@@ -64,12 +64,7 @@ CORRECT_SUBDIRS = (
 'zh_CN.GB2312', 'zh_TW.Big5',
 )
 
-st = '-('
-for s in CORRECT_SUBDIRS:
-    st += '|' + s[0:2]
-st += ')$'
-
-package_regex = re.compile(st)
+package_regex = re.compile('-(' + '|'.join(map(lambda x: x[0:2], CORRECT_SUBDIRS)) + ')$')
 locale_regex = re.compile('^(/usr/share/locale/([^/]+))/')
 correct_subdir_regex = re.compile('^(([a-z][a-z]([a-z])?(_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex = re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
