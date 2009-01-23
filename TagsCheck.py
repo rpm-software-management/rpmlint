@@ -11,6 +11,7 @@ from Filter import *
 import AbstractCheck
 import FilesCheck
 import Pkg
+import os
 import rpm
 import re
 import Config
@@ -696,7 +697,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'percent-in-conflicts', c[0], c[1])
 
         expected = '%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
-        basename = pkg.filename.split('/')[-1]
+        basename = os.path.basename(pkg.filename)
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
 
