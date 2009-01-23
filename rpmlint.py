@@ -293,7 +293,7 @@ if info_error:
 # if no argument print usage
 if args == [] and not allpkgs:
     usage(sys.argv[0])
-    sys.exit(0)
+    sys.exit(1)
 
 if __name__ == '__main__':
     main()
