@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #---------------------------------------------------------------
 # Project         : Mandriva Linux
 # Module          : rpmlint

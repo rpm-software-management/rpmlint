@@ -1,4 +1,5 @@
 #!/usr/bin/python -O -tt
+# -*- coding: utf-8 -*-
 #############################################################################
 # File          : compile.py
 # Package       : rpmlint
