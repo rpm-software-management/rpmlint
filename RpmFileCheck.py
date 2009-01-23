@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # check the rpm file for various errors.
 # $Id$
 
