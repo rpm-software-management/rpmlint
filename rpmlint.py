@@ -77,7 +77,7 @@ def main():
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if not f.endswith(".spec"):
                             pkgs.append(Pkg.Pkg(f, extract_dir))
-                        else:
+                        elif 'SpecCheck' in Config.allChecks():
                             # Short-circuit spec file checks
                             pkg = Pkg.FakePkg(f)
                             check = SpecCheck.SpecCheck()
@@ -124,10 +124,11 @@ def main():
                             continue
                         try:
                             if f.endswith('.spec'):
-                                pkg = Pkg.FakePkg(f)
-                                check = SpecCheck.SpecCheck()
-                                check.check_spec(pkg, f)
-                                specfiles_checked += 1
+                                if 'SpecCheck' in Config.allChecks():
+                                    pkg = Pkg.FakePkg(f)
+                                    check = SpecCheck.SpecCheck()
+                                    check.check_spec(pkg, f)
+                                    specfiles_checked += 1
                             else:
                                 pkg = Pkg.Pkg(f, extract_dir)
                                 runChecks(pkg)
