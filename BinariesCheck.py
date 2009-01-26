@@ -278,7 +278,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 res = soversion_regex.search(bin_info.soname)
                                 if res:
                                     soversion = res.group(1) or res.group(2)
-                                    if version == None:
+                                    if version is None:
                                         version = soversion
                                     elif version != soversion:
                                         version = -1

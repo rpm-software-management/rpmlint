@@ -384,7 +384,7 @@ DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$', '^packa
 
 VALID_GROUPS = Config.getOption('ValidGroups', Pkg.get_default_valid_rpmgroups())
 VALID_LICENSES = Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
-INVALID_REQUIRES = map(lambda x: re.compile(x), Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
+INVALID_REQUIRES = map(re.compile, Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
 packager_regex = re.compile(Config.getOption('Packager'))
 changelog_version_regex = re.compile('[^>]([^ >]+)\s*$')
 changelog_text_version_regex = re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
@@ -537,7 +537,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         else:
                             prov = res.group(1) + '-devel'
 
-                        if not prov in map(lambda x: x[0], pkg.provides()):
+                        if prov not in [x[0] for x in pkg.provides()]:
                             printWarning(pkg, 'no-provides', prov)
 
         summary = pkg[rpm.RPMTAG_SUMMARY]
@@ -644,8 +644,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 #                 break
 
         def split_license(license):
-            return map(lambda x: x.strip(),
-                       [l for l in license_regex.split(license) if l])
+            return [x.strip() for x in
+                    [l for l in license_regex.split(license) if l]]
 
         rpm_license = pkg[rpm.RPMTAG_LICENSE]
         if not rpm_license:
@@ -668,8 +668,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             printWarning(pkg, 'no-url-tag')
 
-        obs_names = map(lambda x: x[0], pkg.obsoletes())
-        prov_names = map(lambda x: x[0], pkg.provides())
+        obs_names = [x[0] for x in pkg.obsoletes()]
+        prov_names = [x[0] for x in pkg.provides()]
 
         if pkg.name in obs_names:
             printError(pkg, 'obsolete-on-name')

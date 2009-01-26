@@ -242,9 +242,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             if launcher[0].search(command):
                                 found = 0
                                 if launcher[1]:
-                                    if (files.has_key('/bin/' + command_line[0]) or
-                                        files.has_key('/usr/bin/' + command_line[0]) or
-                                        files.has_key('/usr/X11R6/bin/' + command_line[0])):
+                                    if ('/bin/' + command_line[0] in files or
+                                        '/usr/bin/' + command_line[0] in files or
+                                        '/usr/X11R6/bin/' + command_line[0] in files):
                                         found = 1
                                     else:
                                         for l in launcher[1]:
@@ -259,9 +259,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             if not command in files.keys():
                                 printWarning(pkg, 'menu-command-not-in-package', command)
                         else:
-                            if not (files.has_key('/bin/' + command) or
-                                    files.has_key('/usr/bin/' + command) or
-                                    files.has_key('/usr/X11R6/bin/' + command)):
+                            if not ('/bin/' + command in files or
+                                    '/usr/bin/' + command in files or
+                                    '/usr/X11R6/bin/' + command in files):
                                 printWarning(pkg, 'menu-command-not-in-package', command)
                     else:
                         printWarning(pkg, 'missing-menu-command')

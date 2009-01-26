@@ -112,14 +112,14 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        prereq = map(lambda x: x[0], pkg.prereq())
+        prereq = [x[0] for x in pkg.prereq()]
         files = pkg.files().keys()
 
         for tag in script_tags:
             script = pkg[tag[0]]
             prog = pkg[tag[1]]
 
-            if type(script) != types.ListType:
+            if not isinstance(script, types.ListType):
                 self.check_aux(pkg, files, prog, script, tag, prereq)
             else:
                 for idx in range(0, len(prog)):

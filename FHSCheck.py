@@ -17,10 +17,12 @@ import Config
 
 class FHSCheck(AbstractCheck.AbstractCheck):
     usr_regex = re.compile("^/usr/([^/]+)/")
-    usr_subdir = ('X11R6','X386','bin','games','include','lib','lib64','local','sbin','share','src','spool','tmp')
+    usr_subdir = ('X11R6', 'X386', 'bin', 'games', 'include', 'lib', 'lib64',
+                  'local', 'sbin', 'share', 'src', 'spool', 'tmp')
     var_regex = re.compile("^/var/([^/]+)/")
-    var_fsstnd = ('adm','catman','local','named','nis','preserve')
-    var_subdir = ('account','lib','cache','crash','games','lock','log','opt','run','spool','state','tmp','yp','www','ftp')
+    var_fsstnd = ('adm', 'catman', 'local', 'named', 'nis', 'preserve')
+    var_subdir = ('account', 'lib', 'cache', 'crash', 'games', 'lock', 'log',
+                  'opt', 'run', 'spool', 'state', 'tmp', 'yp', 'www', 'ftp')
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")

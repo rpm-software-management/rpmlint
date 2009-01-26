@@ -137,9 +137,7 @@ def setBadness(s, score):
     _scoring[s] = score
 
 def badness(s):
-    if _scoring.has_key(s):
-        return _scoring[s]
-    return 0
+    return _scoring.get(s, 0)
 
 _non_named_group_re = re.compile('[^\\](\()[^:]')
 def isFiltered(s):

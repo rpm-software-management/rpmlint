@@ -137,9 +137,9 @@ def main():
         old_tag = old[s[0]]
         new_tag = new[s[0]]
         if old_tag != new_tag:
-            if old_tag == None:
+            if old_tag is None:
                 print FORMAT % (ADDED, s[1])
-            elif new_tag == None:
+            elif new_tag is None:
                 print FORMAT % (REMOVED, s[1])
             else:
                 print FORMAT % ('S.5.....', s[1])
@@ -174,7 +174,7 @@ def main():
             format = ''
             for idx in range(0, len(FILEIDX)):
                 entry = FILEIDX[idx]
-                if entry[1] != None and old_file[entry[1]] != new_file[entry[1]]:
+                if entry[1] is not None and old_file[entry[1]] != new_file[entry[1]]:
                     format = format + entry[0]
                     diff = 1
                 else:
