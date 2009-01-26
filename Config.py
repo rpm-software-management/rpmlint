@@ -53,6 +53,7 @@ _checks.extend(DEFAULT_CHECKS)
 def addCheck(check):
     global _checks
 
+    check = re.sub('\.py[co]?$', '', check)
     if not check in _checks:
         _checks.append(check)
 
