@@ -8,12 +8,16 @@
 # Created On      : Mon Mar 20 07:43:37 2000
 #---------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
-import Pkg
-import rpm
 import re
 import stat
+
+import rpm
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
+import Pkg
+
 
 DEFAULT_VALID_SECTIONS = (
     'Office/Accessories',

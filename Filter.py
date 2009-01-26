@@ -10,12 +10,13 @@
 
 import sys
 import textwrap
+
 import Config
 try:
     import Testing
-    haveTesting = 1
-except:
-    haveTesting = 0
+except ImportError:
+    Testing = None
+
 
 _diagnostic = list()
 _badness_score = 0
@@ -51,7 +52,7 @@ def _print(msgtype, pkg, reason, details):
         s = s + " (Badness: %d)" % badness
     for d in details:
         s = s + " %s" % d
-    if haveTesting and Testing.isTest():
+    if Testing and Testing.isTest():
         Testing.addOutput(s)
     else:
         if not Config.isFiltered(s):

@@ -9,19 +9,23 @@
 #                 the checks.
 #############################################################################
 
-import sys
-import AbstractCheck
-import imp
 import getopt
 import glob
-import Pkg
-import Config
+import imp
 import os
 import stat
-import rpm
+import sys
 import tempfile
-from Filter import *
+
+import rpm
+
+from Filter import printAllReasons, printError, printInfo, printWarning, \
+     printed_messages
+import AbstractCheck
+import Config
+import Pkg
 import SpecCheck
+
 
 version = '@VERSION@'
 

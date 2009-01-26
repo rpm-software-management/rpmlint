@@ -7,10 +7,11 @@
 # http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
-from Filter import *
+from Filter import printError, printWarning
 from Pkg import getstatusoutput, is_utf8
 import AbstractCheck
 import Config
+
 
 class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):

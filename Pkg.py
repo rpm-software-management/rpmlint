@@ -9,18 +9,19 @@
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
-import os
-import rpm
-import os.path
-import stat
 import commands
+import os
 import popen2
 import re
+import stat
+import sys
 import tempfile
 import types
-import sys
+
+import rpm
 
 from Filter import printWarning
+
 
 RPMFILE_CONFIG = (1 << 0)
 RPMFILE_DOC = (1 << 1)

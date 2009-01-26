@@ -19,10 +19,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-from Filter import *
-import AbstractCheck
 import os
+
+from Filter import printWarning
+import AbstractCheck
 import Config
+
 
 class RpmFileCheck(AbstractCheck.AbstractCheck):
     def __init__(self):

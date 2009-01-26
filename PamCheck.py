@@ -9,10 +9,12 @@
 # Purpose         : Apply pam policy
 #---------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printError
+import AbstractCheck
 import Config
+
 
 pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')
 

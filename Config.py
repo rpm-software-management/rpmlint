@@ -8,8 +8,10 @@
 # Purpose       : handle configuration options. To be used from config files.
 #############################################################################
 
+import locale
 import os.path
 import re
+
 
 DEFAULT_CHECKS = ("DistributionCheck",
                   "TagsCheck",
@@ -32,14 +34,14 @@ DEFAULT_CHECKS = ("DistributionCheck",
                   "MenuXDGCheck",
                   )
 
-USEUTF8_DEFAULT = 0
+USEUTF8_DEFAULT = False
 try:
-    from locale import getpreferredencoding
-    if getpreferredencoding() == 'UTF-8': USEUTF8_DEFAULT = 1
+    if locale.getpreferredencoding() == 'UTF-8':
+        USEUTF8_DEFAULT = True
 except:
     try:
-        from locale import getdefaultlocale
-        if re.match('utf', getdefaultlocale()[1], re.I): USEUTF8_DEFAULT = 1
+        if re.match('utf', locale.getdefaultlocale()[1], re.I):
+            USEUTF8_DEFAULT = True
     except:
         pass
 

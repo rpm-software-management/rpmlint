@@ -8,9 +8,12 @@
 # Purpose       : checks i18n bugs.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
+
 
 # Defined in header.h
 HEADER_I18NTABLE = 100

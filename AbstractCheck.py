@@ -8,6 +8,9 @@
 # Purpose       : Abstract class to hold all the derived classes.
 #############################################################################
 
+import re
+
+
 class AbstractCheck:
     known_checks = {}
 
@@ -19,8 +22,6 @@ class AbstractCheck:
     def check(self, pkg):
         raise NotImplementedError('check must be implemented in subclass')
 
-
-import re
 
 class AbstractFilesCheck(AbstractCheck):
     def __init__(self, name, file_regexp):

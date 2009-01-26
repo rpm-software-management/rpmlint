@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
-import Pkg
 import glob
+import os
 import tempfile
+
+import Pkg
+
 
 currently_testing = 0
 output = []

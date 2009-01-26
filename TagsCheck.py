@@ -8,14 +8,16 @@
 # Purpose       : Check a package to see if some rpm tags are present
 #############################################################################
 
-from Filter import *
+import os
+import re
+
+import rpm
+
+from Filter import printError, printWarning
 import AbstractCheck
+import Config
 import FilesCheck
 import Pkg
-import os
-import rpm
-import re
-import Config
 
 
 DEFAULT_VALID_LICENSES = (

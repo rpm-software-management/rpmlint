@@ -8,10 +8,12 @@
 # Purpose       : verify source package correctness.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printError, printWarning
+import AbstractCheck
 import Config
+
 
 DEFAULT_VALID_SRC_PERMS = (0644, 0755)
 

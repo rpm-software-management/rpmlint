@@ -8,15 +8,17 @@
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import os
-import rpm
 import re
-import sys
+import stat
+
+import rpm
+
+from Filter import printError, printWarning
+import AbstractCheck
 import Config
 import Pkg
-import stat
+
 
 DEFAULT_SYSTEM_LIB_PATHS = (
     '/lib', '/usr/lib', '/usr/X11R6/lib',

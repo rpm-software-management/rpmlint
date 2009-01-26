@@ -9,10 +9,12 @@
 # Purpose         : Check package names according to their content.
 #---------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printWarning
+import AbstractCheck
 import Config
+
 
 # could be added.
 #

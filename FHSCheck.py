@@ -8,9 +8,11 @@
 # Purpose       : check FHS conformity
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printWarning
+import AbstractCheck
+import Config
 
 
 class FHSCheck(AbstractCheck.AbstractCheck):
