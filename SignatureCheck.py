@@ -8,10 +8,13 @@
 # Purpose       : check the presence of a PGP signature.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import re
 import sys
+
+from Filter import printError
+import AbstractCheck
+import Config
+
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
     pgp_regex = re.compile("pgp|gpg", re.IGNORECASE)

@@ -14,13 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from Filter import *
+import types
 
-import sys
 import rpm
-from types import TupleType
 
+from Filter import printWarning
 import AbstractCheck
+import Config
+
 
 # remove version from deps like ['foo', '>', '3']
 def _stripVersionedDeps(deps):
@@ -54,7 +55,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         doc_reqs  = {}  # dependencies of doc files
 
         for dep in pkg.header.dsFromHeader():
-            if isinstance(dep, TupleType): # rpm-python < 4.3.2
+            if isinstance(dep, types.TupleType): # rpm-python < 4.3.2
                 name = dep[0]
                 flags = dep[2]
             else:

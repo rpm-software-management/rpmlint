@@ -9,13 +9,17 @@
 # Purpose         : Check post/pre scripts
 #############################################################################
 
-from Filter import *
-import AbstractCheck
-import rpm
-import re
 import os
-import Pkg
+import re
 import types
+
+import rpm
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
+import Pkg
+
 
 DEFAULT_VALID_SHELLS = ('<lua>',
                         '/bin/sh',

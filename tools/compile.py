@@ -12,6 +12,7 @@
 import py_compile
 import sys
 
+
 for f in sys.argv[2:]:
     py_compile.compile(f, f + 'o', sys.argv[1] + f)
 

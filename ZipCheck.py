@@ -8,13 +8,15 @@
 # Purpose       : Verify Zip/Jar file correctness
 #------------------------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
-import Config
 import os
 import re
 import stat
 import zipfile
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
+
 
 zip_regex = re.compile('\.(zip|[ewj]ar)$')
 jar_regex = re.compile('\.[ewj]ar$')

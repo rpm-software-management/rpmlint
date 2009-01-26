@@ -9,13 +9,16 @@
 # Purpose         : check init scripts (files in /etc/rc.d/init.d)
 #---------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
-import Config
 import os
 import re
+
 import rpm
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
 import Pkg
+
 
 rc_regex = re.compile('^/etc(/rc\.d)?/init\.d/')
 chkconfig_content_regex = re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')

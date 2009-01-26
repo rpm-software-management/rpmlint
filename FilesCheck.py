@@ -9,14 +9,18 @@
 #                 permission, setuid, setgid...
 #############################################################################
 
-from Filter import *
-import AbstractCheck
-from Pkg import is_utf8, is_utf8_str
-import rpm
+import os
 import re
 import stat
 import string
-import os
+
+import rpm
+
+from Filter import printError, printWarning
+from Pkg import is_utf8, is_utf8_str
+import AbstractCheck
+import Config
+
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (

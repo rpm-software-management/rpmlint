@@ -9,10 +9,14 @@
 # Purpose         : LSB non compliance checks
 #---------------------------------------------------------------
 
-from Filter import *
-import AbstractCheck
-import rpm
 import re
+
+import rpm
+
+from Filter import printError
+import AbstractCheck
+import Config
+
 
 version_regex = re.compile('^[a-zA-Z0-9.+]+$')
 name_regex = re.compile('^[a-z0-9.+-]+$')

@@ -8,11 +8,14 @@
 # Purpose       : check the Distribution specificities in a binary rpm package.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
-import rpm
 import re
+
+import rpm
+
+from Filter import printWarning
+import AbstractCheck
 import Config
+
 
 man_regex = re.compile("/man(?:\d[px]?|n)/")
 info_regex = re.compile("(/usr/share|/usr)/info/")

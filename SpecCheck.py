@@ -8,13 +8,14 @@
 # Purpose       : check the spec file of a source rpm.
 #############################################################################
 
-from Filter import *
-import AbstractCheck
-import Pkg
 import re
-import sys
-import Config
+
+from Filter import printError, printWarning
 from TagsCheck import VALID_GROUPS
+import AbstractCheck
+import Config
+import Pkg
+
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'

@@ -8,9 +8,12 @@
 # Purpose       :
 #############################################################################
 
-from Filter import *
-import AbstractCheck
 import re
+
+from Filter import printError, printWarning
+import AbstractCheck
+import Config
+
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
     games_regex = re.compile("^/var/lib/games")
