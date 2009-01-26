@@ -27,9 +27,10 @@ version = '@VERSION@'
 
 # Print usage information
 def usage(name):
-    print 'usage:', name, '[<options>] <rpm files|specfile>'
+    print 'usage:', name, \
+          '[<options>] <rpm files|installed packages|specfiles|dirs>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
+    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
 
 # Print version information
 def printVersion():
