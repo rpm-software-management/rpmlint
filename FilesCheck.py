@@ -205,7 +205,7 @@ lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 mispelled_macro_regex = re.compile('%{.*}')
 siteperl_perl_regex = re.compile('/site_perl/')
-manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$');
+manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
 shebang_regex = re.compile('^#!\s*(\S*)')
 interpreter_regex = re.compile('^/(usr/)?(s?bin|games|libexec(/.+)?|(lib(64)?|share)/.+)/[^/]+$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
@@ -583,7 +583,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         extractedfile = os.path.normpath(extractedfile)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
-                        if not (files.has_key(pkgfile) or os.path.exists(extractedfile) or pkgfile in req_names):
+                        if not (pkgfile in files or os.path.exists(extractedfile) or pkgfile in req_names):
                             is_exception = 0
                             for e in dangling_exceptions:
                                 if e[0].search(link):

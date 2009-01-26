@@ -102,7 +102,8 @@ def getstatusoutput(cmd, stdoutonly = 0):
     text = proc.fromchild.read()
     sts = proc.wait()
     if sts is None: sts = 0
-    if text[-1:] == '\n': text = text[:-1]
+    if text.endswith('\n'):
+        text = text[:-1]
     return sts, text
 
 bz2_regex = re.compile('\.t?bz2?$')
@@ -169,7 +170,9 @@ def get_default_valid_rpmgroups(filename = ""):
     groups = []
     if not filename:
         p = InstalledPkg('rpm')
-        filename = filter(lambda x: x.endswith('/GROUPS'), p.files().keys())[0]
+        groupsfiles = [x for x in p.files().keys() if x.endswith('/GROUPS')]
+        if groupsfiles:
+            filename = groupsfiles[0]
     if filename and os.path.exists(filename):
         fobj = open(filename)
         try:
@@ -278,7 +281,7 @@ class Pkg:
 
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
-        if self.file_info == None:
+        if self.file_info is None:
             self.file_info = []
             lines = commands.getoutput('cd %s ; find . -type f -print0 | LC_ALL=C xargs -0r file' % self.dirName())
             lines = lines.splitlines()
@@ -318,41 +321,41 @@ class Pkg:
     # return the associative array indexed on file names with
     # the values as: (file perm, file owner, file group, file link to)
     def files(self):
-        if self._files != None:
+        if self._files is not None:
             return self._files
         self._gatherFilesInfo()
         return self._files
 
     # return the list of config files
     def configFiles(self):
-        if self._config_files != None:
+        if self._config_files is not None:
             return self._config_files
         self._gatherFilesInfo()
         return self._config_files
 
     # return the list of noreplace files
     def noreplaceFiles(self):
-        if self._noreplace_files != None:
+        if self._noreplace_files is not None:
             return self._noreplace_files
         self._gatherFilesInfo()
         return self._noreplace_files
 
     # return the list of documentation files
     def docFiles(self):
-        if self._doc_files != None:
+        if self._doc_files is not None:
             return self._doc_files
         self._gatherFilesInfo()
         return self._doc_files
 
     # return the list of ghost files
     def ghostFiles(self):
-        if self._ghost_files != None:
+        if self._ghost_files is not None:
             return self._ghost_files
         self._gatherFilesInfo()
         return self._ghost_files
 
     def missingOkFiles(self):
-        if self._missing_ok_files != None:
+        if self._missing_ok_files is not None:
             return self._missing_ok_files
         self._gatherFilesInfo()
         return self._missing_ok_files
@@ -388,7 +391,7 @@ class Pkg:
                     files = []
                     # The rpmlib or the python module doesn't report a list for RPMTAG_DIRINDEXES
                     # if the list has one element...
-                    if type(dirindexes) == types.IntType:
+                    if isinstance(dirindexes, types.IntType):
                         files.append(dirnames[dirindexes] + basenames[0])
                     else:
                         for idx in range(0, len(dirindexes)):
@@ -442,7 +445,7 @@ class Pkg:
 
     def req_names(self):
         if self._req_names == -1:
-            self._req_names = map(lambda x: x[0], self.requires() + self.prereq())
+            self._req_names = [x[0] for x in self.requires() + self.prereq()]
         return self._req_names
 
     def check_versioned_dep(self, name, version):
@@ -473,16 +476,16 @@ class Pkg:
 
         if versions:
             # workaroung buggy rpm python module that doesn't return a list
-            if type(flags) != types.ListType:
+            if not isinstance(flags, types.ListType):
                 flags = [flags]
             for loop in range(len(versions)):
-                if prereq != None and flags[loop] & PREREQ_FLAG:
+                if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((names[loop], versions[loop], flags[loop] & (~PREREQ_FLAG)))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
 
     def _gatherDepInfo(self):
-        if self._requires == None:
+        if self._requires is None:
             self._requires = []
             self._prereq = []
             self._provides = []
@@ -518,7 +521,7 @@ def getInstalledPkgs(name):
         else:
             tab = ts.dbMatch("name", name)
         if not tab:
-            raise KeyError, name
+            raise KeyError(name)
         for hdr in tab:
             pkgs.append(InstalledPkg(name, hdr))
     else:
@@ -526,7 +529,7 @@ def getInstalledPkgs(name):
         ixs = db.findbyname(name)
         if not ixs:
             del db
-            raise KeyError, name
+            raise KeyError(name)
         for ix in ixs:
             pkgs.append(InstalledPkg(name, db[ix]))
         del db
@@ -542,14 +545,14 @@ class InstalledPkg(Pkg):
                 ts = rpm.TransactionSet()
                 tab = ts.dbMatch('name', name)
                 if not tab:
-                    raise KeyError, name
+                    raise KeyError(name)
                 theHdr = tab.next()
             else:
                 db = rpm.opendb()
                 tab = db.findbyname(name)
                 if not tab:
                     del db
-                    raise KeyError, name
+                    raise KeyError(name)
                 theHdr = db[tab[0]]
                 del db
             Pkg.__init__(self, name, '/', theHdr)
@@ -565,7 +568,7 @@ class InstalledPkg(Pkg):
 
     # return the array of info returned by the file command on each file
     def getFilesInfo(self):
-        if self.file_info == None:
+        if self.file_info is None:
             self.file_info = []
             cmd = ['env', 'LC_ALL=C', 'file']
             cmd.extend(self.files().keys())

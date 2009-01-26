@@ -76,7 +76,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             else:                target = core_reqs
 
             for r in reqs[i]:
-                if not target.has_key(r):
+                if r not in target:
                     target[r] = []
 
                 target[r].append(i)
