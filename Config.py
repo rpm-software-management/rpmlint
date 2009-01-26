@@ -48,6 +48,7 @@ no_exception = 0
 
 # handle the list of checks to load
 _checks = []
+_checks.extend(DEFAULT_CHECKS)
 
 def addCheck(check):
     global _checks
