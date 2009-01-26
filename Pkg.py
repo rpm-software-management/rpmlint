@@ -511,7 +511,11 @@ def getInstalledPkgs(name):
     pkgs = []
     if v42:
         ts = rpm.TransactionSet()
-        tab = ts.dbMatch("name", name)
+        if re.search('[?*[]', name):
+            tab = ts.dbMatch()
+            tab.pattern("name", rpm.RPMMIRE_GLOB, name)
+        else:
+            tab = ts.dbMatch("name", name)
         if not tab:
             raise KeyError, name
         for hdr in tab:
