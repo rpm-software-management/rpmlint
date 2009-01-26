@@ -9,13 +9,11 @@
 #############################################################################
 
 class AbstractCheck:
-    check_names_seen = []
-    checks = []
+    known_checks = {}
 
     def __init__(self, name):
-        if name not in AbstractCheck.check_names_seen:
-            AbstractCheck.checks.append(self)
-            AbstractCheck.check_names_seen.append(name)
+        if not AbstractCheck.known_checks.get(name):
+            AbstractCheck.known_checks[name] = self
         self.name = name
 
     def check(self, pkg):

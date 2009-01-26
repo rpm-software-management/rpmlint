@@ -189,14 +189,19 @@ def runChecks(pkg):
     if verbose:
         printInfo(pkg, 'checking')
 
-    for c in AbstractCheck.AbstractCheck.checks:
-        c.check(pkg)
+    for name in Config.allChecks():
+        check = AbstractCheck.AbstractCheck.known_checks.get(name)
+        if check:
+            check.check(pkg)
+        else:
+            sys.stderr.write('(none): W: unknown check %s, skipping\n' % name)
 
     pkg.cleanup()
 
 #############################################################################
 #
 #############################################################################
+
 sys.argv[0] = os.path.basename(sys.argv[0])
 
 # parse options
@@ -221,6 +226,7 @@ except getopt.error, e:
 
 # process options
 checkdir = '/usr/share/rpmlint'
+checks = []
 verbose = 0
 extract_dir = None
 allpkgs = 0
@@ -244,7 +250,7 @@ del f
 # process command line options
 for o in opt:
     if o[0] == '-c' or o[0] == '--check':
-        Config.addCheck(o[1])
+        checks.append(o[1])
     elif o[0] == '-i' or o[0] == '--info':
         Config.info = 1
     elif o[0] == '-I':
@@ -284,6 +290,8 @@ if not extract_dir:
 
 if info_error:
     Config.info = 1
+    for c in checks:
+        Config.addCheck(c)
     for c in Config.allChecks():
         loadCheck(c)
     for e in info_error.split(','):
@@ -297,6 +305,10 @@ if args == [] and not allpkgs:
     sys.exit(1)
 
 if __name__ == '__main__':
+    if checks:
+        Config.resetChecks()
+        for check in checks:
+            Config.addCheck(check)
     main()
 
 # rpmlint.py ends here
