@@ -225,8 +225,6 @@ class Pkg:
                 finally:
                     os.close(fd)
 
-        self._lang_files = None
-
         self.name = self.header[rpm.RPMTAG_NAME]
         if self.isNoSource():
             self.arch = 'nosrc'
@@ -370,7 +368,6 @@ class Pkg:
         self._ghost_files = []
         self._missing_ok_files = []
         self._files = {}
-        self._files_array = []
         flags = self.header[rpm.RPMTAG_FILEFLAGS]
         modes = self.header[rpm.RPMTAG_FILEMODES]
         users = self.header[rpm.RPMTAG_FILEUSERNAME]
@@ -380,6 +377,7 @@ class Pkg:
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
+        langs = self.header[rpm.RPMTAG_FILELANGS]
         # Get files according to rpm version
         if v304:
             files = self.header[rpm.RPMTAG_OLDFILENAMES]
@@ -400,7 +398,6 @@ class Pkg:
             files = self.header[rpm.RPMTAG_FILENAMES]
 
         if files:
-            self._files_array = files
             for idx in range(0, len(files)):
                 if flags[idx] & RPMFILE_CONFIG:
                     self._config_files.append(files[idx])
@@ -415,20 +412,11 @@ class Pkg:
                 self._files[files[idx]] = (modes[idx], users[idx],
                                            groups[idx], links[idx],
                                            sizes[idx], md5s[idx],
-                                           mtimes[idx], rdevs[idx])
-
-    def langFiles(self):
-        if self._lang_files == None:
-            self._lang_files = {}
-            array = self.header[rpm.RPMTAG_FILELANGS]
-            if array:
-                for idx in range(0, len(array)):
-                    self._lang_files[self._files_array[idx]] = array[idx]
-
-        return self._lang_files
+                                           mtimes[idx], rdevs[idx],
+                                           langs[idx])
 
     def fileLang(self, f):
-        return self.langFiles()[f]
+        return self.files()[f][8]
 
     # API to access dependency information
     def obsoletes(self):
