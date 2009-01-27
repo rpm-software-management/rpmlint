@@ -150,7 +150,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         wrong_spec = False
 
         # lookup spec file
-        for fname in files:
+        for fname in pkg.files():
             if fname.endswith('.spec'):
                 self._spec_file = pkg.dirName() + "/" + fname
                 if fname == pkg.name + ".spec":
@@ -226,7 +226,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             section_marker = 0
             for secname, secdata in section.items():
                 if secdata['re'].search(line):
-                    current_section = i
+                    current_section = secname
                     section_marker = 1
                     secdata['count'] += 1
 
