@@ -31,6 +31,12 @@ use_deflevels = Config.getOption('UseDefaultRunlevels', 1)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
 
+LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',
+                'Should-Stop', 'Default-Start', 'Default-Stop',
+                'Short-Description', 'Description')
+RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
+                            'Default-Stop', 'Short-Description')
+
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
@@ -94,14 +100,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             if len(vals) != 1:
                                 printError(pkg, 'redundant-lsb-keyword', kw)
 
-                        # TODO: where is it specified that these (or some)
-                        #       keywords are mandatory?
-                        for kw in ('Provides', 'Description',
-                                   'Short-Description'):
+                        for kw in RECOMMENDED_LSB_KEYWORDS:
                             if kw not in lsb_tags:
-                                printError(pkg,
-                                           'missing-mandatory-lsb-keyword',
-                                           "%s in %s" % (kw, fname))
+                                printWarning(pkg,
+                                             'missing-lsb-keyword',
+                                             "%s in %s" % (kw, fname))
                     if in_lsb_tag:
                         # TODO maybe we do not have to handle this ?
                         if lastline.endswith('\\'):
@@ -118,9 +121,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             else:
                                 tag = res.group(1)
                                 if not tag.startswith('X-') and \
-                                   tag not in ('Provides', 'Required-Start', 'Required-Stop',
-                                               'Should-Stop', 'Should-Start', 'Default-Stop',
-                                               'Default-Start', 'Description', 'Short-Description'):
+                                   tag not in LSB_KEYWORDS:
                                     printError(pkg, 'unknown-lsb-keyword', line)
                                 else:
                                     in_lsb_description = (tag == 'Description')
@@ -200,9 +201,12 @@ a call to chkconfig.''',
 'preun-without-chkconfig',
 '''The package contains an init script but doesn't call chkconfig in its %preun.''',
 
-'missing-mandatory-lsb-keyword',
+'missing-lsb-keyword',
 '''The package contains an init script that does not contain one of the LSB
-comment block convention keywords that are mandatory.''',
+init script comment block convention keywords that are recommendable for all
+init scripts.  If there is nothing to add to a keyword's value, include the
+keyword in the script with an empty value.  Note that as of version 3.2, the
+LSB specification does not mandate presence of any keywords.''',
 
 'no-status-entry',
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
