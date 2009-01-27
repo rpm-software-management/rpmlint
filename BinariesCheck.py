@@ -14,7 +14,7 @@ import stat
 
 import rpm
 
-from Filter import printError, printWarning
+from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
 import Pkg

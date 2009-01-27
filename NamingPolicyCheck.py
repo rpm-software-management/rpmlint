@@ -11,7 +11,7 @@
 
 import re
 
-from Filter import printWarning
+from Filter import addDetails, printWarning
 import AbstractCheck
 import Config
 

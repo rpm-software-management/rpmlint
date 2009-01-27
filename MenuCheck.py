@@ -13,7 +13,7 @@ import stat
 
 import rpm
 
-from Filter import printError, printWarning
+from Filter import addDetails, printError, printInfo, printWarning
 import AbstractCheck
 import Config
 import Pkg

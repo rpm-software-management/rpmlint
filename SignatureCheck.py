@@ -11,7 +11,7 @@
 import re
 import sys
 
-from Filter import printError
+from Filter import addDetails, printError
 import AbstractCheck
 import Config
 

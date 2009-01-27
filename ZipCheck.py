@@ -11,9 +11,10 @@
 import os
 import re
 import stat
+import sys
 import zipfile
 
-from Filter import printError, printWarning
+from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
 
