@@ -126,9 +126,9 @@ def main():
     old = load_pkg(args[0])
     new = load_pkg(args[1])
 
-    old_files = old.files().keys()
-    new_files = new.files().keys()
-    files = old_files + new_files
+    old_files = old.files()
+    new_files = new.files()
+    files = old_files.keys() + new_files.keys()
 
     files.sort()
     previous = None
@@ -148,9 +148,6 @@ def main():
     cmp_list(old.requires(), new.requires(), 'REQUIRES')
     cmp_list(get_provides(old), get_provides(new), 'PROVIDES')
     cmp_list(old.conflicts(), new.conflicts(), 'CONFLICTS')
-
-    old_files = old.files()
-    new_files = new.files()
 
     for f in files:
         diff = 0

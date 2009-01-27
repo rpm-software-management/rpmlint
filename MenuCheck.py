@@ -170,38 +170,37 @@ class MenuCheck(AbstractCheck.AbstractCheck):
         files = pkg.files()
         menus = []
 
-        for f in files.keys():
+        for fname, fattrs in files.items():
             # Check menu files
-            res = menu_file_regex.search(f)
+            res = menu_file_regex.search(fname)
+            mode = fattrs[0]
             if res:
                 basename = res.group(1)
-                mode = files[f][0]
                 if not stat.S_ISREG(mode):
-                    printError(pkg, 'non-file-in-menu-dir', f)
+                    printError(pkg, 'non-file-in-menu-dir', fname)
                 else:
                     if basename != pkg.name:
-                        printWarning(pkg, 'non-coherent-menu-filename', f)
+                        printWarning(pkg, 'non-coherent-menu-filename', fname)
                     if mode & 0444 != 0444:
-                        printError(pkg, 'non-readable-menu-file', f)
+                        printError(pkg, 'non-readable-menu-file', fname)
                     if mode & 0111 != 0:
-                        printError(pkg, 'executable-menu-file', f)
-                    menus.append(f)
+                        printError(pkg, 'executable-menu-file', fname)
+                    menus.append(fname)
             else:
                 # Check old menus from KDE and GNOME
-                res = old_menu_file_regex.search(f)
+                res = old_menu_file_regex.search(fname)
                 if res:
-                    mode = files[f][0]
                     if stat.S_ISREG(mode):
-                        printError(pkg, 'old-menu-entry', f)
+                        printError(pkg, 'old-menu-entry', fname)
                 else:
                     # Check non transparent xpm files
-                    res = xpm_ext_regex.search(f)
+                    res = xpm_ext_regex.search(fname)
                     if res:
-                        mode = files[f][0]
-                        if stat.S_ISREG(mode) and not pkg.grep('None",', f):
-                            printWarning(pkg, 'non-transparent-xpm', f)
-                if menu64_file_regex.search(f):
-                    printError(pkg, 'menu-in-wrong-dir', f)
+                        if stat.S_ISREG(mode) and not pkg.grep('None",', fname):
+                            printWarning(pkg, 'non-transparent-xpm', fname)
+                if menu64_file_regex.search(fname):
+                    printError(pkg, 'menu-in-wrong-dir', fname)
+
         if len(menus) > 0:
             directory = pkg.dirName()
             if menus != []:
@@ -256,7 +255,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 command = command_line[1]
                                 break
                         if command[0] == '/':
-                            if not command in files.keys():
+                            if not command in files:
                                 printWarning(pkg, 'menu-command-not-in-package', command)
                         else:
                             if not ('/bin/' + command in files or
@@ -324,7 +323,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
                         else:
                             for path in icon_paths:
-                                if not (path[0] + icon) in files.keys():
+                                if not (path[0] + icon) in files:
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)

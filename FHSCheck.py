@@ -32,12 +32,11 @@ class FHSCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        files = pkg.files()
         var_list = []
         usr_list = []
 
-        for f in files.keys():
-            s = FHSCheck.usr_regex.search(f)
+        for fname in pkg.files():
+            s = FHSCheck.usr_regex.search(fname)
             if s:
                 d = s.group(1)
                 if not d in FHSCheck.usr_subdir:
@@ -45,12 +44,12 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "non-standard-dir-in-usr", d)
                         usr_list.append(d)
             else:
-                s = FHSCheck.var_regex.search(f)
+                s = FHSCheck.var_regex.search(fname)
                 if s:
                     d = s.group(1)
                     if d in FHSCheck.var_fsstnd:
                         if not d in var_list:
-                            printWarning(pkg, "FSSTND-dir-in-var", f)
+                            printWarning(pkg, "FSSTND-dir-in-var", fname)
                             var_list.append(d)
                     elif not d in FHSCheck.var_subdir:
                         if not d in var_list:

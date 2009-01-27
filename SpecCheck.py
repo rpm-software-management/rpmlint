@@ -148,12 +148,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             return
 
         wrong_spec = False
+
         # lookup spec file
-        files = pkg.files()
-        for f in files.keys():
-            if f.endswith('.spec'):
-                self._spec_file = pkg.dirName() + "/" + f
-                if f == pkg.name + ".spec":
+        for fname in files:
+            if fname.endswith('.spec'):
+                self._spec_file = pkg.dirName() + "/" + fname
+                if fname == pkg.name + ".spec":
                         wrong_spec = False
                         break
                 else:
@@ -224,11 +224,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
 
             section_marker = 0
-            for i in section.keys():
-                if section[i]['re'].search(line):
+            for secname, secdata in section.items():
+                if secdata['re'].search(line):
                     current_section = i
                     section_marker = 1
-                    section[i]['count'] = section[i]['count'] + 1
+                    secdata['count'] += 1
 
             if section_marker:
 
@@ -247,7 +247,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if make_check_regex.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
                 printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
-            if current_section in buildroot_clean.keys():
+            if current_section in buildroot_clean:
                 if contains_buildroot(line) and rm_regex.search(line):
                     buildroot_clean[current_section] = 1
 
@@ -436,11 +436,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                          (indent_spaces, indent_tabs))
 
         # process gathered info
-        for p in patches.keys():
-            if p in applied_patches_ifarch:
-                printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % p, patches[p])
-            if p not in applied_patches:
-                printWarning(pkg, "patch-not-applied", "Patch%d:" % p, patches[p])
+        for pnum, pfile in patches.items():
+            if pnum in applied_patches_ifarch:
+                printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % pnum,
+                             pfile)
+            if pnum not in applied_patches:
+                printWarning(pkg, "patch-not-applied", "Patch%d:" % pnum,
+                             pfile)
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()

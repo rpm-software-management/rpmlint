@@ -300,18 +300,18 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         if not doc_files:
             printWarning(pkg, 'no-documentation')
 
-        if len(files.keys()) and meta_package_regex.search(pkg.name):
-            printWarning(pkg, 'file-in-meta-package')
-
-        if debuginfo_package_regex.search(pkg.name) and not files:
+        if files:
+            if meta_package_regex.search(pkg.name):
+                printWarning(pkg, 'file-in-meta-package')
+        elif debuginfo_package_regex.search(pkg.name):
             printError(pkg, 'empty-debuginfo-package')
 
-        for f in files.keys():
-            enreg = files[f]
-            mode = enreg[0]
-            user = enreg[1]
-            group = enreg[2]
-            size = enreg[4]
+        for f, fattrs in files.items():
+            mode = fattrs[0]
+            user = fattrs[1]
+            group = fattrs[2]
+            link = fattrs[3]
+            size = fattrs[4]
             is_doc = f in doc_files
             nonexec_file = 0
 
@@ -360,7 +360,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if res.group(1) != pkg.name:
                     printError(pkg, 'incoherent-logrotate-file', f)
 
-            link = enreg[3]
             if link != '':
                 ext = compr_regex.search(link)
                 if ext:
@@ -373,8 +372,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if stat.S_ISGID & mode or stat.S_ISUID & mode:
                 # check only normal files
                 if stat.S_ISREG(mode):
-                    user = enreg[1]
-                    group = enreg[2]
                     setuid = None
                     setgid = None
                     if stat.S_ISUID & mode:
@@ -559,7 +556,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 # absolute link
                 if r:
-                    if (not is_so) and link not in files.keys() and link not in req_names:
+                    if (not is_so) and link not in files and link not in req_names:
                         is_exception = 0
                         for e in dangling_exceptions:
                             if e[0].search(link):

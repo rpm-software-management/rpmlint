@@ -113,7 +113,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
             return
 
         prereq = [x[0] for x in pkg.prereq()]
-        files = pkg.files().keys()
+        files = pkg.files()
 
         for tag in script_tags:
             script = pkg[tag[0]]

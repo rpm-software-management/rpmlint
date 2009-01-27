@@ -42,26 +42,28 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
         if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
             printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
-        for f in pkg.files().keys():
-            if man_regex.search(f):
+        for fname in pkg.files():
+            if man_regex.search(fname):
                 if use_bzip2:
-                    if not f.endswith('.bz2'):
-                        printWarning(pkg, "manpage-not-bzipped", f)
+                    if not fname.endswith('.bz2'):
+                        printWarning(pkg, "manpage-not-bzipped", fname)
                 if use_lzma:
-                    if not f.endswith('.lzma'):
-                        printWarning(pkg, "manpage-not-compressed-wth-lzma", f)
+                    if not fname.endswith('.lzma'):
+                        printWarning(pkg, "manpage-not-compressed-wth-lzma",
+                                     fname)
 
-                elif not f.endswith('.gz'):
-                    printWarning(pkg, "manpage-not-gzipped", f)
-            if info_regex.search(f) and not info_dir_regex.search(f):
+                elif not fname.endswith('.gz'):
+                    printWarning(pkg, "manpage-not-gzipped", fname)
+            if info_regex.search(fname) and not info_dir_regex.search(fname):
                 if use_bzip2:
-                    if not f.endswith('.bz2'):
-                        printWarning(pkg, "infopage-not-bzipped", f)
+                    if not fname.endswith('.bz2'):
+                        printWarning(pkg, "infopage-not-bzipped", fname)
                 if use_lzma:
-                    if not f.endswith('.lzma'):
-                        printWarning(pkg, "infopage-not-compressed-wth-lzma", f)
-                elif not f.endswith('.gz'):
-                    printWarning(pkg, "infopage-not-gzipped", f)
+                    if not fname.endswith('.lzma'):
+                        printWarning(pkg, "infopage-not-compressed-wth-lzma",
+                                     fname)
+                elif not fname.endswith('.gz'):
+                    printWarning(pkg, "infopage-not-gzipped", fname)
 
 # Create an object to enable the auto registration of the test
 check = DistributionCheck()
