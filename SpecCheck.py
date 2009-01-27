@@ -10,7 +10,7 @@
 
 import re
 
-from Filter import printError, printWarning
+from Filter import addDetails, printError, printWarning
 from TagsCheck import VALID_GROUPS
 import AbstractCheck
 import Config

@@ -18,7 +18,7 @@ import types
 
 import rpm
 
-from Filter import printWarning
+from Filter import addDetails, printWarning
 import AbstractCheck
 import Config
 

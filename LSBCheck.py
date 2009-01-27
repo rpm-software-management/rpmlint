@@ -13,7 +13,7 @@ import re
 
 import rpm
 
-from Filter import printError
+from Filter import addDetails, printError
 import AbstractCheck
 import Config
 

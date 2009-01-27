@@ -19,8 +19,8 @@ import tempfile
 
 import rpm
 
-from Filter import printAllReasons, printError, printInfo, printWarning, \
-     printed_messages
+from Filter import badnessScore, badnessThreshold, printAllReasons, \
+     printDescriptions, printError, printInfo, printWarning, printed_messages
 import AbstractCheck
 import Config
 import Pkg
