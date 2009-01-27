@@ -58,7 +58,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        files = pkg.files().keys()
+        files = pkg.files()
         if not files:
             return
         try:

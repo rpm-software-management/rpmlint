@@ -31,7 +31,7 @@ class AbstractFilesCheck(AbstractCheck):
         if pkg.isSource():
             return
         files = []
-        for filename in pkg.files().keys():
+        for filename in pkg.files():
             if self.__files_re.match(filename):
                 files.append(filename)
         for filename in files:

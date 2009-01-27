@@ -506,8 +506,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 base = is_devel.group(1)
                 dep = None
                 has_so = 0
-                for f in pkg.files().keys():
-                    if f.endswith('.so'):
+                for fname in pkg.files():
+                    if fname.endswith('.so'):
                         has_so = 1
                         break
                 if has_so:

@@ -33,24 +33,23 @@ class SourceCheck(AbstractCheck.AbstractCheck):
             return
 
         # process file list
-        files = pkg.files()
         spec_file = None
-        for f in files.keys():
-            if f.endswith('.spec'):
+        for fname, fattrs in pkg.files().items():
+            if fname.endswith('.spec'):
                 if spec_file:
-                    printError(pkg, 'multiple-specfiles', spec_file, f)
+                    printError(pkg, 'multiple-specfiles', spec_file, fname)
                 else:
-                    spec_file = f
-            elif source_regex.search(f):
+                    spec_file = fname
+            elif source_regex.search(fname):
                 if use_bzip2:
-                    if not f.endswith('.bz2'):
-                        printWarning(pkg, 'source-or-patch-not-bzipped', f)
+                    if not fname.endswith('.bz2'):
+                        printWarning(pkg, 'source-or-patch-not-bzipped', fname)
                 else:
-                    if not f.endswith('gz'):
-                        printWarning(pkg, 'source-or-patch-not-gzipped', f)
-            perm = files[f][0] & 07777
+                    if not fname.endswith('gz'):
+                        printWarning(pkg, 'source-or-patch-not-gzipped', fname)
+            perm = fattrs[0] & 07777
             if perm not in valid_src_perms:
-                printWarning(pkg, 'strange-permission', f, oct(perm))
+                printWarning(pkg, 'strange-permission', fname, oct(perm))
 
 check = SourceCheck()
 

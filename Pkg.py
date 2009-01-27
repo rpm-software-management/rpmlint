@@ -170,7 +170,7 @@ def get_default_valid_rpmgroups(filename = ""):
     groups = []
     if not filename:
         p = InstalledPkg('rpm')
-        groupsfiles = [x for x in p.files().keys() if x.endswith('/GROUPS')]
+        groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
         if groupsfiles:
             filename = groupsfiles[0]
     if filename and os.path.exists(filename):
@@ -559,7 +559,7 @@ class InstalledPkg(Pkg):
         if self.file_info is None:
             self.file_info = []
             cmd = ['env', 'LC_ALL=C', 'file']
-            cmd.extend(self.files().keys())
+            cmd.extend(self.files())
             sts, lines = getstatusoutput(cmd)
             #print lines
             lines = lines.splitlines()
