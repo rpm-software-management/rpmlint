@@ -11,12 +11,12 @@
 
 import commands
 import os
-import popen2
 import re
 import stat
 import sys
 import tempfile
 import types
+import subprocess
 
 import rpm
 
@@ -95,11 +95,11 @@ def getstatusoutput(cmd, stdoutonly = 0):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.  See popen2.'''
     if stdoutonly:
-        proc = popen2.Popen3(cmd)
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
     else:
-        proc = popen2.Popen4(cmd)
-    proc.tochild.close()
-    text = proc.fromchild.read()
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
+    proc.stdin.close()
+    text = proc.stdout.read()
     sts = proc.wait()
     if sts is None: sts = 0
     if text.endswith('\n'):
