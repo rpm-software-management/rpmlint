@@ -6,8 +6,8 @@ You need the following utilities to run rpmlint:
 	o readelf
 	o file
 	o cpio
-    o desktop-file-validate
-    o iconv
+	o desktop-file-validate
+	o iconv
 
 and the following programs to install it:
 
