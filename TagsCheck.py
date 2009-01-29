@@ -537,7 +537,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         else:
                             prov = res.group(1) + '-devel'
 
-                        if prov not in [x[0] for x in pkg.provides()]:
+                        if prov not in (x[0] for x in pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
 
         summary = pkg[rpm.RPMTAG_SUMMARY]
@@ -644,8 +644,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 #                 break
 
         def split_license(license):
-            return [x.strip() for x in
-                    [l for l in license_regex.split(license) if l]]
+            return (x.strip() for x in
+                    (l for l in license_regex.split(license) if l))
 
         rpm_license = pkg[rpm.RPMTAG_LICENSE]
         if not rpm_license:

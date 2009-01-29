@@ -67,7 +67,7 @@ CORRECT_SUBDIRS = (
 'zh_CN.GB2312', 'zh_TW.Big5',
 )
 
-package_regex = re.compile('-(' + '|'.join([x[0:2] for x in CORRECT_SUBDIRS]) + ')$')
+package_regex = re.compile('-(' + '|'.join((x[0:2] for x in CORRECT_SUBDIRS)) + ')$')
 locale_regex = re.compile('^(/usr/share/locale/([^/]+))/')
 correct_subdir_regex = re.compile('^(([a-z][a-z]([a-z])?(_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex = re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
@@ -165,7 +165,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         if res:
             locales = 'locales-' + res.group(1)
             if locales != name:
-                if locales not in [x[0] for x in pkg.requires()]:
+                if locales not in (x[0] for x in pkg.requires()):
                     printError(pkg, 'no-dependency-on', locales)
 
 def is_prefix(p, s):
