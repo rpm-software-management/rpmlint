@@ -93,7 +93,7 @@ def substitute_shell_vars(val, script):
 
 def getstatusoutput(cmd, stdoutonly = 0):
     '''A version of commands.getstatusoutput() which can take cmd as a
-       sequence, thus making it potentially more secure.  See popen2.'''
+       sequence, thus making it potentially more secure.'''
     if stdoutonly:
         proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
     else:
