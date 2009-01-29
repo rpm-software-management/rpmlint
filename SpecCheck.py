@@ -53,6 +53,10 @@ libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
 comment_or_empty_regex = re.compile('^\s*(#|$)')
 defattr_regex = re.compile('^\s*%defattr\\b')
 attr_regex = re.compile('^\s*%attr\\b')
+section_regexs = dict(
+    ([x, re.compile('^%' + x + '(?:\s|$)')]
+     for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
+               'install', 'package', 'prep')))
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -191,12 +195,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         indent_tabs = 0
         files_has_defattr = 0
         section = {}
-        for sec in ['description', 'prep', 'build', 'install', 'clean',
-                    'files', 'changelog', 'package', 'check']:
-            section[sec] = {
-                'count': 0,
-                're': re.compile('^%' + sec + '(?:\s|$)'),
-                }
 
         is_utf8 = 0
         if self._spec_file and use_utf8:
@@ -224,11 +222,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
 
             section_marker = 0
-            for secname, secdata in section.items():
-                if secdata['re'].search(line):
-                    current_section = secname
+            for sec, regex in section_regexs.items():
+                if regex.search(line):
+                    current_section = sec
                     section_marker = 1
-                    secdata['count'] += 1
+                    section[sec] = section.get(sec, 0) + 1
+                    break
 
             if section_marker:
 
@@ -417,11 +416,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'no-buildroot-tag')
 
         for sec in ('prep', 'build', 'install', 'clean'):
-            if not section[sec]['count']:
+            if not section.get(sec):
                 printWarning(pkg, 'no-%%%s-section' % sec)
         for sec in ('changelog',):
-            # prep, build, install, clean, check prevented by rpmbuild
-            if section[sec]['count'] > 1:
+            # prep, build, install, clean, check prevented by rpmbuild 4.4
+            if section.get(sec, 0) > 1:
                 printWarning(pkg, 'more-than-one-%%%s-section' % sec)
 
         if lib and not mklibname:
