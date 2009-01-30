@@ -1,7 +1,14 @@
 rpmlint is a tool for checking common errors in rpm packages.  rpmlint
 can be used to test individual packages before uploading or to check
-an entire distribution.  By default all checks are processed but
-specific checks can be performed by using command line parameters.
+an entire distribution.  By default all applicable checks are
+performed but specific checks can be performed by using command line
+parameters.
+
+rpmlint can check binary rpms (files and installed ones), source rpms,
+and plain specfiles, but all checks do not apply to all argument
+types.  For best check coverage, run rpmlint on source rpms instead of
+plain specfiles, and installed binary rpms instead of uninstalled
+binary rpm files.
 
 The idea for rpmlint is from the lintian tool of the Debian project.
 
