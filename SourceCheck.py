@@ -53,8 +53,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
 
 check = SourceCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'multiple-specfiles',
 '''Your package contains multiple spec files. To build a
 correct package, you need to have only one spec file containing

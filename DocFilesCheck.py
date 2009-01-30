@@ -20,7 +20,6 @@ import rpm
 
 from Filter import addDetails, printWarning
 import AbstractCheck
-import Config
 
 
 # remove version from deps like ['foo', '>', '3']
@@ -99,8 +98,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
 check = DocFilesCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'doc-file-dependency',
 '''An included file marked as %doc creates a possible additional dependency in
 the package.  Usually, this is not wanted and may be caused by eg. example

@@ -692,8 +692,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = FilesCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'no-documentation',
 '''The package contains no documentation (README, doc, etc).
 You have to include documentation files.''',

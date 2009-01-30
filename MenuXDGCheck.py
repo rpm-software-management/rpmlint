@@ -10,7 +10,6 @@
 from Filter import addDetails, printError, printWarning
 from Pkg import getstatusoutput, is_utf8
 import AbstractCheck
-import Config
 
 
 class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
@@ -30,12 +29,13 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
 
 check = MenuXDGCheck()
 
-if Config.info:
-    addDetails(
-        'invalid-desktopfile',
-        '''.desktop file is not valid, check with desktop-file-validate''',
-        'non-utf8-desktopfile',
-        '''.desktop file is not encoded in UTF-8''',)
+addDetails(
+'invalid-desktopfile',
+'''.desktop file is not valid, check with desktop-file-validate''',
+
+'non-utf8-desktopfile',
+'''.desktop file is not encoded in UTF-8''',
+)
 
 # Local variables:
 # indent-tabs-mode: nil

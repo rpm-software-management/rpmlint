@@ -77,8 +77,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
 
 check = ZipCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'bad-crc-in-zip',
 '''The reported file in the zip fails the CRC check. Usually this is a
 sign of a corrupt zip file.''',

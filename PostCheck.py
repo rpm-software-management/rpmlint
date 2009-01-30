@@ -201,15 +201,14 @@ class PostCheck(AbstractCheck.AbstractCheck):
 check = PostCheck()
 
 # Add information about checks
-if Config.info:
-    addDetails(
+addDetails(
 'postin-without-ghost-file-creation',
 '''A file tagged as ghost is not created during %prein nor during %postin.''',
 )
-    for scriptlet in ('%pre', '%post', '%preun', '%postun', '%trigger', \
-        '%triggerin', '%triggerprein', '%triggerun', '%triggerpostun', \
-        '%pretrans', '%posttrans'):
-        addDetails(
+for scriptlet in ('%pre', '%post', '%preun', '%postun', '%trigger',
+                  '%triggerin', '%triggerprein', '%triggerun',
+                  '%triggerpostun', '%pretrans', '%posttrans'):
+    addDetails(
 'one-line-command-in-%s' % scriptlet,
 '''You should use %s -p <command> instead of using:
 

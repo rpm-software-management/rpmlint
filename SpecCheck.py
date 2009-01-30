@@ -453,8 +453,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 check = SpecCheck()
 
 # Add information about checks
-if Config.info:
-    addDetails(
+addDetails(
 'no-spec-file',
 '''No spec file was specified in your RPM building. Please specify a valid
 SPEC file to build a valid RPM package.''',
