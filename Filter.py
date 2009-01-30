@@ -63,14 +63,13 @@ def _print(msgtype, pkg, reason, details):
             else:
                 sys.stdout.write(s)
                 sys.stdout.write("\n")
-                printDescriptions(reason)
+                if Config.info:
+                    printDescriptions(reason)
             return 1
 
     return 0
 
 def printDescriptions(reason):
-    if not Config.info:
-        return
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
