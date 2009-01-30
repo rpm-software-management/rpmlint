@@ -12,7 +12,6 @@ import re
 
 from Filter import addDetails, printWarning
 import AbstractCheck
-import Config
 
 
 class FHSCheck(AbstractCheck.AbstractCheck):
@@ -59,8 +58,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = FHSCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'non-standard-dir-in-usr',
 """Your package is creating a non-standard subdirectory in /usr. The standard
 directories are:

@@ -300,8 +300,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 printWarning(pkg, 'shared-lib-calls-exit', i[0], ec)
 
                         is_exec = executable_regex.search(i[1])
-                        if shared_object_regex.search(i[1]) or \
-                           is_exec:
+                        if shared_object_regex.search(i[1]) or is_exec:
 
                             if is_exec:
 
@@ -382,8 +381,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 check = BinariesCheck()
 
 # Add information about checks
-if Config.info:
-    addDetails(
+addDetails(
 'arch-independent-package-contains-binary-or-object',
 '''The package contains a binary or object file but is tagged
 noarch.''',

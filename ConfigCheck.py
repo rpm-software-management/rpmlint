@@ -12,7 +12,6 @@ import re
 
 from Filter import addDetails, printError, printWarning
 import AbstractCheck
-import Config
 
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
@@ -49,8 +48,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
 check = ConfigCheck()
 
 # Add information about checks
-if Config.info:
-    addDetails(
+addDetails(
 'app-defaults-must-not-be-conffile',
 """A file in /usr/X11R6/lib/X11/app-defaults/ is a configuration file.
 If you need to store your conf file, put it in /etc.""",

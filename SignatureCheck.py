@@ -13,7 +13,6 @@ import sys
 
 from Filter import addDetails, printError
 import AbstractCheck
-import Config
 
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
@@ -41,8 +40,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = SignatureCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'no-signature',
 '''You have to include your pgp or gpg signature in your package.
 For more information on signatures, please refer to www.gnupg.org.''',

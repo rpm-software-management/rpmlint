@@ -15,7 +15,6 @@ import rpm
 
 from Filter import addDetails, printError
 import AbstractCheck
-import Config
 
 
 version_regex = re.compile('^[a-zA-Z0-9.+]+$')
@@ -43,8 +42,7 @@ class LSBCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = LSBCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'non-lsb-compliant-package-name',
 """Your package name contains an illegal character. Use only
 alphanumeric symbols in your package name.""",

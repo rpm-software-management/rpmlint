@@ -707,8 +707,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 check = TagsCheck()
 
 # Add information about checks
-if Config.info:
-    addDetails(
+addDetails(
 'summary-too-long',
 'The "Summary:" must not exceed %d characters.' % max_line_len,
 

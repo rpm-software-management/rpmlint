@@ -68,8 +68,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = DistributionCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'invalid-vendor',
 'In the ' + distribution + ' distribution, the vendor should be "' + vendor + '".',
 

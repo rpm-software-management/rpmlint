@@ -339,8 +339,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = MenuCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'non-file-in-menu-dir',
 '''/usr/lib/menu must not contain anything else than normal files.''',
 

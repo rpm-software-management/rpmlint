@@ -13,7 +13,6 @@ import re
 
 from Filter import addDetails, printWarning
 import AbstractCheck
-import Config
 
 
 # could be added.
@@ -45,15 +44,15 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         c['name_re'] = re.compile(name_re)
         c['file_re'] = re.compile(file_re)
         self.checks_.append(c)
-        if Config.info:
-            if simple_naming_policy_re.search(name_re):
-                details = "Its name should begin with " + name_re[1:]
-            else:
-                details = "Its name should match the regular expression " + name_re
 
-            addDetails(pkg_name + '-naming-policy-not-applied',
-                       "This package doesn't respect the naming policy for %s "
-                       "packages.\n%s." % (pkg_name, details))
+        if simple_naming_policy_re.search(name_re):
+            details = "Its name should begin with " + name_re[1:]
+        else:
+            details = "Its name should match the regular expression " + name_re
+
+        addDetails(pkg_name + '-naming-policy-not-applied',
+                   "This package doesn't respect the naming policy for %s "
+                   "packages.\n%s." % (pkg_name, details))
 
     def check(self, pkg):
         if pkg.isSource():

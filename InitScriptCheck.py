@@ -185,8 +185,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 # Create an object to enable the auto registration of the test
 check = InitScriptCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'init-script-without-chkconfig-postin',
 '''The package contains an init script but doesn't contain a %post with
 a call to chkconfig.''',

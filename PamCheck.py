@@ -13,7 +13,6 @@ import re
 
 from Filter import addDetails, printError
 import AbstractCheck
-import Config
 
 
 pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')
@@ -30,10 +29,10 @@ class PamCheck(AbstractCheck.AbstractFilesCheck):
 
 check = PamCheck()
 
-if Config.info:
-    addDetails(
-        'use-old-pam-stack',
-        '''Update pam file to use include instead of pam_stack.''',)
+addDetails(
+'use-old-pam-stack',
+'''Update pam file to use include instead of pam_stack.''',
+)
 
 # Local variables:
 # indent-tabs-mode: nil

@@ -12,7 +12,6 @@ import re
 
 from Filter import addDetails, printError, printWarning
 import AbstractCheck
-import Config
 
 
 # Defined in header.h
@@ -174,8 +173,7 @@ def is_prefix(p, s):
 # Create an object to enable the auto registration of the test
 check = I18NCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 # Need to add a function to list all the locales
 'incorrect-i18n-tag-',
 """

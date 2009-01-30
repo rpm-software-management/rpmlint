@@ -69,6 +69,8 @@ def _print(msgtype, pkg, reason, details):
     return 0
 
 def printDescriptions(reason):
+    if not Config.info:
+        return
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":

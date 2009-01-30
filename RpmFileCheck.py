@@ -23,7 +23,6 @@ import os
 
 from Filter import addDetails, printWarning
 import AbstractCheck
-import Config
 
 
 class RpmFileCheck(AbstractCheck.AbstractCheck):
@@ -38,8 +37,7 @@ class RpmFileCheck(AbstractCheck.AbstractCheck):
 
 check = RpmFileCheck()
 
-if Config.info:
-    addDetails(
+addDetails(
 'filename-too-long-for-joliet',
 'This filename is too long to fit on a joliet filesystem (limit is 64 unicode chars).',
 )
