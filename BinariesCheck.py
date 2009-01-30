@@ -123,7 +123,7 @@ class BinaryInfo:
         fobj = None
         try:
             fobj = open(path)
-            fobj.seek(-12, os.SEEK_END)
+            fobj.seek(-12, 2) # 2 == os.SEEK_END, for python 2.4 compat (#172)
             self.tail = fobj.read()
         except Exception, e:
             printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
