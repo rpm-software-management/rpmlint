@@ -443,6 +443,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "patch-not-applied", "Patch%d:" % pnum,
                              pfile)
 
+        out = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-q',
+                                   '--qf=', '--specfile', self._spec_file))
+        for line in out[1].splitlines():
+            printError(pkg, 'specfile-error', line)
+
+
 # Create an object to enable the auto registration of the test
 check = SpecCheck()
 
@@ -623,6 +629,10 @@ using %defattr before it in the %files section, or use per line %attr's.''',
 'non-standard-group',
 '''The value of the Group tag in the package is not valid.  Valid groups are:
 "%s".''' % '", "'.join(VALID_GROUPS),
+
+'specfile-error',
+'''This error occurred when rpmlint used rpm to query the specfile.  The error
+is output by rpm and the message should contain more information.''',
 )
 
 # SpecCheck.py ends here
