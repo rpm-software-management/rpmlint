@@ -7,7 +7,7 @@
 # http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
-from Filter import addDetails, printError, printWarning
+from Filter import addDetails, printError
 from Pkg import getstatusoutput, is_utf8
 import AbstractCheck
 

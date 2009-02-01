@@ -8,7 +8,6 @@
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 
-import os
 import re
 import stat
 

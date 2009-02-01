@@ -568,7 +568,7 @@ class InstalledPkg(Pkg):
             self.file_info = []
             cmd = ['env', 'LC_ALL=C', 'file']
             cmd.extend(self.files())
-            sts, lines = getstatusoutput(cmd)
+            lines = getstatusoutput(cmd)[1]
             #print lines
             lines = lines.splitlines()
             for l in lines:
