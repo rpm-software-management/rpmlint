@@ -30,12 +30,9 @@ class AbstractFilesCheck(AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        files = []
         for filename in pkg.files():
             if self.__files_re.match(filename):
-                files.append(filename)
-        for filename in files:
-            self.check_file(pkg, filename)
+                self.check_file(pkg, filename)
 
 
     def check_file(self, pkg, filename):

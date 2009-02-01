@@ -201,23 +201,22 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 if menu64_file_regex.search(fname):
                     printError(pkg, 'menu-in-wrong-dir', fname)
 
-        if len(menus) > 0:
+        if menus:
+            postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+            if not postin:
+                printError(pkg, 'menu-without-postin')
+            else:
+                if not update_menus_regex.search(postin):
+                    printError(pkg, 'postin-without-update-menus')
+
+            postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+            if not postun:
+                printError(pkg, 'menu-without-postun')
+            else:
+                if not update_menus_regex.search(postun):
+                    printError(pkg, 'postun-without-update-menus')
+
             directory = pkg.dirName()
-            if menus != []:
-                postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
-                if not postin:
-                    printError(pkg, 'menu-without-postin')
-                else:
-                    if not update_menus_regex.search(postin):
-                        printError(pkg, 'postin-without-update-menus')
-
-                postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
-                if not postun:
-                    printError(pkg, 'menu-without-postun')
-                else:
-                    if not update_menus_regex.search(postun):
-                        printError(pkg, 'postun-without-update-menus')
-
             for f in menus:
                 # remove comments and handle cpp continuation lines
                 cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)[1]
