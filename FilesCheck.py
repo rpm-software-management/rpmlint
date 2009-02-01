@@ -306,12 +306,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         elif debuginfo_package_regex.search(pkg.name):
             printError(pkg, 'empty-debuginfo-package')
 
+        # Unique (rdev, inode) combinations
+        hardlinks = {} 
+
         for f, fattrs in files.items():
             mode = fattrs[0]
             user = fattrs[1]
             group = fattrs[2]
             link = fattrs[3]
             size = fattrs[4]
+            rdev = fattrs[7]
+            inode = fattrs[9]
             is_doc = f in doc_files
             nonexec_file = 0
 
@@ -389,6 +394,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             if log_regex.search(f):
                 log_file = f
+
+            # Hardlink check
+            link = hardlinks.get((rdev, inode))
+            if link and os.path.dirname(link) != os.path.dirname(f):
+                printWarning(pkg, 'cross-directory-hard-link', f, link)
+            hardlinks[(rdev, inode)] = f
 
             # normal file check
             if stat.S_ISREG(mode):
@@ -842,6 +853,10 @@ something non-standard.''',
 'no-dependency-on',
 '''
 ''',
+
+'cross-directory-hard-link',
+'''File is hard linked across directories.  This can cause problems in
+installations where the directories are located on different devices.''',
 
 'dangling-symlink',
 '''The symbolic link points nowhere.''',

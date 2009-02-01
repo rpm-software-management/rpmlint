@@ -378,6 +378,13 @@ class Pkg:
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
+        inodes = self.header[rpm.RPMTAG_FILEINODES]
+
+        # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
+        # FWIW) for packages containing exactly one file
+        if not isinstance(inodes, types.ListType):
+            inodes = [inodes]
+
         # Get files according to rpm version
         if v304:
             files = self.header[rpm.RPMTAG_OLDFILENAMES]
@@ -413,7 +420,7 @@ class Pkg:
                                            groups[idx], links[idx],
                                            sizes[idx], md5s[idx],
                                            mtimes[idx], rdevs[idx],
-                                           langs[idx])
+                                           langs[idx], inodes[idx])
 
     def fileLang(self, f):
         return self.files()[f][8]
