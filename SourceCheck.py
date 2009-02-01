@@ -34,7 +34,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
 
         # process file list
         spec_file = None
-        for fname, fattrs in pkg.files().items():
+        for fname, pkgfile in pkg.files().items():
             if fname.endswith('.spec'):
                 if spec_file:
                     printError(pkg, 'multiple-specfiles', spec_file, fname)
@@ -47,7 +47,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
                 else:
                     if not fname.endswith('gz'):
                         printWarning(pkg, 'source-or-patch-not-gzipped', fname)
-            perm = fattrs[0] & 07777
+            perm = pkgfile.mode & 07777
             if perm not in valid_src_perms:
                 printWarning(pkg, 'strange-permission', fname, oct(perm))
 

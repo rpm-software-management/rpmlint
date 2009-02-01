@@ -31,8 +31,8 @@ class ZipCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, "ZipCheck")
 
     def check(self, pkg):
-        for fname in pkg.files():
-            path = pkg.dirName() + fname
+        for fname, pkgfile in pkg.files().items():
+            path = pkgfile.path
             if zip_regex.search(fname) and os.path.exists(path) and \
                    stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
                    zipfile.is_zipfile(path):

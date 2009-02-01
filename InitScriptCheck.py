@@ -48,11 +48,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             return
 
         initscript_list = []
-        for fname, fattrs in pkg.files().items():
+        for fname, pkgfile in pkg.files().items():
             if rc_regex.search(fname):
                 basename = os.path.basename(fname)
                 initscript_list.append(basename)
-                if fattrs[0] & 0500 != 0500:
+                if pkgfile.mode & 0500 != 0500:
                     printError(pkg, 'init-script-non-executable', fname)
 
                 if dot_in_name_regex.match(basename):
@@ -83,7 +83,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 # check common error in file content
                 content = None
                 try:
-                    content = Pkg.readlines(pkg.dirName() + '/' + fname)
+                    content = Pkg.readlines(pkgfile.path)
                 except Exception, e:
                     printWarning(pkg, 'read-error', e)
                     continue

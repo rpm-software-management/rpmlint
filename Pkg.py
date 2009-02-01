@@ -197,8 +197,9 @@ class Pkg:
         self.current_linenum = None
         self._config_files = None
         self._doc_files = None
+        self._noreplace_files = None
         self._ghost_files = None
-        self._missing_ok_files = None
+        self._missingok_files = None
         self._files = None
         self._requires = None
         self._req_names = -1
@@ -321,6 +322,7 @@ class Pkg:
     def files(self):
         if self._files is not None:
             return self._files
+
         self._gatherFilesInfo()
         return self._files
 
@@ -328,45 +330,49 @@ class Pkg:
     def configFiles(self):
         if self._config_files is not None:
             return self._config_files
-        self._gatherFilesInfo()
+
+        self._config_files = [x.name for x in self.files().values()
+                              if x.is_config]
         return self._config_files
 
     # return the list of noreplace files
     def noreplaceFiles(self):
         if self._noreplace_files is not None:
             return self._noreplace_files
-        self._gatherFilesInfo()
+
+        self._noreplace_files = [x.name for x in self.files().values()
+                                 if x.is_noreplace]
         return self._noreplace_files
 
     # return the list of documentation files
     def docFiles(self):
         if self._doc_files is not None:
             return self._doc_files
-        self._gatherFilesInfo()
+
+        self._doc_files = [x.name for x in self.files().values() if x.is_doc]
         return self._doc_files
 
     # return the list of ghost files
     def ghostFiles(self):
         if self._ghost_files is not None:
             return self._ghost_files
-        self._gatherFilesInfo()
+
+        self._ghost_files = [x.name for x in self.files().values()
+                             if x.is_ghost]
         return self._ghost_files
 
     def missingOkFiles(self):
-        if self._missing_ok_files is not None:
-            return self._missing_ok_files
-        self._gatherFilesInfo()
-        return self._missing_ok_files
+        if self._missingok_files is not None:
+            return self._missingok_files
+
+        self._missingok_files = [x.name for x in self.files().values()
+                                 if x.is_missingok]
+        return self._missingok_files
 
     # extract information about the files
     def _gatherFilesInfo(self):
         global v304
 
-        self._config_files = []
-        self._doc_files = []
-        self._noreplace_files = []
-        self._ghost_files = []
-        self._missing_ok_files = []
         self._files = {}
         flags = self.header[rpm.RPMTAG_FILEFLAGS]
         modes = self.header[rpm.RPMTAG_FILEMODES]
@@ -407,24 +413,21 @@ class Pkg:
 
         if files:
             for idx in range(0, len(files)):
-                if flags[idx] & RPMFILE_CONFIG:
-                    self._config_files.append(files[idx])
-                if flags[idx] & RPMFILE_DOC:
-                    self._doc_files.append(files[idx])
-                if flags[idx] & RPMFILE_NOREPLACE:
-                    self._noreplace_files.append(files[idx])
-                if flags[idx] & RPMFILE_GHOST:
-                    self._ghost_files.append(files[idx])
-                if flags[idx] & RPMFILE_MISSINGOK:
-                    self._missing_ok_files.append(files[idx])
-                self._files[files[idx]] = (modes[idx], users[idx],
-                                           groups[idx], links[idx],
-                                           sizes[idx], md5s[idx],
-                                           mtimes[idx], rdevs[idx],
-                                           langs[idx], inodes[idx], deps[idx])
-
-    def fileLang(self, f):
-        return self.files()[f][8]
+                pkgfile = PkgFile(files[idx])
+                pkgfile.path = os.path.join(self.dirName(), pkgfile.name)
+                pkgfile.flags = flags[idx]
+                pkgfile.mode = modes[idx]
+                pkgfile.user = users[idx]
+                pkgfile.group = groups[idx]
+                pkgfile.linkto = links[idx]
+                pkgfile.size = sizes[idx]
+                pkgfile.md5 = md5s[idx]
+                pkgfile.mtime = mtimes[idx]
+                pkgfile.rdev = rdevs[idx]
+                pkgfile.inode = inodes[idx]
+                pkgfile.deps = deps[idx]
+                pkgfile.lang = langs[idx]
+                self._files[pkgfile.name] = pkgfile
 
     # API to access dependency information
     def obsoletes(self):
@@ -591,6 +594,33 @@ class FakePkg:
 
     def cleanup(self):
         pass
+
+# Class for files in packages
+class PkgFile(object):
+
+    def __init__(self, name):
+        self.name = name
+        # Real path to the file (taking extract dir into account)
+        self.path = name
+        self.flags = 0
+        self.mode = 0
+        self.user = None
+        self.group = None
+        self.linkto = ''
+        self.size = None
+        self.md5 = None
+        self.mtime = 0
+        self.rdev = ''
+        self.inode = 0
+        self.deps = ''
+        self.lang = ''
+
+    is_config    = property(lambda self: self.flags & RPMFILE_CONFIG)
+    is_doc       = property(lambda self: self.flags & RPMFILE_DOC)
+    is_noreplace = property(lambda self: self.flags & RPMFILE_NOREPLACE)
+    is_ghost     = property(lambda self: self.flags & RPMFILE_GHOST)
+    is_missingok = property(lambda self: self.flags & RPMFILE_MISSINGOK)
+
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:

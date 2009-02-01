@@ -42,8 +42,8 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         doc_files = pkg.docFiles()
 
         reqs = {}
-        for fname, fattrs in files.items():
-            tmp = fattrs[10].split()
+        for fname, pkgfile in files.items():
+            tmp = pkgfile.deps.split()
             tmp = _stripVersionedDeps(tmp)
             reqs[fname] = tmp
 

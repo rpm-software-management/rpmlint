@@ -37,16 +37,16 @@ TAGS = [ (rpm.RPMTAG_NAME, 'NAME'),
          (rpm.RPMTAG_POSTUN, 'POSTUN'),
          ]
 
-FILEIDX = [ ('S', 4),
-            ('M', 0),
-            ('5', 5),
+FILEIDX = [ ('S', 'size'),
+            ('M', 'mode'),
+            ('5', 'md5'),
             ('D', None),
-            ('L', 3),
-            ('U', 1),
-            ('G', 2),
+            ('L', 'linkto'),
+            ('U', 'user'),
+            ('G', 'group'),
             (None, None),
             ]
-FILEIDX_T = ('T', 6)
+FILEIDX_T = ('T', 'mtime')
 
 DEPFORMAT = '%-11s%s %s %s %s'
 FORMAT = '%-11s%s'
@@ -176,7 +176,9 @@ def main():
             format = ''
             for idx in range(0, len(FILEIDX)):
                 entry = FILEIDX[idx]
-                if entry[1] is not None and old_file[entry[1]] != new_file[entry[1]]:
+                prop = entry[1]
+                if entry[1] is not None and \
+                       getattr(old_file, prop) != getattr(new_file, prop):
                     format = format + entry[0]
                     diff = 1
                 else:
