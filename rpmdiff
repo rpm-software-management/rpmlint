@@ -59,13 +59,18 @@ CHANGED = 'S.5....T'
 
 # load a package from a file or from the installed ones
 def load_pkg(name, tmpdir = tempfile.gettempdir()):
-    st = os.stat(name)
-    if stat.S_ISREG(st[stat.ST_MODE]):
-        try:
+    try:
+        st = os.stat(name)
+        if stat.S_ISREG(st[stat.ST_MODE]):
             return Pkg.Pkg(name, tmpdir)
-        except TypeError:
-            pass
-    return Pkg.InstalledPkg(name)
+    except (OSError, TypeError):
+        pass
+    inst = Pkg.getInstalledPkgs(name)
+    if not inst:
+        raise KeyError("No installed packages by name %s" % name)
+    if len(inst) > 1:
+        raise KeyError("More than one installed packages by name %s" % name)
+    return inst[0]
 
 # output the right string according to RPMSENSE_* const
 def sense2str(sense):
