@@ -543,7 +543,10 @@ class InstalledPkg(Pkg):
                 tab = ts.dbMatch('name', name)
                 if not tab:
                     raise KeyError(name)
-                theHdr = tab.next()
+                try:
+                    theHdr = tab.next()
+                except StopIteration:
+                    raise KeyError(name)
             else:
                 db = rpm.opendb()
                 tab = db.findbyname(name)
