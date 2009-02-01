@@ -220,7 +220,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                sts, cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)
+                cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)[1]
 
                 for line in cmd.splitlines():
                     if not line.startswith('?'): continue

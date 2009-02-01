@@ -20,7 +20,7 @@ import tempfile
 import rpm
 
 from Filter import badnessScore, badnessThreshold, printAllReasons, \
-     printDescriptions, printError, printInfo, printWarning, printed_messages
+     printDescriptions, printInfo, printed_messages
 import AbstractCheck
 import Config
 import Pkg
