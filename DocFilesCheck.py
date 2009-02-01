@@ -38,17 +38,14 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
 
     def __checkRequirements(self, pkg):
-        file_reqs = pkg.header[rpm.RPMTAG_FILEREQUIRE]
-        files     = pkg.header[rpm.RPMTAG_FILENAMES] # not files().keys()!
+        files = pkg.files()
         doc_files = pkg.docFiles()
 
-        assert(len(file_reqs) == len(files))
-
-        reqs      = {}
-        for i in xrange(0, len(files)):
-            tmp            = file_reqs[i].split()
-            tmp            = _stripVersionedDeps(tmp)
-            reqs[files[i]] = tmp
+        reqs = {}
+        for fname, fattrs in files.items():
+            tmp = fattrs[10].split()
+            tmp = _stripVersionedDeps(tmp)
+            reqs[fname] = tmp
 
         core_reqs = {}  # dependencies of non-doc files
         doc_reqs  = {}  # dependencies of doc files
@@ -66,7 +63,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             core_reqs[name] = []
 
         # register things which are provided by the package
-        for i in pkg.header[rpm.RPMTAG_PROVIDES] + files:
+        for i in pkg.header[rpm.RPMTAG_PROVIDES] + files.keys():
             core_reqs[i] = []
 
         for i in files:
