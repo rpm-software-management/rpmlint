@@ -102,17 +102,6 @@ the package.  Usually, this is not wanted and may be caused by eg. example
 scripts with executable bits set included in the package's documentation.''',
 )
 
-def test():
-    for (arg,exp) in ((['a'],['a']),
-                      ([], []),
-                      (['a','b'], ['a', 'b']),
-                      (['a','b', 'c', 'd'], ['a', 'b', 'c', 'd']),
-                      (['a','>', '0'], ['a']),
-                      (['a','>', '0', 'b'], ['a', 'b']),
-                      (['a','>', '0', 'b', '>', '0'], ['a', 'b']),
-                      ):
-        assert(_stripVersionedDeps(arg) == exp)
-
 # DocFilesCheck.py ends here
 
 # Local variables:
