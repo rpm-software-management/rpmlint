@@ -205,7 +205,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         info = pkg.getFilesInfo()
         files = pkg.files()
         exec_files = []
-        has_lib = []
+        has_lib = False
         version = None
         binary = 0
         binary_in_usr_lib = 0
@@ -257,7 +257,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
                         # so name in library
                         if is_shlib:
-                            has_lib.append(i[0])
+                            has_lib = True
                             if bin_info.readelf_error:
                                 pass
                             elif not bin_info.soname:
@@ -356,10 +356,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'invalid-directory-reference', i[0],
                                    '(line %s)' % ", ".join(lines))
 
-        if has_lib != []:
-            if exec_files != []:
-                for f in exec_files:
-                    printError(pkg, 'executable-in-library-package', f)
+        if has_lib:
+            for f in exec_files:
+                printError(pkg, 'executable-in-library-package', f)
             for f in files:
                 res = numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
