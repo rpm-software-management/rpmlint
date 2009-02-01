@@ -170,10 +170,10 @@ class MenuCheck(AbstractCheck.AbstractCheck):
         files = pkg.files()
         menus = []
 
-        for fname, fattrs in files.items():
+        for fname, pkgfile in files.items():
             # Check menu files
             res = menu_file_regex.search(fname)
-            mode = fattrs[0]
+            mode = pkgfile.mode
             if res:
                 basename = res.group(1)
                 if not stat.S_ISREG(mode):

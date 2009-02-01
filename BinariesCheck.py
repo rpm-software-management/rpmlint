@@ -218,7 +218,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             multi_pkg = 0
 
         for f in files:
-            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f][0]):
+            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f].mode):
                 has_usr_lib_file = f
                 break
 
@@ -269,8 +269,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     (directory, base) = dir_base(i[0])
                                     try:
                                         symlink = directory + bin_info.soname
-                                        (perm, owner, group, link, size, md5, mtime, rdev, lang, inode, deps) = files[symlink]
-                                        if link != i[0] and link != base and link != '':
+                                        if files[symlink].linkto not in (i[0], base, ''):
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
                                         printError(pkg, 'no-ldconfig-symlink', i[0])

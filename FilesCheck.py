@@ -309,14 +309,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         # Unique (rdev, inode) combinations
         hardlinks = {} 
 
-        for f, fattrs in files.items():
-            mode = fattrs[0]
-            user = fattrs[1]
-            group = fattrs[2]
-            link = fattrs[3]
-            size = fattrs[4]
-            rdev = fattrs[7]
-            inode = fattrs[9]
+        for f, pkgfile in files.items():
+            mode = pkgfile.mode
+            user = pkgfile.user
+            group = pkgfile.group
+            link = pkgfile.linkto
+            size = pkgfile.size
+            rdev = pkgfile.rdev
+            inode = pkgfile.inode
             is_doc = f in doc_files
             nonexec_file = 0
 
@@ -587,7 +587,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # relative link
                 else:
                     if not is_so:
-                        extractedfile = '%s%s/%s' % (pkg.dirName(), os.path.dirname(f), link)
+                        extractedfile = os.path.join(os.path.dirname(pkgfile.path), link)
                         extractedfile = os.path.normpath(extractedfile)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
@@ -637,7 +637,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # check text file
             if stat.S_ISREG(mode):
-                path = pkg.dirName() + '/' + f
+                path = pkgfile.path
                 if os.access(path, os.R_OK):
                     if istextfile(path, pkg):
                         fobj = open(path, 'r')

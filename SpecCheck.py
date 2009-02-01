@@ -154,9 +154,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         wrong_spec = False
 
         # lookup spec file
-        for fname in pkg.files():
+        for fname, pkgfile in pkg.files().items():
             if fname.endswith('.spec'):
-                self._spec_file = pkg.dirName() + "/" + fname
+                self._spec_file = pkgfile.path
                 if fname == pkg.name + ".spec":
                         wrong_spec = False
                         break

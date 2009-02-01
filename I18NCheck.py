@@ -148,12 +148,12 @@ class I18NCheck(AbstractCheck.AbstractCheck):
                         subdir = None
 
             if f.endswith('.mo') or subdir:
-                if pkg.fileLang(f) == '' and not webapp:
+                if pkg.files()[f].lang == '' and not webapp:
                     printWarning(pkg, 'file-not-in-%lang', f)
 
         main_dir, main_lang = ("", "")
         for f in files:
-            lang = pkg.fileLang(f)
+            lang = pkg.files()[f].lang
             if main_lang and lang == "" and is_prefix(main_dir + '/', f):
                 printError(pkg, 'subfile-not-in-%lang', f)
             if main_lang != lang:
