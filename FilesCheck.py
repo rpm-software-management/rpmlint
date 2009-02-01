@@ -396,9 +396,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 log_file = f
 
             # Hardlink check
-            link = hardlinks.get((rdev, inode))
-            if link and os.path.dirname(link) != os.path.dirname(f):
-                printWarning(pkg, 'cross-directory-hard-link', f, link)
+            hardlink = hardlinks.get((rdev, inode))
+            if hardlink and os.path.dirname(hardlink) != os.path.dirname(f):
+                printWarning(pkg, 'cross-directory-hard-link', f, hardlink)
             hardlinks[(rdev, inode)] = f
 
             # normal file check
