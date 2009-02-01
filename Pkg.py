@@ -379,6 +379,7 @@ class Pkg:
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
+        deps = self.header[rpm.RPMTAG_FILEREQUIRE]
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
         # FWIW) for packages containing exactly one file
@@ -420,7 +421,7 @@ class Pkg:
                                            groups[idx], links[idx],
                                            sizes[idx], md5s[idx],
                                            mtimes[idx], rdevs[idx],
-                                           langs[idx], inodes[idx])
+                                           langs[idx], inodes[idx], deps[idx])
 
     def fileLang(self, f):
         return self.files()[f][8]
