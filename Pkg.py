@@ -463,7 +463,8 @@ class Pkg:
         flags = header[flagstag]
 
         if versions:
-            # workaroung buggy rpm python module that doesn't return a list
+            # work around buggy rpm python module that doesn't return a list
+            # TODO which rpm-python version is this? seems to work in >= 4.3.3
             if not isinstance(flags, types.ListType):
                 flags = [flags]
             for loop in range(len(versions)):
