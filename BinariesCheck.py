@@ -271,7 +271,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                     (directory, base) = dir_base(i[0])
                                     try:
                                         symlink = directory + bin_info.soname
-                                        if files[symlink].linkto not in (i[0], base, ''):
+                                        link = files[symlink].linkto
+                                        if link not in (i[0], base, ''):
                                             printError(pkg, 'invalid-ldconfig-symlink', i[0], link)
                                     except KeyError:
                                         printError(pkg, 'no-ldconfig-symlink', i[0])
