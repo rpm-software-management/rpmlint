@@ -372,7 +372,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'no-binary')
 
         if has_usr_lib_file and not binary_in_usr_lib:
-            printError(pkg, 'only-non-binary-in-usr-lib')
+            printWarning(pkg, 'only-non-binary-in-usr-lib')
 
 # Create an object to enable the auto registration of the test
 check = BinariesCheck()
