@@ -207,20 +207,22 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         exec_files = []
         has_lib = False
         version = None
-        binary = 0
-        binary_in_usr_lib = 0
-        has_usr_lib_file = 0
+        binary = False
+        binary_in_usr_lib = False
+        has_usr_lib_file = False
 
+        multi_pkg = False
         res = srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM] or '')
         if res:
             multi_pkg = (pkg.name != res.group(1))
-        else:
-            multi_pkg = 0
 
         for f in files:
-            if usr_lib_regex.search(f) and not usr_lib_exception_regex.search(f) and not stat.S_ISDIR(files[f].mode):
-                has_usr_lib_file = f
-                break
+            if not stat.S_ISDIR(files[f].mode) and usr_lib_regex.search(f):
+                has_usr_lib_file = True
+                if usr_lib_exception_regex.search(f):
+                    # Fake that we have binaries there to avoid
+                    # only-non-binary-in-usr-lib false positives
+                    binary_in_usr_lib = True
 
         for i in info:
             is_elf = i[1].find('ELF') != -1
@@ -230,9 +232,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_shlib = so_regex.search(i[0])
 
             if is_binary:
-                binary += 1
+                binary = True
                 if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(i[0]):
-                    binary_in_usr_lib = 1
+                    binary_in_usr_lib = True
 
                 if pkg.arch == 'noarch':
                     printError(pkg, 'arch-independent-package-contains-binary-or-object', i[0])
@@ -367,9 +369,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if version and version != -1 and pkg.name.find(version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)
 
-        if pkg.arch != 'noarch' and not multi_pkg:
-            if binary == 0:
-                printError(pkg, 'no-binary')
+        if not binary and not multi_pkg and pkg.arch != 'noarch':
+            printError(pkg, 'no-binary')
 
         if has_usr_lib_file and not binary_in_usr_lib:
             printWarning(pkg, 'only-non-binary-in-usr-lib')
