@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import types
-
 import rpm
 
 from Filter import addDetails, printWarning
@@ -51,16 +49,10 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         doc_reqs  = {}  # dependencies of doc files
 
         for dep in pkg.header.dsFromHeader():
-            if isinstance(dep, types.TupleType): # rpm-python < 4.3.2
-                name = dep[0]
-                flags = dep[2]
-            else:
-                name = dep.N()
-                flags = dep.Flags()
             # skip deps which were found by find-requires
-            if flags & rpm.RPMSENSE_FIND_REQUIRES != 0:
+            if dep.Flags() & rpm.RPMSENSE_FIND_REQUIRES != 0:
                 continue
-            core_reqs[name] = []
+            core_reqs[dep.N()] = []
 
         # register things which are provided by the package
         for i in pkg.header[rpm.RPMTAG_PROVIDES] + files.keys():
@@ -86,8 +78,6 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
         if pkg.isSource():
-            return
-        if not 'RPMTAG_FILEREQUIRE' in dir(rpm): # need rpm >= 4.1.1
             return
 
         self.__checkRequirements(pkg)

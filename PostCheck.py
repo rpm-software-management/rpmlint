@@ -66,13 +66,9 @@ script_tags = [
     (rpm.RPMTAG_PREUN,          rpm.RPMTAG_PREUNPROG,         '%preun'),
     (rpm.RPMTAG_POSTUN,         rpm.RPMTAG_POSTUNPROG,        '%postun'),
     (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
+    (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
+    (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
     ]
-if hasattr(rpm, "RPMTAG_PRETRANS"):
-    script_tags.append(
-        (rpm.RPMTAG_PRETRANS,   rpm.RPMTAG_PRETRANSPROG,      '%pretrans'))
-if hasattr(rpm, "RPMTAG_POSTTRANS"):
-    script_tags.append(
-        (rpm.RPMTAG_POSTTRANS,  rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'))
 
 def incorrect_shell_script(prog, shellscript):
     if not shellscript:
