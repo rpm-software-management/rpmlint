@@ -154,23 +154,11 @@ def main():
         # if requested, scan all the installed packages
         if allpkgs:
             try:
-                if Pkg.v42:
-                    ts = rpm.TransactionSet('/')
-                    for item in ts.dbMatch():
-                        pkg = Pkg.InstalledPkg(item[rpm.RPMTAG_NAME], item)
-                        runChecks(pkg)
-                        packages_checked += 1
-                else:
-                    try:
-                        db = rpm.opendb()
-                        idx = db.firstkey()
-                        while idx:
-                            pkg = Pkg.InstalledPkg(db[idx][rpm.RPMTAG_NAME], db[idx])
-                            runChecks(pkg)
-                            packages_checked += 1
-                            idx = db.nextkey(idx)
-                    finally:
-                        del db
+                ts = rpm.TransactionSet('/')
+                for hdr in ts.dbMatch():
+                    pkg = Pkg.InstalledPkg(hdr[rpm.RPMTAG_NAME], hdr)
+                    runChecks(pkg)
+                    packages_checked += 1
             except KeyboardInterrupt:
                 sys.stderr.write('(none): E: interrupted, exiting while scanning all packages\n')
                 sys.exit(2)

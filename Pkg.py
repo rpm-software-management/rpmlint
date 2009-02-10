@@ -23,46 +23,19 @@ import rpm
 from Filter import printWarning
 
 
-RPMFILE_CONFIG = (1 << 0)
-RPMFILE_DOC = (1 << 1)
-RPMFILE_DONOTUSE = (1 << 2)
-RPMFILE_MISSINGOK = (1 << 3)
-RPMFILE_NOREPLACE = (1 << 4)
-RPMFILE_SPECFILE = (1 << 5)
-RPMFILE_GHOST = (1 << 6)
-RPMFILE_LICENSE = (1 << 7)
-RPMFILE_README = (1 << 8)
-
-# check if we use a rpm version compatible with 3.0.4
+# TODO: which rpm-python versions are these tests for? can be dropped for 4.4+?
 try:
-    if rpm.RPMTAG_OLDFILENAMES:
-        v304 = 1
-except AttributeError:
-    v304 = 0
-
-try:
-    if rpm.RPMSENSE_SCRIPT_PRE:
-        PREREQ_FLAG = rpm.RPMSENSE_PREREQ|rpm.RPMSENSE_SCRIPT_PRE|rpm.RPMSENSE_SCRIPT_POST|rpm.RPMSENSE_SCRIPT_PREUN|rpm.RPMSENSE_SCRIPT_POSTUN
+    PREREQ_FLAG = rpm.RPMSENSE_PREREQ | \
+                  rpm.RPMSENSE_SCRIPT_PRE | \
+                  rpm.RPMSENSE_SCRIPT_POST | \
+                  rpm.RPMSENSE_SCRIPT_PREUN | \
+                  rpm.RPMSENSE_SCRIPT_POSTUN
 except AttributeError:
     try:
         PREREQ_FLAG = rpm.RPMSENSE_PREREQ
     except:
-        #(proyvind): This seems ugly, but then again so does this whole check as well.
+        #(proyvind): This seems ugly, but then again so does this whole check
         PREREQ_FLAG = False
-# check if we use a rpm version compatible with 4.2
-v42 = 0
-try:
-    if rpm.RPMTAG_DISTTAG: # in >= 4.4
-        v42 = 1
-        #(proyvind): Don't use RPMTAG_OLDFILENAMES with rpm 4.4, especially since
-        #            it's put to rest with rpm5.org.
-        v304 = 0
-except AttributeError:
-    try:
-        if rpm.RPMTAG_SOURCEPACKAGE: # in 4.2 but not in 4.4.something (6?)
-            v42 = 1
-    except AttributeError:
-        pass
 
 # utilities
 
@@ -209,22 +182,15 @@ class Pkg:
             self.is_source = is_source
         else:
             # Create a package object from the file name
-            if v42:
-                ts = rpm.TransactionSet()
-                # Don't check signatures here...
-                ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
-                fd = os.open(filename, os.O_RDONLY)
-                try:
-                    self.header = ts.hdrFromFdno(fd)
-                finally:
-                    os.close(fd)
-                self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
-            else:
-                fd = os.open(filename, os.O_RDONLY)
-                try:
-                    (self.header, self.is_source) = rpm.headerFromPackage(fd)
-                finally:
-                    os.close(fd)
+            ts = rpm.TransactionSet()
+            # Don't check signatures here...
+            ts.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+            fd = os.open(filename, os.O_RDONLY)
+            try:
+                self.header = ts.hdrFromFdno(fd)
+            finally:
+                os.close(fd)
+            self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
         self.name = self.header[rpm.RPMTAG_NAME]
         if self.isNoSource():
@@ -371,7 +337,6 @@ class Pkg:
 
     # extract information about the files
     def _gatherFilesInfo(self):
-        global v304
 
         self._files = {}
         flags = self.header[rpm.RPMTAG_FILEFLAGS]
@@ -386,30 +351,12 @@ class Pkg:
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
         deps = self.header[rpm.RPMTAG_FILEREQUIRE]
+        files = self.header[rpm.RPMTAG_FILENAMES]
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
         # FWIW) for packages containing exactly one file
         if not isinstance(inodes, types.ListType):
             inodes = [inodes]
-
-        # Get files according to rpm version
-        if v304:
-            files = self.header[rpm.RPMTAG_OLDFILENAMES]
-            if not files:
-                basenames = self.header[rpm.RPMTAG_BASENAMES]
-                if basenames:
-                    dirnames = self.header[rpm.RPMTAG_DIRNAMES]
-                    dirindexes = self.header[rpm.RPMTAG_DIRINDEXES]
-                    files = []
-                    # The rpmlib or the python module doesn't report a list for RPMTAG_DIRINDEXES
-                    # if the list has one element...
-                    if isinstance(dirindexes, types.IntType):
-                        files.append(dirnames[dirindexes] + basenames[0])
-                    else:
-                        for idx in range(0, len(dirindexes)):
-                            files.append(dirnames[dirindexes[idx]] + basenames[idx])
-        else:
-            files = self.header[rpm.RPMTAG_FILENAMES]
 
         if files:
             for idx in range(0, len(files)):
@@ -474,10 +421,6 @@ class Pkg:
         flags = header[flagstag]
 
         if versions:
-            # work around buggy rpm python module that doesn't return a list
-            # TODO which rpm-python version is this? seems to work in >= 4.3.3
-            if not isinstance(flags, types.ListType):
-                flags = [flags]
             for loop in range(len(versions)):
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((names[loop], versions[loop], flags[loop] & (~PREREQ_FLAG)))
@@ -512,53 +455,36 @@ class Pkg:
 
 def getInstalledPkgs(name):
     """Get list of installed package objects by name."""
+
     pkgs = []
-    if v42:
-        ts = rpm.TransactionSet()
-        if re.search('[?*[]', name):
-            tab = ts.dbMatch()
-            tab.pattern("name", rpm.RPMMIRE_GLOB, name)
-        else:
-            tab = ts.dbMatch("name", name)
-        if not tab:
-            raise KeyError(name)
-        for hdr in tab:
-            pkgs.append(InstalledPkg(name, hdr))
+    ts = rpm.TransactionSet()
+    if re.search('[?*[]', name):
+        mi = ts.dbMatch()
+        mi.pattern("name", rpm.RPMMIRE_GLOB, name)
     else:
-        db = rpm.opendb()
-        ixs = db.findbyname(name)
-        if not ixs:
-            del db
-            raise KeyError(name)
-        for ix in ixs:
-            pkgs.append(InstalledPkg(name, db[ix]))
-        del db
+        mi = ts.dbMatch("name", name)
+    if not mi:
+        raise KeyError(name)
+
+    for hdr in mi:
+        pkgs.append(InstalledPkg(name, hdr))
     return pkgs
 
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
-    def __init__(self, name, h = None):
-        if h:
-            Pkg.__init__(self, name, '/', h)
-        else:
-            if v42:
-                ts = rpm.TransactionSet()
-                tab = ts.dbMatch('name', name)
-                if not tab:
-                    raise KeyError(name)
-                try:
-                    theHdr = tab.next()
-                except StopIteration:
-                    raise KeyError(name)
-            else:
-                db = rpm.opendb()
-                tab = db.findbyname(name)
-                if not tab:
-                    del db
-                    raise KeyError(name)
-                theHdr = db[tab[0]]
-                del db
-            Pkg.__init__(self, name, '/', theHdr)
+    def __init__(self, name, hdr = None):
+        if not hdr:
+            ts = rpm.TransactionSet()
+            mi = ts.dbMatch('name', name)
+            if not mi:
+                raise KeyError(name)
+            try:
+                hdr = mi.next()
+            except StopIteration:
+                raise KeyError(name)
+
+        Pkg.__init__(self, name, '/', hdr)
+
         self.extracted = 1
         # create a fake filename to satisfy some checks on the filename
         self.filename = '%s-%s-%s.%s.rpm' % (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
@@ -615,11 +541,11 @@ class PkgFile(object):
         self.deps = ''
         self.lang = ''
 
-    is_config    = property(lambda self: self.flags & RPMFILE_CONFIG)
-    is_doc       = property(lambda self: self.flags & RPMFILE_DOC)
-    is_noreplace = property(lambda self: self.flags & RPMFILE_NOREPLACE)
-    is_ghost     = property(lambda self: self.flags & RPMFILE_GHOST)
-    is_missingok = property(lambda self: self.flags & RPMFILE_MISSINGOK)
+    is_config    = property(lambda self: self.flags & rpm.RPMFILE_CONFIG)
+    is_doc       = property(lambda self: self.flags & rpm.RPMFILE_DOC)
+    is_noreplace = property(lambda self: self.flags & rpm.RPMFILE_NOREPLACE)
+    is_ghost     = property(lambda self: self.flags & rpm.RPMFILE_GHOST)
+    is_missingok = property(lambda self: self.flags & rpm.RPMFILE_MISSINGOK)
 
 
 if __name__ == '__main__':
