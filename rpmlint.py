@@ -67,7 +67,6 @@ def main():
     packages_checked = 0
     specfiles_checked = 0
 
-    pkg = None
     try:
         # Loop over all file names given in arguments
         dirs = []
@@ -86,6 +85,7 @@ def main():
                             pkg = Pkg.FakePkg(f)
                             check = SpecCheck.SpecCheck()
                             check.check_spec(pkg, f)
+                            pkg.cleanup()
                             specfiles_checked += 1
 
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
@@ -115,7 +115,6 @@ def main():
             for pkg in pkgs:
                 runChecks(pkg)
                 packages_checked += 1
-                pkg.cleanup()
 
         for d in dirs:
             try:
@@ -132,6 +131,7 @@ def main():
                                     pkg = Pkg.FakePkg(f)
                                     check = SpecCheck.SpecCheck()
                                     check.check_spec(pkg, f)
+                                    pkg.cleanup()
                                     specfiles_checked += 1
                             else:
                                 pkg = Pkg.Pkg(f, extract_dir)
@@ -143,12 +143,10 @@ def main():
                         except Exception, e:
                             sys.stderr.write(
                                 '(none): E: while reading %s: %s\n' % (f, e))
-                            pkg = None
                             continue
             except Exception, e:
                 sys.stderr.write(
                     '(none): E: error while reading dir %s: %s' % (d, e))
-                pkg = None
                 continue
 
         # if requested, scan all the installed packages
@@ -168,7 +166,6 @@ def main():
             sys.exit(66)
 
     finally:
-        pkg and pkg.cleanup()
         print "%d packages and %d specfiles checked; %d errors, %d warnings." \
               % (packages_checked, specfiles_checked,
                  printed_messages["E"], printed_messages["W"])
@@ -179,17 +176,19 @@ def main():
 
 def runChecks(pkg):
 
-    if verbose:
-        printInfo(pkg, 'checking')
+    try:
+        if verbose:
+            printInfo(pkg, 'checking')
 
-    for name in Config.allChecks():
-        check = AbstractCheck.AbstractCheck.known_checks.get(name)
-        if check:
-            check.check(pkg)
-        else:
-            sys.stderr.write('(none): W: unknown check %s, skipping\n' % name)
-
-    pkg.cleanup()
+        for name in Config.allChecks():
+            check = AbstractCheck.AbstractCheck.known_checks.get(name)
+            if check:
+                check.check(pkg)
+            else:
+                sys.stderr.write(
+                    '(none): W: unknown check %s, skipping\n' % name)
+    finally:
+        pkg.cleanup()
 
 #############################################################################
 #
