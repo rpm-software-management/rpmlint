@@ -66,6 +66,7 @@ def main():
 
     packages_checked = 0
     specfiles_checked = 0
+    do_spec_check = 'SpecCheck' in Config.allChecks()
 
     try:
         # Loop over all file names given in arguments
@@ -80,7 +81,7 @@ def main():
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if not f.endswith(".spec"):
                             pkgs.append(Pkg.Pkg(f, extract_dir))
-                        elif 'SpecCheck' in Config.allChecks():
+                        elif do_spec_check:
                             # Short-circuit spec file checks
                             pkg = Pkg.FakePkg(f)
                             check = SpecCheck.SpecCheck()
@@ -116,37 +117,36 @@ def main():
                 runChecks(pkg)
                 packages_checked += 1
 
-        for d in dirs:
+        for dname in dirs:
             try:
-                for i in os.listdir(d):
-                    f = os.path.abspath(os.path.join(d, i))
-                    st = os.stat(f)
-                    if stat.S_ISREG(st[stat.ST_MODE]):
-                        if not (f.endswith('.rpm') or f.endswith('.spm') or \
-                                f.endswith('.spec')):
-                            continue
+                for path, dirs, files in os.walk(dname):
+                    for fname in files:
+                        fname = os.path.abspath(os.path.join(path, fname))
                         try:
-                            if f.endswith('.spec'):
-                                if 'SpecCheck' in Config.allChecks():
-                                    pkg = Pkg.FakePkg(f)
-                                    check = SpecCheck.SpecCheck()
-                                    check.check_spec(pkg, f)
-                                    pkg.cleanup()
-                                    specfiles_checked += 1
-                            else:
-                                pkg = Pkg.Pkg(f, extract_dir)
+                            if fname.endswith('.rpm') or \
+                               fname.endswith('.spm'):
+                                pkg = Pkg.Pkg(fname, extract_dir)
                                 runChecks(pkg)
                                 packages_checked += 1
+
+                            elif do_spec_check and fname.endswith('.spec'):
+                                pkg = Pkg.FakePkg(fname)
+                                check = SpecCheck.SpecCheck()
+                                check.check_spec(pkg, fname)
+                                pkg.cleanup()
+                                specfiles_checked += 1
+
                         except KeyboardInterrupt:
-                            sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % f)
+                            sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % fname)
                             sys.exit(2)
                         except Exception, e:
                             sys.stderr.write(
-                                '(none): E: while reading %s: %s\n' % (f, e))
+                                '(none): E: while reading %s: %s\n' %
+                                (fname, e))
                             continue
             except Exception, e:
                 sys.stderr.write(
-                    '(none): E: error while reading dir %s: %s' % (d, e))
+                    '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
         # if requested, scan all the installed packages
