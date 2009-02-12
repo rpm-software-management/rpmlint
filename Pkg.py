@@ -132,8 +132,7 @@ def readlines(path):
         fobj.close()
 
 def mktemp():
-    suffix = ".rpmlint%s" % os.getpid()
-    tmpfd, tmpname = tempfile.mkstemp(suffix)
+    tmpfd, tmpname = tempfile.mkstemp(prefix = 'rpmlint.')
     tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
 
@@ -233,8 +232,9 @@ class Pkg:
             sys.stderr.write('unable to access dir %s\n' % self.dirname)
             return None
         else:
-            self.dirname = '%s/%s.%d' % (self.dirname, os.path.basename(self.filename), os.getpid())
-            os.mkdir(self.dirname)
+            self.dirname = tempfile.mkdtemp(
+                prefix = 'rpmlint.%s.' % os.path.basename(self.filename),
+                dir = self.dirname)
             # TODO: better shell escaping or sequence based command invocation
             command_str = 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
             cmd = commands.getstatusoutput(command_str)
