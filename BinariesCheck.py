@@ -216,10 +216,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         if res:
             multi_pkg = (pkg.name != res.group(1))
 
-        for f in files:
-            if not stat.S_ISDIR(files[f].mode) and usr_lib_regex.search(f):
+        for fname, pkgfile in files.items():
+            if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
                 has_usr_lib_file = True
-                if usr_lib_exception_regex.search(f):
+                if usr_lib_exception_regex.search(fname):
                     # Fake that we have binaries there to avoid
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
