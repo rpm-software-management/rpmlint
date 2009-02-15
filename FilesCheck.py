@@ -214,6 +214,7 @@ use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|ml[ily]?)$'), re.IGNORECASE)
 meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
+quotes_regex = re.compile('[\'"]+')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
@@ -404,6 +405,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             # normal file check
             if stat.S_ISREG(mode):
 
+                # Prefetch scriptlets, strip quotes from them (#169)
+                postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                if postin:
+                    postin = quotes_regex.sub('', postin)
+                postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                if postun:
+                    postun = quotes_regex.sub('', postun)
+                preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
+                if preun:
+                    preun = quotes_regex.sub('', preun)
+
                 if not devel_pkg:
                     if lib_path_regex.search(f):
                         lib_file = 1
@@ -426,14 +438,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
-                    postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                     if not postin:
                         printError(pkg, 'library-without-ldconfig-postin', f)
                     else:
                         if not ldconfig_regex.search(postin):
                             printError(pkg, 'postin-without-ldconfig', f)
 
-                    postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun:
                         printError(pkg, 'library-without-ldconfig-postun', f)
                     else:
@@ -449,14 +459,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         re.escape(kernel_version) + '\\b.*\\b' +
                         re.escape(kernel_version) + '\\b',
                         re.MULTILINE | re.DOTALL)
-                    postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+
                     if not postin or not depmod_regex.search(postin):
                         printError(pkg, 'module-without-depmod-postin', f)
                     # check that we run depmod on the right kernel
                     elif not kernel_version_regex.search(postin):
                         printError(pkg, 'postin-with-wrong-depmod', f)
 
-                    postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
                     if not postun or not depmod_regex.search(postun):
                         printError(pkg, 'module-without-depmod-postun', f)
                     # check that we run depmod on the right kernel
@@ -465,15 +474,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check install-info call in %post and %postun
                 if f.startswith('/usr/share/info/'):
-                    postin = pkg[rpm.RPMTAG_POSTIN]
                     if not postin:
                         printError(pkg, 'info-files-without-install-info-postin', f)
                     else:
                         if not install_info_regex.search(postin):
                             printError(pkg, 'postin-without-install-info', f)
 
-                    postun = pkg[rpm.RPMTAG_POSTUN]
-                    preun = pkg[rpm.RPMTAG_PREUN]
                     if not postun and not preun:
                         printError(pkg, 'info-files-without-install-info-postun', f)
                     else:
