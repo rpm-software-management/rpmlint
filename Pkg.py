@@ -517,6 +517,7 @@ class FakePkg:
     def __init__(self, name):
         self.name = name
         self.arch = None
+        self.current_linenum = None
 
     def cleanup(self):
         pass
