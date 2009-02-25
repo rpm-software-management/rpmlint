@@ -17,6 +17,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %description
 SpecCheck test.
 
+%package        noarch-sub
+Summary:        Noarch subpackage
+Group:          Undefined
+BuildArch:      noarch
+
+%description    noarch-sub
+Noarch subpackage test.
+
 
 %prep
 %setup -q
@@ -36,6 +44,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
+%defattr(-,root,root,-)
+%{_libdir}/foo
+
+%files noarch-sub
 %defattr(-,root,root,-)
 
 
