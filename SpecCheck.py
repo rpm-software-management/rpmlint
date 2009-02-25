@@ -80,6 +80,9 @@ setup_q_regex = re.compile(' -[A-Za-z]*q')
 setup_t_regex = re.compile(' -[A-Za-z]*T')
 setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
 
+filelist_regex = re.compile('\s+-f\s+\S+')
+pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
+
 def deptokens(line):
     '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
     prco = []
@@ -180,7 +183,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         applied_patches_ifarch = []
         source_dir = None
         buildroot = 0
-        noarch = 0
         configure = 0
         configure_cmdline = ""
         mklibname = 0
@@ -195,6 +197,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         indent_tabs = 0
         files_has_defattr = 0
         section = {}
+        # None == main package
+        current_package = None
+        package_noarch = {}
 
         is_utf8 = 0
         if self._spec_file and use_utf8:
@@ -223,10 +228,18 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             section_marker = 0
             for sec, regex in section_regexs.items():
-                if regex.search(line):
+                res = regex.search(line)
+                if res:
                     current_section = sec
                     section_marker = 1
                     section[sec] = section.get(sec, 0) + 1
+                    if sec in ('package', 'files'):
+                        rest = filelist_regex.sub('', line[res.end()-1:])
+                        res = pkgname_regex.search(rest)
+                        if res:
+                            current_package = res.group(1)
+                        else:
+                            current_package = None
                     break
 
             if section_marker:
@@ -344,7 +357,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = noarch_regex.search(line)
                 if res:
-                    noarch = 1
+                    package_noarch[current_package] = True
 
                 res = prereq_regex.search(line)
                 if res:
@@ -378,6 +391,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     depgen_disabled = depgen_disable_regex.search(line)
 
             if current_section == 'files':
+
                 if not comment_or_empty_regex.search(line) and not \
                    (ifarch_regex.search(line) or if_regex.search(line) or
                     endif_regex.search(line)):
@@ -386,11 +400,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     elif not (files_has_defattr or attr_regex.search(line)):
                         printError(pkg, 'files-attr-not-set')
 
-            # TODO: check scriptlets for these too
-            if current_section == 'files' and noarch:
-                res = libdir_regex.search(line)
-                if res:
-                    printWarning(pkg, 'libdir-macro-in-noarch-package', line.rstrip())
+                # TODO: check scriptlets for these too?
+                if package_noarch.get(current_package) or (current_package not in package_noarch and package_noarch.get(None)):
+                    res = libdir_regex.search(line)
+                    if res:
+                        pkgname = current_package
+                        if pkgname is None:
+                            pkgname = '(main package)'
+                        printWarning(pkg, 'libdir-macro-in-noarch-package',
+                                     pkgname, line.rstrip())
 
             if not indent_tabs and indent_tabs_regex.search(line):
                 indent_tabs = pkg.current_linenum
