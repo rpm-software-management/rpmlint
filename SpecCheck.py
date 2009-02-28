@@ -464,7 +464,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         out = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-q',
                                    '--qf=', '--specfile', self._spec_file))
         for line in out[1].splitlines():
-            printError(pkg, 'specfile-error', line)
+            # No such file or dir hack: https://bugzilla.redhat.com/487855
+            if line.find("No such file or directory") < 0:
+                printError(pkg, 'specfile-error', line)
 
 
 # Create an object to enable the auto registration of the test
