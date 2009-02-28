@@ -18,6 +18,12 @@ import tempfile
 import types
 import subprocess
 
+try:
+    import magic
+    _magic = magic.open(magic.MAGIC_NONE)
+    _magic.load()
+except:
+    _magic = None
 import rpm
 
 from Filter import printWarning
@@ -159,13 +165,11 @@ def get_default_valid_rpmgroups(filename = ""):
 # classes representing package
 
 class Pkg:
-    file_regex = re.compile('\.?([^:]+):\s+(.*)')
 
     def __init__(self, filename, dirname, header = None, is_source = 0):
         self.filename = filename
         self.extracted = 0
         self.dirname = dirname
-        self.file_info = None
         self.current_linenum = None
         self._config_files = None
         self._doc_files = None
@@ -243,20 +247,6 @@ class Pkg:
 
     def checkSignature(self):
         return getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-K', self.filename))
-
-    # return the array of info returned by the file command on each file
-    def getFilesInfo(self):
-        if self.file_info is None:
-            self.file_info = []
-            lines = commands.getoutput('cd %s ; find . -type f -print0 | LC_ALL=C xargs -0r file' % self.dirName())
-            lines = lines.splitlines()
-            for l in lines:
-                #print l
-                res = Pkg.file_regex.search(l)
-                if res:
-                    self.file_info.append([res.group(1), res.group(2)])
-            #print self.file_info
-        return self.file_info
 
     # remove the extracted files from the package
     def cleanup(self):
@@ -352,6 +342,7 @@ class Pkg:
         inodes = self.header[rpm.RPMTAG_FILEINODES]
         deps = self.header[rpm.RPMTAG_FILEREQUIRE]
         files = self.header[rpm.RPMTAG_FILENAMES]
+        magics = self.header[rpm.RPMTAG_FILECLASS]
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
         # FWIW) for packages containing exactly one file
@@ -377,6 +368,11 @@ class Pkg:
                 pkgfile.inode = inodes[idx]
                 pkgfile.deps = deps[idx]
                 pkgfile.lang = langs[idx]
+                pkgfile.magic = magics[idx]
+                if not pkgfile.magic and _magic:
+                    pkgfile.magic = _magic.file(pkgfile.path)
+                if pkgfile.magic is None:
+                    pkgfile.magic = ''
                 self._files[pkgfile.name] = pkgfile
 
     # API to access dependency information
@@ -497,23 +493,6 @@ class InstalledPkg(Pkg):
 
     def checkSignature(self):
         return (0, 'fake: pgp md5 OK')
-
-    # return the array of info returned by the file command on each file
-    def getFilesInfo(self):
-        if self.file_info is None:
-            self.file_info = []
-            cmd = ['env', 'LC_ALL=C', 'file']
-            cmd.extend(self.files())
-            lines = getstatusoutput(cmd)[1]
-            #print lines
-            lines = lines.splitlines()
-            for l in lines:
-                #print l
-                res = Pkg.file_regex.search(l)
-                if res:
-                    self.file_info.append([res.group(1), res.group(2)])
-            #print self.file_info
-        return self.file_info
 
 # Class to provide an API to a "fake" package, eg. for specfile-only checks
 class FakePkg:
