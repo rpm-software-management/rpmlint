@@ -361,7 +361,10 @@ class Pkg:
         if files:
             for idx in range(0, len(files)):
                 pkgfile = PkgFile(files[idx])
-                pkgfile.path = os.path.join(self.dirName(), pkgfile.name)
+                # Do not use os.path.join here, pkgfile.name can start with a
+                # / which would result in self.dirName being ignored
+                pkgfile.path = os.path.normpath(
+                    self.dirName() + '/' + pkgfile.name)
                 pkgfile.flags = flags[idx]
                 pkgfile.mode = modes[idx]
                 pkgfile.user = users[idx]
