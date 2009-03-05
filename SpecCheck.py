@@ -70,8 +70,7 @@ scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECA
 depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
 depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
 
-indent_spaces_regex = re.compile(' {3}.*\S')
-indent_tabs_regex = re.compile('\t.*\S')
+indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{6}[^\t]?  )')
 
 provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
@@ -410,7 +409,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'libdir-macro-in-noarch-package',
                                      pkgname, line.rstrip())
 
-            if not indent_tabs and indent_tabs_regex.search(line):
+            if not indent_tabs and line.find('\t') != -1:
                 indent_tabs = pkg.current_linenum
             if not indent_spaces and indent_spaces_regex.search(line):
                 indent_spaces = pkg.current_linenum
