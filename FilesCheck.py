@@ -180,7 +180,7 @@ includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
 buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
-buildconfig_rpath_regex = re.compile('(?:-rpath\\b|Wl,-R)')
+buildconfig_rpath_regex = re.compile('(?:-rpath|Wl,-R)\\b')
 sofile_regex = re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
 devel_regex = re.compile('(.*)-(debug(info)?|devel|headers|source|static)$')
 debuginfo_package_regex = re.compile('-debug(info)?$')
