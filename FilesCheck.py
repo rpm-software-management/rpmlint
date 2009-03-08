@@ -179,6 +179,7 @@ bin_regex = re.compile('^(/usr)?/s?bin/')
 includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
 buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
+buildconfig_rpath_regex = re.compile('-rpath\\b')
 sofile_regex = re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
 devel_regex = re.compile('(.*)-(debug(info)?|devel|headers|source|static)$')
 debuginfo_package_regex = re.compile('-debug(info)?$')
@@ -487,17 +488,23 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                            (not preun or not install_info_regex.search(preun)):
                             printError(pkg, 'postin-without-install-info', f)
 
-
                 # check perl temp file
                 if perl_temp_file_regex.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
+
+                is_buildconfig = buildconfigfile_regex.search(f) and True
+
+                # check rpaths in buildconfig files
+                if is_buildconfig:
+                    ln = pkg.grep(buildconfig_rpath_regex, f)
+                    if ln:
+                        printError(pkg, 'rpath-in-buildconfig', f, 'lines', ln)
 
                 if bin_regex.search(f) and mode & 0111 == 0:
                     printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
                 if not devel_pkg and not is_doc and \
                        (includefile_regex.search(f) or \
-                        develfile_regex.search(f) or \
-                        buildconfigfile_regex.search(f)):
+                        develfile_regex.search(f) or is_buildconfig):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
                     printError(pkg, 'non-readable', f, oct(perm))
@@ -1021,6 +1028,10 @@ by newer version of cron and insecure''',
 'symlink-crontab-file',
 '''This crontab file is a symbolic link, which is insecure and refused by newer
 version of cron''',
+
+'rpath-in-buildconfig',
+'''This build configuration file contains rpaths which will be introduced into 
+dependent packages.''',
 )
 
 # FilesCheck.py ends here
