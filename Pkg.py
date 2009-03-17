@@ -29,22 +29,14 @@ import rpm
 from Filter import printWarning
 
 
-# TODO: which rpm-python versions are these tests for? can be dropped for 4.4+?
-try:
-    PREREQ_FLAG = rpm.RPMSENSE_PREREQ | \
-                  rpm.RPMSENSE_SCRIPT_PRE | \
-                  rpm.RPMSENSE_SCRIPT_POST | \
-                  rpm.RPMSENSE_SCRIPT_PREUN | \
-                  rpm.RPMSENSE_SCRIPT_POSTUN | \
-                  rpm.RPMSENSE_SCRIPT_VERIFY
-except AttributeError:
-    try:
-        PREREQ_FLAG = rpm.RPMSENSE_PREREQ
-    except:
-        #(proyvind): This seems ugly, but then again so does this whole check
-        PREREQ_FLAG = False
-
 # utilities
+
+PREREQ_FLAG = rpm.RPMSENSE_PREREQ | \
+              rpm.RPMSENSE_SCRIPT_PRE | \
+              rpm.RPMSENSE_SCRIPT_POST | \
+              rpm.RPMSENSE_SCRIPT_PREUN | \
+              rpm.RPMSENSE_SCRIPT_POSTUN | \
+              rpm.RPMSENSE_SCRIPT_VERIFY
 
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
