@@ -35,8 +35,7 @@ PREREQ_FLAG = rpm.RPMSENSE_PREREQ | \
               rpm.RPMSENSE_SCRIPT_PRE | \
               rpm.RPMSENSE_SCRIPT_POST | \
               rpm.RPMSENSE_SCRIPT_PREUN | \
-              rpm.RPMSENSE_SCRIPT_POSTUN | \
-              rpm.RPMSENSE_SCRIPT_VERIFY
+              rpm.RPMSENSE_SCRIPT_POSTUN
 
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
