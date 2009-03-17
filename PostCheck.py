@@ -68,6 +68,7 @@ script_tags = [
     (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
     (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
     (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
+    (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
     ]
 
 def incorrect_shell_script(prog, shellscript):
@@ -201,9 +202,10 @@ addDetails(
 'postin-without-ghost-file-creation',
 '''A file tagged as ghost is not created during %prein nor during %postin.''',
 )
-for scriptlet in ('%pre', '%post', '%preun', '%postun', '%trigger',
-                  '%triggerin', '%triggerprein', '%triggerun',
-                  '%triggerpostun', '%pretrans', '%posttrans'):
+for scriptlet in (
+    '%pre', '%post', '%preun', '%postun', '%pretrans', '%posttrans',
+    '%trigger', '%triggerin', '%triggerprein', '%triggerun', '%triggerpostun',
+    '%verifyscript'):
     addDetails(
 'one-line-command-in-%s' % scriptlet,
 '''You should use %s -p <command> instead of using:

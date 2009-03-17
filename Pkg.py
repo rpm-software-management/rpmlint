@@ -35,7 +35,8 @@ try:
                   rpm.RPMSENSE_SCRIPT_PRE | \
                   rpm.RPMSENSE_SCRIPT_POST | \
                   rpm.RPMSENSE_SCRIPT_PREUN | \
-                  rpm.RPMSENSE_SCRIPT_POSTUN
+                  rpm.RPMSENSE_SCRIPT_POSTUN | \
+                  rpm.RPMSENSE_SCRIPT_VERIFY
 except AttributeError:
     try:
         PREREQ_FLAG = rpm.RPMSENSE_PREREQ
