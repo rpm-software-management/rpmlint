@@ -30,8 +30,12 @@ _rpmlint()
 			-E --extractdir -p --profile -V --version -n \
 			--noexception -f --file' -- $cur ) )
 	else
-		type _rpm_installed_packages &>/dev/null && \
-			_rpm_installed_packages
+		# Installed packages completion is slow, do it only if arg
+		# does not look like a path.
+		if [[ "$cur" != */* ]]; then
+			type _rpm_installed_packages &>/dev/null && \
+				_rpm_installed_packages
+		fi
 		_filedir '@(rpm|spec)'
 	fi
 }
