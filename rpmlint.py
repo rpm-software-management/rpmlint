@@ -19,12 +19,17 @@ import tempfile
 
 import rpm
 
+# Do not import anything that initializes its global variables from
+# Config at load time here (or anything that imports such a thing),
+# that results in those variables initialized before config files are
+# loaded which is too early - settings from config files won't take
+# place for those variables.
+
 from Filter import badnessScore, badnessThreshold, printAllReasons, \
      printDescriptions, printInfo, printed_messages
 import AbstractCheck
 import Config
 import Pkg
-import SpecCheck
 
 
 version = '@VERSION@'
@@ -67,6 +72,10 @@ def main():
     packages_checked = 0
     specfiles_checked = 0
     do_spec_check = 'SpecCheck' in Config.allChecks()
+    if do_spec_check:
+        # See comments in "top level import section" for why this isn't
+        # imported earlier.
+        import SpecCheck
 
     try:
         # Loop over all file names given in arguments
