@@ -70,7 +70,8 @@ scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECA
 depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
 depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
 
-indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{6}[^\t]?  )')
+# See https://bugzilla.redhat.com/488146 for details
+indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
 
 provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
