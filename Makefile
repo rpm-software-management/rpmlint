@@ -44,7 +44,7 @@ install:
 	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
 verify:
-	pychecker *.py
+	pychecker --limit=100 [A-Z]*.py
 
 .PHONY: test
 
