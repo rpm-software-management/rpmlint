@@ -134,6 +134,18 @@ def mktemp():
     tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
 
+slash_regex = re.compile('/+')
+slashdot_regex = re.compile('/(\.(/|$))+')
+slashend_regex = re.compile('/+$')
+
+def safe_normpath(path):
+    """Like os.path.normpath but normalizes less aggressively thus being
+    potentially safer for paths containing symlinks."""
+    ret = slash_regex.sub('/', path)
+    ret = slashdot_regex.sub('\\2', ret)
+    ret = slashend_regex.sub('', ret)
+    return ret
+
 def get_default_valid_rpmgroups(filename = ""):
     """ Get the default rpm group from filename, or from the rpm package if no
     filename is given"""
