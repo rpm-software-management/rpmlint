@@ -369,7 +369,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'incoherent-logrotate-file', f)
 
             if link != '':
-                link = safe_normpath(link)
                 ext = compr_regex.search(link)
                 if ext:
                     if not re.compile('\.' + ext.group(1) + '$').search(f):

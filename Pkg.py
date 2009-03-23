@@ -136,14 +136,14 @@ def mktemp():
 
 slash_regex = re.compile('/+')
 slashdot_regex = re.compile('/(\.(/|$))+')
-slashend_regex = re.compile('/+$')
+slashend_regex = re.compile('([^/])/+$')
 
 def safe_normpath(path):
     """Like os.path.normpath but normalizes less aggressively thus being
     potentially safer for paths containing symlinks."""
     ret = slash_regex.sub('/', path)
     ret = slashdot_regex.sub('\\2', ret)
-    ret = slashend_regex.sub('', ret)
+    ret = slashend_regex.sub('\\1', ret)
     return ret
 
 def get_default_valid_rpmgroups(filename = ""):
@@ -364,7 +364,7 @@ class Pkg:
                 pkgfile.mode = modes[idx]
                 pkgfile.user = users[idx]
                 pkgfile.group = groups[idx]
-                pkgfile.linkto = links[idx]
+                pkgfile.linkto = links[idx] and safe_normpath(links[idx])
                 pkgfile.size = sizes[idx]
                 pkgfile.md5 = md5s[idx]
                 pkgfile.mtime = mtimes[idx]
