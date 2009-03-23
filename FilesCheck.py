@@ -17,7 +17,7 @@ import string
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import is_utf8, is_utf8_str
+from Pkg import is_utf8, is_utf8_str, safe_normpath
 import AbstractCheck
 import Config
 
@@ -369,6 +369,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'incoherent-logrotate-file', f)
 
             if link != '':
+                link = safe_normpath(link)
                 ext = compr_regex.search(link)
                 if ext:
                     if not re.compile('\.' + ext.group(1) + '$').search(f):
@@ -575,11 +576,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # symbolic link check
             elif stat.S_ISLNK(mode):
-                r = absolute_regex.search(link)
                 is_so = sofile_regex.search(f)
                 if not devel_pkg and is_so and not link.endswith('.so'):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 # absolute link
+                r = absolute_regex.search(link)
                 if r:
                     if (not is_so) and link not in files and link not in req_names:
                         is_exception = 0
@@ -602,9 +603,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 else:
                     if not is_so:
                         extractedfile = os.path.join(os.path.dirname(pkgfile.path), link)
-                        extractedfile = os.path.normpath(extractedfile)
+                        extractedfile = safe_normpath(extractedfile)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
-                        pkgfile = os.path.normpath(pkgfile)
+                        pkgfile = safe_normpath(pkgfile)
                         if not (pkgfile in files or os.path.exists(extractedfile) or pkgfile in req_names):
                             is_exception = 0
                             for e in dangling_exceptions:
