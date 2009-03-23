@@ -325,9 +325,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
-            if standard_users and not user in standard_users:
+            if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)
-            if standard_groups and not group in standard_groups:
+            if standard_groups and group not in standard_groups:
                 printWarning(pkg, 'non-standard-gid', f, group)
 
             if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
@@ -430,7 +430,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-root-user-log-file', f, user)
                     if group != 'root':
                         printError(pkg, 'non-root-group-log-file', f, group)
-                    if not f in ghost_files:
+                    if f not in ghost_files:
                         printError(pkg, 'non-ghost-file', f)
 
                 if doc_regex.search(f):
@@ -554,7 +554,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if nonexec_file:
                         printWarning(pkg, 'spurious-executable-perm', f)
                 elif f.startswith('/etc/'):
-                    if not f in config_files and not f in ghost_files:
+                    if f not in config_files and f not in ghost_files:
                         printWarning(pkg, 'non-conffile-in-etc', f)
 
                 if pkg.arch == 'noarch' and f.startswith('/usr/lib64/python'):
@@ -581,7 +581,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # absolute link
                 r = absolute_regex.search(link)
                 if r:
-                    if (not is_so) and link not in files and link not in req_names:
+                    if not is_so and link not in files and link not in req_names:
                         is_exception = 0
                         for e in dangling_exceptions:
                             if e[0].search(link):
@@ -610,7 +610,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     is_exception = e[1]
                                     break
                             if is_exception:
-                                if not is_exception in req_names:
+                                if is_exception not in req_names:
                                     printWarning(pkg, 'no-dependency-on', is_exception)
                             else:
                                 printWarning(pkg, 'dangling-relative-symlink', f, link)

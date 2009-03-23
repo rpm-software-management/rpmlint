@@ -41,7 +41,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
             elif not ConfigCheck.etc_var_regex.search(c):
                 printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
 
-            if not c in noreplace_files:
+            if c not in noreplace_files:
                 printWarning(pkg, "conffile-without-noreplace-flag", c)
 
 # Create an object to enable the auto registration of the test

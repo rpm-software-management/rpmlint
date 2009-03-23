@@ -56,7 +56,7 @@ def addCheck(check):
     global _checks
 
     check = re.sub('\.py[co]?$', '', check)
-    if not check in _checks:
+    if check not in _checks:
         _checks.append(check)
 
 def allChecks():
@@ -84,7 +84,7 @@ def addCheckDir(dir):
 
     d = os.path.expanduser(dir)
 
-    if not d in _dirs:
+    if d not in _dirs:
         _dirs.insert(0, d)
 
 def checkDirs():

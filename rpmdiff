@@ -86,10 +86,10 @@ def sense2str(sense):
 # compares 2 lists
 def cmp_list(o, n, name):
     for old in o:
-        if not old in n:
+        if old not in n:
             print DEPFORMAT % (REMOVED, name, old[0], sense2str(old[2]), old[1])
     for new in n:
-        if not new in o:
+        if new not in o:
             print DEPFORMAT % (ADDED, name, new[0], sense2str(new[2]), new[1])
 
 # filter the own name of the package

@@ -161,9 +161,9 @@ def get_default_valid_rpmgroups(filename = ""):
             groups = fobj.read().strip().splitlines()
         finally:
             fobj.close()
-        if not 'Development/Debug' in groups:
+        if 'Development/Debug' not in groups:
             groups.append('Development/Debug')
-            groups.sort()
+        groups.sort()
     return groups
 
 # classes representing package

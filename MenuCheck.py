@@ -254,7 +254,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 command = command_line[1]
                                 break
                         if command[0] == '/':
-                            if not command in files:
+                            if command not in files:
                                 printWarning(pkg, 'menu-command-not-in-package', command)
                         else:
                             if not ('/bin/' + command in files or
@@ -322,7 +322,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
                         else:
                             for path in icon_paths:
-                                if not (path[0] + icon) in files:
+                                if (path[0] + icon) not in files:
                                     printError(pkg, path[1] + '-icon-not-in-package', icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
