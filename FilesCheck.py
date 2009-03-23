@@ -227,6 +227,9 @@ use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
 standard_groups = Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS)
 standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 
+non_readable_regexs = (re.compile('^/var/log/'),
+                       re.compile('^/etc/(g?shadow-?|securetty)$'))
+
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
@@ -507,8 +510,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                        (includefile_regex.search(f) or \
                         develfile_regex.search(f) or is_buildconfig):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
-                if mode & 0444 != 0444 and perm & 07000 == 0 and f[0:len('/var/log')] != '/var/log':
-                    printError(pkg, 'non-readable', f, oct(perm))
+                if mode & 0444 != 0444 and perm & 07000 == 0:
+                    ok_nonreadable = False
+                    for regex in non_readable_regexs:
+                        if regex.search(f):
+                            ok_nonreadable = True
+                            break
+                    if not ok_nonreadable:
+                        printError(pkg, 'non-readable', f, oct(perm))
                 if size == 0 and not normal_zero_length_regex.search(f) and f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
