@@ -374,7 +374,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             for f in files:
                 res = numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
-                if not f in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
+                if f not in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
             if version and version != -1 and pkg.name.find(version) == -1:
                 printError(pkg, 'incoherent-version-in-name', version)

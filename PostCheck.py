@@ -132,13 +132,13 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 for f in ghost_files:
                     if (not postin or postin.find(f) == -1) and \
                        (not prein or prein.find(f) == -1) and \
-                       not f in pkg.missingOkFiles():
+                       f not in pkg.missingOkFiles():
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
             if prog:
-                if not prog in valid_shells:
+                if prog not in valid_shells:
                     printError(pkg, 'invalid-shell-in-' + tag[2], prog)
                 if prog in empty_shells:
                     printError(pkg, 'non-empty-' + tag[2], prog)

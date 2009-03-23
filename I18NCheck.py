@@ -119,11 +119,11 @@ class I18NCheck(AbstractCheck.AbstractCheck):
             if res:
                 locale = res.group(2)
                 # checks the same locale only once
-                if not locale in locales:
+                if locale not in locales:
                     locales.append(locale)
                     res2 = correct_subdir_regex.search(locale)
                     if not res2:
-                        if not locale in EXCEPTION_DIRS:
+                        if locale not in EXCEPTION_DIRS:
                             printError(pkg, 'incorrect-locale-subdir', f)
                     else:
                         locale_name = res2.group(2)
@@ -136,13 +136,13 @@ class I18NCheck(AbstractCheck.AbstractCheck):
             subdir = None
             if res:
                 subdir = res.group(1)
-                if not subdir in CORRECT_SUBDIRS:
+                if subdir not in CORRECT_SUBDIRS:
                     printError(pkg, 'invalid-lc-messages-dir', f)
             else:
                 res = man_regex.search(f)
                 if res:
                     subdir = res.group(1)
-                    if subdir != 'man' and not subdir in CORRECT_SUBDIRS:
+                    if subdir != 'man' and subdir not in CORRECT_SUBDIRS:
                         printError(pkg, 'invalid-locale-man-dir', f)
                     else:
                         subdir = None

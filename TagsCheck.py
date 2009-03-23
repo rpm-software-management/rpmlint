@@ -674,7 +674,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if pkg.name in obs_names:
             printError(pkg, 'obsolete-on-name')
         for o in obs_names:
-            if not o in prov_names:
+            if o not in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
             if o[1].find('%') != -1:
