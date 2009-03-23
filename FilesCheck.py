@@ -601,11 +601,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # relative link
                 else:
                     if not is_so:
-                        extractedfile = os.path.join(os.path.dirname(pkgfile.path), link)
-                        extractedfile = safe_normpath(extractedfile)
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = safe_normpath(pkgfile)
-                        if not (pkgfile in files or os.path.exists(extractedfile) or pkgfile in req_names):
+                        if pkgfile not in files and pkgfile not in req_names:
                             is_exception = 0
                             for e in dangling_exceptions:
                                 if e[0].search(link):
@@ -873,7 +871,9 @@ something non-standard.''',
 installations where the directories are located on different devices.''',
 
 'dangling-symlink',
-'''The symbolic link points nowhere.''',
+'''The target of the symbolic link does not exist within this package or its
+file based dependencies.  Verify spelling of the link target and that the
+target is included in a package in this package's dependency chain.''',
 
 'symlink-should-be-relative',
 '''Absolute symlinks are problematic eg. when working with chroot environments.
@@ -881,7 +881,9 @@ symlinks(8) is a tool that can be useful for creating/dealing with relative
 symlinks at package build time.''',
 
 'dangling-relative-symlink',
-'''The relative symbolic link points nowhere.''',
+'''The target of the symbolic link does not exist within this package or its
+file based dependencies.  Verify spelling of the link target and that the
+target is included in a package in this package's dependency chain.''',
 
 'symlink-has-too-many-up-segments',
 '''
