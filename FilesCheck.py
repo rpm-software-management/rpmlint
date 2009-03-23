@@ -602,7 +602,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 else:
                     if not is_so:
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
-                        pkgfile = safe_normpath(pkgfile)
+                        pkgfile = os.path.normpath(pkgfile)
                         if pkgfile not in files and pkgfile not in req_names:
                             is_exception = 0
                             for e in dangling_exceptions:
