@@ -294,6 +294,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         req_names = pkg.req_names()
         lib_package = lib_package_regex.search(pkg.name)
         is_kernel_package = kernel_package_regex.search(pkg.name)
+        debuginfo_package = debuginfo_package_regex.search(pkg.name)
 
         # report these errors only once
         perl_dep_error = 0
@@ -302,6 +303,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         non_lib_file = 0
         log_file = 0
         logrotate_file = 0
+        debuginfo_srcs = 0
+        debuginfo_debugs = 0
 
         if not doc_files:
             printWarning(pkg, 'no-documentation')
@@ -309,7 +312,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         if files:
             if meta_package_regex.search(pkg.name):
                 printWarning(pkg, 'file-in-meta-package')
-        elif debuginfo_package_regex.search(pkg.name):
+        elif debuginfo_package:
             printError(pkg, 'empty-debuginfo-package')
 
         # Unique (rdev, inode) combinations
@@ -569,6 +572,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if pkg.arch == 'noarch' and f.startswith('/usr/lib64/python'):
                     printError(pkg, 'noarch-python-in-64bit-path', f)
 
+                if debuginfo_package:
+                    if f.endswith('.debug'):
+                        debuginfo_debugs += 1
+                    else:
+                        debuginfo_srcs += 1
+
             # normal dir check
             elif stat.S_ISDIR(mode):
                 if mode & 01002 == 2: # world writable without sticky bit
@@ -720,6 +729,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
         if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
+
+        if debuginfo_package and debuginfo_debugs and not debuginfo_srcs:
+            printError(pkg, 'debuginfo-without-sources')
 
 # Create an object to enable the auto registration of the test
 check = FilesCheck()
@@ -1022,6 +1034,15 @@ to strip the binaries, the package actually being a noarch one but erratically
 packaged as arch dependent, or something else.  Verify what the case is, and
 if there's no way to produce useful debuginfo out of it, disable creation of
 the debuginfo package.''',
+
+'debuginfo-without-sources',
+'''This debuginfo package appears to contain debug symbols but no source files.
+This is often a sign of binaries being unexpectedly stripped too early during
+the build, or being compiled without compiler debug flags (which again often
+is a sign of distro's default compiler flags ignored which might have security
+consequences), or other compiler flags which result in rpmbuild's debuginfo
+extraction not working as expected.  Verify that the binaries are not
+unexpectedly stripped and that the intended compiler flags are used.''',
 
 'read-error',
 '''This file could not be read.  A reason for this could be that the info about
