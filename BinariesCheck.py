@@ -358,7 +358,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             if bin_info.stack:
                                 if bin_info.exec_stack:
                                     printWarning(pkg, 'executable-stack', fname)
-                            elif pkg.arch.endswith("86") or pkg.arch.startswith("pentium") or pkg.arch in ("athlon", "x86_64"):
+                            elif not bin_info.readelf_error and (
+                                pkg.arch.endswith("86") or
+                                pkg.arch.startswith("pentium") or
+                                pkg.arch in ("athlon", "x86_64")):
                                 printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
             else:
