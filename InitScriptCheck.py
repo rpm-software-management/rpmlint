@@ -179,7 +179,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
         goodnames = (pkg.name.lower(), pkg.name.lower() + 'd')
         if len(initscript_list) == 1 and initscript_list[0] not in goodnames:
-            printWarning(pkg, 'incoherent-init-script-name', initscript_list[0])
+            printWarning(pkg, 'incoherent-init-script-name', initscript_list[0],
+                         str(goodnames))
 
 
 # Create an object to enable the auto registration of the test
