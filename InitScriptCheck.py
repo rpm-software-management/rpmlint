@@ -158,6 +158,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 value = Pkg.substitute_shell_vars(name, content_str)
                                 if value == basename:
                                     error = 0
+                            else:
+                                i = name.find('}')
+                                if i != -1:
+                                    name = name[0:i]
+                                    error = name != basename
                             if error:
                                 if name[0] == '$':
                                     printWarning(pkg, 'incoherent-subsys', fname, name)
