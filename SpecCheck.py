@@ -73,8 +73,12 @@ depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_depend
 # See https://bugzilla.redhat.com/488146 for details
 indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
 
+requires_regex = re.compile('^(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
+conflicts_regex = re.compile('^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
+
+compop_regex = re.compile('[<>=]')
 
 setup_q_regex = re.compile(' -[A-Za-z]*q')
 setup_t_regex = re.compile(' -[A-Za-z]*T')
@@ -370,15 +374,39 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if scriptlet_requires_regex.search(line):
                     printError(pkg, 'broken-syntax-in-scriptlet-requires', line.strip())
 
+                res = requires_regex.search(line)
+                if res:
+                    reqs = deptokens(res.group(1))
+                    for req in unversioned(reqs):
+                        if compop_regex.search(req):
+                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                                         req)
+
                 res = provides_regex.search(line)
                 if res:
-                    for prov in unversioned(deptokens(res.group(1))):
+                    provs = deptokens(res.group(1))
+                    for prov in unversioned(provs):
                         printWarning(pkg, 'unversioned-explicit-provides', prov)
+                        if compop_regex.search(prov):
+                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                                         prov)
 
                 res = obsoletes_regex.search(line)
                 if res:
-                    for obs in unversioned(deptokens(res.group(1))):
+                    obses = deptokens(res.group(1))
+                    for obs in unversioned(obses):
                         printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+                        if compop_regex.search(obs):
+                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                                         obs)
+
+                res = conflicts_regex.search(line)
+                if res:
+                    confs = deptokens(res.group(1))
+                    for conf in unversioned(confs):
+                        if compop_regex.search(conf):
+                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                                         conf)
 
             if current_section == 'changelog':
                 res = macro_regex.search(line)
@@ -652,6 +680,11 @@ using %defattr before it in the %files section, or use per line %attr's.''',
 'specfile-error',
 '''This error occurred when rpmlint used rpm to query the specfile.  The error
 is output by rpm and the message should contain more information.''',
+
+'comparison-operator-in-deptoken',
+'''This dependency token contains a comparison operator (<, > or =).  This is
+usually not intended and may be caused by missing whitespace between the token's
+name, the comparison operator and the version string.''',
 )
 
 # SpecCheck.py ends here
