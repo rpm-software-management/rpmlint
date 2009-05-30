@@ -40,3 +40,36 @@ _rpmlint()
 	fi
 }
 complete -F _rpmlint $filenames rpmlint
+
+_rpmdiff()
+{
+	local cur prev
+
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	case $prev in
+		-i|--ignore)
+			COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' \
+				-- $cur ) )
+			return 0
+			;;
+		-h|--help)
+			return 0
+			;;
+	esac
+
+	if [[ "$cur" == -* ]]; then
+		COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- $cur ) )
+	else
+		# Installed packages completion is slow, do it only if arg
+		# does not look like a path.
+		if [[ "$cur" != */* ]]; then
+			type _rpm_installed_packages &>/dev/null && \
+				_rpm_installed_packages
+		fi
+		_filedir rpm
+	fi
+}
+complete -F _rpmdiff $filenames rpmdiff
