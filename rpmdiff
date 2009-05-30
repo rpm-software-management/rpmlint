@@ -1,190 +1,249 @@
 #!/usr/bin/python -tt
-#---------------------------------------------------------------
-# Project         : Mandriva Linux
-# Module          : rpmlint
-# File            : rpmdiff
-# Version         : $Id$
-# Author          : Frederic Lepied
-# Created On      : Sat Feb  9 21:24:33 2002
-# Purpose         : rewriting of rpmdiff to show the use of the
-#                   Pkg lib.
-#---------------------------------------------------------------
+#
+# Copyright (C) 2006 Mandriva; 2009 Red Hat, Inc.
+# Authors: Frederic Lepied, Florian Festi
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Library General Public License as published by
+# the Free Software Foundation; version 2 only
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+import getopt
+import itertools
+import os
+import site
+import stat
+import sys
+import tempfile
 
 import rpm
-import sys
-import os
-import stat
-import site
-import getopt
-import tempfile
 
 if not os.path.exists('Pkg.py') and os.path.isdir("/usr/share/rpmlint"):
     site.addsitedir("/usr/share/rpmlint")
 
 import Pkg
 
-# constants
 
-TAGS = [ (rpm.RPMTAG_NAME, 'NAME'),
-         (rpm.RPMTAG_SUMMARY, 'SUMMARY'),
-         (rpm.RPMTAG_DESCRIPTION, 'DESCRIPTION'),
-         (rpm.RPMTAG_GROUP, 'GROUP'),
-         (rpm.RPMTAG_LICENSE, 'LICENSE'),
-         (rpm.RPMTAG_URL, 'URL'),
-         (rpm.RPMTAG_PREIN, 'PREIN'),
-         (rpm.RPMTAG_POSTIN, 'POSTIN'),
-         (rpm.RPMTAG_PREUN, 'PREUN'),
-         (rpm.RPMTAG_POSTUN, 'POSTUN'),
-         ]
+class Rpmdiff:
 
-FILEIDX = [ ('S', 'size'),
-            ('M', 'mode'),
-            ('5', 'md5'),
-            ('D', None),
-            ('L', 'linkto'),
-            ('U', 'user'),
-            ('G', 'group'),
-            (None, None),
-            ]
-FILEIDX_T = ('T', 'mtime')
+    # constants
 
-DEPFORMAT = '%-11s%s %s %s %s'
-FORMAT = '%-11s%s'
+    TAGS = ( rpm.RPMTAG_NAME, rpm.RPMTAG_SUMMARY,
+             rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_GROUP,
+             rpm.RPMTAG_LICENSE, rpm.RPMTAG_URL,
+             rpm.RPMTAG_PREIN, rpm.RPMTAG_POSTIN,
+             rpm.RPMTAG_PREUN, rpm.RPMTAG_POSTUN)
 
-ADDED   = 'added'
-REMOVED = 'removed'
-CHANGED = 'S.5....T'
+    PRCO = ( 'REQUIRES', 'PROVIDES', 'CONFLICTS', 'OBSOLETES')
 
-# code starts here
+    #{fname : (size, mode, mtime, flags, dev, inode,
+    #          nlink, state, vflags, user, group, digest)}
+    __FILEIDX = [ ['S', 0],
+                  ['M', 1],
+                  ['5', 11],
+                  ['D', 4],
+                  ['N', 6],
+                  ['L', 7],
+                  ['V', 8],
+                  ['U', 9],
+                  ['G', 10],
+                  ['F', 3],
+                  ['T', 2] ]
 
-# load a package from a file or from the installed ones
-def load_pkg(name, tmpdir = tempfile.gettempdir()):
-    try:
-        st = os.stat(name)
-        if stat.S_ISREG(st[stat.ST_MODE]):
-            return Pkg.Pkg(name, tmpdir)
-    except (OSError, TypeError):
-        pass
-    inst = Pkg.getInstalledPkgs(name)
-    if not inst:
-        raise KeyError("No installed packages by name %s" % name)
-    if len(inst) > 1:
-        raise KeyError("More than one installed packages by name %s" % name)
-    return inst[0]
+    DEPFORMAT = '%-11s%s %s %s %s'
+    FORMAT = '%-11s%s'
 
-# output the right string according to RPMSENSE_* const
-def sense2str(sense):
-    s = ""
-    if sense & rpm.RPMSENSE_LESS:
-        s += "<"
-    if sense & rpm.RPMSENSE_GREATER:
-        s += ">"
-    if sense & rpm.RPMSENSE_EQUAL:
-        s += "="
-    return s
+    ADDED   = 'added'
+    REMOVED = 'removed'
 
-# compares 2 lists
-def cmp_list(o, n, name):
-    for old in o:
-        if old not in n:
-            print DEPFORMAT % (REMOVED, name, old[0], sense2str(old[2]), old[1])
-    for new in n:
-        if new not in o:
-            print DEPFORMAT % (ADDED, name, new[0], sense2str(new[2]), new[1])
+    # code starts here
 
-# filter the own name of the package
-def get_provides(pkg):
-    name = pkg[rpm.RPMTAG_NAME]
-    p = []
-    for prov in pkg.provides():
-        if not (prov[0] == name and prov[1] == '%s-%s' % (pkg[rpm.RPMTAG_VERSION], pkg[rpm.RPMTAG_RELEASE]) and prov[2] == rpm.RPMSENSE_EQUAL):
-            p.append(prov)
-    return p
+    def __init__(self, old, new, ignore=None):
+        self.result = []
+        self.ignore = ignore
+        if self.ignore is None:
+            self.ignore = []
 
-def usage(exit = 1):
+        FILEIDX = self.__FILEIDX
+        for tag in self.ignore:
+            for entry in FILEIDX:
+                if tag == entry[0]:
+                    entry[1] = None
+                    break
+
+        old = self.__load_pkg(old).header
+        new = self.__load_pkg(new).header
+
+        # Compare single tags
+        for tag in self.TAGS:
+            old_tag = old[tag]
+            new_tag = new[tag]
+            if old_tag != new_tag:
+                tagname = rpm.tagnames[tag]
+                if old_tag == None:
+                    self.__add(self.FORMAT, (self.ADDED, tagname))
+                elif new_tag == None:
+                    self.__add(self.FORMAT, (self.REMOVED, tagname))
+                else:
+                    self.__add(self.FORMAT, ('S.5.....', tagname))
+
+        # compare Provides, Requires, ...
+        for  tag in self.PRCO:
+            self.__comparePRCOs(old, new, tag)
+
+        # compare the files
+            
+        old_files_dict = self.__fileIteratorToDict(old.fiFromHeader())
+        new_files_dict = self.__fileIteratorToDict(new.fiFromHeader())
+        files = list(set(itertools.chain(old_files_dict.iterkeys(),
+                                         new_files_dict.iterkeys())))
+        files.sort()
+
+        for f in files:
+            diff = 0
+
+            old_file = old_files_dict.get(f)
+            new_file = new_files_dict.get(f)
+
+            if not old_file:
+                self.__add(self.FORMAT, (self.ADDED, f))
+            elif not new_file:
+                self.__add(self.FORMAT, (self.REMOVED, f))
+            else:
+                format = ''
+                for entry in FILEIDX:
+                    if entry[1] != None and \
+                            old_file[entry[1]] != new_file[entry[1]]:
+                        format = format + entry[0]
+                        diff = 1
+                    else:
+                        format = format + '.'
+                if diff:
+                    self.__add(self.FORMAT, (format, f))
+
+    # return a report of the differences
+    def textdiff(self):
+        return '\n'.join((format % data for format, data in self.result))
+
+    # do the two rpms differ
+    def differs(self):
+        return bool(self.result)
+
+    # add one differing item
+    def __add(self, format, data):
+        self.result.append((format, data))
+
+    # load a package from a file or from the installed ones
+    def __load_pkg(self, name, tmpdir = tempfile.gettempdir()):
+        try:
+            st = os.stat(name)
+            if stat.S_ISREG(st[stat.ST_MODE]):
+                return Pkg.Pkg(name, tmpdir)
+        except (OSError, TypeError):
+            pass
+        inst = Pkg.getInstalledPkgs(name)
+        if not inst:
+            raise KeyError("No installed packages by name %s" % name)
+        if len(inst) > 1:
+            raise KeyError("More than one installed packages by name %s" % name)
+        return inst[0]
+
+    # output the right string according to RPMSENSE_* const
+    def sense2str(self, sense):
+        s = ""
+        for tag, char in ((rpm.RPMSENSE_LESS, "<"),
+                          (rpm.RPMSENSE_GREATER, ">"),
+                          (rpm.RPMSENSE_EQUAL, "=")):
+            if sense & tag:
+                s += char
+        return s
+
+    # compare Provides, Requires, Conflicts, Obsoletes
+    def __comparePRCOs(self, old, new, name):
+        oldflags = old[name[:-1]+'FLAGS']
+        newflags = new[name[:-1]+'FLAGS']
+        # fix buggy rpm binding not returning list for single entries
+        if not isinstance(oldflags, list): oldflags = [ oldflags ]
+        if not isinstance(newflags, list): newflags = [ newflags ]
+
+        o = zip(old[name], oldflags, old[name[:-1]+'VERSION'])
+        n = zip(new[name], newflags, new[name[:-1]+'VERSION'])
+
+        if name == 'PROVIDES': # filter our self provide
+            oldNV = (old['name'], rpm.RPMSENSE_EQUAL, 
+                     "%s-%s" % (old['version'], old['release']))
+            newNV = (new['name'], rpm.RPMSENSE_EQUAL, 
+                     "%s-%s" % (new['version'], new['release']))
+            o = [entry for entry in o if entry != oldNV]
+            n = [entry for entry in n if entry != newNV]
+
+        for oldentry in o:
+            if not oldentry in n:
+                if name == 'REQUIRES' and oldentry[1] & Pkg.PREREQ_FLAG:
+                    tagname = 'PREREQ'
+                else:
+                    tagname = name
+                self.__add(self.DEPFORMAT,
+                           (self.REMOVED, tagname, oldentry[0],
+                            self.sense2str(oldentry[1]), oldentry[2]))
+        for newentry in n:
+            if not newentry in o:
+                if name == 'REQUIRES' and newentry[1] & Pkg.PREREQ_FLAG:
+                    tagname = 'PREREQ'
+                else:
+                    tagname = name
+                self.__add(self.DEPFORMAT,
+                           (self.ADDED, tagname, newentry[0],
+                            self.sense2str(newentry[1]), newentry[2]))
+
+    def __fileIteratorToDict(self, fi):
+        result = {}
+        for filedata in fi:
+            result[filedata[0]] = filedata[1:]
+        return result
+
+def _usage(exit=1):
     print "Usage: %s [<options>] <old package> <new package>" % sys.argv[0]
     print "Options:"
     print "  -h, --help            Output this message and exit"
-    print "  -t, --ignore-times    Ignore differences in file timestamps"
+    print "  -i, --ignore          Tag to ignore when calculating differences"
+    print "                          (may be used multiple times)"
+    print "                        Valid values are: SM5DNLVUGFT"
     sys.exit(exit)
 
 def main():
-    ignore_times = False
+
+    ignore_tags = []
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "ht", ["help", "ignore-times"])
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   "hti:", ["help", "ignore-times", "ignore="])
     except getopt.GetoptError, e:
         print "Error: %s" % e
-        usage()
+        _usage()
 
     for option, argument in opts:
         if option in ("-h", "--help"):
-            usage(0)
+            _usage(0)
         if option in ("-t", "--ignore-times"):
-            ignore_times = True
+            # deprecated; --ignore=T should be used instead
+            ignore_tags.append("T")
+        if option in ("-i", "--ignore"):
+            ignore_tags.append(argument)
 
     if len(args) != 2:
-        usage()
+        _usage()
 
-    if not ignore_times:
-        FILEIDX[7] = FILEIDX_T
-
-    old = load_pkg(args[0])
-    new = load_pkg(args[1])
-
-    old_files = old.files()
-    new_files = new.files()
-    files = old_files.keys() + new_files.keys()
-
-    files.sort()
-    previous = None
-
-    for s in TAGS:
-        old_tag = old[s[0]]
-        new_tag = new[s[0]]
-        if old_tag != new_tag:
-            if old_tag is None:
-                print FORMAT % (ADDED, s[1])
-            elif new_tag is None:
-                print FORMAT % (REMOVED, s[1])
-            else:
-                print FORMAT % ('S.5.....', s[1])
-
-    cmp_list(old.prereq(), new.prereq(), 'PREREQ')
-    cmp_list(old.requires(), new.requires(), 'REQUIRES')
-    cmp_list(get_provides(old), get_provides(new), 'PROVIDES')
-    cmp_list(old.conflicts(), new.conflicts(), 'CONFLICTS')
-
-    for f in files:
-        diff = 0
-        if f == previous:
-            continue
-        previous = f
-        try:
-            old_file = old_files[f]
-        except KeyError:
-            old_file = None
-        try:
-            new_file = new_files[f]
-        except KeyError:
-            new_file = None
-
-        if not old_file:
-            print FORMAT % (ADDED, f)
-        elif not new_file:
-            print FORMAT % (REMOVED, f)
-        else:
-            format = ''
-            for idx in range(0, len(FILEIDX)):
-                entry = FILEIDX[idx]
-                prop = entry[1]
-                if entry[1] is not None and \
-                       getattr(old_file, prop) != getattr(new_file, prop):
-                    format = format + entry[0]
-                    diff = 1
-                else:
-                    format = format + '.'
-            if diff:
-                print FORMAT % (format, f)
+    d = Rpmdiff(args[0], args[1], ignore=ignore_tags)
+    print d.textdiff()
+    sys.exit(int(d.differs()))
 
 if __name__ == '__main__':
     main()
