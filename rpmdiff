@@ -26,9 +26,8 @@ import tempfile
 
 import rpm
 
-if not os.path.exists('Pkg.py') and os.path.isdir("/usr/share/rpmlint"):
+if os.path.isdir("/usr/share/rpmlint"):
     site.addsitedir("/usr/share/rpmlint")
-
 import Pkg
 
 
