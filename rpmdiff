@@ -210,12 +210,14 @@ class Rpmdiff:
         return result
 
 def _usage(exit=1):
-    print "Usage: %s [<options>] <old package> <new package>" % sys.argv[0]
-    print "Options:"
-    print "  -h, --help            Output this message and exit"
-    print "  -i, --ignore          Tag to ignore when calculating differences"
-    print "                          (may be used multiple times)"
-    print "                        Valid values are: SM5DNLVUGFT"
+    print '''Usage: %s [<options>] <old package> <new package>
+Options:
+  -h, --help     Output this message and exit
+  -i, --ignore   File property to ignore when calculating differences (may be
+                 used multiple times); valid values are: S (size), M (mode),
+                 5 (checksum), D (device), N (inode), L (number of links),
+                 V (vflags), U (user), G (group), F (digest), T (time)''' \
+        % sys.argv[0]
     sys.exit(exit)
 
 def main():
