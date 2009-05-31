@@ -49,7 +49,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "manpage-not-bzipped", fname)
                 if use_lzma:
                     if not fname.endswith('.lzma'):
-                        printWarning(pkg, "manpage-not-compressed-wth-lzma",
+                        printWarning(pkg, "manpage-not-compressed-with-lzma",
                                      fname)
 
                 elif not fname.endswith('.gz'):
@@ -60,7 +60,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "infopage-not-bzipped", fname)
                 if use_lzma:
                     if not fname.endswith('.lzma'):
-                        printWarning(pkg, "infopage-not-compressed-wth-lzma",
+                        printWarning(pkg, "infopage-not-compressed-with-lzma",
                                      fname)
                 elif not fname.endswith('.gz'):
                     printWarning(pkg, "infopage-not-gzipped", fname)
