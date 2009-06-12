@@ -6,7 +6,7 @@
 # This line is mandatory to access the configuration functions
 from Config import *
 
-# Additionale path to look for checks
+# Additional paths to look for checks
 
 #addCheckDir("~/mandrake/rpmlint")
 
