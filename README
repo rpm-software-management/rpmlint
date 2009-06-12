@@ -38,7 +38,7 @@ Implemented checks:
 
 If you want to change configuration options or the list of checks, use
 the global configuration files /etc/rpmlint/*config or the user
-configuration file ~/.rpmlintrc.
+configuration file ~/.config/rpmlint.
 
 Configuration files are Python source files and should begin with the
 following line:

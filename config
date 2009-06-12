@@ -1,6 +1,6 @@
 # -*- python -*-
 # Configuration for the rpmlint utility.
-# Loaded before ~/.rpmlintrc
+# Loaded before ~/.config/rpmlint
 # $Id$
 
 # This line is mandatory to access the configuration functions
