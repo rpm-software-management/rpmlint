@@ -39,7 +39,7 @@ def usage(name):
     print 'usage:', name, \
           '[<options>] <rpm files|installed packages|specfiles|dirs>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <config file to use instead of ~/.rpmlintrc>]'
+    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <user config file to use instead of ~/.config/rpmlint>]'
 
 # Print version information
 def printVersion():
@@ -231,7 +231,10 @@ checks = []
 verbose = 0
 extract_dir = None
 allpkgs = 0
-conf_file = '~/.rpmlintrc'
+conf_file = os.path.expanduser('~/.config/rpmlint')
+if not os.path.exists(conf_file):
+    # deprecated backwards compatibility with < 0.88
+    conf_file = '~/.rpmlintrc'
 info_error = 0
 
 # load global config files
