@@ -73,7 +73,7 @@ script_tags = [
 
 def incorrect_shell_script(prog, shellscript):
     if not shellscript:
-        return 0
+        return False
     # TODO: test that "prog" is available/executable
     tmpfile, tmpname = Pkg.mktemp()
     try:
@@ -87,7 +87,7 @@ def incorrect_shell_script(prog, shellscript):
 
 def incorrect_perl_script(prog, perlscript):
     if not perlscript:
-        return 0
+        return False
     # TODO: test that "prog" is available/executable
     tmpfile, tmpname = Pkg.mktemp()
     try:
@@ -155,10 +155,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'forbidden-selinux-command-in-' + tag[2], res.group(2))
 
                 if update_menu_regex.search(script):
-                    menu_error = 1
+                    menu_error = True
                     for f in files:
                         if menu_regex.search(f):
-                            menu_error = 0
+                            menu_error = False
                             break
                     if menu_error:
                         printError(pkg, 'update-menus-without-menu-file-in-' + tag[2])
@@ -166,10 +166,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'use-tmp-in-' + tag[2])
                 for c in prereq_assoc:
                     if c[0].search(script):
-                        found = 0
+                        found = False
                         for p in c[1]:
                             if p in prereq or p in files:
-                                found = 1
+                                found = True
                                 break
                         if not found:
                             printError(pkg, 'no-prereq-on', c[1][0])

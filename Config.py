@@ -45,8 +45,8 @@ except:
     except:
         pass
 
-info = 0
-no_exception = 0
+info = False
+no_exception = False
 
 # handle the list of checks to load
 _checks = []
@@ -147,7 +147,7 @@ def isFiltered(s):
     if _filters_re == None:
         # no filter
         if len(_filters) == 0:
-            return 0
+            return False
         _filters_re = '(?:' + _filters[0] + ')'
 
         for idx in range(1, len(_filters)):
@@ -160,8 +160,8 @@ def isFiltered(s):
 
     if not no_exception:
         if _filters_re.search(s):
-            return 1
-    return 0
+            return True
+    return False
 
 # Config.py ends here
 

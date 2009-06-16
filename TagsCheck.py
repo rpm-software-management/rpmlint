@@ -390,7 +390,7 @@ changelog_version_regex = re.compile('[^>]([^ >]+)\s*$')
 changelog_text_version_regex = re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 release_ext = Config.getOption('ReleaseExtension')
 extension_regex = release_ext and re.compile(release_ext)
-use_version_in_changelog = Config.getOption('UseVersionInChangelog', 1)
+use_version_in_changelog = Config.getOption('UseVersionInChangelog', True)
 devel_number_regex = re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 url_regex = re.compile('^(ftp|http|https)://')
@@ -403,7 +403,7 @@ invalid_version_regex = re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECA
 forbidden_words_regex = re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
 valid_buildhost_regex = re.compile(Config.getOption('ValidBuildHost'))
 epoch_regex = re.compile('^[0-9]+:')
-use_epoch = Config.getOption('UseEpoch', 0)
+use_epoch = Config.getOption('UseEpoch', False)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = 79
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
@@ -471,7 +471,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         name = pkg.name
         deps = pkg.requires() + pkg.prereq()
-        devel_depend = 0
+        devel_depend = False
         is_devel = FilesCheck.devel_regex.search(name)
         is_source = pkg.isSource()
         for d in deps:
@@ -487,7 +487,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not devel_depend and not is_devel and not is_source:
                 if FilesCheck.devel_regex.search(d[0]):
                     printError(pkg, 'devel-dependency', d[0])
-                    devel_depend = 1
+                    devel_depend = True
             if is_source and lib_devel_number_regex.search(d[0]):
                 printError(pkg, 'invalid-build-requires', d[0])
             if not is_source and not is_devel:
@@ -505,10 +505,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if is_devel and not is_source:
                 base = is_devel.group(1)
                 dep = None
-                has_so = 0
+                has_so = False
                 for fname in pkg.files():
                     if fname.endswith('.so'):
-                        has_so = 1
+                        has_so = True
                         break
                 if has_so:
                     base_or_libs = base + '/' + base + '-libs/lib' + base

@@ -23,7 +23,7 @@ zip_regex = re.compile('\.(zip|[ewj]ar)$')
 jar_regex = re.compile('\.[ewj]ar$')
 classpath_regex = re.compile('^\s*Class-Path\s*:', re.M | re.I)
 
-want_indexed_jars = Config.getOption('UseIndexedJars', 1)
+want_indexed_jars = Config.getOption('UseIndexedJars', True)
 
 class ZipCheck(AbstractCheck.AbstractCheck):
 
@@ -42,10 +42,10 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                     badcrc = z.testzip()
                     if badcrc:
                         printError(pkg, 'bad-crc-in-zip: %s' % badcrc, fname)
-                    compressed = 0
+                    compressed = False
                     for zinfo in z.infolist():
                         if zinfo.compress_type != zipfile.ZIP_STORED:
-                            compressed = 1
+                            compressed = True
                             break
                     if not compressed:
                         printWarning(pkg, 'uncompressed-zip', fname)

@@ -75,10 +75,10 @@ ForbiddenWords		regex		''
 IconFilename		regex		'.*\.png$'
 InvalidRequires		list of regexps see DEFAULT_INVALID_REQUIRES in
 					TagsCheck.py
-KernelModuleRPMsOK	boolean		1
+KernelModuleRPMsOK	boolean		True
 MetaPackageRegexp	regex		'^(bundle|task)-' 
 Packager		regex		''
-PerlVersionTrick	boolean		1
+PerlVersionTrick	boolean		True
 ReleaseExtension	regex or None	''
 RpmGamesGroup		regex		'Games'
 SkipDocsRegexp		regex		'\.(rtf|x?html?|ml[ily]?)$'
@@ -87,12 +87,13 @@ StandardGroups		list of strings	see DEFAULT_STANDARD_GROUPS in
 StandardUsers		list of strings	see DEFAULT_STANDARD_USERS in
 					FilesCheck.py 
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
-UseBzip2		boolean		1
-UseDefaultRunlevels	boolean		1
-UseEpoch		boolean		0
-UseIndexedJars		boolean		1
-UseRelativeSymlinks	boolean		1
-UseVersionInChangelog	boolean		1
+UseBzip2		boolean		True
+UseLzma			boolean		False
+UseDefaultRunlevels	boolean		True
+UseEpoch		boolean		False
+UseIndexedJars		boolean		True
+UseRelativeSymlinks	boolean		True
+UseVersionInChangelog	boolean		True
 UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
 UseUTF8			boolean		(autodetected)
 ValidBuildHost		regex		''

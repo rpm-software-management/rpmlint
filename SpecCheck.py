@@ -91,7 +91,7 @@ def deptokens(line):
     '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
     prco = []
     tmp = ''
-    wantmore = 0
+    wantmore = False
     toks = re.split('[\s,]+', line.strip())
 
     # Drop line continuation backslash in multiline macro definition, eg.
@@ -110,13 +110,13 @@ def deptokens(line):
             tmp = tok
         elif wantmore:
             tmp += ' ' + tok
-            wantmore = 0
+            wantmore = False
         elif tok[0] in ('=', '<', '>'):
             tmp += ' ' + tok
-            wantmore = 1
+            wantmore = True
         else:
             prco.append(tmp)
-            wantmore = 0
+            wantmore = False
             tmp = tok
     if len(tmp) != 0:
         prco.append(tmp)
@@ -144,8 +144,8 @@ def contains_buildroot(line):
     if res and \
            (not res.group(1) or len(res.group(1)) % 2 == 0) and \
            (not res.group(2) or len(res.group(2)) % 2 != 0):
-        return 1
-    return 0
+        return True
+    return False
 
 
 class SpecCheck(AbstractCheck.AbstractCheck):
@@ -185,30 +185,30 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
-        source_dir = None
-        buildroot = 0
-        configure = 0
+        source_dir = False
+        buildroot = False
+        configure_linenum = None
         configure_cmdline = ""
-        mklibname = 0
-        lib = 0
+        mklibname = False
+        is_lib_pkg = False
         if_depth = 0
         ifarch_depth = -1
         current_section = 'package'
-        buildroot_clean = {'clean': 0, 'install' : 0}
-        depscript_override = 0
-        depgen_disabled = 0
+        buildroot_clean = {'clean': False, 'install' : False}
+        depscript_override = False
+        depgen_disabled = False
         indent_spaces = 0
         indent_tabs = 0
-        files_has_defattr = 0
+        files_has_defattr = False
         section = {}
         # None == main package
         current_package = None
         package_noarch = {}
 
-        is_utf8 = 0
+        is_utf8 = False
         if self._spec_file and use_utf8:
             if Pkg.is_utf8(self._spec_file):
-                is_utf8 = 1
+                is_utf8 = True
             else:
                 printError(pkg, "non-utf8-spec-file", self._spec_file)
 
@@ -230,12 +230,12 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if line.find(nbsp) != -1:
                 printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
 
-            section_marker = 0
+            section_marker = False
             for sec, regex in section_regexs.items():
                 res = regex.search(line)
                 if res:
                     current_section = sec
-                    section_marker = 1
+                    section_marker = True
                     section[sec] = section.get(sec, 0) + 1
                     if sec in ('package', 'files'):
                         rest = filelist_regex.sub('', line[res.end()-1:])
@@ -249,10 +249,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if section_marker:
 
                 if current_section == 'files':
-                    files_has_defattr = 0
+                    files_has_defattr = False
 
-                if lib_package_regex.search(line):
-                    lib = 1
+                if not is_lib_pkg and lib_package_regex.search(line):
+                    is_lib_pkg = True
 
                 continue
 
@@ -263,9 +263,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if make_check_regex.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
                 printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
-            if current_section in buildroot_clean:
+            if current_section in buildroot_clean and not buildroot_clean[current_section]:
                 if contains_buildroot(line) and rm_regex.search(line):
-                    buildroot_clean[current_section] = 1
+                    buildroot_clean[current_section] = True
 
             if ifarch_regex.search(line):
                 if_depth = if_depth + 1
@@ -301,10 +301,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             elif not source_dir:
                 res = source_dir_regex.search(line)
                 if res:
-                    source_dir = 1
+                    source_dir = True
                     printError(pkg, "use-of-RPM_SOURCE_DIR")
 
-            if configure:
+            if configure_linenum:
                 if configure_cmdline[-1] == "\\":
                     configure_cmdline = configure_cmdline[:-1] + line.strip()
                 else:
@@ -313,17 +313,17 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         # Hack to get the correct (start of ./configure) line
                         # number displayed:
                         real_linenum = pkg.current_linenum
-                        pkg.current_linenum = configure
+                        pkg.current_linenum = configure_linenum
                         printWarning(pkg, "configure-without-libdir-spec")
                         pkg.current_linenum = real_linenum
                     elif res.group(1):
                         res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
                             printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
-                    configure = 0
+                    configure_linenum = None
 
             if current_section != 'changelog' and configure_start_regex.search(line):
-                configure = pkg.current_linenum # store line where it started
+                configure_linenum = pkg.current_linenum # store line where it started
                 configure_cmdline = line.strip()
 
             res = hardcoded_library_path_regex.search(line)
@@ -331,7 +331,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "hardcoded-library-path", "in", res.group(1).lstrip())
 
             if mklibname_regex.search(line):
-                mklibname = 1
+                mklibname = True
 
             if current_section == 'package':
 
@@ -346,7 +346,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = buildroot_regex.search(line)
                 if res:
-                    buildroot = 1
+                    buildroot = True
                     if res.group(1).startswith('/'):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
 
@@ -414,9 +414,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'macro-in-%changelog', res.group(2))
             else:
                 if not depscript_override:
-                    depscript_override = depscript_override_regex.search(line)
+                    depscript_override = depscript_override_regex.search(line) is not None
                 if not depgen_disabled:
-                    depgen_disabled = depgen_disable_regex.search(line)
+                    depgen_disabled = depgen_disable_regex.search(line) is not None
 
             if current_section == 'files':
 
@@ -424,7 +424,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                    (ifarch_regex.search(line) or if_regex.search(line) or
                     endif_regex.search(line)):
                     if defattr_regex.search(line):
-                        files_has_defattr = 1;
+                        files_has_defattr = True
                     elif not (files_has_defattr or attr_regex.search(line)):
                         printError(pkg, 'files-attr-not-set')
 
@@ -469,7 +469,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if section.get(sec, 0) > 1:
                 printWarning(pkg, 'more-than-one-%%%s-section' % sec)
 
-        if lib and not mklibname:
+        if is_lib_pkg and not mklibname:
             printError(pkg, 'lib-package-without-%mklibname')
 
         if depscript_override and not depgen_disabled:

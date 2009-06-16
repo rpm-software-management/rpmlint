@@ -27,7 +27,7 @@ chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MUL
 status_regex = re.compile('^[^#]*status', re.MULTILINE)
 reload_regex = re.compile('^[^#]*reload', re.MULTILINE)
 dot_in_name_regex = re.compile('.*\..*')
-use_deflevels = Config.getOption('UseDefaultRunlevels', 1)
+use_deflevels = Config.getOption('UseDefaultRunlevels', True)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
 
@@ -72,12 +72,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     if not chkconfig_regex.search(preun):
                         printError(pkg, 'preun-without-chkconfig', fname)
 
-                status_found = 0
-                reload_found = 0
-                chkconfig_content_found = 0
-                subsys_regex_found = 0
-                in_lsb_tag = 0
-                in_lsb_description = 0
+                status_found = False
+                reload_found = False
+                chkconfig_content_found = False
+                subsys_regex_found = False
+                in_lsb_tag = False
+                in_lsb_description = False
                 lastline = ''
                 lsb_tags = {}
                 # check common error in file content
@@ -92,10 +92,10 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     line = line[:-1] # chomp
                     # TODO check if there is only one line like this
                     if line.startswith('### BEGIN INIT INFO'):
-                        in_lsb_tag = 1
+                        in_lsb_tag = True
                         continue
                     if line.endswith('### END INIT INFO'):
-                        in_lsb_tag = 0
+                        in_lsb_tag = False
                         for kw, vals in lsb_tags.items():
                             if len(vals) != 1:
                                 printError(pkg, 'redundant-lsb-keyword', kw)
@@ -114,7 +114,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             if not res:
                                 cres = lsb_cont_regex.search(line)
                                 if not (in_lsb_description and cres):
-                                    in_lsb_description = 0
+                                    in_lsb_description = False
                                     printError(pkg, 'malformed-line-in-lsb-comment-block', line)
                                 else:
                                     lsb_tags["Description"][-1] += " " + cres.group(1)
@@ -132,15 +132,15 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
 
 
-                    if status_regex.search(line):
-                        status_found = 1
+                    if not status_found and status_regex.search(line):
+                        status_found = True
 
-                    if reload_regex.search(line):
-                        reload_found = 1
+                    if not reload_found and reload_regex.search(line):
+                        reload_found = True
 
                     res = chkconfig_content_regex.search(line)
                     if res:
-                        chkconfig_content_found = 1
+                        chkconfig_content_found = True
                         if use_deflevels:
                             if res.group(1) == '-':
                                 printWarning(pkg, 'no-default-runlevel', fname)
@@ -150,14 +150,14 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
                     res = subsys_regex.search(line)
                     if res:
-                        subsys_regex_found = 1
+                        subsys_regex_found = True
                         name = res.group(1)
                         if name != basename:
-                            error = 1
+                            error = True
                             if name[0] == '$':
                                 value = Pkg.substitute_shell_vars(name, content_str)
                                 if value == basename:
-                                    error = 0
+                                    error = False
                             else:
                                 i = name.find('}')
                                 if i != -1:

@@ -65,9 +65,9 @@ def _print(msgtype, pkg, reason, details):
                 sys.stdout.write("\n")
                 if Config.info:
                     printDescriptions(reason)
-            return 1
+            return True
 
-    return 0
+    return False
 
 def printDescriptions(reason):
     try:
@@ -102,7 +102,7 @@ def _diag_compare(x, y):
 def printAllReasons():
     threshold = badnessThreshold()
     if threshold < 0:
-        return 0
+        return False
 
     global _badness_score, _diagnostic
     _diagnostic.sort(_diag_compare)

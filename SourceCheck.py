@@ -18,7 +18,7 @@ import Config
 DEFAULT_VALID_SRC_PERMS = (0644, 0755)
 
 source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
-use_bzip2 = Config.getOption('UseBzip2', 1)
+use_bzip2 = Config.getOption('UseBzip2', True)
 valid_src_perms = Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 
 class SourceCheck(AbstractCheck.AbstractCheck):

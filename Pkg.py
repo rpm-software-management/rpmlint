@@ -62,7 +62,7 @@ def substitute_shell_vars(val, script):
     else:
         return val
 
-def getstatusoutput(cmd, stdoutonly = 0):
+def getstatusoutput(cmd, stdoutonly = False):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.'''
     if stdoutonly:
@@ -93,8 +93,8 @@ def is_utf8_str(s):
     try:
         s.decode('UTF-8')
     except:
-        return 0
-    return 1
+        return False
+    return True
 
 def to_utf8(string):
     if string is None:
@@ -170,9 +170,9 @@ def get_default_valid_rpmgroups(filename = ""):
 
 class Pkg:
 
-    def __init__(self, filename, dirname, header = None, is_source = 0):
+    def __init__(self, filename, dirname, header = None, is_source = False):
         self.filename = filename
-        self.extracted = 0
+        self.extracted = False
         self.dirname = dirname
         self.current_linenum = None
         self._config_files = None
@@ -246,7 +246,7 @@ class Pkg:
             # TODO: better shell escaping or sequence based command invocation
             command_str = 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
             cmd = commands.getstatusoutput(command_str)
-            self.extracted = 1
+            self.extracted = True
             return cmd
 
     def checkSignature(self):
@@ -404,10 +404,9 @@ class Pkg:
                 if current_version.find(':') > 0:
                     current_version = ''.join(current_version.split(':')[1:])
                 if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or current_version != version:
-                    return 0
-                else:
-                    return 1
-        return 0
+                    return False
+                return True
+        return False
 
     def conflicts(self):
         self._gatherDepInfo()
@@ -488,7 +487,7 @@ class InstalledPkg(Pkg):
 
         Pkg.__init__(self, name, '/', hdr)
 
-        self.extracted = 1
+        self.extracted = True
         # create a fake filename to satisfy some checks on the filename
         self.filename = '%s-%s-%s.%s.rpm' % (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
 

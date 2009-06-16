@@ -21,7 +21,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
 
     def check_file(self, pkg, filename):
         f = pkg.dirName() + filename
-        if getstatusoutput(('desktop-file-validate', f), 1)[0]:
+        if getstatusoutput(('desktop-file-validate', f), True)[0]:
                 printError(pkg, 'invalid-desktopfile', filename)
         if not is_utf8(f):
                 printError(pkg, 'non-utf8-desktopfile', filename)

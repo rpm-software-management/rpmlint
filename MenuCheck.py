@@ -219,7 +219,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
             directory = pkg.dirName()
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), 1)[1]
+                cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), True)[1]
 
                 for line in cmd.splitlines():
                     if not line.startswith('?'): continue
@@ -231,23 +231,23 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     else:
                         printInfo(pkg, 'unable-to-parse-menu-entry', line)
 
-                    command = 1
+                    command = True
                     res = command_regex.search(line)
                     if res:
                         command_line = (res.group(1) or res.group(2)).split()
                         command = command_line[0]
                         for launcher in launchers:
                             if launcher[0].search(command):
-                                found = 0
+                                found = False
                                 if launcher[1]:
                                     if ('/bin/' + command_line[0] in files or
                                         '/usr/bin/' + command_line[0] in files or
                                         '/usr/X11R6/bin/' + command_line[0] in files):
-                                        found = 1
+                                        found = True
                                     else:
                                         for l in launcher[1]:
                                             if l in pkg.req_names():
-                                                found = 1
+                                                found = True
                                                 break
                                     if not found:
                                         printError(pkg, 'use-of-launcher-in-menu-but-no-requires-on', launcher[1][0])
@@ -263,7 +263,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 printWarning(pkg, 'menu-command-not-in-package', command)
                     else:
                         printWarning(pkg, 'missing-menu-command')
-                        command = 0
+                        command = False
 
                     res = longtitle_regex.search(line)
                     if res:

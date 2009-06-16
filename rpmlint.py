@@ -228,14 +228,14 @@ except getopt.error, e:
 # process options
 checkdir = '/usr/share/rpmlint'
 checks = []
-verbose = 0
+verbose = False
 extract_dir = None
-allpkgs = 0
+allpkgs = False
 conf_file = os.path.expanduser('~/.config/rpmlint')
 if not os.path.exists(conf_file):
     # deprecated backwards compatibility with < 0.88
     conf_file = '~/.rpmlintrc'
-info_error = 0
+info_error = None
 
 # load global config files
 configs = glob.glob('/etc/rpmlint/*config')
@@ -256,7 +256,7 @@ for o in opt:
     if o[0] == '-c' or o[0] == '--check':
         checks.append(o[1])
     elif o[0] == '-i' or o[0] == '--info':
-        Config.info = 1
+        Config.info = True
     elif o[0] == '-I':
         info_error = o[1]
     elif o[0] == '-h' or o[0] == '--help':
@@ -265,7 +265,7 @@ for o in opt:
     elif o[0] == '-C' or o[0] == '--checkdir':
         Config.addCheckDir(o[1])
     elif o[0] == '-v' or o[0] == '--verbose':
-        verbose = 1
+        verbose = True
     elif o[0] == '-V' or o[0] == '--version':
         printVersion()
         sys.exit(0)
@@ -273,9 +273,9 @@ for o in opt:
         extract_dir = o[1]
         Config.setOption('ExtractDir', extract_dir)
     elif o[0] == '-n' or o[0] == '--noexception':
-        Config.no_exception = 1
+        Config.no_exception = True
     elif o[0] == '-a' or o[0] == '--all':
-        allpkgs = 1
+        allpkgs = True
     elif o[0] == '-f' or o[0] == '--file':
         conf_file = o[1]
     else:
@@ -293,7 +293,7 @@ if not extract_dir:
     extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
 
 if info_error:
-    Config.info = 1
+    Config.info = True
     for c in checks:
         Config.addCheck(c)
     for c in Config.allChecks():
