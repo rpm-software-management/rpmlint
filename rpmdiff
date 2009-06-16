@@ -107,7 +107,7 @@ class Rpmdiff:
         files.sort()
 
         for f in files:
-            diff = 0
+            diff = False
 
             old_file = old_files_dict.get(f)
             new_file = new_files_dict.get(f)
@@ -122,7 +122,7 @@ class Rpmdiff:
                     if entry[1] != None and \
                             old_file[entry[1]] != new_file[entry[1]]:
                         format = format + entry[0]
-                        diff = 1
+                        diff = True
                     else:
                         format = format + '.'
                 if diff:

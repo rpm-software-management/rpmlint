@@ -194,13 +194,13 @@ games_path_regex = re.compile('^/usr(/lib(64)?)?/games/')
 games_group_regex = re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 dangling_exceptions = Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
 logrotate_regex = re.compile('^/etc/logrotate\.d/(.*)')
-module_rpms_ok = Config.getOption('KernelModuleRPMsOK', 1)
+module_rpms_ok = Config.getOption('KernelModuleRPMsOK', True)
 kernel_modules_regex = re.compile('^/lib/modules/(2\.[23456]\.[0-9]+[^/]*?)/')
 kernel_package_regex = re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
 normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
 perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex = re.compile('^/usr/lib/python([.0-9]+)/')
-perl_version_trick = Config.getOption('PerlVersionTrick', 1)
+perl_version_trick = Config.getOption('PerlVersionTrick', True)
 log_regex = re.compile('^/var/log/[^/]+$')
 lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
@@ -222,7 +222,7 @@ for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
 del idx
 
-use_relative_symlinks = Config.getOption("UseRelativeSymlinks", 1)
+use_relative_symlinks = Config.getOption("UseRelativeSymlinks", True)
 
 standard_groups = Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS)
 standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
@@ -245,17 +245,17 @@ def istextfile(filename, pkg):
         printWarning(pkg, 'read-error', e)
         if fobj:
             fobj.close()
-        return 0
+        return False
 
     if "\0" in s:
-        return 0
+        return False
 
     if not s:  # Empty files are considered text
-        return 1
+        return True
 
     # PDF's are binary but often detected as text by the algorithm below
     if filename.lower().endswith('.pdf') and s.startswith('%PDF-'):
-        return 0
+        return False
 
     # Get the non-text characters (maps a character to itself then
     # use the 'remove' option to get rid of the text characters.)
@@ -264,8 +264,8 @@ def istextfile(filename, pkg):
     # If more than 30% non-text characters, then
     # this is considered a binary file
     if float(len(t))/len(s) > 0.30:
-        return 0
-    return 1
+        return False
+    return True
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -297,14 +297,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         debuginfo_package = debuginfo_package_regex.search(pkg.name)
 
         # report these errors only once
-        perl_dep_error = 0
-        python_dep_error = 0
-        lib_file = 0
-        non_lib_file = 0
-        log_file = 0
-        logrotate_file = 0
-        debuginfo_srcs = 0
-        debuginfo_debugs = 0
+        perl_dep_error = False
+        python_dep_error = False
+        lib_file = False
+        non_lib_file = None
+        log_file = None
+        logrotate_file = False
+        debuginfo_srcs = False
+        debuginfo_debugs = False
 
         if not doc_files:
             printWarning(pkg, 'no-documentation')
@@ -327,7 +327,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             rdev = pkgfile.rdev
             inode = pkgfile.inode
             is_doc = f in doc_files
-            nonexec_file = 0
+            nonexec_file = False
 
             if mispelled_macro_regex.search(f):
                 printWarning(pkg, 'mispelled-macro', f)
@@ -370,7 +370,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             res = logrotate_regex.search(f)
             if res:
-                logrotate_file += 1
+                logrotate_file = True
                 if res.group(1) != pkg.name:
                     printError(pkg, 'incoherent-logrotate-file', f)
 
@@ -426,12 +426,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
-                        lib_file = 1
+                        lib_file = True
                     elif not is_doc:
                         non_lib_file = f
 
                 if log_regex.search(f):
-                    nonexec_file = 1
+                    nonexec_file = True
                     if user != 'root':
                         printError(pkg, 'non-root-user-log-file', f, user)
                     if group != 'root':
@@ -440,7 +440,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-ghost-file', f)
 
                 if doc_regex.search(f):
-                    nonexec_file = 1
+                    nonexec_file = True
                     if not is_doc:
                         printError(pkg, 'not-listed-as-documentation', f)
 
@@ -537,7 +537,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if not (pkg.check_versioned_dep('perl-base', vers) or
                                 pkg.check_versioned_dep('perl', vers)):
                             printError(pkg, 'no-dependency-on', 'perl-base', vers)
-                            perl_dep_error = 1
+                            perl_dep_error = True
 
                 if not python_dep_error:
                     res = python_regex.search(f)
@@ -545,7 +545,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if not (pkg.check_versioned_dep('python-base', res.group(1)) or
                                 pkg.check_versioned_dep('python', res.group(1))):
                             printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
-                            python_dep_error = 1
+                            python_dep_error = True
 
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != 0755:
@@ -574,9 +574,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if debuginfo_package:
                     if f.endswith('.debug'):
-                        debuginfo_debugs += 1
+                        debuginfo_debugs = True
                     else:
-                        debuginfo_srcs += 1
+                        debuginfo_srcs = True
 
             # normal dir check
             elif stat.S_ISDIR(mode):
@@ -600,7 +600,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 r = absolute_regex.search(link)
                 if r:
                     if not is_so and link not in files and link not in req_names:
-                        is_exception = 0
+                        is_exception = False
                         for e in dangling_exceptions:
                             if e[0].search(link):
                                 is_exception = e[1]
@@ -622,7 +622,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         pkgfile = '%s/%s' % (os.path.dirname(f), link)
                         pkgfile = os.path.normpath(pkgfile)
                         if pkgfile not in files and pkgfile not in req_names:
-                            is_exception = 0
+                            is_exception = False
                             for e in dangling_exceptions:
                                 if e[0].search(link):
                                     is_exception = e[1]

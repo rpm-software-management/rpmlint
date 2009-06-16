@@ -22,8 +22,8 @@ info_regex = re.compile("(/usr/share|/usr)/info/")
 info_dir_regex = re.compile("/info/dir$")
 vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
-use_bzip2 = Config.getOption("UseBzip2", 1)
-use_lzma = Config.getOption("UseLzma", 0)
+use_bzip2 = Config.getOption("UseBzip2", True)
+use_lzma = Config.getOption("UseLzma", False)
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
 

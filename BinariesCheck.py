@@ -41,18 +41,18 @@ class BinaryInfo:
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
-        self.readelf_error = 0
+        self.readelf_error = False
         self.needed = []
         self.rpath = []
         self.undef = []
         self.unused = []
-        self.comment = 0
-        self.soname = 0
-        self.non_pic = 1
-        self.stack = 0
-        self.exec_stack = 0
+        self.comment = False
+        self.soname = False
+        self.non_pic = True
+        self.stack = False
+        self.exec_stack = False
         self.exit_calls = []
-        fork_called = 0
+        fork_called = False
         self.tail = ''
 
         is_debug = BinaryInfo.debug_file_regex.search(path)
@@ -75,11 +75,11 @@ class BinaryInfo:
                     continue
 
                 if BinaryInfo.comment_regex.search(l):
-                    self.comment = 1
+                    self.comment = True
                     continue
 
                 if BinaryInfo.pic_regex.search(l):
-                    self.non_pic = 0
+                    self.non_pic = False
                     continue
 
                 r = BinaryInfo.soname_regex.search(l)
@@ -89,10 +89,10 @@ class BinaryInfo:
 
                 r = BinaryInfo.stack_regex.search(l)
                 if r:
-                    self.stack = 1
+                    self.stack = True
                     flags = r.group(1)
                     if flags and BinaryInfo.stack_exec_regex.search(flags):
-                        self.exec_stack = 1
+                        self.exec_stack = True
                     continue
 
                 if is_shlib:
@@ -102,7 +102,7 @@ class BinaryInfo:
                         continue
                     r = BinaryInfo.fork_call_regex.search(l)
                     if r:
-                        fork_called = 1
+                        fork_called = True
                         continue
 
             if self.non_pic:
@@ -115,7 +115,7 @@ class BinaryInfo:
                 self.exit_calls = []
 
         else:
-            self.readelf_error = 1
+            self.readelf_error = True
             printWarning(pkg, 'binaryinfo-readelf-failed',
                          file, re.sub('\n.*', '', res[1]))
 
@@ -148,18 +148,18 @@ class BinaryInfo:
             if res[0]:
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
                 # unused direct dependencies
-                in_unused = 0
+                in_unused = False
                 for l in res[1].splitlines():
                     if not l.rstrip():
                         pass
                     elif l.startswith('Unused direct dependencies'):
-                        in_unused = 1
+                        in_unused = True
                     elif in_unused:
                         unused = BinaryInfo.unused_regex.search(l)
                         if unused:
                             self.unused.append(unused.group(1))
                         else:
-                            in_unused = 0
+                            in_unused = False
 
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
@@ -335,10 +335,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                    ( not bin_info.soname or \
                                      ( not libc_regex.search(bin_info.soname) and \
                                        not ldso_soname_regex.search(bin_info.soname))):
-                                    found_libc = 0
+                                    found_libc = False
                                     for lib in bin_info.needed:
                                         if libc_regex.search(lib):
-                                            found_libc = 1
+                                            found_libc = True
                                             break
                                     if not found_libc:
                                         if shared_object_regex.search(pkgfile.magic):
