@@ -24,6 +24,7 @@ vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
 use_bzip2 = Config.getOption("UseBzip2", True)
 use_lzma = Config.getOption("UseLzma", False)
+use_xz = Config.getOption("UseXz", False)
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
 
@@ -43,27 +44,40 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
             printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
         for fname in pkg.files():
+
             if man_regex.search(fname):
                 if use_bzip2:
                     if not fname.endswith('.bz2'):
-                        printWarning(pkg, "manpage-not-bzipped", fname)
-                if use_lzma:
+                        printWarning(pkg, "manpage-not-compressed-with-bzip2",
+                                     fname)
+                elif use_lzma:
                     if not fname.endswith('.lzma'):
                         printWarning(pkg, "manpage-not-compressed-with-lzma",
                                      fname)
-
+                elif use_xz:
+                    if not fname.endswith('.xz'):
+                        printWarning(pkg, "manpage-not-compressed-with-xz",
+                                     fname)
                 elif not fname.endswith('.gz'):
-                    printWarning(pkg, "manpage-not-gzipped", fname)
+                    printWarning(pkg, "manpage-not-compressed-with-gzip",
+                                 fname)
+
             if info_regex.search(fname) and not info_dir_regex.search(fname):
                 if use_bzip2:
                     if not fname.endswith('.bz2'):
-                        printWarning(pkg, "infopage-not-bzipped", fname)
-                if use_lzma:
+                        printWarning(pkg, "infopage-not-compressed-with-bzip2",
+                                     fname)
+                elif use_lzma:
                     if not fname.endswith('.lzma'):
                         printWarning(pkg, "infopage-not-compressed-with-lzma",
                                      fname)
+                elif use_xz:
+                    if not fname.endswith('.xz'):
+                        printWarning(pkg, "infopage-not-compressed-with-xz",
+                                     fname)
                 elif not fname.endswith('.gz'):
-                    printWarning(pkg, "infopage-not-gzipped", fname)
+                    printWarning(pkg, "infopage-not-compressed-with-gzip",
+                                 fname)
 
 # Create an object to enable the auto registration of the test
 check = DistributionCheck()
@@ -74,41 +88,23 @@ addDetails(
 
 'invalid-distribution',
 'The distribution value should be "' + distribution + '".',
-
-'manpage-not-compressed-with-lzma',
-'''Manual Pages are not compressed using the .lzma extension/format. Please
-run lzma <man page file> to compress it in the %install section and
-rebuild the package. You can also use the spec-helper package
-that automates this task.''',
-
-'manpage-not-bzipped',
-'''Manual Pages are not compressed using the .bz2 extension/format. Please
-run bzip2 <man page file> to bzip it in the %install section and
-rebuild the package. You can also use the spec-helper package
-that automates this task.''',
-
-'manpage-not-gzipped',
-'''Manual Pages are not compressed using the .gz extension/format. Please
-run gzip <man page file> to gzip it in the %install section and rebuild the
-package.''',
-
-'infopage-not-compressed-with-lzma',
-'''An info page are not compressed using the .lzma extension/format. Please
-run lzma <info page file> to compress it in the %install section and
-rebuild the package. You can also use the spec-helper package
-that automates this task.''',
-
-'infopage-not-bzipped',
-'''An info page is not compressed using the .bz2 extension/format. Please
-run bzip2 <info page file> to bzip it in the %install section and rebuild the
-package. You can also use the spec-helper package that automates this task.''',
-
-'infopage-not-gzipped',
-'''An info page is not compressed using the .gz extension/format. Please
-run gzip <info page file> to gzip it in the %install section and rebuild the
-package.''',
-
 )
+
+for compr in ('gzip', 'bzip2', 'lzma', 'xz'):
+    addDetails('manpage-not-compressed-with-%s' % compr,
+'''This manual page is not compressed with %s. If the compression does not
+happen automatically when the package is rebuilt, make sure that you have the
+appropriate rpm helper and/or config packages for your target distribution
+installed and try rebuilding again; if it still does not happen automatically,
+you can compress this file in the %%install section of the spec file.''' \
+% compr)
+    addDetails('infopage-not-compressed-with-%s' % compr,
+'''This info page is not compressed with %s. If the compression does not happen
+automatically when the package is rebuilt, make sure that you have the
+appropriate rpm helper and/or config packages for your target distribution
+installed and try rebuilding again; if it still does not happen automatically,
+you can compress this file in the %%install section of the spec file.''' \
+% compr)
 
 # DistributionCheck.py ends here
 

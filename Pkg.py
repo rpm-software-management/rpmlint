@@ -84,7 +84,8 @@ bz2_regex = re.compile('\.t?bz2?$')
 def is_utf8(fname):
     cat = 'gzip -dcf'
     if bz2_regex.search(fname): cat = 'bzip2 -dcf'
-    if fname.endswith('lzma'): cat = 'lzma -dc'
+    elif fname.endswith('lzma'): cat = 'lzma -dc'
+    elif fname.endswith('xz'): cat = 'xz -dc'
     # TODO: better shell escaping or sequence based command invocation
     cmd = commands.getstatusoutput('%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
     return not cmd[0]
