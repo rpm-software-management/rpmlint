@@ -219,7 +219,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
                 has_usr_lib_file = True
-                if usr_lib_exception_regex.search(fname):
+                if not binary_in_usr_lib and usr_lib_exception_regex.search(fname):
                     # Fake that we have binaries there to avoid
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
@@ -251,7 +251,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'non-sparc32-binary', fname)
 
                     # stripped ?
-                    if not unstrippable.search(fname) and not is_ocaml_native:
+                    if not is_ocaml_native and not unstrippable.search(fname):
                         if not_stripped.search(pkgfile.magic):
                             printWarning(
                                 pkg, 'unstripped-binary-or-object', fname)
