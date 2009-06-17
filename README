@@ -89,6 +89,7 @@ StandardUsers		list of strings	see DEFAULT_STANDARD_USERS in
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
 UseBzip2		boolean		True
 UseLzma			boolean		False
+UseXz			boolean		False
 UseDefaultRunlevels	boolean		True
 UseEpoch		boolean		False
 UseIndexedJars		boolean		True
