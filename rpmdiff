@@ -57,8 +57,8 @@ class Rpmdiff:
                   ['F', 3],
                   ['T', 2] ]
 
-    DEPFORMAT = '%-11s%s %s %s %s'
-    FORMAT = '%-11s%s'
+    DEPFORMAT = '%-12s%s %s %s %s'
+    FORMAT = '%-12s%s'
 
     ADDED   = 'added'
     REMOVED = 'removed'
