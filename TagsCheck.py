@@ -708,14 +708,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             i = 0
             for prov in provs:
                 j = 0
+                pp = pkg.provides()[i]
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):
-                        pp = pkg.provides()[i]
                         oo = pkg.obsoletes()[j]
                         printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
                                      (apply(Pkg.formatRequire, oo),
                                       apply(Pkg.formatRequire, pp)))
-                        j += 1
+                    j += 1
                 i += 1
 
         expected = '%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
