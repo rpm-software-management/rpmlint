@@ -1,6 +1,6 @@
 #!/usr/bin/python -tt
 #
-# Copyright (C) 2006 Mandriva; 2009 Red Hat, Inc.
+# Copyright (C) 2006 Mandriva; 2009 Red Hat, Inc.; 2009 Ville Skyttä
 # Authors: Frederic Lepied, Florian Festi
 #
 # This program is free software; you can redistribute it and/or modify
@@ -165,6 +165,29 @@ class Rpmdiff:
                 s += char
         return s
 
+    # output the right requires string according to RPMSENSE_* const
+    def req2str(self, req):
+        s = "REQUIRES"
+        # we want to use 64 even with rpm versions that define RPMSENSE_PREQREQ
+        # as 0 to get sane results when comparing packages built with an old
+        # (64) version and a new (0) one
+        if req & (rpm.RPMSENSE_PREREQ or 64):
+            s = "PREREQ"
+
+        ss = []
+        if req & rpm.RPMSENSE_SCRIPT_PRE:
+            ss.append("pre")
+        elif req & rpm.RPMSENSE_SCRIPT_POST:
+            ss.append("post")
+        elif req & rpm.RPMSENSE_SCRIPT_PREUN:
+            ss.append("preun")
+        elif req & rpm.RPMSENSE_SCRIPT_POSTUN:
+            ss.append("postun")
+        if ss:
+            s += "(%s)" % ",".join(ss)
+
+        return s
+
     # compare Provides, Requires, Conflicts, Obsoletes
     def __comparePRCOs(self, old, new, name):
         oldflags = old[name[:-1]+'FLAGS']
@@ -189,21 +212,14 @@ class Rpmdiff:
 
         for oldentry in o:
             if not oldentry in n:
-                if name == 'REQUIRES' and oldentry[1] & Pkg.PREREQ_FLAG:
-                    tagname = 'PREREQ'
-                else:
-                    tagname = name
                 self.__add(self.DEPFORMAT,
-                           (self.REMOVED, tagname, oldentry[0],
-                            self.sense2str(oldentry[1]), oldentry[2]))
+                           (self.REMOVED, self.req2str(oldentry[1]),
+                            oldentry[0], self.sense2str(oldentry[1]),
+                            oldentry[2]))
         for newentry in n:
             if not newentry in o:
-                if name == 'REQUIRES' and newentry[1] & Pkg.PREREQ_FLAG:
-                    tagname = 'PREREQ'
-                else:
-                    tagname = name
                 self.__add(self.DEPFORMAT,
-                           (self.ADDED, tagname, newentry[0],
+                           (self.ADDED, self.req2str(newentry[1]), newentry[0],
                             self.sense2str(newentry[1]), newentry[2]))
 
     def __fileIteratorToDict(self, fi):
