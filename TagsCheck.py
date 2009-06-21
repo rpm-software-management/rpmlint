@@ -497,7 +497,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if d[2] == rpm.RPMSENSE_EQUAL and d[1].find('-') != -1:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
             if d[1].find('%') != -1:
-                printError(pkg, 'percent-in-dependency', d[0], d[1])
+                printError(pkg, 'percent-in-dependency',
+                           apply(Pkg.formatRequire, d))
 
         if not name:
             printError(pkg, 'no-name-tag')
@@ -676,7 +677,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
             if o[1].find('%') != -1:
-                printError(pkg, 'percent-in-obsoletes', o[0], o[1])
+                printError(pkg, 'percent-in-obsoletes',
+                           apply(Pkg.formatRequire, o))
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
@@ -690,11 +692,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         for p in pkg.provides():
             if p[1].find('%') != -1:
-                printError(pkg, 'percent-in-provides', p[0], p[1])
+                printError(pkg, 'percent-in-provides',
+                           apply(Pkg.formatRequire, p))
 
         for c in pkg.conflicts():
             if c[1].find('%') != -1:
-                printError(pkg, 'percent-in-conflicts', c[0], c[1])
+                printError(pkg, 'percent-in-conflicts',
+                           apply(Pkg.formatRequire, c))
 
         obss = [(x[0], x[2], Pkg.stringToVersion(x[1]))
                 for x in pkg.obsoletes()]
