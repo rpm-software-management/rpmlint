@@ -710,11 +710,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 j = 0
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):
-                        pname, pver, pflags = pkg.provides()[i]
-                        oname, over, oflags = pkg.obsoletes()[j]
+                        pp = pkg.provides()[i]
+                        oo = pkg.obsoletes()[j]
                         printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
-                                     (Pkg.formatRequire(oname, over, oflags),
-                                      Pkg.formatRequire(pname, pver, pflags)))
+                                     (apply(Pkg.formatRequire, oo),
+                                      apply(Pkg.formatRequire, pp)))
                         j += 1
                 i += 1
 
