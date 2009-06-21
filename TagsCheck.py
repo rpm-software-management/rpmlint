@@ -671,8 +671,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         obs_names = [x[0] for x in pkg.obsoletes()]
         prov_names = [x[0] for x in pkg.provides()]
 
-        if pkg.name in obs_names:
-            printError(pkg, 'obsolete-on-name')
         for o in obs_names:
             if o not in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
@@ -899,9 +897,6 @@ explicit Requires: tags.''',
 'useless-provides',
 '''This package provides 2 times the same capacity. It should only provide it
 once.''',
-
-'obsolete-on-name',
-'''A package should not obsolete itself, as it can cause weird errors in tools.''',
 
 'tag-not-utf8',
 '''The character encoding of the value of this tag is not UTF-8.''',
