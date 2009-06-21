@@ -31,7 +31,9 @@ from Filter import printWarning
 
 # utilities
 
-PREREQ_FLAG = rpm.RPMSENSE_PREREQ | \
+# 64: RPMSENSE_PREREQ is 0 with recent rpm versions, we want 64 here in order
+# to do the right thing with packages built with older rpm versions
+PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | \
               rpm.RPMSENSE_SCRIPT_PRE | \
               rpm.RPMSENSE_SCRIPT_POST | \
               rpm.RPMSENSE_SCRIPT_PREUN | \
