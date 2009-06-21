@@ -242,15 +242,6 @@ def rangeCompare(reqtuple, provtuple):
                 return 1
         if reqf in ['LE', 'LT', 10, 2]:
             return 1
-#                if rc >= 1:
-#                    if reqf in ['GT', 'GE', 4, 12]:
-#                        return 1
-#                if rc == 0:
-#                    if reqf in ['GE', 'LE', 'EQ', 8, 10, 12]:
-#                        return 1
-#                if rc <= -1:
-#                    if reqf in ['LT', 'LE', 2, 10]:
-#                        return 1
 
     return 0
 
