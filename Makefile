@@ -13,13 +13,13 @@ ETCDIR=/etc
 MANDIR=/usr/share/man
 
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
-	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1 rpmUtils/*.py
+	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1
 GENERATED = AUTHORS ChangeLog
 
 PACKAGE=rpmlint
 
 # update this variable to create a new release
-VERSION := 0.87
+VERSION := 0.88
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
@@ -28,16 +28,15 @@ LC_ALL:=C
 export LC_ALL
 
 all:
-	python ./tools/compile.py "$(LIBDIR)/" [A-Z]*.py rpmUtils/*.py
-	@for f in [A-Z]*.py rpmUtils/*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
+	python ./tools/compile.py "$(LIBDIR)/" [A-Z]*.py
+	@for f in [A-Z]*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
 
 clean:
 	rm -f *~ *.pyc *.pyo AUTHORS ChangeLog
 
 install:
-	-mkdir -p $(DESTDIR)$(LIBDIR)/rpmUtils $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
+	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
-	cp -p rpmUtils/*.py rpmUtils/*.pyo $(DESTDIR)$(LIBDIR)/rpmUtils
 	sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
@@ -45,7 +44,7 @@ install:
 	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
 verify:
-	pychecker --limit=100 [A-Z]*.py rpmUtils/*.py
+	pychecker --limit=100 [A-Z]*.py
 
 .PHONY: test
 
