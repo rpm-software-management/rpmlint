@@ -169,6 +169,137 @@ def get_default_valid_rpmgroups(filename = ""):
         groups.sort()
     return groups
 
+# from yum 3.2.23, rpmUtils.miscutils
+def compareEVR((e1, v1, r1), (e2, v2, r2)):
+    # return 1: a is newer than b
+    # 0: a and b are the same version
+    # -1: b is newer than a
+    e1 = str(e1)
+    v1 = str(v1)
+    r1 = str(r1)
+    e2 = str(e2)
+    v2 = str(v2)
+    r2 = str(r2)
+    rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
+    return rc
+
+# from yum 3.2.23, rpmUtils.miscutils with some rpmlint modifications
+def rangeCompare(reqtuple, provtuple):
+    """returns true if provtuple satisfies reqtuple"""
+    (reqn, reqf, (reqe, reqv, reqr)) = reqtuple
+    (n, f, (e, v, r)) = provtuple
+    if reqn != n:
+        return 0
+
+    # rpmlint modification: flags=0 (in addition to None) satisfies everything
+    if not f or not reqf:
+        return 1
+
+    # and you thought we were done having fun
+    # if the requested release is left out then we have
+    # to remove release from the package prco to make sure the match
+    # is a success - ie: if the request is EQ foo 1:3.0.0 and we have 
+    # foo 1:3.0.0-15 then we have to drop the 15 so we can match
+    if reqr is None:
+        r = None
+    if reqe is None:
+        e = None
+    if reqv is None: # just for the record if ver is None then we're going to segfault
+        v = None
+
+    # if we just require foo-version, then foo-version-* will match
+    if r is None:
+        reqr = None
+
+    rc = compareEVR((e, v, r), (reqe, reqv, reqr))
+
+    # does not match unless
+    if rc >= 1:
+        if reqf in ['GT', 'GE', 4, 12]:
+            return 1
+        if reqf in ['EQ', 8]:
+            if f in ['LE', 10]:
+                return 1
+    if rc == 0:
+        if reqf in ['GT', 4]:
+            if f in ['GT', 'GE', 4, 12]:
+                return 1
+        if reqf in ['GE', 12]:
+            if f in ['GT', 'GE', 'EQ', 'LE', 4, 12, 8, 10]:
+                return 1
+        if reqf in ['EQ', 8]:
+            if f in ['EQ', 'GE', 'LE', 8, 12, 10]:
+                return 1
+        if reqf in ['LE', 10]:
+            if f in ['EQ', 'LE', 'LT', 'GE', 8, 10, 2, 12]:
+                return 1
+        if reqf in ['LT', 2]:
+            if f in ['LE', 'LT', 10, 2]:
+                return 1
+    if rc <= -1:
+        if reqf in ['GT', 'GE', 'EQ', 4, 12, 8]:
+            if f in ['GT', 'GE', 4, 12]:
+                return 1
+        if reqf in ['LE', 'LT', 10, 2]:
+            return 1
+#                if rc >= 1:
+#                    if reqf in ['GT', 'GE', 4, 12]:
+#                        return 1
+#                if rc == 0:
+#                    if reqf in ['GE', 'LE', 'EQ', 8, 10, 12]:
+#                        return 1
+#                if rc <= -1:
+#                    if reqf in ['LT', 'LE', 2, 10]:
+#                        return 1
+
+    return 0
+
+# from yum 3.2.23, rpmUtils.miscutils
+def formatRequire (name, version, flags):
+    s = name
+    
+    if flags:
+        if flags & (rpm.RPMSENSE_LESS | rpm.RPMSENSE_GREATER |
+                    rpm.RPMSENSE_EQUAL):
+            s = s + " "
+            if flags & rpm.RPMSENSE_LESS:
+                s = s + "<"
+            if flags & rpm.RPMSENSE_GREATER:
+                s = s + ">"
+            if flags & rpm.RPMSENSE_EQUAL:
+                s = s + "="
+            if version:
+                s = "%s %s" %(s, version)
+    return s
+
+# from yum 3.2.23, rpmUtils.miscutils
+def stringToVersion(verstring):
+    if verstring in [None, '']:
+        return (None, None, None)
+    i = verstring.find(':')
+    if i != -1:
+        try:
+            epoch = str(long(verstring[:i]))
+        except ValueError:
+            # look, garbage in the epoch field, how fun, kill it
+            epoch = '0' # this is our fallback, deal
+    else:
+        epoch = '0'
+    j = verstring.find('-')
+    if j != -1:
+        if verstring[i + 1:j] == '':
+            version = None
+        else:
+            version = verstring[i + 1:j]
+        release = verstring[j + 1:]
+    else:
+        if verstring[i + 1:] == '':
+            version = None
+        else:
+            version = verstring[i + 1:]
+        release = None
+    return (epoch, version, release)
+
 # classes representing package
 
 class Pkg:
