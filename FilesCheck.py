@@ -687,14 +687,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'executable-sourced-script', f, oct(perm))
                         # ...but executed ones should
                         elif res or mode & 0111 != 0 or script_regex.search(f):
+                            interpreter = None
                             if res:
-                                if not interpreter_regex.search(res.group(1)):
-                                    printError(pkg, 'wrong-script-interpreter', f, '"' + res.group(1) + '"')
+                                interpreter = res.group(1)
+                                if not interpreter_regex.search(interpreter):
+                                    printError(pkg, 'wrong-script-interpreter', f, interpreter)
                             elif not nonexec_file and not (lib_path_regex.search(f) and f.endswith('.la')):
                                 printError(pkg, 'script-without-shebang', f)
 
                             if mode & 0111 == 0 and not is_doc:
-                                printError(pkg, 'non-executable-script', f, oct(perm))
+                                printError(pkg, 'non-executable-script', f, oct(perm), interpreter)
                             if line.endswith('\r\n') or line.endswith('\r'):
                                 printError(pkg, 'wrong-script-end-of-line-encoding', f)
                         elif is_doc and not skipdocs_regex.search(f):
