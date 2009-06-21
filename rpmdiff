@@ -176,11 +176,14 @@ class Rpmdiff:
         o = zip(old[name], oldflags, old[name[:-1]+'VERSION'])
         n = zip(new[name], newflags, new[name[:-1]+'VERSION'])
 
-        if name == 'PROVIDES': # filter our self provide
+        # filter self provides, TODO: self %name(%_isa) as well
+        if name == 'PROVIDES':
+            oldE = old['epoch'] is not None and str(old['epoch'])+":" or ""
             oldNV = (old['name'], rpm.RPMSENSE_EQUAL, 
-                     "%s-%s" % (old['version'], old['release']))
+                     "%s%s-%s" % (oldE, old['version'], old['release']))
+            newE = new['epoch'] is not None and str(new['epoch'])+":" or ""
             newNV = (new['name'], rpm.RPMSENSE_EQUAL, 
-                     "%s-%s" % (new['version'], new['release']))
+                     "%s%s-%s" % (newE, new['version'], new['release']))
             o = [entry for entry in o if entry != oldNV]
             n = [entry for entry in n if entry != newNV]
 
