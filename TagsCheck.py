@@ -698,6 +698,24 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if c[1].find('%') != -1:
                 printError(pkg, 'percent-in-conflicts', c[0], c[1])
 
+        obss = [(x[0], x[2], Pkg.stringToVersion(x[1]))
+                for x in pkg.obsoletes()]
+        if obss:
+            provs = [(x[0], x[2], Pkg.stringToVersion(x[1]))
+                     for x in pkg.provides()]
+            i = 0
+            for prov in provs:
+                j = 0
+                for obs in obss:
+                    if Pkg.rangeCompare(obs, prov):
+                        pname, pver, pflags = pkg.provides()[i]
+                        oname, over, oflags = pkg.obsoletes()[j]
+                        printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
+                                     (Pkg.formatRequire(oname, over, oflags),
+                                      Pkg.formatRequire(pname, pver, pflags)))
+                        j += 1
+                i += 1
+
         expected = '%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
         basename = os.path.basename(pkg.filename)
         if basename != expected:
@@ -914,6 +932,11 @@ It could be an unexpanded macro, please double check.''',
 '''The name of the package is repeated in its summary.  This is often redundant
 information and looks silly in various programs' output.  Make the summary
 brief and to the point without including redundant information in it.''',
+
+'self-obsoletion',
+'''The package obsoletes itself.  This is known to cause errors in various
+tools and should thus be avoided, usually by using appropriately versioned
+Obsoletes and/or Provides and avoiding unversioned ones.''',
 )
 
 # TagsCheck.py ends here
