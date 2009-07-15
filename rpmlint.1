@@ -54,9 +54,12 @@ Ignore output filters.
 Load user configuration from the specified file, default is ~/.config/rpmlint
 .SH CAVEATS
 All checks do not apply to all argument types.  For best check
-coverage, run rpmlint on source rpms instead of plain specfiles as
-well as \fIinstalled\fR binary rpms instead of binary rpm package
-files.
+coverage, run rpmlint on all source and binary packages your build
+produces.  The set of checks rpmlint runs on source packages is a
+superset of the one for plain specfiles, the set of checks run for
+installed binary packages is a superset of the one for uninstalled
+binary package files, and the source and binary package check sets are
+quite different.
 .SH FILES
 .TP
 \fB/usr/share/rpmlint/config\fR
