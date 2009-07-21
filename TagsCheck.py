@@ -571,6 +571,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'name-repeated-in-summary', res.group(1))
             if use_utf8 and not Pkg.is_utf8_str(summary):
                 printError(pkg, 'tag-not-utf8', 'Summary')
+            res = AbstractCheck.macro_regex.search(summary)
+            if res:
+                printWarning(pkg, 'macro-in-summary', res.group(2))
 
         description = pkg[rpm.RPMTAG_DESCRIPTION]
         if not description:
@@ -591,6 +594,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'tag-in-description', res.group(1))
             if use_utf8 and not Pkg.is_utf8_str(description):
                 printError(pkg, 'tag-not-utf8', '%description')
+            res = AbstractCheck.macro_regex.search(description)
+            if res:
+                printWarning(pkg, 'macro-in-description', res.group(2))
 
         group = pkg[rpm.RPMTAG_GROUP]
         if not group:
@@ -598,6 +604,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             if VALID_GROUPS and group not in VALID_GROUPS:
                 printWarning(pkg, 'non-standard-group', group)
+            else:
+                res = AbstractCheck.macro_regex.search(group)
+                if res:
+                    printWarning(pkg, 'macro-in-group', res.group(2))
 
         buildhost = pkg[rpm.RPMTAG_BUILDHOST]
         if not buildhost:
@@ -605,6 +615,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             if Config.getOption('ValidBuildHost') and not valid_buildhost_regex.search(buildhost):
                 printWarning(pkg, 'invalid-buildhost', buildhost)
+            else:
+                res = AbstractCheck.macro_regex.search(buildhost)
+                if res:
+                    printWarning(pkg, 'macro-in-buildhost', res.group(2))
 
         changelog = pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
@@ -652,6 +666,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not rpm_license:
             printError(pkg, 'no-license')
         else:
+            valid_license = True
             if rpm_license not in VALID_LICENSES:
                 for l1 in split_license(rpm_license):
                     if l1 in VALID_LICENSES:
@@ -659,6 +674,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     for l2 in split_license(l1):
                         if l2 not in VALID_LICENSES:
                             printWarning(pkg, 'invalid-license', l2)
+                            valid_license = False
+            if not valid_license:
+                res = AbstractCheck.macro_regex.search(rpm_license)
+                if res:
+                    printWarning(pkg, 'macro-in-license', res.group(2))
 
         url = pkg[rpm.RPMTAG_URL]
         if url and url != 'none':
@@ -666,6 +686,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'invalid-url', url)
             elif Config.getOption('InvalidURL') and invalid_url_regex.search(url):
                 printWarning(pkg, 'invalid-url', url)
+            # No macro_regex check here; URL's commonly contain %XX hex stuff
         else:
             printWarning(pkg, 'no-url-tag')
 
@@ -937,6 +958,11 @@ brief and to the point without including redundant information in it.''',
 tools and should thus be avoided, usually by using appropriately versioned
 Obsoletes and/or Provides and avoiding unversioned ones.''',
 )
+for tag in ('summary', 'description', 'group', 'buildhost', 'license'):
+    addDetails(
+'macro-in-%s' % tag,
+'''This tag contains something that looks like an unexpanded macro; this is
+often the sign of a misspelling. Please check your specfile.''')
 
 # TagsCheck.py ends here
 
