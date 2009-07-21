@@ -163,7 +163,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 if i != -1:
                                     name = name[0:i]
                                     error = name != basename
-                            if error:
+                            if error and len(name):
                                 if name[0] == '$':
                                     printWarning(pkg, 'incoherent-subsys', fname, name)
                                 else:
