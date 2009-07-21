@@ -205,7 +205,7 @@ log_regex = re.compile('^/var/log/[^/]+$')
 lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
-mispelled_macro_regex = re.compile('%{.*}')
+misspelled_macro_regex = re.compile('%{.*}')
 siteperl_perl_regex = re.compile('/site_perl/')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
 shebang_regex = re.compile('^#!\s*(\S*)')
@@ -329,8 +329,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             is_doc = f in doc_files
             nonexec_file = False
 
-            if mispelled_macro_regex.search(f):
-                printWarning(pkg, 'mispelled-macro', f)
+            if misspelled_macro_regex.search(f):
+                printWarning(pkg, 'misspelled-macro', f)
             if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)
             if standard_groups and group not in standard_groups:
@@ -968,7 +968,7 @@ for the wrong kernel.''',
 '''This package contains files in /var/log/ without adding logrotate
 configuration for them.''',
 
-'mispelled-macro',
+'misspelled-macro',
 '''This package contains a file which matches %{.*}; this is often the sign
 of a misspelled macro. Please check your spec file.''',
 
