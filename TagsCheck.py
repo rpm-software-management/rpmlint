@@ -573,7 +573,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'tag-not-utf8', 'Summary')
             res = AbstractCheck.macro_regex.search(summary)
             if res:
-                printWarning(pkg, 'macro-in-summary', res.group(2))
+                printWarning(pkg, 'macro-in-summary', res.group(0))
 
         description = pkg[rpm.RPMTAG_DESCRIPTION]
         if not description:
@@ -596,7 +596,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'tag-not-utf8', '%description')
             res = AbstractCheck.macro_regex.search(description)
             if res:
-                printWarning(pkg, 'macro-in-description', res.group(2))
+                printWarning(pkg, 'macro-in-%description', res.group(0))
 
         group = pkg[rpm.RPMTAG_GROUP]
         if not group:
@@ -607,7 +607,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             else:
                 res = AbstractCheck.macro_regex.search(group)
                 if res:
-                    printWarning(pkg, 'macro-in-group', res.group(2))
+                    printWarning(pkg, 'macro-in-group', res.group(0))
 
         buildhost = pkg[rpm.RPMTAG_BUILDHOST]
         if not buildhost:
@@ -618,7 +618,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             else:
                 res = AbstractCheck.macro_regex.search(buildhost)
                 if res:
-                    printWarning(pkg, 'macro-in-buildhost', res.group(2))
+                    printWarning(pkg, 'macro-in-buildhost', res.group(0))
 
         changelog = pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
@@ -678,7 +678,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if not valid_license:
                 res = AbstractCheck.macro_regex.search(rpm_license)
                 if res:
-                    printWarning(pkg, 'macro-in-license', res.group(2))
+                    printWarning(pkg, 'macro-in-license', res.group(0))
 
         url = pkg[rpm.RPMTAG_URL]
         if url and url != 'none':
@@ -958,7 +958,7 @@ brief and to the point without including redundant information in it.''',
 tools and should thus be avoided, usually by using appropriately versioned
 Obsoletes and/or Provides and avoiding unversioned ones.''',
 )
-for tag in ('summary', 'description', 'group', 'buildhost', 'license'):
+for tag in ('summary', '%description', 'group', 'buildhost', 'license'):
     addDetails(
 'macro-in-%s' % tag,
 '''This tag contains something that looks like an unexpanded macro; this is
