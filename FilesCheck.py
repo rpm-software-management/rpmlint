@@ -205,7 +205,6 @@ log_regex = re.compile('^/var/log/[^/]+$')
 lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
-misspelled_macro_regex = re.compile('%{.*}')
 siteperl_perl_regex = re.compile('/site_perl/')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
 shebang_regex = re.compile('^#!\s*(\S*)')
@@ -329,8 +328,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             is_doc = f in doc_files
             nonexec_file = False
 
-            if misspelled_macro_regex.search(f):
-                printWarning(pkg, 'misspelled-macro', f)
+            res = AbstractCheck.macro_regex.search(f)
+            if res:
+                printWarning(pkg, 'misspelled-macro', f, res.group(2))
             if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)
             if standard_groups and group not in standard_groups:
@@ -969,8 +969,9 @@ for the wrong kernel.''',
 configuration for them.''',
 
 'misspelled-macro',
-'''This package contains a file which matches %{.*}; this is often the sign
-of a misspelled macro. Please check your spec file.''',
+'''This package contains a file which contains something that looks like an
+unexpanded macro; this is often the sign of a misspelling. Please check your
+specfile.''',
 
 'manifest-in-perl-module',
 '''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
