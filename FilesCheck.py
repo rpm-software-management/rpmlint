@@ -969,8 +969,8 @@ for the wrong kernel.''',
 configuration for them.''',
 
 'misspelled-macro',
-'''This package contains a file which contains something that looks like an
-unexpanded macro; this is often the sign of a misspelling. Please check your
+'''This package contains a file whose path contains something that looks like
+an unexpanded macro; this is often the sign of a misspelling. Please check your
 specfile.''',
 
 'manifest-in-perl-module',
