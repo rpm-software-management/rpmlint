@@ -48,7 +48,6 @@ hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibP
 prereq_regex = re.compile('^PreReq(\(.*\))?:\s*(.+?)\s*$', re.IGNORECASE)
 buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
-macro_regex = re.compile('(%+)[{(]?(\w+)')
 libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
 comment_or_empty_regex = re.compile('^\s*(#|$)')
 defattr_regex = re.compile('^\s*%defattr\\b')
@@ -409,7 +408,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                          conf)
 
             if current_section == 'changelog':
-                res = macro_regex.search(line)
+                res = AbstractCheck.macro_regex.search(line)
                 if res and len(res.group(1)) % 2:
                     printWarning(pkg, 'macro-in-%changelog', res.group(2))
             else:
