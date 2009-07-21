@@ -11,7 +11,7 @@
 import re
 
 
-macro_regex = re.compile('(%+)[{(]?(\w+)')
+macro_regex = re.compile('(%+)[{(]?\w+[)}]?')
 
 class AbstractCheck:
     known_checks = {}

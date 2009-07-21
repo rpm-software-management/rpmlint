@@ -330,7 +330,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             res = AbstractCheck.macro_regex.search(f)
             if res:
-                printWarning(pkg, 'misspelled-macro', f, res.group(2))
+                printWarning(pkg, 'misspelled-macro', f, res.group(0))
             if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)
             if standard_groups and group not in standard_groups:
