@@ -80,45 +80,48 @@ def main():
     try:
         # Loop over all file names given in arguments
         dirs = []
-        for f in args:
+        for arg in args:
             pkgs = []
             isfile = False
             try:
                 try:
-                    st = os.stat(f)
+                    st = os.stat(arg)
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        if not f.endswith(".spec"):
-                            pkgs.append(Pkg.Pkg(f, extract_dir))
+                        if not arg.endswith(".spec"):
+                            pkgs.append(Pkg.Pkg(arg, extract_dir))
                         elif do_spec_check:
                             # Short-circuit spec file checks
-                            pkg = Pkg.FakePkg(f)
+                            pkg = Pkg.FakePkg(arg)
                             check = SpecCheck.SpecCheck()
-                            check.check_spec(pkg, f)
+                            check.check_spec(pkg, arg)
                             pkg.cleanup()
                             specfiles_checked += 1
 
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
-                        dirs.append(f)
+                        dirs.append(arg)
                         continue
                     else:
                         raise OSError
                 except OSError:
-                    ipkgs = Pkg.getInstalledPkgs(f)
+                    ipkgs = Pkg.getInstalledPkgs(arg)
                     if not ipkgs:
                         sys.stderr.write(
-                            '(none): E: no installed packages by name %s\n' % f)
+                            '(none): E: no installed packages by name %s\n'
+                            % arg)
                     else:
                         pkgs.extend(ipkgs)
             except KeyboardInterrupt:
                 if isfile:
-                    f = os.path.abspath(f)
-                sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % f)
+                    arg = os.path.abspath(arg)
+                sys.stderr.write(
+                    '(none): E: interrupted, exiting while reading %s\n' % arg)
                 sys.exit(2)
             except Exception, e:
                 if isfile:
-                    f = os.path.abspath(f)
-                sys.stderr.write('(none): E: error while reading %s: %s\n' % (f, e))
+                    arg = os.path.abspath(arg)
+                sys.stderr.write(
+                    '(none): E: error while reading %s: %s\n' % (arg, e))
                 pkgs = []
                 continue
 
@@ -146,7 +149,9 @@ def main():
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
-                            sys.stderr.write('(none): E: interrupted, exiting while reading %s\n' % fname)
+                            sys.stderr.write(
+                                '(none): E: interrupted, exiting while ' +
+                                'reading %s\n' % fname)
                             sys.exit(2)
                         except Exception, e:
                             sys.stderr.write(
