@@ -17,8 +17,6 @@ import stat
 import sys
 import tempfile
 
-import rpm
-
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
 # that results in those variables initialized before config files are
@@ -163,18 +161,6 @@ def main():
                     '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
-        # if requested, scan all the installed packages
-        if allpkgs:
-            try:
-                ts = rpm.TransactionSet('/')
-                for hdr in ts.dbMatch():
-                    pkg = Pkg.InstalledPkg(hdr[rpm.RPMTAG_NAME], hdr)
-                    runChecks(pkg)
-                    packages_checked += 1
-            except KeyboardInterrupt:
-                sys.stderr.write('(none): E: interrupted, exiting while scanning all packages\n')
-                sys.exit(2)
-
         if printAllReasons():
             sys.stderr.write('(none): E: badness %d exceeds threshold %d, aborting.\n' % (badnessScore(), badnessThreshold()))
             sys.exit(66)
@@ -235,7 +221,6 @@ checkdir = '/usr/share/rpmlint'
 checks = []
 verbose = False
 extract_dir = None
-allpkgs = False
 conf_file = os.path.expanduser('~/.config/rpmlint')
 if not os.path.exists(conf_file):
     # deprecated backwards compatibility with < 0.88
@@ -280,7 +265,8 @@ for o in opt:
     elif o[0] == '-n' or o[0] == '--noexception':
         Config.no_exception = True
     elif o[0] == '-a' or o[0] == '--all':
-        allpkgs = True
+        if '*' not in args:
+            args.append('*')
     elif o[0] == '-f' or o[0] == '--file':
         conf_file = o[1]
     else:
@@ -309,7 +295,7 @@ if info_error:
     sys.exit(0)
 
 # if no argument print usage
-if args == [] and not allpkgs:
+if not args:
     usage(sys.argv[0])
     sys.exit(1)
 
