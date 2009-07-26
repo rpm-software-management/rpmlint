@@ -513,8 +513,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         break
                 if has_so:
                     base_or_libs = base + '/' + base + '-libs/lib' + base
+                    # try to match *%_isa as well (e.g. "(x86-64)", "(x86-32)")
+                    base_or_libs_re = re.compile(
+                        '^(lib)?%s(-libs)?(\(\w+-\d+\))?$' % re.escape(base))
                     for d in deps:
-                        if d[0] == base or d[0] == base + '-libs' or d[0] == 'lib' + base:
+                        if base_or_libs_re.match(d[0]):
                             dep = d
                             break
                     if not dep:
