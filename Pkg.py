@@ -523,12 +523,15 @@ class Pkg:
         return self._req_names
 
     def check_versioned_dep(self, name, version):
+        # try to match name%_isa as well (e.g. "foo(x86-64)", "foo(x86-32)")
+        name_re = re.compile('^%s(\(\w+-\d+\))?$' % re.escape(name))
         for d in self.requires() + self.prereq():
-            if d[0] == name:
+            if name_re.match(d[0]):
                 current_version = d[1]
                 if current_version.find(':') > 0:
                     current_version = ''.join(current_version.split(':')[1:])
-                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL or current_version != version:
+                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
+                        or current_version != version:
                     return False
                 return True
         return False
