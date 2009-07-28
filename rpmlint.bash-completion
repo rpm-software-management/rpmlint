@@ -6,13 +6,10 @@
 
 _rpmlint()
 {
-	local cur prev
-
 	COMPREPLY=()
-	cur=${COMP_WORDS[COMP_CWORD]}
-	prev=${COMP_WORDS[COMP_CWORD-1]}
+	local cur=$2 # for _rpm_installed_packages, _filedir
 
-	case $prev in
+	case $3 in
 		-@(C|E|-@(check|extract)dir))
 			_filedir -d
 			return 0
@@ -43,13 +40,10 @@ complete -F _rpmlint $filenames rpmlint
 
 _rpmdiff()
 {
-	local cur prev
-
 	COMPREPLY=()
-	cur=${COMP_WORDS[COMP_CWORD]}
-	prev=${COMP_WORDS[COMP_CWORD-1]}
+	local cur=$2 # for _rpm_installed_packages, _filedir
 
-	case $prev in
+	case $3 in
 		-i|--ignore)
 			COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' \
 				-- $cur ) )
