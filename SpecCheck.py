@@ -455,10 +455,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         for sect in buildroot_clean:
             if not buildroot_clean[sect]:
-                printError(pkg, 'no-cleaning-of-buildroot', '%' + sect)
+                printWarning(pkg, 'no-cleaning-of-buildroot', '%' + sect)
 
         if not buildroot:
-            printError(pkg, 'no-buildroot-tag')
+            printWarning(pkg, 'no-buildroot-tag')
 
         for sec in ('prep', 'build', 'install', 'clean'):
             if not section.get(sec):
@@ -527,7 +527,10 @@ be replaced by License and Epoch respectively.''',
 
 'no-buildroot-tag',
 '''The BuildRoot tag isn't used in your spec. It must be used in order to
-allow building the package as non root on some systems.''',
+allow building the package as non root on some systems. For some rpm versions
+(e.g. rpm.org >= 4.6) the BuildRoot tag is not necessary in specfiles and is
+ignored by rpmbuild; if your package is only going to be built with such rpm
+versions you can ignore this warning.''',
 
 'hardcoded-path-in-buildroot-tag',
 '''A path is hardcoded in your Buildroot tag. It should be replaced
@@ -611,8 +614,11 @@ ways.''',
 unpacking the sources.''',
 
 'no-cleaning-of-buildroot',
-'''You should clean $RPM_BUILD_ROOT in the %clean section and just after the
-beginning of %install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
+'''You should clean $RPM_BUILD_ROOT in the %clean section and in the beginning
+of the %install section. Use "rm -rf $RPM_BUILD_ROOT". Some rpm configurations
+do this automatically; if your package is only going to be built in such
+configurations, you can ignore this warning for the section(s) where your rpm
+takes care of it.''',
 
 'rpm-buildroot-usage',
 '''$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
