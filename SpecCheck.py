@@ -616,7 +616,7 @@ beginning of %install section. Use "rm -Rf $RPM_BUILD_ROOT".''',
 
 'rpm-buildroot-usage',
 '''$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
-will break short circuiting.''',
+may break short circuit builds.''',
 
 'make-check-outside-check-section',
 '''Make check or other automated regression test should be run in %check, as
