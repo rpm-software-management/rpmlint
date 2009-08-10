@@ -79,8 +79,12 @@ class Rpmdiff:
                     entry[1] = None
                     break
 
-        old = self.__load_pkg(old).header
-        new = self.__load_pkg(new).header
+        try:
+            old = self.__load_pkg(old).header
+            new = self.__load_pkg(new).header
+        except KeyError, e:
+            sys.stderr.write(str(e) + '\n')
+            sys.exit(2)
 
         # Compare single tags
         for tag in self.TAGS:
