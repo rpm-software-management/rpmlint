@@ -76,6 +76,7 @@ IconFilename		regex		'.*\.png$'
 InvalidRequires		list of regexps see DEFAULT_INVALID_REQUIRES in
 					TagsCheck.py
 KernelModuleRPMsOK	boolean		True
+MaxLineLength		integer		79
 MetaPackageRegexp	regex		'^(bundle|task)-' 
 Packager		regex		''
 PerlVersionTrick	boolean		True
