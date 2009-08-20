@@ -13,7 +13,8 @@ ETCDIR=/etc
 MANDIR=/usr/share/man
 
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
-	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1
+	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1 \
+	test.sh test/*.rpm test/*.spec test/*.py
 GENERATED = AUTHORS ChangeLog
 
 PACKAGE=rpmlint
