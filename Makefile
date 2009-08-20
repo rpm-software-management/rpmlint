@@ -46,10 +46,10 @@ install:
 verify:
 	pychecker --limit=100 [A-Z]*.py
 
-.PHONY: test
+.PHONY: check
 
-test:
-	sh test.sh
+check:
+	./test.sh
 
 version:
 	@echo "$(VERSION)"
