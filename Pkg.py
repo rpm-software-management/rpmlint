@@ -20,6 +20,7 @@ import subprocess
 
 try:
     import magic
+    # TODO: magic.MAGIC_COMPRESS when PkgFile gets decompress support.
     _magic = magic.open(magic.MAGIC_NONE)
     _magic.load()
 except:
@@ -295,6 +296,8 @@ def stringToVersion(verstring):
 
 class Pkg:
 
+    _magic_from_compressed_re = re.compile('\([^)]+\s+compressed\s+data\\b')
+
     def __init__(self, filename, dirname, header = None, is_source = False):
         self.filename = filename
         self.extracted = False
@@ -502,6 +505,13 @@ class Pkg:
                     pkgfile.magic = _magic.file(pkgfile.path)
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
+                elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
+                    # Discard magic from inside compressed files ("file -z")
+                    # until PkgFile gets decompression support.  We may get
+                    # such magic strings from package headers already now;
+                    # for example Fedora's rpmbuild as of F-11's 4.7.1 is
+                    # patched so it generates them.
+                    pkgfile.magic = ''
                 self._files[pkgfile.name] = pkgfile
 
     # API to access dependency information
@@ -654,6 +664,9 @@ class PkgFile(object):
         self.inode = 0
         self.deps = ''
         self.lang = ''
+        self.magic = ''
+
+    # TODO: decompression support
 
     is_config    = property(lambda self: self.flags & rpm.RPMFILE_CONFIG)
     is_doc       = property(lambda self: self.flags & rpm.RPMFILE_DOC)
