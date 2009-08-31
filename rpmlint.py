@@ -12,6 +12,7 @@
 import getopt
 import glob
 import imp
+import locale
 import os
 import stat
 import sys
@@ -59,6 +60,8 @@ def loadCheck(name):
 # main program
 #############################################################################
 def main():
+
+    locale.setlocale(locale.LC_COLLATE, '')
 
     # Add check dirs to the front of load path
     sys.path[0:0] = Config.checkDirs()
@@ -108,6 +111,8 @@ def main():
                             '(none): E: no installed packages by name %s\n'
                             % arg)
                     else:
+                        ipkgs.sort(key = lambda x: locale.strxfrm(
+                                x.header.sprintf("%{NAME}.%{ARCH}")))
                         pkgs.extend(ipkgs)
             except KeyboardInterrupt:
                 if isfile:
