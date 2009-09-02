@@ -598,7 +598,7 @@ def getInstalledPkgs(name):
 
     pkgs = []
     ts = rpm.TransactionSet()
-    if re.search('[?*[]', name):
+    if re.search('[?*]|\[.+\]', name):
         mi = ts.dbMatch()
         mi.pattern("name", rpm.RPMMIRE_GLOB, name)
     else:
