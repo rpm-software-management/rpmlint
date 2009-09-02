@@ -226,8 +226,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if is_utf8:
                 line = unicode(line, "utf-8", "replace")
 
-            if line.find(nbsp) != -1:
-                printWarning(pkg, "non-break-space", "line %s" % pkg.current_linenum)
+            char = line.find(nbsp)
+            if char != -1:
+                printWarning(pkg, "non-break-space", "line %s, char %d" %
+                             (pkg.current_linenum, char))
 
             section_marker = False
             for sec, regex in section_regexs.items():
