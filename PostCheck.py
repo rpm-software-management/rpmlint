@@ -130,8 +130,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'ghost-files-without-postin')
             else:
                 for f in ghost_files:
-                    if (not postin or postin.find(f) == -1) and \
-                       (not prein or prein.find(f) == -1) and \
+                    if (not postin or f not in postin) and \
+                       (not prein or f not in prein) and \
                        f not in pkg.missingOkFiles():
                         printWarning(pkg, 'postin-without-ghost-file-creation', f)
 

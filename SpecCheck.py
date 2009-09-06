@@ -133,7 +133,7 @@ def unversioned(toks):
     '''Return unversioned dependency tokens from the given list.'''
     res = []
     for tok in toks:
-        if tok.find(' ') < 0:
+        if ' ' not in tok:
             res.append(tok)
     return res
 
@@ -439,7 +439,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'libdir-macro-in-noarch-package',
                                      pkgname, line.rstrip())
 
-            if not indent_tabs and line.find('\t') != -1:
+            if not indent_tabs and '\t' in line:
                 indent_tabs = pkg.current_linenum
             if not indent_spaces and indent_spaces_regex.search(line):
                 indent_spaces = pkg.current_linenum
@@ -494,7 +494,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                    '--qf=', '--specfile', self._spec_file))
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855
-            if line.find("No such file or directory") < 0:
+            if 'No such file or directory' not in line:
                 printError(pkg, 'specfile-error', line)
 
 
