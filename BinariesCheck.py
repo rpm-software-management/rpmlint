@@ -224,9 +224,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
 
-            is_elf = pkgfile.magic.find('ELF') != -1
-            is_ar = pkgfile.magic.find('current ar archive') != -1
-            is_ocaml_native = pkgfile.magic.find('Objective caml native') != -1
+            is_elf = 'ELF' in pkgfile.magic
+            is_ar = 'current ar archive' in pkgfile.magic
+            is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_binary = is_elf or is_ar or is_ocaml_native
             is_shlib = so_regex.search(fname)
 
@@ -379,7 +379,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 fn = res and res.group(1) or f
                 if f not in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
-            if version and version != -1 and pkg.name.find(version) == -1:
+            if version and version != -1 and version not in pkg.name:
                 printError(pkg, 'incoherent-version-in-name', version)
 
         if not binary and not multi_pkg and pkg.arch != 'noarch':

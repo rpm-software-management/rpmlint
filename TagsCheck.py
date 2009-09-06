@@ -494,9 +494,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res = lib_package_regex.search(d[0])
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
-            if d[2] == rpm.RPMSENSE_EQUAL and d[1].find('-') != -1:
+            if d[2] == rpm.RPMSENSE_EQUAL and '-' in d[1]:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
-            if d[1].find('%') != -1:
+            if '%' in d[1]:
                 printError(pkg, 'percent-in-dependency',
                            apply(Pkg.formatRequire, d))
 
@@ -552,7 +552,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if use_utf8:
                 utf8summary = Pkg.to_utf8(summary).decode('utf-8')
             spell_check(pkg, summary, 'summary')
-            if summary.find('\n') != -1:
+            if '\n' in summary:
                 printError(pkg, 'summary-on-multiple-lines')
             if summary[0] != summary[0].upper():
                 printWarning(pkg, 'summary-not-capitalized', summary)
@@ -700,7 +700,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if o not in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
-            if o[1].find('%') != -1:
+            if '%' in o[1]:
                 printError(pkg, 'percent-in-obsoletes',
                            apply(Pkg.formatRequire, o))
 
@@ -715,12 +715,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
-            if p[1].find('%') != -1:
+            if '%' in p[1]:
                 printError(pkg, 'percent-in-provides',
                            apply(Pkg.formatRequire, p))
 
         for c in pkg.conflicts():
-            if c[1].find('%') != -1:
+            if '%' in c[1]:
                 printError(pkg, 'percent-in-conflicts',
                            apply(Pkg.formatRequire, c))
 

@@ -153,7 +153,7 @@ def isFiltered(s):
         for idx in range(1, len(_filters)):
             # to prevent named group overflow that happen when there is too many () in a single regexp
             # AssertionError: sorry, but this version only supports 100 named groups
-            if _filters[idx].find('(') > -1:
+            if '(' in _filters[idx]:
                 _non_named_group_re.subn('(:?', _filters[idx])
             _filters_re = _filters_re + '|(?:' + _filters[idx] +')'
         _filters_re = re.compile(_filters_re)
