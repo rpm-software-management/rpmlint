@@ -33,12 +33,15 @@ import Pkg
 
 version = '@VERSION@'
 
+_default_user_conf = '%s/rpmlint' % \
+    (os.environ.get('XDG_CONFIG_HOME') or '~/.config')
+
 # Print usage information
 def usage(name):
     print 'usage:', name, \
           '[<options>] <rpm files|installed packages|specfiles|dirs>'
     print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <user config file to use instead of ~/.config/rpmlint>]'
+    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <user config file to use instead of %s]' % _default_user_conf
 
 # Print version information
 def printVersion():
@@ -226,8 +229,8 @@ checkdir = '/usr/share/rpmlint'
 checks = []
 verbose = False
 extract_dir = None
-conf_file = os.path.expanduser('~/.config/rpmlint')
-if not os.path.exists(conf_file):
+conf_file = _default_user_conf
+if not os.path.exists(os.path.expanduser(conf_file)):
     # deprecated backwards compatibility with < 0.88
     conf_file = '~/.rpmlintrc'
 info_error = None
