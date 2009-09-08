@@ -38,7 +38,8 @@ Implemented checks:
 
 If you want to change configuration options or the list of checks, use
 the global configuration files /etc/rpmlint/*config or the user
-configuration file ~/.config/rpmlint.
+configuration file $XDG_CONFIG_HOME/rpmlint (~/.config/rpmlint if
+$XDG_CONFIG_HOME is empty or not set).
 
 Configuration files are Python source files and should begin with the
 following line:

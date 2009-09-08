@@ -51,7 +51,9 @@ Display version information and exit.
 Ignore output filters.
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fIconffile\fR
-Load user configuration from the specified file, default is ~/.config/rpmlint
+Load user configuration from the specified file, default is
+$XDG_CONFIG_HOME/rpmlint (~/.config/rpmlint if $XDG_CONFIG_HOME is
+empty or not set).
 .SH CAVEATS
 All checks do not apply to all argument types.  For best check
 coverage, run rpmlint on all source and binary packages your build
@@ -68,7 +70,7 @@ Built-in configuration.
 \fB/etc/rpmlint/*config\fR
 System wide configuration.
 .TP
-\fB~/.config/rpmlint\fR
+\fB$XDG_CONFIG_HOME/rpmlint\fR or \fB~/.config/rpmlint\fR
 User configuration.
 .SH EXIT CODES
 .IP 0
