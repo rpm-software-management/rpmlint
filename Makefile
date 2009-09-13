@@ -20,7 +20,7 @@ GENERATED = AUTHORS ChangeLog
 PACKAGE=rpmlint
 
 # update this variable to create a new release
-VERSION := 0.90
+VERSION := 0.91
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
