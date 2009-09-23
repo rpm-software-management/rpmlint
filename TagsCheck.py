@@ -11,9 +11,14 @@
 import os
 import re
 
+try:
+    import enchant
+    import enchant.checker
+except ImportError:
+    enchant = None
 import rpm
 
-from Filter import addDetails, printError, printWarning
+from Filter import addDetails, printError, printInfo, printWarning
 import AbstractCheck
 import Config
 import FilesCheck
@@ -409,19 +414,49 @@ max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
 
-def spell_check(pkg, str, tagname):
-    for seq in str.split():
-        for word in re.split('[^a-z]+', seq.lower()):
-            if len(word) > 0:
-                try:
-                    if word[0] == '\'':
-                        word = word[1:]
-                    if word[-1] == '\'':
-                        word = word[:-1]
-                    correct = BAD_WORDS[word]
-                    printWarning(pkg, 'spelling-error-in-' + tagname, word, correct)
-                except KeyError:
-                    pass
+def spell_check(pkg, str, tagname, lang):
+    dict_found = True
+    if enchant:
+        if lang == 'C':
+            lang = 'en_US'
+        try:
+            checker = enchant.checker.SpellChecker(
+                lang, filters = [ enchant.tokenize.EmailFilter,
+                                  enchant.tokenize.URLFilter,
+                                  enchant.tokenize.WikiWordFilter ])
+            checker.set_text(str)
+            uppername = pkg.name.upper()
+            for err in checker:
+                upperword = err.word.upper()
+                # Skip errors containing package name
+                if uppername in upperword:
+                    continue
+                # Skip all uppercase words
+                if err.word == upperword:
+                    continue
+                    
+                printWarning(pkg, 'spelling-error-in-' + tagname,
+                             lang, err.word)
+        except enchant.DictNotFoundError:
+            printInfo(pkg, 'enchant-dictionary-not-found', lang)
+            dict_found = False
+            pass
+
+    if not enchant or not dict_found:
+        for seq in str.split():
+            for word in re.split('[^a-z]+', seq.lower()):
+                if len(word) > 0:
+                    try:
+                        if word[0] == '\'':
+                            word = word[1:]
+                        if word[-1] == '\'':
+                            word = word[:-1]
+                        correct = BAD_WORDS[word]
+                        printWarning(pkg, 'spelling-error-in-' + tagname,
+                                     lang, word, correct)
+                    except KeyError:
+                        pass
+
 
 class TagsCheck(AbstractCheck.AbstractCheck):
 
@@ -544,60 +579,21 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if prov not in (x[0] for x in pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
 
-        summary = pkg[rpm.RPMTAG_SUMMARY]
-        if not summary:
+        if not pkg[rpm.RPMTAG_SUMMARY]:
             printError(pkg, 'no-summary-tag')
         else:
-            utf8summary = summary
-            if use_utf8:
-                utf8summary = Pkg.to_utf8(summary).decode('utf-8')
-            spell_check(pkg, summary, 'summary')
-            if '\n' in summary:
-                printError(pkg, 'summary-on-multiple-lines')
-            if summary[0] != summary[0].upper():
-                printWarning(pkg, 'summary-not-capitalized', summary)
-            if summary[-1] == '.':
-                printWarning(pkg, 'summary-ended-with-dot', summary)
-            if len(utf8summary) > max_line_len:
-                printError(pkg, 'summary-too-long', summary)
-            if leading_space_regex.search(summary):
-                printError(pkg, 'summary-has-leading-spaces', summary)
-            res = forbidden_words_regex.search(summary)
-            if res and Config.getOption('ForbiddenWords'):
-                printWarning(pkg, 'summary-use-invalid-word', res.group(1))
-            if name:
-                sepchars = '[\s' + punct + ']'
-                res = re.search('(?:^|\s)(%s)(?:%s|$)' %
-                                (re.escape(name), sepchars),
-                                summary, re.IGNORECASE | re.UNICODE)
-                if res:
-                    printWarning(pkg, 'name-repeated-in-summary', res.group(1))
-            if use_utf8 and not Pkg.is_utf8_str(summary):
-                printError(pkg, 'tag-not-utf8', 'Summary')
-            res = AbstractCheck.macro_regex.search(summary)
+            for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                self.check_summary(pkg, lang)
+            res = AbstractCheck.macro_regex.search(pkg[rpm.RPMTAG_SUMMARY])
             if res:
                 printWarning(pkg, 'macro-in-summary', res.group(0))
 
-        description = pkg[rpm.RPMTAG_DESCRIPTION]
-        if not description:
+        if not pkg[rpm.RPMTAG_DESCRIPTION]:
             printError(pkg, 'no-description-tag')
         else:
-            spell_check(pkg, description, 'description')
-            for l in description.splitlines():
-                utf8l = l
-                if use_utf8:
-                    utf8l = Pkg.to_utf8(l).decode('utf-8')
-                if len(utf8l) > max_line_len:
-                    printError(pkg, 'description-line-too-long', l)
-                res = forbidden_words_regex.search(l)
-                if res and Config.getOption('ForbiddenWords'):
-                    printWarning(pkg, 'description-use-invalid-word', res.group(1))
-                res = tag_regex.search(l)
-                if res:
-                    printWarning(pkg, 'tag-in-description', res.group(1))
-            if use_utf8 and not Pkg.is_utf8_str(description):
-                printError(pkg, 'tag-not-utf8', '%description')
-            res = AbstractCheck.macro_regex.search(description)
+            for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                self.check_description(pkg, lang)
+            res = AbstractCheck.macro_regex.search(pkg[rpm.RPMTAG_DESCRIPTION])
             if res:
                 printWarning(pkg, 'macro-in-%description', res.group(0))
 
@@ -746,6 +742,56 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         basename = os.path.basename(pkg.filename)
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
+
+    def check_description(self, pkg, lang):
+        description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
+        utf8desc = description
+        if use_utf8:
+            utf8desc = Pkg.to_utf8(description).decode('utf-8')
+        spell_check(pkg, utf8desc, 'description', lang)
+        for l in utf8desc.splitlines():
+            if len(l) > max_line_len:
+                printError(pkg, 'description-line-too-long', lang, l)
+            res = forbidden_words_regex.search(l)
+            if res and Config.getOption('ForbiddenWords'):
+                printWarning(pkg, 'description-use-invalid-word', lang,
+                             res.group(1))
+            res = tag_regex.search(l)
+            if res:
+                printWarning(pkg, 'tag-in-description', lang, res.group(1))
+        if use_utf8 and not Pkg.is_utf8_str(description):
+            printError(pkg, 'tag-not-utf8', '%description', lang)
+
+    def check_summary(self, pkg, lang):
+        summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
+        utf8summary = summary
+        if use_utf8:
+            utf8summary = Pkg.to_utf8(summary).decode('utf-8')
+        spell_check(pkg, utf8summary, 'summary', lang)
+        if '\n' in summary:
+            printError(pkg, 'summary-on-multiple-lines', lang)
+        if summary[0] != summary[0].upper():
+            printWarning(pkg, 'summary-not-capitalized', lang, summary)
+        if summary[-1] == '.':
+            printWarning(pkg, 'summary-ended-with-dot', lang, summary)
+        if len(utf8summary) > max_line_len:
+            printError(pkg, 'summary-too-long', lang, summary)
+        if leading_space_regex.search(summary):
+            printError(pkg, 'summary-has-leading-spaces', lang, summary)
+        res = forbidden_words_regex.search(summary)
+        if res and Config.getOption('ForbiddenWords'):
+            printWarning(pkg, 'summary-use-invalid-word', lang, res.group(1))
+        if pkg.name:
+            sepchars = '[\s' + punct + ']'
+            res = re.search('(?:^|\s)(%s)(?:%s|$)' %
+                            (re.escape(pkg.name), sepchars),
+                            summary, re.IGNORECASE | re.UNICODE)
+            if res:
+                printWarning(pkg, 'name-repeated-in-summary', lang,
+                             res.group(1))
+        if use_utf8 and not Pkg.is_utf8_str(summary):
+            printError(pkg, 'tag-not-utf8', 'Summary', lang)
+
 
 # Create an object to enable the auto registration of the test
 check = TagsCheck()
@@ -955,6 +1001,11 @@ It could be an unexpanded macro, please double check.''',
 '''The name of the package is repeated in its summary.  This is often redundant
 information and looks silly in various programs' output.  Make the summary
 brief and to the point without including redundant information in it.''',
+
+'enchant-dictionary-not-found',
+'''A dictionary for the Enchant spell checking library is not available for
+the language given in the info message.  Spell checking will proceed with
+rpmlint's built-in implementation for localized tags in this language.''',
 
 'self-obsoletion',
 '''The package obsoletes itself.  This is known to cause errors in various

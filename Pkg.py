@@ -405,6 +405,16 @@ class Pkg:
                 in_file.close()
         return ret
 
+    def langtag(self, tag, lang):
+        """Get value of tag in the given language."""
+        # LANGUAGE trumps other env vars per GNU gettext docs, see also #166
+        orig = os.environ.get('LANGUAGE')
+        os.environ['LANGUAGE'] = lang
+        ret = self[tag]
+        if orig is not None:
+            os.environ['LANGUAGE'] = orig
+        return ret
+
     # return the associative array indexed on file names with
     # the values as: (file perm, file owner, file group, file link to)
     def files(self):
