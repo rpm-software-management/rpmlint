@@ -414,6 +414,7 @@ max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
 
+_enchant_dict_warned = set()
 def spell_check(pkg, str, tagname, lang):
     dict_found = True
     if enchant:
@@ -438,7 +439,9 @@ def spell_check(pkg, str, tagname, lang):
                 printWarning(pkg, 'spelling-error-in-' + tagname,
                              lang, err.word)
         except enchant.DictNotFoundError:
-            printInfo(pkg, 'enchant-dictionary-not-found', lang)
+            if lang not in _enchant_dict_warned:
+                printInfo(pkg, 'enchant-dictionary-not-found', lang)
+                _enchant_dict_warned.add(lang)
             dict_found = False
             pass
 
