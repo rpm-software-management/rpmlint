@@ -38,10 +38,20 @@ _default_user_conf = '%s/rpmlint' % \
 
 # Print usage information
 def usage(name):
-    print 'usage:', name, \
-          '[<options>] <rpm files|installed packages|specfiles|dirs>'
-    print '  options in:'
-    print '\t[-i|--info]\n\t[-I <error,error,...>]\n\t[-c|--check <check>]\n\t[-a|--all]\n\t[-C|--checkdir <checkdir>]\n\t[-h|--help]\n\t[-v|--verbose]\n\t[-E|--extractdir <dir>]\n\t[-V|--version]\n\t[-n|--noexception]\n\t[-f|--file <user config file to use instead of %s]' % _default_user_conf
+    print '''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
+  options:
+\t[-i|--info]
+\t[-I <error,error,...>]
+\t[-c|--check <check>]
+\t[-a|--all]
+\t[-C|--checkdir <checkdir>]
+\t[-h|--help]
+\t[-v|--verbose]
+\t[-E|--extractdir <dir>]
+\t[-V|--version]
+\t[-n|--noexception]
+\t[-f|--file <user config file to use instead of %s]''' \
+        % (name, _default_user_conf)
 
 # Print version information
 def printVersion():
