@@ -41,7 +41,7 @@ def usage(name):
     print '''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
-\t[-I <error,error,...>]
+\t[-I <messageid,messageid,...>]
 \t[-c|--check <check>]
 \t[-a|--all]
 \t[-C|--checkdir <checkdir>]
@@ -261,31 +261,31 @@ del f
 
 # process command line options
 for o in opt:
-    if o[0] == '-c' or o[0] == '--check':
+    if o[0] in ('-c', '--check'):
         checks.append(o[1])
-    elif o[0] == '-i' or o[0] == '--info':
+    elif o[0] in('-i', '--info'):
         Config.info = True
     elif o[0] == '-I':
         info_error = o[1]
-    elif o[0] == '-h' or o[0] == '--help':
+    elif o[0] in ('-h', '--help'):
         usage(sys.argv[0])
         sys.exit(0)
-    elif o[0] == '-C' or o[0] == '--checkdir':
+    elif o[0] in ('-C', '--checkdir'):
         Config.addCheckDir(o[1])
-    elif o[0] == '-v' or o[0] == '--verbose':
+    elif o[0] in ('-v', '--verbose'):
         verbose = True
-    elif o[0] == '-V' or o[0] == '--version':
+    elif o[0] in ('-V', '--version'):
         printVersion()
         sys.exit(0)
-    elif o[0] == '-E' or o[0] == '--extractdir':
+    elif o[0] in ('-E', '--extractdir'):
         extract_dir = o[1]
         Config.setOption('ExtractDir', extract_dir)
-    elif o[0] == '-n' or o[0] == '--noexception':
+    elif o[0] in ('-n', '--noexception'):
         Config.no_exception = True
-    elif o[0] == '-a' or o[0] == '--all':
+    elif o[0] in ('-a', '--all'):
         if '*' not in args:
             args.append('*')
-    elif o[0] == '-f' or o[0] == '--file':
+    elif o[0] in ('-f', '--file'):
         conf_file = o[1]
     else:
         print 'unknown option', o
