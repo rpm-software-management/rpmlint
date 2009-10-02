@@ -43,7 +43,7 @@ _rpmdiff()
 
     case $3 in
         -i|--ignore)
-            COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' -- $cur ) )
+            COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' -- "$cur" ) )
             return 0
             ;;
         -h|--help)
