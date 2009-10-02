@@ -24,7 +24,7 @@ _rpmlint()
 	if [[ "$cur" == -* ]]; then
 		COMPREPLY=( $( compgen -W '-i --info -I -c --check \
 			-a --all -C --checkdir -h --help -v --verbose \
-			-E --extractdir -p --profile -V --version -n \
+			-E --extractdir -V --version -n \
 			--noexception -f --file' -- $cur ) )
 	else
 		# Installed packages completion is slow, do it only if arg
