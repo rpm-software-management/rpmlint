@@ -54,6 +54,17 @@ Ignore output filters.
 Load user configuration from the specified file, default is
 $XDG_CONFIG_HOME/rpmlint (~/.config/rpmlint if $XDG_CONFIG_HOME is
 empty or not set).
+.TP
+\fB\-o\fR, \fB\-\-option\fR=\fIvalue\fR
+Override a configuration option.  \fIvalue\fR is a whitespace separated string,
+first word of which is the option name to set, and the Python eval() return
+value for the rest is set as the value for the option.  Passing only an option
+name is treated as if None was passed as its value.  See rpmlint's README for
+the list of configuration options and their types.  For example:
+ \-o "UseBzip2 True"
+ \-o "Distribution 'My favorite distro'"
+ \-o "MaxLineLength 80"
+ \-o "ValidShells ('/bin/sh', '/bin/bash')"
 .SH CAVEATS
 All checks do not apply to all argument types.  For best check
 coverage, run rpmlint on all source and binary packages your build

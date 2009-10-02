@@ -50,7 +50,8 @@ def usage(name):
 \t[-E|--extractdir <dir>]
 \t[-V|--version]
 \t[-n|--noexception]
-\t[-f|--file <user config file to use instead of %s]''' \
+\t[-f|--file <user config file to use instead of %s]
+\t[-o|--option <key value>]''' \
         % (name, _default_user_conf)
 
 # Print version information
@@ -217,7 +218,7 @@ sys.argv[0] = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args) = getopt.getopt(sys.argv[1:],
-                              'iI:c:C:hVvanE:f:',
+                              'iI:c:C:hVvanE:f:o:',
                               ['info',
                                'check=',
                                'checkdir=',
@@ -228,6 +229,7 @@ try:
                                'noexception',
                                'extractdir=',
                                'file=',
+                               'option=',
                                ])
 except getopt.error, e:
     sys.stderr.write("%s: %s\n" % (sys.argv[0], e))
@@ -259,6 +261,8 @@ for f in configs:
 # pychecker fix
 del f
 
+config_overrides = {}
+
 # process command line options
 for o in opt:
     if o[0] in ('-c', '--check'):
@@ -287,6 +291,12 @@ for o in opt:
             args.append('*')
     elif o[0] in ('-f', '--file'):
         conf_file = o[1]
+    elif o[0] in ('-o', '--option'):
+        kv = o[1].split(None, 1)
+        if len(kv) == 1:
+            config_overrides[kv[0]] = None
+        else:
+            config_overrides[kv[0]] = eval(kv[1])
     else:
         print 'unknown option', o
 
@@ -297,6 +307,10 @@ except IOError:
     pass
 except Exception,E:
     sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (conf_file, E))
+
+# apply config overrides
+for key, value in config_overrides.items():
+    Config.setOption(key, value)
 
 if not extract_dir:
     extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
