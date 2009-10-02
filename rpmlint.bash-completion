@@ -18,7 +18,7 @@ _rpmlint()
 			_filedir
 			return 0
 			;;
-		-I|-c|--check)
+		-I|-c|--check|-o|--option)
 			# argument required but no completions available
 			return 0
 			;;
@@ -28,7 +28,7 @@ _rpmlint()
 	if [[ "$cur" == -* ]]; then
 		COMPREPLY=( $( compgen -W '--info -I --check --all --checkdir
 			--help --verbose --extractdir --version --noexception
-			--file' -- $cur ) )
+			--file --option' -- $cur ) )
 	else
 		# Installed packages completion is slow, do it only if arg
 		# does not look like a path.
