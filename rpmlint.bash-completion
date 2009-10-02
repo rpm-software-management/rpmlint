@@ -1,72 +1,73 @@
-# -*- mode: shell-script; sh-basic-offset: 8; indent-tabs-mode: t -*-
-# ex: ts=8 sw=8 et filetype=sh
-#
-# bash-completion add-on for rpmlint(1)
+# bash-completion add-on for rpmlint
 # http://bash-completion.alioth.debian.org/
 
 _rpmlint()
 {
-	COMPREPLY=()
-	local cur=$2 # for _rpm_installed_packages, _filedir
+    COMPREPLY=()
+    local cur=$2 # for _rpm_installed_packages, _filedir
 
-	case $3 in
-		-C|--checkdir|-E|--extractdir)
-			_filedir -d
-			return 0
-			;;
-		-f|--file)
-			_filedir
-			return 0
-			;;
-		-I|-c|--check|-o|--option)
-			# argument required but no completions available
-			return 0
-			;;
-	esac
+    case $3 in
+        -C|--checkdir|-E|--extractdir)
+            _filedir -d
+            return 0
+            ;;
+        -f|--file)
+            _filedir
+            return 0
+            ;;
+        -I|-c|--check|-o|--option)
+            # argument required but no completions available
+            return 0
+            ;;
+    esac
 
-
-	if [[ "$cur" == -* ]]; then
-		COMPREPLY=( $( compgen -W '--info -I --check --all --checkdir
-			--help --verbose --extractdir --version --noexception
-			--file --option' -- "$cur" ) )
-	else
-		# Installed packages completion is slow, do it only if arg
-		# does not look like a path.
-		if [[ "$cur" != */* ]]; then
-			type _rpm_installed_packages &>/dev/null && \
-				_rpm_installed_packages
-		fi
-		_filedir '@(rpm|spec)'
-	fi
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '--info -I --check --all --checkdir
+                        --help --verbose --extractdir --version --noexception
+                        --file --option' -- "$cur" ) )
+    else
+        # Installed packages completion is slow, do it only if arg does not
+        # look like a path.
+        if [[ "$cur" != */* ]]; then
+            type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
+        fi
+        _filedir '@(rpm|spec)'
+    fi
 }
 complete -F _rpmlint -o filenames rpmlint
 
 _rpmdiff()
 {
-	COMPREPLY=()
-	local cur=$2 # for _rpm_installed_packages, _filedir
+    COMPREPLY=()
+    local cur=$2 # for _rpm_installed_packages, _filedir
 
-	case $3 in
-		-i|--ignore)
-			COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' \
-				-- $cur ) )
-			return 0
-			;;
-		-h|--help)
-			return 0
-			;;
-	esac
+    case $3 in
+        -i|--ignore)
+            COMPREPLY=( $( compgen -W 'S M 5 D N L V U G F T' -- $cur ) )
+            return 0
+            ;;
+        -h|--help)
+            return 0
+            ;;
+    esac
 
-	if [[ "$cur" == -* ]]; then
-		COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- "$cur" ) )
-	else
-		# Installed packages completion is slow, do it only if arg
-		# does not look like a path.
-		if [[ "$cur" != */* ]]; then
-			type _rpm_installed_packages &>/dev/null && \
-				_rpm_installed_packages
-		fi
-		_filedir rpm
-	fi
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- "$cur" ) )
+    else
+        # Installed packages completion is slow, do it only if arg does not
+        # look like a path.
+        if [[ "$cur" != */* ]]; then
+            type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
+        fi
+        _filedir rpm
+    fi
 }
 complete -F _rpmdiff -o filenames rpmdiff
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
