@@ -10,11 +10,11 @@ _rpmlint()
 	local cur=$2 # for _rpm_installed_packages, _filedir
 
 	case $3 in
-		-@(C|E|-@(check|extract)dir))
+		-C|--checkdir|-E|--extractdir)
 			_filedir -d
 			return 0
 			;;
-		-@(f|-file))
+		-f|--file)
 			_filedir
 			return 0
 			;;
