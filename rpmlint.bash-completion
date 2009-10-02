@@ -18,6 +18,10 @@ _rpmlint()
 			_filedir
 			return 0
 			;;
+		-I|-c|--check)
+			# argument required but no completions available
+			return 0
+			;;
 	esac
 
 
