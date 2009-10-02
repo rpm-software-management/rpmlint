@@ -28,7 +28,7 @@ _rpmlint()
 	if [[ "$cur" == -* ]]; then
 		COMPREPLY=( $( compgen -W '--info -I --check --all --checkdir
 			--help --verbose --extractdir --version --noexception
-			--file --option' -- $cur ) )
+			--file --option' -- "$cur" ) )
 	else
 		# Installed packages completion is slow, do it only if arg
 		# does not look like a path.
@@ -58,7 +58,7 @@ _rpmdiff()
 	esac
 
 	if [[ "$cur" == -* ]]; then
-		COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- $cur ) )
+		COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- "$cur" ) )
 	else
 		# Installed packages completion is slow, do it only if arg
 		# does not look like a path.
