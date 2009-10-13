@@ -11,11 +11,6 @@
 import os
 import re
 
-try:
-    import enchant
-    import enchant.checker
-except ImportError:
-    enchant = None
 import rpm
 
 from Filter import addDetails, printError, printInfo, printWarning
@@ -24,6 +19,16 @@ import Config
 import FilesCheck
 import Pkg
 
+_use_enchant = Config.getOption("UseEnchant", None)
+if _use_enchant or _use_enchant is None:
+    try:
+        import enchant
+        import enchant.checker
+    except ImportError:
+        enchant = None
+else:
+    enchant = None
+del _use_enchant
 
 DEFAULT_VALID_LICENSES = (
     # OSI approved licenses, http://www.opensource.org/licenses/ (unversioned,

@@ -99,6 +99,7 @@ UseRelativeSymlinks	boolean		True
 UseVersionInChangelog	boolean		True
 UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
 UseUTF8			boolean		(autodetected)
+UseEnchant		boolean		True (falls back if Enchant is N/A)
 ValidBuildHost		regex		''
 ValidGroups		list of strings
 ValidLicenses		list of strings
