@@ -272,7 +272,9 @@ def main():
         _usage()
 
     d = Rpmdiff(args[0], args[1], ignore=ignore_tags)
-    print d.textdiff()
+    textdiff = d.textdiff()
+    if textdiff:
+        print textdiff
     sys.exit(int(d.differs()))
 
 if __name__ == '__main__':
