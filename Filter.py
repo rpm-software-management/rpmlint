@@ -78,26 +78,9 @@ def printDescriptions(reason):
     except KeyError:
         pass
 
-def _diag_compare(x, y):
-
-    where_a = x.split()[1]
-    level_a = x.split()[2]
-
-    where_b = y.split()[1]
-    level_b = y.split()[2]
-
-    if level_b > level_a:
-        return 1
-    elif level_b == level_a:
-        if where_b > where_b:
-            return 1
-        elif where_b == where_a:
-            return 0
-        else:
-            return -1
-    else:
-        return -1
-
+def _diag_sortkey(x):
+    xs = x.split()
+    return (xs[2], xs[1])
 
 def printAllReasons():
     threshold = badnessThreshold()
@@ -105,7 +88,7 @@ def printAllReasons():
         return False
 
     global _badness_score, _diagnostic
-    _diagnostic.sort(_diag_compare)
+    _diagnostic.sort(key = _diag_sortkey, reverse = True)
     last_reason = ''
     for diag in _diagnostic:
         if Config.info:
