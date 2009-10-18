@@ -256,7 +256,7 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:],
                                    "hti:", ["help", "ignore-times", "ignore="])
     except getopt.GetoptError, e:
-        print "Error: %s" % e
+        sys.stderr.write("Error: %s\n" % e)
         _usage()
 
     for option, argument in opts:
