@@ -38,7 +38,7 @@ _default_user_conf = '%s/rpmlint' % \
 
 # Print usage information
 def usage(name):
-    print '''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
+    Pkg.rlprint('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
 \t[-I <messageid,messageid,...>]
@@ -52,11 +52,11 @@ def usage(name):
 \t[-n|--noexception]
 \t[-f|--file <user config file to use instead of %s]
 \t[-o|--option <key value>]''' \
-        % (name, _default_user_conf)
+        % (name, _default_user_conf))
 
 # Print version information
 def printVersion():
-    print 'rpmlint version', version, 'Copyright (C) 1999-2007 Frederic Lepied, Mandriva'
+    Pkg.rlprint('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % version)
 
 def loadCheck(name):
     '''Load a (check) module by its name, unless it is already loaded.'''
@@ -121,8 +121,8 @@ def main():
                 except OSError:
                     ipkgs = Pkg.getInstalledPkgs(arg)
                     if not ipkgs:
-                        sys.stderr.write(
-                            '(none): E: no installed packages by name %s\n'
+                        Pkg.rlwarn(
+                            '(none): E: no installed packages by name %s'
                             % arg)
                     else:
                         ipkgs.sort(key = lambda x: locale.strxfrm(
@@ -131,14 +131,14 @@ def main():
             except KeyboardInterrupt:
                 if isfile:
                     arg = os.path.abspath(arg)
-                sys.stderr.write(
-                    '(none): E: interrupted, exiting while reading %s\n' % arg)
+                Pkg.rlwarn(
+                    '(none): E: interrupted, exiting while reading %s' % arg)
                 sys.exit(2)
             except Exception, e:
                 if isfile:
                     arg = os.path.abspath(arg)
-                sys.stderr.write(
-                    '(none): E: error while reading %s: %s\n' % (arg, e))
+                Pkg.rlwarn(
+                    '(none): E: error while reading %s: %s' % (arg, e))
                 pkgs = []
                 continue
 
@@ -166,22 +166,23 @@ def main():
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
-                            sys.stderr.write(
+                            Pkg.rlwarn(
                                 '(none): E: interrupted, exiting while ' +
-                                'reading %s\n' % fname)
+                                'reading %s' % fname)
                             sys.exit(2)
                         except Exception, e:
-                            sys.stderr.write(
-                                '(none): E: while reading %s: %s\n' %
-                                (fname, e))
+                            Pkg.rlwarn(
+                                '(none): E: while reading %s: %s' % (fname, e))
                             continue
             except Exception, e:
-                sys.stderr.write(
+                Pkg.rlwarn(
                     '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
         if printAllReasons():
-            sys.stderr.write('(none): E: badness %d exceeds threshold %d, aborting.\n' % (badnessScore(), badnessThreshold()))
+            Pkg.rlwarn(
+                '(none): E: badness %d exceeds threshold %d, aborting.' %
+                (badnessScore(), badnessThreshold()))
             sys.exit(66)
 
     finally:
@@ -204,8 +205,7 @@ def runChecks(pkg):
             if check:
                 check.check(pkg)
             else:
-                sys.stderr.write(
-                    '(none): W: unknown check %s, skipping\n' % name)
+                Pkg.rlwarn('(none): W: unknown check %s, skipping' % name)
     finally:
         pkg.cleanup()
 
@@ -232,7 +232,7 @@ try:
                                'option=',
                                ])
 except getopt.error, e:
-    sys.stderr.write("%s: %s\n" % (sys.argv[0], e))
+    Pkg.rlwarn("%s: %s" % (sys.argv[0], e))
     usage(sys.argv[0])
     sys.exit(1)
 
@@ -257,7 +257,7 @@ for f in configs:
     except IOError:
         pass
     except Exception, E:
-        sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (f, E))
+        Pkg.rlwarn('(none): W: error loading %s, skipping: %s' % (f, E))
 # pychecker fix
 del f
 
@@ -306,7 +306,7 @@ try:
 except IOError:
     pass
 except Exception,E:
-    sys.stderr.write('(none): W: error loading %s, skipping: %s\n' % (conf_file, E))
+    Pkg.rlwarn('(none): W: error loading %s, skipping: %s' % (conf_file, E))
 
 # apply config overrides
 for key, value in config_overrides.items():

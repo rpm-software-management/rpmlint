@@ -27,6 +27,23 @@ except:
     _magic = None
 import rpm
 
+# Python 2/3 compatibility/convenience wrappers for printing to stdout/stderr
+# with less concerns of UnicodeErrors.
+if sys.version_info[0] > 2:
+    exec('''
+def rlprint(s):
+    print(s)
+def rlwarn(s):
+    print(s, file=sys.stderr)
+''')
+else:
+    exec('''
+def rlprint(s):
+    print s
+def rlwarn(s):
+    print >> sys.stderr, s
+''')
+
 from Filter import printWarning
 
 
@@ -365,7 +382,7 @@ class Pkg:
     def _extract(self):
         s = os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
-            sys.stderr.write('unable to access dir %s\n' % self.dirname)
+            rlwarn('Unable to access dir %s' % self.dirname)
             return None
         else:
             self.dirname = tempfile.mkdtemp(
@@ -688,11 +705,11 @@ class PkgFile(object):
 if __name__ == '__main__':
     for p in sys.argv[1:]:
         pkg = Pkg(sys.argv[1], tempfile.gettempdir())
-        sys.stdout.write('Requires: %s\n' % pkg.requires())
-        sys.stdout.write('Prereq: %s\n' % pkg.prereq())
-        sys.stdout.write('Conflicts: %s\n' % pkg.conflicts())
-        sys.stdout.write('Provides: %s\n' % pkg.provides())
-        sys.stdout.write('Obsoletes: %s\n' % pkg.obsoletes())
+        rlprint('Requires: %s' % pkg.requires())
+        rlprint('Prereq: %s' % pkg.prereq())
+        rlprint('Conflicts: %s' % pkg.conflicts())
+        rlprint('Provides: %s' % pkg.provides())
+        rlprint('Obsoletes: %s' % pkg.obsoletes())
         pkg.cleanup()
 
 # Pkg.py ends here
