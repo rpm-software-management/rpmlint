@@ -44,8 +44,6 @@ def rlwarn(s):
     print >> sys.stderr, s
 ''')
 
-from Filter import printWarning
-
 
 # utilities
 
@@ -416,7 +414,8 @@ class Pkg:
                         ret.append(str(lineno))
                         break
             except Exception, e:
-                printWarning(self, 'read-error', filename, e)
+                import Filter
+                Filter.printWarning(self, 'read-error', filename, e)
         finally:
             if in_file:
                 in_file.close()
