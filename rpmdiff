@@ -83,7 +83,7 @@ class Rpmdiff:
             old = self.__load_pkg(old).header
             new = self.__load_pkg(new).header
         except KeyError, e:
-            sys.stderr.write(str(e) + '\n')
+            Pkg.rlwarn(str(e))
             sys.exit(2)
 
         # Compare single tags
@@ -239,13 +239,13 @@ class Rpmdiff:
         return result
 
 def _usage(exit=1):
-    sys.stdout.write('''Usage: %s [<options>] <old package> <new package>
+    Pkg.rlprint('''Usage: %s [<options>] <old package> <new package>
 Options:
   -h, --help     Output this message and exit
   -i, --ignore   File property to ignore when calculating differences (may be
                  used multiple times); valid values are: S (size), M (mode),
                  5 (checksum), D (device), N (inode), L (number of links),
-                 V (vflags), U (user), G (group), F (digest), T (time)\n''' \
+                 V (vflags), U (user), G (group), F (digest), T (time)''' \
         % sys.argv[0])
     sys.exit(exit)
 
@@ -256,7 +256,7 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:],
                                    "hti:", ["help", "ignore-times", "ignore="])
     except getopt.GetoptError, e:
-        sys.stderr.write("Error: %s\n" % e)
+        Pkg.rlwarn("Error: %s" % e)
         _usage()
 
     for option, argument in opts:
@@ -274,7 +274,7 @@ def main():
     d = Rpmdiff(args[0], args[1], ignore=ignore_tags)
     textdiff = d.textdiff()
     if textdiff:
-        sys.stdout.write(textdiff + "\n")
+        Pkg.rlprint(textdiff)
     sys.exit(int(d.differs()))
 
 if __name__ == '__main__':

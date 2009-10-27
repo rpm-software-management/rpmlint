@@ -9,10 +9,10 @@
 #############################################################################
 
 import re
-import sys
 
 from Filter import addDetails, printError
 import AbstractCheck
+import Pkg
 
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
@@ -32,7 +32,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
             if kres:
                 printError(pkg, "unknown-key", kres.group(1))
             else:
-                sys.stderr.write("error checking signature of " + pkg.filename + "\n")
+                Pkg.rlwarn("Error checking signature of %s" % pkg.filename)
         else:
             if not SignatureCheck.pgp_regex.search(res[1]):
                 printError(pkg, "no-signature")
