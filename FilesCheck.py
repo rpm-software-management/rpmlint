@@ -200,6 +200,7 @@ kernel_package_regex = re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure
 normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
 perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex = re.compile('^/usr/lib/python([.0-9]+)/')
+python_bytecode_regex = re.compile('^(.*)(\.py[oc])$')
 perl_version_trick = Config.getOption('PerlVersionTrick', True)
 log_regex = re.compile('^/var/log/[^/]+$')
 lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
@@ -265,6 +266,14 @@ def istextfile(filename, pkg):
     if float(len(t))/len(s) > 0.30:
         return False
     return True
+
+def py_demarshal_long(b):
+    # Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
+    # bytes in a string:
+    return (ord(b[0])
+            + (ord(b[1]) << 8)
+            + (ord(b[2]) << 16)
+            + (ord(b[3]) << 24))
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -547,10 +556,31 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
                             python_dep_error = True
 
+                res = python_bytecode_regex.search(f)
+                if res:
+                    source_file = res.group(1) + '.py'
+                    if source_file in files:
+                        # Extract header of .pyc file:
+                        pyc_fobj = open(pkgfile.path, 'rb')
+                        try:
+                            pyc_bytes = pyc_fobj.read(8)
+                        finally:
+                            pyc_fobj.close()
+                        pyc_timestamp = py_demarshal_long(pyc_bytes[4:8])
+ 
+                        # Verify that the timestamp embedded in the .pyc header
+                        # matches the mtime of the .py file:
+                        if pyc_timestamp != files[source_file].mtime:
+                            printError(pkg,
+                                       'python-bytecode-inconsistent-mtime',
+                                       f, pyc_timestamp,
+                                       source_file, files[source_file].mtime)
+                    else:
+                        printWarning(pkg, 'python-bytecode-without-source', f)
+
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != 0755:
                     printError(pkg, 'non-standard-executable-perm', f, oct(perm))
-
                 if mode & 0111 != 0:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
@@ -1068,6 +1098,15 @@ version of cron''',
 'rpath-in-buildconfig',
 '''This build configuration file contains rpaths which will be introduced into 
 dependent packages.''',
+
+'python-bytecode-inconsistent-mtime',
+'''The timestamp embedded in this python bytecode file isn't equal to the mtime
+of the original source file, which will force the interpreter to recompile the
+.py source every time, ignoring the saved bytecode.''',
+
+'python-bytecode-without-source',
+'''This python bytecode file (.pyo/.pyc) is not accompanied by its original
+source file (.py)''',
 )
 
 # FilesCheck.py ends here
