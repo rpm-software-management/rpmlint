@@ -419,17 +419,27 @@ max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
 
-_enchant_dict_warned = set()
+_enchant_checkers = {}
 def spell_check(pkg, str, tagname, lang):
+
     dict_found = True
     if enchant:
         if lang == 'C':
             lang = 'en_US'
-        try:
-            checker = enchant.checker.SpellChecker(
-                lang, filters = [ enchant.tokenize.EmailFilter,
-                                  enchant.tokenize.URLFilter,
-                                  enchant.tokenize.WikiWordFilter ])
+
+        checker = _enchant_checkers.get(lang)
+        if not checker and lang not in _enchant_checkers:
+            try:
+                checker = enchant.checker.SpellChecker(
+                    lang, filters = [ enchant.tokenize.EmailFilter,
+                                      enchant.tokenize.URLFilter,
+                                      enchant.tokenize.WikiWordFilter ])
+            except enchant.DictNotFoundError:
+                printInfo(pkg, 'enchant-dictionary-not-found', lang)
+                pass
+            _enchant_checkers[lang] = checker
+
+        if checker:
             checker.set_text(str)
             uppername = pkg.name.upper()
             upperparts = uppername.split('-')
@@ -447,12 +457,8 @@ def spell_check(pkg, str, tagname, lang):
                     printWarning(pkg, 'spelling-error-in-' + tagname,
                                  lang, err.word)
 
-        except enchant.DictNotFoundError:
-            if lang not in _enchant_dict_warned:
-                printInfo(pkg, 'enchant-dictionary-not-found', lang)
-                _enchant_dict_warned.add(lang)
+        else:
             dict_found = False
-            pass
 
     if not enchant or not dict_found:
         for seq in str.split():
