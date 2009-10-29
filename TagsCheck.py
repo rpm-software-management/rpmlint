@@ -432,17 +432,21 @@ def spell_check(pkg, str, tagname, lang):
                                   enchant.tokenize.WikiWordFilter ])
             checker.set_text(str)
             uppername = pkg.name.upper()
+            upperparts = uppername.split('-')
             for err in checker:
                 upperword = err.word.upper()
-                # Skip errors containing package name
-                if uppername in upperword:
-                    continue
+
                 # Skip all uppercase words
                 if err.word == upperword:
                     continue
                     
-                printWarning(pkg, 'spelling-error-in-' + tagname,
-                             lang, err.word)
+                # Skip errors containing package name or equal to a
+                # "component" of it
+                if uppername not in upperword and \
+                        upperword not in upperparts:
+                    printWarning(pkg, 'spelling-error-in-' + tagname,
+                                 lang, err.word)
+
         except enchant.DictNotFoundError:
             if lang not in _enchant_dict_warned:
                 printInfo(pkg, 'enchant-dictionary-not-found', lang)
