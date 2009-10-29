@@ -36,10 +36,8 @@ noarch_regex = re.compile('^BuildArch(?:itectures)?\s*:\s*\\bnoarch\\b', re.IGNO
 make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?')
-configure_start_regex = re.compile('\./configure')
 configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=([^\s]+)[^#]*')
 lib_package_regex = re.compile('^%package.*\Wlib')
-mklibname_regex = re.compile('%mklibname')
 ifarch_regex = re.compile('%ifn?arch\s+')
 if_regex = re.compile('%if\s+')
 endif_regex = re.compile('%endif\\b')
@@ -323,7 +321,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                             printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
                     configure_linenum = None
 
-            if current_section != 'changelog' and configure_start_regex.search(line):
+            if current_section != 'changelog' and './configure' in line:
                 configure_linenum = pkg.current_linenum # store line where it started
                 configure_cmdline = line.strip()
 
@@ -331,7 +329,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(res.group(1).lstrip())):
                 printError(pkg, "hardcoded-library-path", "in", res.group(1).lstrip())
 
-            if mklibname_regex.search(line):
+            if '%mklibname' in line:
                 mklibname = True
 
             if current_section == 'package':

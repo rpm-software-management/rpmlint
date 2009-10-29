@@ -19,7 +19,6 @@ import Config
 
 man_regex = re.compile("/man(?:\d[px]?|n)/")
 info_regex = re.compile("(/usr/share|/usr)/info/")
-info_dir_regex = re.compile("/info/dir$")
 vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
 use_bzip2 = Config.getOption("UseBzip2", True)
@@ -62,7 +61,7 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, "manpage-not-compressed-with-gzip",
                                  fname)
 
-            if info_regex.search(fname) and not info_dir_regex.search(fname):
+            if info_regex.search(fname) and not fname.endswith("/info/dir"):
                 if use_bzip2:
                     if not fname.endswith('.bz2'):
                         printWarning(pkg, "infopage-not-compressed-with-bzip2",
