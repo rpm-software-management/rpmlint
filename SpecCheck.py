@@ -453,9 +453,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         # No useful line number info beyond this point.
         pkg.current_linenum = None
 
-        for sect in buildroot_clean:
-            if not buildroot_clean[sect]:
-                printWarning(pkg, 'no-cleaning-of-buildroot', '%' + sect)
+        for sect in (x for x in buildroot_clean if not buildroot_clean[x]):
+            printWarning(pkg, 'no-cleaning-of-buildroot', '%' + sect)
 
         if not buildroot:
             printWarning(pkg, 'no-buildroot-tag')
