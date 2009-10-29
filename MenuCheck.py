@@ -148,8 +148,6 @@ xpm_ext_regex = re.compile('/usr/share/icons/(mini/|large/).*\.xpm$')
 icon_ext_regex = re.compile(Config.getOption('IconFilename', '.*\.png$'))
 version_regex = re.compile('([0-9.][0-9.]+)($|\s)')
 launchers = Config.getOption('MenuLaunchers', DEFAULT_LAUNCHERS)
-bad_title_regex = re.compile('/')
-menu64_file_regex = re.compile('^/usr/lib64/menu')
 xdg_migrated_regex = re.compile('xdg=\"?([^\" ]+)')
 
 # compile regexps
@@ -198,7 +196,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         if stat.S_ISREG(mode) and not pkg.grep('None",', fname):
                             printWarning(pkg, 'non-transparent-xpm', fname)
-                if menu64_file_regex.search(fname):
+                if fname.startswith('/usr/lib64/menu'):
                     printError(pkg, 'menu-in-wrong-dir', fname)
 
         if menus:
@@ -287,7 +285,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         res = version_regex.search(title)
                         if res:
                             printWarning(pkg, 'version-in-menu-title', title)
-                        if bad_title_regex.search(title):
+                        if '/' in title:
                             printError(pkg, 'invalid-title', title)
                     else:
                         printError(pkg, 'no-title-in-menu', f)

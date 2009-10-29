@@ -20,7 +20,6 @@ import Config
 import Pkg
 
 
-rc_regex = re.compile('^/etc(/rc\.d)?/init\.d/')
 chkconfig_content_regex = re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
 subsys_regex = re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
 chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
@@ -49,7 +48,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
         initscript_list = []
         for fname, pkgfile in pkg.files().items():
-            if rc_regex.search(fname):
+            if fname.startswith('/etc/init.d/') or \
+                    fname.startswith('/etc/rc.d/init.d/'):
                 basename = os.path.basename(fname)
                 initscript_list.append(basename)
                 if pkgfile.mode & 0500 != 0500:

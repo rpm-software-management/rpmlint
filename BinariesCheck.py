@@ -33,10 +33,8 @@ class BinaryInfo:
     #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
     stack_regex = re.compile('^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
     stack_exec_regex = re.compile('^..E$')
-    non_pic_regex = re.compile('TEXTREL', re.MULTILINE)
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
-    debug_file_regex = re.compile('\.debug$')
     exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
 
@@ -55,7 +53,7 @@ class BinaryInfo:
         fork_called = False
         self.tail = ''
 
-        is_debug = BinaryInfo.debug_file_regex.search(path)
+        is_debug = path.endswith('.debug')
 
         cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d', '-s']
         cmd.append(path)
@@ -106,7 +104,7 @@ class BinaryInfo:
                         continue
 
             if self.non_pic:
-                self.non_pic = BinaryInfo.non_pic_regex.search(res[1])
+                self.non_pic = 'TEXTREL' in res[1]
 
             # Ignore all exit() calls if fork() is being called.
             # Does not have any context at all but without this kludge, the
@@ -164,12 +162,8 @@ class BinaryInfo:
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile('[^.][0-9]')
-usr_share = re.compile('^/usr/share/')
-etc = re.compile('^/etc/')
-not_stripped = re.compile('not stripped')
 unstrippable = re.compile('\.o$|\.static$')
 shared_object_regex = re.compile('shared object')
-executable_regex = re.compile('executable')
 libc_regex = re.compile('libc\.')
 ldso_soname_regex = re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
@@ -239,11 +233,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'arch-independent-package-contains-binary-or-object', fname)
                 else:
                     # in /usr/share ?
-                    if usr_share.search(fname):
+                    if fname.startswith('/usr/share/'):
                         printError(
                             pkg, 'arch-dependent-file-in-usr-share', fname)
                     # in /etc ?
-                    if etc.search(fname):
+                    if fname.startswith('/etc/'):
                         printError(pkg, 'binary-in-etc', fname)
 
                     if pkg.arch == 'sparc' and \
@@ -252,7 +246,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
                     # stripped ?
                     if not is_ocaml_native and not unstrippable.search(fname):
-                        if not_stripped.search(pkgfile.magic):
+                        if 'not stripped' in pkgfile.magic:
                             printWarning(
                                 pkg, 'unstripped-binary-or-object', fname)
 
@@ -307,7 +301,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 printWarning(
                                     pkg, 'shared-lib-calls-exit', fname, ec)
 
-                        is_exec = executable_regex.search(pkgfile.magic)
+                        is_exec = 'executable' in pkgfile.magic
                         if is_exec or \
                                shared_object_regex.search(pkgfile.magic):
 

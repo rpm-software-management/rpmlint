@@ -43,7 +43,6 @@ home_regex = re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
 dangerous_command_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
 selinux_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
 single_command_regex = re.compile("^[ \n]*([^ \n]+)[ \n]*$")
-update_menu_regex = re.compile('update-menus', re.MULTILINE)
 tmp_regex = re.compile('\s(/var)?/tmp', re.MULTILINE)
 menu_regex = re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
 bogus_var_regex = re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
@@ -154,7 +153,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printError(pkg, 'forbidden-selinux-command-in-' + tag[2], res.group(2))
 
-                if update_menu_regex.search(script):
+                if 'update-menus' in script:
                     menu_error = True
                     for f in files:
                         if menu_regex.search(f):
