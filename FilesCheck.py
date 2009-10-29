@@ -9,6 +9,7 @@
 #                 permission, setuid, setgid...
 #############################################################################
 
+from datetime import datetime
 import os
 import re
 import stat
@@ -571,10 +572,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         # Verify that the timestamp embedded in the .pyc header
                         # matches the mtime of the .py file:
                         if pyc_timestamp != files[source_file].mtime:
+                            cts = datetime.fromtimestamp(
+                                pyc_timestamp).isoformat()
+                            sts = datetime.fromtimestamp(
+                                files[source_file].mtime).isoformat()
                             printError(pkg,
                                        'python-bytecode-inconsistent-mtime',
-                                       f, pyc_timestamp,
-                                       source_file, files[source_file].mtime)
+                                       f, cts, source_file, sts)
                     else:
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
