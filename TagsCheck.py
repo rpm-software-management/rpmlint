@@ -423,6 +423,7 @@ _enchant_checkers = {}
 def spell_check(pkg, str, tagname, lang):
 
     dict_found = True
+    warned = set()
     if enchant:
         if lang == 'C':
             lang = 'en_US'
@@ -444,6 +445,9 @@ def spell_check(pkg, str, tagname, lang):
             uppername = pkg.name.upper()
             upperparts = uppername.split('-')
             for err in checker:
+                if err.word in warned:
+                    continue
+
                 upperword = err.word.upper()
 
                 # Skip all uppercase words
@@ -456,6 +460,7 @@ def spell_check(pkg, str, tagname, lang):
                         upperword not in upperparts:
                     printWarning(pkg, 'spelling-error-in-' + tagname,
                                  lang, err.word)
+                    warned.add(err.word)
 
         else:
             dict_found = False
@@ -471,8 +476,11 @@ def spell_check(pkg, str, tagname, lang):
                         word = word[1:]
                     if word[-1] == '\'':
                         word = word[:-1]
+                    if word in warned:
+                        continue
                     printWarning(pkg, 'spelling-error-in-' + tagname, lang,
                                  word, correct)
+                    warned.add(word)
 
 
 class TagsCheck(AbstractCheck.AbstractCheck):
