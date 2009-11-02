@@ -464,16 +464,15 @@ def spell_check(pkg, str, tagname, lang):
         for seq in str.split():
             for word in re.split('[^a-z]+', seq.lower()):
                 if len(word) > 0:
-                    try:
-                        if word[0] == '\'':
-                            word = word[1:]
-                        if word[-1] == '\'':
-                            word = word[:-1]
-                        correct = BAD_WORDS[word]
-                        printWarning(pkg, 'spelling-error-in-' + tagname,
-                                     lang, word, correct)
-                    except KeyError:
-                        pass
+                    correct = BAD_WORDS.get(word)
+                    if not correct:
+                        continue
+                    if word[0] == '\'':
+                        word = word[1:]
+                    if word[-1] == '\'':
+                        word = word[:-1]
+                    printWarning(pkg, 'spelling-error-in-' + tagname, lang,
+                                 word, correct)
 
 
 class TagsCheck(AbstractCheck.AbstractCheck):
