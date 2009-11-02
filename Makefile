@@ -17,7 +17,8 @@ FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	test.sh test/*.rpm test/*.spec test/*.py
 GENERATED = AUTHORS ChangeLog
 
-PACKAGE=rpmlint
+PACKAGE = rpmlint
+PYTHON = python
 
 # update this variable to create a new release
 VERSION := 0.91
@@ -29,15 +30,17 @@ LC_ALL:=C
 export LC_ALL
 
 all:
-	python ./tools/compile.py "$(LIBDIR)/" [A-Z]*.py
-	@for f in [A-Z]*.py; do if grep -q '^[^#]*print ' $$f; then echo "print statement in $$f:"; grep -Hn '^[^#]*print ' $$f; exit 1; fi; done
+	if [ "x${COMPILE_PYC}" = "x1" ] ; then \
+		$(PYTHON) -m py_compile [A-Z]*.py ; \
+	fi
+	$(PYTHON) -O -m py_compile [A-Z]*.py
 
 clean:
 	rm -f *~ *.pyc *.pyo AUTHORS ChangeLog
 
 install:
 	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
-	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p *.py *.pyc *.pyo $(DESTDIR)$(LIBDIR)
 	sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
