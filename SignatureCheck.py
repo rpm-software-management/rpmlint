@@ -17,7 +17,7 @@ import Pkg
 
 class SignatureCheck(AbstractCheck.AbstractCheck):
     pgp_regex = re.compile("pgp|gpg", re.IGNORECASE)
-    unknown_key_regex = re.compile("\(MISSING KEYS:\s+([^\)]+)\)")
+    unknown_key_regex = re.compile("\(MISSING KEYS:(?:\([^)]+\))?\s+([^\)]+)\)")
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
