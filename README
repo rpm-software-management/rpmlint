@@ -81,6 +81,7 @@ MaxLineLength		integer		79
 MetaPackageRegexp	regex		'^(bundle|task)-' 
 Packager		regex		''
 PerlVersionTrick	boolean		True
+PythonDefaultVersion	string		None
 ReleaseExtension	regex or None	''
 RpmGamesGroup		regex		'Games'
 SkipDocsRegexp		regex		'\.(rtf|x?html?|ml[ily]?)$'
