@@ -202,6 +202,7 @@ normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch
 perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex = re.compile('^/usr/lib(?:64)?/python([.0-9]+)/')
 python_bytecode_regex = re.compile('^(.*)(\.py[oc])$')
+python_default_version = Config.getOption('PythonDefaultVersion', None)
 perl_version_trick = Config.getOption('PerlVersionTrick', True)
 log_regex = re.compile('^/var/log/[^/]+$')
 lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
@@ -266,6 +267,49 @@ def istextfile(filename, pkg):
     if float(len(t))/len(s) > 0.30:
         return False
     return True
+
+# See Python/import.c (in the trunk and py3k branches) for a full list of
+# the values here.
+_python_magic_values = {
+    '2.2': 60717,
+    '2.3': 62011,
+    '2.4': 62061,
+    '2.5': 62131,
+    '2.6': 62161,
+    '3.0': 3130,
+    '3.1': 3150,
+    }
+
+def get_expected_pyc_magic(path):
+    # .pyc/.pyo files embed a 4-byte magic value identifying which version of
+    # the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
+    # return a (magic ABI value, python version) tuple.  For example,
+    # '/usr/lib/python3.1/foo.pyc' should return ('3.1', 3151).
+    # The first value will be None if the python version was not resolved
+    # from the given pathname and the PythonDefaultVersion configuration
+    # variable is not set, or if we don't know the magic ABI value for the
+    # python version (no matter from which source the version came from).
+    # The second value will be None if a python version could not be resolved
+    # from the given pathname.
+
+    ver_from_path = None
+    m = python_regex.search(path)
+    if m:
+        ver_from_path = m.group(1)
+
+    expected_version = ver_from_path or python_default_version
+    expected_magic_value = _python_magic_values.get(expected_version)
+
+    if not expected_magic_value:
+        return (None, ver_from_path)
+
+    # In Python 2, if Py_UnicodeFlag is set, Python's import code uses a value
+    # one higher, but this is off by default. In Python 3, it always uses the
+    # value one higher:
+    if expected_version.startswith('3.'):
+        expected_magic_value += 1
+        
+    return (expected_magic_value, ver_from_path)
 
 def py_demarshal_long(b):
     # Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
@@ -566,10 +610,32 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             pyc_bytes = pyc_fobj.read(8)
                         finally:
                             pyc_fobj.close()
-                        pyc_timestamp = py_demarshal_long(pyc_bytes[4:8])
+
+                        # Verify that the magic ABI value embedded in the .pyc
+                        # header is correct
+                        found_magic = py_demarshal_long(pyc_bytes[:4]) & 0xffff
+                        exp_magic, exp_version = get_expected_pyc_magic(f)
+                        if exp_magic and found_magic != exp_magic:
+                            found_version = 'unknown'
+                            for (pv, pm) in _python_magic_values.items():
+                                if pm == found_magic:
+                                    found_version = pv
+                                    break
+                            # If expected version was from the file path, issue
+                            # an error, otherwise a warning.
+                            msg = (pkg, 'python-bytecode-wrong-magic-value',
+                                   f, "expected %d (%s), found %d (%s)" %
+                                   (exp_magic,
+                                    exp_version or python_default_version,
+                                    found_magic, found_version))
+                            if exp_version is not None:
+                                printError(*msg)
+                            else:
+                                printWarning(*msg)
  
                         # Verify that the timestamp embedded in the .pyc header
                         # matches the mtime of the .py file:
+                        pyc_timestamp = py_demarshal_long(pyc_bytes[4:8])
                         if pyc_timestamp != files[source_file].mtime:
                             cts = datetime.fromtimestamp(
                                 pyc_timestamp).isoformat()
@@ -1101,6 +1167,11 @@ version of cron''',
 'rpath-in-buildconfig',
 '''This build configuration file contains rpaths which will be introduced into 
 dependent packages.''',
+
+'python-bytecode-wrong-magic-value',
+'''The "magic" ABI version embedded in this python bytecode file isn't equal
+to that of the corresponding runtime, which will force the interpreter to
+recompile the .py source every time, ignoring the saved bytecode.''',
 
 'python-bytecode-inconsistent-mtime',
 '''The timestamp embedded in this python bytecode file isn't equal to the mtime

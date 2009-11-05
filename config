@@ -23,6 +23,7 @@ from Config import *
 #setOption("ReleaseExtension", None)
 #setOption("ValidGroups", ("Group1", "Group2"))
 #setOption("KernelModuleRPMsOK", 0)
+#setOption("PythonDefaultVersion", "2.6")
 
 # Output filters
 # addFilter("E: .* no-signature")
