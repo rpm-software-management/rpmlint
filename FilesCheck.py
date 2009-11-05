@@ -18,7 +18,7 @@ import string
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import is_utf8, is_utf8_str, safe_normpath
+from Pkg import is_utf8, is_utf8_str
 import AbstractCheck
 import Config
 
