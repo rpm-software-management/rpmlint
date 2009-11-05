@@ -27,22 +27,15 @@ except:
     _magic = None
 import rpm
 
-# Python 2/3 compatibility/convenience wrappers for printing to stdout/stderr
-# with less concerns of UnicodeErrors.
+import Filter
+
+# Python 2/3 compatibility/convenience wrapper for printing to stderr with
+# less concerns of UnicodeErrors than plain sys.stderr.write.
 if sys.version_info[0] > 2:
-    exec('''
-def rlprint(s):
-    print(s)
-def rlwarn(s):
-    print(s, file=sys.stderr)
-''')
+    # Blows up with Python < 3 without the exec() hack
+    exec('def warn(s): print (s, file=sys.stderr)')
 else:
-    exec('''
-def rlprint(s):
-    print s
-def rlwarn(s):
-    print >> sys.stderr, s
-''')
+    def warn(s): print >> sys.stderr, s
 
 
 # utilities
@@ -380,7 +373,7 @@ class Pkg:
     def _extract(self):
         s = os.stat(self.dirname)
         if not stat.S_ISDIR(s[stat.ST_MODE]):
-            rlwarn('Unable to access dir %s' % self.dirname)
+            warn('Unable to access dir %s' % self.dirname)
             return None
         else:
             self.dirname = tempfile.mkdtemp(
@@ -414,7 +407,6 @@ class Pkg:
                         ret.append(str(lineno))
                         break
             except Exception, e:
-                import Filter
                 Filter.printWarning(self, 'read-error', filename, e)
         finally:
             if in_file:
@@ -704,11 +696,11 @@ class PkgFile(object):
 if __name__ == '__main__':
     for p in sys.argv[1:]:
         pkg = Pkg(sys.argv[1], tempfile.gettempdir())
-        rlprint('Requires: %s' % pkg.requires())
-        rlprint('Prereq: %s' % pkg.prereq())
-        rlprint('Conflicts: %s' % pkg.conflicts())
-        rlprint('Provides: %s' % pkg.provides())
-        rlprint('Obsoletes: %s' % pkg.obsoletes())
+        print ('Requires: %s' % pkg.requires())
+        print ('Prereq: %s' % pkg.prereq())
+        print ('Conflicts: %s' % pkg.conflicts())
+        print ('Provides: %s' % pkg.provides())
+        print ('Obsoletes: %s' % pkg.obsoletes())
         pkg.cleanup()
 
 # Pkg.py ends here
