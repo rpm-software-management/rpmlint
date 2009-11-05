@@ -11,7 +11,6 @@
 import textwrap
 
 import Config
-import Pkg
 try:
     import Testing
 except ImportError:
@@ -61,7 +60,7 @@ def _print(msgtype, pkg, reason, details):
             if threshold >= 0:
                 _diagnostic.append(s + "\n")
             else:
-                Pkg.rlprint(s)
+                print (s)
                 if Config.info:
                     printDescriptions(reason)
             return True
@@ -72,8 +71,8 @@ def printDescriptions(reason):
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
-            Pkg.rlprint(textwrap.fill(d, 78))
-            Pkg.rlprint("")
+            print (textwrap.fill(d, 78))
+            print ("")
     except KeyError:
         pass
 
@@ -96,7 +95,7 @@ def printAllReasons():
                 if len(last_reason):
                     printDescriptions(last_reason)
                 last_reason = reason
-        Pkg.rlprint(diag)
+        print (diag)
     if Config.info and len(last_reason):
         printDescriptions(last_reason)
     _diagnostic = list()
