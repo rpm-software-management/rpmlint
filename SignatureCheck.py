@@ -32,7 +32,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
             if kres:
                 printError(pkg, "unknown-key", kres.group(1))
             else:
-                Pkg.rlwarn("Error checking signature of %s" % pkg.filename)
+                Pkg.rlwarn("Error checking signature of %s: %s" % (pkg.filename, res[1]))
         else:
             if not SignatureCheck.pgp_regex.search(res[1]):
                 printError(pkg, "no-signature")
@@ -44,10 +44,10 @@ addDetails(
 'no-signature',
 '''You have to include your pgp or gpg signature in your package.
 For more information on signatures, please refer to www.gnupg.org.''',
+
 'unknown-key',
 '''The package was signed, but with an unknown key.
 See the rpm --import option for more information.''',
-
 )
 
 # SignatureCheck.py ends here
