@@ -158,15 +158,19 @@ def safe_normpath(path):
     ret = slashend_regex.sub('\\1', ret)
     return ret
 
-def get_default_valid_rpmgroups(filename = ""):
-    """ Get the default rpm group from filename, or from the rpm package if no
-    filename is given"""
+def get_default_valid_rpmgroups(filename = None):
+    """Get default rpm groups from filename, or try to look them up from
+    the rpm package (if installed) if no filename is given"""
     groups = []
     if not filename:
-        p = InstalledPkg('rpm')
-        groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
-        if groupsfiles:
-            filename = groupsfiles[0]
+        try:
+            p = InstalledPkg('rpm')
+        except KeyError:
+            pass
+        else:
+            groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
+            if groupsfiles:
+                filename = groupsfiles[0]
     if filename and os.path.exists(filename):
         fobj = open(filename)
         try:
