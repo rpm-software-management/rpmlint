@@ -313,6 +313,7 @@ if not extract_dir:
 
 if info_error:
     Config.info = True
+    sys.path[0:0] = Config.checkDirs()
     for c in checks:
         Config.addCheck(c)
     for c in Config.allChecks():
