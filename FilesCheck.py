@@ -170,7 +170,7 @@ DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
 
 tmp_regex = re.compile('^/tmp/|^(/var|/usr)/tmp/')
 sub_bin_regex = re.compile('^(/usr)?/s?bin/\S+/')
-backup_regex = re.compile('~$|\#[^/]+\#$')
+backup_regex = re.compile('(~|\#[^/]+\#|\.orig|\.rej)$')
 compr_regex = re.compile('\.(gz|z|Z|zip|bz2|lzma|xz)$')
 absolute_regex = re.compile('^/([^/]+)')
 absolute2_regex = re.compile('^/?([^/]+)')
@@ -913,9 +913,9 @@ for packages to install files in this directory.''',
 create a subdir there. Create it in /usr/lib/ instead.''',
 
 'backup-file-in-package',
-'''You have a backup file in your package. The files are usually
-beginning with ~ (vi) or #file# (emacs). Please remove it and rebuild
-your package.''',
+'''You have a file whose name looks like one for backup files, usually created
+by an editor or resulting from applying unclean (fuzzy, or ones with line
+offsets) patches.''',
 
 'dir-or-file-in-home',
 '''A file in the package is located in /home. It's not permitted
