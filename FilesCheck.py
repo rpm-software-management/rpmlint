@@ -404,10 +404,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'dir-or-file-in-var-local', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
-            elif backup_regex.search(f):
-                printError(pkg, 'backup-file-in-package', f)
             elif f.startswith('/home/'):
                 printError(pkg, 'dir-or-file-in-home', f)
+            elif '/site_perl/' in f:
+                printWarning(pkg, 'siteperl-in-perl-module', f)
+
+            if backup_regex.search(f):
+                printError(pkg, 'backup-file-in-package', f)
             elif scm_regex.search(f):
                 printError(pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
@@ -416,8 +419,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 printWarning(pkg, 'manifest-in-perl-module', f)
-            elif '/site_perl/' in f:
-                printWarning(pkg, 'siteperl-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 printError(pkg, 'info-dir-file', f)
 
