@@ -84,7 +84,7 @@ PerlVersionTrick	boolean		True
 PythonDefaultVersion	string		None
 ReleaseExtension	regex or None	''
 RpmGamesGroup		regex		'Games'
-SkipDocsRegexp		regex		'\.(rtf|x?html?|ml[ily]?)$'
+SkipDocsRegexp		regex		'\.(rtf|x?html?|svg|ml[ily]?)$'
 StandardGroups		list of strings	see DEFAULT_STANDARD_GROUPS in
 					FilesCheck.py
 StandardUsers		list of strings	see DEFAULT_STANDARD_USERS in
