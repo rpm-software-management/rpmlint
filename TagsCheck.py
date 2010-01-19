@@ -707,16 +707,18 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if res:
                     printWarning(pkg, 'macro-in-license', res.group(0))
 
-        url = pkg[rpm.RPMTAG_URL]
-        if url:
-            res = urlparse(url)
-            if not res.scheme or not res.netloc or \
-                    res.scheme not in ('http', 'https', 'ftp') or \
-                    (Config.getOption('InvalidURL') and \
-                         invalid_url_regex.search(url)):
-                printWarning(pkg, 'invalid-url', tag, url)
-        else:
-            printWarning(pkg, 'no-url-tag')
+        for tag in ('URL', 'DistURL', 'BugURL'):
+            if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
+                url = pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]
+                if url:
+                    res = urlparse(url)
+                    if not res.scheme or not res.netloc or \
+                            res.scheme not in ('http', 'https', 'ftp') or \
+                            (Config.getOption('InvalidURL') and \
+                             invalid_url_regex.search(url)):
+                        printWarning(pkg, 'invalid-url', tag, url)
+                elif tag == 'URL':
+                    printWarning(pkg, 'no-url-tag')
 
         obs_names = [x[0] for x in pkg.obsoletes()]
         prov_names = [x[0] for x in pkg.provides()]
