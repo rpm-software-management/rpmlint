@@ -382,7 +382,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             nonexec_file = False
 
             for match in AbstractCheck.macro_regex.findall(f):
-                printWarning(pkg, 'misspelled-macro', f, match)
+                printWarning(pkg, 'unexpanded-macro', f, match)
             if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)
             if standard_groups and group not in standard_groups:
@@ -1067,7 +1067,7 @@ for the wrong kernel.''',
 '''This package contains files in /var/log/ without adding logrotate
 configuration for them.''',
 
-'misspelled-macro',
+'unexpanded-macro',
 '''This package contains a file whose path contains something that looks like
 an unexpanded macro; this is often the sign of a misspelling. Please check your
 specfile.''',
