@@ -408,9 +408,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                          conf)
 
             if current_section == 'changelog':
-                res = AbstractCheck.macro_regex.search(line)
-                if res and len(res.group(1)) % 2:
-                    printWarning(pkg, 'macro-in-%changelog', res.group(0))
+                for match in AbstractCheck.macro_regex.findall(line):
+                    res = re.match('%+', match)
+                    if len(res.group(0)) % 2:
+                        printWarning(pkg, 'macro-in-%changelog', match)
             else:
                 if not depscript_override:
                     depscript_override = depscript_override_regex.search(line) is not None
