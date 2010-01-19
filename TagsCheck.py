@@ -490,15 +490,25 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
 
+    def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
+        if value:
+            for match in AbstractCheck.macro_regex.findall(value):
+                # Do not warn about %XX URL escapes
+                if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
+                    continue
+                printWarning(pkg, 'unexpanded-macro', tagname, match)
+
     def check(self, pkg):
 
         packager = pkg[rpm.RPMTAG_PACKAGER]
+        self._unexpanded_macros(pkg, 'Packager', packager)
         if not packager:
             printError(pkg, 'no-packager-tag')
         elif Config.getOption('Packager') and not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
 
         version = pkg[rpm.RPMTAG_VERSION]
+        self._unexpanded_macros(pkg, 'Version', version)
         if not version:
             printError(pkg, 'no-version-tag')
         else:
@@ -507,6 +517,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'invalid-version', version)
 
         release = pkg[rpm.RPMTAG_RELEASE]
+        self._unexpanded_macros(pkg, 'Release', release)
         if not release:
             printError(pkg, 'no-release-tag')
         elif release_ext and not extension_regex.search(release):
@@ -558,10 +569,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and '-' in d[1]:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
-            if '%' in d[1]:
-                printError(pkg, 'percent-in-dependency',
-                           apply(Pkg.formatRequire, d))
+            self._unexpanded_macros(pkg, 'dependency %s' % \
+                                        apply(Pkg.formatRequire, d), d[1])
 
+        self._unexpanded_macros(pkg, 'Name', name)
         if not name:
             printError(pkg, 'no-name-tag')
         else:
@@ -606,45 +617,40 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if prov not in (x[0] for x in pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
 
-        if not pkg[rpm.RPMTAG_SUMMARY]:
+        summary = pkg[rpm.RPMTAG_SUMMARY]
+        if not summary:
             printError(pkg, 'no-summary-tag')
         else:
-            for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
-                self.check_summary(pkg, lang)
-            res = AbstractCheck.macro_regex.search(pkg[rpm.RPMTAG_SUMMARY])
-            if res:
-                printWarning(pkg, 'macro-in-summary', res.group(0))
+            if not pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                self._unexpanded_macros(pkg, 'Summary', summary)
+            else:
+                for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                    self.check_summary(pkg, lang)
 
-        if not pkg[rpm.RPMTAG_DESCRIPTION]:
+        description = pkg[rpm.RPMTAG_DESCRIPTION]
+        if not description:
             printError(pkg, 'no-description-tag')
         else:
-            for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
-                self.check_description(pkg, lang)
-            res = AbstractCheck.macro_regex.search(pkg[rpm.RPMTAG_DESCRIPTION])
-            if res:
-                printWarning(pkg, 'macro-in-%description', res.group(0))
+            if not pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                self._unexpanded_macros(pkg, '%description', description)
+            else:
+                for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                    self.check_description(pkg, lang)
 
         group = pkg[rpm.RPMTAG_GROUP]
+        self._unexpanded_macros(pkg, 'Group', group)
         if not group:
             printError(pkg, 'no-group-tag')
-        else:
-            if VALID_GROUPS and group not in VALID_GROUPS:
-                printWarning(pkg, 'non-standard-group', group)
-            else:
-                res = AbstractCheck.macro_regex.search(group)
-                if res:
-                    printWarning(pkg, 'macro-in-group', res.group(0))
+        elif VALID_GROUPS and group not in VALID_GROUPS:
+            printWarning(pkg, 'non-standard-group', group)
 
         buildhost = pkg[rpm.RPMTAG_BUILDHOST]
+        self._unexpanded_macros(pkg, 'BuildHost', buildhost)
         if not buildhost:
             printError(pkg, 'no-buildhost-tag')
-        else:
-            if Config.getOption('ValidBuildHost') and not valid_buildhost_regex.search(buildhost):
-                printWarning(pkg, 'invalid-buildhost', buildhost)
-            else:
-                res = AbstractCheck.macro_regex.search(buildhost)
-                if res:
-                    printWarning(pkg, 'macro-in-buildhost', res.group(0))
+        elif Config.getOption('ValidBuildHost') and \
+                not valid_buildhost_regex.search(buildhost):
+            printWarning(pkg, 'invalid-buildhost', buildhost)
 
         changelog = pkg[rpm.RPMTAG_CHANGELOGNAME]
         if not changelog:
@@ -702,13 +708,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'invalid-license', l2)
                             valid_license = False
             if not valid_license:
-                res = AbstractCheck.macro_regex.search(rpm_license)
-                if res:
-                    printWarning(pkg, 'macro-in-license', res.group(0))
+                self._unexpanded_macros(pkg, 'License', rpm_license)
 
         for tag in ('URL', 'DistURL', 'BugURL'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
                 url = pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]
+                self._unexpanded_macros(pkg, tag, url, is_url = True)
                 if url:
                     res = urlparse(url)
                     if not res.scheme or not res.netloc or \
@@ -726,9 +731,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if o not in prov_names:
                 printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
-            if '%' in o[1]:
-                printError(pkg, 'percent-in-obsoletes',
-                           apply(Pkg.formatRequire, o))
+            self._unexpanded_macros(pkg, 'Obsoletes %s' % \
+                                        apply(Pkg.formatRequire, o), o[1])
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
@@ -741,14 +745,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
-            if '%' in p[1]:
-                printError(pkg, 'percent-in-provides',
-                           apply(Pkg.formatRequire, p))
+            self._unexpanded_macros(pkg, 'Provides %s' % \
+                                        apply(Pkg.formatRequire, p), p[1])
 
         for c in pkg.conflicts():
-            if '%' in c[1]:
-                printError(pkg, 'percent-in-conflicts',
-                           apply(Pkg.formatRequire, c))
+            self._unexpanded_macros(pkg, 'Conflicts %s' % \
+                                        apply(Pkg.formatRequire, c), c[1])
 
         obss = [(x[0], x[2], Pkg.stringToVersion(x[1]))
                 for x in pkg.obsoletes()]
@@ -773,8 +775,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
 
+        for tag in ('Distribution', 'DistTag', 'ExcludeArch', 'ExcludeOS',
+                    'Vendor'):
+            if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
+                self._unexpanded_macros(
+                    pkg, tag, pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
+
+
     def check_description(self, pkg, lang):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
+        self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         utf8desc = description
         if use_utf8:
             utf8desc = Pkg.to_utf8(description).decode('utf-8')
@@ -794,6 +804,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check_summary(self, pkg, lang):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
+        self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         utf8summary = summary
         if use_utf8:
             utf8summary = Pkg.to_utf8(summary).decode('utf-8')
@@ -1004,22 +1015,6 @@ once.''',
 'requires-on-release',
 '''This rpm requires a specific release of another package.''',
 
-'percent-in-dependency',
-'''This rpm has a dependency whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.''',
-
-'percent-in-obsoletes',
-'''This rpm has an Obsoletes whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.''',
-
-'percent-in-provides',
-'''This rpm has a Provides whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.''',
-
-'percent-in-conflicts',
-'''This rpm has a Conflicts whose version part contains the '%' character.
-It could be an unexpanded macro, please double check.''',
-
 'no-url-tag',
 '''The URL tag is missing.''',
 
@@ -1037,12 +1032,11 @@ rpmlint's built-in implementation for localized tags in this language.''',
 '''The package obsoletes itself.  This is known to cause errors in various
 tools and should thus be avoided, usually by using appropriately versioned
 Obsoletes and/or Provides and avoiding unversioned ones.''',
-)
-for tag in ('summary', '%description', 'group', 'buildhost', 'license'):
-    addDetails(
-'macro-in-%s' % tag,
+
+'unexpanded-macro',
 '''This tag contains something that looks like an unexpanded macro; this is
-often the sign of a misspelling. Please check your specfile.''')
+often the sign of a misspelling. Please check your specfile.''',
+)
 
 # TagsCheck.py ends here
 
