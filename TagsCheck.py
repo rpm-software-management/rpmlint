@@ -423,7 +423,7 @@ tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?
 punct = '.,:;!?'
 
 _enchant_checkers = {}
-def spell_check(pkg, str, tagname, lang):
+def spell_check(pkg, str, fmt, lang):
 
     dict_found = True
     warned = set()
@@ -461,8 +461,7 @@ def spell_check(pkg, str, tagname, lang):
                 # "component" of it
                 if uppername not in upperword and \
                         upperword not in upperparts:
-                    printWarning(pkg, 'spelling-error-in-' + tagname,
-                                 lang, err.word)
+                    printWarning(pkg, 'spelling-error', fmt % lang, err.word)
                     warned.add(err.word)
 
         else:
@@ -481,7 +480,7 @@ def spell_check(pkg, str, tagname, lang):
                         word = word[:-1]
                     if word in warned:
                         continue
-                    printWarning(pkg, 'spelling-error-in-' + tagname, lang,
+                    printWarning(pkg, 'spelling-error', fmt % lang,
                                  word, correct)
                     warned.add(word)
 
@@ -779,7 +778,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         utf8desc = description
         if use_utf8:
             utf8desc = Pkg.to_utf8(description).decode('utf-8')
-        spell_check(pkg, utf8desc, 'description', lang)
+        spell_check(pkg, utf8desc, '%%description -l %s', lang)
         for l in utf8desc.splitlines():
             if len(l) > max_line_len:
                 printError(pkg, 'description-line-too-long', lang, l)
@@ -798,7 +797,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         utf8summary = summary
         if use_utf8:
             utf8summary = Pkg.to_utf8(summary).decode('utf-8')
-        spell_check(pkg, utf8summary, 'summary', lang)
+        spell_check(pkg, utf8summary, 'Summary(%s)', lang)
         if '\n' in summary:
             printError(pkg, 'summary-on-multiple-lines', lang)
         if summary[0] != summary[0].upper():
@@ -838,11 +837,8 @@ because when the final version will be out, you will have to use an Epoch tag
 to make the package upgradable. Instead put it in the release tag, prefixed
 with something you have control over.''',
 
-'spelling-error-in-description',
-'''You made a misspelling in the Description. Please double-check.''',
-
-'spelling-error-in-summary',
-'''You made a misspelling in the Summary. Please double-check.''',
+'spelling-error',
+'''The value of this tag appears to be misspelled. Please double-check.''',
 
 'no-packager-tag',
 '''There is no Packager tag in your package. You have to specify a packager using
