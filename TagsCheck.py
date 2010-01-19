@@ -10,6 +10,10 @@
 
 import os
 import re
+try:
+    from urlparse import urlparse
+except ImportError: # Python 3
+    from urllib.parse import urlparse
 
 import rpm
 
@@ -403,7 +407,6 @@ extension_regex = release_ext and re.compile(release_ext)
 use_version_in_changelog = Config.getOption('UseVersionInChangelog', True)
 devel_number_regex = re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
-url_regex = re.compile('^(ftp|http|https)://')
 invalid_url_regex = re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_package_regex = re.compile('(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex = re.compile('^\s+')
@@ -705,12 +708,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'macro-in-license', res.group(0))
 
         url = pkg[rpm.RPMTAG_URL]
-        if url and url != 'none':
-            if not url_regex.search(url):
-                printWarning(pkg, 'invalid-url', url)
-            elif Config.getOption('InvalidURL') and invalid_url_regex.search(url):
-                printWarning(pkg, 'invalid-url', url)
-            # No macro_regex check here; URL's commonly contain %XX hex stuff
+        if url:
+            res = urlparse(url)
+            if not res.scheme or not res.netloc or \
+                    res.scheme not in ('http', 'https', 'ftp') or \
+                    (Config.getOption('InvalidURL') and \
+                         invalid_url_regex.search(url)):
+                printWarning(pkg, 'invalid-url', tag, url)
         else:
             printWarning(pkg, 'no-url-tag')
 
@@ -948,8 +952,7 @@ your specfile.''',
 "%s".''' % '", "'.join(VALID_LICENSES),
 
 'invalid-url',
-'''Your URL is not valid. It must begin with http, https or ftp and must no
-longer contain the word mandrake.''',
+'''The value of this tag should be a valid HTTP, HTTPS, or FTP URL.''',
 
 'obsolete-not-provided',
 '''If a package is obsoleted by a compatible replacement, the obsoleted package
