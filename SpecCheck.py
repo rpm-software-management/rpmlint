@@ -89,6 +89,8 @@ setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
 
 filelist_regex = re.compile('\s+-f\s+\S+')
 pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
+tarball_regex = re.compile('\.(?:t(?:ar|[glx]z|bz2?)|zip)\\b', re.IGNORECASE)
+
 
 def deptokens(line):
     '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
@@ -534,7 +536,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     msg = 'invalid-url %s%s:' % (srctype, num)
                     if res.scheme and res.netloc:
                         self.check_url(pkg, msg, url)
-                    elif srctype == "Source":
+                    elif srctype == "Source" and tarball_regex.search(url):
                         printWarning(pkg, msg, url)
 
 # Create an object to enable the auto registration of the test
