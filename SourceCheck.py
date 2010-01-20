@@ -18,7 +18,7 @@ import Config
 DEFAULT_VALID_SRC_PERMS = (0644, 0755)
 
 source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
-use_bzip2 = Config.getOption('UseBzip2', True)
+compress_ext = Config.getOption("CompressExtension", "bz2")
 valid_src_perms = Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 
 class SourceCheck(AbstractCheck.AbstractCheck):
@@ -40,13 +40,10 @@ class SourceCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'multiple-specfiles', spec_file, fname)
                 else:
                     spec_file = fname
-            elif source_regex.search(fname):
-                if use_bzip2:
-                    if not fname.endswith('.bz2'):
-                        printWarning(pkg, 'source-or-patch-not-bzipped', fname)
-                else:
-                    if not fname.endswith('gz'):
-                        printWarning(pkg, 'source-or-patch-not-gzipped', fname)
+            elif source_regex.search(fname) and compress_ext:
+                if not fname.endswith(compress_ext):
+                    printWarning(pkg, 'source-or-patch-not-compressed',
+                                 compress_ext, fname)
             perm = pkgfile.mode & 07777
             if perm not in valid_src_perms:
                 printWarning(pkg, 'strange-permission', fname, oct(perm))
@@ -59,13 +56,10 @@ addDetails(
 correct package, you need to have only one spec file containing
 all your RPM information.''',
 
-'source-or-patch-not-bzipped',
-'''A source archive or file in your package is not bzipped (doesn't
-have the .bz2 extension). To bzip it, use bzip2.''',
-
-'source-or-patch-not-gzipped',
-'''A source archive or file in your package is not gzipped (doesn't
-have the .gz extension). To gzip it, use the gzip command.''',
+'source-or-patch-not-compressed',
+'''A source archive or file in your package is not compressed using the %s
+compression method (doesn't have the %s extension).''' %
+(compress_ext, compress_ext),
 
 'strange-permission',
 '''A file that you listed to include in your package has strange

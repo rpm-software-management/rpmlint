@@ -21,9 +21,7 @@ man_regex = re.compile("/man(?:\d[px]?|n)/")
 info_regex = re.compile("(/usr/share|/usr)/info/")
 vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
-use_bzip2 = Config.getOption("UseBzip2", True)
-use_lzma = Config.getOption("UseLzma", False)
-use_xz = Config.getOption("UseXz", False)
+compress_ext = Config.getOption("CompressExtension", "bz2")
 
 class DistributionCheck(AbstractCheck.AbstractCheck):
 
@@ -42,41 +40,18 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
         if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
             printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
-        for fname in pkg.files():
+        if compress_ext:
+            for fname in pkg.files():
+                if man_regex.search(fname):
+                    if not fname.endswith(compress_ext):
+                        printWarning(pkg, 'manpage-not-compressed',
+                                     compress_ext, fname)
+                elif info_regex.search(fname) and \
+                        not fname.endswith("/info/dir"):
+                    if not fname.endswith(compress_ext):
+                        printWarning(pkg, 'infopage-not-compressed',
+                                     compress_ext, fname)
 
-            if man_regex.search(fname):
-                if use_bzip2:
-                    if not fname.endswith('.bz2'):
-                        printWarning(pkg, "manpage-not-compressed-with-bzip2",
-                                     fname)
-                elif use_lzma:
-                    if not fname.endswith('.lzma'):
-                        printWarning(pkg, "manpage-not-compressed-with-lzma",
-                                     fname)
-                elif use_xz:
-                    if not fname.endswith('.xz'):
-                        printWarning(pkg, "manpage-not-compressed-with-xz",
-                                     fname)
-                elif not fname.endswith('.gz'):
-                    printWarning(pkg, "manpage-not-compressed-with-gzip",
-                                 fname)
-
-            if info_regex.search(fname) and not fname.endswith("/info/dir"):
-                if use_bzip2:
-                    if not fname.endswith('.bz2'):
-                        printWarning(pkg, "infopage-not-compressed-with-bzip2",
-                                     fname)
-                elif use_lzma:
-                    if not fname.endswith('.lzma'):
-                        printWarning(pkg, "infopage-not-compressed-with-lzma",
-                                     fname)
-                elif use_xz:
-                    if not fname.endswith('.xz'):
-                        printWarning(pkg, "infopage-not-compressed-with-xz",
-                                     fname)
-                elif not fname.endswith('.gz'):
-                    printWarning(pkg, "infopage-not-compressed-with-gzip",
-                                 fname)
 
 # Create an object to enable the auto registration of the test
 check = DistributionCheck()
@@ -87,23 +62,25 @@ addDetails(
 
 'invalid-distribution',
 'The distribution value should be "' + distribution + '".',
-)
 
-for compr in ('gzip', 'bzip2', 'lzma', 'xz'):
-    addDetails('manpage-not-compressed-with-%s' % compr,
-'''This manual page is not compressed with %s. If the compression does not
-happen automatically when the package is rebuilt, make sure that you have the
-appropriate rpm helper and/or config packages for your target distribution
-installed and try rebuilding again; if it still does not happen automatically,
-you can compress this file in the %%install section of the spec file.''' \
-% compr)
-    addDetails('infopage-not-compressed-with-%s' % compr,
-'''This info page is not compressed with %s. If the compression does not happen
+'manpage-not-compressed',
+'''This manual page is not compressed with the %s compression method
+(does not have the %s extension). If the compression does not happen
 automatically when the package is rebuilt, make sure that you have the
 appropriate rpm helper and/or config packages for your target distribution
 installed and try rebuilding again; if it still does not happen automatically,
 you can compress this file in the %%install section of the spec file.''' \
-% compr)
+% (compress_ext, compress_ext),
+
+'infopage-not-compressed',
+'''This info page is not compressed with the %s compression method
+(does not have the %s extension). If the compression does not happen
+automatically when the package is rebuilt, make sure that you have the
+appropriate rpm helper and/or config packages for your target distribution
+installed and try rebuilding again; if it still does not happen automatically,
+you can compress this file in the %%install section of the spec file.''' \
+% (compress_ext, compress_ext),
+)
 
 # DistributionCheck.py ends here
 

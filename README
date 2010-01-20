@@ -68,6 +68,7 @@ Available options:
 name			type		default
 ========================================================
 BadnessThreshold	integer		-1 (< 0 means disabled)
+CompressExtension	string          bz2
 DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
 Distribution		string		""
 ExtraMenuNeeds		list of strings
@@ -92,9 +93,6 @@ StandardGroups		list of strings	see DEFAULT_STANDARD_GROUPS in
 StandardUsers		list of strings	see DEFAULT_STANDARD_USERS in
 					FilesCheck.py 
 SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
-UseBzip2		boolean		True
-UseLzma			boolean		False
-UseXz			boolean		False
 UseDefaultRunlevels	boolean		True
 UseEpoch		boolean		False
 UseIndexedJars		boolean		True
