@@ -21,6 +21,12 @@ macro_regex = re.compile('%+[{(]?\w+[)}]?')
 class _HeadRequest(urllib2.Request):
     def get_method(self):
         return "HEAD"
+class _HeadRedirectHandler(urllib2.HTTPRedirectHandler):
+    def redirect_request(*args):
+        res = urllib2.HTTPRedirectHandler.redirect_request(*args)
+        if res:
+            res = _HeadRequest(res.get_full_url())
+        return res
 
 class AbstractCheck:
     known_checks = {}
@@ -49,7 +55,8 @@ class AbstractCheck:
         socket.setdefaulttimeout(self.network_timeout)
         res = err = None
         try:
-            res = urllib2.urlopen(_HeadRequest(url))
+            opener = urllib2.build_opener(_HeadRedirectHandler())
+            res = opener.open(_HeadRequest(url))
         except Exception, e:
             printWarning(pkg, 'invalid-url', '%s:' % tag, url, e)
         res and res.close()
