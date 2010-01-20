@@ -527,13 +527,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 for src in spec_obj.sources():
                     (url, num, flags) = src
                     res = urlparse(url)
+                    if flags & 1: # rpmspec.h, rpm.org ticket #123
+                        srctype = "Source"
+                    else:
+                        srctype = "Patch"
+                    msg = 'invalid-url %s%s:' % (srctype, num)
                     if res.scheme and res.netloc:
-                        if flags & 1: # rpmspec.h, rpm.org ticket #123
-                            srctype = "Source"
-                        else:
-                            srctype = "Patch"
-                        self.check_url(pkg, 'invalid-url %s%s:' % \
-                                           (srctype, num), url)
+                        self.check_url(pkg, msg, url)
+                    elif srctype == "Source":
+                        printWarning(pkg, msg, url)
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()
