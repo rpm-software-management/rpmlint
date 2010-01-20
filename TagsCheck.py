@@ -715,10 +715,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 url = pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]
                 self._unexpanded_macros(pkg, tag, url, is_url = True)
                 if url:
-                    res = urlparse(url)
-                    if not res.scheme or not res.netloc or \
-                            "." not in res.netloc or \
-                            res.scheme not in ('http', 'https', 'ftp') or \
+                    (scheme, netloc) = urlparse(url)[0:2]
+                    if not scheme or not netloc or "." not in netloc or \
+                            scheme not in ('http', 'https', 'ftp') or \
                             (Config.getOption('InvalidURL') and \
                              invalid_url_regex.search(url)):
                         printWarning(pkg, 'invalid-url', tag, url)
