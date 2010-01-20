@@ -533,11 +533,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         srctype = "Source"
                     else:
                         srctype = "Patch"
-                    msg = 'invalid-url %s%s:' % (srctype, num)
+                    tag = '%s%s' % (srctype, num)
                     if res.scheme and res.netloc:
-                        self.check_url(pkg, msg, url)
+                        self.check_url(pkg, tag, url)
                     elif srctype == "Source" and tarball_regex.search(url):
-                        printWarning(pkg, msg, url)
+                        printWarning(pkg, 'invalid-url', '%s:' % tag, url)
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()

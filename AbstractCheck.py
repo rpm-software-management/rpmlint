@@ -36,11 +36,11 @@ class AbstractCheck:
     def check(self, pkg):
         raise NotImplementedError('check must be implemented in subclass')
 
-    def check_url(self, pkg, msg, url):
+    def check_url(self, pkg, tag, url):
         """Check that URL points to something that seems to exist."""
         if self.verbose:
             if self.network_enabled:
-                printInfo(pkg, 'checking URL', url,
+                printInfo(pkg, 'checking-url', url,
                           '(timeout %s seconds)' % self.network_timeout)
             else:
                 printInfo(pkg, 'network-checks-disabled', url)
@@ -51,7 +51,7 @@ class AbstractCheck:
         try:
             res = urllib2.urlopen(_HeadRequest(url))
         except Exception, e:
-            printWarning(pkg, msg, url, e)
+            printWarning(pkg, 'invalid-url', '%s:' % tag, url, e)
         res and res.close()
 
 class AbstractFilesCheck(AbstractCheck):
