@@ -79,6 +79,8 @@ InvalidRequires		list of regexps see DEFAULT_INVALID_REQUIRES in
 KernelModuleRPMsOK	boolean		True
 MaxLineLength		integer		79
 MetaPackageRegexp	regex		'^(bundle|task)-' 
+NetworkEnabled		boolean		False
+NetworkTimeout		integer		10
 Packager		regex		''
 PerlVersionTrick	boolean		True
 PythonDefaultVersion	string		None
