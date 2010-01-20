@@ -528,13 +528,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if spec_obj:
                 for src in spec_obj.sources():
                     (url, num, flags) = src
-                    res = urlparse(url)
+                    (scheme, netloc) = urlparse(url)[0:2]
                     if flags & 1: # rpmspec.h, rpm.org ticket #123
                         srctype = "Source"
                     else:
                         srctype = "Patch"
                     tag = '%s%s' % (srctype, num)
-                    if res.scheme and res.netloc:
+                    if scheme and netloc:
                         self.check_url(pkg, tag, url)
                     elif srctype == "Source" and tarball_regex.search(url):
                         printWarning(pkg, 'invalid-url', '%s:' % tag, url)
