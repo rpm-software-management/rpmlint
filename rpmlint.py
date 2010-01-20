@@ -109,6 +109,7 @@ def main():
                             # Short-circuit spec file checks
                             pkg = Pkg.FakePkg(arg)
                             check = SpecCheck.SpecCheck()
+                            check.verbose = verbose
                             check.check_spec(pkg, arg)
                             pkg.cleanup()
                             specfiles_checked += 1
@@ -159,6 +160,7 @@ def main():
                             elif do_spec_check and fname.endswith('.spec'):
                                 pkg = Pkg.FakePkg(fname)
                                 check = SpecCheck.SpecCheck()
+                                check.verbose = verbose
                                 check.check_spec(pkg, fname)
                                 pkg.cleanup()
                                 specfiles_checked += 1
@@ -199,6 +201,7 @@ def runChecks(pkg):
         for name in Config.allChecks():
             check = AbstractCheck.AbstractCheck.known_checks.get(name)
             if check:
+                check.verbose = verbose
                 check.check(pkg)
             else:
                 Pkg.warn('(none): W: unknown check %s, skipping' % name)
