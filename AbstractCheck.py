@@ -21,6 +21,7 @@ class AbstractCheck:
         if not AbstractCheck.known_checks.get(name):
             AbstractCheck.known_checks[name] = self
         self.name = name
+        self.verbose = False
 
     def check(self, pkg):
         raise NotImplementedError('check must be implemented in subclass')
