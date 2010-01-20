@@ -717,6 +717,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if url:
                     res = urlparse(url)
                     if not res.scheme or not res.netloc or \
+                            "." not in res.netloc or \
                             res.scheme not in ('http', 'https', 'ftp') or \
                             (Config.getOption('InvalidURL') and \
                              invalid_url_regex.search(url)):
@@ -961,7 +962,7 @@ your specfile.''',
 "%s".''' % '", "'.join(VALID_LICENSES),
 
 'invalid-url',
-'''The value of this tag should be a valid HTTP, HTTPS, or FTP URL.''',
+'''The value of this tag should be a valid, public HTTP, HTTPS, or FTP URL.''',
 
 'obsolete-not-provided',
 '''If a package is obsoleted by a compatible replacement, the obsoleted package
