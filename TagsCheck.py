@@ -722,6 +722,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             (Config.getOption('InvalidURL') and \
                              invalid_url_regex.search(url)):
                         printWarning(pkg, 'invalid-url', tag, url)
+                    else:
+                        self.check_url(pkg, '%s %s' % ('invalid-url', tag), url)
                 elif tag == 'URL':
                     printWarning(pkg, 'no-url-tag')
 
@@ -960,9 +962,6 @@ your specfile.''',
 'invalid-license',
 '''The value of the License tag was not recognized.  Known values are:
 "%s".''' % '", "'.join(VALID_LICENSES),
-
-'invalid-url',
-'''The value of this tag should be a valid, public HTTP, HTTPS, or FTP URL.''',
 
 'obsolete-not-provided',
 '''If a package is obsoleted by a compatible replacement, the obsoleted package

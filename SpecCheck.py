@@ -9,6 +9,12 @@
 #############################################################################
 
 import re
+try:
+    from urlparse import urlparse
+except ImportError: # Python 3
+    from urllib.parse import urlparse
+
+import rpm
 
 from Filter import addDetails, printError, printWarning
 from TagsCheck import VALID_GROUPS
@@ -334,6 +340,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if current_section == 'package':
 
+                # Would be cleaner to get sources and patches from the
+                # specfile parsed in Python (see below), but we want to
+                # catch %ifarch'd etc ones as well, and also catch these when
+                # the specfile is not parseable.
+
                 res = patch_regex.search(line)
                 if res:
                     pnum = int(res.group(1) or 0)
@@ -488,13 +499,41 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "patch-not-applied", "Patch%d:" % pnum,
                              pfile)
 
+        # We'd like to parse the specfile only once using python bindings,
+        # but it seems errors from rpmlib get logged to stderr and we can't
+        # capture and print them nicely, so we do it once each way :P
+
         out = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-q',
                                    '--qf=', '--specfile', self._spec_file))
+        parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855
             if 'No such file or directory' not in line:
+                parse_error = True
                 printError(pkg, 'specfile-error', line)
 
+        if not parse_error and self._spec_file:
+            # grab sources and patches from parsed spec object to get
+            # them with macros expanded for URL checking
+
+            spec_obj = None
+            try:
+                ts = rpm.TransactionSet()
+                spec_obj = ts.parseSpec(self._spec_file)
+            except:
+                # errors logged above already
+                pass
+            if spec_obj:
+                for src in spec_obj.sources():
+                    (url, num, flags) = src
+                    res = urlparse(url)
+                    if res.scheme and res.netloc:
+                        if flags & 1: # rpmspec.h, rpm.org ticket #123
+                            srctype = "Source"
+                        else:
+                            srctype = "Patch"
+                        self.check_url(pkg, 'invalid-url %s%s:' % \
+                                           (srctype, num), url)
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()
