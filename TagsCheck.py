@@ -723,7 +723,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                              invalid_url_regex.search(url)):
                         printWarning(pkg, 'invalid-url', tag, url)
                     else:
-                        self.check_url(pkg, '%s %s' % ('invalid-url', tag), url)
+                        self.check_url(pkg, tag, url)
                 elif tag == 'URL':
                     printWarning(pkg, 'no-url-tag')
 
