@@ -423,7 +423,7 @@ tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?
 punct = '.,:;!?'
 
 _enchant_checkers = {}
-def spell_check(pkg, str, fmt, lang):
+def spell_check(pkg, str, fmt, lang, ignored):
 
     dict_found = True
     warned = set()
@@ -448,7 +448,7 @@ def spell_check(pkg, str, fmt, lang):
             uppername = pkg.name.upper()
             upperparts = uppername.split('-')
             for err in checker:
-                if err.word in warned:
+                if err.word in warned or err.word in ignored:
                     continue
 
                 upperword = err.word.upper()
@@ -483,7 +483,7 @@ def spell_check(pkg, str, fmt, lang):
                         word = word[1:]
                     if word[-1] == '\'':
                         word = word[:-1]
-                    if word in warned:
+                    if word in warned or word in ignored:
                         continue
                     printWarning(pkg, 'spelling-error', fmt % lang,
                                  word, '->', correct)
@@ -622,6 +622,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if prov not in (x[0] for x in pkg.provides()):
                             printWarning(pkg, 'no-provides', prov)
 
+        # List of words to ignore in spell check
+        ignored_words = [x.split('/')[-1] for x in pkg.files()]
+
         summary = pkg[rpm.RPMTAG_SUMMARY]
         if not summary:
             printError(pkg, 'no-summary-tag')
@@ -630,7 +633,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 self._unexpanded_macros(pkg, 'Summary', summary)
             else:
                 for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
-                    self.check_summary(pkg, lang)
+                    self.check_summary(pkg, lang, ignored_words)
 
         description = pkg[rpm.RPMTAG_DESCRIPTION]
         if not description:
@@ -640,7 +643,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 self._unexpanded_macros(pkg, '%description', description)
             else:
                 for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
-                    self.check_description(pkg, lang)
+                    self.check_description(pkg, lang, ignored_words)
 
         group = pkg[rpm.RPMTAG_GROUP]
         self._unexpanded_macros(pkg, 'Group', group)
@@ -789,13 +792,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     pkg, tag, pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
 
 
-    def check_description(self, pkg, lang):
+    def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         utf8desc = description
         if use_utf8:
             utf8desc = Pkg.to_utf8(description).decode('utf-8')
-        spell_check(pkg, utf8desc, '%%description -l %s', lang)
+        spell_check(pkg, utf8desc, '%%description -l %s', lang, ignored_words)
         for l in utf8desc.splitlines():
             if len(l) > max_line_len:
                 printError(pkg, 'description-line-too-long', lang, l)
@@ -809,13 +812,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if use_utf8 and not Pkg.is_utf8_str(description):
             printError(pkg, 'tag-not-utf8', '%description', lang)
 
-    def check_summary(self, pkg, lang):
+    def check_summary(self, pkg, lang, ignored_words):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         utf8summary = summary
         if use_utf8:
             utf8summary = Pkg.to_utf8(summary).decode('utf-8')
-        spell_check(pkg, utf8summary, 'Summary(%s)', lang)
+        spell_check(pkg, utf8summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:
             printError(pkg, 'summary-on-multiple-lines', lang)
         if summary[0] != summary[0].upper():
