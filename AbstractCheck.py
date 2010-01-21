@@ -56,6 +56,8 @@ class AbstractCheck:
         res = err = None
         try:
             opener = urllib2.build_opener(_HeadRedirectHandler())
+            opener.addheaders = [('User-Agent',
+                                  'rpmlint/%s' % Config.__version__)]
             res = opener.open(_HeadRequest(url))
         except Exception, e:
             errstr = str(e) or repr(e) or type(e)
