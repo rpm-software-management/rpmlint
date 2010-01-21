@@ -58,7 +58,8 @@ class AbstractCheck:
             opener = urllib2.build_opener(_HeadRedirectHandler())
             res = opener.open(_HeadRequest(url))
         except Exception, e:
-            printWarning(pkg, 'invalid-url', '%s:' % tag, url, e)
+            errstr = str(e) or repr(e) or type(e)
+            printWarning(pkg, 'invalid-url', '%s:' % tag, url, errstr)
         res and res.close()
 
 class AbstractFilesCheck(AbstractCheck):
