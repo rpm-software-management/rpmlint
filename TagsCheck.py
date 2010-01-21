@@ -459,10 +459,15 @@ def spell_check(pkg, str, fmt, lang):
                     
                 # Skip errors containing package name or equal to a
                 # "component" of it
-                if uppername not in upperword and \
-                        upperword not in upperparts:
-                    printWarning(pkg, 'spelling-error', fmt % lang, err.word)
-                    warned.add(err.word)
+                if uppername in upperword or upperword in upperparts:
+                    continue
+
+                # Warn and suggest
+                sug = ', '.join(checker.suggest()[:3])
+                if sug:
+                    sug = '-> %s' % sug
+                printWarning(pkg, 'spelling-error', fmt % lang, err.word, sug)
+                warned.add(err.word)
 
         else:
             dict_found = False
@@ -481,7 +486,7 @@ def spell_check(pkg, str, fmt, lang):
                     if word in warned:
                         continue
                     printWarning(pkg, 'spelling-error', fmt % lang,
-                                 word, correct)
+                                 word, '->', correct)
                     warned.add(word)
 
 
