@@ -40,7 +40,8 @@ clean:
 
 install: all
 	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
-	cp -p *.py *.pyc *.pyo $(DESTDIR)$(LIBDIR)
+	-cp -p *.pyc $(DESTDIR)$(LIBDIR)
+	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
 	cp -p rpmlint.bash-completion $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
