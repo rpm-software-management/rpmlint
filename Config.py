@@ -12,6 +12,10 @@ import locale
 import os.path
 import re
 
+try:
+    from __version__ import __version__
+except ImportError:
+    __version__ = 'devel'
 
 DEFAULT_CHECKS = ("DistributionCheck",
                   "TagsCheck",

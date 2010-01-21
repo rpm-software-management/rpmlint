@@ -15,7 +15,7 @@ MANDIR=/usr/share/man
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1 \
 	test.sh test/*.rpm test/*.spec test/*.py
-GENERATED = AUTHORS ChangeLog
+GENERATED = AUTHORS ChangeLog __version__.py
 
 PACKAGE = rpmlint
 PYTHON = python
@@ -29,19 +29,18 @@ SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\
 LC_ALL:=C
 export LC_ALL
 
-all:
+all: __version__.py
 	if [ "x${COMPILE_PYC}" = "x1" ] ; then \
-		$(PYTHON) -m py_compile [A-Z]*.py ; \
+		$(PYTHON) -m py_compile [A-Z]*.py __version__.py ; \
 	fi
-	$(PYTHON) -O -m py_compile [A-Z]*.py
+	$(PYTHON) -O -m py_compile [A-Z]*.py __version__.py
 
 clean:
-	rm -f *~ *.pyc *.pyo AUTHORS ChangeLog
+	rm -f *~ *.pyc *.pyo $(GENERATED)
 
-install:
-	-mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
+install: all
+	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
 	cp -p *.py *.pyc *.pyo $(DESTDIR)$(LIBDIR)
-	sed -e 's/@VERSION@/$(VERSION)/' < rpmlint.py > $(DESTDIR)$(LIBDIR)/rpmlint.py
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
 	cp -p rpmlint.bash-completion $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
@@ -91,5 +90,9 @@ AUTHORS: authors.xml authors.xsl
 ChangeLog: $(FILES) authors.xml
 	svn2cl --authors=authors.xml --group-by-day --reparagraph \
 		--strip-prefix=trunk
+
+__version__.py: Makefile
+	echo "# Automatically generated, do not edit" > $@
+	echo "__version__ = '$(VERSION)'" >> $@
 
 # Makefile ends here

@@ -31,8 +31,6 @@ import Config
 import Pkg
 
 
-version = '@VERSION@'
-
 _default_user_conf = '%s/rpmlint' % \
     (os.environ.get('XDG_CONFIG_HOME') or '~/.config')
 
@@ -56,7 +54,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print ('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % version)
+    print ('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
 
 def loadCheck(name):
     '''Load a (check) module by its name, unless it is already loaded.'''
