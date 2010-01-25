@@ -165,7 +165,7 @@ def get_default_valid_rpmgroups(filename = None):
     if not filename:
         try:
             p = InstalledPkg('rpm')
-        except KeyError:
+        except:
             pass
         else:
             groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
