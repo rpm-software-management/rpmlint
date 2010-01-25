@@ -526,7 +526,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 # errors logged above already
                 pass
             if spec_obj:
-                for src in spec_obj.sources():
+                try:
+                    # rpm < 4.8.0
+                    sources = spec_obj.sources()
+                except TypeError:
+                    # rpm >= 4.8.0
+                    sources = spec_obj.sources
+                for src in sources:
                     (url, num, flags) = src
                     (scheme, netloc) = urlparse(url)[0:2]
                     if flags & 1: # rpmspec.h, rpm.org ticket #123
