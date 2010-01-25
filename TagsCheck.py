@@ -396,7 +396,9 @@ BAD_WORDS = {
 
 DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
-VALID_GROUPS = Config.getOption('ValidGroups', Pkg.get_default_valid_rpmgroups())
+VALID_GROUPS = Config.getOption('ValidGroups', None)
+if VALID_GROUPS is None: # get defaults from rpm package only if it's not set
+    VALID_GROUPS = Pkg.get_default_valid_rpmgroups()
 VALID_LICENSES = Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES = map(re.compile, Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
 packager_regex = re.compile(Config.getOption('Packager'))
