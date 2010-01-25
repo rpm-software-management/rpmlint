@@ -59,8 +59,9 @@ empty or not set).
 Override a configuration option.  \fIvalue\fR is a whitespace separated string,
 first word of which is the option name to set, and the Python eval() return
 value for the rest is set as the value for the option.  Passing only an option
-name is treated as if None was passed as its value.  See rpmlint's README for
-the list of configuration options and their types.  For example:
+name is treated as if None was passed as its value.  See the file "config"
+shipped with rpmlint for the list of configuration options and their types.
+For example:
  \-o "NetworkEnabled True"
  \-o "Distribution 'My favorite distro'"
  \-o "MaxLineLength 80"
