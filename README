@@ -63,48 +63,5 @@ addFilter(regexp) adds a filter to remove the output of a check, and
 removeFilter(regexp) removes one (for use eg. in per-user configuration
 files to remove filters added in system config files).
 
-Available options:
-
-name			type		default
-========================================================
-BadnessThreshold	integer		-1 (< 0 means disabled)
-CompressExtension	string          bz2
-DanglingSymlinkExceptions list of pairs (['consolehelper$', 'usermode'],)
-Distribution		string		""
-ExtraMenuNeeds		list of strings
-ExtractDir		string		tempfile.gettempdir()
-ForbiddenWords		regex		''
-IconFilename		regex		'.*\.png$'
-InvalidRequires		list of regexps see DEFAULT_INVALID_REQUIRES in
-					TagsCheck.py
-KernelModuleRPMsOK	boolean		True
-MaxLineLength		integer		79
-MetaPackageRegexp	regex		'^(bundle|task)-' 
-NetworkEnabled		boolean		False
-NetworkTimeout		integer		10
-Packager		regex		''
-PerlVersionTrick	boolean		True
-PythonDefaultVersion	string		None
-ReleaseExtension	regex or None	''
-RpmGamesGroup		regex		'Games'
-SkipDocsRegexp		regex		'\.(rtf|x?html?|svg|ml[ily]?)$'
-StandardGroups		list of strings	see DEFAULT_STANDARD_GROUPS in
-					FilesCheck.py
-StandardUsers		list of strings	see DEFAULT_STANDARD_USERS in
-					FilesCheck.py 
-SystemLibPaths		list of strings	('/lib', '/usr/lib', '/usr/X11R6/lib')
-UseDefaultRunlevels	boolean		True
-UseEpoch		boolean		False
-UseIndexedJars		boolean		True
-UseRelativeSymlinks	boolean		True
-UseVersionInChangelog	boolean		True
-UsrLibBinaryException	regex		'^/usr/lib/(perl|python|menu|pkgconfig|lib[^/]+\.(so|l?a)$)'
-UseUTF8			boolean		(autodetected)
-UseEnchant		boolean		True (falls back if Enchant is N/A)
-ValidBuildHost		regex		''
-ValidGroups		list of strings
-ValidLicenses		list of strings
-ValidMenuSections	list of strings
-ValidShells		list of strings	('/bin/sh', '/bin/bash', '/usr/bin/perl')
-ValidSrcPerms		list of modes	(0644, 0755)
-Vendor			string		""
+See the file "config" shipped with rpmlint for examples, available
+options and their default values.

@@ -1,31 +1,201 @@
 # -*- python -*-
-# Configuration for the rpmlint utility.
-# Loaded before ~/.config/rpmlint
-# $Id$
+
+# Example configuration file for rpmlint.
 
 # This line is mandatory to access the configuration functions
 from Config import *
 
-# Additional paths to look for checks
+# Additional paths to look for checks.
+# ------------------------------------
 
 #addCheckDir("~/mandrake/rpmlint")
 
-# Configure the checks if you don't want the default ones
+# Configure the checks if you don't want the default ones.
+# --------------------------------------------------------
 
 #addCheck("FHSCheck")
 #addCheck("BinariesCheck")
 
-# Configuration options used by the checks
+# Configuration options used by the checks shipped with rpmlint.
+# The values in the commented out setOption() calls represent default
+# or typical example values for the option.
+# -------------------------------------------------------------------
 
-#setOption("Vendor", "MySelf")
-#setOption("Distribution", "MyDistrib")
+# Type: integer, default: -1 (less than 0 means disabled)
+#setOption("BadnessThreshold", -1)
+
+# When checking that various files that should be compressed are
+# indeed compressed, look for this filename extension (no dot here).
+# Type: string, default: "bz2"
 #setOption("CompressExtension", "bz2")
-#setOption("ReleaseExtension", None)
-#setOption("ValidGroups", ("Group1", "Group2"))
-#setOption("KernelModuleRPMsOK", 0)
-#setOption("PythonDefaultVersion", "2.6")
 
-# Output filters
-# addFilter("E: .* no-signature")
+# Exception list for dangling symlink checks.  The first in each pair
+# is a regexp, and the second the package in which the target of the
+# dangling symlink is shipped.
+# Type: list of lists, default: [['consolehelper$', 'usermode-consoleonly']]
+#setOption("DanglingSymlinkExceptions", [])
 
-# config ends here
+# Value for the Distribution tag.
+# Type: string, default: "" (the empty string disables checking)
+#setOption("Distribution", "")
+
+# Base directory where to extract uninstalled packages while checking.
+# Type: string, default: tempfile.gettempdir()
+#setOption("ExtractDir", "/tmp")
+
+# Standard "needs" values for non-XDG legacy menu items.
+# Type: list of strings, default: ['gnome', 'icewm', 'kde', 'wmaker']
+#setOption("ExtraMenuNeeds", ['gnome', 'icewm', 'kde', 'wmaker'])
+
+# Words that must not exist in various tag values.
+# Type: regexp, default: '' ('' effectively disables this check)
+#setOption("ForbiddenWords", '')
+
+# Exceptions for hardcoded library paths.
+# Type: regexp, default: see DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS in SpecCheck
+#setOption("HardcodedLibPathExceptions", '/lib/modules/')
+
+# Accepted non-XDG legacy icon filenames.
+# Type: regexp, default: '.*\.png$'
+#setOption("IconFilename", '.*\.png$')
+
+# Paths in which non-XDG legacy icons should be installed.  The first
+# item in the lists is a filesystem path, and the second the icon type.
+# Type: list of lists, default: see DEFAULT_ICON_PATH in MenuCheck.py
+#setOption("IconPath", [])
+
+# Disallowed dependencies.
+# Type: list of regexps, default: see DEFAULT_INVALID_REQUIRES in TagsCheck.py
+#setOption("InvalidRequires", [])
+
+# Strings to disallow in various URL tags.
+# Type: regexp, default: '' ('' effectively disables this check)
+#setOption("InvalidURL", '')
+
+# Whether to allow packaging kernel modules in non-kernel packages.
+# Type: boolean, default: True
+#setOption("KernelModuleRPMsOK", True)
+
+# Maximum line length for summaries and descriptions.
+# Type: integer, default: 79
+#setOption("MaxLineLength", 79)
+
+# Type: list of lists, see DEFAULT_LAUNCHERS in MenuCheck
+#setOption("MenuLaunchers", [])
+
+# Names of packages to treat as "meta" ones.
+# Type: regexp, default: '^(bundle|task)-'
+#setOption("MetaPackageRegexp", '^(bundle|task)-')
+
+# Whether to enable checks that require networking.
+# Type: boolean, default: False
+#setOption("NetworkEnabled", False)
+
+# Timeout for network operations in seconds.
+# Type: integer, default: 10
+#setOption("NetworkTimeout", 10)
+
+# Value for the Packager tag.
+# Type: regexp, default: '' ('' effectively disables this check)
+#setOption("Packager", '')
+
+# Type: boolean, default: True
+#setOption("PerlVersionTrick", True)
+
+# Assumed default version of Python if one cannot be determined from files.
+# Type: string, default: None
+#setOption("PythonDefaultVersion", None)
+
+# Expected suffix in Release tags.
+# Type: regexp, default: '' ('' effectively disables this check)
+#setOption("ReleaseExtension", '')
+
+# Group tag for games.
+# Type: regexp, default: 'Games'
+#setOption("RpmGamesGroup", 'Games')
+
+# Doc files to which end of line and UTF-8 checks should not be applied.
+# Type: regexp, defult: \.(?:rtf|x?html?|svg|ml[ily]?)$'
+#setOption("SkipDocsRegexp", '\.(?:rtf|x?html?|svg|ml[ily]?)$')
+
+# Standard OS groups.
+# Type: list of strings, default: see DEFAULT_STANDARD_GROUPS in FilesCheck
+#setOption("StandardGroups", [])
+
+# Standard OS users.
+# Type: list of strings, see DEFAULT_STANDARD_USERS in FilesCheck
+#setOption("StandardUsers", [])
+
+# List of directories considered to be system default library search paths.
+# Type: list of strings, default: see DEFAULT_SYSTEM_LIB_PATHS in BinariesCheck
+#setOption("SystemLibPaths", ['/lib', '/lib64', '/usr/lib', '/usr/lib64']
+
+# Whether to want default start/stop runlevels specified in init scripts.
+# Type: boolean, default: True
+#setOption("UseDefaultRunlevels", True)
+
+# Whether to use the Enchant spell checker (if available) for spell checking.
+# Type: boolean, default: True
+#setOption("UseEnchant", True)
+
+# Whether an explicit Epoch should always be specified.
+# Type: boolean, default: False
+#setOption("UseEpoch", False)
+
+# Whether jars should be indexed.
+# Type: boolean, default: True
+#setOption("UseIndexedJars", True)
+
+# Whether symlinks between directories should be relative.
+# Type: boolean, default: True
+#setOption("UseRelativeSymlinks", True)
+
+# Whether the UTF-8 character encoding should be used where applicable.
+# Type: boolean, default: autodetected from environment
+#setOption("UseUTF8", True)
+
+# Whether %changelog entries should contain a version.
+# Type: boolean, default: True
+#setOption("UseVersionInChangelog", True)
+
+# Architecture dependent paths in which packages are allowed to install files
+# even if they are all non-binary.
+# Type: regexp, default: see BinariesCheck
+#setOption("UsrLibBinaryException", '^/usr/lib(64)?/(perl|python|ruby)')
+
+# Value for the BuildHost tag.
+# Type: regexp, default '' ('' effectively disables this check)
+#setOption("ValidBuildHost", '')
+
+# Interpreters whose scriptlets are allowed to be empty.
+# Type: list of strings, default: ['/sbin/ldconfig']
+#setOption("ValidEmptyShells", ['/sbin/ldconfig'])
+
+# Values for the Group tag.
+# Type: list of strings, default: extracted from GROUPS file shipped with rpm
+#setOption("ValidGroups", [])
+
+# Values for the License tag.
+# Type: list of strings, default: see DEFAULT_VALID_LICENSES in TagsCheck
+#setOption("ValidLicenses", [])
+
+# Values for non-XDG legacy menu item sections.
+# Type: list of strings, default: see DEFAULT_VALID_SECTIONS in MenuCheck
+#setOption("ValidMenuSections", [])
+
+# Package scriptlet interpreters.
+# Type: list of strings, default: see DEFAULT_VALID_SHELLS in PostCheck
+#setOption("ValidShells", ['/bin/sh', '/bin/bash'])
+
+# Permissions for files in source packages.
+# Type: list of modes, default: (0644, 0755)
+#setOption("ValidSrcPerms", (0644, 0755))
+
+# Value for the Vendor tag.
+# Type: string, default: "" ("" effectively disables this check)
+#setOption("Vendor", "")
+
+# Output filters.
+# ---------------
+
+#addFilter("E: .* no-signature")
