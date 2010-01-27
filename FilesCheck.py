@@ -160,7 +160,7 @@ DEFAULT_GAMES_GROUPS = 'Games'
 DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
-# Standard users and groups from LSB 3.1: 21.2 User & Group Names
+# Standard users and groups from LSB Core 4.0.0: 21.2 User & Group Names
 DEFAULT_STANDARD_USERS  = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'shutdown', 'halt', 'mail', 'news', 'uucp',
                            'operator', 'man', 'nobody',)
