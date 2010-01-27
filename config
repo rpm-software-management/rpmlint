@@ -32,8 +32,8 @@ from Config import *
 # Exception list for dangling symlink checks.  The first in each pair
 # is a regexp, and the second the package in which the target of the
 # dangling symlink is shipped.
-# Type: list of lists, default: [['consolehelper$', 'usermode-consoleonly']]
-#setOption("DanglingSymlinkExceptions", [])
+# Type: tuple of lists, default: (['consolehelper$', 'usermode-consoleonly'])
+#setOption("DanglingSymlinkExceptions", ())
 
 # Value for the Distribution tag.
 # Type: string, default: "" (the empty string disables checking)
@@ -44,8 +44,8 @@ from Config import *
 #setOption("ExtractDir", "/tmp")
 
 # Standard "needs" values for non-XDG legacy menu items.
-# Type: list of strings, default: ['gnome', 'icewm', 'kde', 'wmaker']
-#setOption("ExtraMenuNeeds", ['gnome', 'icewm', 'kde', 'wmaker'])
+# Type: tuple of strings, default: ('gnome', 'icewm', 'kde', 'wmaker')
+#setOption("ExtraMenuNeeds", ('gnome', 'icewm', 'kde', 'wmaker'))
 
 # Words that must not exist in various tag values.
 # Type: regexp, default: '' ('' effectively disables this check)
@@ -60,13 +60,13 @@ from Config import *
 #setOption("IconFilename", '.*\.png$')
 
 # Paths in which non-XDG legacy icons should be installed.  The first
-# item in the lists is a filesystem path, and the second the icon type.
-# Type: list of lists, default: see DEFAULT_ICON_PATH in MenuCheck.py
-#setOption("IconPath", [])
+# item in the tuples is a filesystem path, and the second the icon type.
+# Type: tuple of string tuples, default: see DEFAULT_ICON_PATH in MenuCheck
+#setOption("IconPath", ())
 
 # Disallowed dependencies.
-# Type: list of regexps, default: see DEFAULT_INVALID_REQUIRES in TagsCheck.py
-#setOption("InvalidRequires", [])
+# Type: tuple of regexps, default: see DEFAULT_INVALID_REQUIRES in TagsCheck
+#setOption("InvalidRequires", ())
 
 # Strings to disallow in various URL tags.
 # Type: regexp, default: '' ('' effectively disables this check)
@@ -80,8 +80,8 @@ from Config import *
 # Type: integer, default: 79
 #setOption("MaxLineLength", 79)
 
-# Type: list of lists, see DEFAULT_LAUNCHERS in MenuCheck
-#setOption("MenuLaunchers", [])
+# Type: tuple of string,tuple lists, default: see DEFAULT_LAUNCHERS in MenuCheck
+#setOption("MenuLaunchers", ())
 
 # Names of packages to treat as "meta" ones.
 # Type: regexp, default: '^(bundle|task)-'
@@ -119,16 +119,16 @@ from Config import *
 #setOption("SkipDocsRegexp", '\.(?:rtf|x?html?|svg|ml[ily]?)$')
 
 # Standard OS groups.
-# Type: list of strings, default: see DEFAULT_STANDARD_GROUPS in FilesCheck
-#setOption("StandardGroups", [])
+# Type: tuple of strings, default: see DEFAULT_STANDARD_GROUPS in FilesCheck
+#setOption("StandardGroups", ())
 
 # Standard OS users.
-# Type: list of strings, see DEFAULT_STANDARD_USERS in FilesCheck
-#setOption("StandardUsers", [])
+# Type: tuple of strings, see DEFAULT_STANDARD_USERS in FilesCheck
+#setOption("StandardUsers", ())
 
 # List of directories considered to be system default library search paths.
-# Type: list of strings, default: see DEFAULT_SYSTEM_LIB_PATHS in BinariesCheck
-#setOption("SystemLibPaths", ['/lib', '/lib64', '/usr/lib', '/usr/lib64']
+# Type: tuple of strings, default: see DEFAULT_SYSTEM_LIB_PATHS in BinariesCheck
+#setOption("SystemLibPaths", ('/lib', '/lib64', '/usr/lib', '/usr/lib64'))
 
 # Whether to want default start/stop runlevels specified in init scripts.
 # Type: boolean, default: True
@@ -168,27 +168,27 @@ from Config import *
 #setOption("ValidBuildHost", '')
 
 # Interpreters whose scriptlets are allowed to be empty.
-# Type: list of strings, default: ['/sbin/ldconfig']
-#setOption("ValidEmptyShells", ['/sbin/ldconfig'])
+# Type: tuple of strings, default: ('/sbin/ldconfig',)
+#setOption("ValidEmptyShells", ('/sbin/ldconfig',))
 
 # Values for the Group tag.
 # Type: list of strings, default: extracted from GROUPS file shipped with rpm
 #setOption("ValidGroups", [])
 
 # Values for the License tag.
-# Type: list of strings, default: see DEFAULT_VALID_LICENSES in TagsCheck
-#setOption("ValidLicenses", [])
+# Type: tuple of strings, default: see DEFAULT_VALID_LICENSES in TagsCheck
+#setOption("ValidLicenses", ())
 
 # Values for non-XDG legacy menu item sections.
-# Type: list of strings, default: see DEFAULT_VALID_SECTIONS in MenuCheck
-#setOption("ValidMenuSections", [])
+# Type: tuple of strings, default: see DEFAULT_VALID_SECTIONS in MenuCheck
+#setOption("ValidMenuSections", ())
 
 # Package scriptlet interpreters.
-# Type: list of strings, default: see DEFAULT_VALID_SHELLS in PostCheck
-#setOption("ValidShells", ['/bin/sh', '/bin/bash'])
+# Type: tuple of strings, default: see DEFAULT_VALID_SHELLS in PostCheck
+#setOption("ValidShells", ('/bin/sh', '/bin/bash'))
 
 # Permissions for files in source packages.
-# Type: list of modes, default: (0644, 0755)
+# Type: tuple of modes, default: (0644, 0755)
 #setOption("ValidSrcPerms", (0644, 0755))
 
 # Value for the Vendor tag.
