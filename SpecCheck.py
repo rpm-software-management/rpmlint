@@ -501,6 +501,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "patch-not-applied", "Patch%d:" % pnum,
                              pfile)
 
+        # Rest of the checks require a real spec file
+        if not self._spec_file:
+            return
+
         # We'd like to parse the specfile only once using python bindings,
         # but it seems errors from rpmlib get logged to stderr and we can't
         # capture and print them nicely, so we do it once each way :P
@@ -514,7 +518,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 parse_error = True
                 printError(pkg, 'specfile-error', line)
 
-        if not parse_error and self._spec_file:
+        if not parse_error:
             # grab sources and patches from parsed spec object to get
             # them with macros expanded for URL checking
 
