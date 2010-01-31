@@ -97,6 +97,21 @@ def main():
             pkgs = []
             isfile = False
             try:
+                if arg == "-":
+                    arg = "(standard input)"
+                    # Short-circuit stdin spec file check
+                    if do_spec_check:
+                        stdin = sys.stdin.readlines()
+                        if not stdin:
+                            continue
+                        pkg = Pkg.FakePkg(arg)
+                        check = SpecCheck.SpecCheck()
+                        check.verbose = verbose
+                        check.check_spec(pkg, None, spec_lines=stdin)
+                        pkg.cleanup()
+                        specfiles_checked += 1
+                    continue
+
                 try:
                     st = os.stat(arg)
                     isfile = True
