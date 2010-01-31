@@ -465,7 +465,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
 
-        # No useful line number info beyond this point.
+        # Last line read is not useful after this point
         pkg.current_linenum = None
 
         for sect in (x for x in buildroot_clean if not buildroot_clean[x]):
@@ -489,9 +489,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             printWarning(pkg, 'depscript-without-disabling-depgen')
 
         if indent_spaces and indent_tabs:
+            pkg.current_linenum = max(indent_spaces, indent_tabs)
             printWarning(pkg, 'mixed-use-of-spaces-and-tabs',
                          '(spaces: line %d, tab: line %d)' %
                          (indent_spaces, indent_tabs))
+            pkg.current_linenum = None
 
         # process gathered info
         for pnum, pfile in patches.items():
