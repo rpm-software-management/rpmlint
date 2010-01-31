@@ -12,7 +12,9 @@ by using command line parameters.
 
 \fIFILE\fR can be a rpm package file, a spec file, or a directory.  In
 case of a directory, it is recursively searched for rpm and spec files
-to check.  \fIPACKAGE\fR is the name of an installed package or a
+to check.  The special value \fB\-\fR results in standard input being
+read and treated as (single) spec file content.
+\fIPACKAGE\fR is the name of an installed package or a
 .BR glob (7)
 pattern to match installed packages, unless a file by that name exists.
 .TP
