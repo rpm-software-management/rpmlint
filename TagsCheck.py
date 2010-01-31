@@ -38,28 +38,30 @@ DEFAULT_VALID_LICENSES = (
     # OSI approved licenses, http://www.opensource.org/licenses/ (unversioned,
     # trailing "license" dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
-    # the full name).  Updated 2009-01-23.
+    # the full name).  Updated 2010-02-01.
     'Academic Free License',
     'Adaptive Public License',
+    'AGPLv3', # Affero GNU Public License
+    'AGPLv3+', # Affero GNU Public License
     'Apache License',
     'Apache Software License',
     'Apple Public Source License',
     'Artistic',
     'Attribution Assurance License',
     'BSD',
+    'Boost Software License',
     'Computer Associates Trusted Open Source License',
     'CDDL', # Common Development and Distribution License
-    'CPL', # Common Public License
+    'Common Public Attribution License',
     'CUA Office Public License',
     'EU DataGrid Software License',
     'Eclipse Public License',
     'Educational Community License',
     'Eiffel Forum License',
     'Entessa Public License',
+    'European Union Public License',
     'Fair License',
     'Frameworx License',
-    'GNU Affero GPLv3',
-    'GNU Affero GPLv3+',
     'GPLv1',
     'GPLv1+',
     'GPLv2',
@@ -72,14 +74,13 @@ DEFAULT_VALID_LICENSES = (
     'LGPLv3+',
     'Historical Permission Notice and Disclaimer',
     'IBM Public License',
-    'Intel Open Source License',
+    'IPA Font License',
     'ISC License',
-    'Jabber Open Source License',
     'Lucent Public License',
     'Microsoft Public License',
     'Microsoft Reciprocal License',
+    'MirOS License',
     'MIT',
-    'CVW License', # MITRE Collaborative Virtual Workspace License
     'Motosoto License',
     'MPL', # Mozilla Public License
     'Multics License',
@@ -90,6 +91,7 @@ DEFAULT_VALID_LICENSES = (
     'Non-profit Open Software License',
     'NTP License',
     'OCLC Research Public License',
+    'OFL', # Open Font License
     'Open Group Test Suite License',
     'Open Software License',
     'PHP License',
@@ -99,8 +101,8 @@ DEFAULT_VALID_LICENSES = (
     'RealNetworks Public Source License',
     'Reciprocal Public License',
     'Ricoh Source Code Public License',
+    'Simple Public License',
     'Sleepycat License',
-    'Sun Industry Standards Source License',
     'Sun Public License',
     'Sybase Open Watcom Public License',
     'University of Illinois/NCSA Open Source License',
