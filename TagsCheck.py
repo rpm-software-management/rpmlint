@@ -784,7 +784,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     j += 1
                 i += 1
 
-        expected = '%s-%s-%s.%s.rpm' % (name, version, release, pkg.arch)
+        expected = pkg.header.sprintf(rpm.expandMacro("%{_build_name_fmt}")).split("/")[-1]
         basename = os.path.basename(pkg.filename)
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
