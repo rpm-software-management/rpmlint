@@ -44,13 +44,15 @@ class AbstractCheck:
 
     def check_url(self, pkg, tag, url):
         """Check that URL points to something that seems to exist."""
+        if not self.network_enabled:
+            if self.verbose:
+                printInfo(pkg, 'network-checks-disabled', url)
+            return
+
         if self.verbose:
-            if self.network_enabled:
                 printInfo(pkg, 'checking-url', url,
                           '(timeout %s seconds)' % self.network_timeout)
-            else:
-                printInfo(pkg, 'network-checks-disabled', url)
-                return
+        
         # Could use timeout kwarg to urlopen, but that's python >= 2.6 only
         socket.setdefaulttimeout(self.network_timeout)
         res = err = None
