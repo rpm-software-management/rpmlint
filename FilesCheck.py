@@ -388,7 +388,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if standard_groups and group not in standard_groups:
                 printWarning(pkg, 'non-standard-gid', f, group)
 
-            if not module_rpms_ok and kernel_modules_regex.search(f) and not is_kernel_package:
+            if not module_rpms_ok and kernel_modules_regex.search(f) and not \
+                    is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
 
             if tmp_regex.search(f):
@@ -431,7 +432,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 ext = compr_regex.search(link)
                 if ext:
                     if not re.compile('\.' + ext.group(1) + '$').search(f):
-                        printError(pkg, 'compressed-symlink-with-wrong-ext', f, link)
+                        printError(pkg, 'compressed-symlink-with-wrong-ext',
+                                   f, link)
 
             perm = mode & 07777
 
@@ -449,10 +451,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'setuid-binary', f, setuid, oct(perm))
                     if setgid:
                         if not (group == 'games' and
-                                (games_path_regex.search(f) or games_group_regex.search(pkg[rpm.RPMTAG_GROUP]))):
-                            printError(pkg, 'setgid-binary', f, setgid, oct(perm))
+                                (games_path_regex.search(f) or
+                                 games_group_regex.search(
+                                    pkg[rpm.RPMTAG_GROUP]))):
+                            printError(pkg, 'setgid-binary', f, setgid,
+                                       oct(perm))
                     if mode & 0777 != 0755:
-                        printError(pkg, 'non-standard-executable-perm', f, oct(perm))
+                        printError(pkg, 'non-standard-executable-perm', f,
+                                   oct(perm))
 
             if log_regex.search(f):
                 log_file = f
@@ -536,16 +542,19 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # check install-info call in %post and %postun
                 if f.startswith('/usr/share/info/'):
                     if not postin:
-                        printError(pkg, 'info-files-without-install-info-postin', f)
+                        printError(pkg,
+                                   'info-files-without-install-info-postin', f)
                     else:
                         if not install_info_regex.search(postin):
                             printError(pkg, 'postin-without-install-info', f)
 
                     if not postun and not preun:
-                        printError(pkg, 'info-files-without-install-info-postun', f)
+                        printError(pkg,
+                                   'info-files-without-install-info-postun', f)
                     else:
-                        if (not postun or not install_info_regex.search(postun)) and \
-                           (not preun or not install_info_regex.search(preun)):
+                        if (not postun or
+                            not install_info_regex.search(postun)) and \
+                            (not preun or not install_info_regex.search(preun)):
                             printError(pkg, 'postin-without-install-info', f)
 
                 # check perl temp file
@@ -574,7 +583,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             break
                     if not ok_nonreadable:
                         printError(pkg, 'non-readable', f, oct(perm))
-                if size == 0 and not normal_zero_length_regex.search(f) and f not in ghost_files:
+                if size == 0 and not normal_zero_length_regex.search(f) and \
+                        f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
                 if mode & 0002 != 0:
@@ -589,15 +599,19 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             vers = res.group(1) + res.group(2)
                         if not (pkg.check_versioned_dep('perl-base', vers) or
                                 pkg.check_versioned_dep('perl', vers)):
-                            printError(pkg, 'no-dependency-on', 'perl-base', vers)
+                            printError(pkg, 'no-dependency-on',
+                                       'perl-base', vers)
                             perl_dep_error = True
 
                 if not python_dep_error:
                     res = python_regex.search(f)
                     if res:
-                        if not (pkg.check_versioned_dep('python-base', res.group(1)) or
-                                pkg.check_versioned_dep('python', res.group(1))):
-                            printError(pkg, 'no-dependency-on', 'python-base', res.group(1))
+                        if not (pkg.check_versioned_dep('python-base',
+                                                        res.group(1)) or
+                                pkg.check_versioned_dep('python',
+                                                        res.group(1))):
+                            printError(pkg, 'no-dependency-on', 'python-base',
+                                       res.group(1))
                             python_dep_error = True
 
                 res = python_bytecode_regex.search(f)
@@ -649,7 +663,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != 0755:
-                    printError(pkg, 'non-standard-executable-perm', f, oct(perm))
+                    printError(pkg, 'non-standard-executable-perm',
+                               f, oct(perm))
                 if mode & 0111 != 0:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
@@ -698,7 +713,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # absolute link
                 r = absolute_regex.search(link)
                 if r:
-                    if not is_so and link not in files and link not in req_names:
+                    if not is_so and link not in files and \
+                            link not in req_names:
                         is_exception = False
                         for e in dangling_exceptions:
                             if e[0].search(link):
@@ -706,7 +722,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 break
                         if is_exception:
                             if is_exception not in req_names:
-                                printWarning(pkg, 'no-dependency-on', is_exception)
+                                printWarning(pkg, 'no-dependency-on',
+                                             is_exception)
                         else:
                             printWarning(pkg, 'dangling-symlink', f, link)
                     linktop = r.group(1)
@@ -714,7 +731,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if r:
                         filetop = r.group(1)
                         if filetop == linktop or use_relative_symlinks:
-                            printWarning(pkg, 'symlink-should-be-relative', f, link)
+                            printWarning(pkg, 'symlink-should-be-relative',
+                                         f, link)
                 # relative link
                 else:
                     if not is_so:
@@ -728,9 +746,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     break
                             if is_exception:
                                 if is_exception not in req_names:
-                                    printWarning(pkg, 'no-dependency-on', is_exception)
+                                    printWarning(pkg, 'no-dependency-on',
+                                                 is_exception)
                             else:
-                                printWarning(pkg, 'dangling-relative-symlink', f, link)
+                                printWarning(pkg, 'dangling-relative-symlink',
+                                             f, link)
                     pathcomponents = f.split('/')[1:]
                     r = points_regex.search(link)
                     lastpop = None
@@ -739,7 +759,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     while r:
                         mylink = r.group(1)
                         if len(pathcomponents) == 0:
-                            printError(pkg, 'symlink-has-too-many-up-segments', f, link)
+                            printError(pkg, 'symlink-has-too-many-up-segments',
+                                       f, link)
                             break
                         else:
                             lastpop = pathcomponents[0]
@@ -750,7 +771,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         r = absolute2_regex.search(mylink)
                         linktop = r.group(1)
 
-                        # does the link go up and then down into the same directory?
+                        # does the link go up and then down into the same
+                        # directory?
                         #if linktop == lastpop:
                         #    printWarning(pkg, 'lengthy-symlink', f, link)
 
@@ -758,11 +780,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             # we've reached the root directory
                             if linktop != lastpop and not use_relative_symlinks:
                                 # relative link into other toplevel directory
-                                printWarning(pkg, 'symlink-should-be-absolute', f, link)
-                        # check additional segments for mistakes like `foo/../bar/'
+                                printWarning(pkg, 'symlink-should-be-absolute',
+                                             f, link)
+                        # check additional segments for mistakes like
+                        # `foo/../bar/'
                         for linksegment in mylink.split('/'):
                             if linksegment == '..':
-                                printError(pkg, 'symlink-contains-up-and-down-segments', f, link)
+                                printError(
+                                    pkg,
+                                    'symlink-contains-up-and-down-segments',
+                                    f, link)
 
             # check text file
             if stat.S_ISREG(mode):
@@ -781,26 +808,34 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         # sourced scripts should not be executable
                         if sourced_script_regex.search(f):
                             if res:
-                                printError(pkg, 'sourced-script-with-shebang', f)
+                                printError(pkg,
+                                           'sourced-script-with-shebang', f)
                             if mode & 0111 != 0:
-                                printError(pkg, 'executable-sourced-script', f, oct(perm))
+                                printError(pkg, 'executable-sourced-script',
+                                           f, oct(perm))
                         # ...but executed ones should
                         elif res or mode & 0111 != 0 or script_regex.search(f):
                             interpreter = None
                             if res:
                                 interpreter = res.group(1)
                                 if not interpreter_regex.search(interpreter):
-                                    printError(pkg, 'wrong-script-interpreter', f, interpreter)
-                            elif not nonexec_file and not (lib_path_regex.search(f) and f.endswith('.la')):
+                                    printError(pkg, 'wrong-script-interpreter',
+                                               f, interpreter)
+                            elif not nonexec_file and not \
+                                    (lib_path_regex.search(f) and
+                                     f.endswith('.la')):
                                 printError(pkg, 'script-without-shebang', f)
 
                             if mode & 0111 == 0 and not is_doc:
-                                printError(pkg, 'non-executable-script', f, oct(perm), interpreter)
+                                printError(pkg, 'non-executable-script', f,
+                                           oct(perm), interpreter)
                             if line.endswith('\r\n') or line.endswith('\r'):
-                                printError(pkg, 'wrong-script-end-of-line-encoding', f)
+                                printError(
+                                    pkg, 'wrong-script-end-of-line-encoding', f)
                         elif is_doc and not skipdocs_regex.search(f):
                             if line.endswith('\r\n') or line.endswith('\r'):
-                                printWarning(pkg, 'wrong-file-end-of-line-encoding', f)
+                                printWarning(
+                                    pkg, 'wrong-file-end-of-line-encoding', f)
                             # We check only doc text files for UTF-8-ness;
                             # checking everything may be slow and can generate
                             # lots of unwanted noise.
@@ -861,7 +896,8 @@ Standard groups are:
 a call to ldconfig.''',
 
 'postin-without-ldconfig',
-'''This package contains a library and its %post scriptlet doesn't call ldconfig.''',
+'''This package contains a library and its %post scriptlet doesn't call
+ldconfig.''',
 
 'library-without-ldconfig-postun',
 '''This package contains a library and provides no %postun scriptlet containing
@@ -882,7 +918,8 @@ a call to install-info.''',
 a call to install-info.''',
 
 'postun-without-install-info',
-'''This package contains info files and its %postun doesn't call install-info.''',
+'''This package contains info files and its %postun doesn't call
+install-info.''',
 
 'perl-temp-file',
 '''You have a perl temporary file in your package. Usually, this
@@ -941,7 +978,8 @@ a configuration file. All non-executable files in /etc should be configuration
 files. Mark the file as %config in the spec file.''',
 
 'compressed-symlink-with-wrong-ext',
-'''The symlink points to a compressed file but doesn't use the same extension.''',
+'''The symlink points to a compressed file but doesn't use the same
+extension.''',
 
 'setuid-binary',
 '''The file is setuid, this may be dangerous, especially if this
@@ -1087,7 +1125,8 @@ customize an executable, make it for example read a config file in
 /etc/sysconfig.''',
 
 'sourced-script-with-shebang',
-'''This text file contains a shebang, but is meant to be sourced, not executed.''',
+'''This text file contains a shebang, but is meant to be sourced, not
+executed.''',
 
 'executable-sourced-script',
 '''This text file has executable bit set, but is meant to be sourced, not
@@ -1122,7 +1161,8 @@ correctly in some circumstances.''',
 in the specfile's %prep section for example using iconv(1).''',
 
 'filename-not-utf8',
-'''The character encoding of the name of this file is not UTF-8.  Rename it.''',
+'''The character encoding of the name of this file is not UTF-8.
+Rename it.''',
 
 'file-in-meta-package',
 '''This package seems to be a meta-package (an empty package used to require

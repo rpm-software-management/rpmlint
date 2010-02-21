@@ -225,7 +225,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         package = res.group(1)
                         if package != pkg.name:
-                            printWarning(pkg, 'incoherent-package-value-in-menu', package, f)
+                            printWarning(pkg,
+                                         'incoherent-package-value-in-menu',
+                                         package, f)
                     else:
                         printInfo(pkg, 'unable-to-parse-menu-entry', line)
 
@@ -239,8 +241,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 found = False
                                 if launcher[1]:
                                     if ('/bin/' + command_line[0] in files or
-                                        '/usr/bin/' + command_line[0] in files or
-                                        '/usr/X11R6/bin/' + command_line[0] in files):
+                                        '/usr/bin/' + command_line[0] in files
+                                        or '/usr/X11R6/bin/' + command_line[0]
+                                        in files):
                                         found = True
                                     else:
                                         for l in launcher[1]:
@@ -248,17 +251,21 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                                 found = True
                                                 break
                                     if not found:
-                                        printError(pkg, 'use-of-launcher-in-menu-but-no-requires-on', launcher[1][0])
+                                        printError(pkg,
+                                                   'use-of-launcher-in-menu-but-no-requires-on',
+                                                   launcher[1][0])
                                 command = command_line[1]
                                 break
                         if command[0] == '/':
                             if command not in files:
-                                printWarning(pkg, 'menu-command-not-in-package', command)
+                                printWarning(pkg, 'menu-command-not-in-package',
+                                             command)
                         else:
                             if not ('/bin/' + command in files or
                                     '/usr/bin/' + command in files or
                                     '/usr/X11R6/bin/' + command in files):
-                                printWarning(pkg, 'menu-command-not-in-package', command)
+                                printWarning(pkg, 'menu-command-not-in-package',
+                                             command)
                     else:
                         printWarning(pkg, 'missing-menu-command')
                         command = False
@@ -268,10 +275,12 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         grp = res.groups()
                         title = grp[1] or grp[2]
                         if title[0] != title[0].upper():
-                            printWarning(pkg, 'menu-longtitle-not-capitalized', title)
+                            printWarning(pkg, 'menu-longtitle-not-capitalized',
+                                         title)
                         res = version_regex.search(title)
                         if res:
-                            printWarning(pkg, 'version-in-menu-longtitle', title)
+                            printWarning(pkg, 'version-in-menu-longtitle',
+                                         title)
                     else:
                         printError(pkg, 'no-longtitle-in-menu', f)
                         title = None
@@ -281,7 +290,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         grp = res.groups()
                         title = grp[1] or grp[2]
                         if title[0] != title[0].upper():
-                            printWarning(pkg, 'menu-title-not-capitalized', title)
+                            printWarning(pkg, 'menu-title-not-capitalized',
+                                         title)
                         res = version_regex.search(title)
                         if res:
                             printWarning(pkg, 'version-in-menu-title', title)
@@ -303,9 +313,11 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 # don't warn entries for sections
                                 if command:
                                     if section not in valid_sections:
-                                        printError(pkg, 'invalid-menu-section', section, f)
+                                        printError(pkg, 'invalid-menu-section',
+                                                   section, f)
                             else:
-                                printInfo(pkg, 'unable-to-parse-menu-section', line)
+                                printInfo(pkg, 'unable-to-parse-menu-section',
+                                          line)
                         elif needs not in standard_needs:
                             printInfo(pkg, 'strange-needs', needs, f)
                     else:
@@ -317,11 +329,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         if not icon_ext_regex.search(icon):
                             printWarning(pkg, 'invalid-menu-icon-type', icon)
                         if icon[0] == '/' and needs == 'x11':
-                            printWarning(pkg, 'hardcoded-path-in-menu-icon', icon)
+                            printWarning(pkg, 'hardcoded-path-in-menu-icon',
+                                         icon)
                         else:
                             for path in icon_paths:
                                 if (path[0] + icon) not in files:
-                                    printError(pkg, path[1] + '-icon-not-in-package', icon, f)
+                                    printError(pkg,
+                                               path[1] + '-icon-not-in-package',
+                                               icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
 

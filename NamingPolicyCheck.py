@@ -64,7 +64,8 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
             # check for files then
             for c in self.checks_:
                 for f in files:
-                    if c['file_re'].search(f) and not c['name_re'].search(pkg.name):
+                    if c['file_re'].search(f) and \
+                            not c['name_re'].search(pkg.name):
                         raise NamingPolicyNotAppliedException
         except NamingPolicyNotAppliedException:
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
@@ -72,7 +73,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
 check = NamingPolicyCheck()
 
 #
-# these are the check currently impleted.
+# these are the check currently implemented.
 #
 # first argument is the name of the check, printed by the warning.
 #   ex : xmms.
@@ -80,10 +81,12 @@ check = NamingPolicyCheck()
 # secund argument is the regular expression of the naming policy.
 #   ex: xmms plugin should be named xmms-name_of_plugin.
 #
-# third is the path of the file that should contains a package to be related to the naming scheme.
+# third is the path of the file that should contains a package to be related to
+# the naming scheme.
 #   ex: xmms plugin are put under /usr/lib/xmms/
 #
-# the module is far from being perfect since you need to check this file for the naming file.
+# the module is far from being perfect since you need to check this file for
+# the naming file.
 # if somone as a elegant solution, I will be happy to implement and test it.
 
 

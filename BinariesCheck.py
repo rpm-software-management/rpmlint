@@ -213,7 +213,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
                 has_usr_lib_file = True
-                if not binary_in_usr_lib and usr_lib_exception_regex.search(fname):
+                if not binary_in_usr_lib and \
+                        usr_lib_exception_regex.search(fname):
                     # Fake that we have binaries there to avoid
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
@@ -226,11 +227,15 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             if is_binary:
                 binary = True
-                if has_usr_lib_file and not binary_in_usr_lib and usr_lib_regex.search(fname):
+                if has_usr_lib_file and not binary_in_usr_lib and \
+                        usr_lib_regex.search(fname):
                     binary_in_usr_lib = True
 
                 if pkg.arch == 'noarch':
-                    printError(pkg, 'arch-independent-package-contains-binary-or-object', fname)
+                    printError(
+                        pkg,
+                        'arch-independent-package-contains-binary-or-object',
+                        fname)
                 else:
                     # in /usr/share ?
                     if fname.startswith('/usr/share/'):
@@ -271,7 +276,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                         symlink = directory + bin_info.soname
                                         link = files[symlink].linkto
                                         if link not in (fname, base, ''):
-                                            printError(pkg, 'invalid-ldconfig-symlink', fname, link)
+                                            printError(
+                                                pkg, 'invalid-ldconfig-symlink',
+                                                fname, link)
                                     except KeyError:
                                         printError(
                                             pkg, 'no-ldconfig-symlink', fname)
@@ -292,7 +299,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             for p in bin_info.rpath:
                                 if p in system_lib_paths or \
                                    not usr_lib_regex.search(p):
-                                    printError(pkg, 'binary-or-shlib-defines-rpath', fname, bin_info.rpath)
+                                    printError(pkg,
+                                               'binary-or-shlib-defines-rpath',
+                                               fname, bin_info.rpath)
                                     break
 
                         # shared lib calls exit() or _exit()?
@@ -320,34 +329,46 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                not (bin_info.soname and \
                                     ldso_soname_regex.search(bin_info.soname)):
                                 if shared_object_regex.search(pkgfile.magic):
-                                    printError(pkg, 'shared-lib-without-dependency-information', fname)
+                                    printError(pkg,
+                                               'shared-lib-without-dependency-information',
+                                               fname)
                                 else:
                                     printError(pkg, 'statically-linked-binary', fname)
                             else:
                                 # linked against libc ?
                                 if not libc_regex.search(fname) and \
-                                   ( not bin_info.soname or \
-                                     ( not libc_regex.search(bin_info.soname) and \
-                                       not ldso_soname_regex.search(bin_info.soname))):
+                                   (not bin_info.soname or
+                                    (not libc_regex.search(bin_info.soname) and
+                                     not ldso_soname_regex.search(
+                                               bin_info.soname))):
                                     found_libc = False
                                     for lib in bin_info.needed:
                                         if libc_regex.search(lib):
                                             found_libc = True
                                             break
                                     if not found_libc:
-                                        if shared_object_regex.search(pkgfile.magic):
-                                            printError(pkg, 'library-not-linked-against-libc', fname)
+                                        if shared_object_regex.search(
+                                            pkgfile.magic):
+                                            printError(pkg,
+                                                       'library-not-linked-against-libc',
+                                                       fname)
                                         else:
-                                            printError(pkg, 'program-not-linked-against-libc', fname)
+                                            printError(pkg,
+                                                       'program-not-linked-against-libc',
+                                                       fname)
 
                             # It could be useful to check these for others than
                             # shared libs only, but that has potential to
                             # generate lots of false positives and noise.
                             if is_shlib:
                                 for s in bin_info.undef:
-                                    printWarning(pkg, 'undefined-non-weak-symbol', fname, s)
+                                    printWarning(pkg,
+                                                 'undefined-non-weak-symbol',
+                                                 fname, s)
                                 for s in bin_info.unused:
-                                    printWarning(pkg, 'unused-direct-shlib-dependency', fname, s)
+                                    printWarning(
+                                        pkg, 'unused-direct-shlib-dependency',
+                                        fname, s)
 
                             if bin_info.stack:
                                 if bin_info.exec_stack:
@@ -356,7 +377,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 pkg.arch.endswith("86") or
                                 pkg.arch.startswith("pentium") or
                                 pkg.arch in ("athlon", "x86_64")):
-                                printError(pkg, 'missing-PT_GNU_STACK-section', fname)
+                                printError(pkg, 'missing-PT_GNU_STACK-section',
+                                           fname)
 
             else:
                 if reference_regex.search(fname):
@@ -371,7 +393,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             for f in files:
                 res = numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
-                if f not in exec_files and not so_regex.search(f) and not versioned_dir_regex.search(fn):
+                if f not in exec_files and not so_regex.search(f) and \
+                        not versioned_dir_regex.search(fn):
                     printError(pkg, 'non-versioned-file-in-library-package', f)
             if version and version != -1 and version not in pkg.name:
                 printError(pkg, 'incoherent-version-in-name', version)
@@ -474,7 +497,8 @@ indicate gratuitously bloated linkage; check that the binary has been linked
 with the intended shared libraries only.''',
 
 'only-non-binary-in-usr-lib',
-'''There are only non binary files in /usr/lib so they should be in /usr/share.''',
+'''There are only non binary files in /usr/lib so they should be in
+/usr/share.''',
 
 'binaryinfo-readelf-failed',
 '''Executing readelf on this file failed, all checks could not be run.''',

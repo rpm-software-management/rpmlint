@@ -266,12 +266,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if current_section in ('prep', 'build'):
                 if contains_buildroot(line):
-                    printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section, line[:-1].strip())
+                    printWarning(pkg, 'rpm-buildroot-usage',
+                                 '%' + current_section, line[:-1].strip())
 
-            if make_check_regex.search(line) and current_section not in ('check', 'changelog', 'package', 'description'):
+            if make_check_regex.search(line) and current_section not in \
+                    ('check', 'changelog', 'package', 'description'):
                 printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
-            if current_section in buildroot_clean and not buildroot_clean[current_section]:
+            if current_section in buildroot_clean and \
+                    not buildroot_clean[current_section]:
                 if contains_buildroot(line) and rm_regex.search(line):
                     buildroot_clean[current_section] = True
 
@@ -327,16 +330,22 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     elif res.group(1):
                         res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
-                            printError(pkg, "hardcoded-library-path", res.group(1), "in configure options")
+                            printError(pkg, "hardcoded-library-path",
+                                       res.group(1), "in configure options")
                     configure_linenum = None
 
             if current_section != 'changelog' and './configure' in line:
-                configure_linenum = pkg.current_linenum # store line where it started
+                # store line where it started
+                configure_linenum = pkg.current_linenum
                 configure_cmdline = line.strip()
 
             res = hardcoded_library_path_regex.search(line)
-            if current_section != 'changelog' and res and not (biarch_package_regex.match(pkg.name) or hardcoded_lib_path_exceptions_regex.search(res.group(1).lstrip())):
-                printError(pkg, "hardcoded-library-path", "in", res.group(1).lstrip())
+            if current_section != 'changelog' and res and not \
+                    (biarch_package_regex.match(pkg.name) or
+                     hardcoded_lib_path_exceptions_regex.search(
+                            res.group(1).lstrip())):
+                printError(pkg, "hardcoded-library-path", "in",
+                           res.group(1).lstrip())
 
             if '%mklibname' in line:
                 mklibname = True
@@ -361,7 +370,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     buildroot = True
                     if res.group(1).startswith('/'):
-                        printWarning(pkg, 'hardcoded-path-in-buildroot-tag', res.group(1))
+                        printWarning(pkg, 'hardcoded-path-in-buildroot-tag',
+                                     res.group(1))
 
                 res = packager_regex.search(line)
                 if res:
@@ -385,7 +395,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'buildprereq-use', res.group(1))
 
                 if scriptlet_requires_regex.search(line):
-                    printError(pkg, 'broken-syntax-in-scriptlet-requires', line.strip())
+                    printError(pkg, 'broken-syntax-in-scriptlet-requires',
+                               line.strip())
 
                 res = requires_regex.search(line)
                 if res:
@@ -428,9 +439,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'macro-in-%changelog', match)
             else:
                 if not depscript_override:
-                    depscript_override = depscript_override_regex.search(line) is not None
+                    depscript_override = \
+                        depscript_override_regex.search(line) is not None
                 if not depgen_disabled:
-                    depgen_disabled = depgen_disable_regex.search(line) is not None
+                    depgen_disabled = \
+                        depgen_disable_regex.search(line) is not None
 
             if current_section == 'files':
 
@@ -443,7 +456,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'files-attr-not-set')
 
                 # TODO: check scriptlets for these too?
-                if package_noarch.get(current_package) or (current_package not in package_noarch and package_noarch.get(None)):
+                if package_noarch.get(current_package) or \
+                        (current_package not in package_noarch and
+                         package_noarch.get(None)):
                     res = libdir_regex.search(line)
                     if res:
                         pkgname = current_package

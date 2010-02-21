@@ -69,7 +69,8 @@ def substitute_shell_vars(val, script):
         value = shell_var_value(res.group(2), script)
         if not value:
             value = ''
-        return res.group(1) + value + substitute_shell_vars(res.group(3), script)
+        return res.group(1) + value + \
+            substitute_shell_vars(res.group(3), script)
     else:
         return val
 
@@ -77,9 +78,12 @@ def getstatusoutput(cmd, stdoutonly = False):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.'''
     if stdoutonly:
-        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE, close_fds=True)
     else:
-        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
     text = proc.stdout.read()
     sts = proc.wait()
@@ -98,7 +102,8 @@ def is_utf8(fname):
     if bz2_regex.search(fname): cat = 'bzip2 -dcf'
     elif xz_regex.search(fname): cat = 'xz -dc'
     # TODO: better shell escaping or sequence based command invocation
-    cmd = commands.getstatusoutput('%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
+    cmd = commands.getstatusoutput(
+        '%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
     return not cmd[0]
 
 def is_utf8_str(s):
@@ -217,7 +222,8 @@ def rangeCompare(reqtuple, provtuple):
         r = None
     if reqe is None:
         e = None
-    if reqv is None: # just for the record if ver is None then we're going to segfault
+    # just for the record if ver is None then we're going to segfault
+    if reqv is None:
         v = None
 
     # if we just require foo-version, then foo-version-* will match
@@ -384,7 +390,9 @@ class Pkg:
                 prefix = 'rpmlint.%s.' % os.path.basename(self.filename),
                 dir = self.dirname)
             # TODO: better shell escaping or sequence based command invocation
-            command_str = 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % (self.filename, self.dirname, self.dirname)
+            command_str = \
+                'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % \
+                (self.filename, self.dirname, self.dirname)
             cmd = commands.getstatusoutput(command_str)
             self.extracted = True
             return cmd
@@ -577,7 +585,8 @@ class Pkg:
         return self._provides
 
     # internal function to gather dependency info used by the above ones
-    def _gather_aux(self, header, list, nametag, versiontag, flagstag, prereq = None):
+    def _gather_aux(self, header, list, nametag, versiontag, flagstag,
+                    prereq = None):
         names = header[nametag]
         versions = header[versiontag]
         flags = header[flagstag]
@@ -585,7 +594,8 @@ class Pkg:
         if versions:
             for loop in range(len(versions)):
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((names[loop], versions[loop], flags[loop] & (~PREREQ_FLAG)))
+                    prereq.append((names[loop], versions[loop],
+                                   flags[loop] & (~PREREQ_FLAG)))
                 else:
                     list.append((names[loop], versions[loop], flags[loop]))
 
@@ -649,7 +659,9 @@ class InstalledPkg(Pkg):
 
         self.extracted = True
         # create a fake filename to satisfy some checks on the filename
-        self.filename = '%s-%s-%s.%s.rpm' % (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE], self[rpm.RPMTAG_ARCH])
+        self.filename = '%s-%s-%s.%s.rpm' % \
+            (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE],
+             self[rpm.RPMTAG_ARCH])
 
     def cleanup(self):
         pass
