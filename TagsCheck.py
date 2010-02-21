@@ -513,7 +513,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         self._unexpanded_macros(pkg, 'Packager', packager)
         if not packager:
             printError(pkg, 'no-packager-tag')
-        elif Config.getOption('Packager') and not packager_regex.search(packager):
+        elif Config.getOption('Packager') and \
+                not packager_regex.search(packager):
             printWarning(pkg, 'invalid-packager', packager)
 
         version = pkg[rpm.RPMTAG_VERSION]
@@ -543,10 +544,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if use_epoch:
             for o in pkg.obsoletes():
                 if o[1] and not epoch_regex.search(o[1]):
-                    printWarning(pkg, 'no-epoch-in-obsoletes', o[0] + ' ' + o[1])
+                    printWarning(pkg,
+                                 'no-epoch-in-obsoletes', o[0] + ' ' + o[1])
             for c in pkg.conflicts():
                 if c[1] and not epoch_regex.search(c[1]):
-                    printWarning(pkg, 'no-epoch-in-conflicts', c[0] + ' ' + c[1])
+                    printWarning(pkg,
+                                 'no-epoch-in-conflicts', c[0] + ' ' + c[1])
             for p in pkg.provides():
                 if p[1] and not epoch_regex.search(p[1]):
                     printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
@@ -557,7 +560,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         is_devel = FilesCheck.devel_regex.search(name)
         is_source = pkg.isSource()
         for d in deps:
-            if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and not epoch_regex.search(d[1]):
+            if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and \
+                    not epoch_regex.search(d[1]):
                 printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
@@ -611,9 +615,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             expected = version
                         if dep[1][:len(expected)] != expected:
                             if dep[1] != '':
-                                printWarning(pkg, 'incoherent-version-dependency-on', base_or_libs, dep[1], expected)
+                                printWarning(pkg,
+                                             'incoherent-version-dependency-on',
+                                             base_or_libs, dep[1], expected)
                             else:
-                                printWarning(pkg, 'no-version-dependency-on', base_or_libs, expected)
+                                printWarning(pkg, 'no-version-dependency-on',
+                                             base_or_libs, expected)
                     res = devel_number_regex.search(name)
                     if not res:
                         printWarning(pkg, 'no-major-in-name', name)
@@ -687,10 +694,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         # Allow EVR in changelog without release extension,
                         # the extension is often a macro or otherwise dynamic.
                         if release_ext:
-                            expected.append(extension_regex.sub('', expected[0]))
+                            expected.append(
+                                extension_regex.sub('', expected[0]))
                         if ret.group(1) not in expected:
                             if len(expected) == 1: expected = expected[0]
-                            printWarning(pkg, 'incoherent-version-in-changelog', ret.group(1), expected)
+                            printWarning(pkg, 'incoherent-version-in-changelog',
+                                         ret.group(1), expected)
 
             if clt: changelog = changelog + clt
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
@@ -784,7 +793,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     j += 1
                 i += 1
 
-        expected = pkg.header.sprintf(rpm.expandMacro("%{_build_name_fmt}")).split("/")[-1]
+        expected = pkg.header.sprintf(
+            rpm.expandMacro("%{_build_name_fmt}")).split("/")[-1]
         basename = os.path.basename(pkg.filename)
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
@@ -866,12 +876,12 @@ with something you have control over.''',
 '''The value of this tag appears to be misspelled. Please double-check.''',
 
 'no-packager-tag',
-'''There is no Packager tag in your package. You have to specify a packager using
-the Packager tag. Ex: Packager: John Doo <john.doo@example.com>.''',
+'''There is no Packager tag in your package. You have to specify a packager
+using the Packager tag. Ex: Packager: John Doe <john.doe@example.com>.''',
 
 'invalid-packager',
-'''The packager email must finish with a email compatible with the Packager option
-of rpmlint. Please change it and rebuild your package.''',
+'''The packager email must end with an email compatible with the Packager
+option of rpmlint. Please change it and rebuild your package.''',
 
 'no-version-tag',
 '''There is no Version tag in your package. You have to specify a version using
@@ -909,8 +919,8 @@ Name tag.''',
 ''',
 
 'no-provides',
-'''Your library package doesn't provide the -devel name without the major version
-included.''',
+'''Your library package doesn't provide the -devel name without the major
+version included.''',
 
 'no-summary-tag',
 '''There is no Summary tag in your package. You have to describe your package
@@ -1008,8 +1018,8 @@ Epoch tag.''',
 package itself.''',
 
 'invalid-build-requires',
-'''Your source package contains a dependency not compliant with the lib64 naming.
-This BuildRequires dependency will not be resolved on lib64 platforms
+'''Your source package contains a dependency not compliant with the lib64
+naming. This BuildRequires dependency will not be resolved on lib64 platforms
 (eg. amd64).''',
 
 'explicit-lib-dependency',

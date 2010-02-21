@@ -17,7 +17,8 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        AbstractCheck.AbstractFilesCheck.__init__(self, "MenuXDGCheck", "/usr/share/applications/.*\.desktop$")
+        AbstractCheck.AbstractFilesCheck.__init__(
+            self, "MenuXDGCheck", "/usr/share/applications/.*\.desktop$")
 
     def check_file(self, pkg, filename):
         f = pkg.dirName() + filename

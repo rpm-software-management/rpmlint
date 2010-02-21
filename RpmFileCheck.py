@@ -39,7 +39,8 @@ check = RpmFileCheck()
 
 addDetails(
 'filename-too-long-for-joliet',
-'This filename is too long to fit on a joliet filesystem (limit is 64 unicode chars).',
+'''This filename is too long to fit on a joliet filesystem (limit is 64 unicode
+chars).''',
 )
 
 # Local variables:

@@ -60,14 +60,16 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 # check chkconfig call in %post and %preun
                 postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
                 if not postin:
-                    printError(pkg, 'init-script-without-chkconfig-postin', fname)
+                    printError(pkg,
+                               'init-script-without-chkconfig-postin', fname)
                 else:
                     if not chkconfig_regex.search(postin):
                         printError(pkg, 'postin-without-chkconfig', fname)
 
                 preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
                 if not preun:
-                    printError(pkg, 'init-script-without-chkconfig-preun', fname)
+                    printError(pkg,
+                               'init-script-without-chkconfig-preun', fname)
                 else:
                     if not chkconfig_regex.search(preun):
                         printError(pkg, 'preun-without-chkconfig', fname)
@@ -115,9 +117,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 cres = lsb_cont_regex.search(line)
                                 if not (in_lsb_description and cres):
                                     in_lsb_description = False
-                                    printError(pkg, 'malformed-line-in-lsb-comment-block', line)
+                                    printError(pkg,
+                                               'malformed-line-in-lsb-comment-block',
+                                               line)
                                 else:
-                                    lsb_tags["Description"][-1] += " " + cres.group(1)
+                                    lsb_tags["Description"][-1] += \
+                                        " " + cres.group(1)
                             else:
                                 tag = res.group(1)
                                 if not tag.startswith('X-') and \
@@ -146,7 +151,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                 printWarning(pkg, 'no-default-runlevel', fname)
                         else:
                             if res.group(1) != '-':
-                                printWarning(pkg, 'service-default-enabled', fname)
+                                printWarning(pkg,
+                                             'service-default-enabled', fname)
 
                     res = subsys_regex.search(line)
                     if res:
@@ -155,7 +161,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                         if name != basename:
                             error = True
                             if name[0] == '$':
-                                value = Pkg.substitute_shell_vars(name, content_str)
+                                value = Pkg.substitute_shell_vars(
+                                    name, content_str)
                                 if value == basename:
                                     error = False
                             else:
@@ -165,9 +172,11 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                                     error = name != basename
                             if error and len(name):
                                 if name[0] == '$':
-                                    printWarning(pkg, 'incoherent-subsys', fname, name)
+                                    printWarning(pkg, 'incoherent-subsys',
+                                                 fname, name)
                                 else:
-                                    printError(pkg, 'incoherent-subsys', fname, name)
+                                    printError(pkg, 'incoherent-subsys',
+                                               fname, name)
 
                 if "Default-Start" in lsb_tags:
                     if "".join(lsb_tags["Default-Start"]):
@@ -197,14 +206,16 @@ addDetails(
 a call to chkconfig.''',
 
 'postin-without-chkconfig',
-'''The package contains an init script but doesn't call chkconfig in its %post.''',
+'''The package contains an init script but doesn't call chkconfig in its
+%post script.''',
 
 'init-script-without-chkconfig-preun',
 '''The package contains an init script but doesn't contain a %preun with
 a call to chkconfig.''',
 
 'preun-without-chkconfig',
-'''The package contains an init script but doesn't call chkconfig in its %preun.''',
+'''The package contains an init script but doesn't call chkconfig in its
+%preun script.''',
 
 'missing-lsb-keyword',
 '''The package contains an init script that does not contain one of the LSB

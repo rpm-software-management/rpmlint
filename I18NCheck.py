@@ -111,7 +111,8 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         # others in /usr/share or /usr/lib, the only reliable way
         # sofar to detect them is to look for an apache configuration file
         for f in files:
-            if f.startswith('/etc/apache2/') or f.startswith('/etc/httpd/conf.d/'):
+            if f.startswith('/etc/apache2/') or \
+                    f.startswith('/etc/httpd/conf.d/'):
                 webapp = True
 
         for f in files:
@@ -204,7 +205,8 @@ addDetails(
 """,
 
 'subfile-not-in-%lang',
-""" If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be installable if XX is not in %_install_langs""",
+""" If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be
+installable if XX is not in %_install_langs.""",
 
 )
 

@@ -38,7 +38,8 @@ class DistributionCheck(AbstractCheck.AbstractCheck):
             printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
 
         if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
-            printWarning(pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
+            printWarning(pkg, "invalid-distribution",
+                         pkg[rpm.RPMTAG_DISTRIBUTION])
 
         if compress_ext:
             for fname in pkg.files():
@@ -58,7 +59,7 @@ check = DistributionCheck()
 
 addDetails(
 'invalid-vendor',
-'In the ' + distribution + ' distribution, the vendor should be "' + vendor + '".',
+'''In the "%s" distribution, vendor should be "%s".''' % (distribution, vendor),
 
 'invalid-distribution',
 'The distribution value should be "' + distribution + '".',

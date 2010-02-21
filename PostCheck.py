@@ -119,7 +119,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 self.check_aux(pkg, files, prog, script, tag, prereq)
             else:
                 for idx in range(0, len(prog)):
-                    self.check_aux(pkg, files, prog[idx], script[idx], tag, prereq)
+                    self.check_aux(
+                        pkg, files, prog[idx], script[idx], tag, prereq)
 
         ghost_files = pkg.ghostFiles()
         if ghost_files:
@@ -132,7 +133,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     if (not postin or f not in postin) and \
                        (not prein or f not in prein) and \
                        f not in pkg.missingOkFiles():
-                        printWarning(pkg, 'postin-without-ghost-file-creation', f)
+                        printWarning(pkg,
+                                     'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
@@ -148,10 +150,12 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'spurious-bracket-in-' + tag[2])
                 res = dangerous_command_regex.search(script)
                 if res:
-                    printWarning(pkg, 'dangerous-command-in-' + tag[2], res.group(2))
+                    printWarning(pkg, 'dangerous-command-in-' + tag[2],
+                                 res.group(2))
                 res = selinux_regex.search(script)
                 if res:
-                    printError(pkg, 'forbidden-selinux-command-in-' + tag[2], res.group(2))
+                    printError(pkg, 'forbidden-selinux-command-in-' + tag[2],
+                               res.group(2))
 
                 if 'update-menus' in script:
                     menu_error = True
@@ -160,7 +164,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                             menu_error = False
                             break
                     if menu_error:
-                        printError(pkg, 'update-menus-without-menu-file-in-' + tag[2])
+                        printError(pkg, 'update-menus-without-menu-file-in-' +
+                                   tag[2])
                 if tmp_regex.search(script):
                     printError(pkg, 'use-tmp-in-' + tag[2])
                 for c in prereq_assoc:
@@ -180,7 +185,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'use-of-home-in-' + tag[2])
                 res = bogus_var_regex.search(script)
                 if res:
-                    printWarning(pkg, 'bogus-variable-use-in-' + tag[2], res.group(1))
+                    printWarning(pkg, 'bogus-variable-use-in-' + tag[2],
+                                 res.group(1))
 
             if prog == '/usr/bin/perl':
                 if incorrect_perl_script(prog, script):

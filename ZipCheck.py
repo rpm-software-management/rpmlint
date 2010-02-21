@@ -55,7 +55,8 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                         try:
                             mf = z.read('META-INF/MANIFEST.MF')
                             if classpath_regex.search(mf):
-                                printWarning(pkg, 'class-path-in-manifest', fname)
+                                printWarning(pkg,
+                                             'class-path-in-manifest', fname)
                         except KeyError:
                             # META-INF/* are optional:
                             # http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html
