@@ -425,6 +425,7 @@ use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
+sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 
 _enchant_checkers = {}
 def spell_check(pkg, str, fmt, lang, ignored):
@@ -448,11 +449,20 @@ def spell_check(pkg, str, fmt, lang, ignored):
             _enchant_checkers[lang] = checker
 
         if checker:
-            checker.set_text(str)
+            # squeeze whitespace to ease leading context check
+            checker.set_text(re.sub(r'\s+', ' ', str))
             uppername = pkg.name.upper()
             upperparts = uppername.split('-')
             for err in checker:
+
+                # Skip already warned and ignored words
                 if err.word in warned or err.word in ignored:
+                    continue
+
+                # Skip all capitalized words that do not start a sentence
+                # (side effect: skips also words starting with non-letter chars)
+                if err.word[0] == err.word[0].upper() and not \
+                        sentence_break_regex.search(checker.leading_context(3)):
                     continue
 
                 upperword = err.word.upper()
@@ -460,9 +470,9 @@ def spell_check(pkg, str, fmt, lang, ignored):
                 # Skip all uppercase words
                 if err.word == upperword:
                     continue
-                    
+
                 # Skip errors containing package name or equal to a
-                # "component" of it
+                # "component" of it, case insensitively
                 if uppername in upperword or upperword in upperparts:
                     continue
 
