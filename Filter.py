@@ -8,6 +8,7 @@
 # Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 
+import sys
 import textwrap
 
 import Config
@@ -20,6 +21,14 @@ except ImportError:
 _diagnostic = list()
 _badness_score = 0
 printed_messages = { "I": 0, "W": 0, "E": 0 }
+
+if sys.stdout.isatty():
+    def __print(s):
+        print(s)
+else:
+    import locale
+    def __print(s):
+        print(s.encode(locale.getpreferredencoding(), "replace"))
 
 def printInfo(pkg, reason, *details):
     _print("I", pkg, reason, details)
@@ -60,7 +69,7 @@ def _print(msgtype, pkg, reason, details):
             if threshold >= 0:
                 _diagnostic.append(s + "\n")
             else:
-                print (s)
+                __print(s)
                 if Config.info:
                     printDescriptions(reason)
             return True
@@ -71,8 +80,8 @@ def printDescriptions(reason):
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
-            print (textwrap.fill(d, 78))
-            print ("")
+            __print(textwrap.fill(d, 78))
+            __print("")
     except KeyError:
         pass
 
@@ -95,7 +104,7 @@ def printAllReasons():
                 if len(last_reason):
                     printDescriptions(last_reason)
                 last_reason = reason
-        print (diag)
+        __print(diag)
     if Config.info and len(last_reason):
         printDescriptions(last_reason)
     _diagnostic = list()
