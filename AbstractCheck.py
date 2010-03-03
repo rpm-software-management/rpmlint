@@ -73,7 +73,8 @@ class AbstractFilesCheck(AbstractCheck):
     def check(self, pkg):
         if pkg.isSource():
             return
-        for filename in pkg.files():
+        ghosts = pkg.ghostFiles()
+        for filename in (x for x in pkg.files() if x not in ghosts):
             if self.__files_re.match(filename):
                 self.check_file(pkg, filename)
 
