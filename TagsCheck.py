@@ -803,8 +803,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     j += 1
                 i += 1
 
-        expected = pkg.header.sprintf(
-            rpm.expandMacro("%{_build_name_fmt}")).split("/")[-1]
+        expfmt = rpm.expandMacro("%{_build_name_fmt}")
+        if pkg.isSource():
+            # _build_name_fmt often (always?) ends up not outputting src/nosrc
+            # as arch for source packages, do it ourselves
+            expfmt = re.sub(r'(?i)%\{?ARCH\b\}?', pkg.arch, expfmt)
+        expected = pkg.header.sprintf(expfmt).split("/")[-1]
         basename = os.path.basename(pkg.filename)
         if basename != expected:
             printWarning(pkg, 'non-coherent-filename', basename, expected)
