@@ -33,6 +33,8 @@ Noarch subpackage test.
 %patch -P 2 -P 4
 
 %build
+# %configure
+# %%%
 
 
 %install
