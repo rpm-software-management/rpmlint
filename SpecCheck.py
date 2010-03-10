@@ -480,6 +480,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
 
+            # Test if there is macro in comment
+            hashPos = line.find("#")
+            if hashPos != -1:
+                for match in AbstractCheck.macro_regex.findall(
+                    line[hashPos+1:]):
+                    res = re.match('%+', match)
+                    if len(res.group(0)) % 2:
+                        printWarning(pkg, 'macro-in-comment', match)
+
         # Last line read is not useful after this point
         pkg.current_linenum = None
 
@@ -761,6 +770,11 @@ is output by rpm and the message should contain more information.''',
 '''This dependency token contains a comparison operator (<, > or =).  This is
 usually not intended and may be caused by missing whitespace between the token's
 name, the comparison operator and the version string.''',
+
+'macro-in-comment',
+'''There is a unescaped macro after a shell style comment in the specfile.
+Macros are expanded everywhere, so check if it can cause a problem in this
+case and escape the macro with another leading % if appropriate.''',
 )
 
 # SpecCheck.py ends here

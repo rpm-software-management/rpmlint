@@ -16,6 +16,7 @@ class TestSpecCheck(unittest.TestCase):
         self.assertFalse(re.search("patch-not-applied Patch\\b", out));
         self.assertFalse(re.search("patch-not-applied Patch[0124]", out));
         self.assertFalse(re.search("libdir-macro-in-noarch-package", out));
+        self.assertTrue(len(re.findall("macro-in-comment", out)) == 1)
 
 if __name__ == '__main__':
     unittest.main()
