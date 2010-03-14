@@ -62,7 +62,7 @@ section_regexs = dict(
                'install', 'package', 'prep', 'pre', 'post', 'preun', 'postun',
                'trigger', 'triggerin', 'triggerun', 'triggerprein',
                'triggerpostun', 'pretrans', 'posttrans')))
-deprecated_grep_regex = re.compile(r'\b([ef])grep\b')
+deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
@@ -478,9 +478,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # Check if egrep or fgrep is used
             if current_section not in \
                     ('package', 'changelog', 'description', 'files'):
-                res = deprecated_grep_regex.search(line)
-                if res:
-                    printWarning(pkg, "%sgrep-deprecated" % res.group(1))
+                greps = deprecated_grep_regex.findall(line)
+                if greps:
+                    printWarning(pkg, "deprecated-grep", greps)
 
             # If not checking spec file only, we're checking one inside a
             # SRPM -> skip this check to avoid duplicate warnings (#167)
@@ -615,13 +615,9 @@ documentation to see what's wrong.''',
 '''The following tags are obsolete: Copyright and Serial. They must
 be replaced by License and Epoch respectively.''',
 
-'egrep-deprecated',
-'''Direct use of egrep is deprecated in GNU grep and historical in POSIX,
-use grep -E instead.''',
-
-'fgrep-deprecated',
-'''Direct use of fgrep is deprecated in GNU grep and historical in POSIX,
-use grep -F instead.''',
+'deprecated-grep',
+'''Direct use of grep as egrep or fgrep is deprecated in GNU grep and
+historical in POSIX, use grep -E and grep -F instead.''',
 
 'no-buildroot-tag',
 '''The BuildRoot tag isn't used in your spec. It must be used in order to
