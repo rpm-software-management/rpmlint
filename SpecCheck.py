@@ -59,7 +59,9 @@ attr_regex = re.compile('^\s*%attr\\b')
 section_regexs = dict(
     ([x, re.compile('^%' + x + '(?:\s|$)')]
      for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
-               'install', 'package', 'prep')))
+               'install', 'package', 'prep', 'pre', 'post', 'preun', 'postun',
+               'trigger', 'triggerin', 'triggerun', 'triggerprein',
+               'triggerpostun', 'pretrans', 'posttrans')))
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
