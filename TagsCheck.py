@@ -1061,7 +1061,10 @@ brief and to the point without including redundant information in it.''',
 'enchant-dictionary-not-found',
 '''A dictionary for the Enchant spell checking library is not available for
 the language given in the info message.  Spell checking will proceed with
-rpmlint's built-in implementation for localized tags in this language.''',
+rpmlint's built-in implementation for localized tags in this language.
+For better spell checking results in this language, install the appropriate
+dictionary that Enchant will use for this language, often for example
+hunspell-* or aspell-*.''',
 
 'self-obsoletion',
 '''The package obsoletes itself.  This is known to cause errors in various
