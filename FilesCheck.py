@@ -176,7 +176,7 @@ absolute_regex = re.compile('^/([^/]+)')
 absolute2_regex = re.compile('^/?([^/]+)')
 points_regex = re.compile('^\.\./(.*)')
 doc_regex = re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
-bin_regex = re.compile('^/(usr/(s?bin|games)|s?bin)/')
+bin_regex = re.compile('^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
 includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
 buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
@@ -369,6 +369,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
         # Unique (rdev, inode) combinations
         hardlinks = {} 
+        
+        # All executable files from binary directories go here.
+        bindir_exes = {}
 
         for f, pkgfile in files.items():
             mode = pkgfile.mode
@@ -569,8 +572,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if ln:
                         printError(pkg, 'rpath-in-buildconfig', f, 'lines', ln)
 
-                if bin_regex.search(f) and mode & 0111 == 0:
-                    printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
+                res = bin_regex.search(f)
+                if res:
+                    if mode & 0111 == 0:
+                        printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
+                    else:
+                        exe = res.group(1)
+                        if "/" not in exe:
+                            bindir_exes.setdefault(exe, []).append(f)
+
                 if not devel_pkg and not is_doc and \
                        (includefile_regex.search(f) or \
                         develfile_regex.search(f) or is_buildconfig):
@@ -868,6 +878,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
         if debuginfo_package and debuginfo_debugs and not debuginfo_srcs:
             printError(pkg, 'debuginfo-without-sources')
+
+        for exe, paths in bindir_exes.items():
+            if len(paths) > 1:
+                printWarning(pkg, "duplicate-executable", exe, paths)
 
 # Create an object to enable the auto registration of the test
 check = FilesCheck()
@@ -1221,6 +1235,10 @@ of the original source file, which will force the interpreter to recompile the
 'python-bytecode-without-source',
 '''This python bytecode file (.pyo/.pyc) is not accompanied by its original
 source file (.py)''',
+
+'duplicate-executable',
+'''This executable file exists in more than one standard binary directories.
+It can cause problems when dirs in $PATH are reordered.''',
 )
 
 # FilesCheck.py ends here
