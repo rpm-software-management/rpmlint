@@ -461,20 +461,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # set[ug]id bit check
                 if stat.S_ISGID & mode or stat.S_ISUID & mode:
-                    setuid = None
-                    setgid = None
                     if stat.S_ISUID & mode:
-                        setuid = user
+                        printError(pkg, 'setuid-binary', f, user, oct(perm))
                     if stat.S_ISGID & mode:
-                        setgid = group
-                    if setuid:
-                        printError(pkg, 'setuid-binary', f, setuid, oct(perm))
-                    if setgid:
                         if not (group == 'games' and
                                 (games_path_regex.search(f) or
                                  games_group_regex.search(
                                     pkg[rpm.RPMTAG_GROUP]))):
-                            printError(pkg, 'setgid-binary', f, setgid,
+                            printError(pkg, 'setgid-binary', f, group,
                                        oct(perm))
                     if mode & 0777 != 0755:
                         printError(pkg, 'non-standard-executable-perm', f,
@@ -694,9 +688,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                        logrotate_regex.search(f)
                     if nonexec_file:
                         printWarning(pkg, 'spurious-executable-perm', f)
-                elif f.startswith('/etc/'):
-                    if f not in config_files and f not in ghost_files:
-                        printWarning(pkg, 'non-conffile-in-etc', f)
+                elif f.startswith('/etc/') and f not in config_files and \
+                        f not in ghost_files:
+                    printWarning(pkg, 'non-conffile-in-etc', f)
 
                 if pkg.arch == 'noarch' and f.startswith('/usr/lib64/python'):
                     printError(pkg, 'noarch-python-in-64bit-path', f)
@@ -773,9 +767,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'world-writable', f, oct(perm))
                 if perm != 0755:
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
-                if pkg.name not in filesys_packages:
-                    if f in STANDARD_DIRS:
-                        printError(pkg, 'standard-dir-owned-by-package', f)
+                if pkg.name not in filesys_packages and f in STANDARD_DIRS:
+                    printError(pkg, 'standard-dir-owned-by-package', f)
                 if hidden_file_regex.search(f):
                     printWarning(pkg, 'hidden-file-or-dir', f)
 
@@ -863,12 +856,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         #if linktop == lastpop:
                         #    printWarning(pkg, 'lengthy-symlink', f, link)
 
-                        if len(pathcomponents) == 0:
-                            # we've reached the root directory
-                            if linktop != lastpop and not use_relative_symlinks:
-                                # relative link into other toplevel directory
-                                printWarning(pkg, 'symlink-should-be-absolute',
-                                             f, link)
+                        # have we reached the root directory?
+                        if len(pathcomponents) == 0 and linktop != lastpop \
+                                and not use_relative_symlinks:
+                            # relative link into other toplevel directory
+                            printWarning(pkg, 'symlink-should-be-absolute', f,
+                                         link)
                         # check additional segments for mistakes like
                         # `foo/../bar/'
                         for linksegment in mylink.split('/'):
