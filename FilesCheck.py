@@ -231,6 +231,8 @@ standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 non_readable_regexs = (re.compile('^/var/log/'),
                        re.compile('^/etc/(g?shadow-?|securetty)$'))
 
+man_base_regex = re.compile(r'^/usr(?:/share)?/man/man[^/]+/(.+)\.[1-9n]')
+
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
@@ -370,8 +372,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         # Unique (rdev, inode) combinations
         hardlinks = {} 
         
-        # All executable files from binary directories go here.
+        # All executable files from standard bin dirs (basename => [paths])
+        # Hack: basenames with empty paths links are symlinks (not subject
+        # to duplicate binary check, but yes for man page existence check)
         bindir_exes = {}
+
+        # All man page "base" names (without section etc extensions)
+        man_basenames = set()
 
         for f, pkgfile in files.items():
             mode = pkgfile.mode
@@ -702,6 +709,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         debuginfo_srcs = True
 
+                res = man_base_regex.search(f)
+                if res:
+                    man_basenames.add(res.group(1))
+
                 # text file checks
                 if os.access(pkgfile.path, os.R_OK):
                     if istextfile(pkgfile.path, pkg):
@@ -773,9 +784,21 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # symbolic link check
             elif stat.S_ISLNK(mode):
+
                 is_so = sofile_regex.search(f)
                 if not devel_pkg and is_so and not link.endswith('.so'):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
+
+                res = man_base_regex.search(f)
+                if res:
+                    man_basenames.add(res.group(1))
+                else:
+                    res = bin_regex.search(f)
+                    if res:
+                        exe = res.group(1)
+                        if "/" not in exe:
+                            bindir_exes.setdefault(exe, [])
+
                 # absolute link
                 r = absolute_regex.search(link)
                 if r:
@@ -879,6 +902,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         for exe, paths in bindir_exes.items():
             if len(paths) > 1:
                 printWarning(pkg, "duplicate-executable", exe, paths)
+            if exe not in man_basenames:
+                printWarning(pkg, "no-manual-page-for-binary", exe)
 
 # Create an object to enable the auto registration of the test
 check = FilesCheck()
@@ -1236,6 +1261,9 @@ source file (.py)''',
 'duplicate-executable',
 '''This executable file exists in more than one standard binary directories.
 It can cause problems when dirs in $PATH are reordered.''',
+
+'no-manual-page-for-binary',
+'''Each executable in standard binary directories should have a man page.''',
 )
 
 # FilesCheck.py ends here
