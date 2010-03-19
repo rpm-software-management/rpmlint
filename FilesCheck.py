@@ -825,9 +825,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # relative link
                 else:
                     if not is_so:
-                        pkgfile = '%s/%s' % (os.path.dirname(f), link)
-                        pkgfile = os.path.normpath(pkgfile)
-                        if pkgfile not in files and pkgfile not in req_names:
+                        abslink = '%s/%s' % (os.path.dirname(f), link)
+                        abslink = os.path.normpath(abslink)
+                        if abslink not in files and abslink not in req_names:
                             is_exception = False
                             for e in dangling_exceptions:
                                 if e[0].search(link):
