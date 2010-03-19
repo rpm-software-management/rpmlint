@@ -3,7 +3,6 @@
 import unittest
 import Testing
 import PamCheck
-import Pkg
 # FIXME harcode
 
 class TestPamCheck(unittest.TestCase):

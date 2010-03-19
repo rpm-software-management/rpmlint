@@ -55,7 +55,7 @@ class AbstractCheck:
         
         # Could use timeout kwarg to urlopen, but that's python >= 2.6 only
         socket.setdefaulttimeout(self.network_timeout)
-        res = err = None
+        res = None
         try:
             opener = urllib2.build_opener(_HeadRedirectHandler())
             opener.addheaders = [('User-Agent',
