@@ -223,169 +223,162 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_binary = is_elf or is_ar or is_ocaml_native
-            is_shlib = so_regex.search(fname)
 
-            if is_binary:
-                binary = True
-                if has_usr_lib_file and not binary_in_usr_lib and \
-                        usr_lib_regex.search(fname):
-                    binary_in_usr_lib = True
-
-                if pkg.arch == 'noarch':
-                    printError(
-                        pkg,
-                        'arch-independent-package-contains-binary-or-object',
-                        fname)
-                else:
-                    # in /usr/share ?
-                    if fname.startswith('/usr/share/'):
-                        printError(
-                            pkg, 'arch-dependent-file-in-usr-share', fname)
-                    # in /etc ?
-                    if fname.startswith('/etc/'):
-                        printError(pkg, 'binary-in-etc', fname)
-
-                    if pkg.arch == 'sparc' and \
-                           sparc_regex.search(pkgfile.magic):
-                        printError(pkg, 'non-sparc32-binary', fname)
-
-                    # stripped ?
-                    if not is_ocaml_native and not unstrippable.search(fname):
-                        if 'not stripped' in pkgfile.magic:
-                            printWarning(
-                                pkg, 'unstripped-binary-or-object', fname)
-
-                        # inspect binary file
-                        bin_info = BinaryInfo(
-                            pkg, pkgfile.path, fname, is_ar, is_shlib)
-
-                        # so name in library
-                        if is_shlib:
-                            has_lib = True
-                            if bin_info.readelf_error:
-                                pass
-                            elif not bin_info.soname:
-                                printWarning(pkg, 'no-soname', fname)
-                            else:
-                                if not validso_regex.search(bin_info.soname):
-                                    printError(pkg, 'invalid-soname', fname,
-                                               bin_info.soname)
-                                else:
-                                    (directory, base) = dir_base(fname)
-                                    try:
-                                        symlink = directory + bin_info.soname
-                                        link = files[symlink].linkto
-                                        if link not in (fname, base, ''):
-                                            printError(
-                                                pkg, 'invalid-ldconfig-symlink',
-                                                fname, link)
-                                    except KeyError:
-                                        printError(
-                                            pkg, 'no-ldconfig-symlink', fname)
-                                res = soversion_regex.search(bin_info.soname)
-                                if res:
-                                    soversion = res.group(1) or res.group(2)
-                                    if version is None:
-                                        version = soversion
-                                    elif version != soversion:
-                                        version = -1
-
-                            if bin_info.non_pic and not bin_info.readelf_error:
-                                printError(
-                                    pkg, 'shlib-with-non-pic-code', fname)
-
-                        # rpath ?
-                        if bin_info.rpath:
-                            for p in bin_info.rpath:
-                                if p in system_lib_paths or \
-                                   not usr_lib_regex.search(p):
-                                    printError(pkg,
-                                               'binary-or-shlib-defines-rpath',
-                                               fname, bin_info.rpath)
-                                    break
-
-                        # shared lib calls exit() or _exit()?
-                        if is_shlib and bin_info.exit_calls:
-                            for ec in bin_info.exit_calls:
-                                printWarning(
-                                    pkg, 'shared-lib-calls-exit', fname, ec)
-
-                        is_exec = 'executable' in pkgfile.magic
-                        if is_exec or \
-                               shared_object_regex.search(pkgfile.magic):
-
-                            if is_exec:
-
-                                if bin_regex.search(fname):
-                                    exec_files.append(fname)
-
-                                if ocaml_mixed_regex.search(bin_info.tail):
-                                    printWarning(
-                                        pkg, 'ocaml-mixed-executable', fname)
-
-                            if bin_info.readelf_error:
-                                pass
-                            elif not bin_info.needed and \
-                               not (bin_info.soname and \
-                                    ldso_soname_regex.search(bin_info.soname)):
-                                if shared_object_regex.search(pkgfile.magic):
-                                    printError(pkg,
-                                               'shared-lib-without-dependency-information',
-                                               fname)
-                                else:
-                                    printError(pkg, 'statically-linked-binary', fname)
-                            else:
-                                # linked against libc ?
-                                if not libc_regex.search(fname) and \
-                                   (not bin_info.soname or
-                                    (not libc_regex.search(bin_info.soname) and
-                                     not ldso_soname_regex.search(
-                                               bin_info.soname))):
-                                    found_libc = False
-                                    for lib in bin_info.needed:
-                                        if libc_regex.search(lib):
-                                            found_libc = True
-                                            break
-                                    if not found_libc:
-                                        if shared_object_regex.search(
-                                            pkgfile.magic):
-                                            printError(pkg,
-                                                       'library-not-linked-against-libc',
-                                                       fname)
-                                        else:
-                                            printError(pkg,
-                                                       'program-not-linked-against-libc',
-                                                       fname)
-
-                            # It could be useful to check these for others than
-                            # shared libs only, but that has potential to
-                            # generate lots of false positives and noise.
-                            if is_shlib:
-                                for s in bin_info.undef:
-                                    printWarning(pkg,
-                                                 'undefined-non-weak-symbol',
-                                                 fname, s)
-                                for s in bin_info.unused:
-                                    printWarning(
-                                        pkg, 'unused-direct-shlib-dependency',
-                                        fname, s)
-
-                            if bin_info.stack:
-                                if bin_info.exec_stack:
-                                    printWarning(pkg, 'executable-stack', fname)
-                            elif not bin_info.readelf_error and (
-                                pkg.arch.endswith("86") or
-                                pkg.arch.startswith("pentium") or
-                                pkg.arch in ("athlon", "x86_64")):
-                                printError(pkg, 'missing-PT_GNU_STACK-section',
-                                           fname)
-
-            else:
+            if not is_binary:
                 if reference_regex.search(fname):
                     lines = pkg.grep(invalid_dir_ref_regex, fname)
                     if lines:
                         printError(pkg, 'invalid-directory-reference', fname,
                                    '(line %s)' % ", ".join(lines))
+                continue
+
+            # binary files only from here on
+
+            binary = True
+
+            if has_usr_lib_file and not binary_in_usr_lib and \
+                    usr_lib_regex.search(fname):
+                binary_in_usr_lib = True
+
+            if pkg.arch == 'noarch':
+                printError(
+                    pkg,
+                    'arch-independent-package-contains-binary-or-object',
+                    fname)
+                continue
+
+            # arch dependent packages only from here on
+
+            # in /usr/share ?
+            if fname.startswith('/usr/share/'):
+                printError(pkg, 'arch-dependent-file-in-usr-share', fname)
+
+            # in /etc ?
+            if fname.startswith('/etc/'):
+                printError(pkg, 'binary-in-etc', fname)
+
+            if pkg.arch == 'sparc' and sparc_regex.search(pkgfile.magic):
+                printError(pkg, 'non-sparc32-binary', fname)
+
+            if is_ocaml_native or unstrippable.search(fname):
+                continue
+
+            # stripped ?
+            if 'not stripped' in pkgfile.magic:
+                printWarning(pkg, 'unstripped-binary-or-object', fname)
+
+            # inspect binary file
+            is_shlib = so_regex.search(fname)
+            bin_info = BinaryInfo(pkg, pkgfile.path, fname, is_ar, is_shlib)
+
+            if is_shlib:
+                has_lib = True
+
+            # shared libs
+            if is_shlib and not bin_info.readelf_error:
+
+                # so name in library
+                if not bin_info.soname:
+                    printWarning(pkg, 'no-soname', fname)
+                else:
+                    if not validso_regex.search(bin_info.soname):
+                        printError(pkg, 'invalid-soname', fname,
+                                   bin_info.soname)
+                    else:
+                        (directory, base) = dir_base(fname)
+                        try:
+                            symlink = directory + bin_info.soname
+                            link = files[symlink].linkto
+                            if link not in (fname, base, ''):
+                                printError(pkg, 'invalid-ldconfig-symlink',
+                                           fname, link)
+                        except KeyError:
+                            printError(pkg, 'no-ldconfig-symlink', fname)
+
+                    res = soversion_regex.search(bin_info.soname)
+                    if res:
+                        soversion = res.group(1) or res.group(2)
+                        if version is None:
+                            version = soversion
+                        elif version != soversion:
+                            version = -1
+
+                if bin_info.non_pic:
+                    printError(pkg, 'shlib-with-non-pic-code', fname)
+
+                # It could be useful to check these for others than shared
+                # libs only, but that has potential to generate lots of
+                # false positives and noise.
+                for s in bin_info.undef:
+                    printWarning(pkg, 'undefined-non-weak-symbol', fname, s)
+                for s in bin_info.unused:
+                    printWarning(pkg, 'unused-direct-shlib-dependency',
+                                 fname, s)
+
+                # calls exit() or _exit()?
+                for ec in bin_info.exit_calls:
+                    printWarning(pkg, 'shared-lib-calls-exit', fname, ec)
+
+            # rpath ?
+            if bin_info.rpath:
+                for p in bin_info.rpath:
+                    if p in system_lib_paths or not usr_lib_regex.search(p):
+                        printError(pkg, 'binary-or-shlib-defines-rpath',
+                                   fname, bin_info.rpath)
+                        break
+
+            is_exec = 'executable' in pkgfile.magic
+            if not is_exec and not shared_object_regex.search(pkgfile.magic):
+                continue
+
+            if is_exec:
+
+                if bin_regex.search(fname):
+                    exec_files.append(fname)
+
+                if ocaml_mixed_regex.search(bin_info.tail):
+                    printWarning(pkg, 'ocaml-mixed-executable', fname)
+
+            if bin_info.readelf_error:
+                continue
+
+            if not bin_info.needed and not (
+                bin_info.soname and ldso_soname_regex.search(bin_info.soname)):
+                if shared_object_regex.search(pkgfile.magic):
+                    printError(pkg,
+                               'shared-lib-without-dependency-information',
+                               fname)
+                else:
+                    printError(pkg, 'statically-linked-binary', fname)
+
+            else:
+                # linked against libc ?
+                if not libc_regex.search(fname) and \
+                        (not bin_info.soname or \
+                             (not libc_regex.search(bin_info.soname) and \
+                              not ldso_soname_regex.search(bin_info.soname))):
+
+                    found_libc = False
+                    for lib in bin_info.needed:
+                        if libc_regex.search(lib):
+                            found_libc = True
+                            break
+
+                    if not found_libc:
+                        if shared_object_regex.search(pkgfile.magic):
+                            printError(pkg, 'library-not-linked-against-libc',
+                                       fname)
+                        else:
+                            printError(pkg, 'program-not-linked-against-libc',
+                                       fname)
+
+            if bin_info.stack:
+                if bin_info.exec_stack:
+                    printWarning(pkg, 'executable-stack', fname)
+            elif not bin_info.readelf_error and (
+                pkg.arch.endswith("86") or pkg.arch.startswith("pentium") or
+                pkg.arch in ("athlon", "x86_64")):
+                printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
         if has_lib:
             for f in exec_files:
