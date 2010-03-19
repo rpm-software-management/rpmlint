@@ -702,6 +702,62 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     else:
                         debuginfo_srcs = True
 
+                # text file checks
+                if os.access(pkgfile.path, os.R_OK):
+                    if istextfile(pkgfile.path, pkg):
+                        fobj = open(pkgfile.path, 'r')
+                        try:
+                            line = fobj.readline()
+                        finally:
+                            fobj.close()
+                        res = None
+                        # ignore perl module shebang -- TODO: disputed...
+                        if not f.endswith('.pm'):
+                            res = shebang_regex.search(line)
+                        # sourced scripts should not be executable
+                        if sourced_script_regex.search(f):
+                            if res:
+                                printError(pkg,
+                                           'sourced-script-with-shebang', f)
+                            if mode & 0111 != 0:
+                                printError(pkg, 'executable-sourced-script',
+                                           f, oct(perm))
+                        # ...but executed ones should
+                        elif res or mode & 0111 != 0 or script_regex.search(f):
+                            interpreter = None
+                            if res:
+                                interpreter = res.group(1)
+                                if not interpreter_regex.search(interpreter):
+                                    printError(pkg, 'wrong-script-interpreter',
+                                               f, interpreter)
+                            elif not nonexec_file and not \
+                                    (lib_path_regex.search(f) and
+                                     f.endswith('.la')):
+                                printError(pkg, 'script-without-shebang', f)
+
+                            if mode & 0111 == 0 and not is_doc:
+                                printError(pkg, 'non-executable-script', f,
+                                           oct(perm), interpreter)
+                            if line.endswith('\r\n') or line.endswith('\r'):
+                                printError(
+                                    pkg, 'wrong-script-end-of-line-encoding', f)
+                        elif is_doc and not skipdocs_regex.search(f):
+                            if line.endswith('\r\n') or line.endswith('\r'):
+                                printWarning(
+                                    pkg, 'wrong-file-end-of-line-encoding', f)
+                            # We check only doc text files for UTF-8-ness;
+                            # checking everything may be slow and can generate
+                            # lots of unwanted noise.
+                            if use_utf8 and not is_utf8(pkgfile.path):
+                                printWarning(pkg, 'file-not-utf8', f)
+
+                    elif is_doc and compr_regex.search(f):
+                        ff = compr_regex.sub('', f)
+                        if not skipdocs_regex.search(ff):
+                            # compressed docs, eg. info and man files etc
+                            if use_utf8 and not is_utf8(pkgfile.path):
+                                printWarning(pkg, 'file-not-utf8', f)
+
             # normal dir check
             elif stat.S_ISDIR(mode):
                 if mode & 01002 == 2: # world writable without sticky bit
@@ -800,65 +856,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     pkg,
                                     'symlink-contains-up-and-down-segments',
                                     f, link)
-
-            # check text file
-            if stat.S_ISREG(mode):
-                path = pkgfile.path
-                if os.access(path, os.R_OK):
-                    if istextfile(path, pkg):
-                        fobj = open(path, 'r')
-                        try:
-                            line = fobj.readline()
-                        finally:
-                            fobj.close()
-                        res = None
-                        # ignore perl module shebang -- TODO: disputed...
-                        if not f.endswith('.pm'):
-                            res = shebang_regex.search(line)
-                        # sourced scripts should not be executable
-                        if sourced_script_regex.search(f):
-                            if res:
-                                printError(pkg,
-                                           'sourced-script-with-shebang', f)
-                            if mode & 0111 != 0:
-                                printError(pkg, 'executable-sourced-script',
-                                           f, oct(perm))
-                        # ...but executed ones should
-                        elif res or mode & 0111 != 0 or script_regex.search(f):
-                            interpreter = None
-                            if res:
-                                interpreter = res.group(1)
-                                if not interpreter_regex.search(interpreter):
-                                    printError(pkg, 'wrong-script-interpreter',
-                                               f, interpreter)
-                            elif not nonexec_file and not \
-                                    (lib_path_regex.search(f) and
-                                     f.endswith('.la')):
-                                printError(pkg, 'script-without-shebang', f)
-
-                            if mode & 0111 == 0 and not is_doc:
-                                printError(pkg, 'non-executable-script', f,
-                                           oct(perm), interpreter)
-                            if line.endswith('\r\n') or line.endswith('\r'):
-                                printError(
-                                    pkg, 'wrong-script-end-of-line-encoding', f)
-                        elif is_doc and not skipdocs_regex.search(f):
-                            if line.endswith('\r\n') or line.endswith('\r'):
-                                printWarning(
-                                    pkg, 'wrong-file-end-of-line-encoding', f)
-                            # We check only doc text files for UTF-8-ness;
-                            # checking everything may be slow and can generate
-                            # lots of unwanted noise.
-                            if use_utf8 and not is_utf8(path):
-                                printWarning(pkg, 'file-not-utf8', f)
-
-                    elif is_doc and compr_regex.search(f):
-                        ff = compr_regex.sub('', f)
-                        if not skipdocs_regex.search(ff):
-                            # compressed docs, eg. info and man files etc
-                            if use_utf8 and not is_utf8(path):
-                                printWarning(pkg, 'file-not-utf8', f)
-
 
             if f.startswith('/etc/cron.d/'):
                 if stat.S_ISLNK(mode):
