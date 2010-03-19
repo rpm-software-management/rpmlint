@@ -447,10 +447,20 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             perm = mode & 07777
 
-            # bit s check
-            if stat.S_ISGID & mode or stat.S_ISUID & mode:
-                # check only normal files
-                if stat.S_ISREG(mode):
+            if log_regex.search(f):
+                log_file = f
+
+            # Hardlink check
+            hardlink = hardlinks.get((rdev, inode))
+            if hardlink and os.path.dirname(hardlink) != os.path.dirname(f):
+                printWarning(pkg, 'cross-directory-hard-link', f, hardlink)
+            hardlinks[(rdev, inode)] = f
+
+            # normal file check
+            if stat.S_ISREG(mode):
+
+                # set[ug]id bit check
+                if stat.S_ISGID & mode or stat.S_ISUID & mode:
                     setuid = None
                     setgid = None
                     if stat.S_ISUID & mode:
@@ -469,18 +479,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if mode & 0777 != 0755:
                         printError(pkg, 'non-standard-executable-perm', f,
                                    oct(perm))
-
-            if log_regex.search(f):
-                log_file = f
-
-            # Hardlink check
-            hardlink = hardlinks.get((rdev, inode))
-            if hardlink and os.path.dirname(hardlink) != os.path.dirname(f):
-                printWarning(pkg, 'cross-directory-hard-link', f, hardlink)
-            hardlinks[(rdev, inode)] = f
-
-            # normal file check
-            if stat.S_ISREG(mode):
 
                 # Prefetch scriptlets, strip quotes from them (#169)
                 postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
