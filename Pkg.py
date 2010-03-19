@@ -635,11 +635,10 @@ def getInstalledPkgs(name):
         mi.pattern("name", rpm.RPMMIRE_GLOB, name)
     else:
         mi = ts.dbMatch("name", name)
-    if not mi:
-        raise KeyError(name)
 
     for hdr in mi:
         pkgs.append(InstalledPkg(name, hdr))
+
     return pkgs
 
 # Class to provide an API to an installed package
