@@ -48,148 +48,141 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
         initscript_list = []
         for fname, pkgfile in pkg.files().items():
-            if fname.startswith('/etc/init.d/') or \
-                    fname.startswith('/etc/rc.d/init.d/'):
-                basename = os.path.basename(fname)
-                initscript_list.append(basename)
-                if pkgfile.mode & 0500 != 0500:
-                    printError(pkg, 'init-script-non-executable', fname)
 
-                if dot_in_name_regex.match(basename):
-                    printError(pkg, 'init-script-name-with-dot', fname)
-                # check chkconfig call in %post and %preun
-                postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
-                if not postin:
-                    printError(pkg,
-                               'init-script-without-chkconfig-postin', fname)
-                else:
-                    if not chkconfig_regex.search(postin):
-                        printError(pkg, 'postin-without-chkconfig', fname)
+            if not fname.startswith('/etc/init.d/') and \
+                    not fname.startswith('/etc/rc.d/init.d/'):
+                continue
 
-                preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
-                if not preun:
-                    printError(pkg,
-                               'init-script-without-chkconfig-preun', fname)
-                else:
-                    if not chkconfig_regex.search(preun):
-                        printError(pkg, 'preun-without-chkconfig', fname)
+            basename = os.path.basename(fname)
+            initscript_list.append(basename)
+            if pkgfile.mode & 0500 != 0500:
+                printError(pkg, 'init-script-non-executable', fname)
 
-                status_found = False
-                reload_found = False
-                chkconfig_content_found = False
-                subsys_regex_found = False
-                in_lsb_tag = False
-                in_lsb_description = False
-                lastline = ''
-                lsb_tags = {}
-                # check common error in file content
-                content = None
-                try:
-                    content = Pkg.readlines(pkgfile.path)
-                except Exception, e:
-                    printWarning(pkg, 'read-error', e)
+            if dot_in_name_regex.match(basename):
+                printError(pkg, 'init-script-name-with-dot', fname)
+            # check chkconfig call in %post and %preun
+            postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+            if not postin:
+                printError(pkg, 'init-script-without-chkconfig-postin', fname)
+            elif not chkconfig_regex.search(postin):
+                printError(pkg, 'postin-without-chkconfig', fname)
+
+            preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
+            if not preun:
+                printError(pkg, 'init-script-without-chkconfig-preun', fname)
+            elif not chkconfig_regex.search(preun):
+                printError(pkg, 'preun-without-chkconfig', fname)
+
+            status_found = False
+            reload_found = False
+            chkconfig_content_found = False
+            subsys_regex_found = False
+            in_lsb_tag = False
+            in_lsb_description = False
+            lastline = ''
+            lsb_tags = {}
+            # check common error in file content
+            content = None
+            try:
+                content = Pkg.readlines(pkgfile.path)
+            except Exception, e:
+                printWarning(pkg, 'read-error', e)
+                continue
+            content_str = "".join(content)
+            for line in content:
+                line = line[:-1] # chomp
+                # TODO check if there is only one line like this
+                if line.startswith('### BEGIN INIT INFO'):
+                    in_lsb_tag = True
                     continue
-                content_str = "".join(content)
-                for line in content:
-                    line = line[:-1] # chomp
-                    # TODO check if there is only one line like this
-                    if line.startswith('### BEGIN INIT INFO'):
-                        in_lsb_tag = True
-                        continue
-                    if line.endswith('### END INIT INFO'):
-                        in_lsb_tag = False
-                        for kw, vals in lsb_tags.items():
-                            if len(vals) != 1:
-                                printError(pkg, 'redundant-lsb-keyword', kw)
+                if line.endswith('### END INIT INFO'):
+                    in_lsb_tag = False
+                    for kw, vals in lsb_tags.items():
+                        if len(vals) != 1:
+                            printError(pkg, 'redundant-lsb-keyword', kw)
 
-                        for kw in RECOMMENDED_LSB_KEYWORDS:
-                            if kw not in lsb_tags:
-                                printWarning(pkg,
-                                             'missing-lsb-keyword',
-                                             "%s in %s" % (kw, fname))
-                    if in_lsb_tag:
-                        # TODO maybe we do not have to handle this ?
-                        if lastline.endswith('\\'):
-                            line = lastline + line
-                        else:
-                            res = lsb_tags_regex.search(line)
-                            if not res:
-                                cres = lsb_cont_regex.search(line)
-                                if not (in_lsb_description and cres):
-                                    in_lsb_description = False
-                                    printError(pkg,
-                                               'malformed-line-in-lsb-comment-block',
-                                               line)
-                                else:
-                                    lsb_tags["Description"][-1] += \
-                                        " " + cres.group(1)
+                    for kw in RECOMMENDED_LSB_KEYWORDS:
+                        if kw not in lsb_tags:
+                            printWarning(pkg, 'missing-lsb-keyword',
+                                         "%s in %s" % (kw, fname))
+                if in_lsb_tag:
+                    # TODO maybe we do not have to handle this ?
+                    if lastline.endswith('\\'):
+                        line = lastline + line
+                    else:
+                        res = lsb_tags_regex.search(line)
+                        if not res:
+                            cres = lsb_cont_regex.search(line)
+                            if not (in_lsb_description and cres):
+                                in_lsb_description = False
+                                printError(pkg,
+                                           'malformed-line-in-lsb-comment-block',
+                                           line)
                             else:
-                                tag = res.group(1)
-                                if not tag.startswith('X-') and \
-                                   tag not in LSB_KEYWORDS:
-                                    printError(pkg, 'unknown-lsb-keyword', line)
-                                else:
-                                    in_lsb_description = (tag == 'Description')
-                                    if tag not in lsb_tags:
-                                        lsb_tags[tag] = []
-                                    lsb_tags[tag].append(res.group(2))
-                        lastline = line
-
-
-
-                    if not status_found and status_regex.search(line):
-                        status_found = True
-
-                    if not reload_found and reload_regex.search(line):
-                        reload_found = True
-
-                    res = chkconfig_content_regex.search(line)
-                    if res:
-                        chkconfig_content_found = True
-                        if use_deflevels:
-                            if res.group(1) == '-':
-                                printWarning(pkg, 'no-default-runlevel', fname)
+                                lsb_tags["Description"][-1] += \
+                                    " " + cres.group(1)
                         else:
-                            if res.group(1) != '-':
-                                printWarning(pkg,
-                                             'service-default-enabled', fname)
-
-                    res = subsys_regex.search(line)
-                    if res:
-                        subsys_regex_found = True
-                        name = res.group(1)
-                        if name != basename:
-                            error = True
-                            if name[0] == '$':
-                                value = Pkg.substitute_shell_vars(
-                                    name, content_str)
-                                if value == basename:
-                                    error = False
+                            tag = res.group(1)
+                            if not tag.startswith('X-') and \
+                                    tag not in LSB_KEYWORDS:
+                                printError(pkg, 'unknown-lsb-keyword', line)
                             else:
-                                i = name.find('}')
-                                if i != -1:
-                                    name = name[0:i]
-                                    error = name != basename
-                            if error and len(name):
-                                if name[0] == '$':
-                                    printWarning(pkg, 'incoherent-subsys',
-                                                 fname, name)
-                                else:
-                                    printError(pkg, 'incoherent-subsys',
-                                               fname, name)
+                                in_lsb_description = (tag == 'Description')
+                                if tag not in lsb_tags:
+                                    lsb_tags[tag] = []
+                                lsb_tags[tag].append(res.group(2))
+                    lastline = line
 
-                if "Default-Start" in lsb_tags:
-                    if "".join(lsb_tags["Default-Start"]):
+                if not status_found and status_regex.search(line):
+                    status_found = True
+
+                if not reload_found and reload_regex.search(line):
+                    reload_found = True
+
+                res = chkconfig_content_regex.search(line)
+                if res:
+                    chkconfig_content_found = True
+                    if use_deflevels:
+                        if res.group(1) == '-':
+                            printWarning(pkg, 'no-default-runlevel', fname)
+                    elif res.group(1) != '-':
                         printWarning(pkg, 'service-default-enabled', fname)
 
-                if not status_found:
-                    printError(pkg, 'no-status-entry', fname)
-                if not reload_found:
-                    printWarning(pkg, 'no-reload-entry', fname)
-                if not chkconfig_content_found:
-                    printError(pkg, 'no-chkconfig-line', fname)
-                if not subsys_regex_found:
-                    printError(pkg, 'subsys-not-used', fname)
+                res = subsys_regex.search(line)
+                if res:
+                    subsys_regex_found = True
+                    name = res.group(1)
+                    if name != basename:
+                        error = True
+                        if name[0] == '$':
+                            value = Pkg.substitute_shell_vars(name, content_str)
+                            if value == basename:
+                                error = False
+                        else:
+                            i = name.find('}')
+                            if i != -1:
+                                name = name[0:i]
+                                error = name != basename
+                        if error and len(name):
+                            if name[0] == '$':
+                                printWarning(pkg, 'incoherent-subsys', fname,
+                                             name)
+                            else:
+                                printError(pkg, 'incoherent-subsys', fname,
+                                           name)
+
+            if "Default-Start" in lsb_tags:
+                if "".join(lsb_tags["Default-Start"]):
+                    printWarning(pkg, 'service-default-enabled', fname)
+
+            if not status_found:
+                printError(pkg, 'no-status-entry', fname)
+            if not reload_found:
+                printWarning(pkg, 'no-reload-entry', fname)
+            if not chkconfig_content_found:
+                printError(pkg, 'no-chkconfig-line', fname)
+            if not subsys_regex_found:
+                printError(pkg, 'subsys-not-used', fname)
 
         goodnames = (pkg.name.lower(), pkg.name.lower() + 'd')
         if len(initscript_list) == 1 and initscript_list[0] not in goodnames:

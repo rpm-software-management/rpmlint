@@ -195,9 +195,8 @@ class PostCheck(AbstractCheck.AbstractCheck):
             res = single_command_regex.search(script)
             if res:
                 printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))
-        else:
-            if prog not in empty_shells and prog in valid_shells:
-                printWarning(pkg, 'empty-' + tag[2])
+        elif prog not in empty_shells and prog in valid_shells:
+            printWarning(pkg, 'empty-' + tag[2])
 
 # Create an object to enable the auto registration of the test
 check = PostCheck()
