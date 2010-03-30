@@ -173,10 +173,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
                 if fname == pkg.name + ".spec":
-                        wrong_spec = False
-                        break
+                    wrong_spec = False
+                    break
                 else:
-                        wrong_spec = True
+                    wrong_spec = True
         if not self._spec_file:
             printError(pkg, "no-spec-file")
         else:
@@ -267,19 +267,19 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 continue
 
-            if current_section in ('prep', 'build'):
-                if contains_buildroot(line):
-                    printWarning(pkg, 'rpm-buildroot-usage',
-                                 '%' + current_section, line[:-1].strip())
+            if current_section in ('prep', 'build') and \
+                    contains_buildroot(line):
+                printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section,
+                             line[:-1].strip())
 
             if make_check_regex.search(line) and current_section not in \
                     ('check', 'changelog', 'package', 'description'):
                 printWarning(pkg, 'make-check-outside-check-section', line[:-1])
 
             if current_section in buildroot_clean and \
-                    not buildroot_clean[current_section]:
-                if contains_buildroot(line) and rm_regex.search(line):
-                    buildroot_clean[current_section] = True
+                    not buildroot_clean[current_section] and \
+                    contains_buildroot(line) and rm_regex.search(line):
+                buildroot_clean[current_section] = True
 
             if ifarch_regex.search(line):
                 if_depth = if_depth + 1

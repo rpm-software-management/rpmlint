@@ -203,16 +203,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
             postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
             if not postin:
                 printError(pkg, 'menu-without-postin')
-            else:
-                if not update_menus_regex.search(postin):
-                    printError(pkg, 'postin-without-update-menus')
+            elif not update_menus_regex.search(postin):
+                printError(pkg, 'postin-without-update-menus')
 
             postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
             if not postun:
                 printError(pkg, 'menu-without-postun')
-            else:
-                if not update_menus_regex.search(postun):
-                    printError(pkg, 'postun-without-update-menus')
+            elif not update_menus_regex.search(postun):
+                printError(pkg, 'postun-without-update-menus')
 
             directory = pkg.dirName()
             for f in menus:
@@ -220,7 +218,8 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), True)[1]
 
                 for line in cmd.splitlines():
-                    if not line.startswith('?'): continue
+                    if not line.startswith('?'):
+                        continue
                     res = package_regex.search(line)
                     if res:
                         package = res.group(1)
@@ -237,35 +236,36 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         command_line = (res.group(1) or res.group(2)).split()
                         command = command_line[0]
                         for launcher in launchers:
-                            if launcher[0].search(command):
-                                found = False
-                                if launcher[1]:
-                                    if ('/bin/' + command_line[0] in files or
-                                        '/usr/bin/' + command_line[0] in files
-                                        or '/usr/X11R6/bin/' + command_line[0]
-                                        in files):
-                                        found = True
-                                    else:
-                                        for l in launcher[1]:
-                                            if l in pkg.req_names():
-                                                found = True
-                                                break
-                                    if not found:
-                                        printError(pkg,
-                                                   'use-of-launcher-in-menu-but-no-requires-on',
-                                                   launcher[1][0])
-                                command = command_line[1]
-                                break
+                            if not launcher[0].search(command):
+                                continue
+                            found = False
+                            if launcher[1]:
+                                if ('/bin/' + command_line[0] in files or
+                                    '/usr/bin/' + command_line[0] in files
+                                    or '/usr/X11R6/bin/' + command_line[0]
+                                    in files):
+                                    found = True
+                                else:
+                                    for l in launcher[1]:
+                                        if l in pkg.req_names():
+                                            found = True
+                                            break
+                                if not found:
+                                    printError(pkg,
+                                               'use-of-launcher-in-menu-but-no-requires-on',
+                                               launcher[1][0])
+                            command = command_line[1]
+                            break
+
                         if command[0] == '/':
                             if command not in files:
                                 printWarning(pkg, 'menu-command-not-in-package',
                                              command)
-                        else:
-                            if not ('/bin/' + command in files or
-                                    '/usr/bin/' + command in files or
-                                    '/usr/X11R6/bin/' + command in files):
-                                printWarning(pkg, 'menu-command-not-in-package',
-                                             command)
+                        elif not ('/bin/' + command in files or
+                                  '/usr/bin/' + command in files or
+                                  '/usr/X11R6/bin/' + command in files):
+                            printWarning(pkg, 'menu-command-not-in-package',
+                                         command)
                     else:
                         printWarning(pkg, 'missing-menu-command')
                         command = False
@@ -311,10 +311,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 grp = res.groups()
                                 section = grp[1] or grp[2]
                                 # don't warn entries for sections
-                                if command:
-                                    if section not in valid_sections:
-                                        printError(pkg, 'invalid-menu-section',
-                                                   section, f)
+                                if command and section not in valid_sections:
+                                    printError(pkg, 'invalid-menu-section',
+                                               section, f)
                             else:
                                 printInfo(pkg, 'unable-to-parse-menu-section',
                                           line)

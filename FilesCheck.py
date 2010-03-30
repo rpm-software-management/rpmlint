@@ -546,18 +546,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if not postin:
                         printError(pkg,
                                    'info-files-without-install-info-postin', f)
-                    else:
-                        if not install_info_regex.search(postin):
-                            printError(pkg, 'postin-without-install-info', f)
+                    elif not install_info_regex.search(postin):
+                        printError(pkg, 'postin-without-install-info', f)
 
                     if not postun and not preun:
                         printError(pkg,
                                    'info-files-without-install-info-postun', f)
-                    else:
-                        if (not postun or
-                            not install_info_regex.search(postun)) and \
-                            (not preun or not install_info_regex.search(preun)):
-                            printError(pkg, 'postin-without-install-info', f)
+                    elif (not postun or
+                          not install_info_regex.search(postun)) and \
+                          (not preun or not install_info_regex.search(preun)):
+                        printError(pkg, 'postin-without-install-info', f)
 
                 # check perl temp file
                 if perl_temp_file_regex.search(f):
@@ -614,14 +612,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if not python_dep_error:
                     res = python_regex.search(f)
-                    if res:
-                        if not (pkg.check_versioned_dep('python-base',
-                                                        res.group(1)) or
-                                pkg.check_versioned_dep('python',
-                                                        res.group(1))):
-                            printError(pkg, 'no-dependency-on', 'python-base',
-                                       res.group(1))
-                            python_dep_error = True
+                    if res and not (pkg.check_versioned_dep('python-base',
+                                                            res.group(1)) or
+                                    pkg.check_versioned_dep('python',
+                                                            res.group(1))):
+                        printError(pkg, 'no-dependency-on', 'python-base',
+                                   res.group(1))
+                        python_dep_error = True
 
                 res = python_bytecode_regex.search(f)
                 if res:

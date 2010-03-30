@@ -489,19 +489,20 @@ def spell_check(pkg, str, fmt, lang, ignored):
     if not enchant or not dict_found:
         for seq in str.split():
             for word in re.split('[^a-z]+', seq.lower()):
-                if len(word) > 0:
-                    correct = BAD_WORDS.get(word)
-                    if not correct:
-                        continue
-                    if word[0] == '\'':
-                        word = word[1:]
-                    if word[-1] == '\'':
-                        word = word[:-1]
-                    if word in warned or word in ignored:
-                        continue
-                    printWarning(pkg, 'spelling-error', fmt % lang,
-                                 word, '->', correct)
-                    warned.add(word)
+                if len(word) == 0:
+                    continue
+                correct = BAD_WORDS.get(word)
+                if not correct:
+                    continue
+                if word[0] == '\'':
+                    word = word[1:]
+                if word[-1] == '\'':
+                    word = word[:-1]
+                if word in warned or word in ignored:
+                    continue
+                printWarning(pkg, 'spelling-error', fmt % lang, word, '->',
+                             correct)
+                warned.add(word)
 
 
 class TagsCheck(AbstractCheck.AbstractCheck):
@@ -510,12 +511,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
 
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
-        if value:
-            for match in AbstractCheck.macro_regex.findall(str(value)):
-                # Do not warn about %XX URL escapes
-                if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
-                    continue
-                printWarning(pkg, 'unexpanded-macro', tagname, match)
+        if not value:
+            return
+        for match in AbstractCheck.macro_regex.findall(str(value)):
+            # Do not warn about %XX URL escapes
+            if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
+                continue
+            printWarning(pkg, 'unexpanded-macro', tagname, match)
 
     def check(self, pkg):
 
@@ -547,9 +549,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if epoch is None:
             if use_epoch:
                 printError(pkg, 'no-epoch-tag')
-        else:
-            if epoch > 99:
-                printWarning(pkg, 'unreasonable-epoch', epoch)
+        elif epoch > 99:
+            printWarning(pkg, 'unreasonable-epoch', epoch)
 
         if use_epoch:
             for o in pkg.obsoletes():
@@ -580,10 +581,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if d[0].startswith('/usr/local/'):
                 printError(pkg, 'invalid-dependency', d[0])
 
-            if not devel_depend and not is_devel and not is_source:
-                if FilesCheck.devel_regex.search(d[0]):
-                    printError(pkg, 'devel-dependency', d[0])
-                    devel_depend = True
+            if not devel_depend and not is_devel and not is_source and \
+                    FilesCheck.devel_regex.search(d[0]):
+                printError(pkg, 'devel-dependency', d[0])
+                devel_depend = True
             if is_source and lib_devel_number_regex.search(d[0]):
                 printError(pkg, 'invalid-build-requires', d[0])
             if not is_source and not is_devel:
@@ -760,9 +761,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         obs_names = [x[0] for x in pkg.obsoletes()]
         prov_names = [x[0] for x in pkg.provides()]
 
-        for o in obs_names:
-            if o not in prov_names:
-                printWarning(pkg, 'obsolete-not-provided', o)
+        for o in (x for x in obs_names if x not in prov_names):
+            printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
             self._unexpanded_macros(pkg, 'Obsoletes %s' % \
                                         apply(Pkg.formatRequire, o), o[1])
@@ -771,9 +771,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         #       https://bugzilla.redhat.com/460872
         useless_provides = []
         for p in prov_names:
-            if prov_names.count(p) != 1:
-                if p not in useless_provides:
-                    useless_provides.append(p)
+            if prov_names.count(p) != 1 and p not in useless_provides:
+                useless_provides.append(p)
         for p in useless_provides:
             printError(pkg, 'useless-provides', p)
 
