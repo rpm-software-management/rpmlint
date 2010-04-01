@@ -309,8 +309,6 @@ for o in opt:
             config_overrides[kv[0]] = None
         else:
             config_overrides[kv[0]] = eval(kv[1])
-    else:
-        print 'unknown option', o
 
 # load user config file
 try:
