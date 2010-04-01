@@ -243,7 +243,7 @@ try:
                                'file=',
                                'option=',
                                ])
-except getopt.error, e:
+except getopt.GetoptError, e:
     Pkg.warn("%s: %s" % (sys.argv[0], e))
     usage(sys.argv[0])
     sys.exit(1)
