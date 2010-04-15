@@ -264,8 +264,8 @@ def rangeCompare(reqtuple, provtuple):
 
     return 0
 
-# from yum 3.2.23, rpmUtils.miscutils
-def formatRequire (name, version, flags):
+# from yum 3.2.23, rpmUtils.miscutils, with rpmlint modifications
+def formatRequire(name, flags, evr):
     s = name
     
     if flags:
@@ -278,23 +278,33 @@ def formatRequire (name, version, flags):
                 s = s + ">"
             if flags & rpm.RPMSENSE_EQUAL:
                 s = s + "="
-            if version:
-                s = "%s %s" %(s, version)
+            s = "%s %s" % (s, versionToString(evr))
     return s
 
-# from yum 3.2.23, rpmUtils.miscutils
+def versionToString(evr):
+    if not isinstance(evr, tuple) and not isinstance(evr, list):
+        # assume string
+        return evr
+    ret = ""
+    if evr[0] is not None and evr[0] != "":
+        ret += str(evr[0]) + ":"
+    ret += evr[1]
+    if evr[2] is not None and evr[2] != "":
+        ret += "-" + evr[2]
+    return ret
+
+# from yum 3.2.23, rpmUtils.miscutils, with some rpmlint modifications
 def stringToVersion(verstring):
     if verstring in [None, '']:
         return (None, None, None)
+    epoch = None
     i = verstring.find(':')
     if i != -1:
         try:
             epoch = str(long(verstring[:i]))
         except ValueError:
-            # look, garbage in the epoch field, how fun, kill it
-            epoch = '0' # this is our fallback, deal
-    else:
-        epoch = '0'
+            # garbage in epoch, ignore it
+            pass
     j = verstring.find('-')
     if j != -1:
         if verstring[i + 1:j] == '':
@@ -546,14 +556,20 @@ class Pkg:
 
     # API to access dependency information
     def obsoletes(self):
+        """Get package Obsoletes as list of
+           (name, flags, (epoch, version, release)) tuples."""
         self._gatherDepInfo()
         return self._obsoletes
 
     def requires(self):
+        """Get package Requires as list of
+           (name, flags, (epoch, version, release)) tuples."""
         self._gatherDepInfo()
         return self._requires
 
     def prereq(self):
+        """Get package PreReqs as list of
+           (name, flags, (epoch, version, release)) tuples."""
         self._gatherDepInfo()
         return self._prereq
 
@@ -577,27 +593,32 @@ class Pkg:
         return False
 
     def conflicts(self):
+        """Get package Conflicts as list of
+           (name, flags, (epoch, version, release)) tuples."""
         self._gatherDepInfo()
         return self._conflicts
 
     def provides(self):
+        """Get package Provides as list of
+           (name, flags, (epoch, version, release)) tuples."""
         self._gatherDepInfo()
         return self._provides
 
     # internal function to gather dependency info used by the above ones
-    def _gather_aux(self, header, list, nametag, versiontag, flagstag,
+    def _gather_aux(self, header, list, nametag, flagstag, versiontag,
                     prereq = None):
         names = header[nametag]
-        versions = header[versiontag]
         flags = header[flagstag]
+        versions = header[versiontag]
 
         if versions:
             for loop in range(len(versions)):
+                evr = stringToVersion(versions[loop])
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((names[loop], versions[loop],
-                                   flags[loop] & (~PREREQ_FLAG)))
+                    prereq.append((names[loop], flags[loop] & (~PREREQ_FLAG),
+                                   evr))
                 else:
-                    list.append((names[loop], versions[loop], flags[loop]))
+                    list.append((names[loop], flags[loop], evr))
 
     def _gatherDepInfo(self):
         if self._requires is None:
@@ -609,21 +630,21 @@ class Pkg:
 
             self._gather_aux(self.header, self._requires,
                              rpm.RPMTAG_REQUIRENAME,
-                             rpm.RPMTAG_REQUIREVERSION,
                              rpm.RPMTAG_REQUIREFLAGS,
+                             rpm.RPMTAG_REQUIREVERSION,
                              self._prereq)
             self._gather_aux(self.header, self._conflicts,
                              rpm.RPMTAG_CONFLICTNAME,
-                             rpm.RPMTAG_CONFLICTVERSION,
-                             rpm.RPMTAG_CONFLICTFLAGS)
+                             rpm.RPMTAG_CONFLICTFLAGS,
+                             rpm.RPMTAG_CONFLICTVERSION)
             self._gather_aux(self.header, self._provides,
                              rpm.RPMTAG_PROVIDENAME,
-                             rpm.RPMTAG_PROVIDEVERSION,
-                             rpm.RPMTAG_PROVIDEFLAGS)
+                             rpm.RPMTAG_PROVIDEFLAGS,
+                             rpm.RPMTAG_PROVIDEVERSION)
             self._gather_aux(self.header, self._obsoletes,
                              rpm.RPMTAG_OBSOLETENAME,
-                             rpm.RPMTAG_OBSOLETEVERSION,
-                             rpm.RPMTAG_OBSOLETEFLAGS)
+                             rpm.RPMTAG_OBSOLETEFLAGS,
+                             rpm.RPMTAG_OBSOLETEVERSION)
 
 def getInstalledPkgs(name):
     """Get list of installed package objects by name."""

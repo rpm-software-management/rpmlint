@@ -549,22 +549,21 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if epoch is None:
             if use_epoch:
                 printError(pkg, 'no-epoch-tag')
-        elif epoch > 99:
-            printWarning(pkg, 'unreasonable-epoch', epoch)
+        else:
+            if epoch > 99:
+                printWarning(pkg, 'unreasonable-epoch', epoch)
+            epoch = str(epoch)
 
         if use_epoch:
-            for o in pkg.obsoletes():
-                if o[1] and not epoch_regex.search(o[1]):
-                    printWarning(pkg, 'no-epoch-in-obsoletes',
-                                 apply(Pkg.formatRequire, o))
-            for c in pkg.conflicts():
-                if c[1] and not epoch_regex.search(c[1]):
-                    printWarning(pkg, 'no-epoch-in-conflicts',
-                                 apply(Pkg.formatRequire, c))
-            for p in pkg.provides():
-                if p[1] and not epoch_regex.search(p[1]):
-                    printWarning(pkg, 'no-epoch-in-provides',
-                                 apply(Pkg.formatRequire, p))
+            for o in (x for x in pkg.obsoletes() if x[1] and x[2][0] is None):
+                printWarning(pkg, 'no-epoch-in-obsoletes',
+                             apply(Pkg.formatRequire, o))
+            for c in (x for x in pkg.conflicts() if x[1] and x[2][0] is None):
+                printWarning(pkg, 'no-epoch-in-conflicts',
+                             apply(Pkg.formatRequire, c))
+            for p in (x for x in pkg.provides() if x[1] and x[2][0] is None):
+                printWarning(pkg, 'no-epoch-in-provides',
+                             apply(Pkg.formatRequire, p))
 
         name = pkg.name
         deps = pkg.requires() + pkg.prereq()
@@ -573,8 +572,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         is_source = pkg.isSource()
         for d in deps:
             value = apply(Pkg.formatRequire, d)
-            if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and \
-                    not epoch_regex.search(d[1]):
+            if use_epoch and d[1] and d[2][0] is None \
+                    and d[0][0:7] != 'rpmlib(':
                 printWarning(pkg, 'no-epoch-in-dependency', value)
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
@@ -593,7 +592,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 res = lib_package_regex.search(d[0])
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
-            if d[2] == rpm.RPMSENSE_EQUAL and '-' in d[1]:
+            if d[1] == rpm.RPMSENSE_EQUAL and d[2][2] is not None:
                 printWarning(pkg, 'requires-on-release', value)
             self._unexpanded_macros(pkg, 'dependency %s' % (value,), value)
 
@@ -621,18 +620,18 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     if not dep:
                         printWarning(pkg, 'no-dependency-on', base_or_libs)
                     elif version:
-                        if epoch is not None: # regardless of use_epoch
-                            expected = str(epoch) + ":" + version
-                        else:
-                            expected = version
-                        if dep[1][:len(expected)] != expected:
-                            if dep[1] != '':
-                                printWarning(pkg,
-                                             'incoherent-version-dependency-on',
-                                             base_or_libs, dep[1], expected)
-                            else:
-                                printWarning(pkg, 'no-version-dependency-on',
-                                             base_or_libs, expected)
+                        exp = (epoch, version, None)
+                        sexp = Pkg.versionToString(exp)
+                        if not dep[1]:
+                            printWarning(pkg, 'no-version-dependency-on',
+                                         base_or_libs, sexp)
+                        elif dep[2][:2] != exp[:2]:
+                            printWarning(pkg,
+                                         'incoherent-version-dependency-on',
+                                         base_or_libs,
+                                         Pkg.versionToString(dep[2][0],
+                                                             dep[2][1], None),
+                                         sexp)
                     res = devel_number_regex.search(name)
                     if not res:
                         printWarning(pkg, 'no-major-in-name', name)
@@ -717,8 +716,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
 
-#         provides = pkg.provides()
-#         for (provide_name, provide_version, provide_flags) in provides:
+#         for provide_name in (x[0] for x in pkg.provides()):
 #             if name == provide_name:
 #                 printWarning(pkg, 'package-provides-itself')
 #                 break
@@ -785,23 +783,15 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             value = apply(Pkg.formatRequire, c)
             self._unexpanded_macros(pkg, 'Conflicts %s' % (value,), value)
 
-        obss = [(x[0], x[2], Pkg.stringToVersion(x[1]))
-                for x in pkg.obsoletes()]
+        obss = pkg.obsoletes()
         if obss:
-            provs = [(x[0], x[2], Pkg.stringToVersion(x[1]))
-                     for x in pkg.provides()]
-            i = 0
+            provs = pkg.provides()
             for prov in provs:
-                j = 0
-                pp = pkg.provides()[i]
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):
-                        oo = pkg.obsoletes()[j]
                         printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
-                                     (apply(Pkg.formatRequire, oo),
-                                      apply(Pkg.formatRequire, pp)))
-                    j += 1
-                i += 1
+                                     (apply(Pkg.formatRequire, obs),
+                                      apply(Pkg.formatRequire, prov)))
 
         expfmt = rpm.expandMacro("%{_build_name_fmt}")
         if pkg.isSource():
