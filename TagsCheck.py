@@ -572,9 +572,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         is_devel = FilesCheck.devel_regex.search(name)
         is_source = pkg.isSource()
         for d in deps:
+            value = apply(Pkg.formatRequire, d)
             if use_epoch and d[1] and d[0][0:7] != 'rpmlib(' and \
                     not epoch_regex.search(d[1]):
-                printWarning(pkg, 'no-epoch-in-dependency', d[0] + ' ' + d[1])
+                printWarning(pkg, 'no-epoch-in-dependency', value)
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
                     printError(pkg, 'invalid-dependency', d[0])
@@ -593,8 +594,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 if res and not res.group(1) and not d[1]:
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and '-' in d[1]:
-                printWarning(pkg, 'requires-on-release', d[0], d[1])
-            value = apply(Pkg.formatRequire, d)
+                printWarning(pkg, 'requires-on-release', value)
             self._unexpanded_macros(pkg, 'dependency %s' % (value,), value)
 
         self._unexpanded_macros(pkg, 'Name', name)
