@@ -593,8 +593,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'explicit-lib-dependency', d[0])
             if d[2] == rpm.RPMSENSE_EQUAL and '-' in d[1]:
                 printWarning(pkg, 'requires-on-release', d[0], d[1])
-            self._unexpanded_macros(pkg, 'dependency %s' % \
-                                        apply(Pkg.formatRequire, d), d[1])
+            value = apply(Pkg.formatRequire, d)
+            self._unexpanded_macros(pkg, 'dependency %s' % (value,), value)
 
         self._unexpanded_macros(pkg, 'Name', name)
         if not name:
@@ -764,8 +764,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for o in (x for x in obs_names if x not in prov_names):
             printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
-            self._unexpanded_macros(pkg, 'Obsoletes %s' % \
-                                        apply(Pkg.formatRequire, o), o[1])
+            value = apply(Pkg.formatRequire, o)
+            self._unexpanded_macros(pkg, 'Obsoletes %s' % (value,), value)
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
@@ -777,12 +777,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
-            self._unexpanded_macros(pkg, 'Provides %s' % \
-                                        apply(Pkg.formatRequire, p), p[1])
+            value = apply(Pkg.formatRequire, p)
+            self._unexpanded_macros(pkg, 'Provides %s' % (value,), value)
 
         for c in pkg.conflicts():
-            self._unexpanded_macros(pkg, 'Conflicts %s' % \
-                                        apply(Pkg.formatRequire, c), c[1])
+            value = apply(Pkg.formatRequire, c)
+            self._unexpanded_macros(pkg, 'Conflicts %s' % (value,), value)
 
         obss = [(x[0], x[2], Pkg.stringToVersion(x[1]))
                 for x in pkg.obsoletes()]
