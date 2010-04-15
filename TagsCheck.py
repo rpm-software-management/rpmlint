@@ -555,15 +555,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if use_epoch:
             for o in pkg.obsoletes():
                 if o[1] and not epoch_regex.search(o[1]):
-                    printWarning(pkg,
-                                 'no-epoch-in-obsoletes', o[0] + ' ' + o[1])
+                    printWarning(pkg, 'no-epoch-in-obsoletes',
+                                 apply(Pkg.formatRequire, o))
             for c in pkg.conflicts():
                 if c[1] and not epoch_regex.search(c[1]):
-                    printWarning(pkg,
-                                 'no-epoch-in-conflicts', c[0] + ' ' + c[1])
+                    printWarning(pkg, 'no-epoch-in-conflicts',
+                                 apply(Pkg.formatRequire, c))
             for p in pkg.provides():
                 if p[1] and not epoch_regex.search(p[1]):
-                    printWarning(pkg, 'no-epoch-in-provides', p[0] + ' ' + p[1])
+                    printWarning(pkg, 'no-epoch-in-provides',
+                                 apply(Pkg.formatRequire, p))
 
         name = pkg.name
         deps = pkg.requires() + pkg.prereq()
