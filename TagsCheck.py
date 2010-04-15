@@ -419,7 +419,6 @@ invalid_version_regex = re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECA
 # () are here for grouping purpose in the regexp
 forbidden_words_regex = re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
 valid_buildhost_regex = re.compile(Config.getOption('ValidBuildHost'))
-epoch_regex = re.compile('^[0-9]+:')
 use_epoch = Config.getOption('UseEpoch', False)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = Config.getOption('MaxLineLength', 79)
