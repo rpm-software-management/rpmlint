@@ -646,11 +646,8 @@ class Pkg:
         name_re = re.compile('^%s(\(\w+-\d+\))?$' % re.escape(name))
         for d in self.requires() + self.prereq():
             if name_re.match(d[0]):
-                current_version = d[1]
-                if current_version.find(':') > 0:
-                    current_version = ''.join(current_version.split(':')[1:])
-                if d[2] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
-                        or current_version != version:
+                if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
+                        or d[2][1] != version:
                     return False
                 return True
         return False
