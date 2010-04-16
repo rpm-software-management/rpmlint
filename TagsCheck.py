@@ -425,6 +425,14 @@ max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
 sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
+so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
+
+private_so_paths = set()
+for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
+             '%python_sitearch', '%ruby_sitearch', '%php_extdir'):
+    epath = rpm.expandMacro(path)
+    if epath != path:
+        private_so_paths.add(epath)
 
 _enchant_checkers = {}
 def spell_check(pkg, str, fmt, lang, ignored):
@@ -808,6 +816,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 self._unexpanded_macros(
                     pkg, tag, pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
 
+        for path in private_so_paths:
+            for fname, pkgfile in pkg.files().items():
+                if fname.startswith(path):
+                    for prov in pkgfile.provides:
+                        if so_dep_regex.search(prov[0]):
+                            printWarning(pkg, "private-shared-object-provides",
+                                         fname, apply(Pkg.formatRequire, prov))
+
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
@@ -1063,6 +1079,14 @@ Obsoletes and/or Provides and avoiding unversioned ones.''',
 'unexpanded-macro',
 '''This tag contains something that looks like an unexpanded macro; this is
 often the sign of a misspelling. Please check your specfile.''',
+
+'private-shared-object-provides',
+'''A shared object soname provides is provided by a file in a path from which
+other packages should not directly load shared objects from.  Such shared
+objects should thus not be depended on and they should not result in provides
+in the containing package.  Get rid of the provides if appropriate, for example
+by filtering it out during build.  Note that in some cases this may require
+disabling rpmbuild's internal dependency generator.''',
 )
 
 # TagsCheck.py ends here
