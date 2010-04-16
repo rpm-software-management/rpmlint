@@ -575,7 +575,7 @@ class Pkg:
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
-        deps = self.header[rpm.RPMTAG_FILEREQUIRE]
+        requires = self.header[rpm.RPMTAG_FILEREQUIRE]
         files = self.header[rpm.RPMTAG_FILENAMES]
         magics = self.header[rpm.RPMTAG_FILECLASS]
 
@@ -601,7 +601,7 @@ class Pkg:
                 pkgfile.mtime = mtimes[idx]
                 pkgfile.rdev = rdevs[idx]
                 pkgfile.inode = inodes[idx]
-                pkgfile.deps = deps[idx]
+                pkgfile.requires = parse_deps(requires[idx])
                 pkgfile.lang = langs[idx]
                 pkgfile.magic = magics[idx]
                 if not pkgfile.magic and _magic:
@@ -779,7 +779,7 @@ class PkgFile(object):
         self.mtime = 0
         self.rdev = ''
         self.inode = 0
-        self.deps = ''
+        self.requires = []
         self.lang = ''
         self.magic = ''
 

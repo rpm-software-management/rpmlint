@@ -20,17 +20,6 @@ from Filter import addDetails, printWarning
 import AbstractCheck
 
 
-# remove version from deps like ['foo', '>', '3']
-def _stripVersionedDeps(deps):
-    deps = deps[:]
-    j    = len(deps)
-    while j >= 3:
-        j = j-1
-        if deps[j-1] in ('<', '<=', '=', '>=', '>'):
-            del deps[j-1:j+1]
-
-    return deps
-
 class DocFilesCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
@@ -41,9 +30,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
         reqs = {}
         for fname, pkgfile in files.items():
-            tmp = pkgfile.deps.split()
-            tmp = _stripVersionedDeps(tmp)
-            reqs[fname] = tmp
+            reqs[fname] = [x[0] for x in pkgfile.requires]
 
         core_reqs = {}  # dependencies of non-doc files
         doc_reqs  = {}  # dependencies of doc files
