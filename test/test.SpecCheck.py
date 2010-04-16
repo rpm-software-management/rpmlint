@@ -12,11 +12,19 @@ class TestSpecCheck(unittest.TestCase):
     def testcheck(self):
         SpecCheck.check.check_spec(self.pkg, self.pkg.name)
         out = "\n".join(Testing.getOutput())
-        self.assertTrue(re.search("patch-not-applied Patch3", out));
-        self.assertFalse(re.search("patch-not-applied Patch\\b", out));
-        self.assertFalse(re.search("patch-not-applied Patch[0124]", out));
-        self.assertFalse(re.search("libdir-macro-in-noarch-package", out));
+        self.assertTrue("patch-not-applied Patch3" in out)
+        self.assertFalse(re.search("patch-not-applied Patch\\b", out))
+        self.assertFalse(re.search("patch-not-applied Patch[0124]", out))
+        self.assertTrue("libdir-macro-in-noarch-package" not in out)
         self.assertTrue(len(re.findall("macro-in-comment", out)) == 1)
+        self.assertTrue("unversioned-explicit-provides unversioned-provides"
+                        in out)
+        self.assertTrue("unversioned-explicit-provides versioned-provides"
+                        not in out)
+        self.assertTrue("unversioned-explicit-obsoletes unversioned-obsoletes"
+                        in out)
+        self.assertTrue("unversioned-explicit-obsoletes versioned-obsoletes"
+                        not in out)
 
 if __name__ == '__main__':
     unittest.main()

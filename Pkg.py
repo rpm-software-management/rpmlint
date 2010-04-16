@@ -320,6 +320,69 @@ def stringToVersion(verstring):
         release = None
     return (epoch, version, release)
 
+def parse_deps(line):
+    '''Parse provides/requires/conflicts/obsoletes line to list of
+       (name, flags, (epoch, version, release)) tuples.'''
+
+    prcos = []
+    tokens = re.split('[\s,]+', line.strip())
+
+    # Drop line continuation backslash in multiline macro definition (for
+    # spec file parsing), e.g.
+    # [...] \
+    # Obsoletes: foo-%1 <= 1.0.0 \
+    # [...] \
+    # (yes, this is an ugly hack and we probably have other problems with
+    #  multiline macro definitions elsewhere...)
+    if tokens[-1] == '\\':
+        del tokens[-1]
+
+    prco = []
+    while tokens:
+        token = tokens.pop(0)
+        if not token:
+            # skip empty tokens
+            continue
+
+        plen = len(prco)
+
+        if plen == 0:
+            prco.append(token)
+
+        elif plen == 1:
+            flags = 0
+            if token[0] in ("=", "<", "<=", ">", ">="):
+                # versioned, flags
+                if "=" in token:
+                    flags |= rpm.RPMSENSE_EQUAL
+                if "<" in token:
+                    flags |= rpm.RPMSENSE_LESS
+                if ">" in token:
+                    flags |= rpm.RPMSENSE_GREATER
+                prco.append(flags)
+            else:
+                # no flags following name, treat as unversioned, add and reset
+                prco.extend((flags, (None, None, None)))
+                prcos.append(tuple(prco))
+                prco = [token]
+
+        elif plen == 2:
+            # last token of versioned one, add and reset
+            prco.append(stringToVersion(token))
+            prcos.append(tuple(prco))
+            prco = []
+
+    plen = len(prco)
+    if plen:
+        if plen == 1:
+            prco.extend((0, (None, None, None)))
+        elif plen == 2:
+            prco.append((None, None, None))
+        prcos.append(tuple(prco))
+
+    return prcos
+
+
 # classes representing package
 
 class Pkg:
