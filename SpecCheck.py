@@ -95,56 +95,11 @@ pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile('\.(?:t(?:ar|[glx]z|bz2?)|zip)\\b', re.IGNORECASE)
 
 
-def deptokens(line):
-    '''Parse provides/requires/conflicts/obsoletes line to dep token list.'''
-    prco = []
-    tmp = ''
-    wantmore = False
-    toks = re.split('[\s,]+', line.strip())
-
-    # Drop line continuation backslash in multiline macro definition, eg.
-    # [...] \
-    # Obsoletes: foo-%1 <= 1.0.0 \
-    # [...] \
-    # (yes, this is an ugly hack and we probably have other problems with
-    #  multiline macro definitions elsewhere...)
-    if toks[-1] == '\\':
-        del toks[-1]
-
-    for tok in toks:
-        if len(tok) == 0:
-            continue
-        if len(tmp) == 0:
-            tmp = tok
-        elif wantmore:
-            tmp += ' ' + tok
-            wantmore = False
-        elif tok[0] in ('=', '<', '>'):
-            tmp += ' ' + tok
-            wantmore = True
-        else:
-            prco.append(tmp)
-            wantmore = False
-            tmp = tok
-    if len(tmp) != 0:
-        prco.append(tmp)
-    return prco
-
-def versioned(toks):
-    '''Return versioned dependency tokens from the given list.'''
-    res = []
-    for tok in toks:
-        if tok.find('=') > 0 or tok.find('<') > 0 or tok.find('>') > 0:
-            res.append(tok)
-    return res
-
-def unversioned(toks):
-    '''Return unversioned dependency tokens from the given list.'''
-    res = []
-    for tok in toks:
-        if ' ' not in tok:
-            res.append(tok)
-    return res
+def unversioned(deps):
+    '''Yield unversioned dependency names from the given list.'''
+    for dep in deps:
+        if not dep[1]:
+            yield dep[0]
 
 def contains_buildroot(line):
     '''Check if the given line contains use of rpm buildroot.'''
@@ -403,7 +358,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = requires_regex.search(line)
                 if res:
-                    reqs = deptokens(res.group(1))
+                    reqs = Pkg.parse_deps(res.group(1))
                     for req in unversioned(reqs):
                         if compop_regex.search(req):
                             printWarning(pkg, 'comparison-operator-in-deptoken',
@@ -411,7 +366,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = provides_regex.search(line)
                 if res:
-                    provs = deptokens(res.group(1))
+                    provs = Pkg.parse_deps(res.group(1))
                     for prov in unversioned(provs):
                         printWarning(pkg, 'unversioned-explicit-provides', prov)
                         if compop_regex.search(prov):
@@ -420,7 +375,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = obsoletes_regex.search(line)
                 if res:
-                    obses = deptokens(res.group(1))
+                    obses = Pkg.parse_deps(res.group(1))
                     for obs in unversioned(obses):
                         printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
                         if compop_regex.search(obs):
@@ -429,7 +384,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = conflicts_regex.search(line)
                 if res:
-                    confs = deptokens(res.group(1))
+                    confs = Pkg.parse_deps(res.group(1))
                     for conf in unversioned(confs):
                         if compop_regex.search(conf):
                             printWarning(pkg, 'comparison-operator-in-deptoken',
