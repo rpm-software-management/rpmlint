@@ -162,8 +162,6 @@ class BinaryInfo:
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile('[^.][0-9]')
-unstrippable = re.compile('\.o$|\.static$')
-shared_object_regex = re.compile('shared object')
 libc_regex = re.compile('libc\.')
 ldso_soname_regex = re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
@@ -260,7 +258,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if pkg.arch == 'sparc' and sparc_regex.search(pkgfile.magic):
                 printError(pkg, 'non-sparc32-binary', fname)
 
-            if is_ocaml_native or unstrippable.search(fname):
+            if is_ocaml_native or fname.endswith('.o') or \
+                    fname.endswith('.static'):
                 continue
 
             # stripped ?
@@ -328,7 +327,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                         break
 
             is_exec = 'executable' in pkgfile.magic
-            if not is_exec and not shared_object_regex.search(pkgfile.magic):
+            is_shobj = 'shared object' in pkgfile.magic
+
+            if not is_exec and not is_shobj:
                 continue
 
             if is_exec:
@@ -344,7 +345,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             if not bin_info.needed and not (
                 bin_info.soname and ldso_soname_regex.search(bin_info.soname)):
-                if shared_object_regex.search(pkgfile.magic):
+                if is_shobj:
                     printError(pkg,
                                'shared-lib-without-dependency-information',
                                fname)
@@ -365,7 +366,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                             break
 
                     if not found_libc:
-                        if shared_object_regex.search(pkgfile.magic):
+                        if is_shobj:
                             printError(pkg, 'library-not-linked-against-libc',
                                        fname)
                         else:

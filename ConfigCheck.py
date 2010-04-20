@@ -15,8 +15,6 @@ import AbstractCheck
 
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
-    games_regex = re.compile("^/var/lib/games")
-    etc_var_regex = re.compile("^/etc/|^/var/")
     appdefaults_regex = re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
 
     def __init__(self):
@@ -33,9 +31,9 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
         for c in config_files:
             if ConfigCheck.appdefaults_regex.search(c):
                 printError(pkg, "app-defaults-must-not-be-conffile", c)
-            if ConfigCheck.games_regex.search(c):
+            elif c.startswith("/var/lib/games/"):
                 printError(pkg, "score-file-must-not-be-conffile", c)
-            elif not ConfigCheck.etc_var_regex.search(c):
+            elif not c.startswith("/etc/") and not c.startswith("/var/"):
                 printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
 
             if c not in noreplace_files:
