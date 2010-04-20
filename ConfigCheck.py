@@ -8,14 +8,11 @@
 # Purpose       :
 #############################################################################
 
-import re
-
 from Filter import addDetails, printError, printWarning
 import AbstractCheck
 
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
-    appdefaults_regex = re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
@@ -29,9 +26,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
         noreplace_files = pkg.noreplaceFiles()
 
         for c in config_files:
-            if ConfigCheck.appdefaults_regex.search(c):
-                printError(pkg, "app-defaults-must-not-be-conffile", c)
-            elif c.startswith("/var/lib/games/"):
+            if c.startswith("/var/lib/games/"):
                 printError(pkg, "score-file-must-not-be-conffile", c)
             elif not c.startswith("/etc/") and not c.startswith("/var/"):
                 printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
@@ -44,10 +39,6 @@ check = ConfigCheck()
 
 # Add information about checks
 addDetails(
-'app-defaults-must-not-be-conffile',
-"""A file in /usr/X11R6/lib/X11/app-defaults/ is a configuration file.
-If you need to store your conf file, put it in /etc.""",
-
 'score-file-must-not-be-conffile',
 """A file in /var/lib/games/ is a configuration file. Store your conf
 files in /etc instead.""",
