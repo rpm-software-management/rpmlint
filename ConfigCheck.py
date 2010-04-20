@@ -16,7 +16,6 @@ import AbstractCheck
 
 class ConfigCheck(AbstractCheck.AbstractCheck):
     games_regex = re.compile("^/var/lib/games")
-    usr_regex = re.compile("^/usr/")
     etc_var_regex = re.compile("^/etc/|^/var/")
     appdefaults_regex = re.compile("^/usr/(share|X11R6/lib)/X11/app-defaults/")
 
@@ -36,8 +35,6 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "app-defaults-must-not-be-conffile", c)
             if ConfigCheck.games_regex.search(c):
                 printError(pkg, "score-file-must-not-be-conffile", c)
-            if ConfigCheck.usr_regex.search(c):
-                printError(pkg, "file-in-usr-marked-as-conffile", c)
             elif not ConfigCheck.etc_var_regex.search(c):
                 printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
 
@@ -56,10 +53,6 @@ If you need to store your conf file, put it in /etc.""",
 'score-file-must-not-be-conffile',
 """A file in /var/lib/games/ is a configuration file. Store your conf
 files in /etc instead.""",
-
-'file-in-usr-marked-as-conffile',
-"""A file in /usr is marked as being a configuration file.
-Store your conf files in /etc/ instead.""",
 
 'non-etc-or-var-file-marked-as-conffile',
 """A file not in /etc or /var is marked as being a configuration file.
