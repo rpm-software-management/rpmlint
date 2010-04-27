@@ -292,7 +292,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'invalid-ldconfig-symlink',
                                            fname, link)
                         except KeyError:
-                            printError(pkg, 'no-ldconfig-symlink', fname)
+                            if base.startswith("lib") or base.startswith("ld-"):
+                                printError(pkg, 'no-ldconfig-symlink', fname)
 
                     res = soversion_regex.search(bin_info.soname)
                     if res:
