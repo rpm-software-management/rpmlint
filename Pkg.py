@@ -95,15 +95,22 @@ def getstatusoutput(cmd, stdoutonly = False):
 bz2_regex = re.compile('\.t?bz2?$')
 xz_regex = re.compile('\.(t[xl]z|xz|lzma)$')
 
+def catcmd(fname):
+    """Get a 'cat' command that handles possibly compressed files."""
+    cat = 'gzip -dcf'
+    if bz2_regex.search(fname):
+        cat = 'bzip2 -dcf'
+    elif xz_regex.search(fname):
+        cat = 'xz -dc'
+    return cat
+
 # TODO: is_utf8 could probably be implemented natively without iconv...
 
 def is_utf8(fname):
-    cat = 'gzip -dcf'
-    if bz2_regex.search(fname): cat = 'bzip2 -dcf'
-    elif xz_regex.search(fname): cat = 'xz -dc'
     # TODO: better shell escaping or sequence based command invocation
     cmd = commands.getstatusoutput(
-        '%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' % (cat, fname))
+        '%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' %
+        (catcmd(fname), fname))
     return not cmd[0]
 
 def is_utf8_str(s):
