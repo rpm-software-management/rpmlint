@@ -10,6 +10,7 @@
 #############################################################################
 
 from datetime import datetime
+import commands
 import os
 import re
 import stat
@@ -18,7 +19,7 @@ import string
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import is_utf8, is_utf8_str
+from Pkg import catcmd, is_utf8, is_utf8_str
 import AbstractCheck
 import Config
 
@@ -232,6 +233,14 @@ non_readable_regexs = (re.compile('^/var/log/'),
                        re.compile('^/etc/(g?shadow-?|securetty)$'))
 
 man_base_regex = re.compile(r'^/usr(?:/share)?/man/man[^/]+/(.+)\.[1-9n]')
+man_warn_regex = re.compile(r'^([^:]+:)\d+:\s*')
+man_nowarn_regex = re.compile(
+    # From Lintian: ignore common undefined macros from pod2man << Perl 5.10
+    r'\`(Tr|IX)\' not defined|'
+    # .so entries won't resolve as we're dealing with stdin
+    r'No such file or directory|'
+    # TODO, better handling for these (see e.g. Lintian)
+    r'(can\'t break|cannot adjust) line')
 
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
@@ -701,6 +710,18 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res = man_base_regex.search(f)
                 if res:
                     man_basenames.add(res.group(1))
+                    # TODO: better shell escaping or sequence based invocation
+                    cmd = commands.getstatusoutput(
+                        'env LC_ALL=C %s "%s" | gtbl | '
+                        'env LC_ALL=C groff -mtty-char -Tutf8 -P-c '
+                        '-mandoc -mandoc -wmac >/dev/null' %
+                        (catcmd(f), pkgfile.path))
+                    for line in cmd[1].split("\n"):
+                        res = man_warn_regex.search(line)
+                        if not res or man_nowarn_regex.search(line):
+                            continue
+                        printWarning(pkg, "manual-page-warning", f,
+                                     line[res.end(1):])
 
                 # text file checks
                 if os.access(pkgfile.path, os.R_OK):
@@ -1252,6 +1273,10 @@ It can cause problems when dirs in $PATH are reordered.''',
 
 'no-manual-page-for-binary',
 '''Each executable in standard binary directories should have a man page.''',
+
+'manual-page-warning',
+'''This man page may contain problems that can cause it not to be formatted
+as intended.''',
 )
 
 # FilesCheck.py ends here
