@@ -5,7 +5,7 @@ Summary:        None here
 
 Group:          Undefined
 License:        GPLv2
-URL:            http://rpmlint.zarb.org/
+URL:            http://rpmlint.zarb.org/#%{name}
 Source0:        Source0.tar.gz
 Patch:          Patch.patch
 Patch1:         Patch1.patch

@@ -445,9 +445,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
 
-            # Test if there is macro in comment
+            # Test if there are macros in comments
             hashPos = line.find("#")
-            if hashPos != -1:
+            if hashPos != -1 and \
+                    (hashPos == 0 or line[hashPos-1] in (" ", "\t")):
                 for match in AbstractCheck.macro_regex.findall(
                     line[hashPos+1:]):
                     res = re.match('%+', match)
