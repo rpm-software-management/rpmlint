@@ -710,18 +710,19 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res = man_base_regex.search(f)
                 if res:
                     man_basenames.add(res.group(1))
-                    # TODO: better shell escaping or sequence based invocation
-                    cmd = commands.getstatusoutput(
-                        'env LC_ALL=C %s "%s" | gtbl | '
-                        'env LC_ALL=C groff -mtty-char -Tutf8 -P-c '
-                        '-mandoc -mandoc -wmac >/dev/null' %
-                        (catcmd(f), pkgfile.path))
-                    for line in cmd[1].split("\n"):
-                        res = man_warn_regex.search(line)
-                        if not res or man_nowarn_regex.search(line):
-                            continue
-                        printWarning(pkg, "manual-page-warning", f,
-                                     line[res.end(1):])
+                    if use_utf8:
+                        # TODO: better shell escaping or seq based invocation
+                        cmd = commands.getstatusoutput(
+                            'env LC_ALL=C %s "%s" | gtbl | '
+                            'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
+                            '-P-c -mandoc -mandoc -wmac >/dev/null' %
+                            (catcmd(f), pkgfile.path))
+                        for line in cmd[1].split("\n"):
+                            res = man_warn_regex.search(line)
+                            if not res or man_nowarn_regex.search(line):
+                                continue
+                            printWarning(pkg, "manual-page-warning", f,
+                                         line[res.end(1):])
 
                 # text file checks
                 if os.access(pkgfile.path, os.R_OK):
