@@ -25,8 +25,11 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
 
     def __checkRequirements(self, pkg):
-        files = pkg.files()
         doc_files = pkg.docFiles()
+        if not doc_files:
+            return
+
+        files = pkg.files()
 
         reqs = {}
         for fname, pkgfile in files.items():
@@ -53,9 +56,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             for r in reqs[i]:
                 if r not in target:
                     target[r] = []
-
                 target[r].append(i)
-
 
         # go through the calculated requirements of the %doc files
         for (dep, req_files) in doc_reqs.items():
