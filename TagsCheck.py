@@ -483,6 +483,12 @@ def spell_check(pkg, str, fmt, lang, ignored):
                 if uppername in upperword or upperword in upperparts:
                     continue
 
+                # Work around enchant's digit tokenizing behavior:
+                # http://github.com/rfk/pyenchant/issues/issue/3
+                if checker.leading_context(1).isdigit() or \
+                        checker.trailing_context(1).isdigit():
+                    continue
+
                 # Warn and suggest
                 sug = ', '.join(checker.suggest()[:3])
                 if sug:
