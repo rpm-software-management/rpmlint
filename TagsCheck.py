@@ -467,8 +467,7 @@ def spell_check(pkg, str, fmt, lang, ignored):
                     continue
 
                 # Skip all capitalized words that do not start a sentence
-                # (side effect: skips also words starting with non-letter chars)
-                if err.word[0] == err.word[0].upper() and not \
+                if err.word[0].isupper() and not \
                         sentence_break_regex.search(checker.leading_context(3)):
                     continue
 
