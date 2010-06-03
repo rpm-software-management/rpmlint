@@ -286,16 +286,20 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "configure-without-libdir-spec")
                         pkg.current_linenum = real_linenum
                     elif res.group(1):
-                        res = re.match(hardcoded_library_paths, res.group(1))
+                        res = re.match(hardcoed_library_paths, res.group(1))
                         if res:
                             printError(pkg, "hardcoded-library-path",
                                        res.group(1), "in configure options")
                     configure_linenum = None
 
-            if current_section != 'changelog' and './configure' in line:
-                # store line where it started
-                configure_linenum = pkg.current_linenum
-                configure_cmdline = line.strip()
+            hashPos = line.find("#")
+
+            if current_section != 'changelog':
+                cfgPos = line.find('./configure')
+                if cfgPos != -1 and (hashPos == -1 or hashPos > cfgPos):
+                    # store line where it started
+                    configure_linenum = pkg.current_linenum
+                    configure_cmdline = line.strip()
 
             res = hardcoded_library_path_regex.search(line)
             if current_section != 'changelog' and res and not \
@@ -446,7 +450,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'non-standard-group', group)
 
             # Test if there are macros in comments
-            hashPos = line.find("#")
             if hashPos != -1 and \
                     (hashPos == 0 or line[hashPos-1] in (" ", "\t")):
                 for match in AbstractCheck.macro_regex.findall(
