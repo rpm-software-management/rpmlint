@@ -286,7 +286,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "configure-without-libdir-spec")
                         pkg.current_linenum = real_linenum
                     elif res.group(1):
-                        res = re.match(hardcoed_library_paths, res.group(1))
+                        res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
                             printError(pkg, "hardcoded-library-path",
                                        res.group(1), "in configure options")
