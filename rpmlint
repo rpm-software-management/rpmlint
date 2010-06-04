@@ -13,6 +13,6 @@ PYTHONPATH=${PYTHONPATH=.}
 
 PYTHONPATH=${PYTHONPATH}:/usr/share/rpmlint
 
-exec python -tt -u -O /usr/share/rpmlint/rpmlint.py $*
+exec python -tt -u -O /usr/share/rpmlint/rpmlint.py "$@"
 
 # rpmlint ends here
