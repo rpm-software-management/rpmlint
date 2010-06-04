@@ -460,6 +460,9 @@ def spell_check(pkg, str, fmt, lang, ignored):
             checker.set_text(re.sub(r'\s+', ' ', str))
             uppername = pkg.name.upper()
             upperparts = uppername.split('-')
+            if lang.startswith('en'):
+                ups = [x + "'S" for x in upperparts]
+                upperparts.extend(ups)
             for err in checker:
 
                 # Skip already warned and ignored words
@@ -657,7 +660,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'no-provides', prov)
 
         # List of words to ignore in spell check
-        ignored_words = [x.split('/')[-1] for x in pkg.files()]
+        ignored_words = set()
+        for pf in pkg.files():
+            ignored_words.update(pf.split('/'))
+        ignored_words.update((x[0] for x in pkg.provides()))
+        ignored_words.update((x[0] for x in pkg.requires()))
+        ignored_words.update((x[0] for x in pkg.conflicts()))
+        ignored_words.update((x[0] for x in pkg.obsoletes()))
 
         summary = pkg[rpm.RPMTAG_SUMMARY]
         if not summary:
