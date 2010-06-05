@@ -211,7 +211,7 @@ def compareEVR((e1, v1, r1), (e2, v2, r2)):
     rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
     return rc
 
-# from yum 3.2.27, rpmUtils.miscutils
+# from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
 def rangeCompare(reqtuple, provtuple):
     """returns true if provtuple satisfies reqtuple"""
     (reqn, reqf, (reqe, reqv, reqr)) = reqtuple
@@ -230,8 +230,10 @@ def rangeCompare(reqtuple, provtuple):
     # foo 1:3.0.0-15 then we have to drop the 15 so we can match
     if reqr is None:
         r = None
-    if reqe is None:
-        e = None
+    # rpmlint mod: don't mess with provided Epoch, doing so breaks e.g.
+    # "Requires: foo < 1.0" should not be satisfied by "Provides: foo = 1:0.5"
+    #if reqe is None:
+    #    e = None
     if reqv is None: # just for the record if ver is None then we're going to segfault
         v = None
 
