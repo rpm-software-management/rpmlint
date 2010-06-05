@@ -194,15 +194,18 @@ def get_default_valid_rpmgroups(filename = None):
         groups.sort()
     return groups
 
-# from yum 3.2.23, rpmUtils.miscutils
+# from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
 def compareEVR((e1, v1, r1), (e2, v2, r2)):
     # return 1: a is newer than b
     # 0: a and b are the same version
     # -1: b is newer than a
-    e1 = str(e1)
+    # rpmlint mod: don't stringify None epochs to 'None' strings
+    if e1 is not None:
+        e1 = str(e1)
     v1 = str(v1)
     r1 = str(r1)
-    e2 = str(e2)
+    if e2 is not None:
+        e2 = str(e2)
     v2 = str(v2)
     r2 = str(r2)
     rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
