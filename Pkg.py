@@ -208,7 +208,7 @@ def compareEVR((e1, v1, r1), (e2, v2, r2)):
     rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
     return rc
 
-# from yum 3.2.23, rpmUtils.miscutils with some rpmlint modifications
+# from yum 3.2.27, rpmUtils.miscutils
 def rangeCompare(reqtuple, provtuple):
     """returns true if provtuple satisfies reqtuple"""
     (reqn, reqf, (reqe, reqv, reqr)) = reqtuple
@@ -216,7 +216,7 @@ def rangeCompare(reqtuple, provtuple):
     if reqn != n:
         return 0
 
-    # rpmlint modification: flags=0 (in addition to None) satisfies everything
+    # unversioned satisfies everything
     if not f or not reqf:
         return 1
 
@@ -229,8 +229,7 @@ def rangeCompare(reqtuple, provtuple):
         r = None
     if reqe is None:
         e = None
-    # just for the record if ver is None then we're going to segfault
-    if reqv is None:
+    if reqv is None: # just for the record if ver is None then we're going to segfault
         v = None
 
     # if we just require foo-version, then foo-version-* will match
@@ -244,8 +243,12 @@ def rangeCompare(reqtuple, provtuple):
         if reqf in ['GT', 'GE', 4, 12]:
             return 1
         if reqf in ['EQ', 8]:
-            if f in ['LE', 10]:
+            if f in ['LE', 10, 'LT', 2]:
+                return 1                
+        if reqf in ['LE', 'LT', 'EQ', 10, 2, 8]:
+            if f in ['LE', 'LT', 10, 2]:
                 return 1
+
     if rc == 0:
         if reqf in ['GT', 4]:
             if f in ['GT', 'GE', 4, 12]:
@@ -268,6 +271,15 @@ def rangeCompare(reqtuple, provtuple):
                 return 1
         if reqf in ['LE', 'LT', 10, 2]:
             return 1
+#                if rc >= 1:
+#                    if reqf in ['GT', 'GE', 4, 12]:
+#                        return 1
+#                if rc == 0:
+#                    if reqf in ['GE', 'LE', 'EQ', 8, 10, 12]:
+#                        return 1
+#                if rc <= -1:
+#                    if reqf in ['LT', 'LE', 2, 10]:
+#                        return 1
 
     return 0
 
