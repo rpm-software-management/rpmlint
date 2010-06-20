@@ -11,6 +11,7 @@
 import re
 
 from Filter import addDetails, printError, printWarning
+from __isocodes__ import COUNTRIES, LANGUAGES
 import AbstractCheck
 
 
@@ -30,47 +31,11 @@ INCORRECT_LOCALES = {
     'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
 
-# Correct subdirs of /usr/share/local for LC_MESSAGES
-# and /usr/share/man for locale man pages.
-#
-# TODO: what makes a subdir "correct"?  This list is missing quite a few
-# entries from eg. ISO 639.
-#
-# 'en_RN' and 'en@IPA' are not real language bu funny variations on english
-CORRECT_SUBDIRS = (
-'af', 'am', 'ang', 'ar', 'as', 'az', 'az_IR', 'be', 'bg', 'bn', 'bn_IN', 'br',
-'bs', 'ca', 'cs', 'cy', 'da', 'de', 'de_AT', 'dz', 'el',
-'en_AU', 'en_CA', 'en_GB', 'en_IE', 'en_US', 'en_RN', 'en@IPA',
-'eo', 'es', 'es_AR', 'es_ES', 'es_DO', 'es_GT', 'es_HN', 'es_SV', 'es_PE',
-'es_PA', 'es_MX', 'et', 'eu',
-'fa', 'fi', 'fo', 'fr', 'fur', 'ga', 'gd', 'gl', 'gn', 'gu', 'gv',
-'he', 'hi', 'hr', 'hu', 'hy',
-'ia', 'id', 'is', 'it', 'iu', 'ja', 'ka', 'kl', 'km', 'kn', 'ko', 'ku', 'kw',
-# 'ltg' is not a standard ISO code; latgalian hasn't yet an ISO code
-'ky', 'lg', 'li', 'lo', 'lt', 'ltg', 'lv',
-'mg', 'mi', 'mk', 'ml', 'mn', 'mr', 'ms', 'mt', 'my',
-'nb', 'nds', 'nds_DE', 'ne', 'nl', 'nn', 'no', 'nr', 'nso',
-'oc', 'or', 'pa_IN', 'ph', 'pl', 'pp', 'pt', 'pt_BR', 'qu', 'ro', 'ru', 'rw',
-'sc', 'se', 'si', 'sk', 'sl', 'sq', 'sr', 'sr@Latn', 'sr@ije', 'ss', 'st',
-'sv', 'ta', 'te', 'tg', 'th', 'tk', 'tl', 'tn', 'tr', 'ts', 'tt',
-'ug', 'uk', 'ur', 'uz', 'uz@Latn',
-'ve', 'vi', 'wa', 'wen', 'xh', 'yi', 'yo', 'zh_CN', 'zh_HK', 'zh_TW', 'zu',
-# KDE uses 'ven' for 've'
-'ven',
-#
-# note: 'pa' should be replaced by 'pa_IN'; but it is still largely used
-'pa',
-# note: zh_CN.GB2312 and zh_TW.Big5 (that is, names with charset information)
-# are obsolescent, but still widely used; some day however they should
-# be removed from this list.
-'zh_CN.GB2312', 'zh_TW.Big5',
-)
-
-package_regex = re.compile('-(' + '|'.join((x[0:2] for x in CORRECT_SUBDIRS)) + ')$')
+package_regex = re.compile('-(' + '|'.join(LANGUAGES) + ')$')
 locale_regex = re.compile('^(/usr/share/locale/([^/]+))/')
 correct_subdir_regex = re.compile('^(([a-z][a-z]([a-z])?(_[A-Z][A-Z])?)([.@].*$)?)$')
 lc_messages_regex = re.compile('/usr/share/locale/([^/]+)/LC_MESSAGES/.*(mo|po)$')
-man_regex = re.compile('/usr(?:/share)?/man/([^/]+)/man./[^/]+$')
+man_regex = re.compile('/usr(?:/share)?/man/([^/]+)/man[0-9n][^/]*/[^/]+$')
 
 # list of exceptions
 #
@@ -81,7 +46,30 @@ EXCEPTION_DIRS = ('C', 'POSIX', 'CP1251', 'CP1255', 'CP1256',
 'ISO-8859-1', 'ISO-8859-2', 'ISO-8859-3', 'ISO-8859-4', 'ISO-8859-5',
 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-9E',
 'ISO-8859-10', 'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-15',
-'KOI8-R', 'KOI8-U', 'UTF-8')
+'KOI8-R', 'KOI8-U', 'UTF-8', 'default')
+
+def is_valid_lang(lang):
+    # TODO: @Foo and charset handling
+    lang = re.sub("[@.].*$", "", lang)
+
+    if lang in LANGUAGES:
+        return True
+
+    ix = lang.find("_")
+    if ix == -1:
+        return False
+
+    # TODO: don't accept all lang_COUNTRY combinations
+
+    country = lang[ix+1:]
+    if country not in COUNTRIES:
+        return False
+
+    lang = lang[0:ix]
+    if lang not in LANGUAGES:
+        return False
+
+    return True
 
 class I18NCheck(AbstractCheck.AbstractCheck):
 
@@ -137,16 +125,16 @@ class I18NCheck(AbstractCheck.AbstractCheck):
             subdir = None
             if res:
                 subdir = res.group(1)
-                if subdir not in CORRECT_SUBDIRS:
+                if not is_valid_lang(subdir):
                     printError(pkg, 'invalid-lc-messages-dir', f)
             else:
                 res = man_regex.search(f)
                 if res:
                     subdir = res.group(1)
-                    if subdir != 'man' and subdir not in CORRECT_SUBDIRS:
-                        printError(pkg, 'invalid-locale-man-dir', f)
-                    else:
+                    if is_valid_lang(subdir):
                         subdir = None
+                    else:
+                        printError(pkg, 'invalid-locale-man-dir', f)
 
             if f.endswith('.mo') or subdir:
                 if pkg.files()[f].lang == '' and not webapp:
