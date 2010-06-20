@@ -29,11 +29,11 @@ SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\
 LC_ALL:=C
 export LC_ALL
 
-all: __version__.py
+all: __version__.py __isocodes__.py
 	if [ "x${COMPILE_PYC}" = "x1" ] ; then \
-		$(PYTHON) -m py_compile [A-Z]*.py __version__.py ; \
+		$(PYTHON) -m py_compile [A-Z]*.py __*__.py ; \
 	fi
-	$(PYTHON) -O -m py_compile [A-Z]*.py __version__.py
+	$(PYTHON) -O -m py_compile [A-Z]*.py __*__.py
 
 clean:
 	rm -f *~ *.pyc *.pyo $(GENERATED)
@@ -48,7 +48,7 @@ install: all
 	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
 verify:
-	pychecker --limit=100 [A-Z]*.py
+	pychecker --limit=100 [A-Z]*.py __*__.py
 
 .PHONY: check
 
@@ -95,5 +95,8 @@ ChangeLog: $(FILES) authors.xml
 __version__.py: Makefile
 	echo "# Automatically generated, do not edit" > $@
 	echo "__version__ = '$(VERSION)'" >> $@
+
+__isocodes__.py:
+	tools/generate-isocodes.py > $@
 
 # Makefile ends here
