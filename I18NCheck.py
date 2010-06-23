@@ -10,13 +10,12 @@
 
 import re
 
+import rpm
+
 from Filter import addDetails, printError, printWarning
 from __isocodes__ import COUNTRIES, LANGUAGES
 import AbstractCheck
 
-
-# Defined in header.h
-HEADER_I18NTABLE = 100
 
 # Associative array of invalid value => correct value
 INCORRECT_LOCALES = {
@@ -86,7 +85,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         locales = []                      # list of locales for this packages
         webapp = False
 
-        i18n_tags = pkg[HEADER_I18NTABLE] or ()
+        i18n_tags = pkg[rpm.RPMTAG_HEADERI18NTABLE] or ()
 
         for i in i18n_tags:
             try:
