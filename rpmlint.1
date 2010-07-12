@@ -78,8 +78,10 @@ binary package files, and the source and binary package check sets are
 quite different.
 .SH FILES
 .TP
-\fB/usr/share/rpmlint/config\fR
-Built-in configuration.
+\fB/usr/share/rpmlint/config\fR, \fB/usr/share/rpmlint/config.*\fR
+Built-in configuration.  When invoked as \fIsomeprefix\fR-rpmlint,
+/usr/share/rpmlint/config.\fIsomeprefix\fR is used if it exists,
+otherwise /usr/share/rpmlint/config.
 .TP
 \fB/etc/rpmlint/*config\fR
 System wide configuration.

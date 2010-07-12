@@ -14,6 +14,7 @@ import glob
 import imp
 import locale
 import os
+import re
 import stat
 import sys
 import tempfile
@@ -262,7 +263,20 @@ info_error = None
 # load global config files
 configs = glob.glob('/etc/rpmlint/*config')
 configs.sort()
-configs.insert(0, '/usr/share/rpmlint/config')
+
+# Was rpmlint invoked as a prefixed variant?
+m = re.match(r"(?P<prefix>[\w-]+)-rpmlint(\.py)?", sys.argv[0])
+if m:
+    # Okay, we're a prefixed variant. Look for the variant config.
+    # If we find it, use it. If not, fallback to the default.
+    prefix = m.group('prefix')
+    if os.path.isfile('/usr/share/rpmlint/config.%s' % prefix):
+        configs.insert(0, '/usr/share/rpmlint/config.%s' % prefix)
+    else:
+        configs.insert(0, '/usr/share/rpmlint/config')
+else:
+    configs.insert(0, '/usr/share/rpmlint/config')
+
 for f in configs:
     try:
         execfile(f)
