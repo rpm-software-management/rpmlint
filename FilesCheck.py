@@ -290,13 +290,14 @@ _python_magic_values = {
     '2.7': 62211,
     '3.0': 3130,
     '3.1': 3150,
+    '3.2': 3160,
     }
 
 def get_expected_pyc_magic(path):
     # .pyc/.pyo files embed a 4-byte magic value identifying which version of
     # the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
     # return a (magic ABI value, python version) tuple.  For example,
-    # '/usr/lib/python3.1/foo.pyc' should return ('3.1', 3151).
+    # '/usr/lib/python3.1/foo.pyc' should return (3151, '3.1').
     # The first value will be None if the python version was not resolved
     # from the given pathname and the PythonDefaultVersion configuration
     # variable is not set, or if we don't know the magic ABI value for the
@@ -316,9 +317,9 @@ def get_expected_pyc_magic(path):
         return (None, ver_from_path)
 
     # In Python 2, if Py_UnicodeFlag is set, Python's import code uses a value
-    # one higher, but this is off by default. In Python 3, it always uses the
-    # value one higher:
-    if expected_version.startswith('3.'):
+    # one higher, but this is off by default. In Python 3.0 and 3.1 (but no
+    # longer in 3.2), it always uses the value one higher:
+    if expected_version[:3] in ('3.0', '3.1'):
         expected_magic_value += 1
         
     return (expected_magic_value, ver_from_path)
