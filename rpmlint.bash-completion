@@ -60,7 +60,7 @@ _rpmdiff()
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W '-h --help -i --ignore' -- "$cur" ) )
+        COMPREPLY=( $( compgen -W '--help --ignore' -- "$cur" ) )
     else
         # Installed packages completion is slow, do it only if arg does not
         # look like a path.
