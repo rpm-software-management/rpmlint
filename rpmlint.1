@@ -27,7 +27,9 @@ Multiple identifiers can be specified by separating them with commas.
 .TP
 \fB\-c\fR, \fB\-\-check\fR=\fIcheck\fR
 Run only the specified check.  This option may be given multiple times
-to specify multiple checks to run.
+to specify multiple checks to run.  \fIcheck\fR is the name of the Python
+module (as it would be given to Python's import statement) containing the
+check.
 .TP
 \fB\-a\fR, \fB\-\-all\fR
 Check all installed packages.
