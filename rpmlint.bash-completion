@@ -15,7 +15,15 @@ _rpmlint()
             _filedir
             return 0
             ;;
-        -I|-c|--check|-o|--option)
+        -c|--check)
+            # should take --checkdir, python path, inheritance into account...
+            COMPREPLY=( $( compgen -W \
+                "$( command ls /usr/share/rpmlint/*Check.py* 2>/dev/null |
+                    sed -e '/^AbstractCheck/d' \
+                        -e 's|.*/\([^/.]*\)\.py.*|\1|' )" -- "$cur" ) )
+            return 0
+            ;;
+        -I|-o|--option)
             # argument required but no completions available
             return 0
             ;;
