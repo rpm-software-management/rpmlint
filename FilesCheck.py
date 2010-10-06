@@ -295,16 +295,16 @@ _python_magic_values = {
     }
 
 def get_expected_pyc_magic(path):
-    # .pyc/.pyo files embed a 4-byte magic value identifying which version of
-    # the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
-    # return a (magic ABI value, python version) tuple.  For example,
-    # '/usr/lib/python3.1/foo.pyc' should return (3151, '3.1').
-    # The first value will be None if the python version was not resolved
-    # from the given pathname and the PythonDefaultVersion configuration
-    # variable is not set, or if we don't know the magic ABI value for the
-    # python version (no matter from which source the version came from).
-    # The second value will be None if a python version could not be resolved
-    # from the given pathname.
+    """.pyc/.pyo files embed a 4-byte magic value identifying which version of
+    the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
+    return a (magic ABI value, python version) tuple.  For example,
+    '/usr/lib/python3.1/foo.pyc' should return (3151, '3.1').
+    The first value will be None if the python version was not resolved
+    from the given pathname and the PythonDefaultVersion configuration
+    variable is not set, or if we don't know the magic ABI value for the
+    python version (no matter from which source the version came from).
+    The second value will be None if a python version could not be resolved
+    from the given pathname."""
 
     ver_from_path = None
     m = python_regex.search(path)
@@ -326,16 +326,16 @@ def get_expected_pyc_magic(path):
     return (expected_magic_value, ver_from_path)
 
 def py_demarshal_long(b):
-    # Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
-    # bytes in a string:
+    """Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
+    bytes in a string."""
     return (ord(b[0])
             + (ord(b[1]) << 8)
             + (ord(b[2]) << 16)
             + (ord(b[3]) << 24))
 
 def python_bytecode_to_script(path):
-    # Given a python bytecode path, give the path of the .py file (or None if
-    # not python bytecode)
+    """Given a python bytecode path, give the path of the .py file
+    (or None if not python bytecode)."""
     
     res = python_bytecode_regex_pep3147.search(path)
     if res:
