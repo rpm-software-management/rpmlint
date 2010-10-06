@@ -202,6 +202,7 @@ kernel_package_regex = re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure
 normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
 perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex = re.compile('^/usr/lib(?:64)?/python([.0-9]+)/')
+python_bytecode_regex_pep3147 = re.compile('^(.*)/__pycache__/(.*)\.(.*)(\.py[oc])$')
 python_bytecode_regex = re.compile('^(.*)(\.py[oc])$')
 python_default_version = Config.getOption('PythonDefaultVersion', None)
 perl_version_trick = Config.getOption('PerlVersionTrick', True)
@@ -331,6 +332,20 @@ def py_demarshal_long(b):
             + (ord(b[1]) << 8)
             + (ord(b[2]) << 16)
             + (ord(b[3]) << 24))
+
+def python_bytecode_to_script(path):
+    # Given a python bytecode path, give the path of the .py file (or None if
+    # not python bytecode)
+    
+    res = python_bytecode_regex_pep3147.search(path)
+    if res:
+        return res.group(1) + '/' + res.group(2) + '.py'
+
+    res = python_bytecode_regex.search(path)
+    if res:
+        return res.group(1) + '.py'
+
+    return None
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -631,9 +646,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                    res.group(1))
                         python_dep_error = True
 
-                res = python_bytecode_regex.search(f)
-                if res:
-                    source_file = res.group(1) + '.py'
+                source_file = python_bytecode_to_script(f)
+                if source_file:
                     if source_file in files:
                         # Extract header of .pyc file:
                         pyc_fobj = open(pkgfile.path, 'rb')
