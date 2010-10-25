@@ -1044,8 +1044,9 @@ files. Mark the file as %config in the spec file.''',
 extension.''',
 
 'setuid-binary',
-'''The file is setuid, this may be dangerous, especially if this
-file is setuid root.''',
+'''The file is setuid; this may be dangerous, especially if this
+file is setuid root. Sometimes file capabilities can be used instead of
+setuid bits.''',
 
 'setgid-binary',
 '''The file is setgid. Usually this is a packaging bug. If this is a game,
