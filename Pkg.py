@@ -603,6 +603,10 @@ class Pkg:
         provides = self.header[rpm.RPMTAG_FILEPROVIDE]
         files = self.header[rpm.RPMTAG_FILENAMES]
         magics = self.header[rpm.RPMTAG_FILECLASS]
+        try: # rpm >= 4.7.0
+            filecaps = self.header[rpm.RPMTAG_FILECAPS]
+        except:
+            filecaps = None
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
         # FWIW) for packages containing exactly one file
@@ -641,6 +645,8 @@ class Pkg:
                     # for example Fedora's rpmbuild as of F-11's 4.7.1 is
                     # patched so it generates them.
                     pkgfile.magic = ''
+                if filecaps:
+                    pkgfile.filecaps = filecaps[idx]
                 self._files[pkgfile.name] = pkgfile
 
     # API to access dependency information
@@ -806,6 +812,7 @@ class PkgFile(object):
         self.provides = []
         self.lang = ''
         self.magic = ''
+        self.filecaps = None
 
     # TODO: decompression support
 
