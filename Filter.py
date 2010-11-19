@@ -47,7 +47,12 @@ def _print(msgtype, pkg, reason, details):
     badness = 0
     if threshold >= 0:
         badness = Config.badness(reason)
-        msgtype = badness and "E" or "W"
+        # anything with badness is an error
+        if badness:
+            msgtype == 'E'
+        # errors without badness become warnings
+        elif msgtype == 'E':
+            msgtype = 'W'
 
     ln = ""
     if pkg.current_linenum is not None:
