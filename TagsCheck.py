@@ -644,8 +644,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg,
                                          'incoherent-version-dependency-on',
                                          base_or_libs,
-                                         Pkg.versionToString(dep[2][0],
-                                                             dep[2][1], None),
+                                         Pkg.versionToString((dep[2][0],
+                                                              dep[2][1], None)),
                                          sexp)
                     res = devel_number_regex.search(name)
                     if not res:
