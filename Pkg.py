@@ -312,9 +312,10 @@ def versionToString(evr):
     ret = ""
     if evr[0] is not None and evr[0] != "":
         ret += str(evr[0]) + ":"
-    ret += evr[1]
-    if evr[2] is not None and evr[2] != "":
-        ret += "-" + evr[2]
+    if evr[1] is not None:
+        ret += evr[1]
+        if evr[2] is not None and evr[2] != "":
+            ret += "-" + evr[2]
     return ret
 
 # from yum 3.2.23, rpmUtils.miscutils, with some rpmlint modifications
