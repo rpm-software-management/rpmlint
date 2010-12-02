@@ -62,7 +62,7 @@ version:
 dist: cleandist localcopy tar
 
 cleandist:
-	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.bz2
+	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.xz
 
 localcopy: $(FILES) $(GENERATED)
 	mkdir $(PACKAGE)-$(VERSION)
@@ -70,7 +70,7 @@ localcopy: $(FILES) $(GENERATED)
 
 tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
-	bzip2 -9vf $(PACKAGE)-$(VERSION).tar
+	xz -9evf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
 
 export:
