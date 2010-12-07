@@ -12,6 +12,6 @@ for i in $TESTPATH/test.*.py; do
 done
 
 echo "Check that rpmlint executes with no unexpected errors"
-python ./rpmlint.py -C $(pwd) test/*.rpm test/*.spec >/dev/null
+python ./rpmlint -C $(pwd) test/*.rpm test/*.spec >/dev/null
 rc=$?
 test $rc -eq 0 -o $rc -eq 64
