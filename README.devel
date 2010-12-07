@@ -4,12 +4,12 @@ $ svn checkout http://rpmlint.zarb.org/svn/trunk/
 
 To run rpmlint from the working tree or in place from an unpacked tarball:
 
-$ python -O -u rpmlint.py -C . <rpms>
+$ ./rpmlint -C . <rpms>
 
 ...and to run only a single check, for example to test only FHSCheck:
 
-$ python -O -u rpmlint.py -C . -c FHSCheck <rpms>
+$ ./rpmlint -C . -c FHSCheck <rpms>
 
 For profiling, use something like:
 
-$ python -O -u -m cProfile -s cumulative rpmlint.py -C . [...]
+$ python -O -u -m cProfile -s cumulative rpmlint -C . [...]
