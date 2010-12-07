@@ -1,4 +1,4 @@
-.TH RPMLINT "1" "January 2009" "rpmlint" "User Commands"
+.TH RPMLINT "1" "December 2010" "rpmlint" "User Commands"
 .SH NAME
 rpmlint \- check common problems in rpm packages
 .SH SYNOPSIS
@@ -36,7 +36,10 @@ Check all installed packages.
 .TP
 \fB\-C\fR, \fB\-\-checkdir\fR=\fIdir\fR
 Insert \fIdir\fR to the front of the list of paths to load checks
-(and other Python modules) from.
+from, unless it is already in the list.  The default list of check
+dirs typically contains only /usr/share/rpmlint.  Directories in the
+check dirs list are also inserted to the front of the list of paths to
+load Python modules from when the check process begins.
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 Display summary of command line options and exit.
