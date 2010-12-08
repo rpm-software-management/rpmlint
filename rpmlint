@@ -122,16 +122,20 @@ def main():
                     st = os.stat(arg)
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        if not arg.endswith(".spec"):
+                        if arg.endswith(".spec"):
+                            if do_spec_check:
+                                # Short-circuit spec file checks
+                                pkg = Pkg.FakePkg(arg)
+                                check = SpecCheck.SpecCheck()
+                                check.verbose = verbose
+                                check.check_spec(pkg, arg)
+                                pkg.cleanup()
+                                specfiles_checked += 1
+                        elif "/" in arg or arg.endswith(".rpm") or \
+                                arg.endswith(".spm"):
                             pkgs.append(Pkg.Pkg(arg, extract_dir))
-                        elif do_spec_check:
-                            # Short-circuit spec file checks
-                            pkg = Pkg.FakePkg(arg)
-                            check = SpecCheck.SpecCheck()
-                            check.verbose = verbose
-                            check.check_spec(pkg, arg)
-                            pkg.cleanup()
-                            specfiles_checked += 1
+                        else:
+                            raise OSError
 
                     elif stat.S_ISDIR(st[stat.ST_MODE]):
                         dirs.append(arg)
