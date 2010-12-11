@@ -541,7 +541,32 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         srctype = "Patch"
                     tag = '%s%s' % (srctype, num)
                     if scheme and netloc:
-                        self.check_url(pkg, tag, url)
+                        info = self.check_url(pkg, tag, url)
+                        clen = info.get("Content-Length")
+                        if clen is not None:
+                            clen = int(clen)
+                        cmd5 = info.get("Content-MD5")
+                        if cmd5 is not None:
+                            cmd5 = cmd5.lower()
+                        if (clen is not None or cmd5 is not None) \
+                                and hasattr(pkg, 'files'):
+                            # Not using path from urlparse results to match how
+                            # rpm itself parses the basename.
+                            pkgfile = pkg.files()[url.split("/")[-1]]
+                            if pkgfile:
+                                if clen is not None and pkgfile.size != clen:
+                                    printWarning(pkg, 'file-size-mismatch',
+                                                 '%s = %s, %s = %s' %
+                                                 (pkgfile.name, pkgfile.size,
+                                                  url, clen))
+                                # pkgfile.md5 could be some other digest than
+                                # MD5, treat as MD5 only if it's 32 chars long
+                                if cmd5 and len(pkgfile.md5) == 32 \
+                                        and pkgfile.md5 != cmd5:
+                                    printWarning(pkg, 'file-md5-mismatch',
+                                                 '%s = %s, %s = %s' %
+                                                 (pkgfile.name, pkgfile.md5,
+                                                  url, cmd5))
                     elif srctype == "Source" and tarball_regex.search(url):
                         printWarning(pkg, 'invalid-url', '%s:' % tag, url)
 
@@ -748,6 +773,16 @@ name, the comparison operator and the version string.''',
 '''There is a unescaped macro after a shell style comment in the specfile.
 Macros are expanded everywhere, so check if it can cause a problem in this
 case and escape the macro with another leading % if appropriate.''',
+
+'file-size-mismatch',
+'''The size of the file in the package does not match the size indicated by
+peeking at its URL.  Verify that the file in the package has the intended
+contents.''',
+
+'file-md5-mismatch',
+'''The MD5 hash of the file in the package does not match the MD5 hash
+indicated by peeking at its URL.  Verify that the file in the package has the
+intended contents.''',
 )
 
 # SpecCheck.py ends here
