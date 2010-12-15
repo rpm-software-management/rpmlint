@@ -248,37 +248,37 @@ man_nowarn_regex = re.compile(
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
 _null_trans = string.maketrans("", "")
 
-def istextfile(filename, pkg):
+def peek(filename, pkg, length=512):
+    """Peek into a file, return a chunk from its beginning and a flag if it
+       seems to be a text file."""
     fobj = None
     try:
-        fobj = open(filename, 'r')
-        s = fobj.read(512)
+        fobj = open(filename, 'rb')
+        chunk = fobj.read(length)
         fobj.close()
     except Exception, e: # eg. https://bugzilla.redhat.com/209876
         printWarning(pkg, 'read-error', e)
         if fobj:
             fobj.close()
-        return False
+        return (chunk, False)
 
-    if "\0" in s:
-        return False
+    if "\0" in chunk:
+        return (chunk, False)
 
-    if not s:  # Empty files are considered text
-        return True
+    if not chunk:  # Empty files are considered text
+        return (chunk, True)
 
     # PDF's are binary but often detected as text by the algorithm below
-    if filename.lower().endswith('.pdf') and s.startswith('%PDF-'):
-        return False
+    if filename.lower().endswith('.pdf') and chunk.startswith('%PDF-'):
+        return (chunk, False)
 
     # Get the non-text characters (maps a character to itself then
     # use the 'remove' option to get rid of the text characters.)
-    t = s.translate(_null_trans, text_characters)
+    t = chunk.translate(_null_trans, text_characters)
 
-    # If more than 30% non-text characters, then
-    # this is considered a binary file
-    if float(len(t))/len(s) > 0.30:
-        return False
-    return True
+    # If more than 30% non-text characters, then consider it a binary file
+    istext = float(len(t))/len(chunk) <= 0.30
+    return (chunk, istext)
 
 # See Python/import.c (in the trunk and py3k branches) for a full list of
 # the values here.
@@ -526,6 +526,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if f not in ghost_files:
                         printError(pkg, 'non-ghost-file', f)
 
+                chunk = None
+                istext = False
+                if os.access(pkgfile.path, os.R_OK):
+                    (chunk, istext) = peek(pkgfile.path, pkg)
+
                 if doc_regex.search(f):
                     nonexec_file = True
                     if not is_doc:
@@ -649,16 +654,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 source_file = python_bytecode_to_script(f)
                 if source_file:
                     if source_file in files:
-                        # Extract header of .pyc file:
-                        pyc_fobj = open(pkgfile.path, 'rb')
-                        try:
-                            pyc_bytes = pyc_fobj.read(8)
-                        finally:
-                            pyc_fobj.close()
-
                         # Verify that the magic ABI value embedded in the .pyc
                         # header is correct
-                        found_magic = py_demarshal_long(pyc_bytes[:4]) & 0xffff
+                        found_magic = py_demarshal_long(chunk[:4]) & 0xffff
                         exp_magic, exp_version = get_expected_pyc_magic(f)
                         if exp_magic and found_magic != exp_magic:
                             found_version = 'unknown'
@@ -680,7 +678,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
  
                         # Verify that the timestamp embedded in the .pyc header
                         # matches the mtime of the .py file:
-                        pyc_timestamp = py_demarshal_long(pyc_bytes[4:8])
+                        pyc_timestamp = py_demarshal_long(chunk[4:8])
                         if pyc_timestamp != files[source_file].mtime:
                             cts = datetime.fromtimestamp(
                                 pyc_timestamp).isoformat()
@@ -741,60 +739,54 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                          line[res.end(1):])
 
                 # text file checks
-                if os.access(pkgfile.path, os.R_OK):
-                    if istextfile(pkgfile.path, pkg):
-                        fobj = open(pkgfile.path, 'r')
-                        try:
-                            line = fobj.readline()
-                        finally:
-                            fobj.close()
-                        res = None
-                        # ignore perl module shebang -- TODO: disputed...
-                        if not f.endswith('.pm'):
-                            res = shebang_regex.search(line)
-                        # sourced scripts should not be executable
-                        if sourced_script_regex.search(f):
-                            if res:
-                                printError(pkg,
-                                           'sourced-script-with-shebang', f)
-                            if mode & 0111 != 0:
-                                printError(pkg, 'executable-sourced-script',
-                                           f, oct(perm))
-                        # ...but executed ones should
-                        elif res or mode & 0111 != 0 or script_regex.search(f):
-                            interpreter = None
-                            if res:
-                                interpreter = res.group(1)
-                                if not interpreter_regex.search(interpreter):
-                                    printError(pkg, 'wrong-script-interpreter',
-                                               f, interpreter)
-                            elif not nonexec_file and not \
-                                    (lib_path_regex.search(f) and
-                                     f.endswith('.la')):
-                                printError(pkg, 'script-without-shebang', f)
+                if istext:
+                    res = None
+                    # ignore perl module shebang -- TODO: disputed...
+                    if not f.endswith('.pm'):
+                        res = shebang_regex.search(chunk)
+                    # sourced scripts should not be executable
+                    if sourced_script_regex.search(f):
+                        if res:
+                            printError(pkg,
+                                       'sourced-script-with-shebang', f)
+                        if mode & 0111 != 0:
+                            printError(pkg, 'executable-sourced-script',
+                                       f, oct(perm))
+                    # ...but executed ones should
+                    elif res or mode & 0111 != 0 or script_regex.search(f):
+                        interpreter = None
+                        if res:
+                            interpreter = res.group(1)
+                            if not interpreter_regex.search(interpreter):
+                                printError(pkg, 'wrong-script-interpreter',
+                                           f, interpreter)
+                        elif not nonexec_file and not \
+                                (lib_path_regex.search(f) and
+                                 f.endswith('.la')):
+                            printError(pkg, 'script-without-shebang', f)
 
-                            if mode & 0111 == 0 and not is_doc:
-                                printError(pkg, 'non-executable-script', f,
-                                           oct(perm), interpreter)
-                            if line.endswith('\r\n') or line.endswith('\r'):
-                                printError(
-                                    pkg, 'wrong-script-end-of-line-encoding', f)
-                        elif is_doc and not skipdocs_regex.search(f):
-                            if line.endswith('\r\n') or line.endswith('\r'):
-                                printWarning(
-                                    pkg, 'wrong-file-end-of-line-encoding', f)
-                            # We check only doc text files for UTF-8-ness;
-                            # checking everything may be slow and can generate
-                            # lots of unwanted noise.
-                            if use_utf8 and not is_utf8(pkgfile.path):
-                                printWarning(pkg, 'file-not-utf8', f)
+                        if mode & 0111 == 0 and not is_doc:
+                            printError(pkg, 'non-executable-script', f,
+                                       oct(perm), interpreter)
+                        if '\r' in chunk:
+                            printError(
+                                pkg, 'wrong-script-end-of-line-encoding', f)
+                    elif is_doc and not skipdocs_regex.search(f):
+                        if '\r' in chunk:
+                            printWarning(
+                                pkg, 'wrong-file-end-of-line-encoding', f)
+                        # We check only doc text files for UTF-8-ness;
+                        # checking everything may be slow and can generate
+                        # lots of unwanted noise.
+                        if use_utf8 and not is_utf8(pkgfile.path):
+                            printWarning(pkg, 'file-not-utf8', f)
 
-                    elif is_doc and compr_regex.search(f):
-                        ff = compr_regex.sub('', f)
-                        if not skipdocs_regex.search(ff):
-                            # compressed docs, eg. info and man files etc
-                            if use_utf8 and not is_utf8(pkgfile.path):
-                                printWarning(pkg, 'file-not-utf8', f)
+                elif is_doc and compr_regex.search(f):
+                    ff = compr_regex.sub('', f)
+                    if not skipdocs_regex.search(ff):
+                        # compressed docs, eg. info and man files etc
+                        if use_utf8 and not is_utf8(pkgfile.path):
+                            printWarning(pkg, 'file-not-utf8', f)
 
             # normal dir check
             elif stat.S_ISDIR(mode):
