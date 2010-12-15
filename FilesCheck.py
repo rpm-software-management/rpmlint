@@ -211,7 +211,7 @@ lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile('^#!\s*(\S*)')
+shebang_regex = re.compile('^#!\s*(\S+)')
 interpreter_regex = re.compile('^/(usr/)?(s?bin|games|libexec(/.+)?|(lib(64)?|share)/.+)/[^/]+$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
@@ -531,8 +531,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if os.access(pkgfile.path, os.R_OK):
                     (chunk, istext) = peek(pkgfile.path, pkg)
 
+                interpreter = None
+                if chunk:
+                    res = shebang_regex.search(chunk)
+                    if res:
+                        interpreter = res.group(1)
+
                 if doc_regex.search(f):
-                    nonexec_file = True
+                    if not interpreter:
+                        nonexec_file = True
                     if not is_doc:
                         printError(pkg, 'not-listed-as-documentation', f)
 
@@ -740,23 +747,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # text file checks
                 if istext:
-                    res = None
                     # ignore perl module shebang -- TODO: disputed...
-                    if not f.endswith('.pm'):
-                        res = shebang_regex.search(chunk)
+                    if f.endswith('.pm'):
+                        interpreter = None
                     # sourced scripts should not be executable
                     if sourced_script_regex.search(f):
-                        if res:
+                        if interpreter:
                             printError(pkg,
-                                       'sourced-script-with-shebang', f)
+                                       'sourced-script-with-shebang', f,
+                                       interpreter)
                         if mode & 0111 != 0:
                             printError(pkg, 'executable-sourced-script',
                                        f, oct(perm))
                     # ...but executed ones should
-                    elif res or mode & 0111 != 0 or script_regex.search(f):
-                        interpreter = None
-                        if res:
-                            interpreter = res.group(1)
+                    elif interpreter or mode & 0111 != 0 or \
+                            script_regex.search(f):
+                        if interpreter:
                             if not interpreter_regex.search(interpreter):
                                 printError(pkg, 'wrong-script-interpreter',
                                            f, interpreter)
