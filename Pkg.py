@@ -320,7 +320,7 @@ def versionToString(evr):
 
 # from yum 3.2.23, rpmUtils.miscutils, with some rpmlint modifications
 def stringToVersion(verstring):
-    if verstring in [None, '']:
+    if verstring in (None, ''):
         return (None, None, None)
     epoch = None
     i = verstring.find(':')
@@ -330,18 +330,19 @@ def stringToVersion(verstring):
         except ValueError:
             # garbage in epoch, ignore it
             pass
-    j = verstring.find('-')
+    i += 1
+    j = verstring.find('-', i)
     if j != -1:
-        if verstring[i + 1:j] == '':
+        if verstring[i:j] == '':
             version = None
         else:
-            version = verstring[i + 1:j]
-        release = verstring[j + 1:]
+            version = verstring[i:j]
+        release = verstring[j+1:]
     else:
-        if verstring[i + 1:] == '':
+        if verstring[i:] == '':
             version = None
         else:
-            version = verstring[i + 1:]
+            version = verstring[i:]
         release = None
     return (epoch, version, release)
 
