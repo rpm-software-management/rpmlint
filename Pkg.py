@@ -191,6 +191,8 @@ def get_default_valid_rpmgroups(filename = None):
             fobj.close()
         if 'Development/Debug' not in groups:
             groups.append('Development/Debug')
+        if 'Unspecified' not in groups: # auto-added by rpm >= 4.6.0
+            groups.append('Unspecified')
         groups.sort()
     return groups
 
