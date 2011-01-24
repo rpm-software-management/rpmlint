@@ -8,8 +8,10 @@
 # Purpose       : Check a package to see if some rpm tags are present
 #############################################################################
 
+import calendar
 import os
 import re
+import time
 try:
     from urlparse import urlparse
 except ImportError: # Python 3
@@ -426,6 +428,8 @@ tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?
 punct = '.,:;!?'
 sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
+# we assume that no rpm packages existed before rpm itself existed...
+oldest_changelog_timestamp = calendar.timegm(time.strptime("1995-01-01", "%Y-%m-%d"))
 
 private_so_paths = set()
 for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
@@ -737,6 +741,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
 
+            clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
+            if clt:
+                clt -= 12 * 3600 # rpm timestamps appear to be at noon
+                if clt < oldest_changelog_timestamp:
+                    printWarning(pkg, 'changelog-time-overflow',
+                                 time.strftime("%Y-%m-%d", time.gmtime(clt)))
+                elif clt > time.time():
+                    printError(pkg, 'changelog-time-in-future',
+                                 time.strftime("%Y-%m-%d", time.gmtime(clt)))
+
 #         for provide_name in (x[0] for x in pkg.provides()):
 #             if name == provide_name:
 #                 printWarning(pkg, 'package-provides-itself')
@@ -1007,6 +1021,14 @@ version that is coherent with the version of the package and rebuild it.''',
 'incoherent-version-in-changelog',
 '''The last entry in %changelog contains a version identifier that is not
 coherent with the epoch:version-release tuple of the package.''',
+
+'changelog-time-overflow',
+'''The timestamp of the latest entry in %changelog is suspiciously far away in
+the past; it is possible that it is actually so much in the future that it
+has overflowed rpm's timestamp representation.''',
+
+'changelog-time-in-future',
+'''The timestamp of the latest entry in %changelog is in the future.''',
 
 'no-license',
 '''There is no License tag in your spec file. You have to specify one license
