@@ -1015,11 +1015,11 @@ in your spec file using the Group tag.''',
 '%changelog' in your spec file and rebuild it.''',
 
 'no-version-in-last-changelog',
-'''The last changelog entry doesn't contain a version. Please insert the
+'''The latest changelog entry doesn't contain a version. Please insert the
 version that is coherent with the version of the package and rebuild it.''',
 
 'incoherent-version-in-changelog',
-'''The last entry in %changelog contains a version identifier that is not
+'''The latest entry in %changelog contains a version identifier that is not
 coherent with the epoch:version-release tuple of the package.''',
 
 'changelog-time-overflow',
