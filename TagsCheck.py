@@ -987,9 +987,9 @@ package.''',
 '''Summary begins with whitespace which will waste space when displayed.''',
 
 'no-description-tag',
-'''There is no %description tag in your spec file. To insert it, just insert a
-'%description' tag in your spec file, add a textual description of the package
-after it, and rebuild the package.''',
+'''The description of the package is empty or missing. To add it, insert a
+%description section in your spec file, add a textual description of the
+package after it, and rebuild the package.''',
 
 'description-line-too-long',
 '''Your description lines must not exceed %d characters. If a line is exceeding
