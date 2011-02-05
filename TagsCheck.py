@@ -437,6 +437,8 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
     epath = rpm.expandMacro(path)
     if epath != path:
         private_so_paths.add(epath)
+        private_so_paths.add(re.sub(r'/lib64(?=/|$)', '/lib', epath))
+        private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
 
 _enchant_checkers = {}
 def spell_check(pkg, str, fmt, lang, ignored):
