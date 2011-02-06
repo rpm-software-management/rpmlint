@@ -542,14 +542,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     tag = '%s%s' % (srctype, num)
                     if scheme and netloc:
                         info = self.check_url(pkg, tag, url)
+                        if not info or not hasattr(pkg, 'files'):
+                            continue
                         clen = info.get("Content-Length")
                         if clen is not None:
                             clen = int(clen)
                         cmd5 = info.get("Content-MD5")
                         if cmd5 is not None:
                             cmd5 = cmd5.lower()
-                        if (clen is not None or cmd5 is not None) \
-                                and hasattr(pkg, 'files'):
+                        if clen is not None or cmd5 is not None:
                             # Not using path from urlparse results to match how
                             # rpm itself parses the basename.
                             pkgfile = pkg.files()[url.split("/")[-1]]
