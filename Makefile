@@ -25,7 +25,7 @@ VERSION := 1.1
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
-# for the [A-Z]* part 
+# for the [A-Z]* part
 LC_ALL:=C
 export LC_ALL
 
