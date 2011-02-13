@@ -662,39 +662,40 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 source_file = python_bytecode_to_script(f)
                 if source_file:
                     if source_file in files:
-                        # Verify that the magic ABI value embedded in the .pyc
-                        # header is correct
-                        found_magic = py_demarshal_long(chunk[:4]) & 0xffff
-                        exp_magic, exp_version = get_expected_pyc_magic(f)
-                        if exp_magic and found_magic != exp_magic:
-                            found_version = 'unknown'
-                            for (pv, pm) in _python_magic_values.items():
-                                if pm == found_magic:
-                                    found_version = pv
-                                    break
-                            # If expected version was from the file path, issue
-                            # an error, otherwise a warning.
-                            msg = (pkg, 'python-bytecode-wrong-magic-value',
-                                   f, "expected %d (%s), found %d (%s)" %
-                                   (exp_magic,
-                                    exp_version or python_default_version,
-                                    found_magic, found_version))
-                            if exp_version is not None:
-                                printError(*msg)
-                            else:
-                                printWarning(*msg)
- 
-                        # Verify that the timestamp embedded in the .pyc header
-                        # matches the mtime of the .py file:
-                        pyc_timestamp = py_demarshal_long(chunk[4:8])
-                        if pyc_timestamp != files[source_file].mtime:
-                            cts = datetime.fromtimestamp(
-                                pyc_timestamp).isoformat()
-                            sts = datetime.fromtimestamp(
-                                files[source_file].mtime).isoformat()
-                            printError(pkg,
-                                       'python-bytecode-inconsistent-mtime',
-                                       f, cts, source_file, sts)
+                        if chunk:
+                            # Verify that the magic ABI value embedded in the
+                            # .pyc header is correct
+                            found_magic = py_demarshal_long(chunk[:4]) & 0xffff
+                            exp_magic, exp_version = get_expected_pyc_magic(f)
+                            if exp_magic and found_magic != exp_magic:
+                                found_version = 'unknown'
+                                for (pv, pm) in _python_magic_values.items():
+                                    if pm == found_magic:
+                                        found_version = pv
+                                        break
+                                # If expected version was from the file path,
+                                # issue # an error, otherwise a warning.
+                                msg = (pkg, 'python-bytecode-wrong-magic-value',
+                                       f, "expected %d (%s), found %d (%s)" %
+                                       (exp_magic,
+                                        exp_version or python_default_version,
+                                        found_magic, found_version))
+                                if exp_version is not None:
+                                    printError(*msg)
+                                else:
+                                    printWarning(*msg)
+
+                            # Verify that the timestamp embedded in the .pyc
+                            # header matches the mtime of the .py file:
+                            pyc_timestamp = py_demarshal_long(chunk[4:8])
+                            if pyc_timestamp != files[source_file].mtime:
+                                cts = datetime.fromtimestamp(
+                                    pyc_timestamp).isoformat()
+                                sts = datetime.fromtimestamp(
+                                    files[source_file].mtime).isoformat()
+                                printError(pkg,
+                                           'python-bytecode-inconsistent-mtime',
+                                           f, cts, source_file, sts)
                     else:
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
