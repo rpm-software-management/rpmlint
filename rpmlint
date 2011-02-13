@@ -67,7 +67,7 @@ def loadCheck(name):
     # Avoid loading more than once (initialization costs)
     loaded = sys.modules.get(name)
     if loaded:
-        return loaded 
+        return loaded
     (fobj, pathname, description) = imp.find_module(name)
     try:
         imp.load_module(name, fobj, pathname, description)

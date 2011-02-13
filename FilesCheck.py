@@ -323,7 +323,7 @@ def get_expected_pyc_magic(path):
     # longer in 3.2), it always uses the value one higher:
     if expected_version[:3] in ('3.0', '3.1'):
         expected_magic_value += 1
-        
+
     return (expected_magic_value, ver_from_path)
 
 def py_demarshal_long(b):
@@ -337,7 +337,7 @@ def py_demarshal_long(b):
 def python_bytecode_to_script(path):
     """Given a python bytecode path, give the path of the .py file
     (or None if not python bytecode)."""
-    
+
     res = python_bytecode_regex_pep3147.search(path)
     if res:
         return res.group(1) + '/' + res.group(2) + '.py'
@@ -397,8 +397,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'empty-debuginfo-package')
 
         # Unique (rdev, inode) combinations
-        hardlinks = {} 
-        
+        hardlinks = {}
+
         # All executable files from standard bin dirs (basename => [paths])
         # Hack: basenames with empty paths links are symlinks (not subject
         # to duplicate binary check, but yes for man page existence check)
@@ -1268,7 +1268,7 @@ by newer version of cron and insecure''',
 version of cron''',
 
 'rpath-in-buildconfig',
-'''This build configuration file contains rpaths which will be introduced into 
+'''This build configuration file contains rpaths which will be introduced into
 dependent packages.''',
 
 'python-bytecode-wrong-magic-value',

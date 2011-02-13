@@ -5,7 +5,7 @@ export TESTPATH="$(pwd)/test/"
 
 for i in $TESTPATH/test.*.py; do
     python $i
-    RET=$? 
+    RET=$?
     if [ $RET -ne 0 ]; then
         exit $RET
     fi

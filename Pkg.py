@@ -228,7 +228,7 @@ def rangeCompare(reqtuple, provtuple):
     # and you thought we were done having fun
     # if the requested release is left out then we have
     # to remove release from the package prco to make sure the match
-    # is a success - ie: if the request is EQ foo 1:3.0.0 and we have 
+    # is a success - ie: if the request is EQ foo 1:3.0.0 and we have
     # foo 1:3.0.0-15 then we have to drop the 15 so we can match
     if reqr is None:
         r = None
@@ -251,7 +251,7 @@ def rangeCompare(reqtuple, provtuple):
             return 1
         if reqf in ['EQ', 8]:
             if f in ['LE', 10, 'LT', 2]:
-                return 1                
+                return 1
         if reqf in ['LE', 'LT', 'EQ', 10, 2, 8]:
             if f in ['LE', 'LT', 10, 2]:
                 return 1
@@ -293,7 +293,7 @@ def rangeCompare(reqtuple, provtuple):
 # from yum 3.2.23, rpmUtils.miscutils, with rpmlint modifications
 def formatRequire(name, flags, evr):
     s = name
-    
+
     if flags:
         if flags & (rpm.RPMSENSE_LESS | rpm.RPMSENSE_GREATER |
                     rpm.RPMSENSE_EQUAL):
