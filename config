@@ -115,7 +115,7 @@ from Config import *
 #setOption("RpmGamesGroup", 'Games')
 
 # Doc files to which end of line and UTF-8 checks should not be applied.
-# Type: regexp, defult: \.(?:rtf|x?html?|svg|ml[ily]?)$'
+# Type: regexp, default: \.(?:rtf|x?html?|svg|ml[ily]?)$'
 #setOption("SkipDocsRegexp", '\.(?:rtf|x?html?|svg|ml[ily]?)$')
 
 # Standard OS groups.
