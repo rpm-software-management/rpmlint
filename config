@@ -195,6 +195,11 @@ from Config import *
 # Type: string, default: "" ("" effectively disables this check)
 #setOption("Vendor", "")
 
+# Man page warning category, passed to groff -w while checking man pages.
+# See the groff(1) or troff(1) man pages for available categories.
+# Type: string, default: 'mac'
+#SetOption("ManWarningCategory", 'mac')
+
 # Output filters.
 # ---------------
 

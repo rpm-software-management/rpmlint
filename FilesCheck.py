@@ -242,6 +242,7 @@ man_nowarn_regex = re.compile(
     r'No such file or directory|'
     # TODO, better handling for these (see e.g. Lintian)
     r'(can\'t break|cannot adjust) line')
+man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
@@ -738,8 +739,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         cmd = commands.getstatusoutput(
                             'env LC_ALL=C %s "%s" | gtbl | '
                             'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
-                            '-P-c -mandoc -wmac >/dev/null' %
-                            (catcmd(f), pkgfile.path))
+                            '-P-c -mandoc -w%s >/dev/null' %
+                            (catcmd(f), pkgfile.path, man_warn_category))
                         for line in cmd[1].split("\n"):
                             res = man_warn_regex.search(line)
                             if not res or man_nowarn_regex.search(line):
