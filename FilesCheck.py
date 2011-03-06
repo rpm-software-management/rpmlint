@@ -244,12 +244,15 @@ man_nowarn_regex = re.compile(
     r'(can\'t break|cannot adjust) line')
 man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 
+fsf_license_regex = re.compile('(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
+fsf_wrong_address_regex = re.compile('(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
+
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
 _null_trans = string.maketrans("", "")
 
-def peek(filename, pkg, length=512):
+def peek(filename, pkg, length=1024):
     """Peek into a file, return a chunk from its beginning and a flag if it
        seems to be a text file."""
     fobj = None
@@ -789,6 +792,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         # lots of unwanted noise.
                         if use_utf8 and not is_utf8(pkgfile.path):
                             printWarning(pkg, 'file-not-utf8', f)
+                    if fsf_license_regex.search(chunk) and \
+                            fsf_wrong_address_regex.search(chunk):
+                        printError(pkg, 'incorrect-fsf-address', f)
 
                 elif is_doc and compr_regex.search(f):
                     ff = compr_regex.sub('', f)
@@ -1296,6 +1302,11 @@ It can cause problems when dirs in $PATH are reordered.''',
 'manual-page-warning',
 '''This man page may contain problems that can cause it not to be formatted
 as intended.''',
+
+'incorrect-fsf-address',
+'''The Free Software Foundation address in this file seems to be outdated or
+misspelled.  Ask upstream to update the address, or if this is a license file,
+possibly the entire file with a new copy available from the FSF.''',
 )
 
 # FilesCheck.py ends here
