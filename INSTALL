@@ -6,7 +6,6 @@ You need the following utilities to run rpmlint:
 	o readelf
 	o cpio
 	o desktop-file-validate
-	o iconv
 	o gzip, bzip2 and xz
 	o enchant and its python bindings (optional)
 

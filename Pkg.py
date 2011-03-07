@@ -104,14 +104,9 @@ def catcmd(fname):
         cat = 'xz -dc'
     return cat
 
-# TODO: is_utf8 could probably be implemented natively without iconv...
-
 def is_utf8(fname):
-    # TODO: better shell escaping or sequence based command invocation
-    cmd = commands.getstatusoutput(
-        '%s "%s" | iconv -f utf-8 -t utf-8 -o /dev/null' %
-        (catcmd(fname), fname))
-    return not cmd[0]
+    (sts, text) = getstatusoutput(catcmd(fname).split() + [fname])
+    return not sts and is_utf8_str(text)
 
 def is_utf8_str(s):
     try:
