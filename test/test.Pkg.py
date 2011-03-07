@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 import rpm
 import unittest
 import Testing
