@@ -120,7 +120,8 @@ _details = {}
 
 def addDetails(*details):
     for idx in range(len(details)/2):
-        _details[details[idx*2]] = details[idx*2+1]
+        if not details[idx*2] in _details:
+            _details[details[idx*2]] = details[idx*2+1]
 
 def badnessScore():
     global _badness_score
