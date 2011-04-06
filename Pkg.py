@@ -13,10 +13,10 @@ import commands
 import os
 import re
 import stat
+import subprocess
 import sys
 import tempfile
 import types
-import subprocess
 import urlparse
 
 try:
