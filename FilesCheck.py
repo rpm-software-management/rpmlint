@@ -692,14 +692,19 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             # Verify that the timestamp embedded in the .pyc
                             # header matches the mtime of the .py file:
                             pyc_timestamp = py_demarshal_long(chunk[4:8])
-                            if pyc_timestamp != files[source_file].mtime:
+                            # If it's a symlink, check target file mtime.
+                            srcfile = pkg.readlink(files[source_file])
+                            if not srcfile:
+                                printWarning(
+                                    pkg, 'python-bytecode-without-source', f)
+                            elif pyc_timestamp != srcfile.mtime:
                                 cts = datetime.fromtimestamp(
                                     pyc_timestamp).isoformat()
                                 sts = datetime.fromtimestamp(
-                                    files[source_file].mtime).isoformat()
+                                    srcfile.mtime).isoformat()
                                 printError(pkg,
                                            'python-bytecode-inconsistent-mtime',
-                                           f, cts, source_file, sts)
+                                           f, cts, srcfile.name, sts)
                     else:
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
