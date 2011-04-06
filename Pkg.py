@@ -17,6 +17,7 @@ import sys
 import tempfile
 import types
 import subprocess
+import urlparse
 
 try:
     import magic
@@ -647,6 +648,16 @@ class Pkg:
                 if filecaps:
                     pkgfile.filecaps = filecaps[idx]
                 self._files[pkgfile.name] = pkgfile
+
+    def readlink(self, pkgfile):
+        """Resolve symlinks for the given PkgFile, return the dereferenced
+           PkgFile if it is found in this package, None if not."""
+        result = pkgfile
+        while result and result.linkto:
+            linkpath = urlparse.urljoin(result.name, result.linkto)
+            linkpath = safe_normpath(linkpath)
+            result = self.files().get(linkpath)
+        return result
 
     # API to access dependency information
     def obsoletes(self):
