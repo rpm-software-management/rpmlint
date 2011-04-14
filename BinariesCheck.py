@@ -139,6 +139,15 @@ class BinaryInfo:
                     undef = BinaryInfo.undef_regex.search(l)
                     if undef:
                         self.undef.append(undef.group(1))
+                if self.undef:
+                    cmd = self.undef[:]
+                    cmd.insert(0, 'c++filt')
+                    try:
+                        res = Pkg.getstatusoutput(cmd)
+                        if not res[0]:
+                            self.undef = res[1].splitlines()
+                    except:
+                        pass
             else:
                 printWarning(pkg, 'ldd-failed', file)
             res = Pkg.getstatusoutput(
@@ -310,12 +319,6 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 # libs only, but that has potential to generate lots of
                 # false positives and noise.
                 for s in bin_info.undef:
-                    try:
-                        (sts, out) = Pkg.getstatusoutput(('c++filt', s))
-                        if not sts:
-                            s = out
-                    except:
-                        pass
                     printWarning(pkg, 'undefined-non-weak-symbol', fname, s)
                 for s in bin_info.unused:
                     printWarning(pkg, 'unused-direct-shlib-dependency',
