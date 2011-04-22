@@ -23,7 +23,14 @@ _rpmlint()
                         -e 's|.*/\([^/.]*\)\.py.*|\1|' )" -- "$cur" ) )
             return 0
             ;;
-        -I|--explain|-o|--option)
+        -I|--explain)
+            # should take --checkdir into account...
+            COMPREPLY=( $( compgen -W "$( sed -e '1,/^addDetails/d' \
+                -ne "s/^'\([^'[:space:]]\{1,\}\)',\$/\1/p" \
+                /usr/share/rpmlint/*Check.py 2>/dev/null )" -- "$cur" ) ) #'
+            return 0
+            ;;
+        -o|--option)
             # argument required but no completions available
             return 0
             ;;
