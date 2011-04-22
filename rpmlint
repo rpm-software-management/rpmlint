@@ -45,7 +45,7 @@ def usage(name):
     print ('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
-\t[-I|--explain <messageid,messageid,...>]
+\t[-I|--explain <messageid>]
 \t[-c|--check <check>]
 \t[-a|--all]
 \t[-C|--checkdir <checkdir>]
@@ -268,7 +268,7 @@ conf_file = _default_user_conf
 if not os.path.exists(os.path.expanduser(conf_file)):
     # deprecated backwards compatibility with < 0.88
     conf_file = '~/.rpmlintrc'
-info_error = None
+info_error = set()
 
 # load global config files
 configs = glob.glob('/etc/rpmlint/*config')
@@ -306,7 +306,8 @@ for o in opt:
     elif o[0] in ('-i', '--info'):
         Config.info = True
     elif o[0] in ('-I', '--explain'):
-        info_error = o[1]
+        # split by comma for deprecated backwards compatibility with < 1.2
+        info_error.update(o[1].split(','))
     elif o[0] in ('-h', '--help'):
         usage(sys.argv[0])
         sys.exit(0)
@@ -356,7 +357,7 @@ if info_error:
         Config.addCheck(c)
     for c in Config.allChecks():
         loadCheck(c)
-    for e in info_error.split(','):
+    for e in sorted(info_error):
         print "%s:" % e
         printDescriptions(e)
     sys.exit(0)
