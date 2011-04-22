@@ -46,7 +46,7 @@ _rpmlint()
         if [[ "$cur" != */* ]]; then
             type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
         fi
-        _filedir '@(rpm|spec)'
+        _filedir @([rs]pm|spec)
     fi
 }
 complete -F _rpmlint -o filenames rpmlint
@@ -74,7 +74,7 @@ _rpmdiff()
         if [[ "$cur" != */* ]]; then
             type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
         fi
-        _filedir rpm
+        _filedir [rs]pm
     fi
 }
 complete -F _rpmdiff -o filenames rpmdiff
