@@ -45,7 +45,7 @@ def usage(name):
     print ('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
-\t[-I <messageid,messageid,...>]
+\t[-I|--explain <messageid,messageid,...>]
 \t[-c|--check <check>]
 \t[-a|--all]
 \t[-C|--checkdir <checkdir>]
@@ -242,6 +242,7 @@ try:
     (opt, args) = getopt.getopt(sys.argv[1:],
                               'iI:c:C:hVvanE:f:o:',
                               ['info',
+                               'explain=',
                                'check=',
                                'checkdir=',
                                'help',
@@ -302,9 +303,9 @@ config_overrides = {}
 for o in opt:
     if o[0] in ('-c', '--check'):
         checks.append(o[1])
-    elif o[0] in('-i', '--info'):
+    elif o[0] in ('-i', '--info'):
         Config.info = True
-    elif o[0] == '-I':
+    elif o[0] in ('-I', '--explain'):
         info_error = o[1]
     elif o[0] in ('-h', '--help'):
         usage(sys.argv[0])

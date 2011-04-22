@@ -23,14 +23,14 @@ _rpmlint()
                         -e 's|.*/\([^/.]*\)\.py.*|\1|' )" -- "$cur" ) )
             return 0
             ;;
-        -I|-o|--option)
+        -I|--explain|-o|--option)
             # argument required but no completions available
             return 0
             ;;
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W '--info -I --check --all --checkdir
+        COMPREPLY=( $( compgen -W '--info --explain --check --all --checkdir
                         --help --verbose --extractdir --version --noexception
                         --file --option' -- "$cur" ) )
     else
