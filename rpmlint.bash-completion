@@ -41,11 +41,10 @@ _rpmlint()
                         --help --verbose --extractdir --version --noexception
                         --file --option' -- "$cur" ) )
     else
-        # Installed packages completion is slow, do it only if arg does not
-        # look like a path.
-        if [[ "$cur" != */* ]]; then
+        # Installed packages completion is potentially slow, do it only if $cur
+        # does not look like a path.
+        [[ $cur != */* && $cur != [.~]* ]] && \
             type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
-        fi
         _filedir @([rs]pm|spec)
     fi
 }
@@ -69,11 +68,10 @@ _rpmdiff()
     if [[ "$cur" == -* ]]; then
         COMPREPLY=( $( compgen -W '--help --ignore' -- "$cur" ) )
     else
-        # Installed packages completion is slow, do it only if arg does not
-        # look like a path.
-        if [[ "$cur" != */* ]]; then
+        # Installed packages completion is potentially slow, do it only if $cur
+        # does not look like a path.
+        [[ $cur != */* && $cur != [.~]* ]] && \
             type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
-        fi
         _filedir [rs]pm
     fi
 }
