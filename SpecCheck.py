@@ -415,7 +415,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     if defattr_regex.search(line):
                         files_has_defattr = True
                     elif not (files_has_defattr or attr_regex.search(line)):
-                        printError(pkg, 'files-attr-not-set')
+                        printWarning(pkg, 'files-attr-not-set')
 
                 # TODO: check scriptlets for these too?
                 if package_noarch.get(current_package) or \
@@ -753,9 +753,10 @@ regular space.''',
 
 'files-attr-not-set',
 '''A file or a directory entry in a %files section does not have attributes
-set which may result in security issues in the resulting binary package
-depending on the system where the package is built.  Add default attributes
-using %defattr before it in the %files section, or use per line %attr's.''',
+set which may result in unexpected file permissions and thus security issues
+in the resulting binary package depending on the build environment and rpmbuild
+version (typically < 4.4).  Add default attributes using %defattr before it in
+the %files section, or use per entry %attr's.''',
 
 'non-standard-group',
 '''The value of the Group tag in the package is not valid.  Valid groups are:
