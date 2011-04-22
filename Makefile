@@ -21,7 +21,7 @@ PACKAGE = rpmlint
 PYTHON = python
 
 # update this variable to create a new release
-VERSION := 1.1
+VERSION := 1.2
 TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
 SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
