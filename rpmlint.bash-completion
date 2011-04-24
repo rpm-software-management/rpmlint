@@ -44,7 +44,8 @@ _rpmlint()
         # Installed packages completion is potentially slow, do it only if $cur
         # does not look like a path.
         [[ $cur != */* && $cur != [.~]* ]] && \
-            type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
+            declare -F _rpm_installed_packages &>/dev/null && \
+            _rpm_installed_packages
         _filedir @([rs]pm|spec)
     fi
 }
@@ -71,7 +72,8 @@ _rpmdiff()
         # Installed packages completion is potentially slow, do it only if $cur
         # does not look like a path.
         [[ $cur != */* && $cur != [.~]* ]] && \
-            type _rpm_installed_packages &>/dev/null && _rpm_installed_packages
+            declare -F _rpm_installed_packages &>/dev/null && \
+            _rpm_installed_packages
         _filedir [rs]pm
     fi
 }
