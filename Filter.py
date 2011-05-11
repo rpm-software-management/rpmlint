@@ -49,7 +49,7 @@ def _print(msgtype, pkg, reason, details):
         badness = Config.badness(reason)
         # anything with badness is an error
         if badness:
-            msgtype == 'E'
+            msgtype = 'E'
         # errors without badness become warnings
         elif msgtype == 'E':
             msgtype = 'W'
