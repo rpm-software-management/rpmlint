@@ -443,6 +443,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'dir-or-file-in-usr-local', f)
             elif f.startswith('/var/local/'):
                 printError(pkg, 'dir-or-file-in-var-local', f)
+            elif f.startswith('/var/run/'):
+                if f not in ghost_files:
+                    printWarning(pkg, 'non-ghost-in-var-run', f)
+            elif f.startswith('/var/lock/'):
+                if f not in ghost_files:
+                    printWarning(pkg, 'non-ghost-in-var-lock', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
             elif f.startswith('/home/'):
@@ -1018,6 +1024,16 @@ for packages to install files in this directory.''',
 'dir-or-file-in-var-local',
 '''A file in the package is located in /var/local. It's not permitted
 for packages to install files in this directory.''',
+
+'non-ghost-in-var-run',
+'''A file or directory in the package is located in /var/run. Files installed
+in this directory should be marked as %ghost and created at runtime to work
+properly in tmpfs /var/run setups.''',
+
+'non-ghost-in-var-lock',
+'''A file or directory in the package is located in /var/lock. Files installed
+in this directory should be marked as %ghost and created at runtime to work
+properly in tmpfs /var/lock setups.''',
 
 'subdir-in-bin',
 '''The package contains a subdirectory in /usr/bin. It's not permitted to
