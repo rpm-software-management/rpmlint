@@ -130,6 +130,10 @@ from Config import *
 # Type: tuple of strings, default: see DEFAULT_SYSTEM_LIB_PATHS in BinariesCheck
 #setOption("SystemLibPaths", ('/lib', '/lib64', '/usr/lib', '/usr/lib64'))
 
+# Executables that must be compiled as position independent.
+# Type: regex, default: None
+#setOption("PieExecutables", '^/bin/(ping6?|su)$')
+
 # Whether to want default start/stop runlevels specified in init scripts.
 # Type: boolean, default: True
 #setOption("UseDefaultRunlevels", True)
