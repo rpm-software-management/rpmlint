@@ -177,6 +177,8 @@ so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
 validso_regex = re.compile('(\.so\.\d+(\.\d+)*|\d\.so)$')
 sparc_regex = re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths = Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
+pie_exec_re = Config.getOption('PieExecutables')
+if pie_exec_re: pie_exec_re = re.compile(pie_exec_re)
 usr_lib_regex = re.compile('^/usr/lib(64)?/')
 bin_regex = re.compile('^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex = re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
@@ -354,6 +356,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
                 if ocaml_mixed_regex.search(bin_info.tail):
                     printWarning(pkg, 'ocaml-mixed-executable', fname)
+
+                if not is_shobj and pie_exec_re and pie_exec_re.search(fname):
+                    printError(pkg, 'non-position-independent-executable',
+                               fname)
 
             if bin_info.readelf_error:
                 continue
@@ -547,6 +553,10 @@ form, make sure that rpmbuild does not strip it during the build, and on setups
 that use prelink, make sure that prelink does not strip it either, usually by
 placing a blacklist file in /etc/prelink.conf.d.  For more information, see
 http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
+
+'non-position-independent-executable',
+'''This executable must be position independent.  Check that it is built with
+-fPIE/-fpie in compiler flags and -pie in linker flags.''',
 )
 
 # BinariesCheck.py ends here
