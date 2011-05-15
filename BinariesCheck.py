@@ -342,6 +342,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if not is_exec and not is_shobj:
                 continue
 
+            if is_shobj and not is_exec and '.so' not in fname and \
+                    bin_regex.search(fname):
+                # pkgfile.magic does not contain "executable" for PIEs
+                is_exec = True
+
             if is_exec:
 
                 if bin_regex.search(fname):
