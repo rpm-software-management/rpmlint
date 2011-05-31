@@ -235,6 +235,12 @@ the "]".''' % scriptlet,
 policy type was found in the scriptlet. These types are subject to change
 on a policy version upgrade. Use the restorecon command which queries the
 currently loaded policy for the correct type instead.''',
+
+'non-empty-%s' % scriptlet,
+'''Scriptlets for the interpreter mentioned in the message should be empty.
+One common case where they are unintentionally not is when the specfile
+contains comments after the scriptlet and before the next section. Review
+and clean up the scriptlet contents if appropriate.''',
 )
 
 # PostCheck.py ends here
