@@ -12,6 +12,7 @@ Patch1:         Patch1.patch
 Patch2:         Patch2.patch
 Patch3:         Patch3.patch
 Patch4:         Patch4.patch
+Patch5:         Patch5.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides:       unversioned-provides, versioned-provides = 1.0
 Obsoletes:      versioned-obsoletes < 2.0
@@ -34,6 +35,8 @@ Noarch subpackage test.
 %patch1
 %patch
 %patch -P 2 -P 4
+sed -e s/foo/bar/ %{PATCH5} | %{__patch} -p1
+
 
 %build
 # %configure
