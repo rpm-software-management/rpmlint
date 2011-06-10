@@ -162,6 +162,10 @@ from Config import *
 # Type: boolean, default: True
 #setOption("UseVersionInChangelog", True)
 
+# Whether init scripts must use /var/lock/subsys
+# Type: boolean, default: True
+#setOption("UseVarLockSubsys", True)
+
 # Architecture dependent paths in which packages are allowed to install files
 # even if they are all non-binary.
 # Type: regexp, default: see BinariesCheck

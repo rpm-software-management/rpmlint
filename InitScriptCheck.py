@@ -29,6 +29,7 @@ dot_in_name_regex = re.compile('.*\..*')
 use_deflevels = Config.getOption('UseDefaultRunlevels', True)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
+use_subsys = Config.getOption('UseVarLockSubsys', True)
 
 LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',
                 'Should-Stop', 'Default-Start', 'Default-Stop',
@@ -152,7 +153,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 if res:
                     subsys_regex_found = True
                     name = res.group(1)
-                    if name != basename:
+                    if use_subsys and name != basename:
                         error = True
                         if name[0] == '$':
                             value = Pkg.substitute_shell_vars(name, content_str)
@@ -181,8 +182,10 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'no-reload-entry', fname)
             if not chkconfig_content_found:
                 printError(pkg, 'no-chkconfig-line', fname)
-            if not subsys_regex_found:
+            if not subsys_regex_found and use_subsys:
                 printError(pkg, 'subsys-not-used', fname)
+            elif subsys_regex_found and not use_subsys:
+                printError(pkg, 'subsys-unsupported', fname)
 
         goodnames = (pkg.name.lower(), pkg.name.lower() + 'd')
         if len(initscript_list) == 1 and initscript_list[0] not in goodnames:
@@ -237,6 +240,10 @@ at which to start and stop it.''',
 reasons, most services should not be. Use "-" as the default runlevel in the
 init script's "chkconfig:" line and/or remove the "Default-Start:" LSB keyword
 to fix this if appropriate for this service.''',
+
+'subsys-unsupported',
+'''The init script uses /var/lock/subsys which is not supported by
+this distribution.''',
 
 'subsys-not-used',
 '''While your daemon is running, you have to put a lock file in
