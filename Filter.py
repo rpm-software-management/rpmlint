@@ -41,7 +41,7 @@ def printError(pkg, reason, *details):
     _print("E", pkg, reason, details)
 
 def _print(msgtype, pkg, reason, details):
-    global printed_messages, _badness_score, _diagnostics
+    global _badness_score
 
     threshold = badnessThreshold()
 
@@ -102,7 +102,7 @@ def printAllReasons():
     if threshold < 0:
         return False
 
-    global _badness_score, _diagnostic
+    global _diagnostic
     _diagnostic.sort(key = _diag_sortkey, reverse = True)
     last_reason = ''
     for diag in _diagnostic:
@@ -127,7 +127,6 @@ def addDetails(*details):
             _details[details[idx*2]] = details[idx*2+1]
 
 def badnessScore():
-    global _badness_score
     return _badness_score
 
 def badnessThreshold():
