@@ -57,15 +57,11 @@ _checks = []
 _checks.extend(DEFAULT_CHECKS)
 
 def addCheck(check):
-    global _checks
-
     check = re.sub('\.py[co]?$', '', check)
     if check not in _checks:
         _checks.append(check)
 
 def allChecks():
-    global _checks
-
     if _checks == []:
         defaultChecks()
     return _checks
@@ -84,16 +80,11 @@ def resetChecks():
 _dirs = ["/usr/share/rpmlint"]
 
 def addCheckDir(dir):
-    global _dirs
-
     d = os.path.expanduser(dir)
-
     if d not in _dirs:
         _dirs.insert(0, d)
 
 def checkDirs():
-    global _dirs
-
     return _dirs
 
 # handle options
@@ -101,13 +92,9 @@ def checkDirs():
 _options = {}
 
 def setOption(name, value):
-    global _options
-
     _options[name] = value
 
 def getOption(name, default = ""):
-    global _options
-
     try:
         return _options[name]
     except:
@@ -118,14 +105,12 @@ _filters = []
 _filters_re = None
 
 def addFilter(s):
-    global _filters
     global _filters_re
 
     _filters.append(s)
     _filters_re = None
 
 def removeFilter(s):
-    global _filters
     global _filters_re
 
     try:
@@ -145,7 +130,6 @@ def badness(s):
 
 _non_named_group_re = re.compile('[^\\](\()[^:]')
 def isFiltered(s):
-    global _filters
     global _filters_re
 
     if _filters_re == None:
