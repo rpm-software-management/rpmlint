@@ -11,7 +11,7 @@ _rpmlint()
             _filedir -d
             return 0
             ;;
-        -f|--file)
+        -f|--file|--rawout)
             _filedir
             return 0
             ;;

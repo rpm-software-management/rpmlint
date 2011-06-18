@@ -8,6 +8,7 @@
 # Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 
+import locale
 import sys
 import textwrap
 
@@ -18,6 +19,7 @@ except ImportError:
     Testing = None
 
 
+_rawout = None
 _diagnostic = list()
 _badness_score = 0
 printed_messages = { "I": 0, "W": 0, "E": 0 }
@@ -26,7 +28,6 @@ if sys.stdout.isatty():
     def __print(s):
         print(s)
 else:
-    import locale
     def __print(s):
         print(s.encode(locale.getpreferredencoding(), "replace"))
 
@@ -68,6 +69,8 @@ def _print(msgtype, pkg, reason, details):
     if Testing and Testing.isTest():
         Testing.addOutput(s)
     else:
+        if _rawout:
+            print >>_rawout, s.encode(locale.getpreferredencoding(), "replace")
         if not Config.isFiltered(s):
             printed_messages[msgtype] += 1
             _badness_score += badness
@@ -129,6 +132,12 @@ def badnessScore():
 
 def badnessThreshold():
     return Config.getOption("BadnessThreshold", -1)
+
+def setRawOut(file):
+    global _rawout
+    if _rawout:
+        _rawout.close()
+    _rawout = open(file, "w")
 
 # Filter.py ends here
 
