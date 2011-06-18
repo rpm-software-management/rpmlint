@@ -31,7 +31,7 @@ sys.path.insert(1, '/usr/share/rpmlint')
 # place for those variables.
 
 from Filter import badnessScore, badnessThreshold, printAllReasons, \
-     printDescriptions, printInfo, printed_messages
+     printDescriptions, printInfo, printed_messages, setRawOut
 import AbstractCheck
 import Config
 import Pkg
@@ -54,6 +54,7 @@ def usage(name):
 \t[-E|--extractdir <dir>]
 \t[-V|--version]
 \t[-n|--noexception]
+\t[   --rawout <file>]
 \t[-f|--file <user config file to use instead of %s]
 \t[-o|--option <key value>]''' \
         % (name, _default_user_conf))
@@ -253,6 +254,7 @@ try:
                                'extractdir=',
                                'file=',
                                'option=',
+                               'rawout=',
                                ])
 except getopt.GetoptError, e:
     Pkg.warn("%s: %s" % (sys.argv[0], e))
@@ -334,6 +336,8 @@ for o in opt:
             config_overrides[kv[0]] = None
         else:
             config_overrides[kv[0]] = eval(kv[1])
+    elif o[0] in ('--rawout',):
+        setRawOut(o[1])
 
 # load user config file
 try:
