@@ -25,10 +25,8 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
 
     def __checkRequirements(self, pkg):
-        doc_files = pkg.docFiles()
-        if not doc_files:
-            return
 
+        doc_files = pkg.docFiles()
         files = pkg.files()
 
         reqs = {}
@@ -64,11 +62,19 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
                 for f in req_files:
                     printWarning(pkg, "doc-file-dependency", f, dep)
 
+    def __checkUnwantedFiles(self, pkg):
+
+        for docfile in pkg.docFiles():
+            if docfile.endswith("/INSTALL"):
+                printWarning(pkg, "install-file-in-docs", docfile)
+
     def check(self, pkg):
-        if pkg.isSource():
+
+        if pkg.isSource() or not pkg.docFiles():
             return
 
         self.__checkRequirements(pkg)
+        self.__checkUnwantedFiles(pkg)
 
 
 check = DocFilesCheck()
@@ -78,6 +84,13 @@ addDetails(
 '''An included file marked as %doc creates a possible additional dependency in
 the package.  Usually, this is not wanted and may be caused by eg. example
 scripts with executable bits set included in the package's documentation.''',
+
+'install-file-in-docs',
+'''A file whose name suggests that it contains installation instructions is
+included in the package.  Such instructions are often not relevant for already
+installed packages; if this is the case for this file and it does not contain
+any information that is of interest after the package has been built and
+installed, do not include the file in the binary package.''',
 )
 
 # DocFilesCheck.py ends here
