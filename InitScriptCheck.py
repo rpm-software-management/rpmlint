@@ -187,11 +187,12 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             elif subsys_regex_found and not use_subsys:
                 printError(pkg, 'subsys-unsupported', fname)
 
-        pkgname = re.sub("-sysvinit$", "", pkg.name.lower())
-        goodnames = (pkgname, pkgname + 'd')
-        if len(initscript_list) == 1 and initscript_list[0] not in goodnames:
-            printWarning(pkg, 'incoherent-init-script-name', initscript_list[0],
-                         str(goodnames))
+        if len(initscript_list) == 1:
+            pkgname = re.sub("-sysvinit$", "", pkg.name.lower())
+            goodnames = (pkgname, pkgname + 'd')
+            if initscript_list[0] not in goodnames:
+                printWarning(pkg, 'incoherent-init-script-name',
+                             initscript_list[0], str(goodnames))
 
 
 # Create an object to enable the auto registration of the test
