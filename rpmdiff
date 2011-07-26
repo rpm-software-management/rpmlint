@@ -40,7 +40,8 @@ class Rpmdiff:
              rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_GROUP,
              rpm.RPMTAG_LICENSE, rpm.RPMTAG_URL,
              rpm.RPMTAG_PREIN, rpm.RPMTAG_POSTIN,
-             rpm.RPMTAG_PREUN, rpm.RPMTAG_POSTUN)
+             rpm.RPMTAG_PREUN, rpm.RPMTAG_POSTUN,
+             rpm.RPMTAG_PRETRANS, rpm.RPMTAG_POSTTRANS)
 
     PRCO = ( 'REQUIRES', 'PROVIDES', 'CONFLICTS', 'OBSOLETES')
 
@@ -188,6 +189,10 @@ class Rpmdiff:
             ss.append("preun")
         elif req & rpm.RPMSENSE_SCRIPT_POSTUN:
             ss.append("postun")
+        elif req & getattr(rpm, "RPMSENSE_PRETRANS", 1 << 7): # rpm >= 4.9.0
+            ss.append("pretrans")
+        elif req & getattr(rpm, "RPMSENSE_POSTTRANS", 1 << 5): # rpm >= 4.9.0
+            ss.append("posttrans")
         if ss:
             s += "(%s)" % ",".join(ss)
 
