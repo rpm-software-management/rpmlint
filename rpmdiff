@@ -174,7 +174,7 @@ class Rpmdiff:
     # output the right requires string according to RPMSENSE_* const
     def req2str(self, req):
         s = "REQUIRES"
-        # we want to use 64 even with rpm versions that define RPMSENSE_PREQREQ
+        # we want to use 64 even with rpm versions that define RPMSENSE_PREREQ
         # as 0 to get sane results when comparing packages built with an old
         # (64) version and a new (0) one
         if req & (rpm.RPMSENSE_PREREQ or 64):
