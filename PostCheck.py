@@ -191,10 +191,12 @@ class PostCheck(AbstractCheck.AbstractCheck):
             if prog == '/usr/bin/perl':
                 if incorrect_perl_script(prog, script):
                     printError(pkg, 'perl-syntax-error-in-' + tag[2])
+            elif prog.endswith('sh'):
+                res = single_command_regex.search(script)
+                if res:
+                    printWarning(pkg, 'one-line-command-in-' + tag[2],
+                                 res.group(1))
 
-            res = single_command_regex.search(script)
-            if res:
-                printWarning(pkg, 'one-line-command-in-' + tag[2], res.group(1))
         elif prog not in empty_shells and prog in valid_shells:
             printWarning(pkg, 'empty-' + tag[2])
 
