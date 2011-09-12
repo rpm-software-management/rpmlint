@@ -39,6 +39,7 @@ obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*(\S+)")
 buildroot_regex = re.compile('^BuildRoot\s*:\s*(\S+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*(\S+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*(\S+)', re.IGNORECASE)
+buildarch_regex = re.compile('^BuildArch(itectures)?\s*:\s*(.+?)\s*$', re.IGNORECASE)
 noarch_regex = re.compile('^BuildArch(?:itectures)?\s*:\s*\\bnoarch\\b', re.IGNORECASE)
 make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
@@ -343,6 +344,10 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'hardcoded-path-in-buildroot-tag',
                                      res.group(1))
 
+                res = buildarch_regex.search(line)
+                if res and res.group(2) != "noarch":
+                    printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(2))
+
                 res = packager_regex.search(line)
                 if res:
                     printWarning(pkg, 'hardcoded-packager-tag', res.group(1))
@@ -626,6 +631,11 @@ by something like %{_tmppath}/%name-root.''',
 'hardcoded-packager-tag',
 '''The Packager tag is hardcoded in your spec file. It should be removed, so
 as to use rebuilder's own defaults.''',
+
+'buildarch-instead-of-exclusivearch-tag',
+'''Use ExclusiveArch instead of BuildArch (or BuildArchitectures)
+to restrict build on some specific architectures.
+Only use BuildArch with noarch''',
 
 'hardcoded-prefix-tag',
 '''The Prefix tag is hardcoded in your spec file. It should be removed, so as
