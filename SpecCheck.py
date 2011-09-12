@@ -40,7 +40,6 @@ buildroot_regex = re.compile('^BuildRoot\s*:\s*(\S+)', re.IGNORECASE)
 prefix_regex = re.compile('^Prefix\s*:\s*(\S+)', re.IGNORECASE)
 packager_regex = re.compile('^Packager\s*:\s*(\S+)', re.IGNORECASE)
 buildarch_regex = re.compile('^BuildArch(itectures)?\s*:\s*(.+?)\s*$', re.IGNORECASE)
-noarch_regex = re.compile('^BuildArch(?:itectures)?\s*:\s*\\bnoarch\\b', re.IGNORECASE)
 make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('^[^#]*(?:(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
@@ -345,8 +344,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                      res.group(1))
 
                 res = buildarch_regex.search(line)
-                if res and res.group(2) != "noarch":
-                    printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(2))
+                if res:
+                    if res.group(2) != "noarch":
+                        printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(2))
+                    else:
+                        package_noarch[current_package] = True
 
                 res = packager_regex.search(line)
                 if res:
@@ -356,10 +358,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     if not res.group(1).startswith('%'):
                         printWarning(pkg, 'hardcoded-prefix-tag', res.group(1))
-
-                res = noarch_regex.search(line)
-                if res:
-                    package_noarch[current_package] = True
 
                 res = prereq_regex.search(line)
                 if res:
