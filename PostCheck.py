@@ -116,11 +116,11 @@ class PostCheck(AbstractCheck.AbstractCheck):
             prog = pkg[tag[1]]
 
             if not isinstance(script, types.ListType):
-                self.check_aux(pkg, files, prog, script, tag, prereq)
+                self.check_aux(pkg, files, prog, script, tag[2], prereq)
             else:
                 for idx in range(0, len(prog)):
                     self.check_aux(
-                        pkg, files, prog[idx], script[idx], tag, prereq)
+                        pkg, files, prog[idx], script[idx], tag[2], prereq)
 
         ghost_files = pkg.ghostFiles()
         if ghost_files:
@@ -140,21 +140,21 @@ class PostCheck(AbstractCheck.AbstractCheck):
         if script:
             if prog:
                 if prog not in valid_shells:
-                    printError(pkg, 'invalid-shell-in-' + tag[2], prog)
+                    printError(pkg, 'invalid-shell-in-' + tag, prog)
                 if prog in empty_shells:
-                    printError(pkg, 'non-empty-' + tag[2], prog)
+                    printError(pkg, 'non-empty-' + tag, prog)
             if prog in syntaxcheck_shells or prog == '/usr/bin/perl':
                 if percent_regex.search(script):
-                    printWarning(pkg, 'percent-in-' + tag[2])
+                    printWarning(pkg, 'percent-in-' + tag)
                 if bracket_regex.search(script):
-                    printWarning(pkg, 'spurious-bracket-in-' + tag[2])
+                    printWarning(pkg, 'spurious-bracket-in-' + tag)
                 res = dangerous_command_regex.search(script)
                 if res:
-                    printWarning(pkg, 'dangerous-command-in-' + tag[2],
+                    printWarning(pkg, 'dangerous-command-in-' + tag,
                                  res.group(2))
                 res = selinux_regex.search(script)
                 if res:
-                    printError(pkg, 'forbidden-selinux-command-in-' + tag[2],
+                    printError(pkg, 'forbidden-selinux-command-in-' + tag,
                                res.group(2))
 
                 if 'update-menus' in script:
@@ -165,9 +165,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
                             break
                     if menu_error:
                         printError(pkg, 'update-menus-without-menu-file-in-' +
-                                   tag[2])
+                                   tag)
                 if tmp_regex.search(script):
-                    printError(pkg, 'use-tmp-in-' + tag[2])
+                    printError(pkg, 'use-tmp-in-' + tag)
                 for c in prereq_assoc:
                     if c[0].search(script):
                         found = False
@@ -180,25 +180,25 @@ class PostCheck(AbstractCheck.AbstractCheck):
 
             if prog in syntaxcheck_shells:
                 if incorrect_shell_script(prog, script):
-                    printError(pkg, 'shell-syntax-error-in-' + tag[2])
+                    printError(pkg, 'shell-syntax-error-in-' + tag)
                 if home_regex.search(script):
-                    printError(pkg, 'use-of-home-in-' + tag[2])
+                    printError(pkg, 'use-of-home-in-' + tag)
                 res = bogus_var_regex.search(script)
                 if res:
-                    printWarning(pkg, 'bogus-variable-use-in-' + tag[2],
+                    printWarning(pkg, 'bogus-variable-use-in-' + tag,
                                  res.group(1))
 
             if prog == '/usr/bin/perl':
                 if incorrect_perl_script(prog, script):
-                    printError(pkg, 'perl-syntax-error-in-' + tag[2])
+                    printError(pkg, 'perl-syntax-error-in-' + tag)
             elif prog.endswith('sh'):
                 res = single_command_regex.search(script)
                 if res:
-                    printWarning(pkg, 'one-line-command-in-' + tag[2],
+                    printWarning(pkg, 'one-line-command-in-' + tag,
                                  res.group(1))
 
         elif prog not in empty_shells and prog in valid_shells:
-            printWarning(pkg, 'empty-' + tag[2])
+            printWarning(pkg, 'empty-' + tag)
 
 # Create an object to enable the auto registration of the test
 check = PostCheck()
