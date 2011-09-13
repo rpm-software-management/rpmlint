@@ -748,6 +748,18 @@ class Pkg:
                              rpm.RPMTAG_OBSOLETEFLAGS,
                              rpm.RPMTAG_OBSOLETEVERSION)
 
+    def scriptprog(self, which):
+        """Get the specified script interpreter as a string.
+           Depending on rpm-python version, the string may or may not include
+           interpreter arguments, if any."""
+        prog = self[which]
+        if prog is None:
+            prog = ""
+        elif not isinstance(prog, basestring):
+            # http://rpm.org/ticket/847#comment:2
+            prog = " ".join(prog)
+        return prog
+
 def getInstalledPkgs(name):
     """Get list of installed package objects by name."""
 

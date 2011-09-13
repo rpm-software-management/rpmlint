@@ -512,15 +512,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                    oct(perm))
 
                 # Prefetch scriptlets, strip quotes from them (#169)
-                postin = pkg[rpm.RPMTAG_POSTIN] or pkg[rpm.RPMTAG_POSTINPROG]
+                postin = pkg[rpm.RPMTAG_POSTIN] or \
+                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
                 if postin:
                     postin = quotes_regex.sub('', postin)
-                postun = pkg[rpm.RPMTAG_POSTUN] or pkg[rpm.RPMTAG_POSTUNPROG]
+                postun = pkg[rpm.RPMTAG_POSTUN] or \
+                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
                 if postun:
                     postun = quotes_regex.sub('', postun)
-                preun = pkg[rpm.RPMTAG_PREUN] or pkg[rpm.RPMTAG_PREUNPROG]
-                if preun:
-                    preun = quotes_regex.sub('', preun)
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
@@ -598,6 +597,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     elif not install_info_regex.search(postin):
                         printError(pkg, 'postin-without-install-info', f)
 
+                    preun = pkg[rpm.RPMTAG_PREUN] or \
+                        pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
                     if not postun and not preun:
                         printError(pkg,
                                    'info-files-without-install-info-postun', f)
