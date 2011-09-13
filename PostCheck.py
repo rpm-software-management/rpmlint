@@ -113,11 +113,14 @@ class PostCheck(AbstractCheck.AbstractCheck):
 
         for tag in script_tags:
             script = pkg[tag[0]]
-            prog = pkg[tag[1]]
 
             if not isinstance(script, types.ListType):
+                prog = pkg.scriptprog(tag[1])
+                if prog:
+                    prog = prog.split()[0]
                 self.check_aux(pkg, files, prog, script, tag[2], prereq)
             else:
+                prog = pkg[tag[1]]
                 for idx in range(0, len(prog)):
                     self.check_aux(
                         pkg, files, prog[idx], script[idx], tag[2], prereq)
