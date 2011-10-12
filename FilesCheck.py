@@ -749,7 +749,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res = man_base_regex.search(f)
                 if res:
                     man_basenames.add(res.group(1))
-                    if use_utf8:
+                    if use_utf8 and chunk:
                         # TODO: better shell escaping or seq based invocation
                         cmd = commands.getstatusoutput(
                             'env LC_ALL=C %s "%s" | gtbl | '
@@ -808,7 +808,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             fsf_wrong_address_regex.search(chunk):
                         printError(pkg, 'incorrect-fsf-address', f)
 
-                elif is_doc and compr_regex.search(f):
+                elif is_doc and chunk and compr_regex.search(f):
                     ff = compr_regex.sub('', f)
                     if not skipdocs_regex.search(ff):
                         # compressed docs, eg. info and man files etc
