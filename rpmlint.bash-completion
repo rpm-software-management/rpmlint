@@ -1,6 +1,16 @@
 # bash-completion add-on for rpmlint
 # http://bash-completion.alioth.debian.org/
 
+_rpmlint_installed_packages()
+{
+    if declare -F _rpm_installed_packages &>/dev/null ; then
+        _rpm_installed_packages
+    elif declare -F _xfunc ; then
+        # bash-completion 1.90+ dynamic loading
+        _xfunc rpm _rpm_installed_packages
+    fi
+}
+
 _rpmlint()
 {
     COMPREPLY=()
@@ -43,9 +53,7 @@ _rpmlint()
     else
         # Installed packages completion is potentially slow, do it only if $cur
         # does not look like a path.
-        [[ $cur != */* && $cur != [.~]* ]] && \
-            declare -F _rpm_installed_packages &>/dev/null && \
-            _rpm_installed_packages
+        [[ $cur != */* && $cur != [.~]* ]] && _rpmlint_installed_packages
         _filedir @([rs]pm|spec)
     fi
 }
@@ -71,9 +79,7 @@ _rpmdiff()
     else
         # Installed packages completion is potentially slow, do it only if $cur
         # does not look like a path.
-        [[ $cur != */* && $cur != [.~]* ]] && \
-            declare -F _rpm_installed_packages &>/dev/null && \
-            _rpm_installed_packages
+        [[ $cur != */* && $cur != [.~]* ]] && _rpmlint_installed_packages
         _filedir [rs]pm
     fi
 }
