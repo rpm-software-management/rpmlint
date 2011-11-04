@@ -39,12 +39,20 @@ clean:
 	rm -f *~ *.pyc *.pyo $(GENERATED)
 
 install: all
-	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(ETCDIR)/bash_completion.d $(DESTDIR)$(MANDIR)/man1
+	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(MANDIR)/man1
 	-cp -p *.pyc $(DESTDIR)$(LIBDIR)
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
 	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
-	cp -p rpmlint.bash-completion $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint
+	compdir=`pkg-config --variable=completionsdir bash-completion 2>/dev/null` ; \
+	if [ "x$$compdir" = "x" ] ; then \
+		mkdir -p $(DESTDIR)$(ETCDIR)/bash_completion.d ; \
+		cp -p rpmlint.bash-completion $(DESTDIR)$(ETCDIR)/bash_completion.d/rpmlint ; \
+	else \
+		mkdir -p $(DESTDIR)$$compdir ; \
+		cp -p rpmlint.bash-completion $(DESTDIR)$$compdir/rpmlint ; \
+		ln -s rpmlint $(DESTDIR)$$compdir/rpmdiff ; \
+	fi
 	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
 
 verify:
