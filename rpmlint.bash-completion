@@ -5,7 +5,7 @@ _rpmlint_installed_packages()
 {
     if declare -F _rpm_installed_packages &>/dev/null ; then
         _rpm_installed_packages
-    elif declare -F _xfunc ; then
+    elif declare -F _xfunc &>/dev/null ; then
         # bash-completion 1.90+ dynamic loading
         _xfunc rpm _rpm_installed_packages
     fi
