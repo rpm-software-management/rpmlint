@@ -745,7 +745,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
-                clt -= 12 * 3600 # rpm timestamps appear to be at noon
+                clt -= clt % (24*3600) # roll back to 00:00:00, see #246
                 if clt < oldest_changelog_timestamp:
                     printWarning(pkg, 'changelog-time-overflow',
                                  time.strftime("%Y-%m-%d", time.gmtime(clt)))
