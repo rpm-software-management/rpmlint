@@ -171,7 +171,6 @@ class BinaryInfo:
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile('[^.][0-9]')
-libc_regex = re.compile('libc\.')
 ldso_soname_regex = re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
 validso_regex = re.compile('(\.so\.\d+(\.\d+)*|\d\.so)$')
@@ -376,14 +375,14 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             else:
                 # linked against libc ?
-                if not libc_regex.search(fname) and \
+                if "libc." not in fname and \
                         (not bin_info.soname or \
-                             (not libc_regex.search(bin_info.soname) and \
+                             ("libc." not in bin_info.soname and \
                               not ldso_soname_regex.search(bin_info.soname))):
 
                     found_libc = False
                     for lib in bin_info.needed:
-                        if libc_regex.search(lib):
+                        if "libc." in lib:
                             found_libc = True
                             break
 
