@@ -25,7 +25,6 @@ subsys_regex = re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
 chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
 status_regex = re.compile('^[^#]*status', re.MULTILINE)
 reload_regex = re.compile('^[^#]*reload', re.MULTILINE)
-dot_in_name_regex = re.compile('.*\..*')
 use_deflevels = Config.getOption('UseDefaultRunlevels', True)
 lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
@@ -59,7 +58,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             if pkgfile.mode & 0500 != 0500:
                 printError(pkg, 'init-script-non-executable', fname)
 
-            if dot_in_name_regex.match(basename):
+            if "." in basename:
                 printError(pkg, 'init-script-name-with-dot', fname)
 
             # check chkconfig call in %post and %preun
