@@ -47,9 +47,12 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             core_reqs[i] = []
 
         for i in files:
-            if not reqs[i]:      continue       # skip empty dependencies
-            elif i in doc_files: target = doc_reqs
-            else:                target = core_reqs
+            if not reqs[i]:
+                continue # skip empty dependencies
+            if i in doc_files:
+                target = doc_reqs
+            else:
+                target = core_reqs
 
             for r in reqs[i]:
                 if r not in target:

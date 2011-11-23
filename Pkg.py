@@ -88,7 +88,8 @@ def getstatusoutput(cmd, stdoutonly = False):
     proc.stdin.close()
     text = proc.stdout.read()
     sts = proc.wait()
-    if sts is None: sts = 0
+    if sts is None:
+        sts = 0
     if text.endswith('\n'):
         text = text[:-1]
     return sts, text

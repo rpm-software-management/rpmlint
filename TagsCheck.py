@@ -735,11 +735,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             expected.append(
                                 extension_regex.sub('', expected[0]))
                         if ret.group(1) not in expected:
-                            if len(expected) == 1: expected = expected[0]
+                            if len(expected) == 1:
+                                expected = expected[0]
                             printWarning(pkg, 'incoherent-version-in-changelog',
                                          ret.group(1), expected)
 
-            if clt: changelog = changelog + clt
+            if clt:
+                changelog = changelog + clt
             if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
                 printError(pkg, 'tag-not-utf8', '%changelog')
 
