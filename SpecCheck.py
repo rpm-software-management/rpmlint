@@ -264,7 +264,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if res:
                 pnum = res.group(1) or 0
                 for tmp in applied_patch_p_regex.findall(line) or [pnum]:
-                    pnum = int(tmp);
+                    pnum = int(tmp)
                     applied_patches.append(pnum)
                     if ifarch_depth > 0:
                         applied_patches_ifarch.append(pnum)
