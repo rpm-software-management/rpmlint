@@ -51,8 +51,8 @@ class AbstractCheck:
             return
 
         if self.verbose:
-                printInfo(pkg, 'checking-url', url,
-                          '(timeout %s seconds)' % self.network_timeout)
+            printInfo(pkg, 'checking-url', url,
+                      '(timeout %s seconds)' % self.network_timeout)
 
         # Could use timeout kwarg to urlopen, but that's python >= 2.6 only
         socket.setdefaulttimeout(self.network_timeout)
