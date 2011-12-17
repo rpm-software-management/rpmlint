@@ -247,6 +247,8 @@ man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 fsf_license_regex = re.compile('(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
 fsf_wrong_address_regex = re.compile('(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
 
+scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
+
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
 text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
@@ -763,6 +765,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                 continue
                             printWarning(pkg, "manual-page-warning", f,
                                          line[res.end(1):])
+
+                if f.endswith(".svgz") and f[0:-1] not in files \
+                        and scalable_icon_regex.search(f):
+                    printWarning(pkg, "gzipped-svg-icon", f)
 
                 # text file checks
                 if istext:
@@ -1330,6 +1336,10 @@ as intended.''',
 '''The Free Software Foundation address in this file seems to be outdated or
 misspelled.  Ask upstream to update the address, or if this is a license file,
 possibly the entire file with a new copy available from the FSF.''',
+
+'gzipped-svg-icon',
+'''Not all desktop environments that support SVG icons support them gzipped
+(.svgz).  Install the icon as plain uncompressed SVG.''',
 )
 
 # FilesCheck.py ends here
