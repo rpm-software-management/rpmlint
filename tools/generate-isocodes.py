@@ -18,7 +18,11 @@ for entry in tree.findall("iso_3166_entry"):
 # 2-letter codes
 tree = ElementTree(file = "/usr/share/xml/iso-codes/iso_639.xml")
 for entry in tree.findall("iso_639_entry"):
-    langs.add(entry.get("iso_639_1_code"))
+    for attr in ("iso_639_1_code", "iso_639_2T_code"):
+        code = entry.get(attr)
+        if code:
+            langs.add(code)
+            break
 
 # Remaining 2-letter codes plus 3-letter ones for which we have no 2-letter one
 tree = ElementTree(file = "/usr/share/xml/iso-codes/iso_639_3.xml")
