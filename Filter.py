@@ -29,7 +29,9 @@ if sys.stdout.isatty():
         print(s)
 else:
     def __print(s):
-        print(s.encode(locale.getpreferredencoding(), "replace"))
+        if isinstance(s, unicode):
+            s = s.encode(locale.getpreferredencoding(), "replace")
+        print(s)
 
 def printInfo(pkg, reason, *details):
     _print("I", pkg, reason, details)
