@@ -564,7 +564,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         if clen is not None or cmd5 is not None:
                             # Not using path from urlparse results to match how
                             # rpm itself parses the basename.
-                            pkgfile = pkg.files()[url.split("/")[-1]]
+                            pkgfile = pkg.files().get(url.split("/")[-1])
                             if pkgfile:
                                 if clen is not None and pkgfile.size != clen:
                                     printWarning(pkg, 'file-size-mismatch',
