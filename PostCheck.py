@@ -224,7 +224,7 @@ for scriptlet in (
 
 It will avoid the fork of a shell interpreter to execute your command as
 well as allows rpm to automatically mark the dependency on your command
-for the excecution of the scriptlet.''' % (scriptlet, scriptlet),
+for the execution of the scriptlet.''' % (scriptlet, scriptlet),
 
 'percent-in-%s' % scriptlet,
 '''The %s scriptlet contains a "%%" in a context which might indicate it being
