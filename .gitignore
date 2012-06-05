@@ -1,0 +1,7 @@
+*.pyo
+*.pyc
+*.flog
+*.xz
+/AUTHORS
+/ChangeLog
+/__version__.py
