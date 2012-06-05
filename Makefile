@@ -21,8 +21,6 @@ PYTHON = python
 
 # update this variable to create a new release
 VERSION := 1.4
-TAG := $(shell echo "V$(VERSION)" | tr -- '-.' '__')
-SVNBASE = $(shell svn info . | grep URL | sed -e 's/[^:]*:\s*//' -e 's,/\(trunk\|tags/.\+\)$$,,')
 
 # for the [A-Z]* part
 LC_ALL:=C
@@ -79,18 +77,6 @@ tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	xz -9evf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
-
-export:
-	svn export $(SVNBASE)/tags/$(TAG) $(PACKAGE)-$(VERSION)
-
-tag:
-	@if svn list $(SVNBASE)/tags/$(TAG) &>/dev/null ; then \
-	    echo "ERROR: tag \"$(TAG)\" probably already exists" ; \
-	    exit 1 ; \
-	else \
-	    echo 'svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG)' ; \
-	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
-	fi
 
 ChangeLog: $(FILES)
 	git2cl > $@
