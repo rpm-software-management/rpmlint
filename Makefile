@@ -96,9 +96,8 @@ tag:
 AUTHORS: authors.xml authors.xsl
 	xsltproc authors.xsl authors.xml | sort -u > $@
 
-ChangeLog: $(FILES) authors.xml
-	svn2cl --authors=authors.xml --group-by-day --reparagraph \
-		--strip-prefix=trunk
+ChangeLog: $(FILES)
+	git2cl > $@
 
 __version__.py: Makefile
 	echo "# Automatically generated, do not edit" > $@
