@@ -1,6 +1,6 @@
-The latest development version can be retrieved from anonymous Subversion:
+The latest development version can be retrieved from anonymous Git:
 
-$ svn checkout http://rpmlint.zarb.org/svn/trunk/
+$ git clone git://git.code.sf.net/p/rpmlint/code rpmlint
 
 To run rpmlint from the working tree or in place from an unpacked tarball:
 
