@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Sat Oct 23 15:52:27 1999
-# Version       : $Id$
 # Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 

@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Tue Sep 28 00:05:33 1999
-# Version       : $Id$
 # Purpose       : check the Distribution specificities in a binary rpm package.
 #############################################################################
 

@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Mon Nov 22 20:02:56 1999
-# Version       : $Id$
 # Purpose       : checks i18n bugs.
 #############################################################################
 

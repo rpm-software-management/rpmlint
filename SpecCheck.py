@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Thu Oct  7 17:06:14 1999
-# Version       : $Id$
 # Purpose       : check the spec file of a source rpm.
 #############################################################################
 

@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Tue Sep 28 07:18:06 1999
-# Version       : $Id$
 # Purpose       : provide an API to handle a rpm package either by accessing
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################

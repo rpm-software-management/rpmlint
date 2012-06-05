@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Fri Oct 15 20:04:25 1999
-# Version       : $Id$
 # Purpose       : handle configuration options. To be used from config files.
 #############################################################################
 

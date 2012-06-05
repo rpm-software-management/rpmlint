@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # check the rpm file for various errors.
-# $Id$
 
 # Copyright (C) 2006 Michael Scherer <misc@zarb.org>
 #                    Ville Skyttä <ville.skytta@iki.fi>

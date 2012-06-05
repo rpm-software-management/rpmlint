@@ -3,7 +3,6 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : InitScriptCheck.py
-# Version         : $Id$
 # Author          : Frederic Lepied
 # Created On      : Fri Aug 25 09:26:37 2000
 # Purpose         : check init scripts (files in /etc/rc.d/init.d)
