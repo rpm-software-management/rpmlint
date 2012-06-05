@@ -15,7 +15,7 @@ MANDIR=/usr/share/man
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1 \
 	test.sh test/*.rpm test/*.spec test/*.py
-GENERATED = AUTHORS ChangeLog __version__.py
+GENERATED = ChangeLog __version__.py
 
 PACKAGE = rpmlint
 PYTHON = python
@@ -92,9 +92,6 @@ tag:
 	    echo 'svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG)' ; \
 	    svn copy -m "Tag $(TAG)." . $(SVNBASE)/tags/$(TAG) ; \
 	fi
-
-AUTHORS: authors.xml authors.xsl
-	xsltproc authors.xsl authors.xml | sort -u > $@
 
 ChangeLog: $(FILES)
 	git2cl > $@
