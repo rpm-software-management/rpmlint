@@ -3,7 +3,6 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : MenuCheck.py
-# Version         : $Id$
 # Author          : Frederic Lepied
 # Created On      : Mon Mar 20 07:43:37 2000
 #---------------------------------------------------------------

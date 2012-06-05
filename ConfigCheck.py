@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Sun Oct  3 21:48:20 1999
-# Version       : $Id$
 # Purpose       :
 #############################################################################
 

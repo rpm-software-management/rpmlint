@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Fri Oct 15 17:40:32 1999
-# Version       : $Id$
 # Purpose       : check FHS conformity
 #############################################################################
 

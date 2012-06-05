@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Version         : $Id$
 
 #
 # check xdg file format violation

@@ -3,7 +3,6 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : NamingPolicyCheck.py
-# Version         : $Id$
 # Author          : Michael Scherer
 # Created On      : Mon May 19 11:25:37 2003
 # Purpose         : Check package names according to their content.

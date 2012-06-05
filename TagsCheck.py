@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Tue Sep 28 00:03:24 1999
-# Version       : $Id$
 # Purpose       : Check a package to see if some rpm tags are present
 #############################################################################
 

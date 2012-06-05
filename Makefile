@@ -3,7 +3,6 @@
 # Package	: rpmlint
 # Author	: Frederic Lepied
 # Created on	: Mon Sep 30 13:20:18 1999
-# Version	: $Id$
 # Purpose	: rules to manage the files.
 #############################################################################
 

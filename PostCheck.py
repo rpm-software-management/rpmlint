@@ -3,7 +3,6 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : PostCheck.py
-# Version         : $Id$
 # Author          : Frederic Lepied
 # Created On      : Wed Jul  5 13:30:17 2000
 # Purpose         : Check post/pre scripts

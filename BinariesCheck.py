@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Tue Sep 28 07:01:42 1999
-# Version       : $Id$
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 

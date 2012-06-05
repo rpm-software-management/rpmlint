@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Mon Oct  4 19:32:49 1999
-# Version       : $Id$
 # Purpose       : test various aspects on files: locations, owner, groups,
 #                 permission, setuid, setgid...
 #############################################################################

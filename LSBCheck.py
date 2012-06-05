@@ -3,7 +3,6 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : LSBCheck.py
-# Version         : $Id$
 # Author          : Frederic Lepied
 # Created On      : Tue Jan 30 14:44:37 2001
 # Purpose         : LSB non compliance checks

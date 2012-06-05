@@ -4,7 +4,6 @@
 # Package       : rpmlint
 # Author        : Frederic Lepied
 # Created on    : Wed Oct 27 21:17:03 1999
-# Version       : $Id$
 # Purpose       : verify source package correctness.
 #############################################################################
 

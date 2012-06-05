@@ -3,9 +3,8 @@
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : PamCheck.py
-# Version         : $Id: /local/personal/PamCheck.py 4977 2006-01-31T09:29:13.664059Z misc  $
 # Author          : Michael Scherer
-# Created On      : 031/01/2006
+# Created On      : 31/01/2006
 # Purpose         : Apply pam policy
 #---------------------------------------------------------------
 
