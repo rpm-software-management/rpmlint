@@ -232,7 +232,7 @@ standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 non_readable_regexs = (re.compile('^/var/log/'),
                        re.compile('^/etc/(g?shadow-?|securetty)$'))
 
-man_base_regex = re.compile(r'^/usr(?:/share)?/man/man[^/]+/(.+)\.[1-9n]')
+man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man[^/]+/(.+)\.[1-9n]')
 man_warn_regex = re.compile(r'^([^:]+:)\d+:\s*')
 man_nowarn_regex = re.compile(
     # From Lintian: ignore common undefined macros from pod2man << Perl 5.10
