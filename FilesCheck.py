@@ -274,8 +274,13 @@ def peek(filename, pkg, length=1024):
     if not chunk:  # Empty files are considered text
         return (chunk, True)
 
+    fl = filename.lower()
+
     # PDF's are binary but often detected as text by the algorithm below
-    if filename.lower().endswith('.pdf') and chunk.startswith('%PDF-'):
+    if fl.endswith('.pdf') and chunk.startswith('%PDF-'):
+        return (chunk, False)
+    # Ditto RDoc RI files
+    if fl.endswith('.ri') and '/ri/' in fl:
         return (chunk, False)
 
     # Get the non-text characters (maps a character to itself then
