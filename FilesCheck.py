@@ -500,6 +500,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if f.startswith('/run/'):
                 if f not in ghost_files:
                     printWarning(pkg, 'non-ghost-in-run', f)
+            elif f.startswith('/etc/systemd/system/'):
+                printWarning(pkg, 'systemd-unit-in-etc', f)
+            elif f.startswith('/etc/udev/rules.d/'):
+                printWarning(pkg, 'udev-rule-in-etc', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
             elif '/site_perl/' in f:
@@ -1070,6 +1074,14 @@ file is beginning with a dot (.) and contain "perl" in its name.''',
 '''A file or directory in the package is located in /run. Files installed
 in this directory should be marked as %ghost and created at runtime to work
 properly in tmpfs /run setups.''',
+
+'systemd-unit-in-etc',
+'''A systemd unit has been packaged in /etc/systemd/system. These units should
+be installed in the system unit dir instead.''',
+
+'udev-rule-in-etc',
+'''A udev rule has been packaged in /etc/udev/rules.d. These rules should be
+installed in the system rules dir instead.''',
 
 'subdir-in-bin',
 '''The package contains a subdirectory in /usr/bin. It's not permitted to
