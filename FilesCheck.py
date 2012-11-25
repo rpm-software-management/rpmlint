@@ -504,6 +504,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, 'systemd-unit-in-etc', f)
             elif f.startswith('/etc/udev/rules.d/'):
                 printWarning(pkg, 'udev-rule-in-etc', f)
+            elif f.startswith('/etc/tmpfiles.d/'):
+                printWarning(pkg, 'tmpfiles-conf-in-etc', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
             elif '/site_perl/' in f:
@@ -1082,6 +1084,10 @@ be installed in the system unit dir instead.''',
 'udev-rule-in-etc',
 '''A udev rule has been packaged in /etc/udev/rules.d. These rules should be
 installed in the system rules dir instead''',
+
+'tmpfiles-conf-in-etc',
+'''A tmpfiles config has been packaged in /etc/tmpfiles.d. These rules should be
+installed in the system tmpfiles dir instead''',
 
 'subdir-in-bin',
 '''The package contains a subdirectory in /usr/bin. It's not permitted to
