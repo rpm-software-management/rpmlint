@@ -291,8 +291,9 @@ def peek(filename, pkg, length=1024):
     istext = float(len(t))/len(chunk) <= 0.30
     return (chunk, istext)
 
-# See Python/import.c (in the default and 2.x branches) for a full list of
-# the values here.
+# See Python sources for a full list of the values here.
+# http://hg.python.org/cpython/file/tip/Lib/importlib/_bootstrap.py
+# http://hg.python.org/cpython/file/2.7/Python/import.c
 _python_magic_values = {
     '2.2': 60717,
     '2.3': 62011,
