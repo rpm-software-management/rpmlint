@@ -40,6 +40,8 @@ class BinaryInfo:
     setgid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?gid(?:@GLIBC\S+)?)(?:\s|$)')
     setuid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?uid(?:@GLIBC\S+)?)(?:\s|$)')
     setgroups_call_regex = re.compile('\s+FUNC\s+.*?\s+((?:ini|se)tgroups(?:@GLIBC\S+)?)(?:\s|$)')
+    chroot_call_regex = re.compile('\s+FUNC\s+.*?\s+(chroot(?:@GLIBC\S+)?)(?:\s|$)')
+    chdir_call_regex = re.compile('\s+FUNC\s+.*?\s+(chdir(?:@GLIBC\S+)?)(?:\s|$)') 
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.readelf_error = False
@@ -59,6 +61,8 @@ class BinaryInfo:
         self.setgid = False
         self.setuid = False
         self.setgroups = False
+        self.chroot = False
+        self.chdir = False
 
         is_debug = path.endswith('.debug')
 
@@ -76,6 +80,12 @@ class BinaryInfo:
 
                 if BinaryInfo.setgroups_call_regex.search(l):
                     self.setgroups = True
+
+                if BinaryInfo.chdir_call_regex.search(l):
+                    self.chdir = True
+
+                if BinaryInfo.chroot_call_regex.search(l):
+                    self.chroot = True
 
                 r = BinaryInfo.needed_regex.search(l)
                 if r:
@@ -421,6 +431,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
                 printError(pkg, 'missing-call-to-setgroups', fname)
 
+            if bin_info.chroot and not bin_info.chdir:
+                printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
+
         if has_lib:
             for f in exec_files:
                 printError(pkg, 'executable-in-library-package', f)
@@ -582,6 +595,12 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 There is a high probability this mean it didn't relinquished all groups, and 
 this would be a potential security issue to be fixed. Seek POS36-C on the web 
 for details about the problem.''',
+
+'missing-call-to-chdir-with-chroot',
+'''This executable appear to call chroot without using chdir to change the current
+directory. This is likely a error and permit to attacker to break out of the
+chroot by using fchdir. While that's not always a security issue, this has to
+be checked.'''
 )
 
 # BinariesCheck.py ends here
