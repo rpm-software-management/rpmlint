@@ -36,6 +36,10 @@ class BinaryInfo:
     unused_regex = re.compile('^\s+(\S+)')
     exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
+    # regexp for setgid setegid setresgid set(?:res|e)?gid
+    setgid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?gid(?:@GLIBC\S+)?)(?:\s|$)')
+    setuid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?uid(?:@GLIBC\S+)?)(?:\s|$)')
+    setgroups_call_regex = re.compile('\s+FUNC\s+.*?\s+((?:ini|se)tgroups(?:@GLIBC\S+)?)(?:\s|$)')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.readelf_error = False
@@ -52,6 +56,10 @@ class BinaryInfo:
         fork_called = False
         self.tail = ''
 
+        self.setgid = False
+        self.setuid = False
+        self.setgroups = False
+
         is_debug = path.endswith('.debug')
 
         cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d', '-s']
@@ -59,6 +67,15 @@ class BinaryInfo:
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
             for l in res[1].splitlines():
+
+                if BinaryInfo.setgid_call_regex.search(l):
+                    self.setgid = True
+
+                if BinaryInfo.setuid_call_regex.search(l):
+                    self.setuid = True
+
+                if BinaryInfo.setgroups_call_regex.search(l):
+                    self.setgroups = True
 
                 r = BinaryInfo.needed_regex.search(l)
                 if r:
@@ -401,6 +418,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 pkg.arch in ("athlon", "x86_64")):
                 printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
+            if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
+                printError(pkg, 'missing-call-to-setgroups', fname)
+
         if has_lib:
             for f in exec_files:
                 printError(pkg, 'executable-in-library-package', f)
@@ -556,6 +576,12 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 'non-position-independent-executable',
 '''This executable must be position independent.  Check that it is built with
 -fPIE/-fpie in compiler flags and -pie in linker flags.''',
+
+'missing-call-to-setgroups-before-setuid',
+'''This executable is calling setuid and setgid without setgroups or initgroups.
+There is a high probability this mean it didn't relinquished all groups, and 
+this would be a potential security issue to be fixed. Seek POS36-C on the web 
+for details about the problem.''',
 )
 
 # BinariesCheck.py ends here
