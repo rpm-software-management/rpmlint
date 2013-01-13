@@ -34,8 +34,6 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
-    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
-    objdump_callq_regex = re.compile('\s+callq\s+\S+ \<(.*)\>\s*$')
     exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
@@ -143,17 +141,16 @@ class BinaryInfo:
 
             # check if chroot is near chdir ( since otherwise, chroot is called without chdir )
             if self.chroot and self.chdir:
-                # FIXME this check is too slow, calling 1000 times a regexp is never a good idea
-                # this is especially true with a server like postfix, where this make the whole run
-                # twice as long
+                # FIXME this check is too slow, because forking for objdump is quite slow
+                # according to a quick test and that's quite visible on a server like postfix
                 res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'objdump', '-d', path))
                 if not res[0]:
                     call = []
+                    # we want that :
+                    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
                     for l in res[1].splitlines():
                         if l.find('callq ') >= 0:
-                            r = BinaryInfo.objdump_callq_regex.search(l)
-                            if r:
-                                call.append(r.group(1))
+                            call.append(l.rpartition(' ')[2])
                     for index,c in enumerate(call):
                         if c.find('chroot@plt') >= 0:
                             for i in call[index-2:index+2]:
