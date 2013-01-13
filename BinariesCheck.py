@@ -34,6 +34,8 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
+    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
+    objdump_callq_regex = re.compile('\s+callq\s+\S+ \<(.*)\>\s*$')
     exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
     fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
@@ -63,6 +65,7 @@ class BinaryInfo:
         self.setgroups = False
         self.chroot = False
         self.chdir = False
+        self.chroot_near_chdir = False
 
         is_debug = path.endswith('.debug')
 
@@ -138,6 +141,24 @@ class BinaryInfo:
             if fork_called:
                 self.exit_calls = []
 
+            # check if chroot is near chdir ( since otherwise, chroot is called without chdir )
+            if self.chroot and self.chdir:
+                # FIXME this check is too slow, calling 1000 times a regexp is never a good idea
+                # this is especially true with a server like postfix, where this make the whole run
+                # twice as long
+                res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'objdump', '-d', path))
+                if not res[0]:
+                    call = []
+                    for l in res[1].splitlines():
+                        if l.find('callq ') >= 0:
+                            r = BinaryInfo.objdump_callq_regex.search(l)
+                            if r:
+                                call.append(r.group(1))
+                    for index,c in enumerate(call):
+                        if c.find('chroot@plt') >= 0:
+                            for i in call[index-2:index+2]:
+                                if i.find('chdir@plt'):
+                                    self.chroot_near_chdir = True
         else:
             self.readelf_error = True
             printWarning(pkg, 'binaryinfo-readelf-failed',
@@ -431,8 +452,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
                 printError(pkg, 'missing-call-to-setgroups', fname)
 
-            if bin_info.chroot and not bin_info.chdir:
-                printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
+            if bin_info.chroot:
+                if not bin_info.chdir or not bin_info.chroot_near_chdir:
+                    printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
 
         if has_lib:
             for f in exec_files:
