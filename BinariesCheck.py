@@ -42,6 +42,7 @@ class BinaryInfo:
     setgroups_call_regex = re.compile('\s+FUNC\s+.*?\s+((?:ini|se)tgroups(?:@GLIBC\S+)?)(?:\s|$)')
     chroot_call_regex = re.compile('\s+FUNC\s+.*?\s+(chroot(?:@GLIBC\S+)?)(?:\s|$)')
     chdir_call_regex = re.compile('\s+FUNC\s+.*?\s+(chdir(?:@GLIBC\S+)?)(?:\s|$)') 
+    mktemp_call_regex = re.compile('\s+FUNC\s+.*?\s+(mktemp(?:@GLIBC\S+)?)(?:\s|$)')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.readelf_error = False
@@ -64,6 +65,7 @@ class BinaryInfo:
         self.chroot = False
         self.chdir = False
         self.chroot_near_chdir = False
+        self.mktemp = False
 
         is_debug = path.endswith('.debug')
 
@@ -72,6 +74,9 @@ class BinaryInfo:
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
             for l in res[1].splitlines():
+
+                if BinaryInfo.mktemp_call_regex.search(l):
+                    self.mktemp = True
 
                 if BinaryInfo.setgid_call_regex.search(l):
                     self.setgid = True
@@ -453,6 +458,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 if not bin_info.chdir or not bin_info.chroot_near_chdir:
                     printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
 
+            if bin_info.mktemp:
+                printError(pkg, 'call-to-mktemp', fname)
+
         if has_lib:
             for f in exec_files:
                 printError(pkg, 'executable-in-library-package', f)
@@ -619,7 +627,14 @@ for details about the problem.''',
 '''This executable appear to call chroot without using chdir to change the current
 directory. This is likely a error and permit to attacker to break out of the
 chroot by using fchdir. While that's not always a security issue, this has to
-be checked.'''
+be checked.''',
+
+'call-to-mktemp',
+'''This executable call mktemp. As advised by the manpage ( mktemp(3) ), this
+function should be avoided. Some implementations are deeply insecure, and there
+is a race condition between the time of check and time of use (TOCTOU). 
+See http://capec.mitre.org/data/definitions/29.html for details, and contact upstream
+to have this issue fixed.''' 
 )
 
 # BinariesCheck.py ends here
