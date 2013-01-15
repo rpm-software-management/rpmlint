@@ -46,6 +46,7 @@ STANDARD_DIRS = (
     '/opt',
     '/proc',
     '/root',
+    '/run',
     '/sbin',
     '/selinux',
     '/srv',
