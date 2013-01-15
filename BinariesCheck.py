@@ -22,6 +22,12 @@ DEFAULT_SYSTEM_LIB_PATHS = (
     '/lib', '/usr/lib', '/usr/X11R6/lib',
     '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
 
+def create_regexp_call(call):
+    if type(call) == type([]):
+        call = '(?:' + '|'.join(call) + ')'
+    r = "\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
+    return re.compile(r)
+
 class BinaryInfo:
 
     needed_regex = re.compile('\s+\(NEEDED\).*\[(\S+)\]')
@@ -34,15 +40,15 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
-    exit_call_regex = re.compile('\s+FUNC\s+.*?\s+(_?exit(?:@\S+)?)(?:\s|$)')
-    fork_call_regex = re.compile('\s+FUNC\s+.*?\s+(fork(?:@\S+)?)(?:\s|$)')
+    exit_call_regex = create_regexp_call('_?exit')
+    fork_call_regex = create_regexp_call('fork')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
-    setgid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?gid(?:@GLIBC\S+)?)(?:\s|$)')
-    setuid_call_regex = re.compile('\s+FUNC\s+.*?\s+(set(?:res|e)?uid(?:@GLIBC\S+)?)(?:\s|$)')
-    setgroups_call_regex = re.compile('\s+FUNC\s+.*?\s+((?:ini|se)tgroups(?:@GLIBC\S+)?)(?:\s|$)')
-    chroot_call_regex = re.compile('\s+FUNC\s+.*?\s+(chroot(?:@GLIBC\S+)?)(?:\s|$)')
-    chdir_call_regex = re.compile('\s+FUNC\s+.*?\s+(chdir(?:@GLIBC\S+)?)(?:\s|$)') 
-    mktemp_call_regex = re.compile('\s+FUNC\s+.*?\s+(mktemp(?:@GLIBC\S+)?)(?:\s|$)')
+    setgid_call_regex = create_regexp_call(['setresgid','setegid','setgid'])
+    setuid_call_regex = create_regexp_call(['setresuid','seteuid','setuid'])
+    setgroups_call_regex = create_regexp_call(['initgroups','setgroups'])
+    chroot_call_regex = create_regexp_call('chroot')
+    chdir_call_regex  = create_regexp_call('chdir')
+    mktemp_call_regex = create_regexp_call('mktemp')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
         self.readelf_error = False
