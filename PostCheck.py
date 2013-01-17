@@ -70,32 +70,25 @@ script_tags = [
     ]
 
 def incorrect_shell_script(prog, shellscript):
-    if not shellscript:
+    return check_syntax_script(prog,'-n', shellscript)
+
+def incorrect_perl_script(prog, perlscript):
+    return check_syntax_script(prog,'-wc', perlscript)
+
+def check_syntax_script(prog, commandline, script):
+    if not script:
         return False
     # TODO: test that "prog" is available/executable
     tmpfile, tmpname = Pkg.mktemp()
     try:
-        tmpfile.write(shellscript)
+        tmpfile.write(script)
         tmpfile.close()
-        ret = Pkg.getstatusoutput((prog, '-n', tmpname))
+        ret = Pkg.getstatusoutput((prog, commandline, tmpname))
     finally:
         tmpfile.close()
         os.remove(tmpname)
     return ret[0]
 
-def incorrect_perl_script(prog, perlscript):
-    if not perlscript:
-        return False
-    # TODO: test that "prog" is available/executable
-    tmpfile, tmpname = Pkg.mktemp()
-    try:
-        tmpfile.write(perlscript)
-        tmpfile.close()
-        ret = Pkg.getstatusoutput((prog, '-wc', tmpname))
-    finally:
-        tmpfile.close()
-        os.remove(tmpname)
-    return ret[0]
 
 class PostCheck(AbstractCheck.AbstractCheck):
 
