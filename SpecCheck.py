@@ -29,16 +29,28 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
-patch_regex = re.compile("^Patch(\d*)\s*:\s*(\S+)", re.IGNORECASE)
+
+def re_tag_compile(tag):
+    if type(tag) == type([]):
+        tag = '(?:' + '|'.join(tag) + ')'
+    r = "^%s\s*:\s*(\S+)\s*$" % tag
+    return re.compile(r, re.IGNORECASE)
+
+
+
+patch_regex = re_tag_compile('Patch(\d*)')
 applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
-obsolete_tags_regex = re.compile("^(Copyright|Serial)\s*:\s*(\S+)")
-buildroot_regex = re.compile('^BuildRoot\s*:\s*(\S+)', re.IGNORECASE)
-prefix_regex = re.compile('^Prefix\s*:\s*(\S+)', re.IGNORECASE)
-packager_regex = re.compile('^Packager\s*:\s*(\S+)', re.IGNORECASE)
-buildarch_regex = re.compile('^BuildArch(itectures)?\s*:\s*(.+?)\s*$', re.IGNORECASE)
+obsolete_tags_regex = re_tag_compile(['Serial','Copyright'])
+buildroot_regex = re_tag_compile('BuildRoot')
+prefix_regex = re_tag_compile('Prefix')
+packager_regex = re_tag_compile('Packager')
+buildarch_regex = re_tag_compile(['BuildArch','BuildArchitectures'])
+buildprereq_regex = re_tag_compile('BuildPreReq')
+prereq_regex = re_tag_compile('PreReq(\(.*\))')
+
 make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
 rpm_buildroot_regex = re.compile('^[^#]*(?:(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
@@ -49,8 +61,6 @@ if_regex = re.compile('^\s*%if\s')
 endif_regex = re.compile('^\s*%endif\\b')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
-prereq_regex = re.compile('^PreReq(\(.*\))?:\s*(.+?)\s*$', re.IGNORECASE)
-buildprereq_regex = re.compile('^BuildPreReq:\s*(.+?)\s*$', re.IGNORECASE)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
 comment_or_empty_regex = re.compile('^\s*(#|$)')
@@ -344,8 +354,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 res = buildarch_regex.search(line)
                 if res:
-                    if res.group(2) != "noarch":
-                        printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(2))
+                    if res.group(1) != "noarch":
+                        printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(1))
                     else:
                         package_noarch[current_package] = True
 
