@@ -442,16 +442,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
 
+            for i in ['mnt','opt','usr-local','var-local','home']:
+                if f.startswith('/%s/' % i.replace('-','/')):
+                    printError(pkg, 'dir-or-file-in-%s' % i, f)
+
             if tmp_regex.search(f):
                 printError(pkg, 'dir-or-file-in-tmp', f)
-            elif f.startswith('/mnt/'):
-                printError(pkg, 'dir-or-file-in-mnt', f)
-            elif f.startswith('/opt/'):
-                printError(pkg, 'dir-or-file-in-opt', f)
-            elif f.startswith('/usr/local/'):
-                printError(pkg, 'dir-or-file-in-usr-local', f)
-            elif f.startswith('/var/local/'):
-                printError(pkg, 'dir-or-file-in-var-local', f)
+
             elif f.startswith('/var/run/'):
                 if f not in ghost_files:
                     printWarning(pkg, 'non-ghost-in-var-run', f)
@@ -460,8 +457,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printWarning(pkg, 'non-ghost-in-var-lock', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
-            elif f.startswith('/home/'):
-                printError(pkg, 'dir-or-file-in-home', f)
             elif '/site_perl/' in f:
                 printWarning(pkg, 'siteperl-in-perl-module', f)
 
