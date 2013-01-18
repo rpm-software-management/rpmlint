@@ -169,7 +169,7 @@ DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'shutdown', 'halt', 'mail', 'news', 'uucp',
                            'man', 'nobody',)
 
-tmp_regex = re.compile('^/tmp/|^(/var|/usr)/tmp/')
+tmp_regex = re.compile('^(/var|/usr)?/tmp/')
 sub_bin_regex = re.compile('^(/usr)?/s?bin/\S+/')
 backup_regex = re.compile('(~|\#[^/]+\#|\.orig|\.rej)$')
 compr_regex = re.compile('\.(gz|z|Z|zip|bz2|lzma|xz)$')
