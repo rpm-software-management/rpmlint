@@ -84,6 +84,8 @@ scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECA
 DEFINE_RE='(^|\s)%(define|global)\s+'
 depscript_override_regex = re.compile(DEFINE_RE + '__find_(requires|provides)\s')
 depgen_disable_regex = re.compile(DEFINE_RE + '_use_internal_dependency_generator\s+0')
+patch_fuzz_override_regexp = re.compile(DEFINE_RE + '_default_patch_fuzz\s+(\d+)')
+
 # See https://bugzilla.redhat.com/488146 for details
 indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
 
@@ -169,6 +171,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         buildroot_clean = {'clean': False, 'install' : False}
         depscript_override = False
         depgen_disabled = False
+        patch_fuzz_override = False
         indent_spaces = 0
         indent_tabs = 0
         files_has_defattr = False
@@ -424,6 +427,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if not depgen_disabled:
                     depgen_disabled = \
                         depgen_disable_regex.search(line) is not None
+                if not patch_fuzz_override:
+                    patch_fuzz_override = \
+                        patch_fuzz_override_regexp.search(line) is not None
 
             if current_section == 'files':
 
@@ -498,6 +504,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         if depscript_override and not depgen_disabled:
             printWarning(pkg, 'depscript-without-disabling-depgen')
+
+        if patch_fuzz_override:
+            printWarning(pkg, 'patch-fuzz-is-changed')
 
         if indent_spaces and indent_tabs:
             pkg.current_linenum = max(indent_spaces, indent_tabs)
@@ -808,6 +817,12 @@ contents.''',
 '''The MD5 hash of the file in the package does not match the MD5 hash
 indicated by peeking at its URL.  Verify that the file in the package has the
 intended contents.''',
+
+'patch-fuzz-is-changed',
+'''The internal patch fuzz value was changed, and could hide patchs issues, or
+could lead to applying a patch at the wrong location. Usually, this is often the 
+sign that someone didn't check if a patch is still needed and do not want to rediff
+it. It is usually better to rediff the patch and try to send it upstream.'''
 )
 
 # SpecCheck.py ends here
