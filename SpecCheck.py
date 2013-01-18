@@ -81,9 +81,9 @@ hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD
 # https://bugzilla.redhat.com/118780 and bugs linked to that one.
 scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
 
-depscript_override_regex = re.compile('(^|\s)%(define|global)\s+__find_(requires|provides)\s')
-depgen_disable_regex = re.compile('(^|\s)%(define|global)\s+_use_internal_dependency_generator\s+0')
-
+DEFINE_RE='(^|\s)%(define|global)\s+'
+depscript_override_regex = re.compile(DEFINE_RE + '__find_(requires|provides)\s')
+depgen_disable_regex = re.compile(DEFINE_RE + '_use_internal_dependency_generator\s+0')
 # See https://bugzilla.redhat.com/488146 for details
 indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
 
