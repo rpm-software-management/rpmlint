@@ -231,6 +231,14 @@ def runChecks(pkg):
     finally:
         pkg.cleanup()
 
+def readConfig(path):
+    try:
+        execfile(path)
+    except IOError:
+        pass
+    except Exception, E:
+        Pkg.warn('(none): W: error loading %s, skipping: %s' % (path, E))
+
 #############################################################################
 #
 #############################################################################
@@ -289,12 +297,7 @@ else:
     configs.insert(0, '/usr/share/rpmlint/config')
 
 for f in configs:
-    try:
-        execfile(f)
-    except IOError:
-        pass
-    except Exception, E:
-        Pkg.warn('(none): W: error loading %s, skipping: %s' % (f, E))
+    readConfig(f)
 # pychecker fix
 del f
 
@@ -339,12 +342,7 @@ for o in opt:
         setRawOut(o[1])
 
 # load user config file
-try:
-    execfile(os.path.expanduser(conf_file))
-except IOError:
-    pass
-except Exception,E:
-    Pkg.warn('(none): W: error loading %s, skipping: %s' % (conf_file, E))
+readConfig(os.path.expanduser(conf_file))
 
 # apply config overrides
 for key, value in config_overrides.items():
