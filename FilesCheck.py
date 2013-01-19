@@ -263,7 +263,7 @@ def peek(filename, pkg, length=1024):
         fobj = open(filename, 'rb')
         chunk = fobj.read(length)
         fobj.close()
-    except Exception, e: # eg. https://bugzilla.redhat.com/209876
+    except IOError, e: # eg. https://bugzilla.redhat.com/209876
         printWarning(pkg, 'read-error', e)
         if fobj:
             fobj.close()
