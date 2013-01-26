@@ -220,6 +220,7 @@ skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?
 meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
 filesys_packages = ['filesystem'] # TODO: make configurable?
 quotes_regex = re.compile('[\'"]+')
+start_certificate_regex = re.compile('^-----BEGIN CERTIFICATE-----$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
@@ -770,6 +771,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if f.endswith(".svgz") and f[0:-1] not in files \
                         and scalable_icon_regex.search(f):
                     printWarning(pkg, "gzipped-svg-icon", f)
+
+                if f.endswith('.pem'):
+                    if f not in ghost_files:
+                        if pkg.grep(start_certificate_regex ,f):
+                            printWarning(pkg, 'pem-certificate', f)
 
                 # text file checks
                 if istext:
@@ -1341,6 +1347,13 @@ possibly the entire file with a new copy available from the FSF.''',
 'gzipped-svg-icon',
 '''Not all desktop environments that support SVG icons support them gzipped
 (.svgz).  Install the icon as plain uncompressed SVG.''',
+
+'pem-certificate',
+'''Shipping a PEM certificate is likely wrong. If used for the default
+configuration, this is insecure ( since the certificate is public ). If this
+is used for validation, ie a CA certificate store, then this must be kept up
+to date due to CA compromise. The only valid reason is for testing purpose,
+so ignore this warning if this is the case.'''
 )
 
 # FilesCheck.py ends here
