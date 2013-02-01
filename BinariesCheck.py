@@ -640,7 +640,13 @@ be checked.''',
 function should be avoided. Some implementations are deeply insecure, and there
 is a race condition between the time of check and time of use (TOCTOU). 
 See http://capec.mitre.org/data/definitions/29.html for details, and contact upstream
-to have this issue fixed.''' 
+to have this issue fixed.''',
+
+'unstripped-binary-or-object',
+'''This executable should be stripped from debugging symbols, in order to take
+less space and be loaded faster. This is usually done automatically at buildtime
+by rpm. Check the build logs and the permission on the file ( some implementations
+only strip if the permission is 0755 ).'''
 )
 
 # BinariesCheck.py ends here
