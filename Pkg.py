@@ -11,7 +11,6 @@
 import commands
 import os
 import re
-import stat
 import subprocess
 import sys
 import tempfile
@@ -478,8 +477,7 @@ class Pkg:
 
     # extract rpm contents
     def _extract(self):
-        s = os.stat(self.dirname)
-        if not stat.S_ISDIR(s[stat.ST_MODE]):
+        if not os.path.isdir(self.dirname):
             warn('Unable to access dir %s' % self.dirname)
             return None
         else:
