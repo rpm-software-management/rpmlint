@@ -286,7 +286,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_elf = 'ELF' in pkgfile.magic
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
-            is_binary = is_elf or is_ar or is_ocaml_native
+            is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
+            is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
 
             if not is_binary:
                 if reference_regex.search(fname):
@@ -324,7 +325,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if pkg.arch == 'sparc' and sparc_regex.search(pkgfile.magic):
                 printError(pkg, 'non-sparc32-binary', fname)
 
-            if is_ocaml_native or fname.endswith('.o') or \
+            if is_ocaml_native or is_lua_bytecode or fname.endswith('.o') or \
                     fname.endswith('.static'):
                 continue
 
