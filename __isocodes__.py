@@ -8481,6 +8481,7 @@ LANGUAGES = set((
 	"zen",
 	"zga",
 	"zgb",
+	"zgh",
 	"zgm",
 	"zgn",
 	"zgr",
