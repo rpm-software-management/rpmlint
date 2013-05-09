@@ -592,8 +592,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         is_source = pkg.isSource()
         for d in deps:
             value = apply(Pkg.formatRequire, d)
-            if use_epoch and d[1] and d[2][0] is None \
-                    and d[0][0:7] != 'rpmlib(':
+            if use_epoch and d[1] and d[2][0] is None and \
+                    not d[0].startswith('rpmlib('):
                 printWarning(pkg, 'no-epoch-in-dependency', value)
             for r in INVALID_REQUIRES:
                 if r.search(d[0]):
@@ -602,16 +602,18 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if d[0].startswith('/usr/local/'):
                 printError(pkg, 'invalid-dependency', d[0])
 
-            if not devel_depend and not is_devel and not is_source and \
-                    FilesCheck.devel_regex.search(d[0]):
-                printError(pkg, 'devel-dependency', d[0])
-                devel_depend = True
-            if is_source and lib_devel_number_regex.search(d[0]):
-                printError(pkg, 'invalid-build-requires', d[0])
-            if not is_source and not is_devel:
-                res = lib_package_regex.search(d[0])
-                if res and not res.group(1) and not d[1]:
-                    printError(pkg, 'explicit-lib-dependency', d[0])
+            if is_source:
+                if lib_devel_number_regex.search(d[0]):
+                    printError(pkg, 'invalid-build-requires', d[0])
+            elif not is_devel:
+                if not devel_depend and FilesCheck.devel_regex.search(d[0]):
+                    printError(pkg, 'devel-dependency', d[0])
+                    devel_depend = True
+                if not d[1]:
+                    res = lib_package_regex.search(d[0])
+                    if res and not res.group(1):
+                        printError(pkg, 'explicit-lib-dependency', d[0])
+
             if d[1] == rpm.RPMSENSE_EQUAL and d[2][2] is not None:
                 printWarning(pkg, 'requires-on-release', value)
             self._unexpanded_macros(pkg, 'dependency %s' % (value,), value)
