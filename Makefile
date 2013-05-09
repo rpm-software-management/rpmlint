@@ -20,7 +20,7 @@ PACKAGE = rpmlint
 PYTHON = python
 
 # update this variable to create a new release
-VERSION := 1.4
+VERSION := 1.5
 
 # for the [A-Z]* part
 LC_ALL:=C
