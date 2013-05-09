@@ -626,28 +626,28 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 
 'missing-call-to-setgroups-before-setuid',
 '''This executable is calling setuid and setgid without setgroups or initgroups.
-There is a high probability this mean it didn't relinquished all groups, and 
-this would be a potential security issue to be fixed. Seek POS36-C on the web 
-for details about the problem.''',
+There is a high probability this mean it didn't relinquish all groups, and this
+would be a potential security issue to be fixed. Seek POS36-C on the web for
+details about the problem.''',
 
 'missing-call-to-chdir-with-chroot',
-'''This executable appear to call chroot without using chdir to change the current
-directory. This is likely a error and permit to attacker to break out of the
-chroot by using fchdir. While that's not always a security issue, this has to
-be checked.''',
+'''This executable appears to call chroot without using chdir to change the
+current directory. This is likely an error and permits an attacker to break out
+of the chroot by using fchdir. While that's not always a security issue, this
+has to be checked.''',
 
 'call-to-mktemp',
-'''This executable call mktemp. As advised by the manpage ( mktemp(3) ), this
+'''This executable calls mktemp. As advised by the manpage (mktemp(3)), this
 function should be avoided. Some implementations are deeply insecure, and there
-is a race condition between the time of check and time of use (TOCTOU). 
-See http://capec.mitre.org/data/definitions/29.html for details, and contact upstream
-to have this issue fixed.''',
+is a race condition between the time of check and time of use (TOCTOU).
+See http://capec.mitre.org/data/definitions/29.html for details, and contact
+upstream to have this issue fixed.''',
 
 'unstripped-binary-or-object',
 '''This executable should be stripped from debugging symbols, in order to take
 less space and be loaded faster. This is usually done automatically at buildtime
-by rpm. Check the build logs and the permission on the file ( some implementations
-only strip if the permission is 0755 ).'''
+by rpm. Check the build logs and the permission on the file (some
+implementations only strip if the permission is 0755).'''
 )
 
 # BinariesCheck.py ends here
