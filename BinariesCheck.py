@@ -459,7 +459,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
-                printError(pkg, 'missing-call-to-setgroups', fname)
+                printError(pkg, 'missing-call-to-setgroups-before-setuid', fname)
 
             if bin_info.chroot:
                 if not bin_info.chdir or not bin_info.chroot_near_chdir:
