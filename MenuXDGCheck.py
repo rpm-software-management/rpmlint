@@ -41,14 +41,19 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
 
         self.cfp.read(f)
         binary = self.cfp.get('Desktop Entry','Exec').split(' ',1)[0]
-        found = False
-        for i in STANDARD_BIN_DIRS:
-            if os.path.exists(root + i + binary):
-                # no need to check if the binary is +x, rpmlint does it
-                # in another place
-                found = True
-        if not found and binary:
-            printWarning(pkg, 'desktopfile-without-binary', filename, binary)
+        if binary:
+            if binary.startswith('/'):
+                found = os.path.exists(root + binary)
+            else:
+                for i in STANDARD_BIN_DIRS:
+                    if os.path.exists(root + i + binary):
+                        # no need to check if the binary is +x, rpmlint does it
+                        # in another place
+                        found = True
+                        break
+            if not found:
+                printWarning(pkg, 'desktopfile-without-binary', filename,
+                             binary)
 
 check = MenuXDGCheck()
 
