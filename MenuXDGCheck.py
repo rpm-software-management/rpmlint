@@ -12,7 +12,8 @@ import AbstractCheck
 from ConfigParser import RawConfigParser
 import os
 
-STANDARD_BIN_DIRS = ['/bin/','/sbin/','/usr/bin/','/usr/sbin/']
+STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
+
 
 class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
