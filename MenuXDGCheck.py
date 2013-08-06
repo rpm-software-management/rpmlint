@@ -40,7 +40,9 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
             printError(pkg, 'non-utf8-desktopfile', filename)
 
         self.cfp.read(f)
-        binary = self.cfp.get('Desktop Entry','Exec').split(' ',1)[0]
+        binary = None
+        if self.cfp.has_option('Desktop Entry', 'Exec'):
+            binary = self.cfp.get('Desktop Entry', 'Exec').split(' ', 1)[0]
         if binary:
             if binary.startswith('/'):
                 found = os.path.exists(root + binary)
