@@ -20,7 +20,6 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        self.cfp = RawConfigParser()
         AbstractCheck.AbstractFilesCheck.__init__(
             self, "MenuXDGCheck", "/usr/share/applications/.*\.desktop$")
 
@@ -40,10 +39,11 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         if not is_utf8(f):
             printError(pkg, 'non-utf8-desktopfile', filename)
 
-        self.cfp.read(f)
+        cfp = RawConfigParser()
+        cfp.read(f)
         binary = None
-        if self.cfp.has_option('Desktop Entry', 'Exec'):
-            binary = self.cfp.get('Desktop Entry', 'Exec').split(' ', 1)[0]
+        if cfp.has_option('Desktop Entry', 'Exec'):
+            binary = cfp.get('Desktop Entry', 'Exec').split(' ', 1)[0]
         if binary:
             if binary.startswith('/'):
                 found = os.path.exists(root + binary)
