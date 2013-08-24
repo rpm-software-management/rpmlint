@@ -45,6 +45,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
         if cfp.has_option('Desktop Entry', 'Exec'):
             binary = cfp.get('Desktop Entry', 'Exec').split(' ', 1)[0]
         if binary:
+            found = False
             if binary.startswith('/'):
                 found = os.path.exists(root + binary)
             else:
