@@ -9,6 +9,7 @@
 
 import re
 import socket
+import sys
 import urllib2
 
 from Filter import addDetails, printInfo, printWarning
@@ -61,7 +62,8 @@ class AbstractCheck:
             opener.addheaders = [('User-Agent',
                                   'rpmlint/%s' % Config.__version__)]
             res = opener.open(_HeadRequest(url))
-        except Exception, e:
+        except Exception:
+            e = sys.exc_info()[1]
             errstr = str(e) or repr(e) or type(e)
             printWarning(pkg, 'invalid-url', '%s:' % tag, url, errstr)
         info = None

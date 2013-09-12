@@ -123,7 +123,7 @@ def printAllReasons():
 _details = {}
 
 def addDetails(*details):
-    for idx in range(len(details)/2):
+    for idx in range(int(len(details)/2)):
         if not details[idx*2] in _details:
             _details[details[idx*2]] = details[idx*2+1]
 

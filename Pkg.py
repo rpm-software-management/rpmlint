@@ -8,14 +8,15 @@
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
-import commands
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import types
-import urlparse
+try:
+    from urlparse import urljoin
+except:
+    from urllib.parse import urljoin
 
 try:
     import magic
@@ -73,14 +74,14 @@ def substitute_shell_vars(val, script):
     else:
         return val
 
-def getstatusoutput(cmd, stdoutonly = False):
+def getstatusoutput(cmd, stdoutonly = False, shell = False):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.'''
     if stdoutonly:
-        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+        proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, close_fds=True)
     else:
-        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE,
+        proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
@@ -192,7 +193,9 @@ def get_default_valid_rpmgroups(filename = None):
     return groups
 
 # from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
-def compareEVR((e1, v1, r1), (e2, v2, r2)):
+def compareEVR(evr1, evr2):
+    (e1, v1, r1) = evr1
+    (e2, v2, r2) = evr2
     # return 1: a is newer than b
     # 0: a and b are the same version
     # -1: b is newer than a
@@ -488,7 +491,7 @@ class Pkg:
             command_str = \
                 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % \
                 (self.filename, self.dirname, self.dirname)
-            cmd = commands.getstatusoutput(command_str)
+            cmd = getstatusoutput(command_str, shell=True)
             self.extracted = True
             return cmd
 
@@ -507,14 +510,16 @@ class Pkg:
         in_file = None
         try:
             try:
-                in_file = open(self.dirName() + '/' + filename)
+                in_file = open(os.path.join(
+                    self.dirName() or '/', filename.lstrip('/')))
                 for line in in_file:
                     lineno += 1
                     if regex.search(line):
                         ret.append(str(lineno))
                         break
-            except Exception, e:
-                Filter.printWarning(self, 'read-error', filename, e)
+            except Exception:
+                Filter.printWarning(self, 'read-error', filename,
+                                    sys.exc_info()[1])
         finally:
             if in_file:
                 in_file.close()
@@ -608,16 +613,14 @@ class Pkg:
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
         # FWIW) for packages containing exactly one file
-        if not isinstance(inodes, types.ListType):
+        if not isinstance(inodes, list):
             inodes = [inodes]
 
         if files:
             for idx in range(0, len(files)):
                 pkgfile = PkgFile(files[idx])
-                # Do not use os.path.join here, pkgfile.name can start with a
-                # / which would result in self.dirName being ignored
-                pkgfile.path = os.path.normpath(
-                    self.dirName() + '/' + pkgfile.name)
+                pkgfile.path = os.path.normpath(os.path.join(
+                    self.dirName() or '/', pkgfile.name.lstrip('/')))
                 pkgfile.flags = flags[idx]
                 pkgfile.mode = modes[idx]
                 pkgfile.user = users[idx]
@@ -652,7 +655,7 @@ class Pkg:
            PkgFile if it is found in this package, None if not."""
         result = pkgfile
         while result and result.linkto:
-            linkpath = urlparse.urljoin(result.name, result.linkto)
+            linkpath = urljoin(result.name, result.linkto)
             linkpath = safe_normpath(linkpath)
             result = self.files().get(linkpath)
         return result

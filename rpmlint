@@ -157,10 +157,11 @@ def main():
                 Pkg.warn(
                     '(none): E: interrupted, exiting while reading %s' % arg)
                 sys.exit(2)
-            except Exception, e:
+            except Exception:
                 if isfile:
                     arg = os.path.abspath(arg)
-                Pkg.warn('(none): E: error while reading %s: %s' % (arg, e))
+                Pkg.warn('(none): E: error while reading %s: %s' %
+                         (arg, sys.exc_info()[1]))
                 pkgs = []
                 continue
 
@@ -192,13 +193,15 @@ def main():
                             Pkg.warn('(none): E: interrupted, exiting while ' +
                                      'reading %s' % fname)
                             sys.exit(2)
-                        except Exception, e:
+                        except Exception:
                             Pkg.warn(
-                                '(none): E: while reading %s: %s' % (fname, e))
+                                '(none): E: while reading %s: %s' %
+                                (fname, sys.exc_info()[1]))
                             continue
-            except Exception, e:
+            except Exception:
                 Pkg.warn(
-                    '(none): E: error while reading dir %s: %s' % (dname, e))
+                    '(none): E: error while reading dir %s: %s' %
+                    (dname, sys.exc_info()[1]))
                 continue
 
         if printAllReasons():
@@ -207,9 +210,9 @@ def main():
             sys.exit(66)
 
     finally:
-        print "%d packages and %d specfiles checked; %d errors, %d warnings." \
+        print("%d packages and %d specfiles checked; %d errors, %d warnings." \
               % (packages_checked, specfiles_checked,
-                 printed_messages["E"], printed_messages["W"])
+                 printed_messages["E"], printed_messages["W"]))
 
     if printed_messages["E"] > 0:
         sys.exit(64)
@@ -255,8 +258,8 @@ try:
                                'option=',
                                'rawout=',
                                ])
-except getopt.GetoptError, e:
-    Pkg.warn("%s: %s" % (sys.argv[0], e))
+except getopt.GetoptError:
+    Pkg.warn("%s: %s" % (sys.argv[0], sys.exc_info()[1]))
     usage(sys.argv[0])
     sys.exit(1)
 
@@ -290,11 +293,12 @@ else:
 
 for f in configs:
     try:
-        execfile(f)
+        exec(compile(open(f).read(), f, 'exec'))
     except IOError:
         pass
-    except Exception, E:
-        Pkg.warn('(none): W: error loading %s, skipping: %s' % (f, E))
+    except Exception:
+        Pkg.warn('(none): W: error loading %s, skipping: %s' %
+                 (f, sys.exc_info()[1]))
 # pychecker fix
 del f
 
@@ -340,11 +344,13 @@ for o in opt:
 
 # load user config file
 try:
-    execfile(os.path.expanduser(conf_file))
+    expconf = os.path.expanduser(conf_file)
+    exec(compile(open(expconf).read(), expconf, 'exec'))
 except IOError:
     pass
-except Exception,E:
-    Pkg.warn('(none): W: error loading %s, skipping: %s' % (conf_file, E))
+except Exception:
+    Pkg.warn('(none): W: error loading %s, skipping: %s' %
+             (conf_file, sys.exc_info()[1]))
 
 # apply config overrides
 for key, value in config_overrides.items():
@@ -361,7 +367,7 @@ if info_error:
     for c in Config.allChecks():
         loadCheck(c)
     for e in sorted(info_error):
-        print "%s:" % e
+        print("%s:" % e)
         printDescriptions(e)
     sys.exit(0)
 
