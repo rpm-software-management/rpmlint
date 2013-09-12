@@ -10,7 +10,6 @@
 
 import os
 import re
-import types
 
 import rpm
 
@@ -107,7 +106,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
         for tag in script_tags:
             script = pkg[tag[0]]
 
-            if not isinstance(script, types.ListType):
+            if not isinstance(script, list):
                 prog = pkg.scriptprog(tag[1])
                 if prog:
                     prog = prog.split()[0]
