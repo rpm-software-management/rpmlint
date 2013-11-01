@@ -24,7 +24,11 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
     def check_file(self, pkg, filename):
         root = pkg.dirName()
         f = root + filename
-        st = getstatusoutput(('appdata-validate', f), True)
+        try:
+            st = getstatusoutput(('appdata-validate', f), True)
+        except OSError:
+            # ignore the check if appdata-validate is not install
+            return
         if st[0]:
             error_printed = False
             for line in st[1].splitlines():
