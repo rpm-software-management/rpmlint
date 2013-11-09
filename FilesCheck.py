@@ -308,7 +308,7 @@ _python_magic_values = {
     '3.1': 3150,
     '3.2': 3180,
     '3.3': 3230,
-    '3.4': 3260,
+    '3.4': 3300,
     }
 
 def get_expected_pyc_magic(path):
