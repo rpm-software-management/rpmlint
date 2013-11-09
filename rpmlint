@@ -238,7 +238,7 @@ def runChecks(pkg):
 #
 #############################################################################
 
-sys.argv[0] = os.path.basename(sys.argv[0])
+argv0 = os.path.basename(sys.argv[0])
 
 # parse options
 try:
@@ -259,8 +259,8 @@ try:
                                'rawout=',
                                ])
 except getopt.GetoptError:
-    Pkg.warn("%s: %s" % (sys.argv[0], sys.exc_info()[1]))
-    usage(sys.argv[0])
+    Pkg.warn("%s: %s" % (argv0, sys.exc_info()[1]))
+    usage(argv0)
     sys.exit(1)
 
 # process options
@@ -279,7 +279,7 @@ configs = glob.glob('/etc/rpmlint/*config')
 configs.sort()
 
 # Was rpmlint invoked as a prefixed variant?
-m = re.match(r"(?P<prefix>[\w-]+)-rpmlint(\.py)?", sys.argv[0])
+m = re.match(r"(?P<prefix>[\w-]+)-rpmlint(\.py)?", argv0)
 if m:
     # Okay, we're a prefixed variant. Look for the variant config.
     # If we find it, use it. If not, fallback to the default.
@@ -314,7 +314,7 @@ for o in opt:
         # split by comma for deprecated backwards compatibility with < 1.2
         info_error.update(o[1].split(','))
     elif o[0] in ('-h', '--help'):
-        usage(sys.argv[0])
+        usage(argv0)
         sys.exit(0)
     elif o[0] in ('-C', '--checkdir'):
         Config.addCheckDir(o[1])
@@ -373,7 +373,7 @@ if info_error:
 
 # if no argument print usage
 if not args:
-    usage(sys.argv[0])
+    usage(argv0)
     sys.exit(1)
 
 if __name__ == '__main__':
