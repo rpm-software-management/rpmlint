@@ -464,6 +464,8 @@ def spell_check(pkg, str, fmt, lang, ignored):
             # squeeze whitespace to ease leading context check
             checker.set_text(re.sub(r'\s+', ' ', str))
             uppername = pkg.name.upper()
+            if use_utf8:
+                uppername = Pkg.to_utf8(uppername).decode('utf-8')
             upperparts = uppername.split('-')
             if lang.startswith('en'):
                 ups = [x + "'S" for x in upperparts]
