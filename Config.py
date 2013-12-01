@@ -35,7 +35,7 @@ DEFAULT_CHECKS = ("DistributionCheck",
                   "PamCheck",
                   "RpmFileCheck",
                   "MenuXDGCheck",
-                  "AppDataCheck.py",
+                  "AppDataCheck",
                   )
 
 USEUTF8_DEFAULT = False
