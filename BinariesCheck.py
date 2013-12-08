@@ -160,7 +160,8 @@ class BinaryInfo:
                     # we want that :
                     # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
                     for l in res[1].splitlines():
-                        if l.find('callq ') >= 0:
+                        # call is for x86 32 bits, callq for x86_64
+                        if l.find('callq ') >= 0 or l.find('call ') >= 0:
                             call.append(l.rpartition(' ')[2])
                     for index,c in enumerate(call):
                         if c.find('chroot@plt') >= 0:
