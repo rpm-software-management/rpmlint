@@ -31,7 +31,7 @@ Noarch subpackage test.
 
 
 %prep
-%setup -q
+%setup
 %patch1
 %patch
 %patch -P 2 -P 4
