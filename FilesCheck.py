@@ -221,7 +221,7 @@ meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|
 filesys_packages = ['filesystem'] # TODO: make configurable?
 quotes_regex = re.compile('[\'"]+')
 start_certificate_regex = re.compile('^-----BEGIN CERTIFICATE-----$')
-start_private_key_regexp = re.compile('^----BEGIN PRIVATE KEY-----$')
+start_private_key_regex = re.compile('^----BEGIN PRIVATE KEY-----$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
@@ -778,7 +778,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if f not in ghost_files:
                         if pkg.grep(start_certificate_regex, f):
                             printWarning(pkg, 'pem-certificate', f)
-                        if pkg.grep(start_private_key_regexp, f):
+                        if pkg.grep(start_private_key_regex, f):
                             printError(pkg, 'pem-private-key', f)
 
                 # text file checks
