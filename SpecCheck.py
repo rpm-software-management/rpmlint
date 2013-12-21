@@ -99,6 +99,9 @@ compop_regex = re.compile('[<>=]')
 setup_q_regex = re.compile(' -[A-Za-z]*q')
 setup_t_regex = re.compile(' -[A-Za-z]*T')
 setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
+autosetup_regex = re.compile('^\s*%autosetup(\s.*|$)')
+autosetup_n_regex = re.compile(' -[A-Za-z]*N')
+autopatch_regex = re.compile('^\s*%autopatch(?:\s|$)')
 
 filelist_regex = re.compile('\s+-f\s+\S+')
 pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
@@ -159,6 +162,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
+        patches_auto_applied = False
         source_dir = False
         buildroot = False
         configure_linenum = None
@@ -264,6 +268,17 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'setup-not-quiet')
                 if current_section != 'prep':
                     printWarning(pkg, 'setup-not-in-prep')
+            elif autopatch_regex.search(line):
+                patches_auto_applied = True
+                if current_section != 'prep':
+                    printWarning(pkg, '%autopatch-not-in-prep')
+            else:
+                res = autosetup_regex.search(line)
+                if res:
+                    if not autosetup_n_regex.search(res.group(1)):
+                        patches_auto_applied = True
+                    if current_section != 'prep':
+                        printWarning(pkg, '%autosetup-not-in-prep')
 
             if endif_regex.search(line):
                 if ifarch_depth == if_depth:
@@ -516,13 +531,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             pkg.current_linenum = None
 
         # process gathered info
-        for pnum, pfile in patches.items():
-            if pnum in applied_patches_ifarch:
-                printWarning(pkg, "%ifarch-applied-patch", "Patch%d:" % pnum,
-                             pfile)
-            if pnum not in applied_patches:
-                printWarning(pkg, "patch-not-applied", "Patch%d:" % pnum,
-                             pfile)
+        if not patches_auto_applied:
+            for pnum, pfile in patches.items():
+                if pnum in applied_patches_ifarch:
+                    printWarning(pkg, "%ifarch-applied-patch",
+                                 "Patch%d:" % pnum, pfile)
+                if pnum not in applied_patches:
+                    printWarning(pkg, "patch-not-applied",
+                                 "Patch%d:" % pnum, pfile)
 
         # Rest of the checks require a real spec file
         if not self._spec_file:
