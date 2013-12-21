@@ -3,6 +3,11 @@
 export PYTHONPATH=$(pwd)/tools:$(pwd)
 export TESTPATH="$(pwd)/test/"
 
+echo
+echo "Please ignore the possibly occurring output like this:"
+echo "    .../Patch*.patch: No such file or directory"
+echo
+
 for i in $TESTPATH/test.*.py; do
     python $i
     RET=$?
