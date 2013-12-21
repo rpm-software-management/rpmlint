@@ -25,6 +25,7 @@ class TestSpecCheck(unittest.TestCase):
                         in out)
         self.assertTrue("unversioned-explicit-obsoletes versioned-obsoletes"
                         not in out)
+        self.assertTrue("setup-not-quiet" in out)
 
 if __name__ == '__main__':
     unittest.main()
