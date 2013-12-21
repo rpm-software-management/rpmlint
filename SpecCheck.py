@@ -84,7 +84,7 @@ scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECA
 DEFINE_RE='(^|\s)%(define|global)\s+'
 depscript_override_regex = re.compile(DEFINE_RE + '__find_(requires|provides)\s')
 depgen_disable_regex = re.compile(DEFINE_RE + '_use_internal_dependency_generator\s+0')
-patch_fuzz_override_regexp = re.compile(DEFINE_RE + '_default_patch_fuzz\s+(\d+)')
+patch_fuzz_override_regex = re.compile(DEFINE_RE + '_default_patch_fuzz\s+(\d+)')
 
 # See https://bugzilla.redhat.com/488146 for details
 indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
@@ -429,7 +429,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                         depgen_disable_regex.search(line) is not None
                 if not patch_fuzz_override:
                     patch_fuzz_override = \
-                        patch_fuzz_override_regexp.search(line) is not None
+                        patch_fuzz_override_regex.search(line) is not None
 
             if current_section == 'files':
 
