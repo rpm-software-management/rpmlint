@@ -627,7 +627,7 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 
 'missing-call-to-setgroups-before-setuid',
 '''This executable is calling setuid and setgid without setgroups or initgroups.
-There is a high probability this mean it didn't relinquish all groups, and this
+There is a high probability this means it didn't relinquish all groups, and this
 would be a potential security issue to be fixed. Seek POS36-C on the web for
 details about the problem.''',
 
