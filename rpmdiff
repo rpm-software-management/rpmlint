@@ -181,15 +181,15 @@ class Rpmdiff:
         ss = []
         if req & rpm.RPMSENSE_SCRIPT_PRE:
             ss.append("pre")
-        elif req & rpm.RPMSENSE_SCRIPT_POST:
+        if req & rpm.RPMSENSE_SCRIPT_POST:
             ss.append("post")
-        elif req & rpm.RPMSENSE_SCRIPT_PREUN:
+        if req & rpm.RPMSENSE_SCRIPT_PREUN:
             ss.append("preun")
-        elif req & rpm.RPMSENSE_SCRIPT_POSTUN:
+        if req & rpm.RPMSENSE_SCRIPT_POSTUN:
             ss.append("postun")
-        elif req & getattr(rpm, "RPMSENSE_PRETRANS", 1 << 7): # rpm >= 4.9.0
+        if req & getattr(rpm, "RPMSENSE_PRETRANS", 1 << 7): # rpm >= 4.9.0
             ss.append("pretrans")
-        elif req & getattr(rpm, "RPMSENSE_POSTTRANS", 1 << 5): # rpm >= 4.9.0
+        if req & getattr(rpm, "RPMSENSE_POSTTRANS", 1 << 5): # rpm >= 4.9.0
             ss.append("posttrans")
         if ss:
             s += "(%s)" % ",".join(ss)
