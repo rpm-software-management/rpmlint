@@ -12,7 +12,7 @@ ETCDIR=/etc
 MANDIR=/usr/share/man
 
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
-	Makefile config rpmdiff rpmlint.bash-completion rpmlint.1 \
+	Makefile config rpmdiff rpmdiff.1 rpmlint.bash-completion rpmlint.1 \
 	test.sh test/*.rpm test/*.spec test/*.py
 GENERATED = ChangeLog __version__.py
 
@@ -50,7 +50,7 @@ install: all
 		cp -p rpmlint.bash-completion $(DESTDIR)$$compdir/rpmlint ; \
 		ln -s rpmlint $(DESTDIR)$$compdir/rpmdiff ; \
 	fi
-	cp -p rpmlint.1 $(DESTDIR)$(MANDIR)/man1/rpmlint.1
+	cp -p rpmdiff.1 rpmlint.1 $(DESTDIR)$(MANDIR)/man1
 
 verify:
 	pychecker --limit=100 [A-Z]*.py __*__.py
