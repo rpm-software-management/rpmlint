@@ -107,8 +107,8 @@ class Rpmdiff:
 
         old_files_dict = self.__fileIteratorToDict(old.fiFromHeader())
         new_files_dict = self.__fileIteratorToDict(new.fiFromHeader())
-        files = list(set(itertools.chain(old_files_dict.iterkeys(),
-                                         new_files_dict.iterkeys())))
+        files = list(set(itertools.chain(iter(old_files_dict),
+                                         iter(new_files_dict))))
         files.sort()
 
         for f in files:
@@ -205,16 +205,20 @@ class Rpmdiff:
         if not isinstance(newflags, list): newflags = [ newflags ]
 
         o = zip(old[name], oldflags, old[name[:-1]+'VERSION'])
+        if not isinstance(o, list):
+            o = list(o)
         n = zip(new[name], newflags, new[name[:-1]+'VERSION'])
+        if not isinstance(n, list):
+            n = list(n)
 
         # filter self provides, TODO: self %name(%_isa) as well
         if name == 'PROVIDES':
             oldE = old['epoch'] is not None and str(old['epoch'])+":" or ""
-            oldNV = (old['name'], rpm.RPMSENSE_EQUAL,
-                     "%s%s-%s" % (oldE, old['version'], old['release']))
+            oldV = "%s%s" % (oldE, old.format("%{VERSION}-%{RELEASE}"))
+            oldNV = (old['name'], rpm.RPMSENSE_EQUAL, oldV.encode())
             newE = new['epoch'] is not None and str(new['epoch'])+":" or ""
-            newNV = (new['name'], rpm.RPMSENSE_EQUAL,
-                     "%s%s-%s" % (newE, new['version'], new['release']))
+            newV = "%s%s" % (newE, new.format("%{VERSION}-%{RELEASE}"))
+            newNV = (new['name'], rpm.RPMSENSE_EQUAL, newV.encode())
             o = [entry for entry in o if entry != oldNV]
             n = [entry for entry in n if entry != newNV]
 
@@ -224,16 +228,16 @@ class Rpmdiff:
                 if namestr == 'REQUIRES':
                     namestr = self.req2str(oldentry[1])
                 self.__add(self.DEPFORMAT,
-                           (self.REMOVED, namestr, oldentry[0],
-                            self.sense2str(oldentry[1]), oldentry[2]))
+                           (self.REMOVED, namestr, oldentry[0].decode(),
+                            self.sense2str(oldentry[1]), oldentry[2].decode()))
         for newentry in n:
             if not newentry in o:
                 namestr = name
                 if namestr == 'REQUIRES':
                     namestr = self.req2str(newentry[1])
                 self.__add(self.DEPFORMAT,
-                           (self.ADDED, namestr, newentry[0],
-                            self.sense2str(newentry[1]), newentry[2]))
+                           (self.ADDED, namestr, newentry[0].decode(),
+                            self.sense2str(newentry[1]), newentry[2].decode()))
 
     def __fileIteratorToDict(self, fi):
         result = {}
