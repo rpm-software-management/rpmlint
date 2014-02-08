@@ -39,18 +39,23 @@ options starting with two dashes (`-').
 .B \-h, \-\-help
 Show summary of options.
 .TP
-.B \-i, \-\-ignore
+.B \-i, \-\-ignore\fR=\fIproperty\fR
 File property to ignore when calculating differences (may be used
 multiple times).
 .br
 Valid values are:
 .nf
- S (size),
- M (mode),
- 5 (checksum),
- D (device),
- N (inode),
+ S (size)
+ M (mode)
+ 5 (checksum)
+ D (device)
+ N (inode)
  L (number of links)
+ V (vflags)
+ U (user)
+ G (group)
+ F (digest)
+ T (time)
 .fi
 .SH SEE ALSO
 .BR rpmlint (1),
