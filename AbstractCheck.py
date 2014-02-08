@@ -10,7 +10,10 @@
 import re
 import socket
 import sys
-import urllib2
+try:
+    import urllib2
+except:
+    import urllib.request as urllib2
 
 from Filter import addDetails, printInfo, printWarning
 import Config

@@ -79,7 +79,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
         if pkg.isSource():
             return
 
-        files = pkg.files().keys()
+        files = list(pkg.files().keys())
         files.sort()
         locales = []                      # list of locales for this packages
         webapp = False

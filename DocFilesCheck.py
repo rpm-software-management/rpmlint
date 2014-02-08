@@ -43,7 +43,9 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             core_reqs[dep.N()] = []
 
         # register things which are provided by the package
-        for i in pkg.header[rpm.RPMTAG_PROVIDES] + files.keys():
+        for i in pkg.header[rpm.RPMTAG_PROVIDES]:
+            core_reqs[i.decode()] = []
+        for i in files:
             core_reqs[i] = []
 
         for i in files:

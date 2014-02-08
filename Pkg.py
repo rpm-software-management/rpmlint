@@ -85,7 +85,7 @@ def getstatusoutput(cmd, stdoutonly = False, shell = False):
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
-    text = proc.stdout.read()
+    text = proc.stdout.read().decode()
     sts = proc.wait()
     if sts is None:
         sts = 0
@@ -444,13 +444,13 @@ class Pkg:
                 os.close(fd)
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
-        self.name = self.header[rpm.RPMTAG_NAME]
+        self.name = self.header[rpm.RPMTAG_NAME].decode()
         if self.isNoSource():
             self.arch = 'nosrc'
         elif self.isSource():
             self.arch = 'src'
         else:
-            self.arch = self.header[rpm.RPMTAG_ARCH]
+            self.arch = self.header.format("%{ARCH}")
 
     # Return true if the package is a source package
     def isSource(self):
@@ -530,7 +530,7 @@ class Pkg:
         # LANGUAGE trumps other env vars per GNU gettext docs, see also #166
         orig = os.environ.get('LANGUAGE')
         os.environ['LANGUAGE'] = lang
-        ret = self[tag]
+        ret = self[tag].decode()
         if orig is not None:
             os.environ['LANGUAGE'] = orig
         return ret
@@ -595,17 +595,17 @@ class Pkg:
         modes = self.header[rpm.RPMTAG_FILEMODES]
         users = self.header[rpm.RPMTAG_FILEUSERNAME]
         groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
-        links = self.header[rpm.RPMTAG_FILELINKTOS]
+        links = [x.decode() for x in self.header[rpm.RPMTAG_FILELINKTOS]]
         sizes = self.header[rpm.RPMTAG_FILESIZES]
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
-        requires = self.header[rpm.RPMTAG_FILEREQUIRE]
-        provides = self.header[rpm.RPMTAG_FILEPROVIDE]
-        files = self.header[rpm.RPMTAG_FILENAMES]
-        magics = self.header[rpm.RPMTAG_FILECLASS]
+        requires = [x.decode() for x in self.header[rpm.RPMTAG_FILEREQUIRE]]
+        provides = [x.decode() for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
+        files = [x.decode() for x in self.header[rpm.RPMTAG_FILENAMES]]
+        magics = [x.decode() for x in self.header[rpm.RPMTAG_FILECLASS]]
         try: # rpm >= 4.7.0
             filecaps = self.header[rpm.RPMTAG_FILECAPS]
         except:
@@ -716,12 +716,12 @@ class Pkg:
 
         if versions:
             for loop in range(len(versions)):
-                evr = stringToVersion(versions[loop])
+                name = names[loop].decode()
+                evr = stringToVersion(versions[loop].decode())
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((names[loop], flags[loop] & (~PREREQ_FLAG),
-                                   evr))
+                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:
-                    list.append((names[loop], flags[loop], evr))
+                    list.append((name, flags[loop], evr))
 
     def _gatherDepInfo(self):
         if self._requires is None:

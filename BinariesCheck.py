@@ -9,6 +9,7 @@
 
 import re
 import stat
+import sys
 
 import rpm
 
@@ -175,10 +176,11 @@ class BinaryInfo:
 
         fobj = None
         try:
-            fobj = open(path)
+            fobj = open(path, 'rb')
             fobj.seek(-12, 2) # 2 == os.SEEK_END, for python 2.4 compat (#172)
-            self.tail = fobj.read()
-        except Exception, e:
+            self.tail = fobj.read().decode()
+        except Exception:
+            e = sys.exc_info()[1]
             printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
         if fobj:
             fobj.close()
@@ -270,9 +272,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         has_usr_lib_file = False
 
         multi_pkg = False
-        res = srcname_regex.search(pkg[rpm.RPMTAG_SOURCERPM] or '')
-        if res:
-            multi_pkg = (pkg.name != res.group(1))
+        srpm = pkg[rpm.RPMTAG_SOURCERPM]
+        if srpm:
+            res = srcname_regex.search(srpm.decode())
+            if res:
+                multi_pkg = (pkg.name != res.group(1))
 
         for fname, pkgfile in files.items():
 
