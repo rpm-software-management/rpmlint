@@ -9,16 +9,16 @@
 #############################################################################
 
 from datetime import datetime
-import commands
 import os
 import re
 import stat
 import string
+import sys
 
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import catcmd, is_utf8, is_utf8_str
+from Pkg import catcmd, getstatusoutput, is_utf8, is_utf8_str
 import AbstractCheck
 import Config
 
@@ -253,7 +253,7 @@ scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 
 # loosely inspired from Python Cookbook
 # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
-text_characters = "".join(map(chr, range(32, 127)) + list("\n\r\t\b"))
+text_characters = "".join(map(chr, range(32, 127))) + "\n\r\t\b"
 _null_trans = string.maketrans("", "")
 
 def peek(filename, pkg, length=1024):
@@ -265,7 +265,8 @@ def peek(filename, pkg, length=1024):
         fobj = open(filename, 'rb')
         chunk = fobj.read(length)
         fobj.close()
-    except IOError, e: # eg. https://bugzilla.redhat.com/209876
+    except IOError: # eg. https://bugzilla.redhat.com/209876
+        e = sys.exc_info()[1]
         printWarning(pkg, 'read-error', e)
         if fobj:
             fobj.close()
@@ -489,7 +490,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'compressed-symlink-with-wrong-ext',
                                    f, link)
 
-            perm = mode & 07777
+            perm = mode & int("7777", 8)
+            mode_is_exec = mode & int("111", 8)
 
             if log_regex.search(f):
                 log_file = f
@@ -514,17 +516,17 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     pkg[rpm.RPMTAG_GROUP]))):
                             printError(pkg, 'setgid-binary', f, group,
                                        oct(perm))
-                    if mode & 0777 != 0755:
+                    if mode & int("777", 8) != int("755", 8):
                         printError(pkg, 'non-standard-executable-perm', f,
                                    oct(perm))
 
                 # Prefetch scriptlets, strip quotes from them (#169)
-                postin = pkg[rpm.RPMTAG_POSTIN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+                postin = (pkg[rpm.RPMTAG_POSTIN] or \
+                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)).decode()
                 if postin:
                     postin = quotes_regex.sub('', postin)
-                postun = pkg[rpm.RPMTAG_POSTUN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
+                postun = (pkg[rpm.RPMTAG_POSTUN] or \
+                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)).decode()
                 if postun:
                     postun = quotes_regex.sub('', postun)
 
@@ -628,7 +630,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 res = bin_regex.search(f)
                 if res:
-                    if mode & 0111 == 0:
+                    if not mode_is_exec:
                         printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
                     else:
                         exe = res.group(1)
@@ -639,7 +641,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                        (includefile_regex.search(f) or \
                         develfile_regex.search(f) or is_buildconfig):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
-                if mode & 0444 != 0444 and perm & 07000 == 0:
+                if mode & int("444", 8) != int("444", 8) and \
+                   perm & int("7000", 8) == 0:
                     ok_nonreadable = False
                     for regex in non_readable_regexs:
                         if regex.search(f):
@@ -651,7 +654,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
-                if mode & 0002 != 0:
+                if mode & stat.S_IWOTH:
                     printError(pkg, 'world-writable', f, oct(perm))
 
                 if not perl_dep_error:
@@ -723,10 +726,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
                 # normal executable check
-                if mode & stat.S_IXUSR and perm != 0755:
+                if mode & stat.S_IXUSR and perm != int("755", 8):
                     printError(pkg, 'non-standard-executable-perm',
                                f, oct(perm))
-                if mode & 0111 != 0:
+                if mode_is_exec:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
                     if not nonexec_file:
@@ -758,11 +761,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     man_basenames.add(res.group(1))
                     if use_utf8 and chunk:
                         # TODO: better shell escaping or seq based invocation
-                        cmd = commands.getstatusoutput(
+                        cmd = getstatusoutput(
                             'env LC_ALL=C %s "%s" | gtbl | '
                             'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
                             '-P-c -mandoc -w%s >/dev/null' %
-                            (catcmd(f), pkgfile.path, man_warn_category))
+                            (catcmd(f), pkgfile.path, man_warn_category),
+                            shell=True)
                         for line in cmd[1].split("\n"):
                             res = man_warn_regex.search(line)
                             if not res or man_nowarn_regex.search(line):
@@ -792,12 +796,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             printError(pkg,
                                        'sourced-script-with-shebang', f,
                                        interpreter)
-                        if mode & 0111 != 0:
+                        if mode_is_exec:
                             printError(pkg, 'executable-sourced-script',
                                        f, oct(perm))
                     # ...but executed ones should
-                    elif interpreter or mode & 0111 != 0 or \
-                            script_regex.search(f):
+                    elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
                             if not interpreter_regex.search(interpreter):
                                 printError(pkg, 'wrong-script-interpreter',
@@ -807,7 +810,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                  f.endswith('.la')):
                             printError(pkg, 'script-without-shebang', f)
 
-                        if mode & 0111 == 0 and not is_doc:
+                        if not mode_is_exec and not is_doc:
                             printError(pkg, 'non-executable-script', f,
                                        oct(perm), interpreter)
                         if '\r' in chunk:
@@ -835,9 +838,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal dir check
             elif stat.S_ISDIR(mode):
-                if mode & 01002 == 2: # world writable without sticky bit
+                if mode & int("1002", 8) == 2: # world writable w/o sticky bit
                     printError(pkg, 'world-writable', f, oct(perm))
-                if perm != 0755:
+                if perm != int("755", 8):
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
                 if pkg.name not in filesys_packages and f in STANDARD_DIRS:
                     printError(pkg, 'standard-dir-owned-by-package', f)
@@ -947,7 +950,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if stat.S_ISLNK(mode):
                     printError(pkg, 'symlink-crontab-file', f)
 
-                if mode & 0111:
+                if mode_is_exec:
                     printError(pkg, 'executable-crontab-file', f)
 
                 if stat.S_IWGRP & mode or stat.S_IWOTH & mode:

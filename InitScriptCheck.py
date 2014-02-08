@@ -10,6 +10,7 @@
 
 import os
 import re
+import sys
 
 import rpm
 
@@ -54,7 +55,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
             basename = os.path.basename(fname)
             initscript_list.append(basename)
-            if pkgfile.mode & 0500 != 0500:
+            if pkgfile.mode & int("500", 8) != int("500", 8):
                 printError(pkg, 'init-script-non-executable', fname)
 
             if "." in basename:
@@ -87,7 +88,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             content = None
             try:
                 content = Pkg.readlines(pkgfile.path)
-            except Exception, e:
+            except Exception:
+                e = sys.exc_info()[1]
                 printWarning(pkg, 'read-error', e)
                 continue
             content_str = "".join(content)

@@ -9,7 +9,10 @@
 from Filter import addDetails, printError, printWarning
 from Pkg import getstatusoutput, is_utf8
 import AbstractCheck
-from ConfigParser import RawConfigParser
+try:
+    from ConfigParser import RawConfigParser
+except:
+    from configparser import RawConfigParser
 import os
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']

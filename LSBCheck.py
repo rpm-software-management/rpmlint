@@ -31,12 +31,16 @@ class LSBCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'non-lsb-compliant-package-name', name)
 
         version = pkg[rpm.RPMTAG_VERSION]
-        if version and not version_regex.search(version):
-            printError(pkg, 'non-lsb-compliant-version', version)
+        if version:
+            version = version.decode()
+            if not version_regex.search(version):
+                printError(pkg, 'non-lsb-compliant-version', version)
 
         release = pkg[rpm.RPMTAG_RELEASE]
-        if release and not version_regex.search(release):
-            printError(pkg, 'non-lsb-compliant-release', release)
+        if release:
+            release = release.decode()
+            if not version_regex.search(release):
+                printError(pkg, 'non-lsb-compliant-release', release)
 
 # Create an object to enable the auto registration of the test
 check = LSBCheck()

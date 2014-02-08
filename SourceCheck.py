@@ -14,7 +14,7 @@ import AbstractCheck
 import Config
 
 
-DEFAULT_VALID_SRC_PERMS = (0644, 0755)
+DEFAULT_VALID_SRC_PERMS = (int("644", 8), int("755", 8))
 
 source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
 compress_ext = Config.getOption("CompressExtension", "bz2")
@@ -43,7 +43,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
                     not fname.endswith(compress_ext):
                 printWarning(pkg, 'source-or-patch-not-compressed',
                              compress_ext, fname)
-            perm = pkgfile.mode & 07777
+            perm = pkgfile.mode & int("7777", 8)
             if perm not in valid_src_perms:
                 printWarning(pkg, 'strange-permission', fname, oct(perm))
 

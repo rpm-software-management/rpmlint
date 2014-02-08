@@ -535,7 +535,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
         if not value:
             return
-        for match in AbstractCheck.macro_regex.findall(str(value)):
+        for match in AbstractCheck.macro_regex.findall(value):
             # Do not warn about %XX URL escapes
             if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
                 continue
@@ -544,28 +544,33 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def check(self, pkg):
 
         packager = pkg[rpm.RPMTAG_PACKAGER]
-        self._unexpanded_macros(pkg, 'Packager', packager)
-        if not packager:
+        if packager:
+            packager = packager.decode()
+            self._unexpanded_macros(pkg, 'Packager', packager)
+            if Config.getOption('Packager') and \
+               not packager_regex.search(packager):
+                printWarning(pkg, 'invalid-packager', packager)
+        else:
             printError(pkg, 'no-packager-tag')
-        elif Config.getOption('Packager') and \
-                not packager_regex.search(packager):
-            printWarning(pkg, 'invalid-packager', packager)
 
         version = pkg[rpm.RPMTAG_VERSION]
-        self._unexpanded_macros(pkg, 'Version', version)
-        if not version:
-            printError(pkg, 'no-version-tag')
-        else:
+        if version:
+            version = version.decode()
+            self._unexpanded_macros(pkg, 'Version', version)
             res = invalid_version_regex.search(version)
             if res:
                 printError(pkg, 'invalid-version', version)
+        else:
+            printError(pkg, 'no-version-tag')
 
         release = pkg[rpm.RPMTAG_RELEASE]
-        self._unexpanded_macros(pkg, 'Release', release)
-        if not release:
+        if release:
+            release = release.decode()
+            self._unexpanded_macros(pkg, 'Release', release)
+            if release_ext and not extension_regex.search(release):
+                printWarning(pkg, 'not-standard-release-extension', release)
+        else:
             printError(pkg, 'no-release-tag')
-        elif release_ext and not extension_regex.search(release):
-            printWarning(pkg, 'not-standard-release-extension', release)
 
         epoch = pkg[rpm.RPMTAG_EPOCH]
         if epoch is None:
@@ -593,7 +598,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         is_devel = FilesCheck.devel_regex.search(name)
         is_source = pkg.isSource()
         for d in deps:
-            value = apply(Pkg.formatRequire, d)
+            value = Pkg.formatRequire(*d)
             if use_epoch and d[1] and d[2][0] is None and \
                     not d[0].startswith('rpmlib('):
                 printWarning(pkg, 'no-epoch-in-dependency', value)
@@ -677,25 +682,31 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         ignored_words.update((x[0] for x in pkg.conflicts()))
         ignored_words.update((x[0] for x in pkg.obsoletes()))
 
+        langs = pkg[rpm.RPMTAG_HEADERI18NTABLE]
+        if langs:
+            langs = [x.decode() for x in langs]
+
         summary = pkg[rpm.RPMTAG_SUMMARY]
-        if not summary:
-            printError(pkg, 'no-summary-tag')
-        else:
-            if not pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+        if summary:
+            summary = summary.decode()
+            if not langs:
                 self._unexpanded_macros(pkg, 'Summary', summary)
             else:
-                for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                for lang in langs:
                     self.check_summary(pkg, lang, ignored_words)
+        else:
+            printError(pkg, 'no-summary-tag')
 
         description = pkg[rpm.RPMTAG_DESCRIPTION]
-        if not description:
-            printError(pkg, 'no-description-tag')
-        else:
-            if not pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+        if description:
+            description = description.decode()
+            if not langs:
                 self._unexpanded_macros(pkg, '%description', description)
             else:
-                for lang in pkg[rpm.RPMTAG_HEADERI18NTABLE]:
+                for lang in langs:
                     self.check_description(pkg, lang, ignored_words)
+        else:
+            printError(pkg, 'no-description-tag')
 
         group = pkg[rpm.RPMTAG_GROUP]
         self._unexpanded_macros(pkg, 'Group', group)
