@@ -43,7 +43,18 @@ class AbstractCheck:
         self.network_timeout = Config.getOption("NetworkTimeout", 10)
 
     def check(self, pkg):
-        raise NotImplementedError('check must be implemented in subclass')
+        if pkg.isSource():
+            return self.check_source(pkg)
+        return self.check_binary(pkg)
+
+    def check_source(self, pkg):
+        return
+
+    def check_binary(self, pkg):
+        return
+
+    def check_spec(self, pkg, spec_file, spec_lines=[]):
+        return
 
     def check_url(self, pkg, tag, url):
         """Check that URL points to something that seems to exist.
@@ -79,9 +90,7 @@ class AbstractFilesCheck(AbstractCheck):
     def __init__(self, name, file_regexp):
         self.__files_re = re.compile(file_regexp)
         AbstractCheck.__init__(self, name)
-    def check(self, pkg):
-        if pkg.isSource():
-            return
+    def check_binary(self, pkg):
         ghosts = pkg.ghostFiles()
         for filename in (x for x in pkg.files() if x not in ghosts):
             if self.__files_re.match(filename):

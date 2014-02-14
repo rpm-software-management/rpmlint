@@ -25,11 +25,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")
 
-    def check(self, pkg):
-        # Check only binary package
-        if pkg.isSource():
-            return
-
+    def check_binary(self, pkg):
         var_list = []
         usr_list = []
 

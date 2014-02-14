@@ -130,10 +130,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
         self._spec_file = None
 
-    def check(self, pkg):
-        if not pkg.isSource():
-            return
-
+    def check_source(self, pkg):
         wrong_spec = False
 
         # lookup spec file

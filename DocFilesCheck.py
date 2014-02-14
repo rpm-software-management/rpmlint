@@ -73,9 +73,9 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             if docfile.endswith("/INSTALL"):
                 printWarning(pkg, "install-file-in-docs", docfile)
 
-    def check(self, pkg):
+    def check_binary(self, pkg):
 
-        if pkg.isSource() or not pkg.docFiles():
+        if not pkg.docFiles():
             return
 
         self.__checkRequirements(pkg)
