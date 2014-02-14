@@ -95,11 +95,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'PostCheck')
 
-    def check(self, pkg):
-        # Check only binary package
-        if pkg.isSource():
-            return
-
+    def check_binary(self, pkg):
         prereq = [x[0] for x in pkg.prereq()]
         files = pkg.files()
 

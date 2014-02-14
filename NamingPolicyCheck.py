@@ -53,9 +53,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
                    "This package doesn't respect the naming policy for %s "
                    "packages.\n%s." % (pkg_name, details))
 
-    def check(self, pkg):
-        if pkg.isSource():
-            return
+    def check_binary(self, pkg):
         files = pkg.files()
         if not files:
             return

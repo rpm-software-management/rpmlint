@@ -90,11 +90,6 @@ def main():
 
     packages_checked = 0
     specfiles_checked = 0
-    do_spec_check = 'SpecCheck' in Config.allChecks()
-    if do_spec_check:
-        # See comments in "top level import section" for why this isn't
-        # imported earlier.
-        import SpecCheck
 
     try:
         # Loop over all file names given in arguments
@@ -106,16 +101,12 @@ def main():
                 if arg == "-":
                     arg = "(standard input)"
                     # Short-circuit stdin spec file check
-                    if do_spec_check:
-                        stdin = sys.stdin.readlines()
-                        if not stdin:
-                            continue
-                        pkg = Pkg.FakePkg(arg)
-                        check = SpecCheck.SpecCheck()
-                        check.verbose = verbose
-                        check.check_spec(pkg, None, spec_lines=stdin)
-                        pkg.cleanup()
-                        specfiles_checked += 1
+                    stdin = sys.stdin.readlines()
+                    if not stdin:
+                        continue
+                    pkg = Pkg.FakePkg(arg)
+                    runSpecChecks(pkg, arg)
+                    specfiles_checked += 1
                     continue
 
                 try:
@@ -123,14 +114,10 @@ def main():
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if arg.endswith(".spec"):
-                            if do_spec_check:
-                                # Short-circuit spec file checks
-                                pkg = Pkg.FakePkg(arg)
-                                check = SpecCheck.SpecCheck()
-                                check.verbose = verbose
-                                check.check_spec(pkg, arg)
-                                pkg.cleanup()
-                                specfiles_checked += 1
+                            # Short-circuit spec file checks
+                            pkg = Pkg.FakePkg(arg)
+                            runSpecChecks(pkg, arg)
+                            specfiles_checked += 1
                         elif "/" in arg or arg.endswith(".rpm") or \
                                 arg.endswith(".spm"):
                             pkgs.append(Pkg.Pkg(arg, extract_dir))
@@ -181,12 +168,9 @@ def main():
                                 runChecks(pkg)
                                 packages_checked += 1
 
-                            elif do_spec_check and fname.endswith('.spec'):
+                            elif fname.endswith('.spec'):
                                 pkg = Pkg.FakePkg(fname)
-                                check = SpecCheck.SpecCheck()
-                                check.verbose = verbose
-                                check.check_spec(pkg, fname)
-                                pkg.cleanup()
+                                runSpecChecks(pkg, fname)
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
@@ -229,6 +213,22 @@ def runChecks(pkg):
             if check:
                 check.verbose = verbose
                 check.check(pkg)
+            else:
+                Pkg.warn('(none): W: unknown check %s, skipping' % name)
+    finally:
+        pkg.cleanup()
+
+def runSpecChecks(pkg, fname):
+
+    try:
+        if verbose:
+            printInfo(pkg, 'checking')
+
+        for name in Config.allChecks():
+            check = AbstractCheck.AbstractCheck.known_checks.get(name)
+            if check:
+                check.verbose = verbose
+                check.check_spec(pkg,fname)
             else:
                 Pkg.warn('(none): W: unknown check %s, skipping' % name)
     finally:

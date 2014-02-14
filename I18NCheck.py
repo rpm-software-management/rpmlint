@@ -74,11 +74,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
 
-    def check(self, pkg):
-
-        if pkg.isSource():
-            return
-
+    def check_binary(self, pkg):
         files = list(pkg.files().keys())
         files.sort()
         locales = []                      # list of locales for this packages
