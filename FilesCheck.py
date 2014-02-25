@@ -346,10 +346,12 @@ def get_expected_pyc_magic(path):
 def py_demarshal_long(b):
     """Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
     bytes in a string."""
-    return (ord(b[0])
-            + (ord(b[1]) << 8)
-            + (ord(b[2]) << 16)
-            + (ord(b[3]) << 24))
+    if isinstance(b, str):
+        b = map(ord, b)
+    return (b[0]
+            + (b[1] << 8)
+            + (b[2] << 16)
+            + (b[3] << 24))
 
 def python_bytecode_to_script(path):
     """Given a python bytecode path, give the path of the .py file

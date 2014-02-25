@@ -34,6 +34,7 @@ import Filter
 if sys.version_info[0] > 2:
     # Blows up with Python < 3 without the exec() hack
     exec('def warn(s): print (s, file=sys.stderr)')
+    long = int
 else:
     def warn(s): print >> sys.stderr, s
 
@@ -756,7 +757,7 @@ class Pkg:
         prog = self[which]
         if prog is None:
             prog = ""
-        elif not isinstance(prog, basestring):
+        elif isinstance(prog, (list, tuple)):
             # http://rpm.org/ticket/847#comment:2
             prog = " ".join(prog)
         return prog
