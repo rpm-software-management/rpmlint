@@ -7,6 +7,7 @@
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 
+import os
 import re
 import stat
 import sys
@@ -177,7 +178,7 @@ class BinaryInfo:
         fobj = None
         try:
             fobj = open(path, 'rb')
-            fobj.seek(-12, 2) # 2 == os.SEEK_END, for python 2.4 compat (#172)
+            fobj.seek(-12, os.SEEK_END)
             self.tail = Pkg.b2s(fobj.read())
         except Exception:
             e = sys.exc_info()[1]
