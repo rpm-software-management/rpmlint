@@ -32,7 +32,7 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         if st[0]:
             for line in st[1].splitlines():
                 if 'problems detected' in line:
-                    printError(pkg, 'invalid-appdate-file', filename)
+                    printError(pkg, 'invalid-appdata-file', filename)
 
 
 check = AppDataCheck()
