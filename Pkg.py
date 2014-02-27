@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import unicodedata
 try:
     from urlparse import urljoin
 except:
@@ -39,7 +40,7 @@ if sys.version_info[0] > 2:
     def b2s(b):
         if b is None:
             return None
-        return b.decode()
+        return b.decode(errors='replace')
 else:
     def warn(s): print >> sys.stderr, s
     def b2s(b):
@@ -117,13 +118,20 @@ def is_utf8(fname):
     (sts, text) = getstatusoutput(catcmd(fname).split() + [fname])
     return not sts and is_utf8_str(text)
 
-def is_utf8_str(s):
-    try:
-        s.decode('UTF-8')
-    except:
-        return False
-    return True
+REPLACEMENT_CHAR = unicodedata.lookup('REPLACEMENT CHARACTER')
 
+def is_utf8_str(s):
+    if hasattr(s, 'decode'):
+        # byte string
+        try:
+            s.decode('UTF-8')
+        except:
+            return False
+        return True
+    # unicode string
+    return REPLACEMENT_CHAR not in s
+
+# TODO: PY3
 def to_utf8(string):
     if string is None:
         return ''
@@ -151,9 +159,10 @@ def to_utf8(string):
     return newstring
 
 def readlines(path):
-    fobj = open(path, "r")
+    fobj = open(path, 'rb')
     try:
-        return fobj.readlines()
+        for line in fobj:
+            yield b2s(line)
     finally:
         fobj.close()
 
@@ -478,7 +487,9 @@ class Pkg:
         if val == []:
             return None
         else:
-            if key in (rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE, rpm.RPMTAG_ARCH):
+            if key in (rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE, rpm.RPMTAG_ARCH,
+                       rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
+                       rpm.RPMTAG_LICENSE):
                 val = b2s(val)
             return val
 
