@@ -17,6 +17,7 @@
 import rpm
 
 from Filter import addDetails, printWarning
+from Pkg import b2s
 import AbstractCheck
 
 
@@ -44,7 +45,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
         # register things which are provided by the package
         for i in pkg.header[rpm.RPMTAG_PROVIDES]:
-            core_reqs[i.decode()] = []
+            core_reqs[b2s(i)] = []
         for i in files:
             core_reqs[i] = []
 

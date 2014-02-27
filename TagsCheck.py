@@ -543,9 +543,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        packager = pkg[rpm.RPMTAG_PACKAGER]
+        packager = Pkg.b2s(pkg[rpm.RPMTAG_PACKAGER])
         if packager:
-            packager = packager.decode()
             self._unexpanded_macros(pkg, 'Packager', packager)
             if Config.getOption('Packager') and \
                not packager_regex.search(packager):
@@ -555,7 +554,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         version = pkg[rpm.RPMTAG_VERSION]
         if version:
-            version = version.decode()
             self._unexpanded_macros(pkg, 'Version', version)
             res = invalid_version_regex.search(version)
             if res:
@@ -565,7 +563,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         release = pkg[rpm.RPMTAG_RELEASE]
         if release:
-            release = release.decode()
             self._unexpanded_macros(pkg, 'Release', release)
             if release_ext and not extension_regex.search(release):
                 printWarning(pkg, 'not-standard-release-extension', release)
@@ -684,11 +681,10 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         langs = pkg[rpm.RPMTAG_HEADERI18NTABLE]
         if langs:
-            langs = [x.decode() for x in langs]
+            langs = [Pkg.b2s(x) for x in langs]
 
-        summary = pkg[rpm.RPMTAG_SUMMARY]
+        summary = Pkg.b2s(pkg[rpm.RPMTAG_SUMMARY])
         if summary:
-            summary = summary.decode()
             if not langs:
                 self._unexpanded_macros(pkg, 'Summary', summary)
             else:
@@ -697,9 +693,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             printError(pkg, 'no-summary-tag')
 
-        description = pkg[rpm.RPMTAG_DESCRIPTION]
+        description = Pkg.b2s(pkg[rpm.RPMTAG_DESCRIPTION])
         if description:
-            description = description.decode()
             if not langs:
                 self._unexpanded_macros(pkg, '%description', description)
             else:
