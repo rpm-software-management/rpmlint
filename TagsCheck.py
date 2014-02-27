@@ -581,13 +581,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if use_epoch:
             for o in (x for x in pkg.obsoletes() if x[1] and x[2][0] is None):
                 printWarning(pkg, 'no-epoch-in-obsoletes',
-                             apply(Pkg.formatRequire, o))
+                             Pkg.formatRequire(*o))
             for c in (x for x in pkg.conflicts() if x[1] and x[2][0] is None):
                 printWarning(pkg, 'no-epoch-in-conflicts',
-                             apply(Pkg.formatRequire, c))
+                             Pkg.formatRequire(*c))
             for p in (x for x in pkg.provides() if x[1] and x[2][0] is None):
                 printWarning(pkg, 'no-epoch-in-provides',
-                             apply(Pkg.formatRequire, p))
+                             Pkg.formatRequire(*p))
 
         name = pkg.name
         deps = pkg.requires() + pkg.prereq()
@@ -722,7 +722,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not changelog:
             printError(pkg, 'no-changelogname-tag')
         else:
-            clt = pkg[rpm.RPMTAG_CHANGELOGTEXT]
+            changelog = [Pkg.b2s(x) for x in changelog]
+            clt = [Pkg.b2s(x) for x in pkg[rpm.RPMTAG_CHANGELOGTEXT]]
             if use_version_in_changelog:
                 ret = changelog_version_regex.search(changelog[0])
                 if not ret and clt:
@@ -791,7 +792,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         for tag in ('URL', 'DistURL', 'BugURL'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
-                url = pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]
+                url = Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
                 self._unexpanded_macros(pkg, tag, url, is_url = True)
                 if url:
                     (scheme, netloc) = urlparse(url)[0:2]
@@ -811,7 +812,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for o in (x for x in obs_names if x not in prov_names):
             printWarning(pkg, 'obsolete-not-provided', o)
         for o in pkg.obsoletes():
-            value = apply(Pkg.formatRequire, o)
+            value = Pkg.formatRequire(*o)
             self._unexpanded_macros(pkg, 'Obsoletes %s' % (value,), value)
 
         # TODO: should take versions, <, <=, =, >=, > into account here
@@ -824,11 +825,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             printError(pkg, 'useless-provides', p)
 
         for p in pkg.provides():
-            value = apply(Pkg.formatRequire, p)
+            value = Pkg.formatRequire(*p)
             self._unexpanded_macros(pkg, 'Provides %s' % (value,), value)
 
         for c in pkg.conflicts():
-            value = apply(Pkg.formatRequire, c)
+            value = Pkg.formatRequire(*c)
             self._unexpanded_macros(pkg, 'Conflicts %s' % (value,), value)
 
         obss = pkg.obsoletes()
@@ -838,8 +839,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):
                         printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
-                                     (apply(Pkg.formatRequire, obs),
-                                      apply(Pkg.formatRequire, prov)))
+                                     (Pkg.formatRequire(*obs),
+                                      Pkg.formatRequire(*prov)))
 
         expfmt = rpm.expandMacro("%{_build_name_fmt}")
         if pkg.isSource():
@@ -854,8 +855,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for tag in ('Distribution', 'DistTag', 'ExcludeArch', 'ExcludeOS',
                     'Vendor'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
-                self._unexpanded_macros(
-                    pkg, tag, pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
+                self._unexpanded_macros(pkg, tag,
+                    Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]))
 
         for path in private_so_paths:
             for fname, pkgfile in pkg.files().items():
@@ -863,7 +864,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     for prov in pkgfile.provides:
                         if so_dep_regex.search(prov[0]):
                             printWarning(pkg, "private-shared-object-provides",
-                                         fname, apply(Pkg.formatRequire, prov))
+                                         fname, Pkg.formatRequire(*prov))
 
 
     def check_description(self, pkg, lang, ignored_words):
