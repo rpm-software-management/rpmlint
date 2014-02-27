@@ -12,13 +12,12 @@ from datetime import datetime
 import os
 import re
 import stat
-import string
 import sys
 
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import catcmd, getstatusoutput, is_utf8, is_utf8_str
+from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_str
 import AbstractCheck
 import Config
 
@@ -211,7 +210,7 @@ lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile('^#!\s*(\S+)')
+shebang_regex = re.compile(b'^#!\s*(\S+)')
 interpreter_regex = re.compile('^/(usr/)?(s?bin|games|libexec(/.+)?|(lib(64)?|share)/.+)/[^/]+$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
@@ -246,15 +245,21 @@ man_nowarn_regex = re.compile(
     r'(can\'t break|cannot adjust) line')
 man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 
-fsf_license_regex = re.compile('(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
-fsf_wrong_address_regex = re.compile('(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
+fsf_license_regex = re.compile(b'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
+fsf_wrong_address_regex = re.compile(b'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
 
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 
-# loosely inspired from Python Cookbook
-# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/173220
-text_characters = "".join(map(chr, range(32, 127))) + "\n\r\t\b"
-_null_trans = string.maketrans("", "")
+# "is binary" stuff borrowed from https://pypi.python.org/pypi/binaryornot
+# TODO: switch to it sometime later instead of embedding our own copy
+
+printable_extended_ascii = b'\n\r\t\f\b'
+if bytes is str:
+    # Python 2 means we need to invoke chr() explicitly
+    printable_extended_ascii += b''.join(map(chr, range(32, 256)))
+else:
+    # Python 3 means bytes accepts integer input directly
+    printable_extended_ascii += bytes(range(32, 256))
 
 def peek(filename, pkg, length=1024):
     """Peek into a file, return a chunk from its beginning and a flag if it
@@ -272,7 +277,7 @@ def peek(filename, pkg, length=1024):
             fobj.close()
         return (chunk, False)
 
-    if "\0" in chunk:
+    if b'\0' in chunk:
         return (chunk, False)
 
     if not chunk:  # Empty files are considered text
@@ -281,18 +286,17 @@ def peek(filename, pkg, length=1024):
     fl = filename.lower()
 
     # PDF's are binary but often detected as text by the algorithm below
-    if fl.endswith('.pdf') and chunk.startswith('%PDF-'):
+    if fl.endswith('.pdf') and chunk.startswith(b'%PDF-'):
         return (chunk, False)
     # Ditto RDoc RI files
     if fl.endswith('.ri') and '/ri/' in fl:
         return (chunk, False)
 
-    # Get the non-text characters (maps a character to itself then
-    # use the 'remove' option to get rid of the text characters.)
-    t = chunk.translate(_null_trans, text_characters)
+    # Binary if control chars are > 30% of the string
+    control_chars = chunk.translate(None, printable_extended_ascii)
+    nontext_ratio = float(len(control_chars)) / float(len(chunk))
+    istext = nontext_ratio <= 0.30
 
-    # If more than 30% non-text characters, then consider it a binary file
-    istext = float(len(t))/len(chunk) <= 0.30
     return (chunk, istext)
 
 # See Python sources for a full list of the values here.
@@ -523,12 +527,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                    oct(perm))
 
                 # Prefetch scriptlets, strip quotes from them (#169)
-                postin = (pkg[rpm.RPMTAG_POSTIN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)).decode()
+                postin = b2s(pkg[rpm.RPMTAG_POSTIN]) or \
+                         pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
                 if postin:
                     postin = quotes_regex.sub('', postin)
-                postun = (pkg[rpm.RPMTAG_POSTUN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)).decode()
+                postun = b2s(pkg[rpm.RPMTAG_POSTUN]) or \
+                         pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
                 if postun:
                     postun = quotes_regex.sub('', postun)
 
@@ -556,7 +560,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if chunk:
                     res = shebang_regex.search(chunk)
                     if res:
-                        interpreter = res.group(1)
+                        interpreter = b2s(res.group(1))
 
                 if doc_regex.search(f):
                     if not interpreter:
@@ -608,8 +612,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     elif not install_info_regex.search(postin):
                         printError(pkg, 'postin-without-install-info', f)
 
-                    preun = pkg[rpm.RPMTAG_PREUN] or \
-                        pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
+                    preun = b2s(pkg[rpm.RPMTAG_PREUN]) or \
+                            pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
                     if not postun and not preun:
                         printError(pkg,
                                    'info-files-without-install-info-postun', f)
@@ -815,11 +819,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if not mode_is_exec and not is_doc:
                             printError(pkg, 'non-executable-script', f,
                                        oct(perm), interpreter)
-                        if '\r' in chunk:
+                        if b'\r' in chunk:
                             printError(
                                 pkg, 'wrong-script-end-of-line-encoding', f)
                     elif is_doc and not skipdocs_regex.search(f):
-                        if '\r' in chunk:
+                        if b'\r' in chunk:
                             printWarning(
                                 pkg, 'wrong-file-end-of-line-encoding', f)
                         # We check only doc text files for UTF-8-ness;

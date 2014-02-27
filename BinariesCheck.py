@@ -178,7 +178,7 @@ class BinaryInfo:
         try:
             fobj = open(path, 'rb')
             fobj.seek(-12, 2) # 2 == os.SEEK_END, for python 2.4 compat (#172)
-            self.tail = fobj.read().decode()
+            self.tail = Pkg.b2s(fobj.read())
         except Exception:
             e = sys.exc_info()[1]
             printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
@@ -274,7 +274,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
         if srpm:
-            res = srcname_regex.search(srpm.decode())
+            res = srcname_regex.search(Pkg.b2s(srpm))
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 

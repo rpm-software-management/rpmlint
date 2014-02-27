@@ -29,14 +29,21 @@ import rpm
 
 import Filter
 
-# Python 2/3 compatibility/convenience wrapper for printing to stderr with
-# less concerns of UnicodeErrors than plain sys.stderr.write.
+# warn(): 2/3 compatibility/convenience wrapper for printing to stderr with
+#         less concerns of UnicodeErrors than plain sys.stderr.write.
+# b2s():  bytes to str
 if sys.version_info[0] > 2:
     # Blows up with Python < 3 without the exec() hack
     exec('def warn(s): print (s, file=sys.stderr)')
     long = int
+    def b2s(b):
+        if b is None:
+            return None
+        return b.decode()
 else:
     def warn(s): print >> sys.stderr, s
+    def b2s(b):
+        return b
 
 
 # utilities
@@ -86,7 +93,7 @@ def getstatusoutput(cmd, stdoutonly = False, shell = False):
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
-    text = proc.stdout.read().decode()
+    text = b2s(proc.stdout.read())
     sts = proc.wait()
     if sts is None:
         sts = 0
@@ -445,7 +452,7 @@ class Pkg:
                 os.close(fd)
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
-        self.name = self.header[rpm.RPMTAG_NAME].decode()
+        self.name = b2s(self.header[rpm.RPMTAG_NAME])
         if self.isNoSource():
             self.arch = 'nosrc'
         elif self.isSource():
@@ -471,6 +478,8 @@ class Pkg:
         if val == []:
             return None
         else:
+            if key in (rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE, rpm.RPMTAG_ARCH):
+                val = b2s(val)
             return val
 
     # return the name of the directory where the package is extracted
@@ -531,7 +540,7 @@ class Pkg:
         # LANGUAGE trumps other env vars per GNU gettext docs, see also #166
         orig = os.environ.get('LANGUAGE')
         os.environ['LANGUAGE'] = lang
-        ret = self[tag].decode()
+        ret = b2s(self[tag])
         if orig is not None:
             os.environ['LANGUAGE'] = orig
         return ret
@@ -596,17 +605,17 @@ class Pkg:
         modes = self.header[rpm.RPMTAG_FILEMODES]
         users = self.header[rpm.RPMTAG_FILEUSERNAME]
         groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
-        links = [x.decode() for x in self.header[rpm.RPMTAG_FILELINKTOS]]
+        links = [b2s(x) for x in self.header[rpm.RPMTAG_FILELINKTOS]]
         sizes = self.header[rpm.RPMTAG_FILESIZES]
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
-        requires = [x.decode() for x in self.header[rpm.RPMTAG_FILEREQUIRE]]
-        provides = [x.decode() for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
-        files = [x.decode() for x in self.header[rpm.RPMTAG_FILENAMES]]
-        magics = [x.decode() for x in self.header[rpm.RPMTAG_FILECLASS]]
+        requires = [b2s(x) for x in self.header[rpm.RPMTAG_FILEREQUIRE]]
+        provides = [b2s(x) for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
+        files = [b2s(x) for x in self.header[rpm.RPMTAG_FILENAMES]]
+        magics = [b2s(x) for x in self.header[rpm.RPMTAG_FILECLASS]]
         try: # rpm >= 4.7.0
             filecaps = self.header[rpm.RPMTAG_FILECAPS]
         except:
@@ -717,8 +726,8 @@ class Pkg:
 
         if versions:
             for loop in range(len(versions)):
-                name = names[loop].decode()
-                evr = stringToVersion(versions[loop].decode())
+                name = b2s(names[loop])
+                evr = stringToVersion(b2s(versions[loop]))
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:
@@ -756,11 +765,11 @@ class Pkg:
            interpreter arguments, if any."""
         prog = self[which]
         if prog is None:
-            prog = ""
+            prog = b''
         elif isinstance(prog, (list, tuple)):
             # http://rpm.org/ticket/847#comment:2
-            prog = " ".join(prog)
-        return prog
+            prog = b' '.join(prog)
+        return b2s(prog)
 
 def getInstalledPkgs(name):
     """Get list of installed package objects by name."""
