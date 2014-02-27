@@ -6,7 +6,7 @@
 # http://people.freedesktop.org/~hughsient/appdata/
 #
 
-from Filter import addDetails, printError, printWarning
+from Filter import addDetails, printError
 from Pkg import getstatusoutput
 import AbstractCheck
 
@@ -30,7 +30,6 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
             # ignore the check if appdata-validate is not install
             return
         if st[0]:
-            error_printed = False
             for line in st[1].splitlines():
                 if 'problems detected' in line:
                     printError(pkg, 'invalid-appdate-file', filename)
