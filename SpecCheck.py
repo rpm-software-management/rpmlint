@@ -8,6 +8,7 @@
 #############################################################################
 
 import re
+import unicodedata
 try:
     from urlparse import urlparse
 except ImportError: # Python 3
@@ -107,6 +108,7 @@ filelist_regex = re.compile('\s+-f\s+\S+')
 pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile('\.(?:t(?:ar|[glx]z|bz2?)|zip)\\b', re.IGNORECASE)
 
+UNICODE_NBSP = unicodedata.lookup('NO-BREAK SPACE')
 
 def unversioned(deps):
     '''Yield unversioned dependency names from the given list.'''
@@ -197,7 +199,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         nbsp = chr(0xA0)
         if is_utf8:
-            nbsp = unichr(0xA0)
+            nbsp = UNICODE_NBSP
 
         for line in spec_lines:
 
