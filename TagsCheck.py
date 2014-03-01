@@ -535,7 +535,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
         if not value:
             return
-        for match in AbstractCheck.macro_regex.findall(value):
+        # str(value) because value might be a list
+        for match in AbstractCheck.macro_regex.findall(str(value)):
             # Do not warn about %XX URL escapes
             if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
                 continue
