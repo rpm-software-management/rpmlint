@@ -325,7 +325,7 @@ def formatRequire(name, flags, evr):
     return s
 
 def versionToString(evr):
-    if not isinstance(evr, tuple) and not isinstance(evr, list):
+    if not isinstance(evr, (list, tuple)):
         # assume string
         return evr
     ret = ""
