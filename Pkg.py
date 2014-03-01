@@ -40,6 +40,8 @@ if sys.version_info[0] > 2:
     def b2s(b):
         if b is None:
             return None
+        if isinstance(b, (list, tuple)):
+            return [b2s(x) for x in b]
         return b.decode(errors='replace')
 else:
     def warn(s): print >> sys.stderr, s
