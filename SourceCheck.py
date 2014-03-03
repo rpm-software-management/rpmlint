@@ -26,11 +26,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'SourceCheck')
 
-    def check(self, pkg):
-        # Check only source package
-        if not pkg.isSource():
-            return
-
+    def check_source(self, pkg):
         # process file list
         spec_file = None
         for fname, pkgfile in pkg.files().items():
