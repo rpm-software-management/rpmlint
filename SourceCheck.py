@@ -26,7 +26,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'SourceCheck')
 
-    def check_binary(self, pkg):
+    def check_source(self, pkg):
         # process file list
         spec_file = None
         for fname, pkgfile in pkg.files().items():
