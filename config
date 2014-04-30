@@ -126,6 +126,10 @@ from Config import *
 # Type: tuple of strings, see DEFAULT_STANDARD_USERS in FilesCheck
 #setOption("StandardUsers", ())
 
+# List of directory prefixes that are not allowed in packages
+# Type: tuple of strings, see DEFAULT_DISALLOWED_DIRS in FilesCheck
+#setOption("DisallowedDirs", ('/home', '/mnt'))
+
 # List of directories considered to be system default library search paths.
 # Type: tuple of strings, default: see DEFAULT_SYSTEM_LIB_PATHS in BinariesCheck
 #setOption("SystemLibPaths", ('/lib', '/lib64', '/usr/lib', '/usr/lib64'))

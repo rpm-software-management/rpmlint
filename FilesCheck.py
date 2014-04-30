@@ -142,14 +142,11 @@ STANDARD_DIRS = (
     '/var/lib/misc',
     '/var/lib/rpm',
     '/var/local',
-    '/var/lock',
-    '/var/lock/subsys',
     '/var/log',
     '/var/mail',
     '/var/nis',
     '/var/opt',
     '/var/preserve',
-    '/var/run',
     '/var/spool',
     '/var/spool/mail',
     '/var/tmp',
@@ -168,7 +165,19 @@ DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'shutdown', 'halt', 'mail', 'news', 'uucp',
                            'man', 'nobody',)
 
-tmp_regex = re.compile('^(/var|/usr)?/tmp/')
+DEFAULT_DISALLOWED_DIRS = (
+    '/home',
+    '/mnt',
+    '/opt',
+    '/tmp',
+    '/usr/local',
+    '/usr/tmp',
+    '/var/local',
+    '/var/lock',
+    '/var/run',
+    '/var/tmp',
+)
+
 sub_bin_regex = re.compile('^(/usr)?/s?bin/\S+/')
 backup_regex = re.compile('(~|\#[^/]+\#|\.orig|\.rej)$')
 compr_regex = re.compile('\.(gz|z|Z|zip|bz2|lzma|xz)$')
@@ -230,6 +239,8 @@ use_relative_symlinks = Config.getOption("UseRelativeSymlinks", True)
 
 standard_groups = Config.getOption('StandardGroups', DEFAULT_STANDARD_GROUPS)
 standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
+
+disallowed_dirs = Config.getOption('DisallowedDirs', DEFAULT_DISALLOWED_DIRS)
 
 non_readable_regexs = (re.compile('^/var/log/'),
                        re.compile('^/etc/(g?shadow-?|securetty)$'))
@@ -457,19 +468,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
 
-            for i in ('mnt', 'opt', 'usr-local', 'var-local', 'home'):
-                if f.startswith('/%s/' % i.replace('-', '/')):
-                    printError(pkg, 'dir-or-file-in-%s' % i, f)
+            for i in disallowed_dirs:
+                if f.startswith(i):
+                    printError(pkg, 'dir-or-file-in-%s' % '-'.join(i.split('/')[1:]), f)
 
-            if tmp_regex.search(f):
-                printError(pkg, 'dir-or-file-in-tmp', f)
-
-            elif f.startswith('/var/run/'):
+            if f.startswith('/run/'):
                 if f not in ghost_files:
-                    printWarning(pkg, 'non-ghost-in-var-run', f)
-            elif f.startswith('/var/lock/'):
-                if f not in ghost_files:
-                    printWarning(pkg, 'non-ghost-in-var-lock', f)
+                    printWarning(pkg, 'non-ghost-in-run', f)
             elif sub_bin_regex.search(f):
                 printError(pkg, 'subdir-in-bin', f)
             elif '/site_perl/' in f:
@@ -1037,35 +1042,10 @@ install-info.''',
 '''You have a perl temporary file in your package. Usually, this
 file is beginning with a dot (.) and contain "perl" in its name.''',
 
-'dir-or-file-in-tmp',
-'''A file in the package is located in /tmp. It's not permitted
-for packages to install files in this directory.''',
-
-'dir-or-file-in-mnt',
-'''A file in the package is located in /mnt. It's not permitted
-for packages to install files in this directory.''',
-
-'dir-or-file-in-opt',
-'''A file in the package is located in /opt. It's not permitted
-for packages to install files in this directory.''',
-
-'dir-or-file-in-usr-local',
-'''A file in the package is located in /usr/local. It's not permitted
-for packages to install files in this directory.''',
-
-'dir-or-file-in-var-local',
-'''A file in the package is located in /var/local. It's not permitted
-for packages to install files in this directory.''',
-
-'non-ghost-in-var-run',
-'''A file or directory in the package is located in /var/run. Files installed
+'non-ghost-in-run',
+'''A file or directory in the package is located in /run. Files installed
 in this directory should be marked as %ghost and created at runtime to work
-properly in tmpfs /var/run setups.''',
-
-'non-ghost-in-var-lock',
-'''A file or directory in the package is located in /var/lock. Files installed
-in this directory should be marked as %ghost and created at runtime to work
-properly in tmpfs /var/lock setups.''',
+properly in tmpfs /run setups.''',
 
 'subdir-in-bin',
 '''The package contains a subdirectory in /usr/bin. It's not permitted to
@@ -1075,10 +1055,6 @@ create a subdir there. Create it in /usr/lib/ instead.''',
 '''You have a file whose name looks like one for backup files, usually created
 by an editor or resulting from applying unclean (fuzzy, or ones with line
 offsets) patches.''',
-
-'dir-or-file-in-home',
-'''A file in the package is located in /home. It's not permitted
-for packages to install files in this directory.''',
 
 'version-control-internal-file',
 '''You have included file(s) internally used by a version control system
@@ -1375,6 +1351,13 @@ this is for testing purpose ( ie, run by the test suite ). Shipping it
 as part of the example documentation mean that someone will sooner or later
 use it and setup a insecure configuration.'''
 )
+
+for i in disallowed_dirs:
+    addDetails('dir-or-file-in-%s' % '-'.join(i.split('/')[1:]),
+    '''A file in the package is located in %s. It's not permitted
+for packages to install files in this directory.''' % i)
+
+
 
 # FilesCheck.py ends here
 
