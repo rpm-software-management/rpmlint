@@ -1177,10 +1177,7 @@ target is included in a package in this package's dependency chain.''',
 ''',
 
 'non-readable',
-'''The file can't be read by everybody. If this is expected (for security
-reasons), contact your rpmlint distributor to get it added to the list of
-exceptions for your distro (or add it to your local configuration if you
-installed rpmlint from the source tarball).''',
+'''The file can't be read by everybody. Review if this is expected.''',
 
 'incoherent-logrotate-file',
 '''Your logrotate file should be named /etc/logrotate.d/<package name>.''',
