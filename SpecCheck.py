@@ -34,7 +34,7 @@ DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|fir
 def re_tag_compile(tag):
     if type(tag) == type([]):
         tag = '(?:' + '|'.join(tag) + ')'
-    r = "^%s\s*:\s*(\S+)\s*$" % tag
+    r = "^%s\s*:\s*(\S.*?)\s*$" % tag
     return re.compile(r, re.IGNORECASE)
 
 
