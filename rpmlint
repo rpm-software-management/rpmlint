@@ -30,7 +30,7 @@ sys.path.insert(1, '/usr/share/rpmlint')
 # place for those variables.
 
 from Filter import badnessScore, badnessThreshold, printAllReasons, \
-     printDescriptions, printInfo, printed_messages, setRawOut
+    printDescriptions, printInfo, printed_messages, setRawOut
 import AbstractCheck
 import Config
 import Pkg
@@ -38,6 +38,7 @@ import Pkg
 
 _default_user_conf = '%s/rpmlint' % \
     (os.environ.get('XDG_CONFIG_HOME') or '~/.config')
+
 
 # Print usage information
 def usage(name):
@@ -55,12 +56,14 @@ def usage(name):
 \t[-n|--noexception]
 \t[   --rawout <file>]
 \t[-f|--file <user config file to use instead of %s]
-\t[-o|--option <key value>]''' \
-        % (name, _default_user_conf))
+\t[-o|--option <key value>]'''
+           % (name, _default_user_conf))
+
 
 # Print version information
 def printVersion():
     print ('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
+
 
 def loadCheck(name):
     '''Load a (check) module by its name, unless it is already loaded.'''
@@ -73,6 +76,7 @@ def loadCheck(name):
         imp.load_module(name, fobj, pathname, description)
     finally:
         fobj.close()
+
 
 #############################################################################
 # main program
@@ -135,8 +139,8 @@ def main():
                         Pkg.warn(
                             '(none): E: no installed packages by name %s' % arg)
                     else:
-                        ipkgs.sort(key = lambda x: locale.strxfrm(
-                                x.header.sprintf("%{NAME}.%{ARCH}")))
+                        ipkgs.sort(key=lambda x: locale.strxfrm(
+                            x.header.sprintf("%{NAME}.%{ARCH}")))
                         pkgs.extend(ipkgs)
             except KeyboardInterrupt:
                 if isfile:
@@ -194,13 +198,14 @@ def main():
             sys.exit(66)
 
     finally:
-        print("%d packages and %d specfiles checked; %d errors, %d warnings." \
+        print("%d packages and %d specfiles checked; %d errors, %d warnings."
               % (packages_checked, specfiles_checked,
                  printed_messages["E"], printed_messages["W"]))
 
     if printed_messages["E"] > 0:
         sys.exit(64)
     sys.exit(0)
+
 
 def runChecks(pkg):
 
@@ -218,6 +223,7 @@ def runChecks(pkg):
     finally:
         pkg.cleanup()
 
+
 def runSpecChecks(pkg, fname):
 
     try:
@@ -228,7 +234,7 @@ def runSpecChecks(pkg, fname):
             check = AbstractCheck.AbstractCheck.known_checks.get(name)
             if check:
                 check.verbose = verbose
-                check.check_spec(pkg,fname)
+                check.check_spec(pkg, fname)
             else:
                 Pkg.warn('(none): W: unknown check %s, skipping' % name)
     finally:

@@ -50,7 +50,7 @@ menu_regex = re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applica
 bogus_var_regex = re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 prereq_assoc = (
-#    ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
+    #['chkconfig', ('chkconfig', '/sbin/chkconfig')],
     ['chkfontpath', ('chkfontpath', '/usr/sbin/chkfontpath')],
     ['rpm-helper', ('rpm-helper',)],
     )
@@ -72,11 +72,14 @@ script_tags = [
     (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
     ]
 
+
 def incorrect_shell_script(prog, shellscript):
-    return check_syntax_script(prog,'-n', shellscript)
+    return check_syntax_script(prog, '-n', shellscript)
+
 
 def incorrect_perl_script(prog, perlscript):
-    return check_syntax_script(prog,'-wc', perlscript)
+    return check_syntax_script(prog, '-wc', perlscript)
+
 
 def check_syntax_script(prog, commandline, script):
     if not script:

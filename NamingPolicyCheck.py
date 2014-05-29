@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------
+#############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : NamingPolicyCheck.py
 # Author          : Michael Scherer
 # Created On      : Mon May 19 11:25:37 2003
 # Purpose         : Check package names according to their content.
-#---------------------------------------------------------------
+#############################################################################
 
 import re
 
@@ -28,8 +28,10 @@ import AbstractCheck
 
 simple_naming_policy_re = re.compile('\^[a-zA-Z1-9-_]*$')
 
+
 class NamingPolicyNotAppliedException(Exception):
     pass
+
 
 class NamingPolicyCheck(AbstractCheck.AbstractCheck):
     checks_ = []

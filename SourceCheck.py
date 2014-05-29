@@ -20,8 +20,8 @@ source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
 compress_ext = Config.getOption("CompressExtension", "bz2")
 valid_src_perms = Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 
-class SourceCheck(AbstractCheck.AbstractCheck):
 
+class SourceCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, 'SourceCheck')

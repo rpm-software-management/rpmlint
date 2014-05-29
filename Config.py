@@ -56,19 +56,23 @@ no_exception = False
 _checks = []
 _checks.extend(DEFAULT_CHECKS)
 
+
 def addCheck(check):
     check = re.sub('\.py[co]?$', '', check)
     if check not in _checks:
         _checks.append(check)
+
 
 def allChecks():
     if _checks == []:
         defaultChecks()
     return _checks
 
+
 def defaultChecks():
     resetChecks()
     _checks.extend(DEFAULT_CHECKS)
+
 
 def resetChecks():
     global _checks
@@ -79,10 +83,12 @@ def resetChecks():
 
 _dirs = ["/usr/share/rpmlint"]
 
+
 def addCheckDir(dir):
     d = os.path.expanduser(dir)
     if d not in _dirs:
         _dirs.insert(0, d)
+
 
 def checkDirs():
     return _dirs
@@ -91,10 +97,12 @@ def checkDirs():
 
 _options = {}
 
+
 def setOption(name, value):
     _options[name] = value
 
-def getOption(name, default = ""):
+
+def getOption(name, default=""):
     try:
         return _options[name]
     except:
@@ -104,11 +112,13 @@ def getOption(name, default = ""):
 _filters = []
 _filters_re = None
 
+
 def addFilter(s):
     global _filters_re
 
     _filters.append(s)
     _filters_re = None
+
 
 def removeFilter(s):
     global _filters_re
@@ -122,17 +132,21 @@ def removeFilter(s):
 
 _scoring = {}
 
+
 def setBadness(s, score):
     _scoring[s] = score
+
 
 def badness(s):
     return _scoring.get(s, 0)
 
 _non_named_group_re = re.compile('[^\\](\()[^:]')
+
+
 def isFiltered(s):
     global _filters_re
 
-    if _filters_re == None:
+    if _filters_re is None:
         # no filter
         if len(_filters) == 0:
             return False
@@ -144,7 +158,7 @@ def isFiltered(s):
             # version only supports 100 named groups
             if '(' in _filters[idx]:
                 _non_named_group_re.subn('(:?', _filters[idx])
-            _filters_re = _filters_re + '|(?:' + _filters[idx] +')'
+            _filters_re = _filters_re + '|(?:' + _filters[idx] + ')'
         _filters_re = re.compile(_filters_re)
 
     if not no_exception:

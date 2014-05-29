@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------
+#############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : InitScriptCheck.py
 # Author          : Frederic Lepied
 # Created On      : Fri Aug 25 09:26:37 2000
 # Purpose         : check init scripts (files in /etc/rc.d/init.d)
-#---------------------------------------------------------------
+#############################################################################
 
 import os
 import re
@@ -35,6 +35,7 @@ LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',
                 'Short-Description', 'Description')
 RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
                             'Default-Stop', 'Short-Description')
+
 
 class InitScriptCheck(AbstractCheck.AbstractCheck):
 
@@ -90,7 +91,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                 continue
             content_str = "".join(content)
             for line in content:
-                line = line[:-1] # chomp
+                line = line[:-1]  # chomp
                 # TODO check if there is only one line like this
                 if line.startswith('### BEGIN INIT INFO'):
                     in_lsb_tag = True

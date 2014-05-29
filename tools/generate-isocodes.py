@@ -11,12 +11,12 @@ langs = set()
 countries = set()
 
 # 2-letter country codes
-tree = ElementTree(file = "/usr/share/xml/iso-codes/iso_3166.xml")
+tree = ElementTree(file="/usr/share/xml/iso-codes/iso_3166.xml")
 for entry in tree.findall("iso_3166_entry"):
     countries.add(entry.get("alpha_2_code"))
 
 # 2-letter codes
-tree = ElementTree(file = "/usr/share/xml/iso-codes/iso_639.xml")
+tree = ElementTree(file="/usr/share/xml/iso-codes/iso_639.xml")
 for entry in tree.findall("iso_639_entry"):
     for attr in ("iso_639_1_code", "iso_639_2T_code"):
         code = entry.get(attr)
@@ -25,7 +25,7 @@ for entry in tree.findall("iso_639_entry"):
             break
 
 # Remaining 2-letter codes plus 3-letter ones for which we have no 2-letter one
-tree = ElementTree(file = "/usr/share/xml/iso-codes/iso_639_3.xml")
+tree = ElementTree(file="/usr/share/xml/iso-codes/iso_639_3.xml")
 for entry in tree.findall("iso_639_3_entry"):
     code = entry.get("part1_code")
     if code:
@@ -38,11 +38,11 @@ print ""
 print "LANGUAGES = set(("
 for code in sorted(langs):
     if code:
-        print "\t\"%s\"," % code
+        print "    \"%s\"," % code
 print "))"
 print ""
 print "COUNTRIES = set(("
 for code in sorted(countries):
     if code:
-        print "\t\"%s\"," % code
+        print "    \"%s\"," % code
 print "))"

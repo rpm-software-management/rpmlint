@@ -21,7 +21,7 @@ except ImportError:
 _rawout = None
 _diagnostic = list()
 _badness_score = 0
-printed_messages = { "I": 0, "W": 0, "E": 0 }
+printed_messages = {"I": 0, "W": 0, "E": 0}
 
 if sys.stdout.isatty():
     def __print(s):
@@ -32,14 +32,18 @@ else:
             s = s.encode(locale.getpreferredencoding(), "replace")
         print(s)
 
+
 def printInfo(pkg, reason, *details):
     _print("I", pkg, reason, details)
+
 
 def printWarning(pkg, reason, *details):
     _print("W", pkg, reason, details)
 
+
 def printError(pkg, reason, *details):
     _print("E", pkg, reason, details)
+
 
 def _print(msgtype, pkg, reason, details):
     global _badness_score
@@ -85,6 +89,7 @@ def _print(msgtype, pkg, reason, details):
 
     return False
 
+
 def printDescriptions(reason):
     try:
         d = _details[reason]
@@ -94,9 +99,11 @@ def printDescriptions(reason):
     except KeyError:
         pass
 
+
 def _diag_sortkey(x):
     xs = x.split()
     return (xs[2], xs[1])
+
 
 def printAllReasons():
     threshold = badnessThreshold()
@@ -104,7 +111,7 @@ def printAllReasons():
         return False
 
     global _diagnostic
-    _diagnostic.sort(key = _diag_sortkey, reverse = True)
+    _diagnostic.sort(key=_diag_sortkey, reverse=True)
     last_reason = ''
     for diag in _diagnostic:
         if Config.info:
@@ -122,16 +129,20 @@ def printAllReasons():
 
 _details = {}
 
+
 def addDetails(*details):
     for idx in range(int(len(details)/2)):
         if not details[idx*2] in _details:
             _details[details[idx*2]] = details[idx*2+1]
 
+
 def badnessScore():
     return _badness_score
 
+
 def badnessThreshold():
     return Config.getOption("BadnessThreshold", -1)
+
 
 def setRawOut(file):
     global _rawout

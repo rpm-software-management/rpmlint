@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------
+#############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : MenuCheck.py
 # Author          : Frederic Lepied
 # Created On      : Mon Mar 20 07:43:37 2000
-#---------------------------------------------------------------
+#############################################################################
 
 import re
 import stat
@@ -153,6 +153,7 @@ xdg_migrated_regex = re.compile('xdg=\"?([^\" ]+)')
 for l in launchers:
     l[0] = re.compile(l[0])
 del l
+
 
 class MenuCheck(AbstractCheck.AbstractCheck):
 
@@ -302,7 +303,7 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     if res:
                         grp = res.groups()
                         needs = (grp[1] or grp[2]).lower()
-                        if needs in ('x11', 'text' ,'wm'):
+                        if needs in ('x11', 'text', 'wm'):
                             res = section_regex.search(line)
                             if res:
                                 grp = res.groups()

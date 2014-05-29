@@ -26,7 +26,7 @@ INCORRECT_LOCALES = {
     'gr_GR': 'el_GR',
     'cz': 'cs',
     'cz_CZ': 'cs_CZ',
-    'lug': 'lg', # 'lug' is valid, but we standardize on 2 letter codes
+    'lug': 'lg',  # 'lug' is valid, but we standardize on 2 letter codes
     'en_UK': 'en_GB'}
 
 package_regex = re.compile('-(' + '|'.join(LANGUAGES) + ')$')
@@ -45,6 +45,7 @@ EXCEPTION_DIRS = ('C', 'POSIX', 'CP1251', 'CP1255', 'CP1256',
 'ISO-8859-6', 'ISO-8859-7', 'ISO-8859-8', 'ISO-8859-9', 'ISO-8859-9E',
 'ISO-8859-10', 'ISO-8859-13', 'ISO-8859-14', 'ISO-8859-15',
 'KOI8-R', 'KOI8-U', 'UTF-8', 'default')
+
 
 def is_valid_lang(lang):
     # TODO: @Foo and charset handling
@@ -68,6 +69,7 @@ def is_valid_lang(lang):
         return False
 
     return True
+
 
 class I18NCheck(AbstractCheck.AbstractCheck):
 
@@ -149,6 +151,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
             if locales != name:
                 if locales not in (x[0] for x in pkg.requires()):
                     printError(pkg, 'no-dependency-on', locales)
+
 
 def is_prefix(p, s):
     return len(p) <= len(s) and p == s[:len(p)]

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------
+#############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : PamCheck.py
 # Author          : Michael Scherer
 # Created On      : 31/01/2006
 # Purpose         : Apply pam policy
-#---------------------------------------------------------------
+#############################################################################
 
 import re
 
@@ -15,6 +15,7 @@ import AbstractCheck
 
 
 pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')
+
 
 class PamCheck(AbstractCheck.AbstractFilesCheck):
     def __init__(self):
