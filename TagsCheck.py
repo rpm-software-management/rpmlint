@@ -13,7 +13,7 @@ import re
 import time
 try:
     from urlparse import urlparse
-except ImportError: # Python 3
+except ImportError:  # Python 3
     from urllib.parse import urlparse
 
 import rpm
@@ -42,8 +42,8 @@ DEFAULT_VALID_LICENSES = (
     # the full name).  Updated 2010-02-01.
     'Academic Free License',
     'Adaptive Public License',
-    'AGPLv3', # Affero GNU Public License
-    'AGPLv3+', # Affero GNU Public License
+    'AGPLv3',  # Affero GNU Public License
+    'AGPLv3+',  # Affero GNU Public License
     'Apache License',
     'Apache Software License',
     'Apple Public Source License',
@@ -52,7 +52,7 @@ DEFAULT_VALID_LICENSES = (
     'BSD',
     'Boost Software License',
     'Computer Associates Trusted Open Source License',
-    'CDDL', # Common Development and Distribution License
+    'CDDL',  # Common Development and Distribution License
     'Common Public Attribution License',
     'CUA Office Public License',
     'EU DataGrid Software License',
@@ -83,7 +83,7 @@ DEFAULT_VALID_LICENSES = (
     'MirOS License',
     'MIT',
     'Motosoto License',
-    'MPL', # Mozilla Public License
+    'MPL',  # Mozilla Public License
     'Multics License',
     'NASA Open Source Agreement',
     'Naumen Public License',
@@ -92,13 +92,13 @@ DEFAULT_VALID_LICENSES = (
     'Non-profit Open Software License',
     'NTP License',
     'OCLC Research Public License',
-    'OFL', # Open Font License
+    'OFL',  # Open Font License
     'Open Group Test Suite License',
     'Open Software License',
     'PHP License',
-    'Python license', # CNRI Python License
+    'Python license',  # CNRI Python License
     'Python Software Foundation License',
-    'QPL', # Qt Public License
+    'QPL',  # Qt Public License
     'RealNetworks Public Source License',
     'Reciprocal Public License',
     'Ricoh Source Code Public License',
@@ -121,8 +121,8 @@ DEFAULT_VALID_LICENSES = (
     'Creative Commons Attribution-NonCommercial-ShareAlike',
     'Creative Commons Attribution-ShareAlike',
     # Others:
-    'Design Public License', # ???
-    'GFDL', # GNU Free Documentation License
+    'Design Public License',  # ???
+    'GFDL',  # GNU Free Documentation License
     'LaTeX Project Public License',
     'OpenContent License',
     'Open Publication License',
@@ -400,7 +400,7 @@ BAD_WORDS = {
 DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
 
 VALID_GROUPS = Config.getOption('ValidGroups', None)
-if VALID_GROUPS is None: # get defaults from rpm package only if it's not set
+if VALID_GROUPS is None:  # get defaults from rpm package only if it's not set
     VALID_GROUPS = Pkg.get_default_valid_rpmgroups()
 VALID_LICENSES = Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES = map(re.compile, Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
@@ -440,6 +440,8 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
         private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
 
 _enchant_checkers = {}
+
+
 def spell_check(pkg, str, fmt, lang, ignored):
 
     dict_found = True
@@ -452,9 +454,9 @@ def spell_check(pkg, str, fmt, lang, ignored):
         if not checker and lang not in _enchant_checkers:
             try:
                 checker = enchant.checker.SpellChecker(
-                    lang, filters = [ enchant.tokenize.EmailFilter,
-                                      enchant.tokenize.URLFilter,
-                                      enchant.tokenize.WikiWordFilter ])
+                    lang, filters=[enchant.tokenize.EmailFilter,
+                                   enchant.tokenize.URLFilter,
+                                   enchant.tokenize.WikiWordFilter])
             except enchant.DictNotFoundError:
                 printInfo(pkg, 'enchant-dictionary-not-found', lang)
                 pass
@@ -738,7 +740,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     # only check when source name correspond to name
                     if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
                         expected = [version + '-' + release]
-                        if epoch is not None: # regardless of use_epoch
+                        if epoch is not None:  # regardless of use_epoch
                             expected[0] = str(epoch) + ':' + expected[0]
                         # Allow EVR in changelog without release extension,
                         # the extension is often a macro or otherwise dynamic.
@@ -758,13 +760,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
-                clt -= clt % (24*3600) # roll back to 00:00:00, see #246
+                clt -= clt % (24*3600)  # roll back to 00:00:00, see #246
                 if clt < oldest_changelog_timestamp:
                     printWarning(pkg, 'changelog-time-overflow',
                                  time.strftime("%Y-%m-%d", time.gmtime(clt)))
                 elif clt > time.time():
                     printError(pkg, 'changelog-time-in-future',
-                                 time.strftime("%Y-%m-%d", time.gmtime(clt)))
+                               time.strftime("%Y-%m-%d", time.gmtime(clt)))
 
 #         for provide_name in (x[0] for x in pkg.provides()):
 #             if name == provide_name:
@@ -794,12 +796,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for tag in ('URL', 'DistURL', 'BugURL'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
                 url = Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
-                self._unexpanded_macros(pkg, tag, url, is_url = True)
+                self._unexpanded_macros(pkg, tag, url, is_url=True)
                 if url:
                     (scheme, netloc) = urlparse(url)[0:2]
                     if not scheme or not netloc or "." not in netloc or \
                             scheme not in ('http', 'https', 'ftp') or \
-                            (Config.getOption('InvalidURL') and \
+                            (Config.getOption('InvalidURL') and
                              invalid_url_regex.search(url)):
                         printWarning(pkg, 'invalid-url', tag, url)
                     else:
@@ -866,7 +868,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                         if so_dep_regex.search(prov[0]):
                             printWarning(pkg, "private-shared-object-provides",
                                          fname, Pkg.formatRequire(*prov))
-
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)

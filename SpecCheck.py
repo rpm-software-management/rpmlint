@@ -11,7 +11,7 @@ import re
 import unicodedata
 try:
     from urlparse import urlparse
-except ImportError: # Python 3
+except ImportError:  # Python 3
     from urllib.parse import urlparse
 
 import rpm
@@ -31,24 +31,23 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # be installed on biarch systems
 DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware)($|[\s/,])'
 
+
 def re_tag_compile(tag):
     if type(tag) == type([]):
         tag = '(?:' + '|'.join(tag) + ')'
     r = "^%s\s*:\s*(\S.*?)\s*$" % tag
     return re.compile(r, re.IGNORECASE)
 
-
-
 patch_regex = re_tag_compile('Patch(\d*)')
 applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
-obsolete_tags_regex = re_tag_compile(['Serial','Copyright'])
+obsolete_tags_regex = re_tag_compile(['Serial', 'Copyright'])
 buildroot_regex = re_tag_compile('BuildRoot')
 prefix_regex = re_tag_compile('Prefix')
 packager_regex = re_tag_compile('Packager')
-buildarch_regex = re_tag_compile(['BuildArch','BuildArchitectures'])
+buildarch_regex = re_tag_compile(['BuildArch', 'BuildArchitectures'])
 buildprereq_regex = re_tag_compile('BuildPreReq')
 prereq_regex = re_tag_compile('PreReq(\(.*\))')
 
@@ -82,7 +81,7 @@ hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD
 # https://bugzilla.redhat.com/118780 and bugs linked to that one.
 scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
 
-DEFINE_RE='(^|\s)%(define|global)\s+'
+DEFINE_RE = '(^|\s)%(define|global)\s+'
 depscript_override_regex = re.compile(DEFINE_RE + '__find_(requires|provides)\s')
 depgen_disable_regex = re.compile(DEFINE_RE + '_use_internal_dependency_generator\s+0')
 patch_fuzz_override_regex = re.compile(DEFINE_RE + '_default_patch_fuzz\s+(\d+)')
@@ -110,18 +109,20 @@ tarball_regex = re.compile('\.(?:t(?:ar|[glx]z|bz2?)|zip)\\b', re.IGNORECASE)
 
 UNICODE_NBSP = unicodedata.lookup('NO-BREAK SPACE')
 
+
 def unversioned(deps):
     '''Yield unversioned dependency names from the given list.'''
     for dep in deps:
         if not dep[1]:
             yield dep[0]
 
+
 def contains_buildroot(line):
     '''Check if the given line contains use of rpm buildroot.'''
     res = rpm_buildroot_regex.search(line)
     if res and \
-           (not res.group(1) or len(res.group(1)) % 2 == 0) and \
-           (not res.group(2) or len(res.group(2)) % 2 != 0):
+       (not res.group(1) or len(res.group(1)) % 2 == 0) and \
+       (not res.group(2) or len(res.group(2)) % 2 != 0):
         return True
     return False
 
@@ -171,7 +172,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         if_depth = 0
         ifarch_depth = -1
         current_section = 'package'
-        buildroot_clean = {'clean': False, 'install' : False}
+        buildroot_clean = {'clean': False, 'install': False}
         depscript_override = False
         depgen_disabled = False
         patch_fuzz_override = False
@@ -337,7 +338,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if current_section != 'changelog' and res and not \
                     (biarch_package_regex.match(pkg.name) or
                      hardcoded_lib_path_exceptions_regex.search(
-                            res.group(1).lstrip())):
+                         res.group(1).lstrip())):
                 printError(pkg, "hardcoded-library-path", "in",
                            res.group(1).lstrip())
 
@@ -482,7 +483,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # If not checking spec file only, we're checking one inside a
             # SRPM -> skip this check to avoid duplicate warnings (#167)
             if spec_only and VALID_GROUPS and \
-                   line.lower().startswith("group:"):
+               line.lower().startswith("group:"):
                 group = line[6:].strip()
                 if group not in VALID_GROUPS:
                     printWarning(pkg, 'non-standard-group', group)
@@ -491,7 +492,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if hashPos != -1 and \
                     (hashPos == 0 or line[hashPos-1] in (" ", "\t")):
                 for match in AbstractCheck.macro_regex.findall(
-                    line[hashPos+1:]):
+                        line[hashPos+1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         printWarning(pkg, 'macro-in-comment', match)
@@ -577,7 +578,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 for src in sources:
                     (url, num, flags) = src
                     (scheme, netloc) = urlparse(url)[0:2]
-                    if flags & 1: # rpmspec.h, rpm.org ticket #123
+                    if flags & 1:  # rpmspec.h, rpm.org ticket #123
                         srctype = "Source"
                     else:
                         srctype = "Patch"
@@ -835,7 +836,7 @@ intended contents.''',
 
 'patch-fuzz-is-changed',
 '''The internal patch fuzz value was changed, and could hide patchs issues, or
-could lead to applying a patch at the wrong location. Usually, this is often the 
+could lead to applying a patch at the wrong location. Usually, this is often the
 sign that someone didn't check if a patch is still needed and do not want to rediff
 it. It is usually better to rediff the patch and try to send it upstream.'''
 )

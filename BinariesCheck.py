@@ -24,11 +24,13 @@ DEFAULT_SYSTEM_LIB_PATHS = (
     '/lib', '/usr/lib', '/usr/X11R6/lib',
     '/lib64', '/usr/lib64', '/usr/X11R6/lib64')
 
+
 def create_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'
     r = "\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
+
 
 class BinaryInfo:
 
@@ -45,11 +47,11 @@ class BinaryInfo:
     exit_call_regex = create_regexp_call('_?exit')
     fork_call_regex = create_regexp_call('fork')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
-    setgid_call_regex = create_regexp_call(['setresgid','setegid','setgid'])
-    setuid_call_regex = create_regexp_call(['setresuid','seteuid','setuid'])
-    setgroups_call_regex = create_regexp_call(['initgroups','setgroups'])
+    setgid_call_regex = create_regexp_call(['setresgid', 'setegid', 'setgid'])
+    setuid_call_regex = create_regexp_call(['setresuid', 'seteuid', 'setuid'])
+    setgroups_call_regex = create_regexp_call(['initgroups', 'setgroups'])
     chroot_call_regex = create_regexp_call('chroot')
-    chdir_call_regex  = create_regexp_call('chdir')
+    chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
 
     def __init__(self, pkg, path, file, is_ar, is_shlib):
@@ -165,7 +167,7 @@ class BinaryInfo:
                         # call is for x86 32 bits, callq for x86_64
                         if l.find('callq ') >= 0 or l.find('call ') >= 0:
                             call.append(l.rpartition(' ')[2])
-                    for index,c in enumerate(call):
+                    for index, c in enumerate(call):
                         if c.find('chroot@plt') >= 0:
                             for i in call[index-2:index+2]:
                                 if i.find('chdir@plt'):
@@ -247,12 +249,14 @@ srcname_regex = re.compile('(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
 ocaml_mixed_regex = re.compile('^Caml1999X0\d\d$')
 
+
 def dir_base(path):
     res = path_regex.search(path)
     if res:
         return res.group(1), res.group(2)
     else:
         return '', path
+
 
 class BinariesCheck(AbstractCheck.AbstractCheck):
 
@@ -423,7 +427,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 continue
 
             if not bin_info.needed and not (
-                bin_info.soname and ldso_soname_regex.search(bin_info.soname)):
+                    bin_info.soname and
+                    ldso_soname_regex.search(bin_info.soname)):
                 if is_shobj:
                     printError(pkg,
                                'shared-lib-without-dependency-information',
@@ -434,9 +439,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             else:
                 # linked against libc ?
                 if "libc." not in fname and \
-                        (not bin_info.soname or \
-                             ("libc." not in bin_info.soname and \
-                              not ldso_soname_regex.search(bin_info.soname))):
+                   (not bin_info.soname or
+                    ("libc." not in bin_info.soname and
+                     not ldso_soname_regex.search(bin_info.soname))):
 
                     found_libc = False
                     for lib in bin_info.needed:
@@ -456,8 +461,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 if bin_info.exec_stack:
                     printWarning(pkg, 'executable-stack', fname)
             elif not bin_info.readelf_error and (
-                pkg.arch.endswith("86") or pkg.arch.startswith("pentium") or
-                pkg.arch in ("athlon", "x86_64")):
+                    pkg.arch.endswith("86") or
+                    pkg.arch.startswith("pentium") or
+                    pkg.arch in ("athlon", "x86_64")):
                 printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:

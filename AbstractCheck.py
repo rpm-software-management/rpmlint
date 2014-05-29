@@ -21,15 +21,19 @@ import Config
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile('%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
 
+
 class _HeadRequest(urllib2.Request):
     def get_method(self):
         return "HEAD"
+
+
 class _HeadRedirectHandler(urllib2.HTTPRedirectHandler):
     def redirect_request(*args):
         res = urllib2.HTTPRedirectHandler.redirect_request(*args)
         if res:
             res = _HeadRequest(res.get_full_url())
         return res
+
 
 class AbstractCheck:
     known_checks = {}
@@ -86,16 +90,17 @@ class AbstractCheck:
             res.close()
         return info
 
+
 class AbstractFilesCheck(AbstractCheck):
     def __init__(self, name, file_regexp):
         self.__files_re = re.compile(file_regexp)
         AbstractCheck.__init__(self, name)
+
     def check_binary(self, pkg):
         ghosts = pkg.ghostFiles()
         for filename in (x for x in pkg.files() if x not in ghosts):
             if self.__files_re.match(filename):
                 self.check_file(pkg, filename)
-
 
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-#------------------------------------------------------------------------------
+#############################################################################
 # File          : ZipCheck.py
 # Package       : rpmlint
 # Author        : Ville Skyttä
 # Created on    : Thu Oct 30 00:14:45 EET 2003
 # Purpose       : Verify Zip/Jar file correctness
-#------------------------------------------------------------------------------
+#############################################################################
 
 import os
 import re
@@ -24,6 +24,7 @@ classpath_regex = re.compile('^\s*Class-Path\s*:', re.M | re.I)
 
 want_indexed_jars = Config.getOption('UseIndexedJars', True)
 
+
 class ZipCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
@@ -33,8 +34,8 @@ class ZipCheck(AbstractCheck.AbstractCheck):
         for fname, pkgfile in pkg.files().items():
             path = pkgfile.path
             if zip_regex.search(fname) and os.path.exists(path) and \
-                   stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
-                   zipfile.is_zipfile(path):
+               stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
+               zipfile.is_zipfile(path):
                 z = None
                 try:
                     z = zipfile.ZipFile(path, 'r')

@@ -161,9 +161,9 @@ DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
                                )
 
 # Standard users and groups from LSB Core 4.0.0: 21.2 User & Group Names
-DEFAULT_STANDARD_USERS  = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
-                           'shutdown', 'halt', 'mail', 'news', 'uucp',
-                           'operator', 'man', 'nobody',)
+DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
+                          'shutdown', 'halt', 'mail', 'news', 'uucp',
+                          'operator', 'man', 'nobody',)
 DEFAULT_STANDARD_GROUPS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
                            'shutdown', 'halt', 'mail', 'news', 'uucp',
                            'man', 'nobody',)
@@ -217,7 +217,7 @@ sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|svg|ml[ily]?)$'), re.IGNORECASE)
 meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
-filesys_packages = ['filesystem'] # TODO: make configurable?
+filesys_packages = ['filesystem']  # TODO: make configurable?
 quotes_regex = re.compile('[\'"]+')
 start_certificate_regex = re.compile('^-----BEGIN CERTIFICATE-----$')
 start_private_key_regex = re.compile('^----BEGIN PRIVATE KEY-----$')
@@ -261,6 +261,7 @@ else:
     # Python 3 means bytes accepts integer input directly
     printable_extended_ascii += bytes(range(32, 256))
 
+
 def peek(filename, pkg, length=1024):
     """Peek into a file, return a chunk from its beginning and a flag if it
        seems to be a text file."""
@@ -270,7 +271,7 @@ def peek(filename, pkg, length=1024):
         fobj = open(filename, 'rb')
         chunk = fobj.read(length)
         fobj.close()
-    except IOError: # eg. https://bugzilla.redhat.com/209876
+    except IOError:  # eg. https://bugzilla.redhat.com/209876
         e = sys.exc_info()[1]
         printWarning(pkg, 'read-error', e)
         if fobj:
@@ -316,6 +317,7 @@ _python_magic_values = {
     '3.4': 3310,
     }
 
+
 def get_expected_pyc_magic(path):
     """.pyc/.pyo files embed a 4-byte magic value identifying which version of
     the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
@@ -347,6 +349,7 @@ def get_expected_pyc_magic(path):
 
     return (expected_magic_value, ver_from_path)
 
+
 def py_demarshal_long(b):
     """Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
     bytes in a string."""
@@ -356,6 +359,7 @@ def py_demarshal_long(b):
             + (b[1] << 8)
             + (b[2] << 16)
             + (b[3] << 24))
+
 
 def python_bytecode_to_script(path):
     """Given a python bytecode path, give the path of the .py file
@@ -370,6 +374,7 @@ def python_bytecode_to_script(path):
         return res.group(1) + '.py'
 
     return None
+
 
 class FilesCheck(AbstractCheck.AbstractCheck):
 
@@ -452,8 +457,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     is_kernel_package:
                 printError(pkg, "kernel-modules-not-in-kernel-packages", f)
 
-            for i in ['mnt','opt','usr-local','var-local','home']:
-                if f.startswith('/%s/' % i.replace('-','/')):
+            for i in ('mnt', 'opt', 'usr-local', 'var-local', 'home'):
+                if f.startswith('/%s/' % i.replace('-', '/')):
                     printError(pkg, 'dir-or-file-in-%s' % i, f)
 
             if tmp_regex.search(f):
@@ -644,8 +649,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             bindir_exes.setdefault(exe, []).append(f)
 
                 if not devel_pkg and not is_doc and \
-                       (includefile_regex.search(f) or \
-                        develfile_regex.search(f) or is_buildconfig):
+                   (includefile_regex.search(f) or develfile_regex.search(f) or
+                    is_buildconfig):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & int("444", 8) != int("444", 8) and \
                    perm & int("7000", 8) == 0:
@@ -844,7 +849,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal dir check
             elif stat.S_ISDIR(mode):
-                if mode & int("1002", 8) == 2: # world writable w/o sticky bit
+                if mode & int("1002", 8) == 2:  # world writable w/o sticky bit
                     printError(pkg, 'world-writable', f, oct(perm))
                 if perm != int("755", 8):
                     printError(pkg, 'non-standard-dir-perm', f, oct(perm))
@@ -852,7 +857,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'standard-dir-owned-by-package', f)
                 if hidden_file_regex.search(f):
                     printWarning(pkg, 'hidden-file-or-dir', f)
-
 
             # symbolic link check
             elif stat.S_ISLNK(mode):

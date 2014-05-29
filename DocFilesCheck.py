@@ -35,7 +35,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
             reqs[fname] = [x[0] for x in pkgfile.requires]
 
         core_reqs = {}  # dependencies of non-doc files
-        doc_reqs  = {}  # dependencies of doc files
+        doc_reqs = {}   # dependencies of doc files
 
         for dep in pkg.header.dsFromHeader():
             # skip deps which were found by find-requires
@@ -51,7 +51,7 @@ class DocFilesCheck(AbstractCheck.AbstractCheck):
 
         for i in files:
             if not reqs[i]:
-                continue # skip empty dependencies
+                continue  # skip empty dependencies
             if i in doc_files:
                 target = doc_reqs
             else:

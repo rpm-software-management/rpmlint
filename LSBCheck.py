@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
-#---------------------------------------------------------------
+#############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
 # File            : LSBCheck.py
 # Author          : Frederic Lepied
 # Created On      : Tue Jan 30 14:44:37 2001
 # Purpose         : LSB non compliance checks
-#---------------------------------------------------------------
+#############################################################################
 
 import re
 
 import rpm
 
 from Filter import addDetails, printError
-from Pkg import b2s
 import AbstractCheck
 
 
 version_regex = re.compile('^[a-zA-Z0-9.+]+$')
 name_regex = re.compile('^[a-z0-9.+-]+$')
+
 
 class LSBCheck(AbstractCheck.AbstractCheck):
 

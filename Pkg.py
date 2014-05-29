@@ -37,6 +37,7 @@ if sys.version_info[0] > 2:
     # Blows up with Python < 3 without the exec() hack
     exec('def warn(s): print (s, file=sys.stderr)')
     long = int
+
     def b2s(b):
         if b is None:
             return None
@@ -44,7 +45,9 @@ if sys.version_info[0] > 2:
             return [b2s(x) for x in b]
         return b.decode(errors='replace')
 else:
-    def warn(s): print >> sys.stderr, s
+    def warn(s):
+        print >> sys.stderr, s
+
     def b2s(b):
         return b
 
@@ -61,6 +64,7 @@ PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | \
 
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
+
 def shell_var_value(var, script):
     assign_regex = re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
                               re.MULTILINE)
@@ -68,11 +72,12 @@ def shell_var_value(var, script):
     if res:
         res2 = var_regex.search(res.group(1))
         if res2:
-            if res2.group(2) == var: # infinite loop
+            if res2.group(2) == var:  # infinite loop
                 return None
         return substitute_shell_vars(res.group(1), script)
     else:
         return None
+
 
 def substitute_shell_vars(val, script):
     res = var_regex.search(val)
@@ -85,7 +90,8 @@ def substitute_shell_vars(val, script):
     else:
         return val
 
-def getstatusoutput(cmd, stdoutonly = False, shell = False):
+
+def getstatusoutput(cmd, stdoutonly=False, shell=False):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.'''
     if stdoutonly:
@@ -107,6 +113,7 @@ def getstatusoutput(cmd, stdoutonly = False, shell = False):
 bz2_regex = re.compile('\.t?bz2?$')
 xz_regex = re.compile('\.(t[xl]z|xz|lzma)$')
 
+
 def catcmd(fname):
     """Get a 'cat' command that handles possibly compressed files."""
     cat = 'gzip -dcf'
@@ -116,11 +123,13 @@ def catcmd(fname):
         cat = 'xz -dc'
     return cat
 
+
 def is_utf8(fname):
     (sts, text) = getstatusoutput(catcmd(fname).split() + [fname])
     return not sts and is_utf8_str(text)
 
 REPLACEMENT_CHAR = unicodedata.lookup('REPLACEMENT CHARACTER')
+
 
 def is_utf8_str(s):
     if hasattr(s, 'decode'):
@@ -132,6 +141,7 @@ def is_utf8_str(s):
         return True
     # unicode string
     return REPLACEMENT_CHAR not in s
+
 
 # TODO: PY3
 def to_utf8(string):
@@ -160,6 +170,7 @@ def to_utf8(string):
             newstring = newstring + char
     return newstring
 
+
 def readlines(path):
     fobj = open(path, 'rb')
     try:
@@ -168,14 +179,16 @@ def readlines(path):
     finally:
         fobj.close()
 
+
 def mktemp():
-    tmpfd, tmpname = tempfile.mkstemp(prefix = 'rpmlint.')
+    tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
     tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
 
 slash_regex = re.compile('/+')
 slashdot_regex = re.compile('/(\.(/|$))+')
 slashend_regex = re.compile('([^/])/+$')
+
 
 def safe_normpath(path):
     """Like os.path.normpath but normalizes less aggressively thus being
@@ -185,7 +198,8 @@ def safe_normpath(path):
     ret = slashend_regex.sub('\\1', ret)
     return ret
 
-def get_default_valid_rpmgroups(filename = None):
+
+def get_default_valid_rpmgroups(filename=None):
     """Get default rpm groups from filename, or try to look them up from
     the rpm package (if installed) if no filename is given"""
     groups = []
@@ -206,10 +220,11 @@ def get_default_valid_rpmgroups(filename = None):
             fobj.close()
         if 'Development/Debug' not in groups:
             groups.append('Development/Debug')
-        if 'Unspecified' not in groups: # auto-added by rpm >= 4.6.0
+        if 'Unspecified' not in groups:  # auto-added by rpm >= 4.6.0
             groups.append('Unspecified')
         groups.sort()
     return groups
+
 
 # from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
 def compareEVR(evr1, evr2):
@@ -229,6 +244,7 @@ def compareEVR(evr1, evr2):
     r2 = str(r2)
     rc = rpm.labelCompare((e1, v1, r1), (e2, v2, r2))
     return rc
+
 
 # from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
 def rangeCompare(reqtuple, provtuple):
@@ -253,7 +269,7 @@ def rangeCompare(reqtuple, provtuple):
     # "Requires: foo < 1.0" should not be satisfied by "Provides: foo = 1:0.5"
     #if reqe is None:
     #    e = None
-    if reqv is None: # just for the record if ver is None then we're going to segfault
+    if reqv is None:  # just for the record if ver is None then we're going to segfault
         v = None
 
     # if we just require foo-version, then foo-version-* will match
@@ -307,6 +323,7 @@ def rangeCompare(reqtuple, provtuple):
 
     return 0
 
+
 # from yum 3.2.23, rpmUtils.miscutils, with rpmlint modifications
 def formatRequire(name, flags, evr):
     s = name
@@ -324,6 +341,7 @@ def formatRequire(name, flags, evr):
             s = "%s %s" % (s, versionToString(evr))
     return s
 
+
 def versionToString(evr):
     if not isinstance(evr, (list, tuple)):
         # assume string
@@ -336,6 +354,7 @@ def versionToString(evr):
         if evr[2] is not None and evr[2] != "":
             ret += "-" + evr[2]
     return ret
+
 
 # from yum 3.2.23, rpmUtils.miscutils, with some rpmlint modifications
 def stringToVersion(verstring):
@@ -364,6 +383,7 @@ def stringToVersion(verstring):
             version = verstring[i:]
         release = None
     return (epoch, version, release)
+
 
 def parse_deps(line):
     '''Parse provides/requires/conflicts/obsoletes line to list of
@@ -434,7 +454,7 @@ class Pkg:
 
     _magic_from_compressed_re = re.compile('\([^)]+\s+compressed\s+data\\b')
 
-    def __init__(self, filename, dirname, header = None, is_source = False):
+    def __init__(self, filename, dirname, header=None, is_source=False):
         self.filename = filename
         self.extracted = False
         self.dirname = dirname
@@ -508,8 +528,8 @@ class Pkg:
             return None
         else:
             self.dirname = tempfile.mkdtemp(
-                prefix = 'rpmlint.%s.' % os.path.basename(self.filename),
-                dir = self.dirname)
+                prefix='rpmlint.%s.' % os.path.basename(self.filename),
+                dir=self.dirname)
             # TODO: better shell escaping or sequence based command invocation
             command_str = \
                 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % \
@@ -629,7 +649,7 @@ class Pkg:
         provides = [b2s(x) for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
         files = [b2s(x) for x in self.header[rpm.RPMTAG_FILENAMES]]
         magics = [b2s(x) for x in self.header[rpm.RPMTAG_FILECLASS]]
-        try: # rpm >= 4.7.0
+        try:  # rpm >= 4.7.0
             filecaps = self.header[rpm.RPMTAG_FILECAPS]
         except:
             filecaps = None
@@ -732,7 +752,7 @@ class Pkg:
 
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, list, nametag, flagstag, versiontag,
-                    prereq = None):
+                    prereq=None):
         names = header[nametag]
         flags = header[flagstag]
         versions = header[versiontag]
@@ -784,6 +804,7 @@ class Pkg:
             prog = b' '.join(prog)
         return b2s(prog)
 
+
 def getInstalledPkgs(name):
     """Get list of installed package objects by name."""
 
@@ -800,9 +821,10 @@ def getInstalledPkgs(name):
 
     return pkgs
 
+
 # Class to provide an API to an installed package
 class InstalledPkg(Pkg):
-    def __init__(self, name, hdr = None):
+    def __init__(self, name, hdr=None):
         if not hdr:
             ts = rpm.TransactionSet()
             mi = ts.dbMatch('name', name)
@@ -827,6 +849,7 @@ class InstalledPkg(Pkg):
     def checkSignature(self):
         return (0, 'fake: pgp md5 OK')
 
+
 # Class to provide an API to a "fake" package, eg. for specfile-only checks
 class FakePkg:
     def __init__(self, name):
@@ -836,6 +859,7 @@ class FakePkg:
 
     def cleanup(self):
         pass
+
 
 # Class for files in packages
 class PkgFile(object):
@@ -862,10 +886,10 @@ class PkgFile(object):
 
     # TODO: decompression support
 
-    is_config    = property(lambda self: self.flags & rpm.RPMFILE_CONFIG)
-    is_doc       = property(lambda self: self.flags & rpm.RPMFILE_DOC)
+    is_config = property(lambda self: self.flags & rpm.RPMFILE_CONFIG)
+    is_doc = property(lambda self: self.flags & rpm.RPMFILE_DOC)
     is_noreplace = property(lambda self: self.flags & rpm.RPMFILE_NOREPLACE)
-    is_ghost     = property(lambda self: self.flags & rpm.RPMFILE_GHOST)
+    is_ghost = property(lambda self: self.flags & rpm.RPMFILE_GHOST)
     is_missingok = property(lambda self: self.flags & rpm.RPMFILE_MISSINGOK)
 
 

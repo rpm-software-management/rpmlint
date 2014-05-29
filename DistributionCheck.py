@@ -22,8 +22,8 @@ vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
 compress_ext = Config.getOption("CompressExtension", "bz2")
 
-class DistributionCheck(AbstractCheck.AbstractCheck):
 
+class DistributionCheck(AbstractCheck.AbstractCheck):
 
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "DistributionCheck")
@@ -65,7 +65,7 @@ addDetails(
 automatically when the package is rebuilt, make sure that you have the
 appropriate rpm helper and/or config packages for your target distribution
 installed and try rebuilding again; if it still does not happen automatically,
-you can compress this file in the %%install section of the spec file.''' \
+you can compress this file in the %%install section of the spec file.'''
 % (compress_ext, compress_ext),
 
 'infopage-not-compressed',
@@ -74,7 +74,7 @@ you can compress this file in the %%install section of the spec file.''' \
 automatically when the package is rebuilt, make sure that you have the
 appropriate rpm helper and/or config packages for your target distribution
 installed and try rebuilding again; if it still does not happen automatically,
-you can compress this file in the %%install section of the spec file.''' \
+you can compress this file in the %%install section of the spec file.'''
 % (compress_ext, compress_ext),
 )
 
