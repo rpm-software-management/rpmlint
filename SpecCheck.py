@@ -17,11 +17,11 @@ except ImportError: # Python 3
 import rpm
 
 from Filter import addDetails, printError, printWarning
+from PostCheck import RPM_SCRIPTLETS
 from TagsCheck import VALID_GROUPS
 import AbstractCheck
 import Config
 import Pkg
-import Common
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -69,8 +69,8 @@ defattr_regex = re.compile('^\s*%defattr\\b')
 attr_regex = re.compile('^\s*%attr\\b')
 section_regexs = dict(
     ([x, re.compile('^%' + x + '(?:\s|$)')]
-     for x in ['build', 'changelog', 'check', 'clean', 'description', 'files',
-               'install', 'package', 'prep'] + Common.RPM_SCRIPTLETS))
+     for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
+               'install', 'package', 'prep') + RPM_SCRIPTLETS))
 deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
