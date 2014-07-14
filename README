@@ -35,6 +35,7 @@ Implemented checks:
 	o Zip/Jar file checks (ZipCheck).
 	o Pam configuration file checks (PamCheck).
 	o Rpm file checks (RpmFileCheck).
+	o Software Collections checks (SCLCheck).
 
 If you want to change configuration options or the list of checks, use
 the global configuration files /etc/rpmlint/*config or the user
