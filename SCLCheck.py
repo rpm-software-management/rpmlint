@@ -324,89 +324,89 @@ check = SCLCheck()
 # Add information about checks
 addDetails(
 'undeclared-scl',
-'''SPEC contains %scl* macros, but was not recognized as SCL metapackage or SCL
-ready package. If this should be SCL metapackage, don't forget to define %scl
-macro. If this should be SCL ready package, run %scl conditionalized
-%scl_package macro, e.g. %{?scl:%scl_package foo}.''',
+'''Specfile contains %scl* macros, but was not recognized as SCL metapackage or
+SCL ready package. If this should be an SCL metapackage, don't forget to define
+the %scl macro. If this should be an SCL ready package, run %scl
+conditionalized %scl_package macro, e.g. %{?scl:%scl_package foo}.''',
 
 'no-runtime-in-scl-metapackage',
-'SCL metapackage must have runtime subpackage',
+'SCL metapackage must have runtime subpackage.',
 
 'no-build-in-scl-metapackage',
-'SCL metapackage must have build subpackage',
+'SCL metapackage must have build subpackage.',
 
 'weird-subpackage-in-scl-metapackage',
-'Only allowed subpackages in SCL metapackage are build and runtime',
+'Only allowed subpackages in SCL metapackage are build and runtime.',
 
 'scl-metapackage-without-scl-utils-build-br',
-'SCL metapackage must BuildRequire scl-utils-build',
+'SCL metapackage must BuildRequire scl-utils-build.',
 
 'scl-build-without-requiring-scl-utils-build',
-'SCL runtime package should Require scl-utils-build',
+'SCL runtime package should Require scl-utils-build.',
 
 'scl-metapackage-without-%scl_install',
-'SCL metapackage must call %scl_install in the %install section',
+'SCL metapackage must call %scl_install in the %install section.',
 
 'noarch-scl-metapackage-with-libdir',
 '''If "enable" script of SCL metapackage contains %{_libdir}, the package must
-be arch specific, otherwise it may be noarch''',
+be arch specific, otherwise it may be noarch.''',
 
 'scl-main-metapackage-contains-files',
-'Main package of SCL metapackage should not contain any files',
+'Main package of SCL metapackage should not contain any files.',
 
 'scl-runtime-package-without-%scl_files',
-'SCL runtime package must contain %scl_files in %files section',
+'SCL runtime package must contain %scl_files in %files section.',
 
 'scl-build-package-without-rpm-macros',
 '''SCL build package must contain %{_root_sysconfdir}/rpm/macros. %{scl}-config
-in %files section''',
+in %files section.''',
 
 'missing-pkg_name-definition',
-'%{!?scl:%global pkg_name %{name}} is missing in the spec',
+'%{!?scl:%global pkg_name %{name}} is missing in the specfile.',
 
 'name-without-scl-prefix',
-'Name of SCL package must start with %{?scl_prefix}',
+'Name of SCL package must start with %{?scl_prefix}.',
 
 'scl-prefix-without-condition',
 '''The SCL prefix is used without condition - this won't work if the package is
-build outside of SCL - use %{?scl_prefix} with questionmark''',
+build outside of SCL - use %{?scl_prefix} with questionmark.''',
 
 'obsoletes-or-conflicts-without-scl-prefix',
 '''Obsoletes, Conflicts and Build Conflicts must always be prefixed with
 %{?scl_prefix}. This is extremely important, as the SCLs are often used for
 deploying new packages on older systems (that may contain old packages, now
 obsoleted by the new ones), but they shouldn't Obsolete or Conflict with the
-non-SCL RPMs installed on the system (that's the idea of SCL)''',
+non-SCL RPMs installed on the system (that's the idea of SCL).''',
 
 'provides-without-scl-prefix',
-'Provides tag must always be prefixed with %{?scl_prefix}',
+'Provides tag must always be prefixed with %{?scl_prefix}.',
 
 'doesnt-require-scl-runtime-or-other-scl-package',
 '''The package must require %{scl}-runtime, unless it depends on another
 package that requires %{scl}-runtime. It's impossible to check what other
 packages require, so this simply checks if this package requires at least
-something from its collection''',
+something from its collection.''',
 
 'subpackage-with-n-without-scl-prefix',
-'''If (and only if) a package define its name with -n, the name must be
-prefixed with %{?scl_prefix}''',
+'''If (and only if) a package defines its name with -n, the name must be
+prefixed with %{?scl_prefix}.''',
 
 'scl-setup-without-n',
-'''The %setup macro need the -n argument for SCL builds, cause the directory
-with source probably doesn't include SCL prefix in its name''',
+'''The %setup macro needs the -n argument for SCL builds, because the directory
+with source probably doesn't include SCL prefix in its name.''',
 
 'scl-name-screwed-up',
-'''SCl package's name starts with SCL prefix. That prefix is used as a
+'''SCL package's name starts with SCL prefix. That prefix is used as a
 directory, where files are stored: If the prefix is foo, the directory is
 /opt/provides/foo. This package doesn't respect that. This means either the
-name of the package is wrong, or the directory''',
+name of the package is wrong, or the directory.''',
 
 'file-outside-of-scl-tree',
 '''SCL package should only contain files in /opt/provider/scl-name directory or
-in other allowed directories such as some directories in /etc or /var. wrapper
-scripts in /usr/bin are also allowed''',
+in other allowed directories such as some directories in /etc or /var. Wrapper
+scripts in /usr/bin are also allowed.''',
 
 'scl-rpm-macros-outside-of-build',
-'''RPM macros in SCL packages shoul belong to -build subpackage of the SCL
-metapackage''',
+'''RPM macros in SCL packages should belong to -build subpackage of the SCL
+metapackage.''',
 )
