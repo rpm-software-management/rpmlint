@@ -16,3 +16,4 @@ and the following programs to install it:
 	o python 2.x (x >= 6)
 	o rpm python bindings 4.4 or newer
 	o sed
+	o pytest (for running the test suite)
