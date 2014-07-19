@@ -10,7 +10,7 @@ import SpecCheck
 class TestSpecCheck(unittest.TestCase):
 
     def setUp(self):
-        self.pkg = Testing.getTestedSpecPackage('SpecCheck')
+        self.pkg = Testing.getTestedSpecPackage('spec/SpecCheck')
         Testing.startTest()
 
     def testcheck(self):

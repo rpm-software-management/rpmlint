@@ -9,7 +9,7 @@ import PamCheck
 class TestPamCheck(unittest.TestCase):
 
     def setUp(self):
-        self.pkg = Testing.getTestedPackage('PamCheck')
+        self.pkg = Testing.getTestedPackage('binary/PamCheck')
         Testing.startTest()
 
     def tearDown(self):
