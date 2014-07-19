@@ -54,7 +54,7 @@ check = DistributionCheck()
 
 addDetails(
 'invalid-vendor',
-'''In the "%s" distribution, vendor should be "%s".''' % (distribution, vendor),
+'In the "%s" distribution, vendor should be "%s".' % (distribution, vendor),
 
 'invalid-distribution',
 'The distribution value should be "' + distribution + '".',

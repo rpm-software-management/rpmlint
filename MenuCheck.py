@@ -126,7 +126,9 @@ DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
                      ('/usr/share/icons/large/', 'large'))
 
 DEFAULT_LAUNCHERS = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
-                     ['(?:/usr/bin/)?launch_x11_clanapp', ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
+                     ['(?:/usr/bin/)?launch_x11_clanapp',
+                      ('/usr/bin/launch_x11_clanapp', 'clanlib',
+                       'libclanlib0')],
                      ['(?:/usr/bin/)?soundwrapper', None],
                     )
 
@@ -257,8 +259,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
                         if command[0] == '/':
                             if command not in files:
-                                printWarning(pkg, 'menu-command-not-in-package',
-                                             command)
+                                printWarning(
+                                    pkg, 'menu-command-not-in-package',
+                                    command)
                         elif not ('/bin/' + command in files or
                                   '/usr/bin/' + command in files or
                                   '/usr/X11R6/bin/' + command in files):
@@ -331,9 +334,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                         else:
                             for path in icon_paths:
                                 if (path[0] + icon) not in files:
-                                    printError(pkg,
-                                               path[1] + '-icon-not-in-package',
-                                               icon, f)
+                                    printError(
+                                        pkg, path[1] + '-icon-not-in-package',
+                                        icon, f)
                     else:
                         printWarning(pkg, 'no-icon-in-menu', title)
 
@@ -374,8 +377,8 @@ update-menus.''',
 update-menus.''',
 
 'menu-without-postun',
-'''A menu file exists in the package but no %postun scriptlet is present to call
-update-menus.''',
+'''A menu file exists in the package but no %postun scriptlet is present to
+call update-menus.''',
 
 'postun-without-update-menus',
 '''A menu file exists in the package but its %postun scriptlet doesn't call

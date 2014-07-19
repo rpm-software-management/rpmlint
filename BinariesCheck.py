@@ -154,11 +154,14 @@ class BinaryInfo:
             if fork_called:
                 self.exit_calls = []
 
-            # check if chroot is near chdir ( since otherwise, chroot is called without chdir )
+            # check if chroot is near chdir (since otherwise, chroot is called
+            # without chdir)
             if self.chroot and self.chdir:
-                # FIXME this check is too slow, because forking for objdump is quite slow
-                # according to a quick test and that's quite visible on a server like postfix
-                res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'objdump', '-d', path))
+                # FIXME this check is too slow, because forking for objdump is
+                # quite slow according to a quick test and that's quite visible
+                # on a server like postfix
+                res = Pkg.getstatusoutput(
+                    ('env', 'LC_ALL=C', 'objdump', '-d', path))
                 if not res[0]:
                     call = []
                     # we want that :
@@ -365,7 +368,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                                 printError(pkg, 'invalid-ldconfig-symlink',
                                            fname, link)
                         except KeyError:
-                            if base.startswith("lib") or base.startswith("ld-"):
+                            if base.startswith("lib") or \
+                               base.startswith("ld-"):
                                 printError(pkg, 'no-ldconfig-symlink', fname)
 
                     res = soversion_regex.search(bin_info.soname)
@@ -467,7 +471,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
-                printError(pkg, 'missing-call-to-setgroups-before-setuid', fname)
+                printError(pkg, 'missing-call-to-setgroups-before-setuid',
+                           fname)
 
             if bin_info.chroot:
                 if not bin_info.chdir or not bin_info.chroot_near_chdir:
@@ -633,10 +638,10 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 -fPIE/-fpie in compiler flags and -pie in linker flags.''',
 
 'missing-call-to-setgroups-before-setuid',
-'''This executable is calling setuid and setgid without setgroups or initgroups.
-There is a high probability this means it didn't relinquish all groups, and this
-would be a potential security issue to be fixed. Seek POS36-C on the web for
-details about the problem.''',
+'''This executable is calling setuid and setgid without setgroups or
+initgroups. There is a high probability this means it didn't relinquish all
+groups, and this would be a potential security issue to be fixed. Seek POS36-C
+on the web for details about the problem.''',
 
 'missing-call-to-chdir-with-chroot',
 '''This executable appears to call chroot without using chdir to change the
@@ -653,8 +658,8 @@ upstream to have this issue fixed.''',
 
 'unstripped-binary-or-object',
 '''This executable should be stripped from debugging symbols, in order to take
-less space and be loaded faster. This is usually done automatically at buildtime
-by rpm. Check the build logs and the permission on the file (some
+less space and be loaded faster. This is usually done automatically at
+buildtime by rpm. Check the build logs and the permission on the file (some
 implementations only strip if the permission is 0755).'''
 )
 
