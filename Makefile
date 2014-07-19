@@ -13,7 +13,7 @@ MANDIR=/usr/share/man
 
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmdiff.1 rpmlint.bash-completion rpmlint.1 \
-	test.sh test/*.rpm test/*.spec test/*.py
+	test.sh test/*/*.rpm test/spec/*.spec test/*.py
 GENERATED = ChangeLog __version__.py
 
 PACKAGE = rpmlint
