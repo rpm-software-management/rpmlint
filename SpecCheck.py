@@ -244,7 +244,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if make_check_regex.search(line) and current_section not in \
                     ('check', 'changelog', 'package', 'description'):
-                printWarning(pkg, 'make-check-outside-check-section', line[:-1])
+                printWarning(pkg, 'make-check-outside-check-section',
+                             line[:-1])
 
             if current_section in buildroot_clean and \
                     not buildroot_clean[current_section] and \
@@ -371,7 +372,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 res = buildarch_regex.search(line)
                 if res:
                     if res.group(1) != "noarch":
-                        printError(pkg, 'buildarch-instead-of-exclusivearch-tag', res.group(1))
+                        printError(pkg,
+                                   'buildarch-instead-of-exclusivearch-tag',
+                                   res.group(1))
                     else:
                         package_noarch[current_package] = True
 
@@ -401,25 +404,30 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     reqs = Pkg.parse_deps(res.group(1))
                     for req in unversioned(reqs):
                         if compop_regex.search(req):
-                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                            printWarning(pkg,
+                                         'comparison-operator-in-deptoken',
                                          req)
 
                 res = provides_regex.search(line)
                 if res:
                     provs = Pkg.parse_deps(res.group(1))
                     for prov in unversioned(provs):
-                        printWarning(pkg, 'unversioned-explicit-provides', prov)
+                        printWarning(pkg, 'unversioned-explicit-provides',
+                                     prov)
                         if compop_regex.search(prov):
-                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                            printWarning(pkg,
+                                         'comparison-operator-in-deptoken',
                                          prov)
 
                 res = obsoletes_regex.search(line)
                 if res:
                     obses = Pkg.parse_deps(res.group(1))
                     for obs in unversioned(obses):
-                        printWarning(pkg, 'unversioned-explicit-obsoletes', obs)
+                        printWarning(pkg, 'unversioned-explicit-obsoletes',
+                                     obs)
                         if compop_regex.search(obs):
-                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                            printWarning(pkg,
+                                         'comparison-operator-in-deptoken',
                                          obs)
 
                 res = conflicts_regex.search(line)
@@ -427,7 +435,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     confs = Pkg.parse_deps(res.group(1))
                     for conf in unversioned(confs):
                         if compop_regex.search(conf):
-                            printWarning(pkg, 'comparison-operator-in-deptoken',
+                            printWarning(pkg,
+                                         'comparison-operator-in-deptoken',
                                          conf)
 
             if current_section == 'changelog':
@@ -636,8 +645,8 @@ example using iconv(1).''',
 use a directory for building, use $RPM_BUILD_ROOT instead.''',
 
 'patch-not-applied',
-'''A patch is included in your package but was not applied. Refer to the patches
-documentation to see what's wrong.''',
+'''A patch is included in your package but was not applied. Refer to the
+patches documentation to see what's wrong.''',
 
 'obsolete-tag',
 '''The following tags are obsolete: Copyright and Serial. They must
@@ -816,8 +825,8 @@ is output by rpm and the message should contain more information.''',
 
 'comparison-operator-in-deptoken',
 '''This dependency token contains a comparison operator (<, > or =).  This is
-usually not intended and may be caused by missing whitespace between the token's
-name, the comparison operator and the version string.''',
+usually not intended and may be caused by missing whitespace between the
+token's name, the comparison operator and the version string.''',
 
 'macro-in-comment',
 '''There is a unescaped macro after a shell style comment in the specfile.
@@ -836,9 +845,10 @@ intended contents.''',
 
 'patch-fuzz-is-changed',
 '''The internal patch fuzz value was changed, and could hide patchs issues, or
-could lead to applying a patch at the wrong location. Usually, this is often the
-sign that someone didn't check if a patch is still needed and do not want to rediff
-it. It is usually better to rediff the patch and try to send it upstream.'''
+could lead to applying a patch at the wrong location. Usually, this is often
+the sign that someone didn't check if a patch is still needed and do not want
+to rediff it. It is usually better to rediff the patch and try to send it
+upstream.'''
 )
 
 # SpecCheck.py ends here

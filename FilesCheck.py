@@ -470,7 +470,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             for i in disallowed_dirs:
                 if f.startswith(i):
-                    printError(pkg, 'dir-or-file-in-%s' % '-'.join(i.split('/')[1:]), f)
+                    printError(pkg, 'dir-or-file-in-%s' %
+                               '-'.join(i.split('/')[1:]), f)
 
             if f.startswith('/run/'):
                 if f not in ghost_files:
@@ -486,7 +487,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 printError(pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/"):
+            elif hidden_file_regex.search(f) and \
+                 not f.startswith("/etc/skel/"):
                 printWarning(pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 printWarning(pkg, 'manifest-in-perl-module', f)
@@ -647,7 +649,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 res = bin_regex.search(f)
                 if res:
                     if not mode_is_exec:
-                        printWarning(pkg, 'non-executable-in-bin', f, oct(perm))
+                        printWarning(pkg, 'non-executable-in-bin', f,
+                                     oct(perm))
                     else:
                         exe = res.group(1)
                         if "/" not in exe:
@@ -712,7 +715,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                         break
                                 # If expected version was from the file path,
                                 # issue # an error, otherwise a warning.
-                                msg = (pkg, 'python-bytecode-wrong-magic-value',
+                                msg = (pkg,
+                                       'python-bytecode-wrong-magic-value',
                                        f, "expected %d (%s), found %d (%s)" %
                                        (exp_magic,
                                         exp_version or python_default_version,
@@ -735,9 +739,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     pyc_timestamp).isoformat()
                                 sts = datetime.fromtimestamp(
                                     srcfile.mtime).isoformat()
-                                printError(pkg,
-                                           'python-bytecode-inconsistent-mtime',
-                                           f, cts, srcfile.name, sts)
+                                printError(
+                                    pkg, 'python-bytecode-inconsistent-mtime',
+                                    f, cts, srcfile.name, sts)
                     else:
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
@@ -1028,11 +1032,11 @@ a call to ldconfig.''',
 a call to install-info.''',
 
 'postin-without-install-info',
-'''This package contains info files and its %post doesn't call install-info.''',
+'This package contains info files and its %post doesn\'t call install-info.',
 
 'info-files-without-install-info-postun',
-'''This package contains info files and provides no %postun scriptlet containing
-a call to install-info.''',
+'''This package contains info files and provides no %postun scriptlet
+containing a call to install-info.''',
 
 'postun-without-install-info',
 '''This package contains info files and its %postun doesn't call

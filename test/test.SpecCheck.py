@@ -2,13 +2,17 @@
 
 import re
 import unittest
+
 import Testing
 import SpecCheck
 
+
 class TestSpecCheck(unittest.TestCase):
+
     def setUp(self):
         self.pkg = Testing.getTestedSpecPackage('SpecCheck')
         Testing.startTest()
+
     def testcheck(self):
         SpecCheck.check.check_spec(self.pkg, self.pkg.name)
         out = "\n".join(Testing.getOutput())

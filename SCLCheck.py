@@ -173,10 +173,12 @@ class SCLCheck(AbstractCheck.AbstractCheck):
             printWarning(pkg, 'scl-main-metapackage-contains-files',
                          ', '.join(files))
         if runtime:
-            if not scl_files.search('\n'.join(self.get_files(spec, 'runtime'))):
+            if not scl_files.search(
+                    '\n'.join(self.get_files(spec, 'runtime'))):
                 printError(pkg, 'scl-runtime-package-without-%scl_files')
         if build:
-            if not scl_macros.search('\n'.join(self.get_files(spec, 'build'))):
+            if not scl_macros.search(
+                    '\n'.join(self.get_files(spec, 'build'))):
                 printError(pkg, 'scl-build-package-without-rpm-macros')
 
     def check_scl_spec(self, pkg, spec):

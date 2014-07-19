@@ -397,7 +397,8 @@ BAD_WORDS = {
     'xwindows': 'X'
     }
 
-DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$', '^package$', '^libsafe\.so\.')
+DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$',
+                            '^package$', '^libsafe\.so\.')
 
 VALID_GROUPS = Config.getOption('ValidGroups', None)
 if VALID_GROUPS is None:  # get defaults from rpm package only if it's not set
@@ -841,7 +842,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             for prov in provs:
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):
-                        printWarning(pkg, 'self-obsoletion', '%s obsoletes %s' %
+                        printWarning(pkg, 'self-obsoletion',
+                                     '%s obsoletes %s' %
                                      (Pkg.formatRequire(*obs),
                                       Pkg.formatRequire(*prov)))
 
@@ -1066,8 +1068,8 @@ leave out the Provides.''',
 the package was buggy.''',
 
 'no-epoch-tag',
-'''There is no Epoch tag in your package. You have to specify an epoch using the
-Epoch tag.''',
+'''There is no Epoch tag in your package. You have to specify an epoch using
+the Epoch tag.''',
 
 'unreasonable-epoch',
 '''The value of your Epoch tag is unreasonably large (> 99).''',
@@ -1094,8 +1096,8 @@ naming. This BuildRequires dependency will not be resolved on lib64 platforms
 (eg. amd64).''',
 
 'explicit-lib-dependency',
-'''You must let rpm find the library dependencies by itself. Do not put unneeded
-explicit Requires: tags.''',
+'''You must let rpm find the library dependencies by itself. Do not put
+unneeded explicit Requires: tags.''',
 
 'useless-provides',
 '''This package provides 2 times the same capacity. It should only provide it

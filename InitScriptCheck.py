@@ -116,9 +116,9 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                             cres = lsb_cont_regex.search(line)
                             if not (in_lsb_description and cres):
                                 in_lsb_description = False
-                                printError(pkg,
-                                           'malformed-line-in-lsb-comment-block',
-                                           line)
+                                printError(
+                                    pkg, 'malformed-line-in-lsb-comment-block',
+                                    line)
                             else:
                                 lsb_tags["Description"][-1] += \
                                     " " + cres.group(1)
@@ -156,7 +156,8 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
                     if use_subsys and name != basename:
                         error = True
                         if name[0] == '$':
-                            value = Pkg.substitute_shell_vars(name, content_str)
+                            value = Pkg.substitute_shell_vars(name,
+                                                              content_str)
                             if value == basename:
                                 error = False
                         else:
