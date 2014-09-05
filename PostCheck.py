@@ -11,8 +11,6 @@
 import os
 import re
 
-import rpm
-
 from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
@@ -112,20 +110,6 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     self.check_aux(
                         pkg, files, prog[idx], script[idx], tag[2], prereq)
 
-        ghost_files = pkg.ghostFiles()
-        if ghost_files:
-            postin = pkg[rpm.RPMTAG_POSTIN]
-            prein = pkg[rpm.RPMTAG_PREIN]
-            for f in ghost_files:
-                if f in pkg.missingOkFiles():
-                    continue
-                if not postin and not prein:
-                    printWarning(pkg, 'ghost-files-without-postin')
-                if (not postin or f not in postin) and \
-                        (not prein or f not in prein):
-                    printWarning(pkg,
-                                 'postin-without-ghost-file-creation', f)
-
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
             if prog:
@@ -194,10 +178,6 @@ class PostCheck(AbstractCheck.AbstractCheck):
 check = PostCheck()
 
 # Add information about checks
-addDetails(
-'postin-without-ghost-file-creation',
-'''A file tagged as ghost is not created during %prein nor during %postin.''',
-)
 for scriptlet in map(lambda x: '%' + x, RPM_SCRIPTLETS):
     addDetails(
 'one-line-command-in-%s' % scriptlet,
