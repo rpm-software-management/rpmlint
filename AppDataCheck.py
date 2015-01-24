@@ -25,9 +25,9 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         root = pkg.dirName()
         f = root + filename
         try:
-            st = getstatusoutput(('appdata-validate', f), True)
+            st = getstatusoutput(('appstream-util', 'validate-relax', f))
         except OSError:
-            # ignore the check if appdata-validate is not installed
+            # ignore the check if appstream-util is not installed
             return
         if st[0]:
             printError(pkg, 'invalid-appdata-file', filename)
@@ -37,7 +37,7 @@ check = AppDataCheck()
 
 addDetails(
 'invalid-appdata-file',
-'''appdata file is not valid, check with appdata-validate''',
+'''appdata file is not valid, check with appstream-util validate-relax''',
 )
 
 # Local variables:
