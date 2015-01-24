@@ -212,6 +212,10 @@ from Config import *
 # Type: string, default: 'mac'
 #SetOption("ManWarningCategory", 'mac')
 
+# Command and arguments to validate appdata files.
+# Type: tuple of strings, default: see DEFAULT_APPDATA_CHECKER in AppDataCheck
+#setOption("AppDataChecker", ('appstream-util', 'validate-relax'))
+
 # Output filters.
 # ---------------
 

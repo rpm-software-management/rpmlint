@@ -9,8 +9,12 @@
 from Filter import addDetails, printError
 from Pkg import getstatusoutput
 import AbstractCheck
+import Config
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
+DEFAULT_APPDATA_CHECKER = ('appstream-util', 'validate-relax')
+
+appdata_checker = Config.getOption("AppDataChecker", DEFAULT_APPDATA_CHECKER)
 
 
 class AppDataCheck(AbstractCheck.AbstractFilesCheck):
@@ -25,9 +29,9 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         root = pkg.dirName()
         f = root + filename
         try:
-            st = getstatusoutput(('appstream-util', 'validate-relax', f))
+            st = getstatusoutput(appdata_checker + (f,))
         except OSError:
-            # ignore the check if appstream-util is not installed
+            # ignore if the checker is not installed
             return
         if st[0]:
             printError(pkg, 'invalid-appdata-file', filename)
@@ -37,7 +41,7 @@ check = AppDataCheck()
 
 addDetails(
 'invalid-appdata-file',
-'''appdata file is not valid, check with appstream-util validate-relax''',
+'''appdata file is not valid, check with %s''' % (" ".join(appdata_checker)),
 )
 
 # Local variables:
