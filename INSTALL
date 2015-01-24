@@ -9,7 +9,7 @@ You need the following utilities to run rpmlint:
 	o gzip, bzip2 and xz
 	o groff and gtbl (optional)
 	o enchant and its python bindings (optional)
-	o appdata-validate (optional)
+	o appstream-util, part of appstream-glib (optional)
 
 and the following programs to install it:
 
