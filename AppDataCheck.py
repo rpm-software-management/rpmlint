@@ -27,7 +27,7 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         try:
             st = getstatusoutput(('appdata-validate', f), True)
         except OSError:
-            # ignore the check if appdata-validate is not install
+            # ignore the check if appdata-validate is not installed
             return
         if st[0]:
             for line in st[1].splitlines():
