@@ -30,9 +30,7 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
             # ignore the check if appdata-validate is not installed
             return
         if st[0]:
-            for line in st[1].splitlines():
-                if 'problems detected' in line:
-                    printError(pkg, 'invalid-appdata-file', filename)
+            printError(pkg, 'invalid-appdata-file', filename)
 
 
 check = AppDataCheck()
