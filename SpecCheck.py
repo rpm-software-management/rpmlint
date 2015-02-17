@@ -96,6 +96,7 @@ conflicts_regex = re.compile('^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
 
 compop_regex = re.compile('[<>=]')
 
+setup_regex = re.compile(r'%setup\b')  # intentionally no whitespace before!
 setup_q_regex = re.compile(' -[A-Za-z]*q')
 setup_t_regex = re.compile(' -[A-Za-z]*T')
 setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
@@ -259,7 +260,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if if_regex.search(line):
                 if_depth = if_depth + 1
 
-            if line.startswith('%setup'):
+            if setup_regex.match(line):
                 if not setup_q_regex.search(line):
                     # Don't warn if there's a -T without -a or -b
                     if setup_t_regex.search(line):
