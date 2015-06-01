@@ -582,6 +582,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
+                    if devel_pkg:
+                        printError(pkg, 'non-devel-file-in-devel-package', f)
                     if not postin:
                         printError(pkg, 'library-without-ldconfig-postin', f)
                     else:
@@ -1105,6 +1107,9 @@ that the file is an executable or that it has executable permissions.''',
 '''A development file (usually source code) is located in a non-devel
 package. If you want to include source code in your package, be sure to
 create a development package.''',
+
+'non-devel-file-in-devel-package',
+'''A non-development file is located in a devel package.''',
 
 'non-standard-dir-perm',
 '''A standard directory should have permission set to 0755. If you get this
