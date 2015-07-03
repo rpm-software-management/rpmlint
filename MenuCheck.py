@@ -198,14 +198,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'menu-in-wrong-dir', fname)
 
         if menus:
-            postin = Pkg.b2s(pkg[rpm.RPMTAG_POSTIN]) or \
+            postin = pkg[rpm.RPMTAG_POSTIN] or \
                      pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
             if not postin:
                 printError(pkg, 'menu-without-postin')
             elif not update_menus_regex.search(postin):
                 printError(pkg, 'postin-without-update-menus')
 
-            postun = Pkg.b2s(pkg[rpm.RPMTAG_POSTUN]) or \
+            postun = pkg[rpm.RPMTAG_POSTUN] or \
                      pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
             if not postun:
                 printError(pkg, 'menu-without-postun')

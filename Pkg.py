@@ -62,6 +62,17 @@ PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | \
               rpm.RPMSENSE_SCRIPT_PREUN | \
               rpm.RPMSENSE_SCRIPT_POSTUN
 
+SCRIPT_TAGS = [
+    (rpm.RPMTAG_PREIN,          rpm.RPMTAG_PREINPROG,         '%pre'),
+    (rpm.RPMTAG_POSTIN,         rpm.RPMTAG_POSTINPROG,        '%post'),
+    (rpm.RPMTAG_PREUN,          rpm.RPMTAG_PREUNPROG,         '%preun'),
+    (rpm.RPMTAG_POSTUN,         rpm.RPMTAG_POSTUNPROG,        '%postun'),
+    (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
+    (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
+    (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
+    (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
+    ]
+
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
 
@@ -511,7 +522,12 @@ class Pkg:
         else:
             if key in (rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE, rpm.RPMTAG_ARCH,
                        rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
-                       rpm.RPMTAG_LICENSE):
+                       rpm.RPMTAG_LICENSE, rpm.RPMTAG_CHANGELOGNAME,
+                       rpm.RPMTAG_CHANGELOGTEXT, rpm.RPMTAG_SUMMARY,
+                       rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_HEADERI18NTABLE,
+                       rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM) \
+            or key in (x[0] for x in SCRIPT_TAGS) \
+            or key in (x[1] for x in SCRIPT_TAGS):
                 val = b2s(val)
             return val
 
@@ -573,7 +589,7 @@ class Pkg:
         # LANGUAGE trumps other env vars per GNU gettext docs, see also #166
         orig = os.environ.get('LANGUAGE')
         os.environ['LANGUAGE'] = lang
-        ret = b2s(self[tag])
+        ret = self[tag]
         if orig is not None:
             os.environ['LANGUAGE'] = orig
         return ret
@@ -666,8 +682,8 @@ class Pkg:
                     self.dirName() or '/', pkgfile.name.lstrip('/')))
                 pkgfile.flags = flags[idx]
                 pkgfile.mode = modes[idx]
-                pkgfile.user = users[idx]
-                pkgfile.group = groups[idx]
+                pkgfile.user = b2s(users[idx])
+                pkgfile.group = b2s(groups[idx])
                 pkgfile.linkto = links[idx] and safe_normpath(links[idx])
                 pkgfile.size = sizes[idx]
                 pkgfile.md5 = md5s[idx]
@@ -676,7 +692,7 @@ class Pkg:
                 pkgfile.inode = inodes[idx]
                 pkgfile.requires = parse_deps(requires[idx])
                 pkgfile.provides = parse_deps(provides[idx])
-                pkgfile.lang = langs[idx]
+                pkgfile.lang = b2s(langs[idx])
                 pkgfile.magic = magics[idx]
                 if not pkgfile.magic and _magic:
                     pkgfile.magic = _magic.file(pkgfile.path)
@@ -846,11 +862,11 @@ class Pkg:
            interpreter arguments, if any."""
         prog = self[which]
         if prog is None:
-            prog = b''
+            prog = ""
         elif isinstance(prog, (list, tuple)):
             # http://rpm.org/ticket/847#comment:2
-            prog = b' '.join(prog)
-        return b2s(prog)
+            prog = "".join(prog)
+        return prog
 
 
 def getInstalledPkgs(name):
@@ -879,7 +895,7 @@ class InstalledPkg(Pkg):
             if not mi:
                 raise KeyError(name)
             try:
-                hdr = mi.next()
+                hdr = next(mi)
             except StopIteration:
                 raise KeyError(name)
 

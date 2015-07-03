@@ -547,7 +547,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        packager = Pkg.b2s(pkg[rpm.RPMTAG_PACKAGER])
+        packager = pkg[rpm.RPMTAG_PACKAGER]
         if packager:
             self._unexpanded_macros(pkg, 'Packager', packager)
             if Config.getOption('Packager') and \
@@ -684,10 +684,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         ignored_words.update((x[0] for x in pkg.obsoletes()))
 
         langs = pkg[rpm.RPMTAG_HEADERI18NTABLE]
-        if langs:
-            langs = [Pkg.b2s(x) for x in langs]
 
-        summary = Pkg.b2s(pkg[rpm.RPMTAG_SUMMARY])
+        summary = pkg[rpm.RPMTAG_SUMMARY]
         if summary:
             if not langs:
                 self._unexpanded_macros(pkg, 'Summary', summary)
@@ -697,7 +695,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             printError(pkg, 'no-summary-tag')
 
-        description = Pkg.b2s(pkg[rpm.RPMTAG_DESCRIPTION])
+        description = pkg[rpm.RPMTAG_DESCRIPTION]
         if description:
             if not langs:
                 self._unexpanded_macros(pkg, '%description', description)
@@ -726,8 +724,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not changelog:
             printError(pkg, 'no-changelogname-tag')
         else:
-            changelog = [Pkg.b2s(x) for x in changelog]
-            clt = [Pkg.b2s(x) for x in pkg[rpm.RPMTAG_CHANGELOGTEXT]]
+            clt = pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if use_version_in_changelog:
                 ret = changelog_version_regex.search(changelog[0])
                 if not ret and clt:
