@@ -626,7 +626,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     elif not install_info_regex.search(postin):
                         printError(pkg, 'postin-without-install-info', f)
 
-                    preun = b2s(pkg[rpm.RPMTAG_PREUN]) or \
+                    preun = pkg[rpm.RPMTAG_PREUN] or \
                             pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
                     if not postun and not preun:
                         printError(pkg,

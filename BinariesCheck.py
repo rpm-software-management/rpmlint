@@ -278,7 +278,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
         if srpm:
-            res = srcname_regex.search(Pkg.b2s(srpm))
+            res = srcname_regex.search(srpm)
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 

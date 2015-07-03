@@ -61,17 +61,6 @@ for p in prereq_assoc:
 # pychecker fix
 del p
 
-script_tags = [
-    (rpm.RPMTAG_PREIN,          rpm.RPMTAG_PREINPROG,         '%pre'),
-    (rpm.RPMTAG_POSTIN,         rpm.RPMTAG_POSTINPROG,        '%post'),
-    (rpm.RPMTAG_PREUN,          rpm.RPMTAG_PREUNPROG,         '%preun'),
-    (rpm.RPMTAG_POSTUN,         rpm.RPMTAG_POSTUNPROG,        '%postun'),
-    (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
-    (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
-    (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
-    (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
-    ]
-
 
 def incorrect_shell_script(prog, shellscript):
     return check_syntax_script(prog, '-n', shellscript)
@@ -105,7 +94,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
         prereq = [x[0] for x in pkg.prereq()]
         files = pkg.files()
 
-        for tag in script_tags:
+        for tag in Pkg.SCRIPT_TAGS:
             script = pkg[tag[0]]
 
             if not isinstance(script, list):
