@@ -526,24 +526,24 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # set[ug]id bit check
                 if stat.S_ISGID & mode or stat.S_ISUID & mode:
                     if stat.S_ISUID & mode:
-                        printError(pkg, 'setuid-binary', f, user, oct(perm))
+                        printError(pkg, 'setuid-binary', f, user, "%o" % perm)
                     if stat.S_ISGID & mode:
                         if not (group == 'games' and
                                 (games_path_regex.search(f) or
                                  games_group_regex.search(
                                     pkg[rpm.RPMTAG_GROUP]))):
                             printError(pkg, 'setgid-binary', f, group,
-                                       oct(perm))
+                                       "%o" % perm)
                     if mode & int("777", 8) != int("755", 8):
                         printError(pkg, 'non-standard-executable-perm', f,
-                                   oct(perm))
+                                   "%o" % perm)
 
                 # Prefetch scriptlets, strip quotes from them (#169)
-                postin = b2s(pkg[rpm.RPMTAG_POSTIN]) or \
+                postin = pkg[rpm.RPMTAG_POSTIN] or \
                          pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
                 if postin:
                     postin = quotes_regex.sub('', postin)
-                postun = b2s(pkg[rpm.RPMTAG_POSTUN]) or \
+                postun = pkg[rpm.RPMTAG_POSTUN] or \
                          pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
                 if postun:
                     postun = quotes_regex.sub('', postun)
@@ -652,7 +652,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if res:
                     if not mode_is_exec:
                         printWarning(pkg, 'non-executable-in-bin', f,
-                                     oct(perm))
+                                     "%o" % perm)
                     else:
                         exe = res.group(1)
                         if "/" not in exe:
@@ -670,13 +670,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             ok_nonreadable = True
                             break
                     if not ok_nonreadable:
-                        printError(pkg, 'non-readable', f, oct(perm))
+                        printError(pkg, 'non-readable', f, "%o" % perm)
                 if size == 0 and not normal_zero_length_regex.search(f) and \
                         f not in ghost_files:
                     printError(pkg, 'zero-length', f)
 
                 if mode & stat.S_IWOTH:
-                    printError(pkg, 'world-writable', f, oct(perm))
+                    printError(pkg, 'world-writable', f, "%o" % perm)
 
                 if not perl_dep_error:
                     res = perl_regex.search(f)
@@ -750,7 +750,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != int("755", 8):
                     printError(pkg, 'non-standard-executable-perm',
-                               f, oct(perm))
+                               f, "%o" % perm)
                 if mode_is_exec:
                     if f in config_files:
                         printError(pkg, 'executable-marked-as-config-file', f)
@@ -820,7 +820,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                        interpreter)
                         if mode_is_exec:
                             printError(pkg, 'executable-sourced-script',
-                                       f, oct(perm))
+                                       f, "%o" % perm)
                     # ...but executed ones should
                     elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
@@ -834,7 +834,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                         if not mode_is_exec and not is_doc:
                             printError(pkg, 'non-executable-script', f,
-                                       oct(perm), interpreter)
+                                       "%o" % perm, interpreter)
                         if b'\r' in chunk:
                             printError(
                                 pkg, 'wrong-script-end-of-line-encoding', f)
@@ -861,9 +861,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             # normal dir check
             elif stat.S_ISDIR(mode):
                 if mode & int("1002", 8) == 2:  # world writable w/o sticky bit
-                    printError(pkg, 'world-writable', f, oct(perm))
+                    printError(pkg, 'world-writable', f, "%o" % perm)
                 if perm != int("755", 8):
-                    printError(pkg, 'non-standard-dir-perm', f, oct(perm))
+                    printError(pkg, 'non-standard-dir-perm', f, "%o" % perm)
                 if pkg.name not in filesys_packages and f in STANDARD_DIRS:
                     printError(pkg, 'standard-dir-owned-by-package', f)
                 if hidden_file_regex.search(f):
