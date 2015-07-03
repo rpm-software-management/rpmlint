@@ -41,7 +41,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
                              compress_ext, fname)
             perm = pkgfile.mode & int("7777", 8)
             if perm not in valid_src_perms:
-                printWarning(pkg, 'strange-permission', fname, oct(perm))
+                printWarning(pkg, 'strange-permission', fname, "%o" % perm)
 
 check = SourceCheck()
 
