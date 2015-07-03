@@ -515,10 +515,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 log_file = f
 
             # Hardlink check
-            hardlink = hardlinks.get((rdev, inode))
-            if hardlink and os.path.dirname(hardlink) != os.path.dirname(f):
-                printWarning(pkg, 'cross-directory-hard-link', f, hardlink)
-            hardlinks[(rdev, inode)] = f
+            for hardlink in hardlinks.get((rdev, inode), ()):
+                if os.path.dirname(hardlink) != os.path.dirname(f):
+                    printWarning(pkg, 'cross-directory-hard-link', f, hardlink)
+            hardlinks.setdefault((rdev, inode), []).append(f)
 
             # normal file check
             if stat.S_ISREG(mode):
