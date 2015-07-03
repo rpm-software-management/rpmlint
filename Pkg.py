@@ -750,6 +750,30 @@ class Pkg:
         self._gatherDepInfo()
         return self._provides
 
+    def recommends(self):
+        """Get package Recommends as list of
+           (name, flags, (epoch, version, release)) tuples."""
+        self._gatherDepInfo()
+        return self._recommends
+
+    def suggests(self):
+        """Get package Suggests as list of
+           (name, flags, (epoch, version, release)) tuples."""
+        self._gatherDepInfo()
+        return self._suggests
+
+    def enhances(self):
+        """Get package Enhances as list of
+           (name, flags, (epoch, version, release)) tuples."""
+        self._gatherDepInfo()
+        return self._enhances
+
+    def supplements(self):
+        """Get package Supplements as list of
+           (name, flags, (epoch, version, release)) tuples."""
+        self._gatherDepInfo()
+        return self._supplements
+
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, list, nametag, flagstag, versiontag,
                     prereq=None):
@@ -773,6 +797,10 @@ class Pkg:
             self._provides = []
             self._conflicts = []
             self._obsoletes = []
+            self._recommends = []
+            self._suggests = []
+            self._enhances = []
+            self._supplements = []
 
             self._gather_aux(self.header, self._requires,
                              rpm.RPMTAG_REQUIRENAME,
@@ -791,6 +819,26 @@ class Pkg:
                              rpm.RPMTAG_OBSOLETENAME,
                              rpm.RPMTAG_OBSOLETEFLAGS,
                              rpm.RPMTAG_OBSOLETEVERSION)
+            if hasattr(rpm, "RPMTAG_RECOMMENDNAME"):  # rpm >= 4.12
+                self._gather_aux(self.header, self._recommends,
+                                 rpm.RPMTAG_RECOMMENDNAME,
+                                 rpm.RPMTAG_RECOMMENDFLAGS,
+                                 rpm.RPMTAG_RECOMMENDVERSION)
+            if hasattr(rpm, "RPMTAG_SUGGESTNAME"):  # rpm >= 4.12
+                self._gather_aux(self.header, self._suggests,
+                                 rpm.RPMTAG_SUGGESTNAME,
+                                 rpm.RPMTAG_SUGGESTFLAGS,
+                                 rpm.RPMTAG_SUGGESTVERSION)
+            if hasattr(rpm, "RPMTAG_ENHANCENAME"):  # rpm >= 4.12
+                self._gather_aux(self.header, self._enhances,
+                                 rpm.RPMTAG_ENHANCENAME,
+                                 rpm.RPMTAG_ENHANCEFLAGS,
+                                 rpm.RPMTAG_ENHANCEVERSION)
+            if hasattr(rpm, "RPMTAG_SUPPLEMENTNAME"):  # rpm >= 4.12
+                self._gather_aux(self.header, self._supplements,
+                                 rpm.RPMTAG_SUPPLEMENTNAME,
+                                 rpm.RPMTAG_SUPPLEMENTFLAGS,
+                                 rpm.RPMTAG_SUPPLEMENTVERSION)
 
     def scriptprog(self, which):
         """Get the specified script interpreter as a string.
