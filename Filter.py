@@ -7,6 +7,7 @@
 # Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 
+from __future__ import print_function
 import locale
 import sys
 import textwrap
@@ -27,10 +28,15 @@ if sys.stdout.isatty():
     def __print(s):
         print(s)
 else:
+    __stdout = sys.stdout
+    if not __stdout.encoding:  # Python < 3 only?
+        import codecs
+        if hasattr(__stdout, "buffer"):
+            __stdout = __stdout.buffer
+        __stdout = codecs.getwriter(
+            locale.getpreferredencoding())(__stdout, "replace")
     def __print(s):
-        if isinstance(s, unicode):
-            s = s.encode(locale.getpreferredencoding(), "replace")
-        print(s)
+        print(s, file=__stdout)
 
 
 def printInfo(pkg, reason, *details):
@@ -75,7 +81,8 @@ def _print(msgtype, pkg, reason, details):
         Testing.addOutput(s)
     else:
         if _rawout:
-            print >>_rawout, s.encode(locale.getpreferredencoding(), "replace")
+            print(s.encode(locale.getpreferredencoding(), "replace"),
+                  file=_rawout)
         if not Config.isFiltered(s):
             printed_messages[msgtype] += 1
             _badness_score += badness
