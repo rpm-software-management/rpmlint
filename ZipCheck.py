@@ -16,6 +16,7 @@ import zipfile
 from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
+import Pkg
 
 
 zip_regex = re.compile('\.(zip|[ewj]ar)$')
@@ -53,7 +54,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                     # additional jar checks
                     if jar_regex.search(fname):
                         try:
-                            mf = z.read('META-INF/MANIFEST.MF')
+                            mf = Pkg.b2s(z.read('META-INF/MANIFEST.MF'))
                             if classpath_regex.search(mf):
                                 printWarning(pkg,
                                              'class-path-in-manifest', fname)
