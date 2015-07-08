@@ -640,7 +640,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if perl_temp_file_regex.search(f):
                     printWarning(pkg, 'perl-temp-file', f)
 
-                is_buildconfig = buildconfigfile_regex.search(f) and True
+                is_buildconfig = istext and buildconfigfile_regex.search(f)
 
                 # check rpaths in buildconfig files
                 if is_buildconfig:
