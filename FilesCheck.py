@@ -1367,7 +1367,6 @@ for i in disallowed_dirs:
 for packages to install files in this directory.''' % i)
 
 
-
 # FilesCheck.py ends here
 
 # Local variables:
