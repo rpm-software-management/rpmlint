@@ -17,7 +17,7 @@ import sys
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_str
+from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr
 import AbstractCheck
 import Config
 
@@ -394,16 +394,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
     def check(self, pkg):
 
-        files = pkg.files()
-
         if use_utf8:
-            for filename in files:
-                if not is_utf8_str(filename):
-                    printError(pkg, 'filename-not-utf8', filename)
+            for filename in pkg.header[rpm.RPMTAG_FILENAMES] or ():
+                if not is_utf8_bytestr(filename):
+                    printError(pkg, 'filename-not-utf8', b2s(filename))
 
         # Rest of the checks are for binary packages only
         if pkg.isSource():
             return
+
+        files = pkg.files()
 
         # Check if the package is a development package
         devel_pkg = devel_regex.search(pkg.name)

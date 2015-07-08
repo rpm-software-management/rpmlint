@@ -466,9 +466,10 @@ def spell_check(pkg, str, fmt, lang, ignored):
         if checker:
             # squeeze whitespace to ease leading context check
             checker.set_text(re.sub(r'\s+', ' ', str))
-            uppername = pkg.name.upper()
             if use_utf8:
-                uppername = Pkg.to_utf8(uppername).decode('utf-8')
+                uppername = Pkg.to_unicode(pkg.header[rpm.RPMTAG_NAME]).upper()
+            else:
+                uppername = pkg.name.upper()
             upperparts = uppername.split('-')
             if lang.startswith('en'):
                 ups = [x + "'S" for x in upperparts]
@@ -538,12 +539,14 @@ class TagsCheck(AbstractCheck.AbstractCheck):
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
         if not value:
             return
-        # str(value) because value might be a list
-        for match in AbstractCheck.macro_regex.findall(str(value)):
-            # Do not warn about %XX URL escapes
-            if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
-                continue
-            printWarning(pkg, 'unexpanded-macro', tagname, match)
+        if not isinstance(value, (list, tuple)):
+            value = [value]
+        for val in value:
+            for match in AbstractCheck.macro_regex.findall(val):
+                # Do not warn about %XX URL escapes
+                if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
+                    continue
+                printWarning(pkg, 'unexpanded-macro', tagname, match)
 
     def check(self, pkg):
 
@@ -688,7 +691,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         summary = pkg[rpm.RPMTAG_SUMMARY]
         if summary:
             if not langs:
-                self._unexpanded_macros(pkg, 'Summary', summary)
+                self._unexpanded_macros(pkg, 'Summary', Pkg.b2s(summary))
             else:
                 for lang in langs:
                     self.check_summary(pkg, lang, ignored_words)
@@ -698,7 +701,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         description = pkg[rpm.RPMTAG_DESCRIPTION]
         if description:
             if not langs:
-                self._unexpanded_macros(pkg, '%description', description)
+                self._unexpanded_macros(pkg, '%description',
+                                        Pkg.b2s(description))
             else:
                 for lang in langs:
                     self.check_description(pkg, lang, ignored_words)
@@ -726,11 +730,11 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         else:
             clt = pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if use_version_in_changelog:
-                ret = changelog_version_regex.search(changelog[0])
+                ret = changelog_version_regex.search(Pkg.b2s(changelog[0]))
                 if not ret and clt:
                     # we also allow the version specified as the first
                     # thing on the first line of the text
-                    ret = changelog_text_version_regex.search(clt[0])
+                    ret = changelog_text_version_regex.search(Pkg.b2s(clt[0]))
                 if not ret:
                     printWarning(pkg, 'no-version-in-last-changelog')
                 elif version and release:
@@ -751,10 +755,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                             printWarning(pkg, 'incoherent-version-in-changelog',
                                          ret.group(1), expected)
 
-            if clt:
-                changelog = changelog + clt
-            if use_utf8 and not Pkg.is_utf8_str(' '.join(changelog)):
-                printError(pkg, 'tag-not-utf8', '%changelog')
+            if use_utf8:
+                if clt:
+                    changelog = changelog + clt
+                for s in changelog:
+                    if not Pkg.is_utf8_bytestr(s):
+                        printError(pkg, 'tag-not-utf8', '%changelog')
+                        break
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
@@ -870,12 +877,16 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
-        self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
-        utf8desc = description
         if use_utf8:
-            utf8desc = Pkg.to_utf8(description).decode('utf-8')
-        spell_check(pkg, utf8desc, '%%description -l %s', lang, ignored_words)
-        for l in utf8desc.splitlines():
+            if not Pkg.is_utf8_bytestr(description):
+                printError(pkg, 'tag-not-utf8', '%description', lang)
+            description = Pkg.to_unicode(description)
+        else:
+            description = Pkg.b2s(description)
+        self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
+        spell_check(pkg, description, '%%description -l %s', lang,
+                    ignored_words)
+        for l in description.splitlines():
             if len(l) > max_line_len:
                 printError(pkg, 'description-line-too-long', lang, l)
             res = forbidden_words_regex.search(l)
@@ -885,23 +896,24 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             res = tag_regex.search(l)
             if res:
                 printWarning(pkg, 'tag-in-description', lang, res.group(1))
-        if use_utf8 and not Pkg.is_utf8_str(description):
-            printError(pkg, 'tag-not-utf8', '%description', lang)
 
     def check_summary(self, pkg, lang, ignored_words):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
-        self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
-        utf8summary = summary
         if use_utf8:
-            utf8summary = Pkg.to_utf8(summary).decode('utf-8')
-        spell_check(pkg, utf8summary, 'Summary(%s)', lang, ignored_words)
+            if not Pkg.is_utf8_bytestr(summary):
+                printError(pkg, 'tag-not-utf8', 'Summary', lang)
+            summary = Pkg.to_unicode(summary)
+        else:
+            summary = Pkg.b2s(summary)
+        self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
+        spell_check(pkg, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:
             printError(pkg, 'summary-on-multiple-lines', lang)
         if summary[0] != summary[0].upper():
             printWarning(pkg, 'summary-not-capitalized', lang, summary)
         if summary[-1] == '.':
             printWarning(pkg, 'summary-ended-with-dot', lang, summary)
-        if len(utf8summary) > max_line_len:
+        if len(summary) > max_line_len:
             printError(pkg, 'summary-too-long', lang, summary)
         if leading_space_regex.search(summary):
             printError(pkg, 'summary-has-leading-spaces', lang, summary)
@@ -916,8 +928,6 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             if res:
                 printWarning(pkg, 'name-repeated-in-summary', lang,
                              res.group(1))
-        if use_utf8 and not Pkg.is_utf8_str(summary):
-            printError(pkg, 'tag-not-utf8', 'Summary', lang)
 
 
 # Create an object to enable the auto registration of the test

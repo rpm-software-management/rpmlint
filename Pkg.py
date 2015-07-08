@@ -13,7 +13,6 @@ import re
 import subprocess
 import sys
 import tempfile
-import unicodedata
 try:
     from urlparse import urljoin
 except:
@@ -37,6 +36,7 @@ if sys.version_info[0] > 2:
     # Blows up with Python < 3 without the exec() hack
     exec('def warn(s): print (s, file=sys.stderr)')
     long = int
+    unicode = str
 
     def b2s(b):
         if b is None:
@@ -102,7 +102,7 @@ def substitute_shell_vars(val, script):
         return val
 
 
-def getstatusoutput(cmd, stdoutonly=False, shell=False):
+def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
     '''A version of commands.getstatusoutput() which can take cmd as a
        sequence, thus making it potentially more secure.'''
     if stdoutonly:
@@ -113,12 +113,14 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False):
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
-    text = b2s(proc.stdout.read())
+    text = proc.stdout.read()
+    if not raw:
+        text = b2s(text)
+        if text.endswith('\n'):
+            text = text[:-1]
     sts = proc.wait()
     if sts is None:
         sts = 0
-    if text.endswith('\n'):
-        text = text[:-1]
     return sts, text
 
 bz2_regex = re.compile('\.t?bz2?$')
@@ -136,50 +138,32 @@ def catcmd(fname):
 
 
 def is_utf8(fname):
-    (sts, text) = getstatusoutput(catcmd(fname).split() + [fname])
-    return not sts and is_utf8_str(text)
-
-REPLACEMENT_CHAR = unicodedata.lookup('REPLACEMENT CHARACTER')
+    (sts, output) = getstatusoutput(catcmd(fname).split() + [fname], raw=True)
+    return not sts and is_utf8_bytestr(output)
 
 
-def is_utf8_str(s):
-    if hasattr(s, 'decode'):
-        # byte string
-        try:
-            s.decode('UTF-8')
-        except:
-            return False
-        return True
-    # unicode string
-    return REPLACEMENT_CHAR not in s
+def is_utf8_bytestr(s):
+    try:
+        s.decode('UTF-8')
+    except:
+        return False
+    return True
 
 
-# TODO: PY3
-def to_utf8(string):
+def to_unicode(string):
     if string is None:
-        return ''
+        return unicode('')
     elif isinstance(string, unicode):
         return string
-    try:
-        x = unicode(string, 'ascii')
-        return string
-    except UnicodeError:
-        encodings = ['utf-8', 'iso-8859-1', 'iso-8859-15', 'iso-8859-2']
-        for enc in encodings:
-            try:
-                x = unicode(string, enc)
-            except UnicodeError:
-                pass
-            else:
-                if x.encode(enc) == string:
-                    return x.encode('utf-8')
-    newstring = ''
-    for char in string:
-        if ord(char) > 127:
-            newstring = newstring + '?'
+    for enc in ('utf-8', 'iso-8859-1', 'iso-8859-15', 'iso-8859-2'):
+        try:
+            x = unicode(string, enc)
+        except UnicodeError:
+            pass
         else:
-            newstring = newstring + char
-    return newstring
+            if x.encode(enc) == string:
+                return x
+    return unicode(string, "ascii", errors=replace)
 
 
 def readlines(path):
@@ -494,7 +478,7 @@ class Pkg:
                 os.close(fd)
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
-        self.name = b2s(self.header[rpm.RPMTAG_NAME])
+        self.name = self[rpm.RPMTAG_NAME]
         if self.isNoSource():
             self.arch = 'nosrc'
         elif self.isSource():
@@ -520,11 +504,11 @@ class Pkg:
         if val == []:
             return None
         else:
-            if key in (rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE, rpm.RPMTAG_ARCH,
-                       rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
-                       rpm.RPMTAG_LICENSE, rpm.RPMTAG_CHANGELOGNAME,
-                       rpm.RPMTAG_CHANGELOGTEXT, rpm.RPMTAG_SUMMARY,
-                       rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_HEADERI18NTABLE,
+            # Note that text tags we want to try decoding for real in TagsCheck
+            # such as summary, description and changelog are not here.
+            if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
+                       rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
+                       rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
                        rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM) \
             or key in (x[0] for x in SCRIPT_TAGS) \
             or key in (x[1] for x in SCRIPT_TAGS):
