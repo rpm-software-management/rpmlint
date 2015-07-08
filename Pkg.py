@@ -199,11 +199,7 @@ def get_default_valid_rpmgroups(filename=None):
     the rpm package (if installed) if no filename is given"""
     groups = []
     if not filename:
-        try:
-            p = InstalledPkg('rpm')
-        except:
-            pass
-        else:
+        with InstalledPkg("rpm") as p:
             groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
             if groupsfiles:
                 filename = groupsfiles[0]
@@ -445,7 +441,19 @@ def parse_deps(line):
 
 # classes representing package
 
-class Pkg:
+class AbstractPkg:
+
+    def cleanup(self):
+        pass
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cleanup()
+
+
+class Pkg(AbstractPkg):
 
     _magic_from_compressed_re = re.compile('\([^)]+\s+compressed\s+data\\b')
 
@@ -899,14 +907,11 @@ class InstalledPkg(Pkg):
 
 
 # Class to provide an API to a "fake" package, eg. for specfile-only checks
-class FakePkg:
+class FakePkg(AbstractPkg):
     def __init__(self, name):
         self.name = name
         self.arch = None
         self.current_linenum = None
-
-    def cleanup(self):
-        pass
 
 
 # Class for files in packages
@@ -943,13 +948,12 @@ class PkgFile(object):
 
 if __name__ == '__main__':
     for p in sys.argv[1:]:
-        pkg = Pkg(sys.argv[1], tempfile.gettempdir())
-        print('Requires: %s' % pkg.requires())
-        print('Prereq: %s' % pkg.prereq())
-        print('Conflicts: %s' % pkg.conflicts())
-        print('Provides: %s' % pkg.provides())
-        print('Obsoletes: %s' % pkg.obsoletes())
-        pkg.cleanup()
+        with Pkg(p, tempfile.gettempdir()) as pkg:
+            print('Requires: %s' % pkg.requires())
+            print('Prereq: %s' % pkg.prereq())
+            print('Conflicts: %s' % pkg.conflicts())
+            print('Provides: %s' % pkg.provides())
+            print('Obsoletes: %s' % pkg.obsoletes())
 
 # Pkg.py ends here
 
