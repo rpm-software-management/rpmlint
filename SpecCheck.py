@@ -204,9 +204,6 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             pkg.current_linenum += 1
 
-            if is_utf8:
-                line = unicode(line, "utf-8", "replace")
-
             char = line.find(nbsp)
             if char != -1:
                 printWarning(pkg, "non-break-space", "line %s, char %d" %
