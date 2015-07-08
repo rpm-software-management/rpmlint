@@ -421,7 +421,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         python_dep_error = False
         lib_file = False
         non_lib_file = None
-        log_file = None
+        log_files = []
         logrotate_file = False
         debuginfo_srcs = False
         debuginfo_debugs = False
@@ -512,7 +512,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             mode_is_exec = mode & int("111", 8)
 
             if log_regex.search(f):
-                log_file = f
+                log_files.append(f)
 
             # Hardlink check
             for hardlink in hardlinks.get((rdev, inode), ()):
@@ -977,8 +977,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if stat.S_IWGRP & mode or stat.S_IWOTH & mode:
                     printError(pkg, 'non-owner-writeable-only-crontab-file', f)
 
-        if log_file and not logrotate_file:
-            printWarning(pkg, 'log-files-without-logrotate', log_file)
+        if len(log_files) and not logrotate_file:
+            printWarning(pkg, 'log-files-without-logrotate', sorted(log_files))
 
         if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
