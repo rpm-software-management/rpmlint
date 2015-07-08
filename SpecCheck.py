@@ -8,6 +8,7 @@
 #############################################################################
 
 import re
+import sys
 import unicodedata
 try:
     from urlparse import urlparse
@@ -199,10 +200,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         nbsp = chr(0xA0)
         if is_utf8:
             nbsp = UNICODE_NBSP
+        do_unicode = is_utf8 and sys.version_info[0] <= 2
 
         for line in spec_lines:
 
             pkg.current_linenum += 1
+
+            if do_unicode:
+                line = unicode(line, "utf-8", "replace")
 
             char = line.find(nbsp)
             if char != -1:
