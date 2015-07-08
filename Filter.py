@@ -35,6 +35,7 @@ else:
             __stdout = __stdout.buffer
         __stdout = codecs.getwriter(
             locale.getpreferredencoding())(__stdout, "replace")
+
     def __print(s):
         print(s, file=__stdout)
 

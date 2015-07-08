@@ -163,7 +163,7 @@ def to_unicode(string):
         else:
             if x.encode(enc) == string:
                 return x
-    return unicode(string, "ascii", errors=replace)
+    return unicode(string, "ascii", errors="replace")
 
 
 def readlines(path):
@@ -944,11 +944,11 @@ class PkgFile(object):
 if __name__ == '__main__':
     for p in sys.argv[1:]:
         pkg = Pkg(sys.argv[1], tempfile.gettempdir())
-        print ('Requires: %s' % pkg.requires())
-        print ('Prereq: %s' % pkg.prereq())
-        print ('Conflicts: %s' % pkg.conflicts())
-        print ('Provides: %s' % pkg.provides())
-        print ('Obsoletes: %s' % pkg.obsoletes())
+        print('Requires: %s' % pkg.requires())
+        print('Prereq: %s' % pkg.prereq())
+        print('Conflicts: %s' % pkg.conflicts())
+        print('Provides: %s' % pkg.provides())
+        print('Obsoletes: %s' % pkg.obsoletes())
         pkg.cleanup()
 
 # Pkg.py ends here
