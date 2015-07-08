@@ -108,8 +108,8 @@ def main():
                     stdin = sys.stdin.readlines()
                     if not stdin:
                         continue
-                    pkg = Pkg.FakePkg(arg)
-                    runSpecChecks(pkg, arg)
+                    with Pkg.FakePkg(arg) as pkg:
+                        runSpecChecks(pkg, arg)
                     specfiles_checked += 1
                     continue
 
@@ -119,8 +119,8 @@ def main():
                     if stat.S_ISREG(st[stat.ST_MODE]):
                         if arg.endswith(".spec"):
                             # Short-circuit spec file checks
-                            pkg = Pkg.FakePkg(arg)
-                            runSpecChecks(pkg, arg)
+                            with Pkg.FakePkg(arg) as pkg:
+                                runSpecChecks(pkg, arg)
                             specfiles_checked += 1
                         elif "/" in arg or arg.endswith(".rpm") or \
                                 arg.endswith(".spm"):
@@ -157,7 +157,8 @@ def main():
                 continue
 
             for pkg in pkgs:
-                runChecks(pkg)
+                with pkg:
+                    runChecks(pkg)
                 packages_checked += 1
 
         for dname in dirs:
@@ -168,13 +169,13 @@ def main():
                         try:
                             if fname.endswith('.rpm') or \
                                fname.endswith('.spm'):
-                                pkg = Pkg.Pkg(fname, extract_dir)
-                                runChecks(pkg)
+                                with Pkg.Pkg(fname, extract_dir) as pkg:
+                                    runChecks(pkg)
                                 packages_checked += 1
 
                             elif fname.endswith('.spec'):
-                                pkg = Pkg.FakePkg(fname)
-                                runSpecChecks(pkg, fname)
+                                with Pkg.FakePkg(fname) as pkg:
+                                    runSpecChecks(pkg, fname)
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
@@ -209,36 +210,30 @@ def main():
 
 def runChecks(pkg):
 
-    try:
-        if verbose:
-            printInfo(pkg, 'checking')
+    if verbose:
+        printInfo(pkg, 'checking')
 
-        for name in Config.allChecks():
-            check = AbstractCheck.AbstractCheck.known_checks.get(name)
-            if check:
-                check.verbose = verbose
-                check.check(pkg)
-            else:
-                Pkg.warn('(none): W: unknown check %s, skipping' % name)
-    finally:
-        pkg.cleanup()
+    for name in Config.allChecks():
+        check = AbstractCheck.AbstractCheck.known_checks.get(name)
+        if check:
+            check.verbose = verbose
+            check.check(pkg)
+        else:
+            Pkg.warn('(none): W: unknown check %s, skipping' % name)
 
 
 def runSpecChecks(pkg, fname):
 
-    try:
-        if verbose:
-            printInfo(pkg, 'checking')
+    if verbose:
+        printInfo(pkg, 'checking')
 
-        for name in Config.allChecks():
-            check = AbstractCheck.AbstractCheck.known_checks.get(name)
-            if check:
-                check.verbose = verbose
-                check.check_spec(pkg, fname)
-            else:
-                Pkg.warn('(none): W: unknown check %s, skipping' % name)
-    finally:
-        pkg.cleanup()
+    for name in Config.allChecks():
+        check = AbstractCheck.AbstractCheck.known_checks.get(name)
+        if check:
+            check.verbose = verbose
+            check.check_spec(pkg, fname)
+        else:
+            Pkg.warn('(none): W: unknown check %s, skipping' % name)
 
 #############################################################################
 #
