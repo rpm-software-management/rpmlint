@@ -113,12 +113,13 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
-    text = proc.stdout.read()
+    with proc.stdout:
+        text = proc.stdout.read()
+    sts = proc.wait()
     if not raw:
         text = b2s(text)
         if text.endswith('\n'):
             text = text[:-1]
-    sts = proc.wait()
     if sts is None:
         sts = 0
     return sts, text
