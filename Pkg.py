@@ -204,11 +204,8 @@ def get_default_valid_rpmgroups(filename=None):
             if groupsfiles:
                 filename = groupsfiles[0]
     if filename and os.path.exists(filename):
-        fobj = open(filename)
-        try:
+        with open(filename) as fobj:
             groups = fobj.read().strip().splitlines()
-        finally:
-            fobj.close()
         if 'Development/Debug' not in groups:
             groups.append('Development/Debug')
         if 'Unspecified' not in groups:  # auto-added by rpm >= 4.6.0
