@@ -167,12 +167,9 @@ def to_unicode(string):
 
 
 def readlines(path):
-    fobj = open(path, 'rb')
-    try:
+    with open(path, 'rb') as fobj:
         for line in fobj:
             yield b2s(line)
-    finally:
-        fobj.close()
 
 
 def mktemp():
