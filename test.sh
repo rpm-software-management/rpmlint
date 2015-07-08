@@ -2,6 +2,7 @@
 
 export PYTHONPATH=$(pwd)/tools:$(pwd)
 export TESTPATH="$(pwd)/test/"
+: ${PYTHON:=python} ${PYTEST:=py.test}
 
 echo
 echo "Please ignore the possibly occurring output like this:"
@@ -9,7 +10,7 @@ echo "    .../Patch*.patch: No such file or directory"
 echo
 
 for i in $TESTPATH/test.*.py; do
-    python $i
+    $PYTHON $i
     RET=$?
     if [ $RET -ne 0 ]; then
         exit $RET
@@ -17,9 +18,9 @@ for i in $TESTPATH/test.*.py; do
 done
 
 echo "Check that rpmlint executes with no unexpected errors"
-python ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
+$PYTHON ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
 rc=$?
 test $rc -eq 0 -o $rc -eq 64
 
 # SCLCheck tests
-py.test -v
+$PYTEST -v
