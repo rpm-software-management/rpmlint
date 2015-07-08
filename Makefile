@@ -17,7 +17,7 @@ FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 GENERATED = ChangeLog __version__.py
 
 PACKAGE = rpmlint
-PYTHON = python
+PYTHON = /usr/bin/python
 
 # update this variable to create a new release
 VERSION := 1.6
@@ -39,7 +39,10 @@ install: all
 	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(MANDIR)/man1
 	-cp -p *.pyc $(DESTDIR)$(LIBDIR)
 	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
-	cp -p rpmlint rpmdiff $(DESTDIR)$(BINDIR)
+	for file in rpmlint rpmdiff ; do \
+		sed -e "s,#!/usr/bin/python ,#!$(PYTHON) ," $$file > $(DESTDIR)$(BINDIR)/$$file ; \
+		chmod +x $(DESTDIR)$(BINDIR)/$$file ; \
+	done
 	cp -p config $(DESTDIR)$(ETCDIR)/$(PACKAGE)
 	compdir=`pkg-config --variable=completionsdir bash-completion 2>/dev/null` ; \
 	if [ "x$$compdir" = "x" ] ; then \
