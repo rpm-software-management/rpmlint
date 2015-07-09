@@ -51,7 +51,7 @@ install: all
 	else \
 		mkdir -p $(DESTDIR)$$compdir ; \
 		cp -p rpmlint.bash-completion $(DESTDIR)$$compdir/rpmlint ; \
-		ln -s rpmlint $(DESTDIR)$$compdir/rpmdiff ; \
+		ln -sf rpmlint $(DESTDIR)$$compdir/rpmdiff ; \
 	fi
 	cp -p rpmdiff.1 rpmlint.1 $(DESTDIR)$(MANDIR)/man1
 
