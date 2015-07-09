@@ -33,7 +33,7 @@ all: __version__.py __isocodes__.py
 	$(PYTHON) -O -m py_compile [A-Z]*.py __*__.py
 
 clean:
-	rm -rf *~ *.pyc *.pyo __pycache__ */__pycache__ $(GENERATED)
+	rm -rf *~ *.py[co] */*.py[co] __pycache__ */__pycache__ $(GENERATED)
 
 install: all
 	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(MANDIR)/man1
