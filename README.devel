@@ -1,6 +1,6 @@
 The latest development version can be retrieved from anonymous Git:
 
-$ git clone git://git.code.sf.net/p/rpmlint/code rpmlint
+$ git clone git@github.com:rpm-software-management/rpmlint.git
 
 To run rpmlint from the working tree or in place from an unpacked tarball:
 

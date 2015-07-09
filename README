@@ -13,8 +13,7 @@ binary rpm files.
 The idea for rpmlint is from the lintian tool of the Debian project.
 
 Comments and new checks welcome. See the project home page at
-http://sourceforge.net/p/rpmlint/ for contact information, bug tracking
-system and other project resources.
+https://github.com/rpm-software-management/rpmlint
 
 Implemented checks:
 
