@@ -27,18 +27,21 @@ LC_ALL:=C
 export LC_ALL
 
 all: __version__.py __isocodes__.py
-	if [ "x${COMPILE_PYC}" = "x1" ] ; then \
-		$(PYTHON) -m py_compile [A-Z]*.py __*__.py ; \
-	fi
-	$(PYTHON) -O -m py_compile [A-Z]*.py __*__.py
 
 clean:
 	rm -rf *~ *.py[co] */*.py[co] __pycache__ */__pycache__ $(GENERATED)
 
 install: all
 	mkdir -p $(DESTDIR)$(LIBDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(ETCDIR)/$(PACKAGE) $(DESTDIR)$(MANDIR)/man1
-	-cp -p *.pyc $(DESTDIR)$(LIBDIR)
-	cp -p *.py *.pyo $(DESTDIR)$(LIBDIR)
+	cp -p *.py $(DESTDIR)$(LIBDIR)
+	if [ "x${COMPILE_PYC}" = "x1" ] ; then \
+		$(PYTHON) -m py_compile \
+			$(DESTDIR)$(LIBDIR)/[A-Z]*.py \
+			$(DESTDIR)$(LIBDIR)/__*__.py ; \
+	fi
+	$(PYTHON) -O -m py_compile \
+		$(DESTDIR)$(LIBDIR)/[A-Z]*.py \
+		$(DESTDIR)$(LIBDIR)/__*__.py ; \
 	for file in rpmlint rpmdiff ; do \
 		sed -e "s,#!/usr/bin/python ,#!$(PYTHON) ," $$file > $(DESTDIR)$(BINDIR)/$$file ; \
 		chmod +x $(DESTDIR)$(BINDIR)/$$file ; \
