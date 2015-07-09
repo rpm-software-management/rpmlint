@@ -66,24 +66,6 @@ verify:
 check:
 	./test.sh
 
-version:
-	@echo "$(VERSION)"
-
-
-dist: cleandist localcopy tar
-
-cleandist:
-	rm -rf $(PACKAGE)-$(VERSION) $(PACKAGE)-$(VERSION).tar.xz
-
-localcopy: $(FILES) $(GENERATED)
-	mkdir $(PACKAGE)-$(VERSION)
-	cp -p --parents $(FILES) $(GENERATED) $(PACKAGE)-$(VERSION)
-
-tar: localcopy
-	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
-	xz -9evf $(PACKAGE)-$(VERSION).tar
-	rm -rf $(PACKAGE)-$(VERSION)
-
 __version__.py: Makefile
 	echo "# Automatically generated, do not edit" > $@
 	echo "__version__ = '$(VERSION)'" >> $@
