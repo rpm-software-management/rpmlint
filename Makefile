@@ -14,7 +14,7 @@ MANDIR=/usr/share/man
 FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmdiff.1 rpmlint.bash-completion rpmlint.1 \
 	test.sh test/*/*.rpm test/spec/*.spec test/*.py
-GENERATED = ChangeLog __version__.py
+GENERATED = __version__.py
 
 PACKAGE = rpmlint
 PYTHON = /usr/bin/python
@@ -83,9 +83,6 @@ tar: localcopy
 	tar cv --owner=root --group=root -f $(PACKAGE)-$(VERSION).tar $(PACKAGE)-$(VERSION)
 	xz -9evf $(PACKAGE)-$(VERSION).tar
 	rm -rf $(PACKAGE)-$(VERSION)
-
-ChangeLog: $(FILES)
-	git2cl > $@
 
 __version__.py: Makefile
 	echo "# Automatically generated, do not edit" > $@

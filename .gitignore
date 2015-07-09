@@ -2,5 +2,4 @@
 *.pyc
 *.flog
 *.xz
-/ChangeLog
 /__version__.py
