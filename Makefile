@@ -61,8 +61,6 @@ install: all
 verify:
 	pychecker --limit=100 [A-Z]*.py __*__.py
 
-.PHONY: check
-
 check:
 	./test.sh
 
@@ -72,5 +70,7 @@ __version__.py: Makefile
 
 __isocodes__.py:
 	tools/generate-isocodes.py > $@
+
+.PHONY: all clean install verify check
 
 # Makefile ends here
