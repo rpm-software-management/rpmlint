@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Generate ISO codes for use with e.g. locale subdir checks
 # http://alioth.debian.org/projects/pkg-isocodes/
 
 import sys
+from pprint import pprint
 from xml.etree.ElementTree import ElementTree
 
 
@@ -33,16 +34,16 @@ for entry in tree.findall("iso_639_3_entry"):
     if not code:
         langs.add(entry.get("id"))
 
-print "# Generated with %s" % sys.argv[0]
-print ""
-print "LANGUAGES = set(("
-for code in sorted(langs):
-    if code:
-        print "    \"%s\"," % code
-print "))"
-print ""
-print "COUNTRIES = set(("
-for code in sorted(countries):
-    if code:
-        print "    \"%s\"," % code
-print "))"
+# Note that we are not pprint()ing the set directly because with
+# Python 3 it results in curly brace set initializers that are not
+# compatible with Python 2.6, do it with set([...]) instead.
+
+print("# Generated with %s" % sys.argv[0])
+print("")
+print("LANGUAGES = set(")
+pprint(sorted(langs))
+print(")")
+print("")
+print("COUNTRIES = set(")
+pprint(sorted(countries))
+print(")")
