@@ -68,7 +68,7 @@ __version__.py: Makefile
 	echo "# Automatically generated, do not edit" > $@
 	echo "__version__ = '$(VERSION)'" >> $@
 
-__isocodes__.py:
+__isocodes__.py: tools/generate-isocodes.py
 	tools/generate-isocodes.py > $@
 
 .PHONY: all clean install verify check
