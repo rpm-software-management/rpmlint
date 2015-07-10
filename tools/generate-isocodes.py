@@ -34,11 +34,7 @@ with urlopen(iso_639_url) as f:
 # Remaining 2-letter codes plus 3-letter ones for which we have no 2-letter one
 with urlopen(iso_639_3_url) as f:
     for entry in ElementTree(file=f).findall("iso_639_3_entry"):
-        code = entry.get("part1_code")
-        if code:
-            langs.add(code)
-        if not code:
-            langs.add(entry.get("id"))
+        langs.add(entry.get("part1_code") or entry.get("id"))
 
 # Note that we are not pprint()ing the set directly because with
 # Python 3 it results in curly brace set initializers that are not
