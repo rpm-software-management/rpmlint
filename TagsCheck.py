@@ -586,15 +586,12 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             epoch = str(epoch)
 
         if use_epoch:
-            for o in (x for x in pkg.obsoletes() if x[1] and x[2][0] is None):
-                printWarning(pkg, 'no-epoch-in-obsoletes',
-                             Pkg.formatRequire(*o))
-            for c in (x for x in pkg.conflicts() if x[1] and x[2][0] is None):
-                printWarning(pkg, 'no-epoch-in-conflicts',
-                             Pkg.formatRequire(*c))
-            for p in (x for x in pkg.provides() if x[1] and x[2][0] is None):
-                printWarning(pkg, 'no-epoch-in-provides',
-                             Pkg.formatRequire(*p))
+            for tag in "obsoletes", "conflicts", "provides", "recommends", \
+                "suggests", "enhances", "supplements":
+                for x in (x for x in getattr(pkg, tag)()
+                          if x[1] and x[2][0] is None):
+                    printWarning(pkg, 'no-epoch-in-%s' % tag,
+                                 Pkg.formatRequire(*x))
 
         name = pkg.name
         deps = pkg.requires() + pkg.prereq()
@@ -1081,15 +1078,6 @@ the Epoch tag.''',
 'unreasonable-epoch',
 '''The value of your Epoch tag is unreasonably large (> 99).''',
 
-'no-epoch-in-obsoletes',
-'''Your package contains a versioned Obsoletes entry without an Epoch.''',
-
-'no-epoch-in-conflicts',
-'''Your package contains a versioned Conflicts entry without an Epoch.''',
-
-'no-epoch-in-provides',
-'''Your package contains a versioned Provides entry without an Epoch.''',
-
 'no-epoch-in-dependency',
 '''Your package contains a versioned dependency without an Epoch.''',
 
@@ -1149,6 +1137,12 @@ in the containing package.  Get rid of the provides if appropriate, for example
 by filtering it out during build.  Note that in some cases this may require
 disabling rpmbuild's internal dependency generator.''',
 )
+
+for i in "obsoletes", "conflicts", "provides", "recommends", "suggests", \
+    "enhances", "supplements":
+    addDetails("no-epoch-in-%s" % i,
+               "Your package contains a versioned %s entry without an Epoch." \
+               % i.capitalize())
 
 # TagsCheck.py ends here
 
