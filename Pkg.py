@@ -197,10 +197,13 @@ def get_default_valid_rpmgroups(filename=None):
     the rpm package (if installed) if no filename is given"""
     groups = []
     if not filename:
-        with InstalledPkg("rpm") as p:
-            groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
-            if groupsfiles:
-                filename = groupsfiles[0]
+        try:
+            with InstalledPkg("rpm") as p:
+                groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
+                if groupsfiles:
+                    filename = groupsfiles[0]
+        except:  # the rpm package might not be installed
+            pass
     if filename and os.path.exists(filename):
         with open(filename) as fobj:
             groups = fobj.read().strip().splitlines()
