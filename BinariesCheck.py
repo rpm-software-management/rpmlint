@@ -31,6 +31,12 @@ def create_regexp_call(call):
     r = "\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
+def create_nonlibc_regexp_call(call):
+    if type(call) == type([]):
+        call = '(?:' + '|'.join(call) + ')'
+    r = "\s+FUNC\s+.*?\s+UND\s+(%s)\s?.*$" % call
+    return re.compile(r)
+
 
 class BinaryInfo:
 
@@ -51,6 +57,18 @@ class BinaryInfo:
     setuid_call_regex = create_regexp_call(['setresuid', 'seteuid', 'setuid'])
     setgroups_call_regex = create_regexp_call(['initgroups', 'setgroups'])
     chroot_call_regex = create_regexp_call('chroot')
+
+    forbidden_functions = Config.getOption("WarnOnFunction")
+    if forbidden_functions:
+        for name, func in forbidden_functions.items():
+            # precompile regexps
+            f_name = func['f_name']
+            func['f_regex'] = create_nonlibc_regexp_call(f_name)
+            if 'good_param' in func:
+                func['waiver_regex'] = re.compile(func['good_param'])
+            # register descriptions
+            addDetails(name, func['description'])
+
     chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
 
@@ -66,6 +84,7 @@ class BinaryInfo:
         self.stack = False
         self.exec_stack = False
         self.exit_calls = []
+        self.forbidden_calls = []
         fork_called = False
         self.tail = ''
 
@@ -84,7 +103,6 @@ class BinaryInfo:
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
             for l in res[1].splitlines():
-
                 if BinaryInfo.mktemp_call_regex.search(l):
                     self.mktemp = True
 
@@ -135,6 +153,12 @@ class BinaryInfo:
                         self.exec_stack = True
                     continue
 
+                if BinaryInfo.forbidden_functions:
+                    for r_name, func in BinaryInfo.forbidden_functions.items():
+                        ret = func['f_regex'].search(l)
+                        if ret:
+                            self.forbidden_calls.append(r_name)
+
                 if is_shlib:
                     r = BinaryInfo.exit_call_regex.search(l)
                     if r:
@@ -144,6 +168,24 @@ class BinaryInfo:
                     if r:
                         fork_called = True
                         continue
+
+            # check if we don't have a string that will automatically
+            # waive the presence of a forbidden call
+            if self.forbidden_calls:
+                cmd = ['env', 'LC_ALL=C', 'strings']
+                cmd.append(path)
+                res = Pkg.getstatusoutput(cmd)
+                if not res[0]:
+                    for l in res[1].splitlines():
+                        # as we need to remove elements, iterate backwards
+                        for i in range(len(self.forbidden_calls)-1, -1, -1):
+                            func = self.forbidden_calls[i]
+                            f = BinaryInfo.forbidden_functions[func]
+                            if 'waiver_regex' not in f:
+                                continue
+                            r = f['waiver_regex'].search(l)
+                            if r:
+                                del self.forbidden_calls[i]
 
             if self.non_pic:
                 self.non_pic = 'TEXTREL' in res[1]
@@ -395,6 +437,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 # calls exit() or _exit()?
                 for ec in bin_info.exit_calls:
                     printWarning(pkg, 'shared-lib-calls-exit', fname, ec)
+
+            for ec in bin_info.forbidden_calls:
+                printWarning(pkg, ec, fname,
+                             BinaryInfo.forbidden_functions[ec]['f_name'])
 
             # rpath ?
             if bin_info.rpath:
