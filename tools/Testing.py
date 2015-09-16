@@ -7,6 +7,9 @@ import tempfile
 import Pkg
 
 
+TEST_CONFIG = os.path.join(os.environ['TESTPATH'], 'test.config')
+exec(compile(open(TEST_CONFIG).read(), TEST_CONFIG, 'exec'))
+
 currently_testing = 0
 output = []
 
