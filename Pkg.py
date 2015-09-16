@@ -54,8 +54,9 @@ else:
 
 # utilities
 
-# 64: RPMSENSE_PREREQ is 0 with recent rpm versions, we want 64 here in order
-# to do the right thing with packages built with older rpm versions
+# 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
+# to do the right thing with those versions and packages built with other
+# rpm versions
 PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | \
               rpm.RPMSENSE_SCRIPT_PRE | \
               rpm.RPMSENSE_SCRIPT_POST | \
