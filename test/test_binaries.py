@@ -14,10 +14,10 @@ class Tools(object):
 
     def _rpm_test_output(self, rpm):
         '''Wrapper that checks RPM package and returns output'''
-        pkg = Testing.getTestedPackage(rpm)
-        Testing.startTest()
-        BinariesCheck.check.check(pkg)
-        return Testing.getOutput()
+        with Testing.getTestedPackage(rpm) as pkg:
+            Testing.startTest()
+            BinariesCheck.check.check(pkg)
+            return Testing.getOutput()
 
 
 class TestForbiddenCCalls(Tools):

@@ -18,19 +18,19 @@ class Tools(object):
     '''Class providing basic tools for other classes'''
     def _spec_test_output(self, spec):
         '''Wrapper that checks spec file and returns output'''
-        pkg = Testing.getTestedSpecPackage(spec)
-        Testing.startTest()
-        # call check_spec() directly, as check() doesn't work with
-        # getTestedSpecPackage()
-        SCLCheck.check.check_spec(pkg, pkg.name)
-        return Testing.getOutput()
+        with Testing.getTestedSpecPackage(spec) as pkg:
+            Testing.startTest()
+            # call check_spec() directly, as check() doesn't work with
+            # getTestedSpecPackage()
+            SCLCheck.check.check_spec(pkg, pkg.name)
+            return Testing.getOutput()
 
     def _rpm_test_output(self, rpm):
         '''Wrapper that checks RPM package and returns output'''
-        pkg = Testing.getTestedPackage(rpm)
-        Testing.startTest()
-        SCLCheck.check.check(pkg)
-        return Testing.getOutput()
+        with Testing.getTestedPackage(rpm) as pkg:
+            Testing.startTest()
+            SCLCheck.check.check(pkg)
+            return Testing.getOutput()
 
 
 class TestSCLBacis(Tools):
