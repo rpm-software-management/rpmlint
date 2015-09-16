@@ -72,6 +72,13 @@ SCRIPT_TAGS = [
     (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
     (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
     (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
+    # file triggers: rpm >= 4.12.90
+    (getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTS", 5066),
+     getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTPROG", 5067),
+     '%filetrigger'),
+    (getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTS", 5076),
+     getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTPROG", 5077),
+     '%transfiletrigger'),
     ]
 
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')

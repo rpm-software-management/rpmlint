@@ -21,7 +21,11 @@ import Pkg
 
 RPM_SCRIPTLETS = ('pre', 'post', 'preun', 'postun', 'pretrans', 'posttrans',
                   'trigger', 'triggerin', 'triggerprein', 'triggerun',
-                  'triggerun', 'triggerpostun', 'verifyscript')
+                  'triggerpostun', 'verifyscript', 'filetriggerin',
+                  'filetrigger', 'filetriggerun', 'filetriggerpostun',
+                  'transfiletriggerin', 'transfiletrigger',
+                  'transfiletriggerun', 'transfiletriggerun',
+                  'transfiletriggerpostun')
 
 DEFAULT_VALID_SHELLS = ('<lua>',
                         '/bin/sh',
