@@ -216,6 +216,31 @@ from Config import *
 # Type: tuple of strings, default: see DEFAULT_APPDATA_CHECKER in AppDataCheck
 #setOption("AppDataChecker", ('appstream-util', 'validate-relax'))
 
+# Check if application performs calls to blacklisted methods
+# the 'f_name' is the regexp for the blacklisted method
+# 'good_param' is the optional parameter that will waive the result if this
+#            regexp matches output of `strings` from the binary file
+# 'description' is the explanation of why the call is blacklisted
+#bad_crypto_warning = \
+#'''This application package calls a function to explicitly set crypto ciphers
+#for SSL/TLS. That may cause the application not to use the system-wide set
+#cryptographic policy and should be modified in accordance to:
+#https://fedoraproject.org/wiki/Packaging:CryptoPolicies'''
+#
+#call_blacklist = {'crypto-policy-non-compliance-openssl' :
+#                                     {'f_name' : 'SSL_CTX_set_cipher_list',
+#                                      'good_param' : '^PROFILE=SYSTEM$',
+#                                      'description' : bad_crypto_warning},
+#                  'crypto-policy-non-compliance-gnutls-1' :
+#                                      {'f_name' : 'gnutls_priority_set_direct',
+#                                       'good_param' : '^@SYSTEM$',
+#                                       'description' : bad_crypto_warning},
+#                  'crypto-policy-non-compliance-gnutls-2' :
+#                                      {'f_name' : 'gnutls_priority_init',
+#                                       'description' : bad_crypto_warning}
+#                 }
+#setOption("WarnOnFunction", call_blacklist)
+
 # Output filters.
 # ---------------
 
