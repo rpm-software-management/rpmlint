@@ -1,5 +1,4 @@
 import os
-import sys
 
 # rpmlint's Testing needs TESTPATH
 os.environ['TESTPATH'] = os.path.dirname(__file__)

@@ -1141,7 +1141,7 @@ disabling rpmbuild's internal dependency generator.''',
 for i in "obsoletes", "conflicts", "provides", "recommends", "suggests", \
     "enhances", "supplements":
     addDetails("no-epoch-in-%s" % i,
-               "Your package contains a versioned %s entry without an Epoch." \
+               "Your package contains a versioned %s entry without an Epoch."
                % i.capitalize())
 
 # TagsCheck.py ends here

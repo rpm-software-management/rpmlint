@@ -31,6 +31,7 @@ def create_regexp_call(call):
     r = "\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
+
 def create_nonlibc_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'

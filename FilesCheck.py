@@ -950,7 +950,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                         # does the link go up and then down into the same
                         # directory?
-                        #if linktop == lastpop:
+                        # if linktop == lastpop:
                         #    printWarning(pkg, 'lengthy-symlink', f, link)
 
                         # have we reached the root directory?

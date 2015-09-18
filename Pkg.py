@@ -264,7 +264,7 @@ def rangeCompare(reqtuple, provtuple):
         r = None
     # rpmlint mod: don't mess with provided Epoch, doing so breaks e.g.
     # "Requires: foo < 1.0" should not be satisfied by "Provides: foo = 1:0.5"
-    #if reqe is None:
+    # if reqe is None:
     #    e = None
     if reqv is None:  # just for the record if ver is None then we're going to segfault
         v = None
