@@ -219,7 +219,7 @@ lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile(b'^#!\s*(\S+)')
+shebang_regex = re.compile(b'^#!\s*(\S+)(.*?)$', re.M)
 interpreter_regex = re.compile('^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
@@ -570,10 +570,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     (chunk, istext) = peek(pkgfile.path, pkg)
 
                 interpreter = None
+                interpreter_args = ''
                 if chunk:
                     res = shebang_regex.search(chunk)
                     if res:
                         interpreter = b2s(res.group(1))
+                        interpreter_args = b2s(res.group(2)).strip()
 
                 if doc_regex.search(f):
                     if not interpreter:
@@ -818,7 +820,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if interpreter:
                             printError(pkg,
                                        'sourced-script-with-shebang', f,
-                                       interpreter)
+                                       interpreter, interpreter_args)
                         if mode_is_exec:
                             printError(pkg, 'executable-sourced-script',
                                        f, "%o" % perm)
@@ -828,7 +830,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             res = interpreter_regex.search(interpreter)
                             if (res and res.group(1) == 'env') or not res:
                                 printError(pkg, 'wrong-script-interpreter',
-                                           f, interpreter)
+                                           f, interpreter, interpreter_args)
                         elif not nonexec_file and not \
                                 (lib_path_regex.search(f) and
                                  f.endswith('.la')):
@@ -836,7 +838,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                         if not mode_is_exec and not is_doc:
                             printError(pkg, 'non-executable-script', f,
-                                       "%o" % perm, interpreter)
+                                       "%o" % perm, interpreter,
+                                       interpreter_args)
                         if b'\r' in chunk:
                             printError(
                                 pkg, 'wrong-script-end-of-line-encoding', f)
