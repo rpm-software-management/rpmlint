@@ -220,7 +220,7 @@ lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
 shebang_regex = re.compile(b'^#!\s*(\S+)')
-interpreter_regex = re.compile('^/(usr/)?(s?bin|games|libexec(/.+)?|(lib(64)?|share)/.+)/[^/]+$')
+interpreter_regex = re.compile('^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
@@ -825,7 +825,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     # ...but executed ones should
                     elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
-                            if not interpreter_regex.search(interpreter):
+                            res = interpreter_regex.search(interpreter)
+                            if (res and res.group(1) == 'env') or not res:
                                 printError(pkg, 'wrong-script-interpreter',
                                            f, interpreter)
                         elif not nonexec_file and not \
@@ -1239,7 +1240,8 @@ executed.''',
 executed.''',
 
 'wrong-script-interpreter',
-'''This script uses an incorrect interpreter.''',
+'''This script uses an interpreter which is either an inappropriate one
+or located in an inappropriate directory for packaged system software.''',
 
 'non-executable-script',
 '''This text file contains a shebang or is located in a path dedicated for
