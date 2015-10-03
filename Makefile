@@ -11,7 +11,7 @@ LIBDIR=/usr/share/rpmlint
 ETCDIR=/etc
 MANDIR=/usr/share/man
 
-FILES = rpmlint *.py INSTALL README README.devel COPYING tools/*.py \
+FILES = rpmlint *.py INSTALL README.md README.devel COPYING tools/*.py \
 	Makefile config rpmdiff rpmdiff.1 rpmlint.bash-completion rpmlint.1 \
 	test.sh test/*/*.rpm test/spec/*.spec test/*.py
 GENERATED = __version__.py
