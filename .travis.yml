@@ -1,8 +1,14 @@
 language: python
 
+# python-rpm is not available through pip, so we need to get it with
+# apt-get and configure the virtualenv to use system site packages. As
+# long as that's the case, we need to stick with Python 2.7 only.
+
 python:
-  - "2.6"
   - "2.7"
+
+virtualenv:
+  system_site_packages: true
 
 install:
   - sudo apt-get update -qq
