@@ -1,4 +1,4 @@
-# rpmlint [![Build Status](https://travis-ci.org/rpm-software-management/rpmlint.svg?branch=master)](https://travis-ci.org/rpm-software-management/rpmlint)
+# rpmlint [![Build Status](https://travis-ci.org/rpm-software-management/rpmlint.svg)](https://travis-ci.org/rpm-software-management/rpmlint)
 
 rpmlint is a tool for checking common errors in rpm packages.  rpmlint
 can be used to test individual packages before uploading or to check
