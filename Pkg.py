@@ -545,6 +545,7 @@ class Pkg(AbstractPkg):
                 prefix='rpmlint.%s.' % os.path.basename(self.filename),
                 dir=self.dirname)
             # TODO: better shell escaping or sequence based command invocation
+            # TODO: warn some way if this fails
             command_str = \
                 'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % \
                 (self.filename, self.dirname, self.dirname)
