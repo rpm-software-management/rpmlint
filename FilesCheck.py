@@ -17,7 +17,7 @@ import sys
 import rpm
 
 from Filter import addDetails, printError, printWarning
-from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr
+from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 import AbstractCheck
 import Config
 
@@ -785,12 +785,13 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if res:
                     man_basenames.add(res.group(1))
                     if use_utf8 and chunk:
-                        # TODO: better shell escaping or seq based invocation
+                        # TODO: sequence based invocation
                         cmd = getstatusoutput(
-                            'env LC_ALL=C %s "%s" | gtbl | '
+                            'env LC_ALL=C %s %s | gtbl | '
                             'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
                             '-P-c -mandoc -w%s >/dev/null' %
-                            (catcmd(f), pkgfile.path, man_warn_category),
+                            (catcmd(f), shquote(pkgfile.path),
+                             shquote(man_warn_category)),
                             shell=True)
                         for line in cmd[1].split("\n"):
                             res = man_warn_regex.search(line)

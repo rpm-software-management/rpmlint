@@ -51,6 +51,11 @@ else:
     def b2s(b):
         return b
 
+try:
+    from shlex import quote as shquote
+except:
+    def shquote(s):
+        return '"%s"' % s
 
 # utilities
 
@@ -544,11 +549,11 @@ class Pkg(AbstractPkg):
             self.dirname = tempfile.mkdtemp(
                 prefix='rpmlint.%s.' % os.path.basename(self.filename),
                 dir=self.dirname)
-            # TODO: better shell escaping or sequence based command invocation
+            # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
-                'rpm2cpio "%s" | (cd "%s"; cpio -id); chmod -R +rX "%s"' % \
-                (self.filename, self.dirname, self.dirname)
+                'rpm2cpio %(f)s | (cd %(d)s; cpio -id); chmod -R +rX %(d)s' % \
+                {'f': shquote(self.filename), 'd': shquote(self.dirname)}
             cmd = getstatusoutput(command_str, shell=True)
             self.extracted = True
             return cmd
