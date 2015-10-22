@@ -698,8 +698,10 @@ class Pkg(AbstractPkg):
                 pkgfile.provides = parse_deps(provides[idx])
                 pkgfile.lang = b2s(langs[idx])
                 pkgfile.magic = magics[idx]
-                if not pkgfile.magic and _magic:
-                    pkgfile.magic = _magic.file(pkgfile.path)
+                if not pkgfile.magic and pkgfile.size and not pkgfile.is_ghost and _magic:
+                    f = open(pkgfile.path)
+                    pkgfile.magic = _magic.descriptor(f.fileno())
+                    f.close()
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
