@@ -707,8 +707,11 @@ class Pkg(AbstractPkg):
                     pkgfile.magic = 'empty'
                 elif not pkgfile.magic and not pkgfile.is_ghost and _magic:
                     f = open(pkgfile.path)
-                    pkgfile.magic = _magic.descriptor(f.fileno())
-                    f.close()
+                    if f:
+                        pkgfile.magic = _magic.descriptor(f.fileno())
+                        f.close()
+                    else:
+                        Pkg.warn("Could not open " + pkgfile.path)
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
