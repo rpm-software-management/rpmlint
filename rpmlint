@@ -18,6 +18,7 @@ import re
 import stat
 import sys
 import tempfile
+import time
 
 # 1 instead of 0 here because we want the script dir to be looked up first,
 # e.g. for in-place from tarball or SCM checkout
@@ -213,11 +214,20 @@ def runChecks(pkg):
     if verbose:
         printInfo(pkg, 'checking')
 
+    if progress:
+        print('%s.%s: I: filelist-initialization' % (pkg.name, pkg.arch))
+        start = time.time()
+        pkg.files()
+        print('%s.%s: I: filelist-initialization %0.1f s' % (pkg.name, pkg.arch, time.time() - start))
+
     for name in Config.allChecks():
         check = AbstractCheck.AbstractCheck.known_checks.get(name)
         if check:
+            start = time.time()
             check.verbose = verbose
             check.check(pkg)
+            if progress:
+                print('%s.%s: I: check-completed  %-23s: %4.1f s' % (pkg.name, pkg.arch, name, time.time() - start))
         else:
             Pkg.warn('(none): W: unknown check %s, skipping' % name)
 
@@ -268,6 +278,7 @@ except getopt.GetoptError:
 checkdir = '/usr/share/rpmlint'
 checks = []
 verbose = False
+progress = False
 extract_dir = None
 conf_file = _default_user_conf
 if not os.path.exists(os.path.expanduser(conf_file)):
@@ -359,6 +370,8 @@ for key, value in config_overrides.items():
 
 if not extract_dir:
     extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
+
+progress = Config.getOption('ReportProgress', False)
 
 if info_error:
     Config.info = True
