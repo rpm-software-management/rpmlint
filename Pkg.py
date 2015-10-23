@@ -10,6 +10,7 @@
 
 import os
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -698,8 +699,19 @@ class Pkg(AbstractPkg):
                 pkgfile.provides = parse_deps(provides[idx])
                 pkgfile.lang = b2s(langs[idx])
                 pkgfile.magic = magics[idx]
-                if not pkgfile.magic and _magic:
-                    pkgfile.magic = _magic.file(pkgfile.path)
+                if not pkgfile.magic and stat.S_ISDIR(pkgfile.mode):
+                    pkgfile.magic = 'directory'
+                elif not pkgfile.magic and stat.S_ISLNK(pkgfile.mode):
+                    pkgfile.magic = 'symbolic link'
+                elif not pkgfile.magic and not pkgfile.size:
+                    pkgfile.magic = 'empty'
+                elif not pkgfile.magic and not pkgfile.is_ghost and _magic:
+                    f = open(pkgfile.path)
+                    if f:
+                        pkgfile.magic = _magic.descriptor(f.fileno())
+                        f.close()
+                    else:
+                        Pkg.warn("Could not open " + pkgfile.path)
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
