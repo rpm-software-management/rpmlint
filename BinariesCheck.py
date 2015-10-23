@@ -51,6 +51,7 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
+    symbol_table_regex = re.compile('^Symbol table')
     call_regex = re.compile('\s0(\sFUNC\s+.*)')
     exit_call_regex = create_regexp_call('_?exit')
     fork_call_regex = create_regexp_call('fork')
@@ -104,7 +105,8 @@ class BinaryInfo:
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
-            for l in res[1].splitlines():
+            lines = res[1].splitlines()
+            for l in lines:
                 r = BinaryInfo.needed_regex.search(l)
                 if r:
                     self.needed.append(r.group(1))
@@ -137,6 +139,10 @@ class BinaryInfo:
                         self.exec_stack = True
                     continue
 
+                if BinaryInfo.symbol_table_regex.search(l):
+                    break
+
+            for l in lines:
                 r = BinaryInfo.call_regex.search(l)
                 if not r:
                     continue
