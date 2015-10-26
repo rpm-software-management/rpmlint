@@ -33,7 +33,7 @@ class Tools(object):
             return Testing.getOutput()
 
 
-class TestSCLBacis(Tools):
+class TestSCLBasic(Tools):
     '''Basic tests of Software Collections checks'''
     def test_nonscl_spec_silent(self):
         '''SCL check on non-SCL spec has to be silent'''
