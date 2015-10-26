@@ -54,10 +54,10 @@ menu_regex = re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applica
 bogus_var_regex = re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 prereq_assoc = (
-    #['chkconfig', ('chkconfig', '/sbin/chkconfig')],
+    # ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
     ['chkfontpath', ('chkfontpath', '/usr/sbin/chkfontpath')],
     ['rpm-helper', ('rpm-helper',)],
-    )
+)
 
 for p in prereq_assoc:
     p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)

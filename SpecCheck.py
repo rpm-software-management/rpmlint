@@ -220,7 +220,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     section_marker = True
                     section[sec] = section.get(sec, 0) + 1
                     if sec in ('package', 'files'):
-                        rest = filelist_regex.sub('', line[res.end()-1:])
+                        rest = filelist_regex.sub('', line[res.end() - 1:])
                         res = pkgname_regex.search(rest)
                         if res:
                             current_package = res.group(1)
@@ -500,9 +500,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             # Test if there are macros in comments
             if hashPos != -1 and \
-                    (hashPos == 0 or line[hashPos-1] in (" ", "\t")):
+                    (hashPos == 0 or line[hashPos - 1] in (" ", "\t")):
                 for match in AbstractCheck.macro_regex.findall(
-                        line[hashPos+1:]):
+                        line[hashPos + 1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         printWarning(pkg, 'macro-in-comment', match)

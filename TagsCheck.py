@@ -137,7 +137,7 @@ DEFAULT_VALID_LICENSES = (
     'Non-distributable',
     'Proprietary',
     'Shareware',
-    )
+)
 
 BAD_WORDS = {
     'alot': 'a lot',
@@ -395,7 +395,7 @@ BAD_WORDS = {
     'wheter': 'whether',
     'wierd': 'weird',
     'xwindows': 'X'
-    }
+}
 
 DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$',
                             '^package$', '^libsafe\.so\.')
@@ -762,7 +762,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
-                clt -= clt % (24*3600)  # roll back to 00:00:00, see #246
+                clt -= clt % (24 * 3600)  # roll back to 00:00:00, see #246
                 if clt < oldest_changelog_timestamp:
                     printWarning(pkg, 'changelog-time-overflow',
                                  time.strftime("%Y-%m-%d", time.gmtime(clt)))

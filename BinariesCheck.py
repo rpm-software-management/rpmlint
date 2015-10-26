@@ -179,7 +179,7 @@ class BinaryInfo:
                 if not res[0]:
                     for l in res[1].splitlines():
                         # as we need to remove elements, iterate backwards
-                        for i in range(len(self.forbidden_calls)-1, -1, -1):
+                        for i in range(len(self.forbidden_calls) - 1, -1, -1):
                             func = self.forbidden_calls[i]
                             f = BinaryInfo.forbidden_functions[func]
                             if 'waiver_regex' not in f:
@@ -215,7 +215,7 @@ class BinaryInfo:
                             call.append(l.rpartition(' ')[2])
                     for index, c in enumerate(call):
                         if c.find('chroot@plt') >= 0:
-                            for i in call[index-2:index+2]:
+                            for i in call[index - 2:index + 2]:
                                 if i.find('chdir@plt'):
                                     self.chroot_near_chdir = True
         else:

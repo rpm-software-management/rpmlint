@@ -61,7 +61,7 @@ def is_valid_lang(lang):
 
     # TODO: don't accept all lang_COUNTRY combinations
 
-    country = lang[ix+1:]
+    country = lang[ix + 1:]
     if country not in COUNTRIES:
         return False
 

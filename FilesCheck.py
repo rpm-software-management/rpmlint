@@ -150,12 +150,13 @@ STANDARD_DIRS = (
     '/var/spool',
     '/var/spool/mail',
     '/var/tmp',
-    )
+)
 
 DEFAULT_GAMES_GROUPS = 'Games'
 
-DEFAULT_DANGLING_EXCEPTIONS = (['consolehelper$', 'usermode-consoleonly'],
-                               )
+DEFAULT_DANGLING_EXCEPTIONS = (
+    ['consolehelper$', 'usermode-consoleonly'],
+)
 
 # Standard users and groups from LSB Core 4.0.0: 21.2 User & Group Names
 DEFAULT_STANDARD_USERS = ('root', 'bin', 'daemon', 'adm', 'lp', 'sync',
@@ -327,7 +328,7 @@ _python_magic_values = {
     '3.3': 3230,
     '3.4': 3310,
     '3.5': 3350,
-    }
+}
 
 
 def get_expected_pyc_magic(path):

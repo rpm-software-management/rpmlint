@@ -68,7 +68,7 @@ class TestSCLBacis(Tools):
     def test_undeclared(self):
         '''Tests SCL specs without %scl definition or %scl_package calls'''
         for spec in ['nodejs010', 'nodejs']:
-            out = self._spec_test_output('spec/'+spec+'-undeclared')
+            out = self._spec_test_output('spec/%s-undeclared' % spec)
             assert len(out) == 1
             assert 'undeclared-scl' in out[0]
 

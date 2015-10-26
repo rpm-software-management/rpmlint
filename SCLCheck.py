@@ -216,9 +216,9 @@ class SCLCheck(AbstractCheck.AbstractCheck):
                 if not scl_prefix_start.search(splits[-1]):
                     printError(pkg, 'subpackage-with-n-without-scl-prefix')
             # current end is counted only from last one
-            borders.append(borders[-1]+more.end())
-        subpackages = [(borders[i], borders[i+1])
-                       for i in range(len(borders)-1)]
+            borders.append(borders[-1] + more.end())
+        subpackages = [(borders[i], borders[i + 1])
+                       for i in range(len(borders) - 1)]
         for subpackage in subpackages:
             ok = False
             for require in self.get_requires(spec[subpackage[0]:subpackage[1]]):
@@ -291,7 +291,7 @@ class SCLCheck(AbstractCheck.AbstractCheck):
         '''Return the list of files in %files section
            for given subpackage or main package'''
         if subpackage:
-            pattern = r'%\{?\??files\}?(\s+-n)?\s+'+subpackage+r'\s*$'
+            pattern = r'%%\{?\??files\}?(\s+-n)?\s+%s\s*$' % subpackage
         else:
             pattern = r'%\{?\??files\}?\s*$'
         search = re.search(pattern, text, re.M)
@@ -302,13 +302,13 @@ class SCLCheck(AbstractCheck.AbstractCheck):
         end = index_or_sub(text[start:], '%files')
         if not end:
             end = index_or_sub(text[start:], '%changelog', -1)
-        return list(filter(None, text[start:start+end].strip().split('\n')))
+        return list(filter(None, text[start:start + end].strip().split('\n')))
 
     def remove_scl_conds(self, text):
         '''Returns given text without %scl conds blocks'''
         while text.count('%{?scl:') > 0:
             spos = text.index('%{?scl:')
-            pos = spos+7
+            pos = spos + 7
             counter = 1
             while counter:
                 if text[pos] == '{':
@@ -316,7 +316,7 @@ class SCLCheck(AbstractCheck.AbstractCheck):
                 if text[pos] == '}':
                     counter -= 1
                 pos += 1
-            text = text[:spos]+text[pos:]
+            text = text[:spos] + text[pos:]
         return text
 
 

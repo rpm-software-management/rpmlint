@@ -112,25 +112,27 @@ DEFAULT_VALID_SECTIONS = (
     'More Applications/Sciences/Robotics',
     'More Applications/Sciences/Other',
     'More Applications/Other',
-    )
+)
 
 DEFAULT_EXTRA_MENU_NEEDS = (
     'gnome',
     'icewm',
     'kde',
     'wmaker',
-    )
+)
 
-DEFAULT_ICON_PATH = (('/usr/share/icons/', 'normal'),
-                     ('/usr/share/icons/mini/', 'mini'),
-                     ('/usr/share/icons/large/', 'large'))
+DEFAULT_ICON_PATH = (
+    ('/usr/share/icons/', 'normal'),
+    ('/usr/share/icons/mini/', 'mini'),
+    ('/usr/share/icons/large/', 'large'),
+)
 
-DEFAULT_LAUNCHERS = (['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
-                     ['(?:/usr/bin/)?launch_x11_clanapp',
-                      ('/usr/bin/launch_x11_clanapp', 'clanlib',
-                       'libclanlib0')],
-                     ['(?:/usr/bin/)?soundwrapper', None],
-                    )
+DEFAULT_LAUNCHERS = (
+    ['(?:/usr/bin/)?kdesu', ('/usr/bin/kdesu', 'kdesu')],
+    ['(?:/usr/bin/)?launch_x11_clanapp',
+     ('/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0')],
+    ['(?:/usr/bin/)?soundwrapper', None],
+)
 
 menu_file_regex = re.compile('^/usr/lib/menu/([^/]+)$')
 old_menu_file_regex = re.compile('^/usr/share/(gnome/apps|applnk)/([^/]+)$')

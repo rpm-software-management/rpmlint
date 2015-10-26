@@ -84,7 +84,7 @@ SCRIPT_TAGS = [
     (getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTS", 5076),
      getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTPROG", 5077),
      '%transfiletrigger'),
-    ]
+]
 
 var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
 
@@ -377,7 +377,7 @@ def stringToVersion(verstring):
             version = None
         else:
             version = verstring[i:j]
-        release = verstring[j+1:]
+        release = verstring[j + 1:]
     else:
         if verstring[i:] == '':
             version = None
