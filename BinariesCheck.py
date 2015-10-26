@@ -51,6 +51,8 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
+    symbol_table_regex = re.compile('^Symbol table')
+    call_regex = re.compile('\s0(\sFUNC\s+.*)')
     exit_call_regex = create_regexp_call('_?exit')
     fork_call_regex = create_regexp_call('fork')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
@@ -103,25 +105,8 @@ class BinaryInfo:
         cmd.append(path)
         res = Pkg.getstatusoutput(cmd)
         if not res[0]:
-            for l in res[1].splitlines():
-                if BinaryInfo.mktemp_call_regex.search(l):
-                    self.mktemp = True
-
-                if BinaryInfo.setgid_call_regex.search(l):
-                    self.setgid = True
-
-                if BinaryInfo.setuid_call_regex.search(l):
-                    self.setuid = True
-
-                if BinaryInfo.setgroups_call_regex.search(l):
-                    self.setgroups = True
-
-                if BinaryInfo.chdir_call_regex.search(l):
-                    self.chdir = True
-
-                if BinaryInfo.chroot_call_regex.search(l):
-                    self.chroot = True
-
+            lines = res[1].splitlines()
+            for l in lines:
                 r = BinaryInfo.needed_regex.search(l)
                 if r:
                     self.needed.append(r.group(1))
@@ -153,6 +138,33 @@ class BinaryInfo:
                     if flags and BinaryInfo.stack_exec_regex.search(flags):
                         self.exec_stack = True
                     continue
+
+                if BinaryInfo.symbol_table_regex.search(l):
+                    break
+
+            for l in lines:
+                r = BinaryInfo.call_regex.search(l)
+                if not r:
+                    continue
+                l = r.group(1)
+
+                if BinaryInfo.mktemp_call_regex.search(l):
+                    self.mktemp = True
+
+                if BinaryInfo.setgid_call_regex.search(l):
+                    self.setgid = True
+
+                if BinaryInfo.setuid_call_regex.search(l):
+                    self.setuid = True
+
+                if BinaryInfo.setgroups_call_regex.search(l):
+                    self.setgroups = True
+
+                if BinaryInfo.chdir_call_regex.search(l):
+                    self.chdir = True
+
+                if BinaryInfo.chroot_call_regex.search(l):
+                    self.chroot = True
 
                 if BinaryInfo.forbidden_functions:
                     for r_name, func in BinaryInfo.forbidden_functions.items():
