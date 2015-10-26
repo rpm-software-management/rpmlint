@@ -28,14 +28,14 @@ DEFAULT_SYSTEM_LIB_PATHS = (
 def create_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'
-    r = "\s0\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
+    r = ".*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
 
 def create_nonlibc_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'
-    r = "\s0\s+FUNC\s+.*?\s+UND\s+(%s)\s?.*$" % call
+    r = ".*?\s+UND\s+(%s)\s?.*$" % call
     return re.compile(r)
 
 
@@ -51,7 +51,7 @@ class BinaryInfo:
     stack_exec_regex = re.compile('^..E$')
     undef_regex = re.compile('^undefined symbol:\s+(\S+)')
     unused_regex = re.compile('^\s+(\S+)')
-    call_regex = re.compile('\s0(\sFUNC\s+.*)')
+    call_regex = re.compile('\s0\s+FUNC\s+(.*)')
     exit_call_regex = create_regexp_call('_?exit')
     fork_call_regex = create_regexp_call('fork')
     # regexp for setgid setegid setresgid set(?:res|e)?gid
