@@ -28,14 +28,14 @@ DEFAULT_SYSTEM_LIB_PATHS = (
 def create_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'
-    r = "\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
+    r = "\s0\s+FUNC\s+.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
 
 def create_nonlibc_regexp_call(call):
     if type(call) == type([]):
         call = '(?:' + '|'.join(call) + ')'
-    r = "\s+FUNC\s+.*?\s+UND\s+(%s)\s?.*$" % call
+    r = "\s0\s+FUNC\s+.*?\s+UND\s+(%s)\s?.*$" % call
     return re.compile(r)
 
 
