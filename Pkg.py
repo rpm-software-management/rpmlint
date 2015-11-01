@@ -707,7 +707,20 @@ class Pkg(AbstractPkg):
                     elif not pkgfile.size:
                         pkgfile.magic = 'empty'
                 if not pkgfile.magic and _magic:
-                    pkgfile.magic = _magic.file(pkgfile.path)
+                    # file() method evaluates every file twice with python2,
+                    # use descriptor() method instead
+                    try:
+                        fd = os.open(pkgfile.path, os.O_RDONLY)
+                    except OSError:
+                        if not pkgfile.is_ghost:
+                            raise
+                    else:
+                        pkgfile.magic = _magic.descriptor(fd)
+                    # libmagic up to 5.18 already closes the descriptor
+                    try:
+                        os.close(fd)
+                    except OSError:
+                        pass
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
