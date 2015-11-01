@@ -16,4 +16,4 @@ and the following programs to install it:
 	o python 2.6 or newer
 	o rpm python bindings 4.4 or newer
 	o sed
-	o pytest (for running the test suite)
+	o pytest and flake8 (for running the test suite)
