@@ -703,7 +703,7 @@ class Pkg(AbstractPkg):
                     if stat.S_ISDIR(pkgfile.mode):
                         pkgfile.magic = 'directory'
                     elif stat.S_ISLNK(pkgfile.mode):
-                        pkgfile.magic = "'symbolic link to '" + pkgfile.linkto + "'"
+                        pkgfile.magic = "symbolic link to `%s'" % pkgfile.linkto
                     elif not pkgfile.size:
                         pkgfile.magic = 'empty'
                 if not pkgfile.magic and _magic:
