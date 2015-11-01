@@ -715,7 +715,7 @@ class Pkg(AbstractPkg):
                         if not pkgfile.is_ghost:
                             raise
                     else:
-                        pkgfile.magic = _magic.descriptor(fd)
+                        pkgfile.magic = b2s(_magic.descriptor(fd))
                     # libmagic up to 5.18 already closes the descriptor
                     try:
                         os.close(fd)
