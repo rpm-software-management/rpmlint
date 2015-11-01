@@ -13,7 +13,7 @@ virtualenv:
 install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq
-      python-rpm python-magic python-enchant rpm2cpio
+      rpm python-rpm python-magic python-enchant rpm2cpio
   - pip install pytest flake8
 
 script:
