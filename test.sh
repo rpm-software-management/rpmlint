@@ -22,5 +22,5 @@ $PYTHON ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
 rc=$?
 test $rc -eq 0 -o $rc -eq 64
 
-# SCLCheck tests
+# py.test tests
 $PYTEST -v
