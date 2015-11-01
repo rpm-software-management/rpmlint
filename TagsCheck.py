@@ -586,8 +586,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             epoch = str(epoch)
 
         if use_epoch:
-            for tag in "obsoletes", "conflicts", "provides", "recommends", \
-                "suggests", "enhances", "supplements":
+            for tag in ("obsoletes", "conflicts", "provides", "recommends",
+                        "suggests", "enhances", "supplements"):
                 for x in (x for x in getattr(pkg, tag)()
                           if x[1] and x[2][0] is None):
                     printWarning(pkg, 'no-epoch-in-%s' % tag,
@@ -861,8 +861,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for tag in ('Distribution', 'DistTag', 'ExcludeArch', 'ExcludeOS',
                     'Vendor'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
-                self._unexpanded_macros(pkg, tag,
-                    Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())]))
+                res = Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
+                self._unexpanded_macros(pkg, tag, res)
 
         for path in private_so_paths:
             for fname, pkgfile in pkg.files().items():
@@ -1138,8 +1138,8 @@ by filtering it out during build.  Note that in some cases this may require
 disabling rpmbuild's internal dependency generator.''',
 )
 
-for i in "obsoletes", "conflicts", "provides", "recommends", "suggests", \
-    "enhances", "supplements":
+for i in ("obsoletes", "conflicts", "provides", "recommends", "suggests",
+          "enhances", "supplements"):
     addDetails("no-epoch-in-%s" % i,
                "Your package contains a versioned %s entry without an Epoch."
                % i.capitalize())

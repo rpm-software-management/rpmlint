@@ -201,14 +201,14 @@ class MenuCheck(AbstractCheck.AbstractCheck):
 
         if menus:
             postin = pkg[rpm.RPMTAG_POSTIN] or \
-                     pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+                pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
             if not postin:
                 printError(pkg, 'menu-without-postin')
             elif not update_menus_regex.search(postin):
                 printError(pkg, 'postin-without-update-menus')
 
             postun = pkg[rpm.RPMTAG_POSTUN] or \
-                     pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
+                pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
             if not postun:
                 printError(pkg, 'menu-without-postun')
             elif not update_menus_regex.search(postun):
@@ -242,12 +242,11 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                                 continue
                             found = False
                             if launcher[1]:
-                                if ('/bin/' + command_line[0] in files or
-                                    '/usr/bin/' + command_line[0] in files
-                                    or '/usr/X11R6/bin/' + command_line[0]
-                                    in files):
-                                    found = True
-                                else:
+                                found = '/bin/' + command_line[0] in files or \
+                                    '/usr/bin/' + command_line[0] in files or \
+                                    '/usr/X11R6/bin/' + command_line[0] \
+                                    in files
+                                if not found:
                                     for l in launcher[1]:
                                         if l in pkg.req_names():
                                             found = True

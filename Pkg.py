@@ -64,21 +64,19 @@ except:
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
 # to do the right thing with those versions and packages built with other
 # rpm versions
-PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | \
-              rpm.RPMSENSE_SCRIPT_PRE | \
-              rpm.RPMSENSE_SCRIPT_POST | \
-              rpm.RPMSENSE_SCRIPT_PREUN | \
-              rpm.RPMSENSE_SCRIPT_POSTUN
+PREREQ_FLAG = (rpm.RPMSENSE_PREREQ or 64) | rpm.RPMSENSE_SCRIPT_PRE | \
+    rpm.RPMSENSE_SCRIPT_POST | rpm.RPMSENSE_SCRIPT_PREUN | \
+    rpm.RPMSENSE_SCRIPT_POSTUN
 
 SCRIPT_TAGS = [
-    (rpm.RPMTAG_PREIN,          rpm.RPMTAG_PREINPROG,         '%pre'),
-    (rpm.RPMTAG_POSTIN,         rpm.RPMTAG_POSTINPROG,        '%post'),
-    (rpm.RPMTAG_PREUN,          rpm.RPMTAG_PREUNPROG,         '%preun'),
-    (rpm.RPMTAG_POSTUN,         rpm.RPMTAG_POSTUNPROG,        '%postun'),
+    (rpm.RPMTAG_PREIN, rpm.RPMTAG_PREINPROG, '%pre'),
+    (rpm.RPMTAG_POSTIN, rpm.RPMTAG_POSTINPROG, '%post'),
+    (rpm.RPMTAG_PREUN, rpm.RPMTAG_PREUNPROG, '%preun'),
+    (rpm.RPMTAG_POSTUN, rpm.RPMTAG_POSTUNPROG, '%postun'),
     (rpm.RPMTAG_TRIGGERSCRIPTS, rpm.RPMTAG_TRIGGERSCRIPTPROG, '%trigger'),
-    (rpm.RPMTAG_PRETRANS,       rpm.RPMTAG_PRETRANSPROG,      '%pretrans'),
-    (rpm.RPMTAG_POSTTRANS,      rpm.RPMTAG_POSTTRANSPROG,     '%posttrans'),
-    (rpm.RPMTAG_VERIFYSCRIPT,   rpm.RPMTAG_VERIFYSCRIPTPROG,  '%verifyscript'),
+    (rpm.RPMTAG_PRETRANS, rpm.RPMTAG_PRETRANSPROG, '%pretrans'),
+    (rpm.RPMTAG_POSTTRANS, rpm.RPMTAG_POSTTRANSPROG, '%posttrans'),
+    (rpm.RPMTAG_VERIFYSCRIPT, rpm.RPMTAG_VERIFYSCRIPTPROG, '%verifyscript'),
     # file triggers: rpm >= 4.12.90
     (getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTS", 5066),
      getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTPROG", 5067),

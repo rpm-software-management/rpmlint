@@ -34,8 +34,6 @@ DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|fir
 
 
 def re_tag_compile(tag):
-    if type(tag) == type([]):
-        tag = '(?:' + '|'.join(tag) + ')'
     r = "^%s\s*:\s*(\S.*?)\s*$" % tag
     return re.compile(r, re.IGNORECASE)
 
@@ -44,11 +42,11 @@ applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
-obsolete_tags_regex = re_tag_compile(['Serial', 'Copyright'])
+obsolete_tags_regex = re_tag_compile('(?:Serial|Copyright)')
 buildroot_regex = re_tag_compile('BuildRoot')
 prefix_regex = re_tag_compile('Prefix')
 packager_regex = re_tag_compile('Packager')
-buildarch_regex = re_tag_compile(['BuildArch', 'BuildArchitectures'])
+buildarch_regex = re_tag_compile('BuildArch(?:itectures)?')
 buildprereq_regex = re_tag_compile('BuildPreReq')
 prereq_regex = re_tag_compile('PreReq(\(.*\))')
 
@@ -205,7 +203,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             pkg.current_linenum += 1
 
             if do_unicode:
-                line = unicode(line, "utf-8", "replace")
+                line = unicode(line, "utf-8", "replace")  # noqa false positive
 
             char = line.find(nbsp)
             if char != -1:
@@ -458,9 +456,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
             if current_section == 'files':
 
-                if not comment_or_empty_regex.search(line) and not \
-                   (ifarch_regex.search(line) or if_regex.search(line) or
-                    endif_regex.search(line)):
+                if not (comment_or_empty_regex.search(line) or
+                        ifarch_regex.search(line) or if_regex.search(line) or
+                        endif_regex.search(line)):
                     if defattr_regex.search(line):
                         files_has_defattr = True
                     elif not (files_has_defattr or attr_regex.search(line)):

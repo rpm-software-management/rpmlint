@@ -26,15 +26,11 @@ DEFAULT_SYSTEM_LIB_PATHS = (
 
 
 def create_regexp_call(call):
-    if type(call) == type([]):
-        call = '(?:' + '|'.join(call) + ')'
     r = ".*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
 
 def create_nonlibc_regexp_call(call):
-    if type(call) == type([]):
-        call = '(?:' + '|'.join(call) + ')'
     r = ".*?\s+UND\s+(%s)\s?.*$" % call
     return re.compile(r)
 
@@ -54,10 +50,9 @@ class BinaryInfo:
     call_regex = re.compile('\s0\s+FUNC\s+(.*)')
     exit_call_regex = create_regexp_call('_?exit')
     fork_call_regex = create_regexp_call('fork')
-    # regexp for setgid setegid setresgid set(?:res|e)?gid
-    setgid_call_regex = create_regexp_call(['setresgid', 'setegid', 'setgid'])
-    setuid_call_regex = create_regexp_call(['setresuid', 'seteuid', 'setuid'])
-    setgroups_call_regex = create_regexp_call(['initgroups', 'setgroups'])
+    setgid_call_regex = create_regexp_call('set(?:res|e)?gid')
+    setuid_call_regex = create_regexp_call('set(?:res|e)?uid')
+    setgroups_call_regex = create_regexp_call('(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
 
     forbidden_functions = Config.getOption("WarnOnFunction")

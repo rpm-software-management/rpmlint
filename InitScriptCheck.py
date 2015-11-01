@@ -60,14 +60,14 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
             # check chkconfig call in %post and %preun
             postin = pkg[rpm.RPMTAG_POSTIN] or \
-                     pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+                pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
             if not postin:
                 printError(pkg, 'init-script-without-chkconfig-postin', fname)
             elif not chkconfig_regex.search(postin):
                 printError(pkg, 'postin-without-chkconfig', fname)
 
             preun = pkg[rpm.RPMTAG_PREUN] or \
-                    pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
+                pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
             if not preun:
                 printError(pkg, 'init-script-without-chkconfig-preun', fname)
             elif not chkconfig_regex.search(preun):

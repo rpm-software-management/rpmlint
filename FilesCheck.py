@@ -489,8 +489,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 printError(pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f) and \
-                 not f.startswith("/etc/skel/"):
+            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/"):
                 printWarning(pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 printWarning(pkg, 'manifest-in-perl-module', f)
@@ -542,11 +541,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # Prefetch scriptlets, strip quotes from them (#169)
                 postin = pkg[rpm.RPMTAG_POSTIN] or \
-                         pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
                 if postin:
                     postin = quotes_regex.sub('', postin)
                 postun = pkg[rpm.RPMTAG_POSTUN] or \
-                         pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
+                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
                 if postun:
                     postun = quotes_regex.sub('', postun)
 
@@ -631,13 +630,12 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'postin-without-install-info', f)
 
                     preun = pkg[rpm.RPMTAG_PREUN] or \
-                            pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
+                        pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
                     if not postun and not preun:
                         printError(pkg,
                                    'info-files-without-install-info-postun', f)
-                    elif (not postun or
-                          not install_info_regex.search(postun)) and \
-                          (not preun or not install_info_regex.search(preun)):
+                    elif not ((postun and install_info_regex.search(postun)) or
+                              (preun and install_info_regex.search(preun))):
                         printError(pkg, 'postin-without-install-info', f)
 
                 # check perl temp file
@@ -662,9 +660,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if "/" not in exe:
                             bindir_exes.setdefault(exe, []).append(f)
 
-                if not devel_pkg and not is_doc and \
-                   (includefile_regex.search(f) or develfile_regex.search(f) or
-                    is_buildconfig):
+                if (not devel_pkg and not is_doc and
+                    (includefile_regex.search(f) or develfile_regex.search(f)
+                     or is_buildconfig)):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & int("444", 8) != int("444", 8) and \
                    perm & int("7000", 8) == 0:
@@ -763,10 +761,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         # check rest of usual cases here.  Sourced scripts have
                         # their own check, so disregard them here.
                         nonexec_file = f.endswith('.pc') or \
-                                       compr_regex.search(f) or \
-                                       includefile_regex.search(f) or \
-                                       develfile_regex.search(f) or \
-                                       logrotate_regex.search(f)
+                            compr_regex.search(f) or \
+                            includefile_regex.search(f) or \
+                            develfile_regex.search(f) or \
+                            logrotate_regex.search(f)
                     if nonexec_file:
                         printWarning(pkg, 'spurious-executable-perm', f)
                 elif f.startswith('/etc/') and f not in config_files and \
@@ -1371,7 +1369,7 @@ use it and setup a insecure configuration.'''
 
 for i in disallowed_dirs:
     addDetails('dir-or-file-in-%s' % '-'.join(i.split('/')[1:]),
-    '''A file in the package is located in %s. It's not permitted
+               '''A file in the package is located in %s. It's not permitted
 for packages to install files in this directory.''' % i)
 
 
