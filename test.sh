@@ -20,7 +20,7 @@ done
 echo "Check that rpmlint executes with no unexpected errors"
 $PYTHON ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
 rc=$?
-test $rc -eq 0 -o $rc -eq 64
+test $rc -eq 0 -o $rc -eq 64 || exit $rc
 
-# py.test tests
-$PYTEST -v
+echo "$PYTEST tests"
+$PYTEST -v || exit $?
