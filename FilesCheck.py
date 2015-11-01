@@ -661,8 +661,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             bindir_exes.setdefault(exe, []).append(f)
 
                 if (not devel_pkg and not is_doc and
-                    (includefile_regex.search(f) or develfile_regex.search(f)
-                     or is_buildconfig)):
+                    (is_buildconfig or includefile_regex.search(f) or
+                     develfile_regex.search(f))):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
                 if mode & int("444", 8) != int("444", 8) and \
                    perm & int("7000", 8) == 0:
