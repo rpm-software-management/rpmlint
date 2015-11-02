@@ -437,6 +437,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         elif debuginfo_package:
             printError(pkg, 'empty-debuginfo-package')
 
+        # Prefetch scriptlets, strip quotes from them (#169)
+        postin = pkg[rpm.RPMTAG_POSTIN] or \
+            pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+        if postin:
+            postin = quotes_regex.sub('', postin)
+        postun = pkg[rpm.RPMTAG_POSTUN] or \
+            pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
+        if postun:
+            postun = quotes_regex.sub('', postun)
+
         # Unique (rdev, inode) combinations
         hardlinks = {}
 
@@ -538,16 +548,6 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if mode & int("777", 8) != int("755", 8):
                         printError(pkg, 'non-standard-executable-perm', f,
                                    "%o" % perm)
-
-                # Prefetch scriptlets, strip quotes from them (#169)
-                postin = pkg[rpm.RPMTAG_POSTIN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
-                if postin:
-                    postin = quotes_regex.sub('', postin)
-                postun = pkg[rpm.RPMTAG_POSTUN] or \
-                    pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
-                if postun:
-                    postun = quotes_regex.sub('', postun)
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
