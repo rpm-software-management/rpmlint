@@ -433,7 +433,8 @@ oldest_changelog_timestamp = calendar.timegm(time.strptime("1995-01-01", "%Y-%m-
 
 private_so_paths = set()
 for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
-             '%python_sitearch', '%ruby_sitearch', '%php_extdir'):
+             '%python_sitearch', '%python2_sitearch', '%python3_sitearch',
+             '%ruby_sitearch', '%php_extdir'):
     epath = rpm.expandMacro(path)
     if epath and epath != path:
         private_so_paths.add(epath)
