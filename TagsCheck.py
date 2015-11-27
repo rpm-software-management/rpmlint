@@ -435,7 +435,7 @@ private_so_paths = set()
 for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
              '%python_sitearch', '%ruby_sitearch', '%php_extdir'):
     epath = rpm.expandMacro(path)
-    if epath != path:
+    if epath and epath != path:
         private_so_paths.add(epath)
         private_so_paths.add(re.sub(r'/lib64(?=/|$)', '/lib', epath))
         private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
