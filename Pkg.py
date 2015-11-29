@@ -989,8 +989,4 @@ if __name__ == '__main__':
 
 # Pkg.py ends here
 
-# Local variables:
-# indent-tabs-mode: nil
-# py-indent-offset: 4
-# End:
 # ex: ts=4 sw=4 et

@@ -106,8 +106,4 @@ check.add_check('ocaml', '^ocaml(-|$)', '/usr/lib(64)?/ocaml/')
 
 # NamingPolicyCheck.py ends here
 
-# Local variables:
-# indent-tabs-mode: nil
-# py-indent-offset: 4
-# End:
 # ex: ts=4 sw=4 et

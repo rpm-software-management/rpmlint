@@ -31,8 +31,4 @@ class TestForbiddenCCalls(Tools):
             out = self._rpm_test_output(os.path.join('binary', package))
             assert 'crypto-policy-non-compliance' not in "\n".join(out)
 
-# Local variables:
-# indent-tabs-mode: nil
-# py-indent-offset: 4
-# End:
 # ex: ts=4 sw=4 et
