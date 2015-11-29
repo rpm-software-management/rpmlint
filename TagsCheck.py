@@ -415,6 +415,7 @@ devel_number_regex = re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 invalid_url_regex = re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_package_regex = re.compile('(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
+python_package_regex = re.compile('^python[23]?-(?!libs)|.*-python[23]?$')
 leading_space_regex = re.compile('^\s+')
 license_regex = re.compile('\(([^)]+)\)|\s(?:and|or)\s')
 invalid_version_regex = re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
@@ -620,7 +621,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     devel_depend = True
                 if not d[1]:
                     res = lib_package_regex.search(d[0])
-                    if res and not res.group(1):
+                    pypkg = python_package_regex.match(d[0])
+                    if res and not res.group(1) and not pypkg:
                         printError(pkg, 'explicit-lib-dependency', d[0])
 
             if d[1] == rpm.RPMSENSE_EQUAL and d[2][2] is not None:
