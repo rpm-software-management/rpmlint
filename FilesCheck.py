@@ -195,7 +195,9 @@ buildconfig_rpath_regex = re.compile('(?:-rpath|Wl,-R)\\b')
 sofile_regex = re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
 devel_regex = re.compile('(.*)-(debug(info)?|devel|headers|source|static)$')
 debuginfo_package_regex = re.compile('-debug(info)?$')
-lib_regex = re.compile('lib(64)?/lib[^/]*(\.so\..*|-[0-9.]+\.so)')
+# matches properly versioned shared libraries like libfoo.so.1.2.3 as well as
+# weird ones like libfoo-1.2.3.so
+lib_regex = re.compile('/lib(?:64)?/lib[^/]*(?:\.so\.[\d.]+|-[\d.]+\.so)$')
 ldconfig_regex = re.compile('^[^#]*ldconfig', re.MULTILINE)
 depmod_regex = re.compile('^[^#]*depmod', re.MULTILINE)
 install_info_regex = re.compile('^[^#]*install-info', re.MULTILINE)
@@ -585,7 +587,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
-                    if devel_pkg:
+                    if devel_pkg and not (sofile_regex.search(f) and stat.S_ISLNK(mode)):
                         printError(pkg, 'non-devel-file-in-devel-package', f)
                     if not postin:
                         printError(pkg, 'library-without-ldconfig-postin', f)
