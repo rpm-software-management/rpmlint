@@ -20,8 +20,8 @@
 
 import os
 
-from Filter import addDetails, printWarning
 import AbstractCheck
+from Filter import addDetails, printWarning
 
 
 class RpmFileCheck(AbstractCheck.AbstractCheck):

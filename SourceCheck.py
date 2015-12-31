@@ -9,9 +9,9 @@
 
 import re
 
-from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
+from Filter import addDetails, printError, printWarning
 
 
 DEFAULT_VALID_SRC_PERMS = (int("644", 8), int("755", 8))

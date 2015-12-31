@@ -9,8 +9,8 @@
 
 import re
 
-from Filter import addDetails, printWarning
 import AbstractCheck
+from Filter import addDetails, printWarning
 
 
 class FHSCheck(AbstractCheck.AbstractCheck):

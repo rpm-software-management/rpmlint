@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import Testing
+
 import PamCheck
+import Testing
 # FIXME harcode
 
 

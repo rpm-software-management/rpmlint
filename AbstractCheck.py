@@ -15,8 +15,8 @@ try:
 except:
     import urllib.request as urllib2
 
-from Filter import addDetails, printInfo, printWarning
 import Config
+from Filter import addDetails, printInfo, printWarning
 
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile('%+[{(]?[a-zA-Z_]\w{2,}[)}]?')

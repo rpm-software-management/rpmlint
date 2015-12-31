@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import rpm
 import unittest
-import Testing
+
+import rpm
+
 import Pkg
+import Testing
 
 
 class TestPkg(unittest.TestCase):

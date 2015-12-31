@@ -10,8 +10,8 @@
 
 import re
 
-from Filter import addDetails, printError
 import AbstractCheck
+from Filter import addDetails, printError
 
 
 pam_stack_re = re.compile('^\s*[^#].*pam_stack\.so\s*service')

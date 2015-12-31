@@ -3,8 +3,8 @@
 import re
 import unittest
 
-import Testing
 import SpecCheck
+import Testing
 
 
 class TestSpecCheck(unittest.TestCase):

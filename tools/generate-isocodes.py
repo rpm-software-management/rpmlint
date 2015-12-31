@@ -4,8 +4,8 @@
 # http://alioth.debian.org/projects/pkg-isocodes/
 
 import os
-import sys
 from pprint import pprint
+import sys
 from urllib.request import urlopen
 from xml.etree.ElementTree import ElementTree
 

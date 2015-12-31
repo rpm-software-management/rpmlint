@@ -10,8 +10,8 @@ for directory in ['../rpmlint/tools', '../rpmlint', '../tools', '..']:
 os.environ['TESTPATH'] = os.path.dirname(__file__)
 
 
-import Testing
 import SCLCheck
+import Testing
 
 
 class Tools(object):

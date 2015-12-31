@@ -8,6 +8,7 @@
 #############################################################################
 
 from __future__ import print_function
+
 import locale
 import sys
 import textwrap

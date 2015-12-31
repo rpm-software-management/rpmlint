@@ -6,14 +6,15 @@
 # http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
-from Filter import addDetails, printError, printWarning
-from Pkg import getstatusoutput, is_utf8
-import AbstractCheck
+import os
 try:
     from ConfigParser import RawConfigParser
 except:
     from configparser import RawConfigParser
-import os
+
+import AbstractCheck
+from Filter import addDetails, printError, printWarning
+from Pkg import getstatusoutput, is_utf8
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
 

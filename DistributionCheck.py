@@ -11,9 +11,9 @@ import re
 
 import rpm
 
-from Filter import addDetails, printWarning
 import AbstractCheck
 import Config
+from Filter import addDetails, printWarning
 
 
 man_regex = re.compile("/man(?:\d[px]?|n)/")

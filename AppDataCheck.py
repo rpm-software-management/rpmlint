@@ -6,10 +6,10 @@
 # http://people.freedesktop.org/~hughsient/appdata/
 #
 
-from Filter import addDetails, printError
-from Pkg import getstatusoutput
 import AbstractCheck
 import Config
+from Filter import addDetails, printError
+from Pkg import getstatusoutput
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
 DEFAULT_APPDATA_CHECKER = ('appstream-util', 'validate-relax')

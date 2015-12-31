@@ -10,8 +10,8 @@
 import os
 import re
 
-from Filter import addDetails, printError, printWarning
 import AbstractCheck
+from Filter import addDetails, printError, printWarning
 import Pkg
 
 # Compile all regexes here

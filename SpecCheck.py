@@ -17,12 +17,12 @@ except ImportError:  # Python 3
 
 import rpm
 
-from Filter import addDetails, printError, printWarning
-from PostCheck import RPM_SCRIPTLETS
-from TagsCheck import VALID_GROUPS
 import AbstractCheck
 import Config
+from Filter import addDetails, printError, printWarning
 import Pkg
+from PostCheck import RPM_SCRIPTLETS
+from TagsCheck import VALID_GROUPS
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'

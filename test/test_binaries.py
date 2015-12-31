@@ -4,8 +4,8 @@ import os
 os.environ['TESTPATH'] = os.path.dirname(__file__)
 
 
-import Testing
 import BinariesCheck
+import Testing
 
 
 class Tools(object):

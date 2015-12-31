@@ -9,8 +9,8 @@
 
 import re
 
-from Filter import addDetails, printError
 import AbstractCheck
+from Filter import addDetails, printError
 import Pkg
 
 

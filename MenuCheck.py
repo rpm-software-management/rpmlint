@@ -12,9 +12,9 @@ import stat
 
 import rpm
 
-from Filter import addDetails, printError, printInfo, printWarning
 import AbstractCheck
 import Config
+from Filter import addDetails, printError, printInfo, printWarning
 import Pkg
 
 

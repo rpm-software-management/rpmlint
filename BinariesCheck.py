@@ -14,9 +14,9 @@ import sys
 
 import rpm
 
-from Filter import addDetails, printError, printWarning
 import AbstractCheck
 import Config
+from Filter import addDetails, printError, printWarning
 import Pkg
 
 
