@@ -1,25 +1,24 @@
 language: python
 
-# python-rpm is not available through pip, so we need to get it with
-# apt-get and configure the virtualenv to use system site packages. As
-# long as that's the case, we need to stick with Python 2.7 only.
+# python-rpm is not available through pip, so we get it with apt-get
+# and configure the virtualenv to use system site packages. As long as
+# that's the case, we need to stick with the system installed Python
+# versions only.
+
+dist: trusty
 
 python:
   - "2.7"
+  - "3.4"
 
 virtualenv:
   system_site_packages: true
 
-addons:
-  apt:
-    packages:
-      - python-enchant
-      - python-magic
-
 install:
   - sudo apt-get update -qq
-  # https://github.com/travis-ci/apt-package-whitelist/issues/1696
-  - sudo apt-get install -qq rpm python-rpm rpm2cpio
+  - sudo apt-get install -qq rpm rpm2cpio
+  - if [ ${TRAVIS_PYTHON_VERSION%%.*} = 2 ]; then sudo apt-get install -qq python-enchant python-magic python-rpm; fi
+  - if [ ${TRAVIS_PYTHON_VERSION%%.*} = 3 ]; then sudo apt-get install -qq python3-enchant python3-magic python3-rpm; fi
   - pip install pytest flake8 flake8-import-order
 
 script:
