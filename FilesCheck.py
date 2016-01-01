@@ -220,7 +220,7 @@ lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile('^(lib|.+-libs)')
 hidden_file_regex = re.compile('/\.[^/]*$')
 manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile(b'^#!\s*(\S+)(.*?)$', re.M)
+shebang_regex = re.compile(b'^#!\s*(\S+)([^\r\n]*?)$')
 interpreter_regex = re.compile('^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
@@ -388,6 +388,12 @@ def python_bytecode_to_script(path):
         return res.group(1) + '.py'
 
     return None
+
+
+def script_interpreter(chunk):
+    res = shebang_regex.search(chunk) if chunk else None
+    return (b2s(res.group(1)), b2s(res.group(2)).strip()) \
+        if res else (None, "")
 
 
 class FilesCheck(AbstractCheck.AbstractCheck):
@@ -570,13 +576,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if os.access(pkgfile.path, os.R_OK):
                     (chunk, istext) = peek(pkgfile.path, pkg)
 
-                interpreter = None
-                interpreter_args = ''
-                if chunk:
-                    res = shebang_regex.search(chunk)
-                    if res:
-                        interpreter = b2s(res.group(1))
-                        interpreter_args = b2s(res.group(2)).strip()
+                (interpreter, interpreter_args) = script_interpreter(chunk)
 
                 if doc_regex.search(f):
                     if not interpreter:
