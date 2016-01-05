@@ -26,4 +26,4 @@ echo "$PYTEST tests"
 $PYTEST -v || exit $?
 
 echo "$FLAKE8 tests"
-$FLAKE8 . || exit $?
+$FLAKE8 . ./rpmdiff ./rpmlint || exit $?
