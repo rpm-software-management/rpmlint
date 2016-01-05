@@ -34,7 +34,7 @@ def create_nonlibc_regexp_call(call):
     return re.compile(r)
 
 
-class BinaryInfo:
+class BinaryInfo(object):
 
     needed_regex = re.compile('\s+\(NEEDED\).*\[(\S+)\]')
     rpath_regex = re.compile('\s+\(RPATH\).*\[(\S+)\]')

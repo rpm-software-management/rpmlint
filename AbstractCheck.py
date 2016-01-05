@@ -34,7 +34,7 @@ class _HeadRedirectHandler(urllib2.HTTPRedirectHandler):
         return res
 
 
-class AbstractCheck:
+class AbstractCheck(object):
     known_checks = {}
 
     def __init__(self, name):

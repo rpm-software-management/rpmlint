@@ -31,7 +31,7 @@ if os.path.isdir("/usr/share/rpmlint"):
 import Pkg
 
 
-class Rpmdiff:
+class Rpmdiff(object):
 
     # constants
 

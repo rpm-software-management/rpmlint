@@ -452,7 +452,7 @@ def parse_deps(line):
 
 # classes representing package
 
-class AbstractPkg:
+class AbstractPkg(object):
 
     def cleanup(self):
         pass
