@@ -228,15 +228,12 @@ class BinaryInfo:
             printWarning(pkg, 'binaryinfo-readelf-failed',
                          file, re.sub('\n.*', '', res[1]))
 
-        fobj = None
         try:
-            fobj = open(path, 'rb')
-            fobj.seek(-12, os.SEEK_END)
-            self.tail = Pkg.b2s(fobj.read())
+            with open(path, 'rb') as fobj:
+                fobj.seek(-12, os.SEEK_END)
+                self.tail = Pkg.b2s(fobj.read())
         except Exception as e:
             printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
-        if fobj:
-            fobj.close()
 
         # Undefined symbol and unused direct dependency checks make sense only
         # for installed packages.

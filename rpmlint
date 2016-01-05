@@ -291,7 +291,8 @@ else:
 
 for f in configs:
     try:
-        exec(compile(open(f).read(), f, 'exec'))
+        with open(f) as fobj:
+            exec(compile(fobj.read(), f, 'exec'))
     except IOError:
         pass
     except Exception as e:
@@ -342,7 +343,8 @@ for o in opt:
 # load user config file
 try:
     expconf = os.path.expanduser(conf_file)
-    exec(compile(open(expconf).read(), expconf, 'exec'))
+    with open(expconf) as fobj:
+        exec(compile(fobj.read(), expconf, 'exec'))
 except IOError:
     pass
 except Exception as e:

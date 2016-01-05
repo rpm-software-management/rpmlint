@@ -276,16 +276,12 @@ else:
 def peek(filename, pkg, length=1024):
     """Peek into a file, return a chunk from its beginning and a flag if it
        seems to be a text file."""
-    fobj = None
     chunk = None
     try:
-        fobj = open(filename, 'rb')
-        chunk = fobj.read(length)
-        fobj.close()
+        with open(filename, 'rb') as fobj:
+            chunk = fobj.read(length)
     except IOError as e:  # eg. https://bugzilla.redhat.com/209876
         printWarning(pkg, 'read-error', e)
-        if fobj:
-            fobj.close()
         return (chunk, False)
 
     if b'\0' in chunk:

@@ -570,21 +570,16 @@ class Pkg(AbstractPkg):
         """Grep regex from a file, return matching line numbers."""
         ret = []
         lineno = 0
-        in_file = None
         try:
-            try:
-                in_file = open(os.path.join(
-                    self.dirName() or '/', filename.lstrip('/')))
+            with open(os.path.join(
+                    self.dirName() or '/', filename.lstrip('/'))) as in_file:
                 for line in in_file:
                     lineno += 1
                     if regex.search(line):
                         ret.append(str(lineno))
                         break
-            except Exception as e:
-                Filter.printWarning(self, 'read-error', filename, e)
-        finally:
-            if in_file:
-                in_file.close()
+        except Exception as e:
+            Filter.printWarning(self, 'read-error', filename, e)
         return ret
 
     def langtag(self, tag, lang):
