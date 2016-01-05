@@ -48,7 +48,7 @@ if sys.version_info[0] > 2:
         return b.decode(errors='replace')
 else:
     def warn(s):
-        print >> sys.stderr, s
+        print >> sys.stderr, s  # noqa (H233)
 
     def b2s(b):
         return b
@@ -116,8 +116,10 @@ def substitute_shell_vars(val, script):
 
 
 def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
-    '''A version of commands.getstatusoutput() which can take cmd as a
-       sequence, thus making it potentially more secure.'''
+    """
+    A version of commands.getstatusoutput() which can take cmd as a
+    sequence, thus making it potentially more secure.
+    """
     if stdoutonly:
         proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
                                 stdout=subprocess.PIPE, close_fds=True)
@@ -197,8 +199,10 @@ slashend_regex = re.compile('([^/])/+$')
 
 
 def safe_normpath(path):
-    """Like os.path.normpath but normalizes less aggressively thus being
-    potentially safer for paths containing symlinks."""
+    """
+    Like os.path.normpath but normalizes less aggressively thus being
+    potentially safer for paths containing symlinks.
+    """
     ret = slash_regex.sub('/', path)
     ret = slashdot_regex.sub('\\2', ret)
     ret = slashend_regex.sub('\\1', ret)
@@ -206,8 +210,10 @@ def safe_normpath(path):
 
 
 def get_default_valid_rpmgroups(filename=None):
-    """Get default rpm groups from filename, or try to look them up from
-    the rpm package (if installed) if no filename is given"""
+    """
+    Get default rpm groups from filename, or try to look them up from
+    the rpm package (if installed) if no filename is given.
+    """
     groups = []
     if not filename:
         try:
@@ -388,8 +394,10 @@ def stringToVersion(verstring):
 
 
 def parse_deps(line):
-    '''Parse provides/requires/conflicts/obsoletes line to list of
-       (name, flags, (epoch, version, release)) tuples.'''
+    """
+    Parse provides/requires/conflicts/obsoletes line to list of
+    (name, flags, (epoch, version, release)) tuples.
+    """
 
     prcos = []
     tokens = re.split('[\s,]+', line.strip())
@@ -728,8 +736,10 @@ class Pkg(AbstractPkg):
                 self._files[pkgfile.name] = pkgfile
 
     def readlink(self, pkgfile):
-        """Resolve symlinks for the given PkgFile, return the dereferenced
-           PkgFile if it is found in this package, None if not."""
+        """
+        Resolve symlinks for the given PkgFile, return the dereferenced
+        PkgFile if it is found in this package, None if not.
+        """
         result = pkgfile
         while result and result.linkto:
             linkpath = urljoin(result.name, result.linkto)
@@ -739,20 +749,26 @@ class Pkg(AbstractPkg):
 
     # API to access dependency information
     def obsoletes(self):
-        """Get package Obsoletes as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Obsoletes as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._obsoletes
 
     def requires(self):
-        """Get package Requires as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Requires as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._requires
 
     def prereq(self):
-        """Get package PreReqs as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package PreReqs as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._prereq
 
@@ -773,38 +789,50 @@ class Pkg(AbstractPkg):
         return False
 
     def conflicts(self):
-        """Get package Conflicts as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Conflicts as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._conflicts
 
     def provides(self):
-        """Get package Provides as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Provides as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._provides
 
     def recommends(self):
-        """Get package Recommends as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Recommends as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._recommends
 
     def suggests(self):
-        """Get package Suggests as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Suggests as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._suggests
 
     def enhances(self):
-        """Get package Enhances as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Enhances as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._enhances
 
     def supplements(self):
-        """Get package Supplements as list of
-           (name, flags, (epoch, version, release)) tuples."""
+        """
+        Get package Supplements as list of
+        (name, flags, (epoch, version, release)) tuples.
+        """
         self._gatherDepInfo()
         return self._supplements
 
@@ -875,9 +903,11 @@ class Pkg(AbstractPkg):
                                  rpm.RPMTAG_SUPPLEMENTVERSION)
 
     def scriptprog(self, which):
-        """Get the specified script interpreter as a string.
-           Depending on rpm-python version, the string may or may not include
-           interpreter arguments, if any."""
+        """
+        Get the specified script interpreter as a string.
+        Depending on rpm-python version, the string may or may not include
+        interpreter arguments, if any.
+        """
         prog = self[which]
         if prog is None:
             prog = ""

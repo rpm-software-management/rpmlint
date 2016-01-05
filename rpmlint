@@ -29,10 +29,10 @@ sys.path.insert(1, '/usr/share/rpmlint')
 # loaded which is too early - settings from config files won't take
 # place for those variables.
 
-from Filter import badnessScore, badnessThreshold, printAllReasons, \
-    printDescriptions, printInfo, printed_messages, setRawOut
 import AbstractCheck
 import Config
+from Filter import badnessScore, badnessThreshold, printAllReasons, \
+    printDescriptions, printed_messages, printInfo, setRawOut
 import Pkg
 
 
@@ -42,7 +42,7 @@ _default_user_conf = '%s/rpmlint' % \
 
 # Print usage information
 def usage(name):
-    print ('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
+    print('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
 \t[-I|--explain <messageid>]
@@ -57,12 +57,12 @@ def usage(name):
 \t[   --rawout <file>]
 \t[-f|--file <user config file to use instead of %s]
 \t[-o|--option <key value>]'''
-           % (name, _default_user_conf))
+          % (name, _default_user_conf))
 
 
 # Print version information
 def printVersion():
-    print ('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
+    print('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
 
 
 def loadCheck(name):
@@ -240,22 +240,11 @@ argv0 = os.path.basename(sys.argv[0])
 
 # parse options
 try:
-    (opt, args) = getopt.getopt(sys.argv[1:],
-                              'iI:c:C:hVvanE:f:o:',
-                              ['info',
-                               'explain=',
-                               'check=',
-                               'checkdir=',
-                               'help',
-                               'version',
-                               'verbose',
-                               'all',
-                               'noexception',
-                               'extractdir=',
-                               'file=',
-                               'option=',
-                               'rawout=',
-                               ])
+    (opt, args) = getopt.getopt(
+        sys.argv[1:], 'iI:c:C:hVvanE:f:o:',
+        ['info', 'explain=', 'check=', 'checkdir=', 'help', 'version',
+         'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
+         'rawout='])
 except getopt.GetoptError as e:
     Pkg.warn("%s: %s" % (argv0, e))
     usage(argv0)

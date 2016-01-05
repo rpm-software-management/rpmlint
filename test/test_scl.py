@@ -40,22 +40,28 @@ class TestSCLBasic(Tools):
         assert not self._spec_test_output('spec/SpecCheck')
 
     def test_nonscl_binary_silent(self):
-        '''SCL check on non-SCL binary RPM has to be silent even with
-        suspicious filename'''
+        '''
+        SCL check on non-SCL binary RPM has to be silent even with
+        suspicious filename
+        '''
         assert not self._rpm_test_output('binary/python3-power')
 
     def test_bunch_of_scl_source_rpms(self):
-        '''A bunch of testing source RPM packages using SCL
+        '''
+        A bunch of testing source RPM packages using SCL
         Assuming they are all OK and except silent output
-        While adding more checks, this might change'''
+        While adding more checks, this might change
+        '''
         for package in ['nodejs010-1', 'nodejs010-nodejs-0.10.3',
                         'nodejs010-nodejs-forever']:
             assert not self._rpm_test_output(os.path.join('source', package))
 
     def test_bunch_of_scl_binary_rpms(self):
-        '''A bunch of testing binary RPM packages using SCL
+        '''
+        A bunch of testing binary RPM packages using SCL
         Assuming they are all OK and except silent output
-        While adding more checks, this might change'''
+        While adding more checks, this might change
+        '''
         for package in ['nodejs010-runtime', 'nodejs010-nodejs-0.10.3',
                         'nodejs010-nodejs-oauth']:
             assert not self._rpm_test_output(os.path.join('binary', package))
@@ -144,8 +150,9 @@ class TestSCLSource(Tools):
         assert 'name-without-scl-prefix' in out[0]
 
     def test_name_with_prefix_without_condition(self):
-        '''Tests SCL spec with prefixed name without condition in
-        scl_prefix macro'''
+        '''
+        Tests SCL spec with prefixed name without condition in scl_prefix macro
+        '''
         out = self._spec_test_output(
             'spec/nodejs-name-with-noncondition-prefix')
         assert len(out) == 1
@@ -164,15 +171,19 @@ class TestSCLSource(Tools):
         assert 'provides-without-scl-prefix' in out[0]
 
     def test_main_package_without_scl_require(self):
-        '''Tests SCL spec where the main package doesn't require anything
-        from collection'''
+        '''
+        Tests SCL spec where the main package doesn't require anything
+        from collection
+        '''
         out = self._spec_test_output('spec/nodejs-norequire')
         assert len(out) == 1
         assert 'doesnt-require-scl-runtime-or-other-scl-package' in out[0]
 
     def test_n_supbackage_without_prefix(self):
-        '''Tests SCL spec where a subpackage uses -n and doesn't start with
-        SCL prefix'''
+        '''
+        Tests SCL spec where a subpackage uses -n and doesn't start with
+        SCL prefix
+        '''
         out = self._spec_test_output('spec/nodejs-n-noprefix')
         assert len(out) == 1
         assert 'subpackage-with-n-without-scl-prefix' in out[0]
@@ -187,8 +198,9 @@ class TestSCLSource(Tools):
 class TestSCLBinary(Tools):
     '''Tests of Software Collections binary RPMs'''
     def test_scl_name_screwed_up(self):
-        '''SCL check on SCL package that differs it's name from scl
-        tree folder'''
+        '''
+        SCL check on SCL package that differs it's name from scl tree folder
+        '''
         out = self._rpm_test_output('binary/nodejs110-nodejs-oauth')
         assert len(out) == 1
         assert 'scl-name-screwed-up' in out[0]

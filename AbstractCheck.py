@@ -60,8 +60,10 @@ class AbstractCheck(object):
         return
 
     def check_url(self, pkg, tag, url):
-        """Check that URL points to something that seems to exist.
-           Return info() of the response if available."""
+        """
+        Check that URL points to something that seems to exist.
+        Return info() of the response if available.
+        """
         if not self.network_enabled:
             if self.verbose:
                 printInfo(pkg, 'network-checks-disabled', url)

@@ -45,8 +45,9 @@ subpackage_runtime = re.compile(r'(^|\s)%package\s+runtime\s*$', re.M)
 
 
 def index_or_sub(source, word, sub=0):
-    '''Helper function that returns index of word
-       in source or sub when not found'''
+    """
+    Helper function that returns index of word in source or sub when not found.
+    """
     try:
         return source.index(word)
     except:
@@ -288,8 +289,10 @@ class SCLCheck(AbstractCheck.AbstractCheck):
         return res
 
     def get_files(self, text, subpackage=None):
-        '''Return the list of files in %files section
-           for given subpackage or main package'''
+        """
+        Return the list of files in %files section for given subpackage or
+        main package.
+        """
         if subpackage:
             pattern = r'%%\{?\??files\}?(\s+-n)?\s+%s\s*$' % subpackage
         else:

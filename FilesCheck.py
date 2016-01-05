@@ -274,8 +274,10 @@ else:
 
 
 def peek(filename, pkg, length=1024):
-    """Peek into a file, return a chunk from its beginning and a flag if it
-       seems to be a text file."""
+    """
+    Peek into a file, return a chunk from its beginning and a flag if it
+    seems to be a text file.
+    """
     chunk = None
     try:
         with open(filename, 'rb') as fobj:
@@ -327,7 +329,8 @@ _python_magic_values = {
 
 
 def get_expected_pyc_magic(path):
-    """.pyc/.pyo files embed a 4-byte magic value identifying which version of
+    """
+    .pyc/.pyo files embed a 4-byte magic value identifying which version of
     the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
     return a (magic ABI value, python version) tuple.  For example,
     '/usr/lib/python3.1/foo.pyc' should return (3151, '3.1').
@@ -336,7 +339,8 @@ def get_expected_pyc_magic(path):
     variable is not set, or if we don't know the magic ABI value for the
     python version (no matter from which source the version came from).
     The second value will be None if a python version could not be resolved
-    from the given pathname."""
+    from the given pathname.
+    """
 
     ver_from_path = None
     m = python_regex.search(path)
@@ -359,8 +363,10 @@ def get_expected_pyc_magic(path):
 
 
 def py_demarshal_long(b):
-    """Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
-    bytes in a string."""
+    """
+    Counterpart to Python's PyMarshal_ReadLongFromFile, operating on the
+    bytes in a string.
+    """
     if isinstance(b, str):
         b = map(ord, b)
     return (b[0]
@@ -370,8 +376,10 @@ def py_demarshal_long(b):
 
 
 def python_bytecode_to_script(path):
-    """Given a python bytecode path, give the path of the .py file
-    (or None if not python bytecode)."""
+    """
+    Given a python bytecode path, give the path of the .py file
+    (or None if not python bytecode).
+    """
 
     res = python_bytecode_regex_pep3147.search(path)
     if res:
