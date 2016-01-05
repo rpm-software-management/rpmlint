@@ -24,7 +24,7 @@ install:
   # https://github.com/travis-ci/apt-package-whitelist/issues/1696
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-rpm rpm rpm2cpio
-  - pip install pytest flake8 flake8-import-order
+  - pip install pytest flake8 flake8-import-order hacking
 
 script:
   - make check
