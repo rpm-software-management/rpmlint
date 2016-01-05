@@ -12,7 +12,6 @@ from datetime import datetime
 import os
 import re
 import stat
-import sys
 
 import rpm
 
@@ -283,8 +282,7 @@ def peek(filename, pkg, length=1024):
         fobj = open(filename, 'rb')
         chunk = fobj.read(length)
         fobj.close()
-    except IOError:  # eg. https://bugzilla.redhat.com/209876
-        e = sys.exc_info()[1]
+    except IOError as e:  # eg. https://bugzilla.redhat.com/209876
         printWarning(pkg, 'read-error', e)
         if fobj:
             fobj.close()

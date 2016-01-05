@@ -10,7 +10,6 @@
 import os
 import re
 import stat
-import sys
 
 import rpm
 
@@ -234,8 +233,7 @@ class BinaryInfo:
             fobj = open(path, 'rb')
             fobj.seek(-12, os.SEEK_END)
             self.tail = Pkg.b2s(fobj.read())
-        except Exception:
-            e = sys.exc_info()[1]
+        except Exception as e:
             printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
         if fobj:
             fobj.close()

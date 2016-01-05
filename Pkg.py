@@ -580,9 +580,8 @@ class Pkg(AbstractPkg):
                     if regex.search(line):
                         ret.append(str(lineno))
                         break
-            except Exception:
-                Filter.printWarning(self, 'read-error', filename,
-                                    sys.exc_info()[1])
+            except Exception as e:
+                Filter.printWarning(self, 'read-error', filename, e)
         finally:
             if in_file:
                 in_file.close()

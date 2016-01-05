@@ -9,7 +9,6 @@
 
 import re
 import socket
-import sys
 try:
     import urllib2
 except:
@@ -80,8 +79,7 @@ class AbstractCheck:
             opener.addheaders = [('User-Agent',
                                   'rpmlint/%s' % Config.__version__)]
             res = opener.open(_HeadRequest(url))
-        except Exception:
-            e = sys.exc_info()[1]
+        except Exception as e:
             errstr = str(e) or repr(e) or type(e)
             printWarning(pkg, 'invalid-url', '%s:' % tag, url, errstr)
         info = None

@@ -10,7 +10,6 @@
 
 import os
 import re
-import sys
 
 import rpm
 
@@ -85,8 +84,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
             content = None
             try:
                 content = [x for x in Pkg.readlines(pkgfile.path)]
-            except Exception:
-                e = sys.exc_info()[1]
+            except Exception as e:
                 printWarning(pkg, 'read-error', e)
                 continue
             content_str = "".join(content)

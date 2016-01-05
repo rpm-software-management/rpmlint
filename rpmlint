@@ -148,11 +148,10 @@ def main():
                 Pkg.warn(
                     '(none): E: interrupted, exiting while reading %s' % arg)
                 sys.exit(2)
-            except Exception:
+            except Exception as e:
                 if isfile:
                     arg = os.path.abspath(arg)
-                Pkg.warn('(none): E: error while reading %s: %s' %
-                         (arg, sys.exc_info()[1]))
+                Pkg.warn('(none): E: error while reading %s: %s' % (arg, e))
                 pkgs = []
                 continue
 
@@ -182,15 +181,13 @@ def main():
                             Pkg.warn('(none): E: interrupted, exiting while ' +
                                      'reading %s' % fname)
                             sys.exit(2)
-                        except Exception:
+                        except Exception as e:
                             Pkg.warn(
-                                '(none): E: while reading %s: %s' %
-                                (fname, sys.exc_info()[1]))
+                                '(none): E: while reading %s: %s' % (fname, e))
                             continue
-            except Exception:
+            except Exception as e:
                 Pkg.warn(
-                    '(none): E: error while reading dir %s: %s' %
-                    (dname, sys.exc_info()[1]))
+                    '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
         if printAllReasons():
@@ -259,8 +256,8 @@ try:
                                'option=',
                                'rawout=',
                                ])
-except getopt.GetoptError:
-    Pkg.warn("%s: %s" % (argv0, sys.exc_info()[1]))
+except getopt.GetoptError as e:
+    Pkg.warn("%s: %s" % (argv0, e))
     usage(argv0)
     sys.exit(1)
 
@@ -297,9 +294,8 @@ for f in configs:
         exec(compile(open(f).read(), f, 'exec'))
     except IOError:
         pass
-    except Exception:
-        Pkg.warn('(none): W: error loading %s, skipping: %s' %
-                 (f, sys.exc_info()[1]))
+    except Exception as e:
+        Pkg.warn('(none): W: error loading %s, skipping: %s' % (f, e))
 # pychecker fix
 del f
 
@@ -349,9 +345,8 @@ try:
     exec(compile(open(expconf).read(), expconf, 'exec'))
 except IOError:
     pass
-except Exception:
-    Pkg.warn('(none): W: error loading %s, skipping: %s' %
-             (conf_file, sys.exc_info()[1]))
+except Exception as e:
+    Pkg.warn('(none): W: error loading %s, skipping: %s' % (conf_file, e))
 
 # apply config overrides
 for key, value in config_overrides.items():
