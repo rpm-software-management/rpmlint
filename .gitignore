@@ -3,3 +3,4 @@
 *.flog
 *.xz
 /__version__.py
+.cache
