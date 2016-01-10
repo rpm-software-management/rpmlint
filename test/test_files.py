@@ -19,7 +19,9 @@ class TestPythonBytecodeToScript(object):
 
 
 def test_script_interpreter():
-    assert se(b"#!/bin/bash -e") == ("/bin/bash", "-e")
+    assert se(b"#!/bin/sh\n# Hello world!\n") == ("/bin/sh", "")
+    assert se(b"#!/bin/bash -e\n") == ("/bin/bash", "-e")
+    assert se(b"#! /usr/bin/perl -wT \n") == ("/usr/bin/perl", "-wT")
     assert se(b"#!/usr/bin/env python3 foo") == ("/usr/bin/env", "python3 foo")
     assert se(b"# something here\n#!not a shebang") == (None, "")
 
