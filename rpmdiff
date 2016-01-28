@@ -20,13 +20,13 @@
 import getopt
 import itertools
 import os.path
-import site
 import sys
 import tempfile
 
 import rpm
 
 if os.path.isdir("/usr/share/rpmlint"):
+    import site
     site.addsitedir("/usr/share/rpmlint")
 import Pkg
 
