@@ -6,9 +6,6 @@ import sys
 for directory in ['../rpmlint/tools', '../rpmlint', '../tools', '..']:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), directory))
 
-# rpmlint's Testing needs TESTPATH
-os.environ['TESTPATH'] = os.path.dirname(__file__)
-
 
 import SCLCheck
 import Testing

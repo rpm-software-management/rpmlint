@@ -7,7 +7,14 @@ import tempfile
 import Pkg
 
 
-TEST_CONFIG = os.path.join(os.environ['TESTPATH'], 'test.config')
+def _testpath():
+    return os.environ.get(
+        'TESTPATH',
+        os.path.join(os.path.dirname(__file__), "..", "test")
+    )
+
+
+TEST_CONFIG = os.path.join(_testpath(), "test.config")
 exec(compile(open(TEST_CONFIG).read(), TEST_CONFIG, 'exec'))
 
 currently_testing = 0
@@ -36,12 +43,12 @@ def getOutput():
 
 
 def getTestedPackage(name):
-    pkg_path = glob.glob(os.environ['TESTPATH'] + '/' + name + '-*.rpm')[0]
+    pkg_path = glob.glob(os.path.join(_testpath(), name) + "-*.rpm")[0]
     return Pkg.Pkg(pkg_path, tempfile.gettempdir())
 
 
 def getTestedSpecPackage(name):
-    pkg_path = glob.glob(os.environ['TESTPATH'] + '/' + name + '.spec')[0]
+    pkg_path = glob.glob(os.path.join(_testpath(), name) + ".spec")[0]
     return Pkg.FakePkg(pkg_path)
 
 # ex: ts=4 sw=4 et

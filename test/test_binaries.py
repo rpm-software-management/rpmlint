@@ -1,9 +1,5 @@
 import os
 
-# rpmlint's Testing needs TESTPATH
-os.environ['TESTPATH'] = os.path.dirname(__file__)
-
-
 import BinariesCheck
 import Testing
 
