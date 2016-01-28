@@ -369,10 +369,7 @@ def py_demarshal_long(b):
     """
     if isinstance(b, str):
         b = map(ord, b)
-    return (b[0]
-            + (b[1] << 8)
-            + (b[2] << 16)
-            + (b[3] << 24))
+    return (b[0] + (b[1] << 8) + (b[2] << 16) + (b[3] << 24))
 
 
 def python_bytecode_to_script(path):

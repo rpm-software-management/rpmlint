@@ -1,14 +1,14 @@
 import os
 import sys
 
+import SCLCheck
+import Testing
+
+
 # add rpmlint-scl, rpmlint and rpmlint/tools to PATH
 # also add rpmlint-scl/tools, so this keeps working once merged with rpmlint
 for directory in ['../rpmlint/tools', '../rpmlint', '../tools', '..']:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), directory))
-
-
-import SCLCheck
-import Testing
 
 
 class Tools(object):

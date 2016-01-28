@@ -28,7 +28,7 @@ import rpm
 if os.path.isdir("/usr/share/rpmlint"):
     import site
     site.addsitedir("/usr/share/rpmlint")
-import Pkg
+import Pkg  # noqa: E402
 
 
 class Rpmdiff(object):
