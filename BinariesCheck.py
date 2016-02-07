@@ -210,7 +210,10 @@ class BinaryInfo(object):
                 # on a server like postfix
                 res = Pkg.getstatusoutput(
                     ('env', 'LC_ALL=C', 'objdump', '-d', path))
-                if not res[0]:
+                if res[0]:
+                    printWarning(pkg, 'binaryinfo-objdump-failed', file)
+                    self.chroot_near_chdir = True  # avoid false positive
+                else:
                     call = []
                     # we want that :
                     # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
@@ -644,6 +647,9 @@ with the intended shared libraries only.''',
 
 'binaryinfo-readelf-failed',
 '''Executing readelf on this file failed, all checks could not be run.''',
+
+'binaryinfo-objdump-failed',
+'''Executing objdump on this file failed, all checks could not be run.''',
 
 'binaryinfo-tail-failed',
 '''Reading trailing bytes of this file failed, all checks could not be run.''',
