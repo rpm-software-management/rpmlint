@@ -25,20 +25,20 @@ _diagnostic = list()
 _badness_score = 0
 printed_messages = {"I": 0, "W": 0, "E": 0}
 
-if sys.stdout.isatty():
-    def __print(s):
-        print(s)
-else:
-    __stdout = sys.stdout
-    if not __stdout.encoding:  # Python < 3 only?
-        import codecs
-        if hasattr(__stdout, "buffer"):
-            __stdout = __stdout.buffer
-        __stdout = codecs.getwriter(
-            locale.getpreferredencoding())(__stdout, "replace")
+__stdout = sys.stdout
+__preferred_encoding = locale.getpreferredencoding()
+if hasattr(__stdout, 'xreadlines'):   # Python < 3 only
+    import codecs
+    if hasattr(__stdout, "buffer"):
+        __stdout = __stdout.buffer
+    __stdout = codecs.getwriter(
+        __preferred_encoding)(sys.stdout, 'replace')
 
-    def __print(s):
-        print(s, file=__stdout)
+
+def __print(s):
+    if isinstance(s, str) and hasattr(s, 'decode'):
+        s = s.decode(__preferred_encoding, 'replace')
+    print(s, file=__stdout)
 
 
 def printInfo(pkg, reason, *details):
