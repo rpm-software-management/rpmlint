@@ -51,7 +51,7 @@ class InitScriptCheck(AbstractCheck.AbstractCheck):
 
             basename = os.path.basename(fname)
             initscript_list.append(basename)
-            if pkgfile.mode & int("500", 8) != int("500", 8):
+            if pkgfile.mode & 0o500 != 0o500:
                 printError(pkg, 'init-script-non-executable', fname)
 
             if "." in basename:

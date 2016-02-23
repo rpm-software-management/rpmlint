@@ -179,9 +179,9 @@ class MenuCheck(AbstractCheck.AbstractCheck):
                 else:
                     if basename != pkg.name:
                         printWarning(pkg, 'non-coherent-menu-filename', fname)
-                    if mode & int("444", 8) != int("444", 8):
+                    if mode & 0o444 != 0o444:
                         printError(pkg, 'non-readable-menu-file', fname)
-                    if mode & int("111", 8):
+                    if mode & 0o111:
                         printError(pkg, 'executable-menu-file', fname)
                     menus.append(fname)
             else:

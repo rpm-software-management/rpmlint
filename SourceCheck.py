@@ -14,7 +14,7 @@ import Config
 from Filter import addDetails, printError, printWarning
 
 
-DEFAULT_VALID_SRC_PERMS = (int("644", 8), int("755", 8))
+DEFAULT_VALID_SRC_PERMS = (0o644, 0o755)
 
 source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
 compress_ext = Config.getOption("CompressExtension", "bz2")
@@ -39,7 +39,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
                     not fname.endswith(compress_ext):
                 printWarning(pkg, 'source-or-patch-not-compressed',
                              compress_ext, fname)
-            perm = pkgfile.mode & int("7777", 8)
+            perm = pkgfile.mode & 0o7777
             if perm not in valid_src_perms:
                 printWarning(pkg, 'strange-permission', fname, "%o" % perm)
 
