@@ -27,7 +27,7 @@ printed_messages = {"I": 0, "W": 0, "E": 0}
 
 __stdout = sys.stdout
 __preferred_encoding = locale.getpreferredencoding()
-if hasattr(__stdout, 'xreadlines'):   # Python < 3 only
+if sys.version_info[0] < 3:
     import codecs
     if hasattr(__stdout, "buffer"):
         __stdout = __stdout.buffer
