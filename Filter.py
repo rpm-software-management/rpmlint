@@ -27,10 +27,8 @@ printed_messages = {"I": 0, "W": 0, "E": 0}
 
 __stdout = sys.stdout
 __preferred_encoding = locale.getpreferredencoding()
-if sys.version_info[0] < 3:
+if sys.version_info.major < 3:
     import codecs
-    if hasattr(__stdout, "buffer"):
-        __stdout = __stdout.buffer
     __stdout = codecs.getwriter(__preferred_encoding)(sys.stdout, 'replace')
 
 
