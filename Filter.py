@@ -31,8 +31,7 @@ if sys.version_info[0] < 3:
     import codecs
     if hasattr(__stdout, "buffer"):
         __stdout = __stdout.buffer
-    __stdout = codecs.getwriter(
-        __preferred_encoding)(sys.stdout, 'replace')
+    __stdout = codecs.getwriter(__preferred_encoding)(sys.stdout, 'replace')
 
 
 def __print(s):
