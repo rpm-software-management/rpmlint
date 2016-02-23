@@ -525,8 +525,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printError(pkg, 'compressed-symlink-with-wrong-ext',
                                    f, link)
 
-            perm = mode & int("7777", 8)
-            mode_is_exec = mode & int("111", 8)
+            perm = mode & 0o7777
+            mode_is_exec = mode & 0o111
 
             if log_regex.search(f):
                 log_files.append(f)
@@ -551,7 +551,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                     pkg[rpm.RPMTAG_GROUP]))):
                             printError(pkg, 'setgid-binary', f, group,
                                        "%o" % perm)
-                    if mode & int("777", 8) != int("755", 8):
+                    if mode & 0o777 != 0o755:
                         printError(pkg, 'non-standard-executable-perm', f,
                                    "%o" % perm)
 
@@ -664,8 +664,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     (is_buildconfig or includefile_regex.search(f) or
                      develfile_regex.search(f))):
                     printWarning(pkg, 'devel-file-in-non-devel-package', f)
-                if mode & int("444", 8) != int("444", 8) and \
-                   perm & int("7000", 8) == 0:
+                if mode & 0o444 != 0o444 and perm & 0o7000 == 0:
                     ok_nonreadable = False
                     for regex in non_readable_regexs:
                         if regex.search(f):
@@ -750,7 +749,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, 'python-bytecode-without-source', f)
 
                 # normal executable check
-                if mode & stat.S_IXUSR and perm != int("755", 8):
+                if mode & stat.S_IXUSR and perm != 0o755:
                     printError(pkg, 'non-standard-executable-perm',
                                f, "%o" % perm)
                 if mode_is_exec:
@@ -865,9 +864,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
             # normal dir check
             elif stat.S_ISDIR(mode):
-                if mode & int("1002", 8) == 2:  # world writable w/o sticky bit
+                if mode & 0o1002 == 2:  # world writable w/o sticky bit
                     printError(pkg, 'world-writable', f, "%o" % perm)
-                if perm != int("755", 8):
+                if perm != 0o755:
                     printError(pkg, 'non-standard-dir-perm', f, "%o" % perm)
                 if pkg.name not in filesys_packages and f in STANDARD_DIRS:
                     printError(pkg, 'standard-dir-owned-by-package', f)
