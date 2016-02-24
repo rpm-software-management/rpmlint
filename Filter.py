@@ -29,8 +29,6 @@ __stdout = sys.stdout
 __preferred_encoding = locale.getpreferredencoding()
 if sys.version_info[0] < 3:
     import codecs
-    if hasattr(__stdout, "buffer"):
-        __stdout = __stdout.buffer
     __stdout = codecs.getwriter(__preferred_encoding)(sys.stdout, 'replace')
 
 
