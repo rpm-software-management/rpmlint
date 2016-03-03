@@ -27,3 +27,22 @@ $PYTEST -v || exit $?
 
 echo "$FLAKE8 tests"
 $FLAKE8 . ./rpmdiff ./rpmlint || exit $?
+
+echo "man page tests"
+if man --help 2>&1 | grep -q -- --warnings; then
+    tmpfile=$(mktemp) || exit 1
+    for manpage in ./rpmdiff.1 ./rpmlint.1; do
+        man --warnings $manpage >/dev/null 2>$tmpfile
+        if [ -s $tmpfile ]; then
+            echo $manpage:
+            cat $tmpfile
+            rm -f $tmpfile
+            exit 1
+        else
+            >$tmpfile
+        fi
+    done
+    rm -f $tmpfile
+else
+    echo "Skipped, man does not seem to recognize the --warnings switch"
+fi
