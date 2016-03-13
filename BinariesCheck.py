@@ -10,6 +10,7 @@
 import os
 import re
 import stat
+import subprocess
 
 import rpm
 
@@ -205,27 +206,37 @@ class BinaryInfo(object):
             # check if chroot is near chdir (since otherwise, chroot is called
             # without chdir)
             if self.chroot and self.chdir:
-                # FIXME this check is too slow, because forking for objdump is
-                # quite slow according to a quick test and that's quite visible
-                # on a server like postfix
-                res = Pkg.getstatusoutput(
-                    ('env', 'LC_ALL=C', 'objdump', '-d', path))
-                if res[0]:
+                p = subprocess.Popen(
+                    ['env', 'LC_ALL=C', 'objdump', '-d', path],
+                    stdout=subprocess.PIPE, bufsize=1)
+                with p.stdout:
+                    # we want that :
+                    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
+                    objdump_call_regex = re.compile(b'callq?\s(.*)')
+                    index = 0
+                    chroot_index = -99
+                    chdir_index = -99
+                    for line in p.stdout:
+                        r = objdump_call_regex.search(line)
+                        if not r:
+                            continue
+                        if b'@plt' not in r.group(1):
+                            pass
+                        elif b'chroot@plt' in r.group(1):
+                            chroot_index = index
+                            if abs(chroot_index - chdir_index) <= 2:
+                                self.chroot_near_chdir = True
+                                break
+                        elif b'chdir@plt' in r.group(1):
+                            chdir_index = index
+                            if abs(chroot_index - chdir_index) <= 2:
+                                self.chroot_near_chdir = True
+                                break
+                        index += 1
+                if p.wait():
                     printWarning(pkg, 'binaryinfo-objdump-failed', file)
                     self.chroot_near_chdir = True  # avoid false positive
-                else:
-                    call = []
-                    # we want that :
-                    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <free@plt>
-                    for l in res[1].splitlines():
-                        # call is for x86 32 bits, callq for x86_64
-                        if l.find('callq ') >= 0 or l.find('call ') >= 0:
-                            call.append(l.rpartition(' ')[2])
-                    for index, c in enumerate(call):
-                        if c.find('chroot@plt') >= 0:
-                            for i in call[index - 2:index + 2]:
-                                if i.find('chdir@plt'):
-                                    self.chroot_near_chdir = True
+
         else:
             self.readelf_error = True
             printWarning(pkg, 'binaryinfo-readelf-failed',
