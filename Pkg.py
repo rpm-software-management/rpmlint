@@ -21,10 +21,10 @@ except:
 
 try:
     import magic
-    _ = magic.descriptor  # magic >= 5.05 needed
     # TODO: magic.MAGIC_COMPRESS when PkgFile gets decompress support.
     _magic = magic.open(magic.MAGIC_NONE)
     _magic.load()
+    _ = _magic.descriptor  # magic >= 5.05 needed
 except:
     _magic = None
 import rpm
