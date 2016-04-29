@@ -187,7 +187,7 @@ points_regex = re.compile('^\.\./(.*)')
 doc_regex = re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
 bin_regex = re.compile('^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
 includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
-develfile_regex = re.compile('\.(a|cmxa?|mli?)$')
+develfile_regex = re.compile('\.(a|cmxa?|mli?|gir)$')
 buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
 buildconfig_rpath_regex = re.compile('(?:-rpath|Wl,-R)\\b')
@@ -582,6 +582,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         nonexec_file = True
                     if not is_doc:
                         printError(pkg, 'not-listed-as-documentation', f)
+
+                if devel_pkg and f.endswith('.typelib'):
+                    printError(pkg, 'non-devel-file-in-devel-package', f)
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
