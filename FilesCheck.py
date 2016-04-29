@@ -1108,9 +1108,8 @@ included in your package.''',
 that the file is an executable or that it has executable permissions.''',
 
 'devel-file-in-non-devel-package',
-'''A development file (usually source code) is located in a non-devel
-package. If you want to include source code in your package, be sure to
-create a development package.''',
+'''A file that is needed only e.g. when developing or building software is
+included in a non-devel package. These files should go in devel packages.''',
 
 'non-devel-file-in-devel-package',
 '''A non-development file is located in a devel package.''',
