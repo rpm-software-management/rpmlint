@@ -8,6 +8,8 @@
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
+from __future__ import print_function
+
 import os
 import re
 import stat
@@ -31,12 +33,10 @@ import rpm
 
 import Filter
 
-# warn(): 2/3 compatibility/convenience wrapper for printing to stderr with
-#         less concerns of UnicodeErrors than plain sys.stderr.write.
+# utilities
+
 # b2s():  bytes to str
 if sys.version_info[0] > 2:
-    # Blows up with Python < 3 without the exec() hack
-    exec('def warn(s): print (s, file=sys.stderr)')
     long = int
     unicode = str
 
@@ -47,9 +47,6 @@ if sys.version_info[0] > 2:
             return [b2s(x) for x in b]
         return b.decode(errors='replace')
 else:
-    def warn(s):
-        print >> sys.stderr, s  # noqa (H233)
-
     def b2s(b):
         return b
 
@@ -59,7 +56,12 @@ except:
     def shquote(s):
         return '"%s"' % s
 
-# utilities
+
+def warn(s):
+    """
+    Print warning message to stderr.
+    """
+    print(s, file=sys.stderr)
 
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
 # to do the right thing with those versions and packages built with other
