@@ -54,6 +54,8 @@ class BinaryInfo(object):
     setuid_call_regex = create_regexp_call('set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call('(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
+    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
+    objdump_call_regex = re.compile(b'callq?\s(.*)')
 
     forbidden_functions = Config.getOption("WarnOnFunction")
     if forbidden_functions:
@@ -208,11 +210,8 @@ class BinaryInfo(object):
             if self.chroot and self.chdir:
                 p = subprocess.Popen(
                     ['env', 'LC_ALL=C', 'objdump', '-d', path],
-                    stdout=subprocess.PIPE, bufsize=1)
+                    stdout=subprocess.PIPE, bufsize=-1)
                 with p.stdout:
-                    # we want that :
-                    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-                    objdump_call_regex = re.compile(b'callq?\s(.*)')
                     index = 0
                     chroot_index = -99
                     chdir_index = -99
