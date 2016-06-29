@@ -216,7 +216,7 @@ class BinaryInfo(object):
                     chroot_index = -99
                     chdir_index = -99
                     for line in p.stdout:
-                        r = objdump_call_regex.search(line)
+                        r = BinaryInfo.objdump_call_regex.search(line)
                         if not r:
                             continue
                         if b'@plt' not in r.group(1):
