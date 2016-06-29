@@ -23,9 +23,9 @@ except:
 
 try:
     import magic
-    _ = magic.descriptor  # magic >= 5.05 needed
     # TODO: magic.MAGIC_COMPRESS when PkgFile gets decompress support.
     _magic = magic.open(magic.MAGIC_NONE)
+    _ = _magic.descriptor  # magic >= 5.05 needed
     _magic.load()
 except:
     _magic = None
