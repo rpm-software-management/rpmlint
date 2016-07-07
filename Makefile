@@ -22,10 +22,6 @@ PYTHON = /usr/bin/python
 # update this variable to create a new release
 VERSION := 1.9
 
-# for the [A-Z]* part
-LC_ALL:=C
-export LC_ALL
-
 all: __version__.py __isocodes__.py
 
 clean:
