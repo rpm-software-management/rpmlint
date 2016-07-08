@@ -189,9 +189,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
         pkg.current_linenum = 0
 
-        nbsp = chr(0xA0)
-        if is_utf8:
-            nbsp = UNICODE_NBSP
+        nbsp = UNICODE_NBSP if is_utf8 else chr(0xA0)
         do_unicode = is_utf8 and sys.version_info[0] <= 2
 
         for line in Pkg.readlines(spec_file):

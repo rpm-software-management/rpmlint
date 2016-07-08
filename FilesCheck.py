@@ -805,12 +805,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         and scalable_icon_regex.search(f):
                     printWarning(pkg, "gzipped-svg-icon", f)
 
-                if f.endswith('.pem'):
-                    if f not in ghost_files:
-                        if pkg.grep(start_certificate_regex, f):
-                            printWarning(pkg, 'pem-certificate', f)
-                        if pkg.grep(start_private_key_regex, f):
-                            printError(pkg, 'pem-private-key', f)
+                if f.endswith('.pem') and f not in ghost_files:
+                    if pkg.grep(start_certificate_regex, f):
+                        printWarning(pkg, 'pem-certificate', f)
+                    if pkg.grep(start_private_key_regex, f):
+                        printError(pkg, 'pem-private-key', f)
 
                 # text file checks
                 if istext:
