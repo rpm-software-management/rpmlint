@@ -216,23 +216,23 @@ class BinaryInfo(object):
                     chroot_index = -99
                     chdir_index = -99
                     for line in p.stdout:
-                        r = BinaryInfo.objdump_call_regex.search(line)
-                        if not r:
+                        res = BinaryInfo.objdump_call_regex.search(line)
+                        if not res:
                             continue
-                        if b'@plt' not in r.group(1):
+                        if b'@plt' not in res.group(1):
                             pass
-                        elif b'chroot@plt' in r.group(1):
+                        elif b'chroot@plt' in res.group(1):
                             chroot_index = index
                             if abs(chroot_index - chdir_index) <= 2:
                                 self.chroot_near_chdir = True
                                 break
-                        elif b'chdir@plt' in r.group(1):
+                        elif b'chdir@plt' in res.group(1):
                             chdir_index = index
                             if abs(chroot_index - chdir_index) <= 2:
                                 self.chroot_near_chdir = True
                                 break
                         index += 1
-                if p.wait():
+                if p.wait() and not self.chroot_near_chdir:
                     printWarning(pkg, 'binaryinfo-objdump-failed', file)
                     self.chroot_near_chdir = True  # avoid false positive
 
