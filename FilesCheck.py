@@ -572,8 +572,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 chunk = None
                 istext = False
-                if os.access(pkgfile.path, os.R_OK):
-                    (chunk, istext) = peek(pkgfile.path, pkg)
+                res = None
+                try:
+                    res = os.access(pkgfile.path, os.R_OK)
+                except UnicodeError as e:  # e.g. non-ASCII, C locale, python 3
+                    printWarning(pkg, 'inaccessible-filename', f, e)
+                else:
+                    if res:
+                        (chunk, istext) = peek(pkgfile.path, pkg)
 
                 (interpreter, interpreter_args) = script_interpreter(chunk)
 
@@ -1302,6 +1308,11 @@ unexpectedly stripped and that the intended compiler flags are used.''',
 it in the rpm header indicates that it is supposed to be a readable normal file
 but it actually is not in the filesystem.  Because of this, some checks will
 be skipped.''',
+
+'inaccessible-filename',
+'''An error occurred while trying to access this file due to some characters
+in its name. Because of this, some checks will be skipped. Access could work
+with some other locale settings.''',
 
 'executable-crontab-file',
 '''This crontab file has executable bit set, which is refused by newer version
