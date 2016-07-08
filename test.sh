@@ -18,7 +18,12 @@ for i in $TESTPATH/test.*.py; do
 done
 
 echo "Check that rpmlint executes with no unexpected errors"
+echo "...in default locale"
 $PYTHON ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
+rc=$?
+test $rc -eq 0 -o $rc -eq 64 || exit $rc
+echo "...in the C locale"
+LC_ALL=C $PYTHON ./rpmlint -C $(pwd) test/*/*.rpm test/spec/*.spec >/dev/null
 rc=$?
 test $rc -eq 0 -o $rc -eq 64 || exit $rc
 
