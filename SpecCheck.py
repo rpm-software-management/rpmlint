@@ -129,6 +129,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
     def __init__(self):
         AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
         self._spec_file = None
+        self._spec_name = None
 
     def check_source(self, pkg):
         wrong_spec = False
@@ -137,6 +138,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         for fname, pkgfile in pkg.files().items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
+                self._spec_name = pkgfile.name
                 if fname == pkg.name + ".spec":
                     wrong_spec = False
                     break
@@ -183,7 +185,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             if Pkg.is_utf8(self._spec_file):
                 is_utf8 = True
             else:
-                printError(pkg, "non-utf8-spec-file", self._spec_file)
+                printError(pkg, "non-utf8-spec-file",
+                           self._spec_name or self._spec_file)
 
         # gather info from spec lines
 
