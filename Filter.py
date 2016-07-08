@@ -9,6 +9,7 @@
 
 from __future__ import print_function
 
+import codecs
 import locale
 import sys
 import textwrap
@@ -25,17 +26,20 @@ _diagnostic = list()
 _badness_score = 0
 printed_messages = {"I": 0, "W": 0, "E": 0}
 
-__stdout = sys.stdout
 __preferred_encoding = locale.getpreferredencoding()
 if sys.version_info[0] < 3:
-    import codecs
     __stdout = codecs.getwriter(__preferred_encoding)(sys.stdout, 'replace')
 
+    def __print(s):
+        if isinstance(s, str):
+            s = s.decode(__preferred_encoding, 'replace')
+        print(s, file=__stdout)
+else:
+    __stdout = codecs.getwriter(__preferred_encoding)(
+        sys.stdout.buffer, 'replace')
 
-def __print(s):
-    if isinstance(s, str) and hasattr(s, 'decode'):
-        s = s.decode(__preferred_encoding, 'replace')
-    print(s, file=__stdout)
+    def __print(s):
+        print(s, file=__stdout)
 
 
 def printInfo(pkg, reason, *details):
