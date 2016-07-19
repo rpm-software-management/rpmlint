@@ -796,9 +796,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         cmd = getstatusoutput(
                             'env LC_ALL=C %s %s | gtbl | '
                             'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
-                            '-P-c -mandoc -w%s >/dev/null' %
+                            '-P-c -mandoc -w%s >%s' %
                             (catcmd(f), shquote(pkgfile.path),
-                             shquote(man_warn_category)),
+                             shquote(man_warn_category), os.devnull),
                             shell=True)
                         for line in cmd[1].split("\n"):
                             res = man_warn_regex.search(line)
