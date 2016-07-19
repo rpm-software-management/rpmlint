@@ -15,7 +15,8 @@ def _testpath():
 
 
 TEST_CONFIG = os.path.join(_testpath(), "test.config")
-exec(compile(open(TEST_CONFIG).read(), TEST_CONFIG, 'exec'))
+with open(TEST_CONFIG) as f:
+    exec(compile(f.read(), TEST_CONFIG, 'exec'))
 
 currently_testing = 0
 output = []
