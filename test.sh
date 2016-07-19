@@ -3,6 +3,8 @@
 export PYTHONPATH=$(pwd)/tools:$(pwd)
 export TESTPATH="$(pwd)/test/"
 : ${PYTHON:=python} ${PYTEST:=py.test} ${FLAKE8:=flake8}
+: ${PYTHONWARNINGS:=all}
+export PYTHONWARNINGS
 
 echo
 echo "Please ignore the possibly occurring output like this:"
@@ -29,6 +31,8 @@ test $rc -eq 0 -o $rc -eq 64 || exit $rc
 
 echo "$PYTEST tests"
 $PYTEST -v || exit $?
+
+unset PYTHONWARNINGS
 
 echo "$FLAKE8 tests"
 $FLAKE8 . ./rpmdiff ./rpmlint || exit $?
