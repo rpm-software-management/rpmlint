@@ -11,13 +11,18 @@
 
 import getopt
 import glob
-import imp
 import locale
 import os
 import re
 import stat
 import sys
 import tempfile
+
+try:
+    import importlib
+except:  # Python < 2.7
+    importlib = None
+    import imp
 
 # 1 instead of 0 here because we want the script dir to be looked up first,
 # e.g. for in-place from tarball or SCM checkout
@@ -71,11 +76,12 @@ def loadCheck(name):
     loaded = sys.modules.get(name)
     if loaded:
         return loaded
-    (fobj, pathname, description) = imp.find_module(name)
-    try:
-        imp.load_module(name, fobj, pathname, description)
-    finally:
-        fobj.close()
+    if importlib:
+        importlib.import_module(name)
+    else:
+        (fobj, pathname, description) = imp.find_module(name)
+        with fobj:
+            imp.load_module(name, fobj, pathname, description)
 
 
 #############################################################################
