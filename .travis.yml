@@ -1,30 +1,18 @@
-language: python
+language: generic
 
-# python-rpm is not available through pip, so we get it with apt-get
-# and configure the virtualenv to use system site packages. As long as
-# that's the case, we need to stick with the system installed Python
-# versions only. Unfortunately as python3-rpm is not available even
-# for Trusty, that means 2.7 only for now.
+sudo: required
 
-dist: trusty
+services:
+  - docker
 
-python:
-  - "2.7"
+env:
+  #- DIST=centos6 PYTHON=python PYTEST=py.test FLAKE8=true
+  #- DIST=ubuntu14 PYTHON=python PYTEST=py.test FLAKE8=true
+  #- DIST=fedora24 PYTHON=python3 PYTEST=py.test-3 FLAKE8=python3-flake8
+  - DIST=fedoradev PYTHON=python3 PYTEST=py.test FLAKE8=flake8
 
-virtualenv:
-  system_site_packages: true
-
-addons:
-  apt:
-    packages:
-      - python-enchant
-      - python-magic
-
-install:
-  # https://github.com/travis-ci/apt-package-whitelist/issues/1696
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq python-rpm rpm rpm2cpio
-  - pip install pytest flake8 flake8-import-order hacking
+before_install:
+  - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - make check
+  - docker run $DIST make check PYTHON=$PYTHON PYTEST=$PYTEST FLAKE8=$FLAKE8
