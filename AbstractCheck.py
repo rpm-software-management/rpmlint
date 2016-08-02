@@ -7,6 +7,7 @@
 # Purpose       : Abstract class to hold all the derived classes.
 #############################################################################
 
+import contextlib
 import re
 try:
     import urllib2
@@ -83,8 +84,8 @@ class AbstractCheck(object):
             printWarning(pkg, 'invalid-url', '%s:' % tag, url, errstr)
         info = None
         if res:
-            info = res.info()
-            res.close()
+            with contextlib.closing(res):
+                info = res.info()
         return info
 
 
