@@ -100,5 +100,3 @@ installed, do not include the file in the binary package.''',
 )
 
 # DocFilesCheck.py ends here
-
-# ex: ts=4 sw=4 et

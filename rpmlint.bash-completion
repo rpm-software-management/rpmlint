@@ -88,4 +88,4 @@ complete -F _rpmdiff -o filenames rpmdiff
 # Local variables:
 # mode: shell-script
 # End:
-# ex: ts=4 sw=4 et filetype=sh
+# ex: filetype=sh

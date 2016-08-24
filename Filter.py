@@ -161,5 +161,3 @@ def setRawOut(file):
     _rawout = open(file, "w")
 
 # Filter.py ends here
-
-# ex: ts=4 sw=4 et

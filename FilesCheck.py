@@ -1385,5 +1385,3 @@ for packages to install files in this directory.''' % i)
 
 
 # FilesCheck.py ends here
-
-# ex: ts=4 sw=4 et

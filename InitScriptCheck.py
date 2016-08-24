@@ -275,5 +275,3 @@ in order for it to run at boot time.''',
 )
 
 # InitScriptCheck.py ends here
-
-# ex: ts=4 sw=4 et

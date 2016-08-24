@@ -728,5 +728,3 @@ implementations only strip if the permission is 0755).'''
 )
 
 # BinariesCheck.py ends here
-
-# ex: ts=4 sw=4 et

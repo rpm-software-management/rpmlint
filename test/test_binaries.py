@@ -26,5 +26,3 @@ class TestForbiddenCCalls(Tools):
         for package in ['ngircd']:
             out = self._rpm_test_output(os.path.join('binary', package))
             assert 'crypto-policy-non-compliance' not in "\n".join(out)
-
-# ex: ts=4 sw=4 et

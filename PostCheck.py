@@ -233,5 +233,3 @@ and clean up the scriptlet contents if appropriate.''',
 )
 
 # PostCheck.py ends here
-
-# ex: ts=4 sw=4 et

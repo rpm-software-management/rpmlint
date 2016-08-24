@@ -79,5 +79,3 @@ you can compress this file in the %%install section of the spec file.'''
 )
 
 # DistributionCheck.py ends here
-
-# ex: ts=4 sw=4 et

@@ -76,5 +76,3 @@ addDetails(
 '''the .desktop file is for a file not present in the package. You
 should check the requires or see if this is not a error''',
 )
-
-# ex: ts=4 sw=4 et

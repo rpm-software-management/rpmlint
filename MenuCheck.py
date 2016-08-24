@@ -452,5 +452,3 @@ sizes of the icon from being found.''',
 )
 
 # MenuCheck.py ends here
-
-# ex: ts=4 sw=4 et

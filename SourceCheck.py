@@ -63,5 +63,3 @@ permissions. Usually, a file should have 0644 permissions.''',
 )
 
 # SourceCheck.py ends here
-
-# ex: ts=4 sw=4 et

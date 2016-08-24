@@ -1014,5 +1014,3 @@ if __name__ == '__main__':
             print('Obsoletes: %s' % pkg.obsoletes())
 
 # Pkg.py ends here
-
-# ex: ts=4 sw=4 et

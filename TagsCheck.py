@@ -1146,5 +1146,3 @@ for i in ("obsoletes", "conflicts", "provides", "recommends", "suggests",
                % i.capitalize())
 
 # TagsCheck.py ends here
-
-# ex: ts=4 sw=4 et

@@ -34,5 +34,3 @@ addDetails(
 'use-old-pam-stack',
 '''Update pam file to use include instead of pam_stack.''',
 )
-
-# ex: ts=4 sw=4 et

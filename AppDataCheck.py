@@ -43,5 +43,3 @@ addDetails(
 'invalid-appdata-file',
 '''appdata file is not valid, check with %s''' % (" ".join(appdata_checker)),
 )
-
-# ex: ts=4 sw=4 et

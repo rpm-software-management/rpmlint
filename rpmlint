@@ -377,5 +377,3 @@ if __name__ == '__main__':
     main()
 
 # rpmlint ends here
-
-# ex: ts=4 sw=4 et

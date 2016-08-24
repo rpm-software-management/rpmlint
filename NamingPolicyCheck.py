@@ -105,5 +105,3 @@ check.add_check('ocaml', '^ocaml(-|$)', '/usr/lib(64)?/ocaml/')
 #         ruby
 
 # NamingPolicyCheck.py ends here
-
-# ex: ts=4 sw=4 et

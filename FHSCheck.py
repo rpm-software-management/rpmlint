@@ -70,5 +70,3 @@ directories are:
 )
 
 # FHSCheck.py ends here
-
-# ex: ts=4 sw=4 et

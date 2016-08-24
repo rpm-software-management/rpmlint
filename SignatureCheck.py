@@ -51,5 +51,3 @@ See the rpm --import option for more information.''',
 )
 
 # SignatureCheck.py ends here
-
-# ex: ts=4 sw=4 et

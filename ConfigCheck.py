@@ -52,5 +52,3 @@ A way to resolve this is to put the following in your SPEC file:
 )
 
 # ConfigCheck.py ends here
-
-# ex: ts=4 sw=4 et

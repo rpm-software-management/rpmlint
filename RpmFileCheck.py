@@ -41,5 +41,3 @@ addDetails(
 '''This filename is too long to fit on a joliet filesystem (limit is 64 unicode
 chars).''',
 )
-
-# ex: ts=4 sw=4 et

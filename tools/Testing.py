@@ -51,5 +51,3 @@ def getTestedPackage(name):
 def getTestedSpecPackage(name):
     pkg_path = glob.glob(os.path.join(_testpath(), name) + ".spec")[0]
     return Pkg.FakePkg(pkg_path)
-
-# ex: ts=4 sw=4 et

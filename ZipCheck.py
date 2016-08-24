@@ -103,5 +103,3 @@ in some situations.''',
 )
 
 # ZipCheck.py ends here
-
-# ex: ts=4 sw=4 et

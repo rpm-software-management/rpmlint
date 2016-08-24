@@ -197,5 +197,3 @@ installable if XX is not in %_install_langs.""",
 )
 
 # I18NCheck.py ends here
-
-# ex: ts=4 sw=4 et
