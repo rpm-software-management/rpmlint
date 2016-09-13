@@ -599,6 +599,8 @@ run at package postinstall phase.)''',
 '''The listed shared libraries contain object code that was compiled
 without -fPIC. All object code in shared libraries should be
 recompiled separately from the static libraries with the -fPIC option.
+Use the ``eu-findtextrel'' command on a library with debugging symbols
+to list code compiled without -fPIC.
 
 Another common mistake that causes this problem is linking with
 ``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
