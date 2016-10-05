@@ -207,7 +207,9 @@ class BinaryInfo(object):
 
             # check if chroot is near chdir (since otherwise, chroot is called
             # without chdir)
-            if self.chroot and self.chdir:
+            # Currently this implementation works only on x86_64 due to reliance
+            # on x86_64 specific assembly. Skip it on other architectures
+            if pkg.arch == 'x86_64' and self.chroot and self.chdir:
                 p = subprocess.Popen(
                     ['env', 'LC_ALL=C', 'objdump', '-d', path],
                     stdout=subprocess.PIPE, bufsize=-1)
@@ -535,7 +537,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'missing-call-to-setgroups-before-setuid',
                            fname)
 
-            if bin_info.chroot:
+            if pkg.arch == 'x86_64' and bin_info.chroot:
                 if not bin_info.chdir or not bin_info.chroot_near_chdir:
                     printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
 
