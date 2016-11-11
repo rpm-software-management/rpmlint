@@ -35,6 +35,7 @@ $PYTEST -v || exit $?
 unset PYTHONWARNINGS
 
 echo "$FLAKE8 tests"
+$FLAKE8 --version
 $FLAKE8 . ./rpmdiff ./rpmlint || exit $?
 
 echo "man page tests"
