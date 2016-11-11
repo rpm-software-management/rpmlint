@@ -43,6 +43,7 @@ class SourceCheck(AbstractCheck.AbstractCheck):
             if perm not in valid_src_perms:
                 printWarning(pkg, 'strange-permission', fname, "%o" % perm)
 
+
 check = SourceCheck()
 
 addDetails(

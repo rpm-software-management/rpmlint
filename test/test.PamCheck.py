@@ -22,5 +22,6 @@ class TestPamCheck(unittest.TestCase):
                          ['PamCheck.i586: E: use-old-pam-stack '
                           '/etc/pam.d/PamCheck (line 1)'])
 
+
 if __name__ == '__main__':
     unittest.main()

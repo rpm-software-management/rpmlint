@@ -37,6 +37,7 @@ class SignatureCheck(AbstractCheck.AbstractCheck):
             if not SignatureCheck.pgp_regex.search(res[1]):
                 printError(pkg, "no-signature")
 
+
 # Create an object to enable the auto registration of the test
 check = SignatureCheck()
 

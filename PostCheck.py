@@ -190,6 +190,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
         elif prog not in empty_shells and prog in valid_shells:
             printWarning(pkg, 'empty-' + tag)
 
+
 # Create an object to enable the auto registration of the test
 check = PostCheck()
 

@@ -37,6 +37,7 @@ def re_tag_compile(tag):
     r = "^%s\s*:\s*(\S.*?)\s*$" % tag
     return re.compile(r, re.IGNORECASE)
 
+
 patch_regex = re_tag_compile('Patch(\d*)')
 applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
@@ -606,6 +607,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                                   url, cmd5))
                     elif srctype == "Source" and tarball_regex.search(url):
                         printWarning(pkg, 'invalid-url', '%s:' % tag, url)
+
 
 # Create an object to enable the auto registration of the test
 check = SpecCheck()

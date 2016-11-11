@@ -108,6 +108,7 @@ def getOption(name, default=""):
     except:
         return default
 
+
 # List of filters
 _filters = []
 _filters_re = None
@@ -130,6 +131,7 @@ def removeFilter(s):
     else:
         _filters_re = None
 
+
 _scoring = {}
 
 
@@ -139,6 +141,7 @@ def setBadness(s, score):
 
 def badness(s):
     return _scoring.get(s, 0)
+
 
 _non_named_group_re = re.compile('[^\\](\()[^:]')
 

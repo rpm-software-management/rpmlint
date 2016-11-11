@@ -308,6 +308,7 @@ def peek(filename, pkg, length=1024):
 
     return (chunk, istext)
 
+
 # See Python sources for a full list of the values here.
 # http://hg.python.org/cpython/file/tip/Lib/importlib/_bootstrap_external.py
 # http://hg.python.org/cpython/file/2.7/Python/import.c
@@ -1003,6 +1004,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, "duplicate-executable", exe, paths)
             if exe not in man_basenames:
                 printWarning(pkg, "no-manual-page-for-binary", exe)
+
 
 # Create an object to enable the auto registration of the test
 check = FilesCheck()

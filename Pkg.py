@@ -63,6 +63,7 @@ def warn(s):
     """
     print(s, file=sys.stderr)
 
+
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
 # to do the right thing with those versions and packages built with other
 # rpm versions
@@ -141,6 +142,7 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
         sts = 0
     return sts, text
 
+
 bz2_regex = re.compile('\.t?bz2?$')
 xz_regex = re.compile('\.(t[xl]z|xz|lzma)$')
 
@@ -194,6 +196,7 @@ def mktemp():
     tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
     tmpfile = os.fdopen(tmpfd, 'w')
     return tmpfile, tmpname
+
 
 slash_regex = re.compile('/+')
 slashdot_regex = re.compile('/(\.(/|$))+')

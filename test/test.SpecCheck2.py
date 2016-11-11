@@ -17,5 +17,6 @@ class TestSpecCheck(unittest.TestCase):
         out = "\n".join(Testing.getOutput())
         self.assertFalse("patch-not-applied" in out)
 
+
 if __name__ == '__main__':
     unittest.main()

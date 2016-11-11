@@ -60,7 +60,6 @@ def is_valid_lang(lang):
         return False
 
     # TODO: don't accept all lang_COUNTRY combinations
-
     country = lang[ix + 1:]
     if country not in COUNTRIES:
         return False
@@ -156,6 +155,7 @@ class I18NCheck(AbstractCheck.AbstractCheck):
 
 def is_prefix(p, s):
     return len(p) <= len(s) and p == s[:len(p)]
+
 
 # Create an object to enable the auto registration of the test
 check = I18NCheck()

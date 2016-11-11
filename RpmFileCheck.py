@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # check the rpm file for various errors.
-
+#
 # Copyright (C) 2006 Michael Scherer <misc@zarb.org>
 #                    Ville Skyttä <ville.skytta@iki.fi>
 #
@@ -33,6 +33,7 @@ class RpmFileCheck(AbstractCheck.AbstractCheck):
         rpmfile_name = os.path.basename(pkg.filename)
         if len(rpmfile_name) > 64:
             printWarning(pkg, 'filename-too-long-for-joliet', rpmfile_name)
+
 
 check = RpmFileCheck()
 

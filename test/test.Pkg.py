@@ -30,5 +30,6 @@ class TestPkg(unittest.TestCase):
         ):
             self.assertFalse(Pkg.rangeCompare(req, prov))
 
+
 if __name__ == '__main__':
     unittest.main()

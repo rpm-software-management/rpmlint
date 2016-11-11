@@ -29,6 +29,7 @@ class ConfigCheck(AbstractCheck.AbstractCheck):
             if c not in noreplace_files:
                 printWarning(pkg, "conffile-without-noreplace-flag", c)
 
+
 # Create an object to enable the auto registration of the test
 check = ConfigCheck()
 

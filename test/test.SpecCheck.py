@@ -31,5 +31,6 @@ class TestSpecCheck(unittest.TestCase):
                         not in out)
         self.assertTrue("setup-not-quiet" in out)
 
+
 if __name__ == '__main__':
     unittest.main()

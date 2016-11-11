@@ -39,6 +39,7 @@ class LSBCheck(AbstractCheck.AbstractCheck):
         if release and not version_regex.search(release):
                 printError(pkg, 'non-lsb-compliant-release', release)
 
+
 # Create an object to enable the auto registration of the test
 check = LSBCheck()
 

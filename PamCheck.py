@@ -28,6 +28,7 @@ class PamCheck(AbstractCheck.AbstractFilesCheck):
             printError(pkg, 'use-old-pam-stack', filename,
                        '(line %s)' % ", ".join(lines))
 
+
 check = PamCheck()
 
 addDetails(

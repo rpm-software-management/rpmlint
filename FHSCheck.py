@@ -49,6 +49,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                         printWarning(pkg, "non-standard-dir-in-var", d)
                         var_list.append(d)
 
+
 # Create an object to enable the auto registration of the test
 check = FHSCheck()
 

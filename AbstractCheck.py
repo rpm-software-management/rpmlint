@@ -106,6 +106,7 @@ class AbstractFilesCheck(AbstractCheck):
         """
         raise NotImplementedError('check must be implemented in subclass')
 
+
 addDetails(
 'invalid-url',
 '''The value should be a valid, public HTTP, HTTPS, or FTP URL.''',

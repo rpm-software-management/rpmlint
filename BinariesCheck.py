@@ -291,6 +291,7 @@ class BinaryInfo(object):
                         else:
                             in_unused = False
 
+
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile('[^.][0-9]')
@@ -561,6 +562,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
         if has_usr_lib_file and not binary_in_usr_lib:
             printWarning(pkg, 'only-non-binary-in-usr-lib')
+
 
 # Create an object to enable the auto registration of the test
 check = BinariesCheck()

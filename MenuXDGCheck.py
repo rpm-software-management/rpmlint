@@ -63,6 +63,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
                 printWarning(pkg, 'desktopfile-without-binary', filename,
                              binary)
 
+
 check = MenuXDGCheck()
 
 addDetails(

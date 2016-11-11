@@ -13,7 +13,6 @@ import re
 import AbstractCheck
 from Filter import addDetails, printWarning
 
-
 # could be added.
 #
 # zope
@@ -69,6 +68,7 @@ class NamingPolicyCheck(AbstractCheck.AbstractCheck):
         except NamingPolicyNotAppliedException:
             printWarning(pkg, c['pkg_name'] + '-naming-policy-not-applied', f)
 
+
 check = NamingPolicyCheck()
 
 #
@@ -87,7 +87,6 @@ check = NamingPolicyCheck()
 # the module is far from being perfect since you need to check this file for
 # the naming file.
 # if somone as a elegant solution, I will be happy to implement and test it.
-
 
 check.add_check('xmms', '^xmms(-|$)', '^/usr/lib(64)?/xmms/')
 check.add_check('python', '^python(-|$)', '^/usr/lib(64)?/python[1-9](-[1-9])?')
