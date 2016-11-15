@@ -79,6 +79,7 @@ def resetChecks():
 
     _checks = []
 
+
 # handle the list of directories to look for checks
 
 _dirs = ["/usr/share/rpmlint"]
@@ -92,6 +93,7 @@ def addCheckDir(dir):
 
 def checkDirs():
     return _dirs
+
 
 # handle options
 
