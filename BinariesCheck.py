@@ -234,6 +234,8 @@ class BinaryInfo(object):
                 if p.wait() and not self.chroot_near_chdir:
                     printWarning(pkg, 'binaryinfo-objdump-failed', file)
                     self.chroot_near_chdir = True  # avoid false positive
+                elif chroot_index == -99 and chdir_index == -99:
+                    self.chroot_near_chdir = True  # avoid false positive
 
         else:
             self.readelf_error = True
