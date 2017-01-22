@@ -406,8 +406,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     provs = Pkg.parse_deps(res.group(1))
                     for prov in unversioned(provs):
-                        printWarning(pkg, 'unversioned-explicit-provides',
-                                     prov)
+                        if not prov.startswith('/'):
+                            printWarning(pkg, 'unversioned-explicit-provides',
+                                         prov)
                         if compop_regex.search(prov):
                             printWarning(pkg,
                                          'comparison-operator-in-deptoken',
@@ -417,8 +418,9 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 if res:
                     obses = Pkg.parse_deps(res.group(1))
                     for obs in unversioned(obses):
-                        printWarning(pkg, 'unversioned-explicit-obsoletes',
-                                     obs)
+                        if not obs.startswith('/'):
+                            printWarning(pkg, 'unversioned-explicit-obsoletes',
+                                         obs)
                         if compop_regex.search(obs):
                             printWarning(pkg,
                                          'comparison-operator-in-deptoken',

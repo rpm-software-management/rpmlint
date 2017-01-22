@@ -25,10 +25,12 @@ class TestSpecCheck(unittest.TestCase):
                         in out)
         self.assertTrue("unversioned-explicit-provides versioned-provides"
                         not in out)
+        self.assertTrue("unversioned-explicit-provides /" not in out)
         self.assertTrue("unversioned-explicit-obsoletes unversioned-obsoletes"
                         in out)
         self.assertTrue("unversioned-explicit-obsoletes versioned-obsoletes"
                         not in out)
+        self.assertTrue("unversioned-explicit-obsoletes /" not in out)
         self.assertTrue("setup-not-quiet" in out)
 
 

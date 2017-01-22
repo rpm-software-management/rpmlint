@@ -17,6 +17,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides:       unversioned-provides, versioned-provides = 1.0
 Obsoletes:      versioned-obsoletes < 2.0
 Obsoletes:      unversioned-obsoletes
+Obsoletes:      /usr/bin/unversioned-but-filename
+Provides:       /sbin/another-unversioned-but-filename
 
 %description
 SpecCheck test.
