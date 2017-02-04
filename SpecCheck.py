@@ -42,6 +42,7 @@ patch_regex = re_tag_compile('Patch(\d*)')
 applied_patch_regex = re.compile("^%patch(\d*)")
 applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
+applied_patch_i_regex = re.compile(r"(?:%\{?__)?patch\}?.*?\s+(?:<|-i)\s+%\{PATCH(\d+)\}")
 source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
 obsolete_tags_regex = re_tag_compile('(?:Serial|Copyright)')
 buildroot_regex = re_tag_compile('BuildRoot')
@@ -295,6 +296,13 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                     applied_patches.append(pnum)
                     if ifarch_depth > 0:
                         applied_patches_ifarch.append(pnum)
+                else:
+                    res = applied_patch_i_regex.search(line)
+                    if res:
+                        pnum = int(res.group(1))
+                        applied_patches.append(pnum)
+                        if ifarch_depth > 0:
+                            applied_patches_ifarch.append(pnum)
             if not res and not source_dir:
                 res = source_dir_regex.search(line)
                 if res:
