@@ -460,6 +460,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printWarning(pkg, ec, fname,
                              BinaryInfo.forbidden_functions[ec]['f_name'])
 
+                if not (pkgfile.mode & stat.S_IEXEC):
+                    printWarning(pkg, 'shared-lib-not-executable', fname)
+
             # rpath ?
             if bin_info.rpath:
                 for p in bin_info.rpath:
@@ -693,6 +696,11 @@ error, reporting it to the user, closing files properly, and cleaning up any
 state that the program has. It is preferred for the library to return an
 actual error code and let the calling program decide how to handle the
 situation.''',
+
+'shared-lib-not-executable',
+'''This library doesn't have the executable bit set. Without this bit set,
+rpm for instance won't be able identify the file as a library and not
+generate dependencies or strip debug symbols from it.''',
 
 'ocaml-mixed-executable',
 '''Executables built with ocamlc -custom are deprecated.  Packagers should ask
