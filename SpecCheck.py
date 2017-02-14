@@ -153,7 +153,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, "invalid-spec-name")
 
             # check content of spec file
+            if pkg.isSource():
+                oldvals = { '_icondir' : None, '_patchdir' : None, '_sourcedir' : None, '_specdir' : None }
+                for key in oldvals.keys():
+                    oldvals[key] = rpm.expandMacro("%" + key)
+                    rpm.addMacro(key, pkg.dirName())
             self.check_spec(pkg, self._spec_file)
+            if pkg.isSource():
+                for key in oldvals.keys():
+                    rpm.addMacro(key, oldvals[key])
 
     def check_spec(self, pkg, spec_file):
         self._spec_file = spec_file
