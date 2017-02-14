@@ -288,6 +288,7 @@ def main():
         print(textdiff)
     sys.exit(int(d.differs()))
 
+
 if __name__ == '__main__':
     main()
 
