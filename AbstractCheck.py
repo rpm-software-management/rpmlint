@@ -18,7 +18,7 @@ import Config
 from Filter import addDetails, printInfo, printWarning
 
 # Note: do not add any capturing parentheses here
-macro_regex = re.compile('%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
+macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
 
 
 class _HeadRequest(urllib2.Request):

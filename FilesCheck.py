@@ -178,58 +178,58 @@ DEFAULT_DISALLOWED_DIRS = (
     '/var/tmp',
 )
 
-sub_bin_regex = re.compile('^(/usr)?/s?bin/\S+/')
-backup_regex = re.compile('(~|\#[^/]+\#|\.orig|\.rej)$')
-compr_regex = re.compile('\.(gz|z|Z|zip|bz2|lzma|xz)$')
-absolute_regex = re.compile('^/([^/]+)')
-absolute2_regex = re.compile('^/?([^/]+)')
-points_regex = re.compile('^\.\./(.*)')
-doc_regex = re.compile('^/usr(/share|/X11R6)?/(doc|man|info)/')
-bin_regex = re.compile('^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
-includefile_regex = re.compile('\.(c|h)(pp|xx)?$', re.IGNORECASE)
-develfile_regex = re.compile('\.(a|cmxa?|mli?|gir)$')
-buildconfigfile_regex = re.compile('(\.pc|/bin/.+-config)$')
+sub_bin_regex = re.compile(r'^(/usr)?/s?bin/\S+/')
+backup_regex = re.compile(r'(~|\#[^/]+\#|\.orig|\.rej)$')
+compr_regex = re.compile(r'\.(gz|z|Z|zip|bz2|lzma|xz)$')
+absolute_regex = re.compile(r'^/([^/]+)')
+absolute2_regex = re.compile(r'^/?([^/]+)')
+points_regex = re.compile(r'^\.\./(.*)')
+doc_regex = re.compile(r'^/usr(/share|/X11R6)?/(doc|man|info)/')
+bin_regex = re.compile(r'^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
+includefile_regex = re.compile(r'\.(c|h)(pp|xx)?$', re.IGNORECASE)
+develfile_regex = re.compile(r'\.(a|cmxa?|mli?|gir)$')
+buildconfigfile_regex = re.compile(r'(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
-buildconfig_rpath_regex = re.compile('(?:-rpath|Wl,-R)\\b')
-sofile_regex = re.compile('/lib(64)?/(.+/)?lib[^/]+\.so$')
-devel_regex = re.compile('(.*)-(debug(info)?|devel|headers|source|static)$')
-debuginfo_package_regex = re.compile('-debug(info)?$')
-lib_regex = re.compile('lib(64)?/lib[^/]*(\.so\..*|-[0-9.]+\.so)')
-ldconfig_regex = re.compile('^[^#]*ldconfig', re.MULTILINE)
-depmod_regex = re.compile('^[^#]*depmod', re.MULTILINE)
-install_info_regex = re.compile('^[^#]*install-info', re.MULTILINE)
-perl_temp_file_regex = re.compile('.*perl.*/(\.packlist|perllocal\.pod)$')
-scm_regex = re.compile('/CVS/[^/]+$|/\.(bzr|cvs|git|hg)ignore$|/\.hgtags$|/\.(bzr|git|hg|svn)/|/(\.arch-ids|{arch})/')
-games_path_regex = re.compile('^/usr(/lib(64)?)?/games/')
+buildconfig_rpath_regex = re.compile(r'(?:-rpath|Wl,-R)\b')
+sofile_regex = re.compile(r'/lib(64)?/(.+/)?lib[^/]+\.so$')
+devel_regex = re.compile(r'(.*)-(debug(info)?|devel|headers|source|static)$')
+debuginfo_package_regex = re.compile(r'-debug(info)?$')
+lib_regex = re.compile(r'lib(64)?/lib[^/]*(\.so\..*|-[0-9.]+\.so)')
+ldconfig_regex = re.compile(r'^[^#]*ldconfig', re.MULTILINE)
+depmod_regex = re.compile(r'^[^#]*depmod', re.MULTILINE)
+install_info_regex = re.compile(r'^[^#]*install-info', re.MULTILINE)
+perl_temp_file_regex = re.compile(r'.*perl.*/(\.packlist|perllocal\.pod)$')
+scm_regex = re.compile(r'/CVS/[^/]+$|/\.(bzr|cvs|git|hg)ignore$|/\.hgtags$|/\.(bzr|git|hg|svn)/|/(\.arch-ids|{arch})/')
+games_path_regex = re.compile(r'^/usr(/lib(64)?)?/games/')
 games_group_regex = re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 dangling_exceptions = Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)
-logrotate_regex = re.compile('^/etc/logrotate\.d/(.*)')
+logrotate_regex = re.compile(r'^/etc/logrotate\.d/(.*)')
 module_rpms_ok = Config.getOption('KernelModuleRPMsOK', True)
-kernel_modules_regex = re.compile('^(?:/usr)/lib/modules/([0-9]+\.[0-9]+\.[0-9]+[^/]*?)/')
-kernel_package_regex = re.compile('^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
-normal_zero_length_regex = re.compile('^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
-perl_regex = re.compile('^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
-python_regex = re.compile('^/usr/lib(?:64)?/python([.0-9]+)/')
-python_bytecode_regex_pep3147 = re.compile('^(.*)/__pycache__/(.*?)\.([^.]+)(\.opt-[12])?\.py[oc]$')
-python_bytecode_regex = re.compile('^(.*)(\.py[oc])$')
+kernel_modules_regex = re.compile(r'^(?:/usr)/lib/modules/([0-9]+\.[0-9]+\.[0-9]+[^/]*?)/')
+kernel_package_regex = re.compile(r'^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
+normal_zero_length_regex = re.compile(r'^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$')
+perl_regex = re.compile(r'^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
+python_regex = re.compile(r'^/usr/lib(?:64)?/python([.0-9]+)/')
+python_bytecode_regex_pep3147 = re.compile(r'^(.*)/__pycache__/(.*?)\.([^.]+)(\.opt-[12])?\.py[oc]$')
+python_bytecode_regex = re.compile(r'^(.*)(\.py[oc])$')
 python_default_version = Config.getOption('PythonDefaultVersion', None)
 perl_version_trick = Config.getOption('PerlVersionTrick', True)
-log_regex = re.compile('^/var/log/[^/]+$')
-lib_path_regex = re.compile('^(/usr(/X11R6)?)?/lib(64)?')
-lib_package_regex = re.compile('^(lib|.+-libs)')
-hidden_file_regex = re.compile('/\.[^/]*$')
-manifest_perl_regex = re.compile('^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile(b'^#!\s*(\S+)(.*?)$', re.M)
-interpreter_regex = re.compile('^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
-script_regex = re.compile('^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
-sourced_script_regex = re.compile('^/etc/(bash_completion\.d|profile\.d)/')
+log_regex = re.compile(r'^/var/log/[^/]+$')
+lib_path_regex = re.compile(r'^(/usr(/X11R6)?)?/lib(64)?')
+lib_package_regex = re.compile(r'^(lib|.+-libs)')
+hidden_file_regex = re.compile(r'/\.[^/]*$')
+manifest_perl_regex = re.compile(r'^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
+shebang_regex = re.compile(rb'^#!\s*(\S+)(.*?)$', re.M)
+interpreter_regex = re.compile(r'^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
+script_regex = re.compile(r'^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
+sourced_script_regex = re.compile(r'^/etc/(bash_completion\.d|profile\.d)/')
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
-skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', '\.(?:rtf|x?html?|svg|ml[ily]?)$'), re.IGNORECASE)
-meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', '^(bundle|task)-'))
+skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', r'\.(?:rtf|x?html?|svg|ml[ily]?)$'), re.IGNORECASE)
+meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', r'^(bundle|task)-'))
 filesys_packages = ['filesystem']  # TODO: make configurable?
-quotes_regex = re.compile('[\'"]+')
-start_certificate_regex = re.compile('^-----BEGIN CERTIFICATE-----$')
-start_private_key_regex = re.compile('^----BEGIN PRIVATE KEY-----$')
+quotes_regex = re.compile(r'[\'"]+')
+start_certificate_regex = re.compile(r'^-----BEGIN CERTIFICATE-----$')
+start_private_key_regex = re.compile(r'^----BEGIN PRIVATE KEY-----$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
@@ -242,8 +242,8 @@ standard_users = Config.getOption('StandardUsers', DEFAULT_STANDARD_USERS)
 
 disallowed_dirs = Config.getOption('DisallowedDirs', DEFAULT_DISALLOWED_DIRS)
 
-non_readable_regexs = (re.compile('^/var/log/'),
-                       re.compile('^/etc/(g?shadow-?|securetty)$'))
+non_readable_regexs = (re.compile(r'^/var/log/'),
+                       re.compile(r'^/etc/(g?shadow-?|securetty)$'))
 
 man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man[^/]+/(.+)\.[1-9n]')
 man_warn_regex = re.compile(r'^([^:]+:)\d+:\s*')
@@ -256,8 +256,8 @@ man_nowarn_regex = re.compile(
     r'(can\'t break|cannot adjust) line')
 man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 
-fsf_license_regex = re.compile(b'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
-fsf_wrong_address_regex = re.compile(b'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
+fsf_license_regex = re.compile(rb'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
+fsf_wrong_address_regex = re.compile(rb'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
 
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 
@@ -522,7 +522,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             if link != '':
                 ext = compr_regex.search(link)
                 if ext:
-                    if not re.compile('\.' + ext.group(1) + '$').search(f):
+                    if not re.compile(r'\.%s$' % ext.group(1)).search(f):
                         printError(pkg, 'compressed-symlink-with-wrong-ext',
                                    f, link)
 
@@ -614,9 +614,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if res:
                     kernel_version = res.group(1)
                     kernel_version_regex = re.compile(
-                        '\\bdepmod\s+-a.*F\s+/boot/System\.map-' +
-                        re.escape(kernel_version) + '\\b.*\\b' +
-                        re.escape(kernel_version) + '\\b',
+                        r'\bdepmod\s+-a.*F\s+/boot/System\.map-' +
+                        re.escape(kernel_version) + r'\b.*\b' +
+                        re.escape(kernel_version) + r'\b',
                         re.MULTILINE | re.DOTALL)
 
                     if not postin or not depmod_regex.search(postin):

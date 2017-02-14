@@ -398,7 +398,7 @@ BAD_WORDS = {
 }
 
 DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$',
-                            '^package$', '^libsafe\.so\.')
+                            '^package$', r'^libsafe\.so\.')
 
 VALID_GROUPS = Config.getOption('ValidGroups', None)
 if VALID_GROUPS is None:  # get defaults from rpm package only if it's not set
@@ -406,25 +406,25 @@ if VALID_GROUPS is None:  # get defaults from rpm package only if it's not set
 VALID_LICENSES = Config.getOption('ValidLicenses', DEFAULT_VALID_LICENSES)
 INVALID_REQUIRES = map(re.compile, Config.getOption('InvalidRequires', DEFAULT_INVALID_REQUIRES))
 packager_regex = re.compile(Config.getOption('Packager'))
-changelog_version_regex = re.compile('[^>]([^ >]+)\s*$')
-changelog_text_version_regex = re.compile('^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
+changelog_version_regex = re.compile(r'[^>]([^ >]+)\s*$')
+changelog_text_version_regex = re.compile(r'^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 release_ext = Config.getOption('ReleaseExtension')
 extension_regex = release_ext and re.compile(release_ext)
 use_version_in_changelog = Config.getOption('UseVersionInChangelog', True)
-devel_number_regex = re.compile('(.*?)([0-9.]+)(_[0-9.]+)?-devel')
-lib_devel_number_regex = re.compile('^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+devel_number_regex = re.compile(r'(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 invalid_url_regex = re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
-lib_package_regex = re.compile('(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
-leading_space_regex = re.compile('^\s+')
-license_regex = re.compile('\(([^)]+)\)|\s(?:and|or)\s')
-invalid_version_regex = re.compile('([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
+lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
+leading_space_regex = re.compile(r'^\s+')
+license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or)\s')
+invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
-forbidden_words_regex = re.compile('(' + Config.getOption('ForbiddenWords') + ')', re.IGNORECASE)
+forbidden_words_regex = re.compile(r'(%s)' % Config.getOption('ForbiddenWords'), re.IGNORECASE)
 valid_buildhost_regex = re.compile(Config.getOption('ValidBuildHost'))
 use_epoch = Config.getOption('UseEpoch', False)
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = Config.getOption('MaxLineLength', 79)
-tag_regex = re.compile('^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
+tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
 sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
@@ -515,7 +515,7 @@ def spell_check(pkg, str, fmt, lang, ignored):
 
     if not enchant or not dict_found:
         for seq in str.split():
-            for word in re.split('[^a-z]+', seq.lower()):
+            for word in re.split(r'[^a-z]+', seq.lower()):
                 if len(word) == 0:
                     continue
                 correct = BAD_WORDS.get(word)
@@ -643,7 +643,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                     base_or_libs = base + '/' + base + '-libs/lib' + base
                     # try to match *%_isa as well (e.g. "(x86-64)", "(x86-32)")
                     base_or_libs_re = re.compile(
-                        '^(lib)?%s(-libs)?(\(\w+-\d+\))?$' % re.escape(base))
+                        r'^(lib)?%s(-libs)?(\(\w+-\d+\))?$' % re.escape(base))
                     for d in deps:
                         if base_or_libs_re.match(d[0]):
                             dep = d
@@ -919,8 +919,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if res and Config.getOption('ForbiddenWords'):
             printWarning(pkg, 'summary-use-invalid-word', lang, res.group(1))
         if pkg.name:
-            sepchars = '[\s' + punct + ']'
-            res = re.search('(?:^|\s)(%s)(?:%s|$)' %
+            sepchars = r'[\s%s]' % punct
+            res = re.search(r'(?:^|\s)(%s)(?:%s|$)' %
                             (re.escape(pkg.name), sepchars),
                             summary, re.IGNORECASE | re.UNICODE)
             if res:

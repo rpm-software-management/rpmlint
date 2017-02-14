@@ -43,15 +43,15 @@ empty_shells = Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging
 syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
-percent_regex = re.compile('^[^#]*%{?\w{3,}', re.MULTILINE)
-bracket_regex = re.compile('^[^#]*if\s+[^ :\]]\]', re.MULTILINE)
-home_regex = re.compile('[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
-dangerous_command_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
-selinux_regex = re.compile("(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
-single_command_regex = re.compile("^[ \n]*([^ \n]+)[ \n]*$")
-tmp_regex = re.compile('^[^#]*\s(/var)?/tmp', re.MULTILINE)
-menu_regex = re.compile('^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
-bogus_var_regex = re.compile('(\${?RPM_BUILD_(ROOT|DIR)}?)')
+percent_regex = re.compile(r'^[^#]*%{?\w{3,}', re.MULTILINE)
+bracket_regex = re.compile(r'^[^#]*if\s+[^ :\]]\]', re.MULTILINE)
+home_regex = re.compile(r'[^a-zA-Z]+~/|\${?HOME(\W|$)', re.MULTILINE)
+dangerous_command_regex = re.compile(r"(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(cp|mv|ln|tar|rpm|chmod|chown|rm|cpio|install|perl|userdel|groupdel)\s", re.MULTILINE)
+selinux_regex = re.compile(r"(^|[;\|`]|&&|$\()\s*(?:\S*/s?bin/)?(chcon|runcon)\s", re.MULTILINE)
+single_command_regex = re.compile(r"^[ %s]*([^ %s]+)[ %s]*$" % (("\n",) * 3))
+tmp_regex = re.compile(r'^[^#]*\s(/var)?/tmp', re.MULTILINE)
+menu_regex = re.compile(r'^/usr/lib/menu/|^/etc/menu-methods/|^/usr/share/applications/')
+bogus_var_regex = re.compile(r'(\${?RPM_BUILD_(ROOT|DIR)}?)')
 
 prereq_assoc = (
     # ['chkconfig', ('chkconfig', '/sbin/chkconfig')],
@@ -60,7 +60,7 @@ prereq_assoc = (
 )
 
 for p in prereq_assoc:
-    p[0] = re.compile('^[^#]+' + p[0], re.MULTILINE)
+    p[0] = re.compile(r'^[^#]+' + p[0], re.MULTILINE)
 
 # pychecker fix
 del p

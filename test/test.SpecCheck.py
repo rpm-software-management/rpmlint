@@ -17,7 +17,7 @@ class TestSpecCheck(unittest.TestCase):
         SpecCheck.check.check_spec(self.pkg, self.pkg.name)
         out = "\n".join(Testing.getOutput())
         self.assertTrue("patch-not-applied Patch3" in out)
-        self.assertFalse(re.search("patch-not-applied Patch\\b", out))
+        self.assertFalse(re.search(r"patch-not-applied Patch\b", out))
         self.assertFalse(re.search("patch-not-applied Patch[0124567]", out))
         self.assertTrue("libdir-macro-in-noarch-package" not in out)
         self.assertTrue(len(re.findall("macro-in-comment", out)) == 1)

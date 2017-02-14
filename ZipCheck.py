@@ -19,9 +19,9 @@ from Filter import addDetails, printError, printWarning
 import Pkg
 
 
-zip_regex = re.compile('\.(zip|[ewj]ar)$')
-jar_regex = re.compile('\.[ewj]ar$')
-classpath_regex = re.compile('^\s*Class-Path\s*:', re.M | re.I)
+zip_regex = re.compile(r'\.(zip|[ewj]ar)$')
+jar_regex = re.compile(r'\.[ewj]ar$')
+classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.M | re.I)
 
 want_indexed_jars = Config.getOption('UseIndexedJars', True)
 

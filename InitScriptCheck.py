@@ -19,14 +19,14 @@ from Filter import addDetails, printError, printWarning
 import Pkg
 
 
-chkconfig_content_regex = re.compile('^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
-subsys_regex = re.compile('/var/lock/subsys/([^/"\'\n\s;&|]+)', re.MULTILINE)
-chkconfig_regex = re.compile('^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
-status_regex = re.compile('^[^#]*status', re.MULTILINE)
-reload_regex = re.compile('^[^#]*reload', re.MULTILINE)
+chkconfig_content_regex = re.compile(r'^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
+subsys_regex = re.compile(r'/var/lock/subsys/([^/"\'\s;&|]+)', re.MULTILINE)
+chkconfig_regex = re.compile(r'^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
+status_regex = re.compile(r'^[^#]*status', re.MULTILINE)
+reload_regex = re.compile(r'^[^#]*reload', re.MULTILINE)
 use_deflevels = Config.getOption('UseDefaultRunlevels', True)
-lsb_tags_regex = re.compile('^# ([\w-]+):\s*(.*?)\s*$')
-lsb_cont_regex = re.compile('^#(?:\t|  )(.*?)\s*$')
+lsb_tags_regex = re.compile(r'^# ([\w-]+):\s*(.*?)\s*$')
+lsb_cont_regex = re.compile(r'^#(?:%s|  )(.*?)\s*$' % "\t")
 use_subsys = Config.getOption('UseVarLockSubsys', True)
 
 LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',

@@ -23,7 +23,7 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
         AbstractCheck.AbstractFilesCheck.__init__(
-            self, "AppDataCheck", "/usr/share/appdata/.*\.appdata.xml$")
+            self, "AppDataCheck", r"/usr/share/appdata/.*\.appdata.xml$")
 
     def check_file(self, pkg, filename):
         root = pkg.dirName()

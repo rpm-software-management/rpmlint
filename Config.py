@@ -58,7 +58,7 @@ _checks.extend(DEFAULT_CHECKS)
 
 
 def addCheck(check):
-    check = re.sub('\.py[co]?$', '', check)
+    check = re.sub(r'\.py[co]?$', '', check)
     if check not in _checks:
         _checks.append(check)
 
@@ -145,7 +145,7 @@ def badness(s):
     return _scoring.get(s, 0)
 
 
-_non_named_group_re = re.compile('[^\\](\()[^:]')
+_non_named_group_re = re.compile(r'[^\\](\()[^:]')
 
 
 def isFiltered(s):

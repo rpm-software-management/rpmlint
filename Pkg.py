@@ -89,12 +89,12 @@ SCRIPT_TAGS = [
      '%transfiletrigger'),
 ]
 
-var_regex = re.compile('^(.*)\${?(\w+)}?(.*)$')
+var_regex = re.compile(r'^(.*)\${?(\w+)}?(.*)$')
 
 
 def shell_var_value(var, script):
-    assign_regex = re.compile('\\b' + re.escape(var) + '\s*=\s*(.+)\s*(#.*)*$',
-                              re.MULTILINE)
+    assign_regex = re.compile(r'\b' + re.escape(var) +
+                              r'\s*=\s*(.+)\s*(#.*)*$', re.MULTILINE)
     res = assign_regex.search(script)
     if res:
         res2 = var_regex.search(res.group(1))
@@ -143,8 +143,8 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
     return sts, text
 
 
-bz2_regex = re.compile('\.t?bz2?$')
-xz_regex = re.compile('\.(t[xl]z|xz|lzma)$')
+bz2_regex = re.compile(r'\.t?bz2?$')
+xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
 
 
 def catcmd(fname):
@@ -198,9 +198,9 @@ def mktemp():
     return tmpfile, tmpname
 
 
-slash_regex = re.compile('/+')
-slashdot_regex = re.compile('/(\.(/|$))+')
-slashend_regex = re.compile('([^/])/+$')
+slash_regex = re.compile(r'/+')
+slashdot_regex = re.compile(r'/(\.(/|$))+')
+slashend_regex = re.compile(r'([^/])/+$')
 
 
 def safe_normpath(path):
@@ -405,7 +405,7 @@ def parse_deps(line):
     """
 
     prcos = []
-    tokens = re.split('[\s,]+', line.strip())
+    tokens = re.split(r'[\s,]+', line.strip())
 
     # Drop line continuation backslash in multiline macro definition (for
     # spec file parsing), e.g.
@@ -479,7 +479,7 @@ class AbstractPkg(object):
 
 class Pkg(AbstractPkg):
 
-    _magic_from_compressed_re = re.compile('\([^)]+\s+compressed\s+data\\b')
+    _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
 
     def __init__(self, filename, dirname, header=None, is_source=False):
         self.filename = filename
@@ -784,7 +784,7 @@ class Pkg(AbstractPkg):
 
     def check_versioned_dep(self, name, version):
         # try to match name%_isa as well (e.g. "foo(x86-64)", "foo(x86-32)")
-        name_re = re.compile('^%s(\(\w+-\d+\))?$' % re.escape(name))
+        name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
         for d in self.requires() + self.prereq():
             if name_re.match(d[0]):
                 if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
@@ -927,7 +927,7 @@ def getInstalledPkgs(name):
 
     pkgs = []
     ts = rpm.TransactionSet()
-    if re.search('[?*]|\[.+\]', name):
+    if re.search(r'[?*]|\[.+\]', name):
         mi = ts.dbMatch()
         mi.pattern("name", rpm.RPMMIRE_GLOB, name)
     else:

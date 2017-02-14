@@ -25,7 +25,7 @@ from Filter import addDetails, printWarning
 # XFree
 # xine
 
-simple_naming_policy_re = re.compile('\^[a-zA-Z1-9-_]*$')
+simple_naming_policy_re = re.compile(r'\^[a-zA-Z1-9-_]*$')
 
 
 class NamingPolicyNotAppliedException(Exception):

@@ -26,36 +26,36 @@ DEFAULT_SYSTEM_LIB_PATHS = (
 
 
 def create_regexp_call(call):
-    r = ".*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
+    r = r".*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
     return re.compile(r)
 
 
 def create_nonlibc_regexp_call(call):
-    r = ".*?\s+UND\s+(%s)\s?.*$" % call
+    r = r".*?\s+UND\s+(%s)\s?.*$" % call
     return re.compile(r)
 
 
 class BinaryInfo(object):
 
-    needed_regex = re.compile('\s+\(NEEDED\).*\[(\S+)\]')
-    rpath_regex = re.compile('\s+\(RPATH\).*\[(\S+)\]')
-    soname_regex = re.compile('\s+\(SONAME\).*\[(\S+)\]')
-    comment_regex = re.compile('^\s+\[\s*\d+\]\s+\.comment\s+')
-    pic_regex = re.compile('^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
+    needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
+    rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
+    soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
+    comment_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.comment\s+')
+    pic_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
     #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
-    stack_regex = re.compile('^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
-    stack_exec_regex = re.compile('^..E$')
-    undef_regex = re.compile('^undefined symbol:\s+(\S+)')
-    unused_regex = re.compile('^\s+(\S+)')
-    call_regex = re.compile('\s0\s+FUNC\s+(.*)')
-    exit_call_regex = create_regexp_call('_?exit')
-    fork_call_regex = create_regexp_call('fork')
-    setgid_call_regex = create_regexp_call('set(?:res|e)?gid')
-    setuid_call_regex = create_regexp_call('set(?:res|e)?uid')
-    setgroups_call_regex = create_regexp_call('(?:ini|se)tgroups')
+    stack_regex = re.compile(r'^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
+    stack_exec_regex = re.compile(r'^..E$')
+    undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
+    unused_regex = re.compile(r'^\s+(\S+)')
+    call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
+    exit_call_regex = create_regexp_call(r'_?exit')
+    fork_call_regex = create_regexp_call(r'fork')
+    setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
+    setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
+    setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
     # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-    objdump_call_regex = re.compile(b'callq?\s(.*)')
+    objdump_call_regex = re.compile(rb'callq?\s(.*)')
 
     forbidden_functions = Config.getOption("WarnOnFunction")
     if forbidden_functions:
@@ -292,25 +292,25 @@ class BinaryInfo(object):
                             in_unused = False
 
 
-path_regex = re.compile('(.*/)([^/]+)')
-numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
-versioned_dir_regex = re.compile('[^.][0-9]')
-ldso_soname_regex = re.compile('^ld(-linux(-(ia|x86_)64))?\.so')
-so_regex = re.compile('/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-validso_regex = re.compile('(\.so\.\d+(\.\d+)*|\d\.so)$')
-sparc_regex = re.compile('SPARC32PLUS|SPARC V9|UltraSPARC')
+path_regex = re.compile(r'(.*/)([^/]+)')
+numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
+versioned_dir_regex = re.compile(r'[^.][0-9]')
+ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
+so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
+validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
+sparc_regex = re.compile(r'SPARC32PLUS|SPARC V9|UltraSPARC')
 system_lib_paths = Config.getOption('SystemLibPaths', DEFAULT_SYSTEM_LIB_PATHS)
 pie_exec_re = Config.getOption('PieExecutables')
 if pie_exec_re:
     pie_exec_re = re.compile(pie_exec_re)
-usr_lib_regex = re.compile('^/usr/lib(64)?/')
-bin_regex = re.compile('^(/usr(/X11R6)?)?/s?bin/')
-soversion_regex = re.compile('.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
-reference_regex = re.compile('\.la$|^/usr/lib(64)?/pkgconfig/')
-usr_lib_exception_regex = re.compile(Config.getOption('UsrLibBinaryException', '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
-srcname_regex = re.compile('(.*?)-[0-9]')
-invalid_dir_ref_regex = re.compile('/(home|tmp)(\W|$)')
-ocaml_mixed_regex = re.compile('^Caml1999X0\d\d$')
+usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
+bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
+soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
+reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
+usr_lib_exception_regex = re.compile(Config.getOption('UsrLibBinaryException', r'^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/)'))
+srcname_regex = re.compile(r'(.*?)-[0-9]')
+invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
+ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
 
 
 def dir_base(path):

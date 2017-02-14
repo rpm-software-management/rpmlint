@@ -16,7 +16,7 @@ from Filter import addDetails, printError, printWarning
 
 DEFAULT_VALID_SRC_PERMS = (0o644, 0o755)
 
-source_regex = re.compile('\\.(tar|patch|tgz|diff)$')
+source_regex = re.compile(r'\\.(tar|patch|tgz|diff)$')
 compress_ext = Config.getOption("CompressExtension", "bz2")
 valid_src_perms = Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 

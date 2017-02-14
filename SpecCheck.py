@@ -30,42 +30,42 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 # Don't check for hardcoded library paths in packages which can have
 # their noarch files in /usr/lib/<package>/*, or packages that can't
 # be installed on biarch systems
-DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware|systemd)($|[\s/,])'
+DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS = r'/lib/(modules|cpp|perl5|rpm|hotplug|firmware|systemd)($|[\s/,])'
 
 
 def re_tag_compile(tag):
-    r = "^%s\s*:\s*(\S.*?)\s*$" % tag
+    r = r"^%s\s*:\s*(\S.*?)\s*$" % tag
     return re.compile(r, re.IGNORECASE)
 
 
-patch_regex = re_tag_compile('Patch(\d*)')
-applied_patch_regex = re.compile("^%patch(\d*)")
-applied_patch_p_regex = re.compile("\s-P\s+(\d+)\\b")
+patch_regex = re_tag_compile(r'Patch(\d*)')
+applied_patch_regex = re.compile(r"^%patch(\d*)")
+applied_patch_p_regex = re.compile(r"\s-P\s+(\d+)\b")
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
 applied_patch_i_regex = re.compile(r"(?:%\{?__)?patch\}?.*?\s+(?:<|-i)\s+%\{PATCH(\d+)\}")
-source_dir_regex = re.compile("^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
-obsolete_tags_regex = re_tag_compile('(?:Serial|Copyright)')
+source_dir_regex = re.compile(r"^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
+obsolete_tags_regex = re_tag_compile(r'(?:Serial|Copyright)')
 buildroot_regex = re_tag_compile('BuildRoot')
 prefix_regex = re_tag_compile('Prefix')
 packager_regex = re_tag_compile('Packager')
 buildarch_regex = re_tag_compile('BuildArch(?:itectures)?')
 buildprereq_regex = re_tag_compile('BuildPreReq')
-prereq_regex = re_tag_compile('PreReq(\(.*\))')
+prereq_regex = re_tag_compile(r'PreReq(\(.*\))')
 
-make_check_regex = re.compile('(^|\s|%{?__)make}?\s+(check|test)')
-rm_regex = re.compile('(^|\s)((.*/)?rm|%{?__rm}?) ')
-rpm_buildroot_regex = re.compile('^[^#]*(?:(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
-configure_libdir_spec_regex = re.compile('ln |\./configure[^#]*--libdir=(\S+)[^#]*')
-lib_package_regex = re.compile('^%package.*\Wlib')
-ifarch_regex = re.compile('^\s*%ifn?arch\s')
-if_regex = re.compile('^\s*%if\s')
-endif_regex = re.compile('^\s*%endif\\b')
+make_check_regex = re.compile(r'(^|\s|%{?__)make}?\s+(check|test)')
+rm_regex = re.compile(r'(^|\s)((.*/)?rm|%{?__rm}?) ')
+rpm_buildroot_regex = re.compile(r'^[^#]*(?:(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
+configure_libdir_spec_regex = re.compile(r'ln |\./configure[^#]*--libdir=(\S+)[^#]*')
+lib_package_regex = re.compile(r'^%package.*\Wlib')
+ifarch_regex = re.compile(r'^\s*%ifn?arch\s')
+if_regex = re.compile(r'^\s*%if\s')
+endif_regex = re.compile(r'^\s*%endif\b')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
 use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
-libdir_regex = re.compile('%{?_lib(?:dir)?\}?\\b')
+libdir_regex = re.compile(r'%{?_lib(?:dir)?\}?\b')
 section_regexs = dict(
-    ([x, re.compile('^%' + x + '(?:\s|$)')]
+    ([x, re.compile('^%' + x + r'(?:\s|$)')]
      for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
                'install', 'package', 'prep') + RPM_SCRIPTLETS))
 deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
@@ -73,38 +73,38 @@ deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
 # TODO: better handling of X libraries and modules.
 hardcoded_library_paths = '(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
-hardcoded_library_path_regex = re.compile('^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + '(?=[\s;/])([^\s,;]*))')
+hardcoded_library_path_regex = re.compile(r'^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + r'(?=[\s;/])([^\s,;]*))')
 
 # Requires(pre,post) is broken in some rpm versions, see
 # https://bugzilla.redhat.com/118780 and bugs linked to that one.
-scriptlet_requires_regex = re.compile('^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
+scriptlet_requires_regex = re.compile(r'^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
 
-DEFINE_RE = '(^|\s)%(define|global)\s+'
-depscript_override_regex = re.compile(DEFINE_RE + '__find_(requires|provides)\s')
-depgen_disable_regex = re.compile(DEFINE_RE + '_use_internal_dependency_generator\s+0')
-patch_fuzz_override_regex = re.compile(DEFINE_RE + '_default_patch_fuzz\s+(\d+)')
+DEFINE_RE = r'(^|\s)%(define|global)\s+'
+depscript_override_regex = re.compile(DEFINE_RE + r'__find_(requires|provides)\s')
+depgen_disable_regex = re.compile(DEFINE_RE + r'_use_internal_dependency_generator\s+0')
+patch_fuzz_override_regex = re.compile(DEFINE_RE + r'_default_patch_fuzz\s+(\d+)')
 
 # See https://bugzilla.redhat.com/488146 for details
 indent_spaces_regex = re.compile('( \t|(^|\t)([^\t]{8})*[^\t]{4}[^\t]?([^\t][^\t.!?]|[^\t]?[.!?] )  )')
 
-requires_regex = re.compile('^(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
-provides_regex = re.compile('^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
-obsoletes_regex = re.compile('^Obsoletes:\s*(.*)', re.IGNORECASE)
-conflicts_regex = re.compile('^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
+requires_regex = re.compile(r'^(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
+provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
+obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
+conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
 
-compop_regex = re.compile('[<>=]')
+compop_regex = re.compile(r'[<>=]')
 
 setup_regex = re.compile(r'%setup\b')  # intentionally no whitespace before!
-setup_q_regex = re.compile(' -[A-Za-z]*q')
-setup_t_regex = re.compile(' -[A-Za-z]*T')
-setup_ab_regex = re.compile(' -[A-Za-z]*[ab]')
-autosetup_regex = re.compile('^\s*%autosetup(\s.*|$)')
-autosetup_n_regex = re.compile(' -[A-Za-z]*N')
-autopatch_regex = re.compile('^\s*%autopatch(?:\s|$)')
+setup_q_regex = re.compile(r' -[A-Za-z]*q')
+setup_t_regex = re.compile(r' -[A-Za-z]*T')
+setup_ab_regex = re.compile(r' -[A-Za-z]*[ab]')
+autosetup_regex = re.compile(r'^\s*%autosetup(\s.*|$)')
+autosetup_n_regex = re.compile(r' -[A-Za-z]*N')
+autopatch_regex = re.compile(r'^\s*%autopatch(?:\s|$)')
 
-filelist_regex = re.compile('\s+-f\s+\S+')
-pkgname_regex = re.compile('\s+(?:-n\s+)?(\S+)')
-tarball_regex = re.compile('\.(?:t(?:ar|[glx]z|bz2?)|zip)\\b', re.IGNORECASE)
+filelist_regex = re.compile(r'\s+-f\s+\S+')
+pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
+tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 UNICODE_NBSP = unicodedata.lookup('NO-BREAK SPACE')
 

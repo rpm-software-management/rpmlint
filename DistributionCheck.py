@@ -16,8 +16,8 @@ import Config
 from Filter import addDetails, printWarning
 
 
-man_regex = re.compile("/man(?:\d[px]?|n)/")
-info_regex = re.compile("(/usr/share|/usr)/info/")
+man_regex = re.compile(r"/man(?:\d[px]?|n)/")
+info_regex = re.compile(r"(/usr/share|/usr)/info/")
 vendor = Config.getOption("Vendor")
 distribution = Config.getOption("Distribution")
 compress_ext = Config.getOption("CompressExtension", "bz2")
