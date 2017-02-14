@@ -292,6 +292,14 @@ class BinaryInfo(object):
                             in_unused = False
 
 
+        if not is_ar and not is_debug and (path.startswith('/bin') \
+                or path.startswith('/lib') or path.startswith('/sbin')):
+            res = Pkg.getstatusoutput(
+                ('env', 'LC_ALL=C', 'ldd', path))
+            for l in res[1].splitlines():
+                if '/usr' in l:
+                    printError(pkg, 'links-against-library-in-usr', file)
+
 path_regex = re.compile('(.*/)([^/]+)')
 numeric_dir_regex = re.compile('/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile('[^.][0-9]')
@@ -706,6 +714,11 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
 'non-position-independent-executable',
 '''This executable must be position independent.  Check that it is built with
 -fPIE/-fpie in compiler flags and -pie in linker flags.''',
+
+'links-against-library-in-usr',
+'''Libraries and executables under /bin, /sbin, /lib and /lib64 may not link
+against libraries located under /usr as this might be a different partition
+not necessarily mounted at same time, ie. such as during boot.''',
 
 'missing-call-to-setgroups-before-setuid',
 '''This executable is calling setuid and setgid without setgroups or
