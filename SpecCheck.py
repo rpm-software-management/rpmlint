@@ -561,11 +561,15 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
 
         out = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-q',
-                                   '--qf=', '--specfile', self._spec_file))
+                                   '--qf=', '--specfile', self._spec_file,
+                                   '-D', '_icondir ' + rpm.expandMacro('%{_icondir}'),
+                                   '-D', '_patchdir ' + rpm.expandMacro('%{_patchdir}'),
+                                   '-D', '_sourcedir ' + rpm.expandMacro('%{_sourcedir}'),
+                                   '-D', '_specdir ' + rpm.expandMacro('%{_specdir}')))
         parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855
-            if 'No such file or directory' not in line:
+            if line.startswith('error') or line.startswith('fatal'):
                 parse_error = True
                 printError(pkg, 'specfile-error', line)
 
