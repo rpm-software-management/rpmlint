@@ -100,6 +100,7 @@ def main():
 
     packages_checked = 0
     specfiles_checked = 0
+    threshold_exceeded = False
 
     try:
         # Loop over all file names given in arguments
@@ -197,17 +198,24 @@ def main():
                 continue
 
         if printAllReasons():
-            Pkg.warn('(none): E: badness %d exceeds threshold %d, aborting.' %
-                     (badnessScore(), badnessThreshold()))
-            sys.exit(66)
+            if below_threshold_returns_zero:
+                threshold_exceeded = True
+            else:
+                Pkg.warn('(none): E: badness %d exceeds threshold %d, aborting.' %
+                         (badnessScore(), badnessThreshold()))
+                sys.exit(66)
 
     finally:
         print("%d packages and %d specfiles checked; %d errors, %d warnings."
               % (packages_checked, specfiles_checked,
                  printed_messages["E"], printed_messages["W"]))
 
-    if printed_messages["E"] > 0:
+    if not below_threshold_returns_zero and printed_messages["E"] > 0:
         sys.exit(64)
+    if below_threshold_returns_zero and threshold_exceeded:
+        Pkg.warn('(none): E: badness %d exceeds threshold %d.' %
+                 (badnessScore(), badnessThreshold()))
+        sys.exit(66)
     sys.exit(0)
 
 
@@ -247,10 +255,10 @@ argv0 = os.path.basename(sys.argv[0])
 # parse options
 try:
     (opt, args) = getopt.getopt(
-        sys.argv[1:], 'iI:c:C:hVvanE:f:o:',
+        sys.argv[1:], 'iI:c:C:hVvanE:f:o:T',
         ['info', 'explain=', 'check=', 'checkdir=', 'help', 'version',
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
-         'rawout='])
+         'rawout=', 'zerothreshold'])
 except getopt.GetoptError as e:
     Pkg.warn("%s: %s" % (argv0, e))
     usage(argv0)
@@ -266,6 +274,7 @@ if not os.path.exists(os.path.expanduser(conf_file)):
     # deprecated backwards compatibility with < 0.88
     conf_file = '~/.rpmlintrc'
 info_error = set()
+below_threshold_returns_zero = False
 
 # load global config files
 configs = glob.glob('/etc/rpmlint/*config')
@@ -321,6 +330,9 @@ for o in opt:
         Config.setOption('ExtractDir', extract_dir)
     elif o[0] in ('-n', '--noexception'):
         Config.no_exception = True
+    # terrible longname, but whatever..
+    elif o[0] in ('-T', 'zerothreshold'):
+        below_threshold_returns_zero = True
     elif o[0] in ('-a', '--all'):
         if '*' not in args:
             args.append('*')
