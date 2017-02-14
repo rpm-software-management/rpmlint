@@ -230,6 +230,7 @@ filesys_packages = ['filesystem']  # TODO: make configurable?
 quotes_regex = re.compile('[\'"]+')
 start_certificate_regex = re.compile('^-----BEGIN CERTIFICATE-----$')
 start_private_key_regex = re.compile('^----BEGIN PRIVATE KEY-----$')
+pkgconfig_regex = re.compile('^/usr/lib(64|x32)?/pkgconfig/.*\.pc$')
 
 for idx in range(0, len(dangling_exceptions)):
     dangling_exceptions[idx][0] = re.compile(dangling_exceptions[idx][0])
@@ -990,6 +991,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if stat.S_IWGRP & mode or stat.S_IWOTH & mode:
                     printError(pkg, 'non-owner-writeable-only-crontab-file', f)
 
+            if pkgconfig_regex.search(f):
+                chunk = None
+                istext = False
+                if os.access(pkgfile.path, os.R_OK):
+                    (chunk, istext) = peek(pkgfile.path, pkg, 2048)
+                    if istext:
+                        for line in chunk.splitlines():
+                            if line.find('//') >= 0 and not line.find('://') >= 0:
+                                printError(pkg, 'double-slash-in-pkgconfig-path', f, line)
+
         if len(log_files) and not logrotate_file:
             printWarning(pkg, 'log-files-without-logrotate', sorted(log_files))
 
@@ -1361,6 +1372,12 @@ as intended.''',
 '''The Free Software Foundation address in this file seems to be outdated or
 misspelled.  Ask upstream to update the address, or if this is a license file,
 possibly the entire file with a new copy available from the FSF.''',
+
+'double-slash-in-pkgconfig-path',
+'''This pkg-config file contains a path with double slash ('//') in it. This
+will break debugedit when stripping debug symbols during package building if
+these paths has been passed to gcc, and fail with the following error:
+"canonicalization unexpectedly shrank by one character"''',
 
 'gzipped-svg-icon',
 '''Not all desktop environments that support SVG icons support them gzipped
