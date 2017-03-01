@@ -416,7 +416,7 @@ lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 invalid_url_regex = re.compile(Config.getOption('InvalidURL'), re.IGNORECASE)
 lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex = re.compile(r'^\s+')
-license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or)\s')
+license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or|AND|OR)\s')
 invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
 forbidden_words_regex = re.compile(r'(%s)' % Config.getOption('ForbiddenWords'), re.IGNORECASE)
