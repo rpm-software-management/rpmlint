@@ -55,7 +55,7 @@ class BinaryInfo(object):
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
     # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-    objdump_call_regex = re.compile(rb'callq?\s(.*)')
+    objdump_call_regex = re.compile(br'callq?\s(.*)')
 
     forbidden_functions = Config.getOption("WarnOnFunction")
     if forbidden_functions:

@@ -219,7 +219,7 @@ lib_path_regex = re.compile(r'^(/usr(/X11R6)?)?/lib(64)?')
 lib_package_regex = re.compile(r'^(lib|.+-libs)')
 hidden_file_regex = re.compile(r'/\.[^/]*$')
 manifest_perl_regex = re.compile(r'^/usr/share/doc/perl-.*/MANIFEST(\.SKIP)?$')
-shebang_regex = re.compile(rb'^#!\s*(\S+)(.*?)$', re.M)
+shebang_regex = re.compile(br'^#!\s*(\S+)(.*?)$', re.M)
 interpreter_regex = re.compile(r'^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile(r'^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile(r'^/etc/(bash_completion\.d|profile\.d)/')
@@ -256,8 +256,8 @@ man_nowarn_regex = re.compile(
     r'(can\'t break|cannot adjust) line')
 man_warn_category = Config.getOption('ManWarningCategory', 'mac')
 
-fsf_license_regex = re.compile(rb'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
-fsf_wrong_address_regex = re.compile(rb'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
+fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
+fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
 
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 
