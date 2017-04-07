@@ -41,8 +41,8 @@ if sys.version_info[0] > 2:
     unicode = str
 
     def b2s(b):
-        if b is None:
-            return None
+        if b is None or isinstance(b, str):
+            return b
         if isinstance(b, (list, tuple)):
             return [b2s(x) for x in b]
         return b.decode(errors='replace')

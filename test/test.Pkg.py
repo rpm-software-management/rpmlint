@@ -30,6 +30,10 @@ class TestPkg(unittest.TestCase):
         ):
             self.assertFalse(Pkg.rangeCompare(req, prov))
 
+    def test_b2s(self):
+        for thing in ("foo", ["foo"]):
+            self.assertEqual(thing, Pkg.b2s(thing))
+
 
 if __name__ == '__main__':
     unittest.main()
