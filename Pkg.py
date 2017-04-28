@@ -541,7 +541,8 @@ class Pkg(AbstractPkg):
             if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
                        rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
                        rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
-                       rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM) \
+                       rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM,
+                       rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
             or key in (x[0] for x in SCRIPT_TAGS) \
             or key in (x[1] for x in SCRIPT_TAGS):
                 val = b2s(val)
