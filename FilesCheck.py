@@ -310,8 +310,8 @@ def peek(filename, pkg, length=1024):
 
 
 # See Python sources for a full list of the values here.
-# http://hg.python.org/cpython/file/tip/Lib/importlib/_bootstrap_external.py
-# http://hg.python.org/cpython/file/2.7/Python/import.c
+# https://github.com/python/cpython/blob/master/Lib/importlib/_bootstrap_external.py
+# https://github.com/python/cpython/blob/2.7/Python/import.c
 _python_magic_values = {
     '2.2': 60717,
     '2.3': 62011,
