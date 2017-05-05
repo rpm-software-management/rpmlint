@@ -4,18 +4,11 @@ import BinariesCheck
 import Testing
 
 
-class Tools(object):
-    '''Class providing basic tools for other classes'''
+class TestForbiddenCCalls(Testing.OutputTest):
 
-    def _rpm_test_output(self, rpm):
-        '''Wrapper that checks RPM package and returns output'''
-        with Testing.getTestedPackage(rpm) as pkg:
-            Testing.startTest()
-            BinariesCheck.check.check(pkg)
-            return Testing.getOutput()
-
-
-class TestForbiddenCCalls(Tools):
+    @classmethod
+    def setup_class(cls):
+        cls.check = BinariesCheck.check.check
 
     def test_forbidden_c_calls(self):
         for package in ['cyrus-imapd', 'dovecot']:

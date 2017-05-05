@@ -51,3 +51,23 @@ def getTestedPackage(name):
 def getTestedSpecPackage(name):
     pkg_path = glob.glob(os.path.join(_testpath(), name) + ".spec")[0]
     return Pkg.FakePkg(pkg_path)
+
+
+class OutputTest(object):
+
+    check = None
+    check_spec = None
+
+    def _rpm_test_output(self, rpm, check=None):
+        with getTestedPackage(rpm) as pkg:
+            startTest()
+            (check or self.check)(pkg)
+            return getOutput()
+
+    def _spec_test_output(self, spec, check=None):
+        with getTestedSpecPackage(spec) as pkg:
+            startTest()
+            # call check_spec() directly, as check() doesn't work with
+            # getTestedSpecPackage()
+            (check or self.check_spec)(pkg, pkg.name)
+            return getOutput()

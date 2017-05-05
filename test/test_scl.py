@@ -11,27 +11,14 @@ for directory in ['../rpmlint/tools', '../rpmlint', '../tools', '..']:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), directory))
 
 
-class Tools(object):
-    '''Class providing basic tools for other classes'''
-    def _spec_test_output(self, spec):
-        '''Wrapper that checks spec file and returns output'''
-        with Testing.getTestedSpecPackage(spec) as pkg:
-            Testing.startTest()
-            # call check_spec() directly, as check() doesn't work with
-            # getTestedSpecPackage()
-            SCLCheck.check.check_spec(pkg, pkg.name)
-            return Testing.getOutput()
-
-    def _rpm_test_output(self, rpm):
-        '''Wrapper that checks RPM package and returns output'''
-        with Testing.getTestedPackage(rpm) as pkg:
-            Testing.startTest()
-            SCLCheck.check.check(pkg)
-            return Testing.getOutput()
-
-
-class TestSCLBasic(Tools):
+class TestSCLBasic(Testing.OutputTest):
     '''Basic tests of Software Collections checks'''
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = SCLCheck.check.check
+        cls.check_spec = SCLCheck.check.check_spec
+
     def test_nonscl_spec_silent(self):
         '''SCL check on non-SCL spec has to be silent'''
         assert not self._spec_test_output('spec/SpecCheck')
@@ -76,8 +63,14 @@ class TestSCLBasic(Tools):
             assert 'undeclared-scl' in out[0]
 
 
-class TestSCLMain(Tools):
+class TestSCLMain(Testing.OutputTest):
     '''Tests of Software Collections main package checks'''
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = SCLCheck.check.check
+        cls.check_spec = SCLCheck.check.check_spec
+
     def test_nobuild(self):
         '''Tests SCL metapackage without build subpackage'''
         out = self._spec_test_output('spec/nodejs010-nobuild')
@@ -132,8 +125,14 @@ class TestSCLMain(Tools):
         assert 'scl-build-package-without-rpm-macros' in out
 
 
-class TestSCLSource(Tools):
+class TestSCLSource(Testing.OutputTest):
     '''Tests of Software Collections enabled package spec checks'''
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = SCLCheck.check.check
+        cls.check_spec = SCLCheck.check.check_spec
+
     def test_no_pkg_name(self):
         '''Tests SCL spec without pkg_name definition'''
         out = self._spec_test_output('spec/nodejs-no-pkg_name')
@@ -192,8 +191,14 @@ class TestSCLSource(Tools):
         assert 'scl-setup-without-n' in out[0]
 
 
-class TestSCLBinary(Tools):
+class TestSCLBinary(Testing.OutputTest):
     '''Tests of Software Collections binary RPMs'''
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = SCLCheck.check.check
+        cls.check_spec = SCLCheck.check.check_spec
+
     def test_scl_name_screwed_up(self):
         '''
         SCL check on SCL package that differs it's name from scl tree folder
