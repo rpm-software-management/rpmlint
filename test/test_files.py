@@ -1,5 +1,9 @@
+import os
+
+import FilesCheck
 from FilesCheck import python_bytecode_to_script as pbts
 from FilesCheck import script_interpreter as se
+import Testing
 
 
 class TestPythonBytecodeToScript(object):
@@ -16,6 +20,18 @@ class TestPythonBytecodeToScript(object):
         assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-1.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
         assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-2.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
         assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
+
+
+class TestPythonBytecodeMagic(Testing.OutputTest):
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = FilesCheck.check.check
+
+    def test_python_bytecode_magic(self):
+        for package in ["python3-power"]:
+            out = self._rpm_test_output(os.path.join("binary", package))
+            assert "python-bytecode-wrong-magic-value" not in "\n".join(out)
 
 
 def test_script_interpreter():

@@ -312,21 +312,22 @@ def peek(filename, pkg, length=1024):
 # See Python sources for a full list of the values here.
 # https://github.com/python/cpython/blob/master/Lib/importlib/_bootstrap_external.py
 # https://github.com/python/cpython/blob/2.7/Python/import.c
+# https://github.com/python/cpython/commit/93602e3af70d3b9f98ae2da654b16b3382b68d50
 _python_magic_values = {
-    '2.2': 60717,
-    '2.3': 62011,
-    '2.4': 62061,
-    '2.5': 62131,
-    '2.6': 62161,
-    '2.7': 62211,
-    '3.0': 3130,
-    '3.1': 3150,
-    '3.2': 3180,
-    '3.3': 3230,
-    '3.4': 3310,
-    '3.5': 3351,  # 3350 for < 3.5.2
-    '3.6': 3379,
-    '3.7': 3390,
+    '2.2': [60717],
+    '2.3': [62011],
+    '2.4': [62061],
+    '2.5': [62131],
+    '2.6': [62161],
+    '2.7': [62211],
+    '3.0': [3130],
+    '3.1': [3150],
+    '3.2': [3180],
+    '3.3': [3230],
+    '3.4': [3310],
+    '3.5': [3350, 3351],  # 3350 for < 3.5.2
+    '3.6': [3379],
+    '3.7': [3390],
 }
 
 
@@ -334,11 +335,11 @@ def get_expected_pyc_magic(path):
     """
     .pyc/.pyo files embed a 4-byte magic value identifying which version of
     the python bytecode ABI they are for. Given a path to a .pyc/.pyo file,
-    return a (magic ABI value, python version) tuple.  For example,
+    return a (magic ABI values, python version) tuple.  For example,
     '/usr/lib/python3.1/foo.pyc' should return (3151, '3.1').
     The first value will be None if the python version was not resolved
     from the given pathname and the PythonDefaultVersion configuration
-    variable is not set, or if we don't know the magic ABI value for the
+    variable is not set, or if we don't know the magic ABI values for the
     python version (no matter from which source the version came from).
     The second value will be None if a python version could not be resolved
     from the given pathname.
@@ -350,18 +351,18 @@ def get_expected_pyc_magic(path):
         ver_from_path = m.group(1)
 
     expected_version = ver_from_path or python_default_version
-    expected_magic_value = _python_magic_values.get(expected_version)
+    expected_magic_values = _python_magic_values.get(expected_version)
 
-    if not expected_magic_value:
+    if not expected_magic_values:
         return (None, ver_from_path)
 
     # In Python 2, if Py_UnicodeFlag is set, Python's import code uses a value
     # one higher, but this is off by default. In Python 3.0 and 3.1 (but no
     # longer in 3.2), it always uses the value one higher:
     if expected_version[:3] in ('3.0', '3.1'):
-        expected_magic_value += 1
+        expected_magic_values = [x + 1 for x in expected_magic_values]
 
-    return (expected_magic_value, ver_from_path)
+    return (expected_magic_values, ver_from_path)
 
 
 def py_demarshal_long(b):
@@ -721,18 +722,18 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                             # .pyc header is correct
                             found_magic = py_demarshal_long(chunk[:4]) & 0xffff
                             exp_magic, exp_version = get_expected_pyc_magic(f)
-                            if exp_magic and found_magic != exp_magic:
+                            if exp_magic and found_magic not in exp_magic:
                                 found_version = 'unknown'
                                 for (pv, pm) in _python_magic_values.items():
-                                    if pm == found_magic:
+                                    if found_magic in pm:
                                         found_version = pv
                                         break
                                 # If expected version was from the file path,
                                 # issue # an error, otherwise a warning.
                                 msg = (pkg,
                                        'python-bytecode-wrong-magic-value',
-                                       f, "expected %d (%s), found %d (%s)" %
-                                       (exp_magic,
+                                       f, "expected %s (%s), found %d (%s)" %
+                                       (" or ".join(map(str, exp_magic)),
                                         exp_version or python_default_version,
                                         found_magic, found_version))
                                 if exp_version is not None:
