@@ -15,4 +15,4 @@ before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - docker run $DIST make check PYTHON=$PYTHON PYTEST=$PYTEST FLAKE8=$FLAKE8
+  - docker run -e PYTHON=$PYTHON -e PYTEST=$PYTEST -e FLAKE8=$FLAKE8 $DIST test/docker-script.sh
