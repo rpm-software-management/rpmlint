@@ -30,6 +30,10 @@ echo "...in the C locale"
 LC_ALL=C $run_rpmlint test/*/*.rpm test/spec/*.spec >/dev/null
 rc=$?
 test $rc -eq 0 -o $rc -eq 64 || exit $rc
+echo "...with specfile from stdin"
+$run_rpmlint - < $TESTPATH/spec/SpecCheck.spec >/dev/null
+rc=$?
+test $rc -eq 0 || exit $rc
 
 echo "$PYTEST tests"
 $PYTEST -v || exit $?

@@ -115,7 +115,7 @@ def main():
                     if not stdin:
                         continue
                     with Pkg.FakePkg(arg) as pkg:
-                        runSpecChecks(pkg, arg)
+                        runSpecChecks(pkg, None, spec_lines=stdin)
                     specfiles_checked += 1
                     continue
 
@@ -225,7 +225,7 @@ def runChecks(pkg):
             Pkg.warn('(none): W: unknown check %s, skipping' % name)
 
 
-def runSpecChecks(pkg, fname):
+def runSpecChecks(pkg, fname, spec_lines=None):
 
     if verbose:
         printInfo(pkg, 'checking')
@@ -234,7 +234,7 @@ def runSpecChecks(pkg, fname):
         check = AbstractCheck.AbstractCheck.known_checks.get(name)
         if check:
             check.verbose = verbose
-            check.check_spec(pkg, fname)
+            check.check_spec(pkg, fname, spec_lines)
         else:
             Pkg.warn('(none): W: unknown check %s, skipping' % name)
 
