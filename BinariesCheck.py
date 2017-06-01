@@ -181,9 +181,7 @@ class BinaryInfo(object):
             # check if we don't have a string that will automatically
             # waive the presence of a forbidden call
             if self.forbidden_calls:
-                cmd = ['env', 'LC_ALL=C', 'strings']
-                cmd.append(path)
-                res = Pkg.getstatusoutput(cmd)
+                res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'strings', path))
                 if not res[0]:
                     for l in res[1].splitlines():
                         # as we need to remove elements, iterate backwards
@@ -263,10 +261,8 @@ class BinaryInfo(object):
                     if undef:
                         self.undef.append(undef.group(1))
                 if self.undef:
-                    cmd = self.undef[:]
-                    cmd.insert(0, 'c++filt')
                     try:
-                        res = Pkg.getstatusoutput(cmd)
+                        res = Pkg.getstatusoutput(['c++filt'] + self.undef)
                         if not res[0]:
                             self.undef = res[1].splitlines()
                     except:
