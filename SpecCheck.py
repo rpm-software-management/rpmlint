@@ -554,8 +554,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         # but it seems errors from rpmlib get logged to stderr and we can't
         # capture and print them nicely, so we do it once each way :P
 
-        out = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-q',
-                                   '--qf=', '--specfile', self._spec_file))
+        out = Pkg.getstatusoutput(
+            ('rpm', '-q', '--qf=', '--specfile', self._spec_file))
         parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855

@@ -97,9 +97,8 @@ class BinaryInfo(object):
 
         is_debug = path.endswith('.debug')
 
-        cmd = ['env', 'LC_ALL=C', 'readelf', '-W', '-S', '-l', '-d', '-s']
-        cmd.append(path)
-        res = Pkg.getstatusoutput(cmd)
+        res = Pkg.getstatusoutput(
+            ('readelf', '-W', '-S', '-l', '-d', '-s', path))
         if not res[0]:
             lines = res[1].splitlines()
             for l in lines:
@@ -181,7 +180,7 @@ class BinaryInfo(object):
             # check if we don't have a string that will automatically
             # waive the presence of a forbidden call
             if self.forbidden_calls:
-                res = Pkg.getstatusoutput(('env', 'LC_ALL=C', 'strings', path))
+                res = Pkg.getstatusoutput(('strings', path))
                 if not res[0]:
                     for l in res[1].splitlines():
                         # as we need to remove elements, iterate backwards
@@ -253,8 +252,7 @@ class BinaryInfo(object):
         # skip debuginfo: https://bugzilla.redhat.com/190599
         if not is_ar and not is_debug and isinstance(pkg, Pkg.InstalledPkg):
             # We could do this with objdump, but it's _much_ simpler with ldd.
-            res = Pkg.getstatusoutput(
-                ('env', 'LC_ALL=C', 'ldd', '-d', '-r', path))
+            res = Pkg.getstatusoutput(('ldd', '-d', '-r', path))
             if not res[0]:
                 for l in res[1].splitlines():
                     undef = BinaryInfo.undef_regex.search(l)
@@ -269,8 +267,7 @@ class BinaryInfo(object):
                         pass
             else:
                 printWarning(pkg, 'ldd-failed', file)
-            res = Pkg.getstatusoutput(
-                ('env', 'LC_ALL=C', 'ldd', '-r', '-u', path))
+            res = Pkg.getstatusoutput(('ldd', '-r', '-u', path))
             if res[0]:
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
                 # unused direct dependencies

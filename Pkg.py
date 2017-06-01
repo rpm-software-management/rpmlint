@@ -118,17 +118,18 @@ def substitute_shell_vars(val, script):
         return val
 
 
-def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False):
+def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all="C"):
     """
     A version of commands.getstatusoutput() which can take cmd as a
     sequence, thus making it potentially more secure.
     """
+    env = dict(os.environ, LC_ALL=lc_all)
     if stdoutonly:
         proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE, close_fds=True)
+                                stdout=subprocess.PIPE, close_fds=True, env=env)
     else:
         proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE,
+                                stdout=subprocess.PIPE, env=env,
                                 stderr=subprocess.STDOUT, close_fds=True)
     proc.stdin.close()
     with proc.stdout:
@@ -573,7 +574,7 @@ class Pkg(AbstractPkg):
             return cmd
 
     def checkSignature(self):
-        return getstatusoutput(('env', 'LC_ALL=C', 'rpm', '-K', self.filename))
+        return getstatusoutput(('rpm', '-K', self.filename))
 
     # remove the extracted files from the package
     def cleanup(self):

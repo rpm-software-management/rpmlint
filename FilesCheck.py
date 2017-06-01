@@ -797,12 +797,11 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     if use_utf8 and chunk:
                         # TODO: sequence based invocation
                         cmd = getstatusoutput(
-                            'env LC_ALL=C %s %s | gtbl | '
-                            'env LC_ALL=en_US.UTF-8 groff -mtty-char -Tutf8 '
+                            '%s %s | gtbl | groff -mtty-char -Tutf8 '
                             '-P-c -mandoc -w%s >%s' %
                             (catcmd(f), shquote(pkgfile.path),
                              shquote(man_warn_category), os.devnull),
-                            shell=True)
+                            shell=True, lc_all="en_US.UTF-8")
                         for line in cmd[1].split("\n"):
                             res = man_warn_regex.search(line)
                             if not res or man_nowarn_regex.search(line):
