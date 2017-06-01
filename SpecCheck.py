@@ -155,9 +155,11 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # check content of spec file
             self.check_spec(pkg, self._spec_file)
 
-    def check_spec(self, pkg, spec_file):
+    def check_spec(self, pkg, spec_file, spec_lines=[]):
         self._spec_file = spec_file
         spec_only = isinstance(pkg, Pkg.FakePkg)
+        if not spec_lines:
+            spec_lines = Pkg.readlines(spec_file)
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
@@ -197,7 +199,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         nbsp = UNICODE_NBSP if is_utf8 else chr(0xA0)
         do_unicode = is_utf8 and sys.version_info[0] <= 2
 
-        for line in Pkg.readlines(spec_file):
+        for line in spec_lines:
 
             pkg.current_linenum += 1
 
