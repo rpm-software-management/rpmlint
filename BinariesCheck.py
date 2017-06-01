@@ -207,9 +207,9 @@ class BinaryInfo(object):
             # Currently this implementation works only on x86_64 due to reliance
             # on x86_64 specific assembly. Skip it on other architectures
             if pkg.arch == 'x86_64' and self.chroot and self.chdir:
-                p = subprocess.Popen(
-                    ['env', 'LC_ALL=C', 'objdump', '-d', path],
-                    stdout=subprocess.PIPE, bufsize=-1)
+                p = subprocess.Popen(('objdump', '-d', path),
+                                     stdout=subprocess.PIPE, bufsize=-1,
+                                     env=dict(os.environ, LC_ALL="C"))
                 with p.stdout:
                     index = 0
                     chroot_index = -99
