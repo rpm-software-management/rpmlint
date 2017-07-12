@@ -508,7 +508,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 printError(pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/"):
+            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/") and not f.endswith("/.build-id"):
                 printWarning(pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 printWarning(pkg, 'manifest-in-perl-module', f)
@@ -880,7 +880,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     printError(pkg, 'non-standard-dir-perm', f, "%o" % perm)
                 if pkg.name not in filesys_packages and f in STANDARD_DIRS:
                     printError(pkg, 'standard-dir-owned-by-package', f)
-                if hidden_file_regex.search(f):
+                if hidden_file_regex.search(f) and not f.endswith("/.build-id"):
                     printWarning(pkg, 'hidden-file-or-dir', f)
 
             # symbolic link check
