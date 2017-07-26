@@ -42,7 +42,8 @@ class Rpmdiff(object):
             rpm.RPMTAG_PREUN, rpm.RPMTAG_POSTUN,
             rpm.RPMTAG_PRETRANS, rpm.RPMTAG_POSTTRANS)
 
-    PRCO = ('REQUIRES', 'PROVIDES', 'CONFLICTS', 'OBSOLETES')
+    PRCO = ('REQUIRES', 'PROVIDES', 'CONFLICTS', 'OBSOLETES',
+            'RECOMMENDS', 'SUGGESTS', 'ENHANCES', 'SUPPLEMENTS')
 
     # {fname : (size, mode, mtime, flags, dev, inode,
     #           nlink, state, vflags, user, group, digest)}
@@ -198,7 +199,11 @@ class Rpmdiff(object):
 
     # compare Provides, Requires, Conflicts, Obsoletes
     def __comparePRCOs(self, old, new, name):
-        oldflags = old[name[:-1] + 'FLAGS']
+        try:
+            oldflags = old[name[:-1] + 'FLAGS']
+        except ValueError as e:
+            # assume tag not supported, e.g. Recommends with older rpm
+            return
         newflags = new[name[:-1] + 'FLAGS']
         # fix buggy rpm binding not returning list for single entries
         if not isinstance(oldflags, list):
