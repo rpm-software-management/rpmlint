@@ -201,7 +201,7 @@ class Rpmdiff(object):
     def __comparePRCOs(self, old, new, name):
         try:
             oldflags = old[name[:-1] + 'FLAGS']
-        except ValueError as e:
+        except ValueError:
             # assume tag not supported, e.g. Recommends with older rpm
             return
         newflags = new[name[:-1] + 'FLAGS']
