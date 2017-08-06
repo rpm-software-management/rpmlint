@@ -162,6 +162,11 @@ from Config import *
 # Type: boolean, default: autodetected from environment
 #setOption("UseUTF8", True)
 
+# Whether debug sources are expected to be in separate packages from
+# -debuginfo, typically -debugsource.
+# Type: boolean, default: False
+#setOption("UseDebugSource", False)
+
 # Whether %changelog entries should contain a version.
 # Type: boolean, default: True
 #setOption("UseVersionInChangelog", True)

@@ -34,6 +34,18 @@ class TestPythonBytecodeMagic(Testing.OutputTest):
             assert "python-bytecode-wrong-magic-value" not in "\n".join(out)
 
 
+class TestDevelFiles(Testing.OutputTest):
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = FilesCheck.check.check
+
+    def test_python_bytecode_magic(self):
+        for package in ["netmask-debugsource"]:
+            out = self._rpm_test_output(os.path.join("binary", package))
+            assert "devel-file-in-non-devel-package" not in "\n".join(out)
+
+
 def test_script_interpreter():
     assert se(b"#!/bin/sh\n# Hello world!\n") == ("/bin/sh", "")
     assert se(b"#!/bin/bash -e\n") == ("/bin/bash", "-e")

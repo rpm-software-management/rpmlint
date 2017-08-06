@@ -192,8 +192,10 @@ buildconfigfile_regex = re.compile(r'(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
 buildconfig_rpath_regex = re.compile(r'(?:-rpath|Wl,-R)\b')
 sofile_regex = re.compile(r'/lib(64)?/(.+/)?lib[^/]+\.so$')
-devel_regex = re.compile(r'(.*)-(debug(info)?|devel|headers|source|static)$')
+devel_regex = re.compile(r'(.*)-(debug(info|source)?|devel|headers|source|static)$')
 debuginfo_package_regex = re.compile(r'-debug(info)?$')
+debugsource_package_regex = re.compile(r'-debugsource$')
+use_debugsource = Config.getOption('UseDebugSource', False)
 lib_regex = re.compile(r'lib(64)?/lib[^/]*(\.so\..*|-[0-9.]+\.so)')
 ldconfig_regex = re.compile(r'^[^#]*ldconfig', re.MULTILINE)
 depmod_regex = re.compile(r'^[^#]*depmod', re.MULTILINE)
@@ -426,6 +428,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         lib_package = lib_package_regex.search(pkg.name)
         is_kernel_package = kernel_package_regex.search(pkg.name)
         debuginfo_package = debuginfo_package_regex.search(pkg.name)
+        debugsource_package = debugsource_package_regex.search(pkg.name)
 
         # report these errors only once
         perl_dep_error = False
@@ -443,7 +446,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         if files:
             if meta_package_regex.search(pkg.name):
                 printWarning(pkg, 'file-in-meta-package')
-        elif debuginfo_package:
+        elif debuginfo_package or debugsource_package:
             printError(pkg, 'empty-debuginfo-package')
 
         # Prefetch scriptlets, strip quotes from them (#169)
@@ -997,7 +1000,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         if lib_package and lib_file and non_lib_file:
             printError(pkg, 'outside-libdir-files', non_lib_file)
 
-        if debuginfo_package and debuginfo_debugs and not debuginfo_srcs:
+        if not use_debugsource and debuginfo_package and debuginfo_debugs and not debuginfo_srcs:
             printError(pkg, 'debuginfo-without-sources')
 
         for exe, paths in bindir_exes.items():
