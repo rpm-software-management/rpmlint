@@ -168,7 +168,7 @@ def main():
 
         for dname in dirs:
             try:
-                for path, dirs, files in os.walk(dname):
+                for path, _, files in os.walk(dname):
                     for fname in files:
                         fname = os.path.abspath(os.path.join(path, fname))
                         try:
