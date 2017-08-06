@@ -37,7 +37,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
             if zip_regex.search(fname) and os.path.exists(path) and \
                stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
                zipfile.is_zipfile(path):
-                z = None
+                z = None  # TODO ZipFile is context manager in 2.7+
                 try:
                     z = zipfile.ZipFile(path, 'r')
                     badcrc = z.testzip()
