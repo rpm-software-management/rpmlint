@@ -155,7 +155,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # check content of spec file
             self.check_spec(pkg, self._spec_file)
 
-    def check_spec(self, pkg, spec_file, spec_lines=[]):
+    def check_spec(self, pkg, spec_file, spec_lines=None):
         self._spec_file = spec_file
         spec_only = isinstance(pkg, Pkg.FakePkg)
         if not spec_lines:
