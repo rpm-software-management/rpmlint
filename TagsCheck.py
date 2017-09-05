@@ -40,79 +40,142 @@ DEFAULT_VALID_LICENSES = (
     # trailing "license" dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
     # the full name).  Updated 2010-02-01.
+    #
+    # Added a selection of Fedora-approved licenses in use in Fedora and Mageia.
+    # For the full list, refer to
+    # https://fedoraproject.org/wiki/Licensing:Main#SoftwareLicenses
     'Academic Free License',
     'Adaptive Public License',
     'AGPLv3',  # Affero GNU Public License
     'AGPLv3+',  # Affero GNU Public License
     'Apache License',
     'Apache Software License',
+    'ASL 1.0', # Apache Software License 1.0
+    'ASL 1.1', # Apache Software License 1.1
+    'ASL 2.0', # Apache Software License 2.0
     'Apple Public Source License',
     'Artistic',
     'Attribution Assurance License',
     'BSD',
+    'BSD with advertising',
+    'BSD with attribution',
     'Boost Software License',
+    'Boost', # Boost Software License
     'Computer Associates Trusted Open Source License',
     'CDDL',  # Common Development and Distribution License
     'Common Public Attribution License',
+    'CPL', # Common Public License
     'CUA Office Public License',
     'EU DataGrid Software License',
     'Eclipse Public License',
+    'EPL', # Eclipse Public License
     'Educational Community License',
     'Eiffel Forum License',
     'Entessa Public License',
     'European Union Public License',
     'Fair License',
     'Frameworx License',
+    'Giftware',
+    'GPL+',
+    'GPL+ with exceptions',
     'GPLv1',
     'GPLv1+',
     'GPLv2',
+    'GPLv2 with exceptions',
     'GPLv2+',
+    'GPLv2+ with exceptions',
     'GPLv3',
+    'GPLv3 with exceptions',
     'GPLv3+',
+    'GPLv3+ with exceptions',
     'LGPLv2',
+    'LGPLv2 with exceptions',
     'LGPLv2+',
+    'LGPLv2+ with exceptions',
     'LGPLv3',
+    'LGPLv3 with exceptions',
     'LGPLv3+',
+    'LGPLv3+ with exceptions',
+    'gnuplot',
+    'HaskellReport', # Haskell Language Report License
     'Historical Permission Notice and Disclaimer',
     'IBM Public License',
+    'ImageMagick',
     'IPA Font License',
     'ISC License',
+    'ISC', # ISC License
+    'Jabber', # Jabber Open Source License
+    'JPython', # JPython License (old)
+    'LPPL', # LaTeX Project Public License
     'Lucent Public License',
     'Microsoft Public License',
     'Microsoft Reciprocal License',
     'MirOS License',
     'MIT',
+    'MIT with advertising',
     'Motosoto License',
     'MPL',  # Mozilla Public License
+    'MPLv1.0', # Mozilla Public License
+    'MPLv1.1', # Mozilla Public License
+    'MPLv2.0', # Mozilla Public License
     'Multics License',
     'NASA Open Source Agreement',
     'Naumen Public License',
     'Nethack General Public License',
+    'Nmap',
     'Nokia Open Source License',
     'Non-profit Open Software License',
     'NTP License',
     'OCLC Research Public License',
     'OFL',  # Open Font License
+    'OpenLDAP',
     'Open Group Test Suite License',
     'Open Software License',
+    'OSL 1.0', # Open Software License
+    'OSL 1.1', # Open Software License
+    'OSL 2.0', # Open Software License
+    'OSL 2.1', # Open Software License
+    'OSL 3.0', # Open Software License
+    'OpenSSL',
+    'GPL+ or Artistic',    # Perl License
+    'GPLv2 or Artistic',   # Perl License (variant)
+    'GPLv2+ or Artistic',  # Perl License (variant)
+    'LGPLv2+ or Artistic', # Perl License (variant)
     'PHP License',
+    'PHP',
+    'PostgreSQL',
+    'Python', # Python License
     'Python license',  # CNRI Python License
     'Python Software Foundation License',
     'QPL',  # Qt Public License
     'RealNetworks Public Source License',
     'Reciprocal Public License',
     'Ricoh Source Code Public License',
+    'Ruby',
+    'Sendmail',
     'Simple Public License',
     'Sleepycat License',
     'Sun Public License',
     'Sybase Open Watcom Public License',
+    'Teeworlds',
+    'TCL',
     'University of Illinois/NCSA Open Source License',
+    'Vim',
     'Vovida Software License',
     'W3C License',
+    'Webmin',
+    'wxWidgets', # wxWidgets License
     'wxWindows Library License',
     'X.Net License',
+    'xinetd',
+    'Zend',
     'Zope Public License',
+    'ZPLv1.0', # Zope Public License v 1.0
+    'ZPLv2.0', # Zope Public License v 2.0
+    'ZPLv2.1', # Zope Public License v 2.1
     'zlib/libpng License',
+    'zlib',
+    'zlib with acknowledgement',
     # Creative commons licenses, http://creativecommons.org/licenses/:
     'Creative Commons Attribution',
     'Creative Commons Attribution-NoDerivs',
