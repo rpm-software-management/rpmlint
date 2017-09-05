@@ -1,7 +1,8 @@
 FROM fedora:rawhide
 
-RUN dnf --refresh -y upgrade
-RUN dnf -y install \
+# --nogpgcheck: Ignore transient(?) package signature failures
+RUN dnf --nogpgcheck --refresh -y upgrade
+RUN dnf --nogpgcheck -y install \
     /usr/bin/appstream-util \
     /usr/bin/cpio \
     /usr/bin/bzip2 \
