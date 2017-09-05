@@ -20,7 +20,7 @@ class TestSpecCheck(unittest.TestCase):
         self.assertFalse(re.search(r"patch-not-applied Patch\b", out))
         self.assertFalse(re.search("patch-not-applied Patch[0124567]", out))
         self.assertTrue("libdir-macro-in-noarch-package" not in out)
-        self.assertTrue(len(re.findall("macro-in-comment", out)) == 1)
+        self.assertEqual(len(re.findall("macro-in-comment", out)), 1)
         self.assertTrue("unversioned-explicit-provides unversioned-provides"
                         in out)
         self.assertTrue("unversioned-explicit-provides versioned-provides"
