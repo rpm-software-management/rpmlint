@@ -8,7 +8,7 @@ services:
 env:
   - DIST=centos6 PYTHON=python PYTEST=py.test FLAKE8=true
   #- DIST=ubuntu14 PYTHON=python PYTEST=py.test FLAKE8=true
-  #- DIST=fedora24 PYTHON=python3 PYTEST=py.test-3 FLAKE8=python3-flake8
+  - DIST=fedora26 PYTHON=python3 PYTEST=py.test-3 FLAKE8=flake8-3
   - DIST=fedoradev PYTHON=python3 PYTEST=py.test FLAKE8=flake8
 
 before_install:

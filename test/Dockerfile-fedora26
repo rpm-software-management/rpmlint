@@ -1,4 +1,4 @@
-FROM fedora:24
+FROM fedora:26
 
 RUN dnf --refresh -y install \
     /usr/bin/appstream-util \
@@ -10,7 +10,7 @@ RUN dnf --refresh -y install \
     /usr/bin/make \
     /usr/bin/man \
     /usr/bin/py.test-3 \
-    /usr/bin/python3-flake8 \
+    /usr/bin/flake8-3 \
     /usr/bin/readelf \
     /usr/bin/xz \
     python3-enchant \
