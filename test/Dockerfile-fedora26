@@ -1,6 +1,7 @@
 FROM fedora:26
 
-RUN dnf --refresh -y install \
+RUN dnf --refresh -y upgrade
+RUN dnf -y install \
     /usr/bin/appstream-util \
     /usr/bin/cpio \
     /usr/bin/bzip2 \
