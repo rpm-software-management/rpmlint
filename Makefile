@@ -20,7 +20,7 @@ PACKAGE = rpmlint
 PYTHON = /usr/bin/python
 
 # update this variable to create a new release
-VERSION := 1.9
+VERSION := 1.10
 
 all: __version__.py __isocodes__.py
 
