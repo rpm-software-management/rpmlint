@@ -14,9 +14,10 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/xz \
         python3-enchant \
         python3-magic \
-        python3-devel rpm-build
-# TODO: Install hacking once it's flake8 3.4+ compatible
-RUN pip3 install \
+        python3-devel rpm-build \
+    && \
+    # TODO: Install hacking once it's flake8 3.4+ compatible \
+    pip3 install \
         flake8-bugbear \
         flake8-import-order \
         pytest
