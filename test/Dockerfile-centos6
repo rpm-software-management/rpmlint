@@ -1,7 +1,7 @@
 FROM centos:6
 
 RUN yum -y install \
-        /usr/bin/cpio \
+        /bin/cpio \
         /usr/bin/bzip2 \
         /usr/bin/desktop-file-validate \
         /usr/bin/groff \
