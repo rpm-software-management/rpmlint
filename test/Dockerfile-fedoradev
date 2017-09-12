@@ -3,24 +3,24 @@ FROM fedora:rawhide
 # --nogpgcheck: Ignore transient(?) package signature failures
 RUN dnf --nogpgcheck --refresh -y upgrade
 RUN dnf --nogpgcheck -y install \
-    /usr/bin/appstream-util \
-    /usr/bin/cpio \
-    /usr/bin/bzip2 \
-    /usr/bin/desktop-file-validate \
-    /usr/bin/groff \
-    /usr/bin/gtbl \
-    /usr/bin/make \
-    /usr/bin/man \
-    /usr/bin/readelf \
-    /usr/bin/xz \
-    python3-enchant \
-    python3-magic \
-    python3-devel rpm-build
+        /usr/bin/appstream-util \
+        /usr/bin/cpio \
+        /usr/bin/bzip2 \
+        /usr/bin/desktop-file-validate \
+        /usr/bin/groff \
+        /usr/bin/gtbl \
+        /usr/bin/make \
+        /usr/bin/man \
+        /usr/bin/readelf \
+        /usr/bin/xz \
+        python3-enchant \
+        python3-magic \
+        python3-devel rpm-build
 # TODO: Install hacking once it's flake8 3.4+ compatible
 RUN pip3 install \
-    flake8-bugbear \
-    flake8-import-order \
-    pytest
+        flake8-bugbear \
+        flake8-import-order \
+        pytest
 
 WORKDIR /usr/src/rpmlint
 COPY . .

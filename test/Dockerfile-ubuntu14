@@ -1,18 +1,20 @@
 FROM ubuntu:14.04
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    binutils \
-    desktop-file-utils \
-    groff-base \
-    make \
-    man \
-    python-enchant \
-    python-magic \
-    python-pytest \
-    python-rpm \
-    rpm \
-    rpm2cpio \
-    xz-utils
+RUN apt-get update \
+    && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install \
+        binutils \
+        desktop-file-utils \
+        groff-base \
+        make \
+        man \
+        python-enchant \
+        python-magic \
+        python-pytest \
+        python-rpm \
+        rpm \
+        rpm2cpio \
+        xz-utils
 
 WORKDIR /usr/src/rpmlint
 COPY . .

@@ -2,22 +2,22 @@ FROM fedora:26
 
 RUN dnf --refresh -y upgrade
 RUN dnf -y install \
-    /usr/bin/appstream-util \
-    /usr/bin/cpio \
-    /usr/bin/bzip2 \
-    /usr/bin/desktop-file-validate \
-    /usr/bin/groff \
-    /usr/bin/gtbl \
-    /usr/bin/make \
-    /usr/bin/man \
-    /usr/bin/py.test-3 \
-    /usr/bin/flake8-3 \
-    /usr/bin/readelf \
-    /usr/bin/xz \
-    python3-enchant \
-    python3-flake8-import-order \
-    python3-hacking \
-    python3-magic
+        /usr/bin/appstream-util \
+        /usr/bin/cpio \
+        /usr/bin/bzip2 \
+        /usr/bin/desktop-file-validate \
+        /usr/bin/groff \
+        /usr/bin/gtbl \
+        /usr/bin/make \
+        /usr/bin/man \
+        /usr/bin/py.test-3 \
+        /usr/bin/flake8-3 \
+        /usr/bin/readelf \
+        /usr/bin/xz \
+        python3-enchant \
+        python3-flake8-import-order \
+        python3-hacking \
+        python3-magic
 
 WORKDIR /usr/src/rpmlint
 COPY . .
