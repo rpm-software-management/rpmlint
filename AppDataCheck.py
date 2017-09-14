@@ -28,8 +28,13 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
     def check_file(self, pkg, filename):
         root = pkg.dirName()
         f = root + filename
+
+        checker = appdata_checker
+        if checker[0] == "appstream-util" and not self.network_enabled:
+            checker += ("--nonet",)
+        print(checker)
         try:
-            st = getstatusoutput(appdata_checker + (f,))
+            st = getstatusoutput(checker + (f,))
         except OSError:
             # ignore if the checker is not installed
             return
