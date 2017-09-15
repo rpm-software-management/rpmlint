@@ -204,9 +204,7 @@ class BinaryInfo(object):
 
             # check if chroot is near chdir (since otherwise, chroot is called
             # without chdir)
-            # Currently this implementation works only on x86_64 due to reliance
-            # on x86_64 specific assembly. Skip it on other architectures
-            if pkg.arch == 'x86_64' and self.chroot and self.chdir:
+            if self.chroot and self.chdir:
                 p = subprocess.Popen(('objdump', '-d', path),
                                      stdout=subprocess.PIPE, bufsize=-1,
                                      env=dict(os.environ, LC_ALL="C"))
@@ -233,6 +231,8 @@ class BinaryInfo(object):
                         index += 1
                 if p.wait() and not self.chroot_near_chdir:
                     printWarning(pkg, 'binaryinfo-objdump-failed', file)
+                    self.chroot_near_chdir = True  # avoid false positive
+                elif chroot_index == -99 and chdir_index == -99:
                     self.chroot_near_chdir = True  # avoid false positive
 
         else:
@@ -531,7 +531,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'missing-call-to-setgroups-before-setuid',
                            fname)
 
-            if pkg.arch == 'x86_64' and bin_info.chroot:
+            if bin_info.chroot:
                 if not bin_info.chdir or not bin_info.chroot_near_chdir:
                     printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
 
