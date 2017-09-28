@@ -1276,7 +1276,10 @@ executed.''',
 
 'wrong-script-interpreter',
 '''This script uses an interpreter which is either an inappropriate one
-or located in an inappropriate directory for packaged system software.''',
+or located in an inappropriate directory for packaged system software.
+Alternatively, if the file should not be executed, then ensure that
+it is not marked as executable.
+''',
 
 'non-executable-script',
 '''This text file contains a shebang or is located in a path dedicated for
