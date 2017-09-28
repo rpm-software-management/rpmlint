@@ -20,6 +20,13 @@ source_regex = re.compile(r'\\.(tar|patch|tgz|diff)$')
 compress_ext = Config.getOption("CompressExtension", "bz2")
 valid_src_perms = Config.getOption("ValidSrcPerms", DEFAULT_VALID_SRC_PERMS)
 
+compressed_fileext_magic = {
+    'xz': 'XZ compressed',
+    'gz': 'gzip compressed',
+    'tgz': 'gzip compressed',
+    'bz2': 'bzip2 compressed'
+}
+
 
 class SourceCheck(AbstractCheck.AbstractCheck):
 
@@ -30,6 +37,12 @@ class SourceCheck(AbstractCheck.AbstractCheck):
         # process file list
         spec_file = None
         for fname, pkgfile in pkg.files().items():
+            file_ext = fname.rpartition('.')[2]
+            if (file_ext in compressed_fileext_magic and
+                    pkgfile.magic and
+                    compressed_fileext_magic[file_ext] not in pkgfile.magic):
+                printWarning(pkg, 'inconsistent-file-extension', fname)
+
             if fname.endswith('.spec'):
                 if spec_file:
                     printError(pkg, 'multiple-specfiles', spec_file, fname)
@@ -61,6 +74,9 @@ compression method (doesn't have the %s extension).''' %
 '''A file that you listed to include in your package has strange
 permissions. Usually, a file should have 0644 permissions.''',
 
+'inconsistent-file-extension',
+'''The file name extension indicates a different compression format than
+what is actually used (as checked by file(1))''',
 )
 
 # SourceCheck.py ends here
