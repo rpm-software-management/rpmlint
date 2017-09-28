@@ -201,7 +201,9 @@ ldconfig_regex = re.compile(r'^[^#]*ldconfig', re.MULTILINE)
 depmod_regex = re.compile(r'^[^#]*depmod', re.MULTILINE)
 install_info_regex = re.compile(r'^[^#]*install-info', re.MULTILINE)
 perl_temp_file_regex = re.compile(r'.*perl.*/(\.packlist|perllocal\.pod)$')
-scm_regex = re.compile(r'/CVS/[^/]+$|/\.(bzr|cvs|git|hg)ignore$|/\.hgtags$|/\.(bzr|git|hg|svn)/|/(\.arch-ids|{arch})/')
+scm_regex = re.compile(
+    r'/(?:RCS|CVS)/[^/]+$|/\.(?:bzr|cvs|git|hg|svn)ignore$|'
+    r',v$|/\.hgtags$|/\.(?:bzr|git|hg|svn)/|/(?:\.arch-ids|{arch})/')
 games_path_regex = re.compile(r'^/usr(/lib(64)?)?/games/')
 games_group_regex = re.compile(Config.getOption('RpmGamesGroups', DEFAULT_GAMES_GROUPS))
 dangling_exceptions = Config.getOption('DanglingSymlinkExceptions', DEFAULT_DANGLING_EXCEPTIONS)

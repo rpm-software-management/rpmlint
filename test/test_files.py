@@ -52,3 +52,13 @@ def test_script_interpreter():
     assert se(b"#! /usr/bin/perl -wT \n") == ("/usr/bin/perl", "-wT")
     assert se(b"#!/usr/bin/env python3 foo") == ("/usr/bin/env", "python3 foo")
     assert se(b"# something here\n#!not a shebang") == (None, "")
+
+
+def test_scm_regex():
+    from FilesCheck import scm_regex
+
+    assert scm_regex.search('/foo/CVS/bar')
+    assert scm_regex.search('/foo/RCS/bar')
+    assert scm_regex.search('/bar/foo,v')
+    assert scm_regex.search('bar/.svnignore')
+    assert scm_regex.search('bar/.git/refs')
