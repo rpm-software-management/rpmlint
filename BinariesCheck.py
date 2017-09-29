@@ -240,8 +240,11 @@ class BinaryInfo(object):
 
         else:
             self.readelf_error = True
-            printWarning(pkg, 'binaryinfo-readelf-failed',
-                         file, re.sub('\n.*', '', res[1]))
+            # Go and others are producing ar archives that don't have ELF
+            # headers, so don't complain about it
+            if not is_ar:
+                printWarning(pkg, 'binaryinfo-readelf-failed',
+                             file, re.sub('\n.*', '', res[1]))
 
         try:
             with open(path, 'rb') as fobj:
