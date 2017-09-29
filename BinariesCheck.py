@@ -71,7 +71,7 @@ class BinaryInfo(object):
     chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
 
-    def __init__(self, pkg, path, file, is_ar, is_shlib):
+    def __init__(self, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
         self.needed = []
         self.rpath = []
@@ -233,7 +233,7 @@ class BinaryInfo(object):
                                 break
                         index += 1
                 if p.wait() and not self.chroot_near_chdir:
-                    printWarning(pkg, 'binaryinfo-objdump-failed', file)
+                    printWarning(pkg, 'binaryinfo-objdump-failed', fname)
                     self.chroot_near_chdir = True  # avoid false positive
                 elif chroot_index == -99 and chdir_index == -99:
                     self.chroot_near_chdir = True  # avoid false positive
@@ -244,14 +244,14 @@ class BinaryInfo(object):
             # headers, so don't complain about it
             if not is_ar:
                 printWarning(pkg, 'binaryinfo-readelf-failed',
-                             file, re.sub('\n.*', '', res[1]))
+                             fname, re.sub('\n.*', '', res[1]))
 
         try:
             with open(path, 'rb') as fobj:
                 fobj.seek(-12, os.SEEK_END)
                 self.tail = Pkg.b2s(fobj.read())
         except Exception as e:
-            printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (file, e))
+            printWarning(pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
 
         # Undefined symbol and unused direct dependency checks make sense only
         # for installed packages.
@@ -272,7 +272,7 @@ class BinaryInfo(object):
                     except:
                         pass
             else:
-                printWarning(pkg, 'ldd-failed', file)
+                printWarning(pkg, 'ldd-failed', fname)
             res = Pkg.getstatusoutput(('ldd', '-r', '-u', path))
             if res[0]:
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
