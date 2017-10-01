@@ -830,13 +830,17 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         for p in useless_provides:
             printError(pkg, 'useless-provides', p)
 
-        for p in pkg.provides():
-            value = Pkg.formatRequire(*p)
-            self._unexpanded_macros(pkg, 'Provides %s' % (value,), value)
-
-        for c in pkg.conflicts():
-            value = Pkg.formatRequire(*c)
-            self._unexpanded_macros(pkg, 'Conflicts %s' % (value,), value)
+        for tagname, items in (
+                ('Provides', pkg.provides()),
+                ('Conflicts', pkg.conflicts()),
+                ('Obsoletes', pkg.obsoletes()),
+                ('Supplements', pkg.supplements()),
+                ('Suggests', pkg.suggests()),
+                ('Enhances', pkg.enhances()),
+                ('Recommends', pkg.recommends())):
+            for p in items:
+                value = Pkg.formatRequire(*p)
+                self._unexpanded_macros(pkg, '%s %s' % (tagname, value), value)
 
         obss = pkg.obsoletes()
         if obss:
