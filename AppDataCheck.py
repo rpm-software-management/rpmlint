@@ -10,6 +10,7 @@ import AbstractCheck
 import Config
 from Filter import addDetails, printError
 from Pkg import getstatusoutput
+import xml.etree.ElementTree as ET
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
 DEFAULT_APPDATA_CHECKER = ('appstream-util', 'validate-relax')
@@ -32,13 +33,18 @@ class AppDataCheck(AbstractCheck.AbstractFilesCheck):
         checker = appdata_checker
         if checker[0] == "appstream-util" and not self.network_enabled:
             checker += ("--nonet",)
-        print(checker)
+        validation_failed = False
         try:
             st = getstatusoutput(checker + (f,))
+            # Return code nonzero?
+            validation_failed = (st[0] != 0)
         except OSError:
-            # ignore if the checker is not installed
-            return
-        if st[0]:
+            # checker is not installed, do a validation manually
+            try:
+                ET.parse(pkg.dirName() + filename)
+            except ET.ParseError:
+                validation_failed = True
+        if validation_failed:
             printError(pkg, 'invalid-appdata-file', filename)
 
 
