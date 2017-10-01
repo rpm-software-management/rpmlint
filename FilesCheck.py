@@ -848,12 +848,15 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
                             res = interpreter_regex.search(interpreter)
-                            is_wrong_interpreter = (not res or (res and
-                                                    res.group(1) == 'env'))
-                            if ((mode_is_exec or script_regex.search(f)) and
-                                    is_wrong_interpreter):
-                                printError(pkg, 'wrong-script-interpreter',
-                                           f, interpreter, interpreter_args)
+                            if (mode_is_exec or script_regex.search(f)):
+                                if res and res.group(1) == 'env':
+                                    printError(pkg, 'env-script-interpreter',
+                                               f, interpreter,
+                                               interpreter_args)
+                                elif not res:
+                                    printError(pkg, 'wrong-script-interpreter',
+                                               f, interpreter,
+                                               interpreter_args)
                         elif not nonexec_file and not \
                                 (lib_path_regex.search(f) and
                                  f.endswith('.la')):
@@ -1280,8 +1283,25 @@ executed.''',
 'wrong-script-interpreter',
 '''This script uses an interpreter which is either an inappropriate one
 or located in an inappropriate directory for packaged system software.
+
 Alternatively, if the file should not be executed, then ensure that
 it is not marked as executable.
+''',
+
+'env-script-interpreter',
+'''This script uses 'env' as an interpreter.
+For the rpm runtime dependency detection to work, the shebang
+#!/usr/bin/env python
+
+needs to be patched into
+#!/usr/bin/python
+
+otherwise the package dependency generator merely adds a dependency
+on /usr/bin/env rather than the actual interpreter /usr/bin/python.
+
+Alternatively, if the file should not be executed, then ensure that
+it is not marked as executable or don't install it in a path that
+is reserved for executables.
 ''',
 
 'non-executable-script',
