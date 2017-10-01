@@ -9,7 +9,6 @@
 
 import re
 import sys
-import unicodedata
 try:
     from urlparse import urlparse
 except ImportError:  # Python 3
@@ -106,7 +105,7 @@ filelist_regex = re.compile(r'\s+-f\s+\S+')
 pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
-UNICODE_NBSP = unicodedata.lookup('NO-BREAK SPACE')
+UNICODE_NBSP = u'\xa0'
 
 
 def unversioned(deps):
