@@ -848,7 +848,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                     elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
                             res = interpreter_regex.search(interpreter)
-                            if (res and res.group(1) == 'env') or not res:
+                            is_wrong_interpreter = (not res or (res and
+                                                    res.group(1) == 'env'))
+                            if ((mode_is_exec or script_regex.search(f)) and
+                                    is_wrong_interpreter):
                                 printError(pkg, 'wrong-script-interpreter',
                                            f, interpreter, interpreter_args)
                         elif not nonexec_file and not \
