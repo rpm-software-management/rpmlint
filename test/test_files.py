@@ -71,11 +71,13 @@ def test_lib_regex():
     assert all(
         lib_regex.search(x) for x in
         ('/lib/libnsl-2.26.so',
-         '/lib64/libSegFault.so',
+         '/usr/lib64/libgnomeui.so.3',
          '/lib64/libgcc_s.so.1'))
 
     # false positives
     assert not any(
         lib_regex.search(x) for x in
         ('/usr/share/gdb/auto-load/usr/lib/libglib-2.0.so.0.4600.1-gdb.py',
+         '/usr/share/doc/findlib/lib-1.0.so',
+         '/usr/lib64/libvulkan_radeon.so',
          '/usr/lib64/rsocket/binary',))
