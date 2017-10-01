@@ -397,6 +397,9 @@ BAD_WORDS = {
     'xwindows': 'X'
 }
 
+CAPITALIZED_IGNORE_LIST = (
+    'jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
+
 DEFAULT_INVALID_REQUIRES = ('^is$', '^not$', '^owned$', '^by$', '^any$',
                             '^package$', r'^libsafe\.so\.')
 
@@ -911,7 +914,8 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         spell_check(pkg, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:
             printError(pkg, 'summary-on-multiple-lines', lang)
-        if summary[0] != summary[0].upper():
+        if (not summary[0].isupper() and
+                summary.partition(' ')[0] not in CAPITALIZED_IGNORE_LIST):
             printWarning(pkg, 'summary-not-capitalized', lang, summary)
         if summary[-1] == '.':
             printWarning(pkg, 'summary-ended-with-dot', lang, summary)
