@@ -351,7 +351,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
 
-            is_elf = 'ELF' in pkgfile.magic
+            is_elf = pkgfile.magic.startswith('ELF ')
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
