@@ -54,8 +54,6 @@ class BinaryInfo(object):
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
-    # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-    objdump_call_regex = re.compile(br'callq?\s(.*)')
 
     forbidden_functions = Config.getOption("WarnOnFunction")
     if forbidden_functions:
@@ -96,6 +94,16 @@ class BinaryInfo(object):
         self.mktemp = False
 
         is_debug = path.endswith('.debug')
+        # Currently this implementation works only on specific
+        # architectures due to reliance on arch specific assembly.
+        if (pkg.arch.startswith('armv') or pkg.arch == 'aarch64'):
+            # 10450:   ebffffec        bl      10408 <chroot@plt>
+            BinaryInfo.objdump_call_regex = re.compile(br'\sbl\s+(.*)')
+        elif (pkg.arch.endswith('86') or pkg.arch == 'x86_64'):
+            # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
+            BinaryInfo.objdump_call_regex = re.compile(br'callq?\s(.*)')
+        else:
+            BinaryInfo.objdump_call_regex = None
 
         res = Pkg.getstatusoutput(
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
@@ -204,10 +212,13 @@ class BinaryInfo(object):
 
             # check if chroot is near chdir (since otherwise, chroot is called
             # without chdir)
-            # Currently this implementation works only on x86_64 due to reliance
-            # on x86_64 specific assembly. Skip it on other architectures
-            if ((pkg.arch.endswith('86') or pkg.arch == 'x86_64') and
-                    self.chroot and self.chdir):
+            if not BinaryInfo.objdump_call_regex and self.chroot and self.chdir:
+                # On some architectures, e.g. PPC, it is to difficult to
+                # find the actual invocations of chroot/chdir, if both
+                # exist assume chroot is fine
+                self.chroot_near_chdir = True
+
+            elif self.chroot and self.chdir:
                 p = subprocess.Popen(('objdump', '-d', path),
                                      stdout=subprocess.PIPE, bufsize=-1,
                                      env=dict(os.environ, LC_ALL="C"))
@@ -537,9 +548,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 printError(pkg, 'missing-call-to-setgroups-before-setuid',
                            fname)
 
-            if ((pkg.arch.endswith('86') or pkg.arch == 'x86_64') and bin_info.chroot):
-                if not bin_info.chdir or not bin_info.chroot_near_chdir:
-                    printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
+            if bin_info.chroot and not bin_info.chroot_near_chdir:
+                printError(pkg, 'missing-call-to-chdir-with-chroot', fname)
 
             if bin_info.mktemp:
                 printError(pkg, 'call-to-mktemp', fname)
