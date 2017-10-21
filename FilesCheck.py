@@ -717,10 +717,10 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                 if not python_dep_error:
                     res = python_regex.search(f)
-                    if res and not (pkg.check_versioned_dep('python-base',
-                                                            res.group(1)) or
-                                    pkg.check_versioned_dep('python',
-                                                            res.group(1))):
+                    if (res and not
+                            any((pkg.check_versioned_dep(dep, res.group(1))
+                                for dep in (
+                                    'python', 'python-base', 'python(abi)')))):
                         printError(pkg, 'no-dependency-on', 'python-base',
                                    res.group(1))
                         python_dep_error = True
