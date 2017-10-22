@@ -27,6 +27,7 @@ try:
     _magic = magic.open(magic.MAGIC_NONE)
     _ = _magic.descriptor  # magic >= 5.05 needed
     _magic.load()
+    _ = _magic.descriptor  # magic >= 5.05 needed
 except:
     _magic = None
 import rpm
