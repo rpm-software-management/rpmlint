@@ -914,7 +914,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         spell_check(pkg, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:
             printError(pkg, 'summary-on-multiple-lines', lang)
-        if (not summary[0].isupper() and
+        if (summary[0] != summary[0].upper() and
                 summary.partition(' ')[0] not in CAPITALIZED_IGNORE_LIST):
             printWarning(pkg, 'summary-not-capitalized', lang, summary)
         if summary[-1] == '.':
