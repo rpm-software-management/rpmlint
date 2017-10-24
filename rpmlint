@@ -20,7 +20,7 @@ import tempfile
 
 try:
     import importlib
-except:  # Python < 2.7
+except ImportError:  # Python < 2.7
     importlib = None
     import imp
 

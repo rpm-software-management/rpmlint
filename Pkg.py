@@ -18,7 +18,7 @@ import sys
 import tempfile
 try:
     from urlparse import urljoin
-except:
+except ImportError:
     from urllib.parse import urljoin
 
 try:
@@ -27,7 +27,7 @@ try:
     _magic = magic.open(magic.MAGIC_NONE)
     _ = _magic.descriptor  # magic >= 5.05 needed
     _magic.load()
-except:
+except ImportError:
     _magic = None
 import rpm
 
@@ -52,7 +52,7 @@ else:
 
 try:
     from shlex import quote as shquote
-except:
+except ImportError:
     def shquote(s):
         return '"%s"' % s
 

@@ -11,7 +11,7 @@ import contextlib
 import re
 try:
     import urllib2
-except:
+except ImportError:
     import urllib.request as urllib2
 
 import Config

@@ -9,7 +9,7 @@
 import os
 try:
     from ConfigParser import RawConfigParser
-except:
+except ImportError:
     from configparser import RawConfigParser
 
 import AbstractCheck
