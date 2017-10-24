@@ -101,32 +101,32 @@ class BinaryInfo(object):
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
         if not res[0]:
             lines = res[1].splitlines()
-            for l in lines:
-                r = BinaryInfo.needed_regex.search(l)
+            for line in lines:
+                r = BinaryInfo.needed_regex.search(line)
                 if r:
                     self.needed.append(r.group(1))
                     continue
 
-                r = BinaryInfo.rpath_regex.search(l)
+                r = BinaryInfo.rpath_regex.search(line)
                 if r:
                     for p in r.group(1).split(':'):
                         self.rpath.append(p)
                     continue
 
-                if BinaryInfo.comment_regex.search(l):
+                if BinaryInfo.comment_regex.search(line):
                     self.comment = True
                     continue
 
-                if BinaryInfo.pic_regex.search(l):
+                if BinaryInfo.pic_regex.search(line):
                     self.non_pic = False
                     continue
 
-                r = BinaryInfo.soname_regex.search(l)
+                r = BinaryInfo.soname_regex.search(line)
                 if r:
                     self.soname = r.group(1)
                     continue
 
-                r = BinaryInfo.stack_regex.search(l)
+                r = BinaryInfo.stack_regex.search(line)
                 if r:
                     self.stack = True
                     flags = r.group(1)
@@ -134,45 +134,45 @@ class BinaryInfo(object):
                         self.exec_stack = True
                     continue
 
-                if l.startswith("Symbol table"):
+                if line.startswith("Symbol table"):
                     break
 
-            for l in lines:
-                r = BinaryInfo.call_regex.search(l)
+            for line in lines:
+                r = BinaryInfo.call_regex.search(line)
                 if not r:
                     continue
-                l = r.group(1)
+                line = r.group(1)
 
-                if BinaryInfo.mktemp_call_regex.search(l):
+                if BinaryInfo.mktemp_call_regex.search(line):
                     self.mktemp = True
 
-                if BinaryInfo.setgid_call_regex.search(l):
+                if BinaryInfo.setgid_call_regex.search(line):
                     self.setgid = True
 
-                if BinaryInfo.setuid_call_regex.search(l):
+                if BinaryInfo.setuid_call_regex.search(line):
                     self.setuid = True
 
-                if BinaryInfo.setgroups_call_regex.search(l):
+                if BinaryInfo.setgroups_call_regex.search(line):
                     self.setgroups = True
 
-                if BinaryInfo.chdir_call_regex.search(l):
+                if BinaryInfo.chdir_call_regex.search(line):
                     self.chdir = True
 
-                if BinaryInfo.chroot_call_regex.search(l):
+                if BinaryInfo.chroot_call_regex.search(line):
                     self.chroot = True
 
                 if BinaryInfo.forbidden_functions:
                     for r_name, func in BinaryInfo.forbidden_functions.items():
-                        ret = func['f_regex'].search(l)
+                        ret = func['f_regex'].search(line)
                         if ret:
                             self.forbidden_calls.append(r_name)
 
                 if is_shlib:
-                    r = BinaryInfo.exit_call_regex.search(l)
+                    r = BinaryInfo.exit_call_regex.search(line)
                     if r:
                         self.exit_calls.append(r.group(1))
                         continue
-                    r = BinaryInfo.fork_call_regex.search(l)
+                    r = BinaryInfo.fork_call_regex.search(line)
                     if r:
                         fork_called = True
                         continue
@@ -182,14 +182,14 @@ class BinaryInfo(object):
             if self.forbidden_calls:
                 res = Pkg.getstatusoutput(('strings', path))
                 if not res[0]:
-                    for l in res[1].splitlines():
+                    for line in res[1].splitlines():
                         # as we need to remove elements, iterate backwards
                         for i in range(len(self.forbidden_calls) - 1, -1, -1):
                             func = self.forbidden_calls[i]
                             f = BinaryInfo.forbidden_functions[func]
                             if 'waiver_regex' not in f:
                                 continue
-                            r = f['waiver_regex'].search(l)
+                            r = f['waiver_regex'].search(line)
                             if r:
                                 del self.forbidden_calls[i]
 
@@ -260,8 +260,8 @@ class BinaryInfo(object):
             # We could do this with objdump, but it's _much_ simpler with ldd.
             res = Pkg.getstatusoutput(('ldd', '-d', '-r', path))
             if not res[0]:
-                for l in res[1].splitlines():
-                    undef = BinaryInfo.undef_regex.search(l)
+                for line in res[1].splitlines():
+                    undef = BinaryInfo.undef_regex.search(line)
                     if undef:
                         self.undef.append(undef.group(1))
                 if self.undef:
@@ -278,13 +278,13 @@ class BinaryInfo(object):
                 # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
                 # unused direct dependencies
                 in_unused = False
-                for l in res[1].splitlines():
-                    if not l.rstrip():
+                for line in res[1].splitlines():
+                    if not line.rstrip():
                         pass
-                    elif l.startswith('Unused direct dependencies'):
+                    elif line.startswith('Unused direct dependencies'):
                         in_unused = True
                     elif in_unused:
-                        unused = BinaryInfo.unused_regex.search(l)
+                        unused = BinaryInfo.unused_regex.search(line)
                         if unused:
                             self.unused.append(unused.group(1))
                         else:
