@@ -42,11 +42,11 @@ USEUTF8_DEFAULT = False
 try:
     if locale.getpreferredencoding() == 'UTF-8':
         USEUTF8_DEFAULT = True
-except:
+except UnicodeError:
     try:
         if re.match('utf', locale.getdefaultlocale()[1], re.I):
             USEUTF8_DEFAULT = True
-    except:
+    except UnicodeError:
         pass
 
 info = False
@@ -105,10 +105,7 @@ def setOption(name, value):
 
 
 def getOption(name, default=""):
-    try:
-        return _options[name]
-    except:
-        return default
+    return _options.get(name, default)
 
 
 # List of filters
@@ -128,7 +125,7 @@ def removeFilter(s):
 
     try:
         _filters.remove(s)
-    except:
+    except ValueError:
         pass
     else:
         _filters_re = None

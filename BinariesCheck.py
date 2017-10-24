@@ -269,7 +269,7 @@ class BinaryInfo(object):
                         res = Pkg.getstatusoutput(['c++filt'] + self.undef)
                         if not res[0]:
                             self.undef = res[1].splitlines()
-                    except:
+                    except OSError:
                         pass
             else:
                 printWarning(pkg, 'ldd-failed', fname)

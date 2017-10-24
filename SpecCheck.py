@@ -570,7 +570,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             try:
                 ts = rpm.TransactionSet()
                 spec_obj = ts.parseSpec(self._spec_file)
-            except:
+            except rpm.error:
                 # errors logged above already
                 pass
             if spec_obj:

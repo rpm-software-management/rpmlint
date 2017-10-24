@@ -50,7 +50,7 @@ def index_or_sub(source, word, sub=0):
     """
     try:
         return source.index(word)
-    except:
+    except ValueError:
         return sub
 
 

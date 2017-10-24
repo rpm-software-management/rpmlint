@@ -43,6 +43,10 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                     badcrc = z.testzip()
                     if badcrc:
                         printError(pkg, 'bad-crc-in-zip', badcrc, fname)
+                except zipfile.error:
+                    printWarning(pkg, 'unable-to-read-zip', '%s: %s' %
+                                 (fname, sys.exc_info()[1]))
+                else:
                     compressed = False
                     for zinfo in z.infolist():
                         if zinfo.compress_type != zipfile.ZIP_STORED:
@@ -70,9 +74,6 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                             if want_indexed_jars:
                                 printWarning(pkg, 'jar-not-indexed', fname)
                             pass
-                except:
-                    printWarning(pkg, 'unable-to-read-zip', '%s: %s' %
-                                 (fname, sys.exc_info()[1]))
 
                 z and z.close()
 

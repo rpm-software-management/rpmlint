@@ -166,7 +166,7 @@ def is_utf8(fname):
 def is_utf8_bytestr(s):
     try:
         s.decode('UTF-8')
-    except:
+    except UnicodeError:
         return False
     return True
 
@@ -227,7 +227,7 @@ def get_default_valid_rpmgroups(filename=None):
                 groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
                 if groupsfiles:
                     filename = groupsfiles[0]
-        except:  # the rpm package might not be installed
+        except KeyError:  # the rpm package might not be installed
             pass
     if filename and os.path.exists(filename):
         with open(filename) as fobj:
@@ -532,7 +532,7 @@ class Pkg(AbstractPkg):
     def __getitem__(self, key):
         try:
             val = self.header[key]
-        except:
+        except KeyError:
             val = []
         if val == []:
             return None
@@ -680,7 +680,7 @@ class Pkg(AbstractPkg):
         magics = [b2s(x) for x in self.header[rpm.RPMTAG_FILECLASS]]
         try:  # rpm >= 4.7.0
             filecaps = self.header[rpm.RPMTAG_FILECAPS]
-        except:
+        except AttributeError:
             filecaps = None
 
         # rpm-python < 4.6 does not return a list for this (or FILEDEVICES,
@@ -915,9 +915,11 @@ class Pkg(AbstractPkg):
         Depending on rpm-python version, the string may or may not include
         interpreter arguments, if any.
         """
+        if which is None:
+            return ''
         prog = self[which]
         if prog is None:
-            prog = ""
+            prog = ''
         elif isinstance(prog, (list, tuple)):
             # http://rpm.org/ticket/847#comment:2
             prog = "".join(prog)
