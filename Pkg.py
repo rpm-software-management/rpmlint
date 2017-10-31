@@ -977,6 +977,15 @@ class FakePkg(AbstractPkg):
         self.name = name
         self.arch = None
         self.current_linenum = None
+        self.dirname = None
+    def dirName(self):
+        if not self.dirname:
+            self.dirname = tempfile.mkdtemp(
+                prefix='rpmlint.%s.' % os.path.basename(self.name))
+        return self.dirname
+    def cleanup(self):
+        if self.dirname:
+            getstatusoutput(('rm', '-rf', self.dirname))
 
 
 # Class for files in packages
