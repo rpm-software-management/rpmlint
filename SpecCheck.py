@@ -567,14 +567,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # them with macros expanded for URL checking
 
             spec_obj = None
-            rpm.addMacro( '_sourcedir', pkg.dirName() )
+            rpm.addMacro('_sourcedir', pkg.dirName())
             try:
                 ts = rpm.TransactionSet()
                 spec_obj = ts.parseSpec(self._spec_file)
             except rpm.error:
                 # errors logged above already
                 pass
-            rpm.delMacro( '_sourcedir' )
+            rpm.delMacro('_sourcedir')
             if spec_obj:
                 try:
                     # rpm < 4.8.0
