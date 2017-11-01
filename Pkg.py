@@ -719,16 +719,11 @@ class Pkg(AbstractPkg):
                     # use descriptor() method instead
                     try:
                         fd = os.open(pkgfile.path, os.O_RDONLY)
+                        pkgfile.magic = b2s(_magic.descriptor(fd))
+                        os.close(fd)
                     except OSError:
                         if not pkgfile.is_ghost:
                             raise
-                    else:
-                        pkgfile.magic = b2s(_magic.descriptor(fd))
-                    # libmagic up to 5.18 already closes the descriptor
-                    try:
-                        os.close(fd)
-                    except OSError:
-                        pass
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
