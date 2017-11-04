@@ -826,11 +826,13 @@ class TagsCheck(AbstractCheck.AbstractCheck):
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
-        useless_provides = []
+        useless_provides = set()
         for p in prov_names:
-            if prov_names.count(p) != 1 and p not in useless_provides:
-                useless_provides.append(p)
-        for p in useless_provides:
+            if (prov_names.count(p) != 1 and
+                    not p.startswith('debuginfo(') and
+                    p not in useless_provides):
+                useless_provides.add(p)
+        for p in sorted(useless_provides):
             printError(pkg, 'useless-provides', p)
 
         for tagname, items in (
