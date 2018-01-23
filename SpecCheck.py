@@ -554,7 +554,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
 
         out = Pkg.getstatusoutput(
-            ('rpm', '-q', '--qf=', '--specfile', self._spec_file))
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % pkg.dirName(), '--specfile', self._spec_file))
         parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855
@@ -567,12 +567,14 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # them with macros expanded for URL checking
 
             spec_obj = None
+            rpm.addMacro('_sourcedir', pkg.dirName())
             try:
                 ts = rpm.TransactionSet()
                 spec_obj = ts.parseSpec(self._spec_file)
             except rpm.error:
                 # errors logged above already
                 pass
+            rpm.delMacro('_sourcedir')
             if spec_obj:
                 try:
                     # rpm < 4.8.0
