@@ -6,6 +6,7 @@
 # http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
 #
 
+import codecs
 import os
 try:
     import ConfigParser as cfgparser
@@ -30,7 +31,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
     def parse_desktop_file(self, pkg, root, f, filename):
         cfp = cfgparser.RawConfigParser()
         try:
-            with open(f, 'rb') as inputf:
+            with codecs.open(f, encoding='utf-8') as inputf:
                 cfp.readfp(inputf, filename)
         except cfgparser.DuplicateSectionError as e:
             printError(
