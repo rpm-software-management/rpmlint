@@ -43,13 +43,17 @@ def getOutput():
     return output
 
 
+def getTestedPath(path):
+    return os.path.join(_testpath(), path)
+
+
 def getTestedPackage(name):
-    pkg_path = glob.glob(os.path.join(_testpath(), name) + "-*.rpm")[0]
+    pkg_path = glob.glob(getTestedPath(name) + "-*.rpm")[0]
     return Pkg.Pkg(pkg_path, tempfile.gettempdir())
 
 
 def getTestedSpecPackage(name):
-    pkg_path = glob.glob(os.path.join(_testpath(), name) + ".spec")[0]
+    pkg_path = glob.glob(getTestedPath(name) + ".spec")[0]
     return Pkg.FakePkg(pkg_path)
 
 

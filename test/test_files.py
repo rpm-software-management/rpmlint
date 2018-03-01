@@ -1,8 +1,10 @@
 import os
+import pytest
 
 import FilesCheck
 from FilesCheck import python_bytecode_to_script as pbts
 from FilesCheck import script_interpreter as se
+from FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 import Testing
 
 
@@ -32,6 +34,23 @@ class TestPythonBytecodeMagic(Testing.OutputTest):
         for package in ["python3-power"]:
             out = self._rpm_test_output(os.path.join("binary", package))
             assert "python-bytecode-wrong-magic-value" not in "\n".join(out)
+
+    @pytest.mark.parametrize('version, magic', ((36, 3379), (37, 3393)))
+    def test_pyc_magic_from_chunk(self, version, magic):
+        path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
+        with open(path, 'rb') as f:
+            chunk = f.read(16)
+        assert pyc_magic_from_chunk(chunk) == magic
+
+
+class TestPythonBytecodeMtime(object):
+
+    @pytest.mark.parametrize('version, mtime', ((36, 1513659236), (37, 1519778958)))
+    def test_pyc_mtime_from_chunk(self, version, mtime):
+        path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
+        with open(path, 'rb') as f:
+            chunk = f.read(16)
+        assert pyc_mtime_from_chunk(chunk) == mtime
 
 
 class TestDevelFiles(Testing.OutputTest):
