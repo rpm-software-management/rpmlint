@@ -24,6 +24,13 @@ class TestPythonBytecodeToScript(object):
         assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
 
 
+def chunk_from_pyc(version, size=16):
+    """Helper to get start of an example pyc file as bytes"""
+    path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
+    with open(path, 'rb') as f:
+        return f.read(size)
+
+
 class TestPythonBytecodeMagic(Testing.OutputTest):
 
     @classmethod
@@ -37,9 +44,7 @@ class TestPythonBytecodeMagic(Testing.OutputTest):
 
     @pytest.mark.parametrize('version, magic', ((36, 3379), (37, 3393)))
     def test_pyc_magic_from_chunk(self, version, magic):
-        path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
-        with open(path, 'rb') as f:
-            chunk = f.read(16)
+        chunk = chunk_from_pyc(version)
         assert pyc_magic_from_chunk(chunk) == magic
 
 
@@ -47,9 +52,7 @@ class TestPythonBytecodeMtime(object):
 
     @pytest.mark.parametrize('version, mtime', ((36, 1513659236), (37, 1519778958)))
     def test_pyc_mtime_from_chunk(self, version, mtime):
-        path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
-        with open(path, 'rb') as f:
-            chunk = f.read(16)
+        chunk = chunk_from_pyc(version)
         assert pyc_mtime_from_chunk(chunk) == mtime
 
 
