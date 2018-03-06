@@ -71,6 +71,8 @@ DEFAULT_VALID_LICENSES = (
     'GPLv3+',
     'LGPLv2',
     'LGPLv2+',
+    'LGPLv2.1',
+    'LGPLv2.1+',
     'LGPLv3',
     'LGPLv3+',
     'Historical Permission Notice and Disclaimer',
