@@ -10,6 +10,7 @@
 
 import os
 import re
+import tempfile
 
 import rpm
 
@@ -78,7 +79,8 @@ def check_syntax_script(prog, commandline, script):
     if not script:
         return False
     # TODO: test that "prog" is available/executable
-    tmpfile, tmpname = Pkg.mktemp()
+    tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
+    tmpfile = os.fdopen(tmpfd, 'wb')
     try:
         tmpfile.write(script)
         tmpfile.close()
@@ -105,12 +107,14 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 prog = pkg.scriptprog(tag[1])
                 if prog:
                     prog = prog.split()[0]
-                self.check_aux(pkg, files, prog, script, tag[2], prereq)
+                self.check_aux(pkg, files, prog, pkg.header[tag[0]],
+                               tag[2], prereq)
             else:
                 prog = pkg[tag[1]]
                 for idx in range(0, len(prog)):
                     self.check_aux(
-                        pkg, files, prog[idx], script[idx], tag[2], prereq)
+                        pkg, files, prog[idx],
+                        pkg.header[tag[0]][idx], tag[2], prereq)
 
         ghost_files = pkg.ghostFiles()
         if ghost_files:
@@ -128,26 +132,27 @@ class PostCheck(AbstractCheck.AbstractCheck):
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
+            script_str = Pkg.b2s(script)
             if prog:
                 if prog not in valid_shells:
                     printError(pkg, 'invalid-shell-in-' + tag, prog)
                 if prog in empty_shells:
                     printError(pkg, 'non-empty-' + tag, prog)
             if prog in syntaxcheck_shells or prog == '/usr/bin/perl':
-                if percent_regex.search(script):
+                if percent_regex.search(script_str):
                     printWarning(pkg, 'percent-in-' + tag)
-                if bracket_regex.search(script):
+                if bracket_regex.search(script_str):
                     printWarning(pkg, 'spurious-bracket-in-' + tag)
-                res = dangerous_command_regex.search(script)
+                res = dangerous_command_regex.search(script_str)
                 if res:
                     printWarning(pkg, 'dangerous-command-in-' + tag,
                                  res.group(2))
-                res = selinux_regex.search(script)
+                res = selinux_regex.search(script_str)
                 if res:
                     printError(pkg, 'forbidden-selinux-command-in-' + tag,
                                res.group(2))
 
-                if 'update-menus' in script:
+                if 'update-menus' in script_str:
                     menu_error = True
                     for f in files:
                         if menu_regex.search(f):
@@ -156,10 +161,10 @@ class PostCheck(AbstractCheck.AbstractCheck):
                     if menu_error:
                         printError(pkg, 'update-menus-without-menu-file-in-' +
                                    tag)
-                if tmp_regex.search(script):
+                if tmp_regex.search(script_str):
                     printError(pkg, 'use-tmp-in-' + tag)
                 for c in prereq_assoc:
-                    if c[0].search(script):
+                    if c[0].search(script_str):
                         found = False
                         for p in c[1]:
                             if p in prereq or p in files:
@@ -171,9 +176,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
             if prog in syntaxcheck_shells:
                 if incorrect_shell_script(prog, script):
                     printError(pkg, 'shell-syntax-error-in-' + tag)
-                if home_regex.search(script):
+                if home_regex.search(script_str):
                     printError(pkg, 'use-of-home-in-' + tag)
-                res = bogus_var_regex.search(script)
+                res = bogus_var_regex.search(script_str)
                 if res:
                     printWarning(pkg, 'bogus-variable-use-in-' + tag,
                                  res.group(1))
@@ -182,7 +187,7 @@ class PostCheck(AbstractCheck.AbstractCheck):
                 if incorrect_perl_script(prog, script):
                     printError(pkg, 'perl-syntax-error-in-' + tag)
             elif prog.endswith('sh'):
-                res = single_command_regex.search(script)
+                res = single_command_regex.search(script_str)
                 if res:
                     printWarning(pkg, 'one-line-command-in-' + tag,
                                  res.group(1))
