@@ -81,3 +81,15 @@ def test_lib_regex():
          '/usr/share/doc/findlib/lib-1.0.so',
          '/usr/lib64/libvulkan_radeon.so',
          '/usr/lib64/rsocket/binary',))
+
+
+class TestDirectoryOwnership(Testing.OutputTest):
+
+    @classmethod
+    def setup_class(cls):
+        cls.check = FilesCheck.check.check
+
+    def test_directory_ownership(self):
+        for package in ["pgzero"]:
+            out = self._rpm_test_output(os.path.join("binary", package))
+            assert "not-owned-directory" not in "\n".join(out)

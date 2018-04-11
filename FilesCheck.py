@@ -18,7 +18,7 @@ import rpm
 import AbstractCheck
 import Config
 from Filter import addDetails, printError, printWarning
-from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
+from Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote, InstalledPkg
 
 
 # must be kept in sync with the filesystem package
@@ -472,6 +472,9 @@ class FilesCheck(AbstractCheck.AbstractCheck):
         # All man page "base" names (without section etc extensions)
         man_basenames = set()
 
+        # List for all directories where directory ownership check was done
+        checked_diectories_ownership = []
+
         for f, pkgfile in files.items():
             mode = pkgfile.mode
             user = pkgfile.user
@@ -482,6 +485,22 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             inode = pkgfile.inode
             is_doc = f in doc_files
             nonexec_file = False
+
+            # Check if directory installed by package is owned by the package.
+            # Directories are checked directly.
+            # For files, os.path.dirname() is checked.
+            # Each directory is checked only once.
+            if isinstance(pkg, InstalledPkg):
+                if stat.S_ISDIR(mode):
+                    directory = pkgfile.path
+                elif stat.S_ISREG(mode):
+                    directory = os.path.dirname(pkgfile.path)
+
+                if directory not in checked_diectories_ownership:
+                    checked_diectories_ownership.append(directory)
+                    code, text = getstatusoutput(('rpm', '-qf', directory))
+                    if code != 0 and 'not owned by any package' in text:
+                        printError(pkg, 'not-owned-directory', directory)
 
             for match in AbstractCheck.macro_regex.findall(f):
                 printWarning(pkg, 'unexpanded-macro', f, match)
@@ -1427,7 +1446,13 @@ so ignore this warning if this is the case.''',
 '''Private key in a .pem file should not be shipped in a rpm, unless
 this is for testing purpose ( ie, run by the test suite ). Shipping it
 as part of the example documentation mean that someone will sooner or later
-use it and setup a insecure configuration.'''
+use it and setup a insecure configuration.''',
+
+'not-owned-directory',
+'''Package contains not owned directories. These directories will be installed
+during package installation but won't be removed during uninstallation. This
+error might be caused by definition in %%files section like "directory/*txt*".
+'''
 )
 
 for i in disallowed_dirs:
