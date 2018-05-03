@@ -227,7 +227,7 @@ def get_default_valid_rpmgroups(filename=None):
                 groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
                 if groupsfiles:
                     filename = groupsfiles[0]
-        except KeyError:  # the rpm package might not be installed
+        except (KeyError, TypeError):  # the rpm package might not be installed
             pass
     if filename and os.path.exists(filename):
         with open(filename) as fobj:
