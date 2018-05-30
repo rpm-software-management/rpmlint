@@ -379,6 +379,27 @@ def py_demarshal_long(b):
     return (b[0] + (b[1] << 8) + (b[2] << 16) + (b[3] << 24))
 
 
+def pyc_magic_from_chunk(chunk):
+    """From given chunk (beginning of the file), return Python magic number"""
+    return py_demarshal_long(chunk[:4]) & 0xffff
+
+
+def pyc_mtime_from_chunk(chunk):
+    """From given chunk (beginning of the file), return mtime or None
+
+    From Python 3.7, mtime is not always present.
+
+    See https://www.python.org/dev/peps/pep-0552/#specification
+    """
+    magic = pyc_magic_from_chunk(chunk)
+    second = py_demarshal_long(chunk[4:8])
+    if magic >= _python_magic_values['3.7'][0]:
+        if second == 0:
+            return py_demarshal_long(chunk[8:12])
+        return None  # No mtime saved, TODO check hashes instead
+    return second
+
+
 def python_bytecode_to_script(path):
     """
     Given a python bytecode path, give the path of the .py file
@@ -731,7 +752,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                         if chunk:
                             # Verify that the magic ABI value embedded in the
                             # .pyc header is correct
-                            found_magic = py_demarshal_long(chunk[:4]) & 0xffff
+                            found_magic = pyc_magic_from_chunk(chunk)
                             exp_magic, exp_version = get_expected_pyc_magic(f)
                             if exp_magic and found_magic not in exp_magic:
                                 found_version = 'unknown'
@@ -754,13 +775,14 @@ class FilesCheck(AbstractCheck.AbstractCheck):
 
                             # Verify that the timestamp embedded in the .pyc
                             # header matches the mtime of the .py file:
-                            pyc_timestamp = py_demarshal_long(chunk[4:8])
+                            pyc_timestamp = pyc_mtime_from_chunk(chunk)
                             # If it's a symlink, check target file mtime.
                             srcfile = pkg.readlink(files[source_file])
                             if not srcfile:
                                 printWarning(
                                     pkg, 'python-bytecode-without-source', f)
-                            elif pyc_timestamp != srcfile.mtime:
+                            elif (pyc_timestamp is not None and
+                                  pyc_timestamp != srcfile.mtime):
                                 cts = datetime.fromtimestamp(
                                     pyc_timestamp).isoformat()
                                 sts = datetime.fromtimestamp(
