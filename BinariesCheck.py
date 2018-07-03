@@ -480,6 +480,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
 
             is_exec = 'executable' in pkgfile.magic
             is_shobj = 'shared object' in pkgfile.magic
+            is_pie_exec = 'pie executable' in pkgfile.magic
 
             if not is_exec and not is_shobj:
                 continue
@@ -497,7 +498,8 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 if ocaml_mixed_regex.search(bin_info.tail):
                     printWarning(pkg, 'ocaml-mixed-executable', fname)
 
-                if not is_shobj and pie_exec_re and pie_exec_re.search(fname):
+                if ((not is_shobj and not is_pie_exec) and
+                        pie_exec_re and pie_exec_re.search(fname)):
                     printError(pkg, 'non-position-independent-executable',
                                fname)
 
