@@ -1117,7 +1117,7 @@ once.''',
 '''This rpm requires a specific release of another package.''',
 
 'no-url-tag',
-'''The URL tag is missing.''',
+'''The URL tag is missing. Please add a http or ftp link to the project location.''',
 
 'name-repeated-in-summary',
 '''The name of the package is repeated in its summary.  This is often redundant
