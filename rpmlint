@@ -67,7 +67,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
+    print('rpmlint version %s' % Config.__version__)
 
 
 def loadCheck(name):
