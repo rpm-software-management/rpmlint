@@ -159,8 +159,9 @@ class PostCheck(AbstractCheck.AbstractCheck):
                             menu_error = False
                             break
                     if menu_error:
-                        printError(pkg, 'update-menus-without-menu-file-in-' +
-                                   tag)
+                        printError(
+                            pkg,
+                            'update-menus-without-menu-file-in-' + tag)
                 if tmp_regex.search(script_str):
                     printError(pkg, 'use-tmp-in-' + tag)
                 for c in prereq_assoc:

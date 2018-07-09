@@ -184,8 +184,9 @@ def main():
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
-                            Pkg.warn('(none): E: interrupted, exiting while ' +
-                                     'reading %s' % fname)
+                            Pkg.warn(
+                                '(none): E: interrupted while reading %s' %
+                                fname)
                             sys.exit(2)
                         except Exception as e:
                             Pkg.warn(

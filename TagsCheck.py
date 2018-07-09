@@ -122,7 +122,7 @@ DEFAULT_VALID_LICENSES = (
     'Creative Commons Attribution-ShareAlike',
     # Others:
     'Design Public License',  # ???
-    'FSFAP', # FSF All Permissive license
+    'FSFAP',  # FSF All Permissive license
     'GFDL',  # GNU Free Documentation License
     'LaTeX Project Public License',
     'OpenContent License',
