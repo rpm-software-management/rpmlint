@@ -884,7 +884,8 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                                  f.endswith('.la')):
                             printError(pkg, 'script-without-shebang', f)
 
-                        if not mode_is_exec and not is_doc:
+                        if not mode_is_exec and not is_doc and \
+                                interpreter and interpreter.startswith("/"):
                             printError(pkg, 'non-executable-script', f,
                                        "%o" % perm, interpreter,
                                        interpreter_args)
