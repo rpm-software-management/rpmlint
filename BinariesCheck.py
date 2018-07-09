@@ -371,7 +371,14 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
+            is_shell = "shell script" in pkgfile.magic
             is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
+
+            if is_shell:
+                with open(pkgfile.path, 'rb') as inputf:
+                    if (b'This wrapper script should never '
+                            b'be moved out of the build directory' in inputf.read(2048)):
+                        printError(pkg, 'libtool-wrapper-in-package', fname)
 
             if not is_binary:
                 if reference_regex.search(fname):
@@ -632,6 +639,12 @@ to list code compiled without -fPIC.
 
 Another common mistake that causes this problem is linking with
 ``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
+
+'libtool-wrapper-in-package',
+'''Your package contains a libtool wrapper shell script. This
+will not work. Instead of installing the libtool wrapper file run
+``libtool --mode=install install -m perm <file> <dest>'' in order
+to install the relinked file.''',
 
 'binary-or-shlib-defines-rpath',
 '''The binary or shared library defines `RPATH'. Usually this is a
