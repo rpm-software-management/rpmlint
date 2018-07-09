@@ -709,7 +709,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
                 for lang in langs:
                     self.check_description(pkg, lang, ignored_words)
 
-            if len(Pkg.b2s(description) < len(pkg[rpm.RPMTAG_SUMMARY]):
+            if len(Pkg.b2s(description)) < len(pkg[rpm.RPMTAG_SUMMARY]):
                 printWarning(pkg, 'description-shorter-than-summary')
         else:
             printError(pkg, 'no-description-tag')

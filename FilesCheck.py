@@ -178,9 +178,10 @@ DEFAULT_DISALLOWED_DIRS = (
     '/var/tmp',
 )
 
+compressions = r'\.(gz|z|Z|zip|bz2|lzma|xz|zst)'
 sub_bin_regex = re.compile(r'^(/usr)?/s?bin/\S+/')
-backup_regex = re.compile(r'(~|\#[^/]+\#|\.orig|\.rej)$')
-compr_regex = re.compile(r'\.(gz|z|Z|zip|bz2|lzma|xz)$')
+backup_regex = re.compile(r'(~|\#[^/]+\#|((\.orig|\.rej)(' + compressions+ ')?))$')
+compr_regex = re.compile(compressions + r'$')
 absolute_regex = re.compile(r'^/([^/]+)')
 absolute2_regex = re.compile(r'^/?([^/]+)')
 points_regex = re.compile(r'^\.\./(.*)')
