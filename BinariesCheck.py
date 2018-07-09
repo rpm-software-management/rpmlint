@@ -344,6 +344,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         binary = False
         binary_in_usr_lib = False
         has_usr_lib_file = False
+        file_in_lib64 = False
 
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
@@ -361,6 +362,10 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     # Fake that we have binaries there to avoid
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
+
+            if stat.S_ISREG(pkgfile.mode) and \
+                    (fname.startswith("/usr/lib64") or fname.startswith("/lib64")):
+                file_in_lib64 = True
 
             is_elf = pkgfile.magic.startswith('ELF ')
             is_ar = 'current ar archive' in pkgfile.magic
@@ -568,8 +573,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if version and version != -1 and version not in pkg.name:
                 printError(pkg, 'incoherent-version-in-name', version)
 
-        if not binary and not multi_pkg and pkg.arch != 'noarch':
+        if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
             printError(pkg, 'no-binary')
+
+        if pkg.arch == 'noarch' and file_in_lib64:
+            printError(pkg, 'noarch-with-lib64')
 
         if has_usr_lib_file and not binary_in_usr_lib:
             printWarning(pkg, 'only-non-binary-in-usr-lib')
@@ -594,6 +602,11 @@ FHS and the FSSTND forbid this.''',
 
 # 'non-sparc32-binary',
 # '',
+
+'noarch-with-lib64',
+'''This package is marked as noarch but installs files into lib64.
+Not all architectures have this in path, so the package can't be
+noarch.''',
 
 'invalid-soname',
 '''The soname of the library is neither of the form lib<libname>.so.<major> or
