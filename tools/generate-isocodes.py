@@ -11,8 +11,8 @@ import sys
 from urllib.request import urlopen
 
 
-iso_3166_1_url = os.environ.get("ISO_3166_1_URL", "http://anonscm.debian.org/cgit/pkg-isocodes/iso-codes.git/plain/data/iso_3166-1.json")
-iso_639_3_url = os.environ.get("ISO_639_3_URL", "http://anonscm.debian.org/cgit/pkg-isocodes/iso-codes.git/plain/data/iso_639-3.json")
+iso_3166_1_url = os.environ.get("ISO_3166_1_URL", "https://salsa.debian.org/iso-codes-team/iso-codes/raw/master/data/iso_3166-1.json")
+iso_639_3_url = os.environ.get("ISO_639_3_URL", "https://salsa.debian.org/iso-codes-team/iso-codes/raw/master/data/iso_3166-3.json")
 
 langs = set()
 countries = set()
