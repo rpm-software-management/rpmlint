@@ -35,9 +35,7 @@ install: all
 			$(DESTDIR)$(LIBDIR)/[A-Z]*.py \
 			$(DESTDIR)$(LIBDIR)/__*__.py ; \
 	fi
-	$(PYTHON) -O -m py_compile \
-		$(DESTDIR)$(LIBDIR)/[A-Z]*.py \
-		$(DESTDIR)$(LIBDIR)/__*__.py ; \
+	$(PYTHON) -O -m compileall -d $(LIBDIR) $(DESTDIR)$(LIBDIR)
 	for file in rpmlint rpmdiff ; do \
 		sed -e "s,#!/usr/bin/python ,#!$(PYTHON) ," $$file > $(DESTDIR)$(BINDIR)/$$file ; \
 		chmod +x $(DESTDIR)$(BINDIR)/$$file ; \

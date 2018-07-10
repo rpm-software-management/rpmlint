@@ -67,7 +67,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print('rpmlint version %s Copyright (C) 1999-2007 Frederic Lepied, Mandriva' % Config.__version__)
+    print('rpmlint version %s' % Config.__version__)
 
 
 def loadCheck(name):
@@ -264,9 +264,6 @@ checks = []
 verbose = False
 extract_dir = None
 conf_file = _default_user_conf
-if not os.path.exists(os.path.expanduser(conf_file)):
-    # deprecated backwards compatibility with < 0.88
-    conf_file = '~/.rpmlintrc'
 info_error = set()
 
 # load global config files

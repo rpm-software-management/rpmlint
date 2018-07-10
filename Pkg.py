@@ -89,6 +89,14 @@ SCRIPT_TAGS = [
      '%transfiletrigger'),
 ]
 
+RPM_SCRIPTLETS = ('pre', 'post', 'preun', 'postun', 'pretrans', 'posttrans',
+                  'trigger', 'triggerin', 'triggerprein', 'triggerun',
+                  'triggerpostun', 'verifyscript', 'filetriggerin',
+                  'filetrigger', 'filetriggerun', 'filetriggerpostun',
+                  'transfiletriggerin', 'transfiletrigger',
+                  'transfiletriggerun', 'transfiletriggerun',
+                  'transfiletriggerpostun')
+
 var_regex = re.compile(r'^(.*)\${?(\w+)}?(.*)$')
 
 
