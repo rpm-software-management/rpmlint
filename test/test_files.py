@@ -1,10 +1,11 @@
 import os
+
 import pytest
 
 import FilesCheck
+from FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from FilesCheck import python_bytecode_to_script as pbts
 from FilesCheck import script_interpreter as se
-from FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 import Testing
 
 
