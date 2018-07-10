@@ -10,8 +10,8 @@
 
 import re
 
-import AbstractCheck
-from Filter import addDetails, printWarning
+from . import AbstractCheck
+from .Filter import addDetails, printWarning
 
 # could be added.
 #

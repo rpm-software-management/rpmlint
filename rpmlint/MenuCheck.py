@@ -12,10 +12,10 @@ import stat
 
 import rpm
 
-import AbstractCheck
-import Config
-from Filter import addDetails, printError, printInfo, printWarning
-import Pkg
+from . import AbstractCheck
+from . import Config
+from .Filter import addDetails, printError, printInfo, printWarning
+from . import Pkg
 
 
 DEFAULT_VALID_SECTIONS = (

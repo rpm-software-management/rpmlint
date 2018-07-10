@@ -13,10 +13,10 @@ import re
 
 import rpm
 
-import AbstractCheck
-import Config
-from Filter import addDetails, printError, printWarning
-import Pkg
+from . import AbstractCheck
+from . import Config
+from .Filter import addDetails, printError, printWarning
+from . import Pkg
 
 
 chkconfig_content_regex = re.compile(r'^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')

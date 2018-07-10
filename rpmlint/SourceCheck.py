@@ -9,9 +9,9 @@
 
 import re
 
-import AbstractCheck
-import Config
-from Filter import addDetails, printError, printWarning
+from . import AbstractCheck
+from . import Config
+from .Filter import addDetails, printError, printWarning
 
 
 DEFAULT_VALID_SRC_PERMS = (0o644, 0o755)

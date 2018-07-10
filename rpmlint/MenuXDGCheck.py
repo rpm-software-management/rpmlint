@@ -13,9 +13,9 @@ try:
 except ImportError:
     import configparser as cfgparser
 
-import AbstractCheck
-from Filter import addDetails, printError, printWarning
-from Pkg import getstatusoutput, is_utf8
+from . import AbstractCheck
+from .Filter import addDetails, printError, printWarning
+from .Pkg import getstatusoutput, is_utf8
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')
 

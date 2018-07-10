@@ -14,10 +14,10 @@ import tempfile
 
 import rpm
 
-import AbstractCheck
-import Config
-from Filter import addDetails, printError, printWarning
-import Pkg
+from . import AbstractCheck
+from . import Config
+from .Filter import addDetails, printError, printWarning
+from . import Pkg
 
 
 DEFAULT_VALID_SHELLS = ('<lua>',

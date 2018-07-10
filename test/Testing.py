@@ -4,7 +4,7 @@ import glob
 import os
 import tempfile
 
-import Pkg
+from rpmlint import Pkg
 
 
 def _testpath():

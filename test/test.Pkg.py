@@ -4,7 +4,7 @@ import unittest
 
 import rpm
 
-import Pkg
+from rpmlint import Pkg
 import Testing
 
 

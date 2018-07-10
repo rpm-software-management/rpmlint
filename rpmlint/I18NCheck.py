@@ -11,9 +11,9 @@ import re
 
 import rpm
 
-from __isocodes__ import COUNTRIES, LANGUAGES
-import AbstractCheck
-from Filter import addDetails, printError, printWarning
+from .__isocodes__ import COUNTRIES, LANGUAGES
+from . import AbstractCheck
+from .Filter import addDetails, printError, printWarning
 
 
 # Associative array of invalid value => correct value

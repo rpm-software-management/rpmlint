@@ -31,7 +31,7 @@ except ImportError:
     _magic = None
 import rpm
 
-import Filter
+from . import Filter
 
 # utilities
 

@@ -7,8 +7,8 @@
 # Purpose       :
 #############################################################################
 
-import AbstractCheck
-from Filter import addDetails, printError, printWarning
+from . import AbstractCheck
+from .Filter import addDetails, printError, printWarning
 
 
 class ConfigCheck(AbstractCheck.AbstractCheck):

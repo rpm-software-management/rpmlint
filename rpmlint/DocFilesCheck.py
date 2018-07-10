@@ -16,9 +16,9 @@
 
 import rpm
 
-import AbstractCheck
-from Filter import addDetails, printWarning
-from Pkg import b2s
+from . import AbstractCheck
+from .Filter import addDetails, printWarning
+from .Pkg import b2s
 
 
 class DocFilesCheck(AbstractCheck.AbstractCheck):

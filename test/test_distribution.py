@@ -1,6 +1,6 @@
 import os
 
-import DistributionCheck
+from rpmlint import DistributionCheck
 import Testing
 
 

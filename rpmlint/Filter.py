@@ -14,7 +14,7 @@ import locale
 import sys
 import textwrap
 
-import Config
+from . import Config
 try:
     import Testing
 except ImportError:

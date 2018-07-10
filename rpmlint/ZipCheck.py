@@ -13,10 +13,10 @@ import stat
 import sys
 import zipfile
 
-import AbstractCheck
-import Config
-from Filter import addDetails, printError, printWarning
-import Pkg
+from . import AbstractCheck
+from . import Config
+from .Filter import addDetails, printError, printWarning
+from . import Pkg
 
 
 zip_regex = re.compile(r'\.(zip|[ewj]ar)$')

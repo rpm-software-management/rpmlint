@@ -1,7 +1,7 @@
 import os
 import sys
 
-import SCLCheck
+from rpmlint import SCLCheck
 import Testing
 
 

@@ -1,6 +1,6 @@
 import os
 
-import SourceCheck
+from rpmlint import SourceCheck
 import Testing
 
 

@@ -1,6 +1,6 @@
 import os
 
-import BinariesCheck
+from rpmlint import BinariesCheck
 import Testing
 
 

@@ -2,7 +2,7 @@
 
 import unittest
 
-import PamCheck
+from rpmlint import PamCheck
 import Testing
 # FIXME harcode
 

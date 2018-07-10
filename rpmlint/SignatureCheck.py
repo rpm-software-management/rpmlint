@@ -9,9 +9,9 @@
 
 import re
 
-import AbstractCheck
-from Filter import addDetails, printError
-import Pkg
+from . import AbstractCheck
+from .Filter import addDetails, printError
+from . import Pkg
 
 
 class SignatureCheck(AbstractCheck.AbstractCheck):

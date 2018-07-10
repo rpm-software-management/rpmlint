@@ -18,11 +18,11 @@ except ImportError:  # Python 3
 
 import rpm
 
-import AbstractCheck
-import Config
-import FilesCheck
-from Filter import addDetails, printError, printInfo, printWarning
-import Pkg
+from . import AbstractCheck
+from . import Config
+from . import FilesCheck
+from .Filter import addDetails, printError, printInfo, printWarning
+from . import Pkg
 
 _use_enchant = Config.getOption("UseEnchant", None)
 if _use_enchant or _use_enchant is None:

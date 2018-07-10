@@ -2,7 +2,7 @@
 
 import unittest
 
-import SpecCheck
+from rpmlint import SpecCheck
 import Testing
 
 

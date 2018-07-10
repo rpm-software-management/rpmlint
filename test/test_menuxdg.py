@@ -1,6 +1,6 @@
 import os
 
-import MenuXDGCheck
+from rpmlint import MenuXDGCheck
 import Testing
 
 
