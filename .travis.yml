@@ -6,10 +6,9 @@ services:
   - docker
 
 env:
-  - DIST=centos6 PYTHON=python PYTEST=py.test FLAKE8=true
-  #- DIST=ubuntu14 PYTHON=python PYTEST=py.test FLAKE8=true
-  - DIST=fedora26 PYTHON=python3 PYTEST=py.test-3 FLAKE8=flake8-3
-  - DIST=fedoradev PYTHON=python3 PYTEST=py.test FLAKE8=flake8
+  - DIST=centos7 PYTHON=python PYTEST=py.test FLAKE8=true
+  - DIST=fedora28 PYTHON=python3 PYTEST=py.test-3 FLAKE8=flake8-3
+    # - DIST=fedoradev PYTHON=python3 PYTEST=py.test FLAKE8=flake8
 
 before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
