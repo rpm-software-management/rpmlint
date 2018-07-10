@@ -39,15 +39,14 @@ setup(
     keywords=['RPM', '.spec', 'validator'],
 
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-cov'],
+    tests_require=['pytest', 'pytest-cov', 'pytest-flake8'],
 
     packages=['rpmlint'],
 
     data_files=[
-        ('lib/obs/service/', glob.glob('obs/*')),
-        ('share/spec-cleaner', glob.glob('data/*')),
+        ('share/man/man1', glob.glob('man/*.1')),
     ],
 
     entry_points={
-        'console_scripts': ['rpmlint = spec_cleaner:main']},
+        'console_scripts': ['rpmlint = rpmlint:main']},
 )
