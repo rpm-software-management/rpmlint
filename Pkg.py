@@ -722,7 +722,7 @@ class Pkg(AbstractPkg):
                         fd = os.open(pkgfile.path, os.O_RDONLY)
                         pkgfile.magic = b2s(_magic.descriptor(fd))
                         os.close(fd)
-                    except FileNotFoundError:
+                    except OSError:
                         pass
                 if pkgfile.magic is None:
                     pkgfile.magic = ''

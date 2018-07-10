@@ -571,7 +571,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             try:
                 ts = rpm.TransactionSet()
                 spec_obj = ts.parseSpec(self._spec_file)
-            except rpm.error:
+            except (ValueError, rpm.error):
                 # errors logged above already
                 pass
             rpm.delMacro('_sourcedir')
