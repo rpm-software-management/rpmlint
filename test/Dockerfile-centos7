@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:7
 
 RUN yum -y install \
         /bin/cpio \
@@ -8,6 +8,7 @@ RUN yum -y install \
         /usr/bin/gtbl \
         /usr/bin/make \
         /usr/bin/man \
+        /usr/bin/perl \
         /usr/bin/py.test \
         /usr/bin/readelf \
         /usr/bin/xz \
