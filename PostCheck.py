@@ -20,14 +20,6 @@ from Filter import addDetails, printError, printWarning
 import Pkg
 
 
-RPM_SCRIPTLETS = ('pre', 'post', 'preun', 'postun', 'pretrans', 'posttrans',
-                  'trigger', 'triggerin', 'triggerprein', 'triggerun',
-                  'triggerpostun', 'verifyscript', 'filetriggerin',
-                  'filetrigger', 'filetriggerun', 'filetriggerpostun',
-                  'transfiletriggerin', 'transfiletrigger',
-                  'transfiletriggerun', 'transfiletriggerun',
-                  'transfiletriggerpostun')
-
 DEFAULT_VALID_SHELLS = ('<lua>',
                         '/bin/sh',
                         '/bin/bash',
@@ -205,7 +197,7 @@ addDetails(
 'postin-without-ghost-file-creation',
 '''A file tagged as ghost is not created during %prein nor during %postin.''',
 )
-for scriptlet in map(lambda x: '%' + x, RPM_SCRIPTLETS):
+for scriptlet in map(lambda x: '%' + x, Pkg.RPM_SCRIPTLETS):
     addDetails(
 'one-line-command-in-%s' % scriptlet,
 '''You should use %s -p <command> instead of using:

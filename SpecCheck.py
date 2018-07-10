@@ -20,7 +20,6 @@ import AbstractCheck
 import Config
 from Filter import addDetails, printError, printWarning
 import Pkg
-from PostCheck import RPM_SCRIPTLETS
 from TagsCheck import VALID_GROUPS
 
 # Don't check for hardcoded library paths in biarch packages
@@ -66,7 +65,7 @@ libdir_regex = re.compile(r'%{?_lib(?:dir)?\}?\b')
 section_regexs = dict(
     ([x, re.compile('^%' + x + r'(?:\s|$)')]
      for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
-               'install', 'package', 'prep') + RPM_SCRIPTLETS))
+               'install', 'package', 'prep') + Pkg.RPM_SCRIPTLETS))
 deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
@@ -233,8 +232,8 @@ class SpecCheck(AbstractCheck.AbstractCheck):
 
                 continue
 
-            if current_section in ('prep', 'build') and \
-                    contains_buildroot(line):
+            if (current_section in Pkg.RPM_SCRIPTLETS + ('prep', 'build') and
+                    contains_buildroot(line)):
                 printWarning(pkg, 'rpm-buildroot-usage', '%' + current_section,
                              line[:-1].strip())
 
