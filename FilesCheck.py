@@ -180,7 +180,7 @@ DEFAULT_DISALLOWED_DIRS = (
 
 compressions = r'\.(gz|z|Z|zip|bz2|lzma|xz|zst)'
 sub_bin_regex = re.compile(r'^(/usr)?/s?bin/\S+/')
-backup_regex = re.compile(r'(~|\#[^/]+\#|((\.orig|\.rej)(' + compressions+ ')?))$')
+backup_regex = re.compile(r'(~|\#[^/]+\#|((\.orig|\.rej)(' + compressions + ')?))$')
 compr_regex = re.compile(compressions + r'$')
 absolute_regex = re.compile(r'^/([^/]+)')
 absolute2_regex = re.compile(r'^/?([^/]+)')
@@ -554,7 +554,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 if res.group(1) != pkg.name:
                     printError(pkg, 'incoherent-logrotate-file', f)
 
-            deps=[x[0] for x in pkg.requires()+pkg.recommends()+pkg.suggests()]
+            deps = [x[0] for x in pkg.requires() + pkg.recommends() + pkg.suggests()]
             if res and not ('logrotate' in deps) and pkg.name != "logrotate":
                 printError(pkg, 'missing-dependency-to-logrotate', "for logrotate script", f)
             if f.startswith('/etc/cron.') \
