@@ -45,6 +45,7 @@ setup(
 
     data_files=[
         ('share/man/man1', glob.glob('man/*.1')),
+        ('share/rpmlint', ['config']),
     ],
     scripts=[
         'scripts/rpmlint',
