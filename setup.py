@@ -46,7 +46,8 @@ setup(
     data_files=[
         ('share/man/man1', glob.glob('man/*.1')),
     ],
-
-    entry_points={
-        'console_scripts': ['rpmlint = rpmlint:main']},
+    scripts=[
+        'scripts/rpmlint',
+        'scripts/rpmdiff',
+    ],
 )

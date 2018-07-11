@@ -24,21 +24,17 @@ except ImportError:  # Python < 2.7
     importlib = None
     import imp
 
-# 1 instead of 0 here because we want the script dir to be looked up first,
-# e.g. for in-place from tarball or SCM checkout
-sys.path.insert(1, '/usr/share/rpmlint')
-
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
 # that results in those variables initialized before config files are
 # loaded which is too early - settings from config files won't take
 # place for those variables.
 
-import AbstractCheck  # noqa: E402
-import Config  # noqa: E402
-from Filter import badnessScore, badnessThreshold, printAllReasons, \
-    printDescriptions, printed_messages, printInfo, setRawOut  # noqa: E402
-import Pkg  # noqa: E402
+from rpmlint import AbstractCheck
+from rpmlint import Config
+from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
+    printDescriptions, printed_messages, printInfo, setRawOut
+from rpmlint import Pkg
 
 
 _default_user_conf = '%s/rpmlint' % \
