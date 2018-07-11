@@ -1,5 +1,6 @@
 FROM centos:7
 
+RUN yum -y install epel-release
 RUN yum -y install \
         /bin/cpio \
         /usr/bin/bzip2 \
@@ -9,11 +10,16 @@ RUN yum -y install \
         /usr/bin/make \
         /usr/bin/man \
         /usr/bin/perl \
-        /usr/bin/py.test \
+        /usr/bin/python \
         /usr/bin/readelf \
         /usr/bin/xz \
+        python-pip \
         python-enchant \
-        python-magic
+        python-magic \
+        python-rpm
+
+# workaround of too old setuptools/pytest
+RUN pip install setuptools --upgrade
 
 WORKDIR /usr/src/rpmlint
 COPY . .
