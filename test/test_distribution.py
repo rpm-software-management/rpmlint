@@ -1,18 +1,14 @@
 import os
 
+import pytest
 from rpmlint import DistributionCheck
 
-import Testing
+from Testing import getTestedPackage
 
 
-class TestDistribution(Testing.OutputTest):
-
-    @classmethod
-    def setup_class(cls):
-        cls.check = DistributionCheck.check.check
-
-    def test_distribution_tags(self):
-        for package in ['ngircd']:
-            out = self._rpm_test_output(os.path.join('binary', package))
-            assert 'invalid-distribution' not in "\n".join(out)
-            assert 'invalid-vendor' not in "\n".join(out)
+@pytest.mark.parametrize('package', ['ngircd'])
+def test_distribution_tags(capsys, package):
+    DistributionCheck.check.check(getTestedPackage(os.path.join('binary', package)))
+    out, err = capsys.readouterr()
+    assert 'invalid-distribution' not in out
+    assert 'invalid-vendor' not in out

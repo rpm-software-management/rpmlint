@@ -6,67 +6,56 @@ from rpmlint.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from rpmlint.FilesCheck import python_bytecode_to_script as pbts
 from rpmlint.FilesCheck import script_interpreter as se
 
-import Testing
+from Testing import getTestedPackage, getTestedPath
 
 
-class TestPythonBytecodeToScript(object):
+def test_pep3147():
+    assert pbts("/usr/lib64/python3.4/__pycache__/__phello__.foo.cpython-34.pyc") == "/usr/lib64/python3.4/__phello__.foo.py"
+    assert pbts("/usr/lib64/python3.4/__pycache__/__phello__.foo.cpython-34.pyo") == "/usr/lib64/python3.4/__phello__.foo.py"
 
-    def test_pep3147(self):
-        assert pbts("/usr/lib64/python3.4/__pycache__/__phello__.foo.cpython-34.pyc") == "/usr/lib64/python3.4/__phello__.foo.py"
-        assert pbts("/usr/lib64/python3.4/__pycache__/__phello__.foo.cpython-34.pyo") == "/usr/lib64/python3.4/__phello__.foo.py"
 
-    def test_py2(self):
-        assert pbts("/usr/lib/python2.7/site-packages/_pytest/main.pyc") == "/usr/lib/python2.7/site-packages/_pytest/main.py"
-        assert pbts("/usr/lib/python2.7/site-packages/_pytest/main.pyo") == "/usr/lib/python2.7/site-packages/_pytest/main.py"
+def test_py2():
+    assert pbts("/usr/lib/python2.7/site-packages/_pytest/main.pyc") == "/usr/lib/python2.7/site-packages/_pytest/main.py"
+    assert pbts("/usr/lib/python2.7/site-packages/_pytest/main.pyo") == "/usr/lib/python2.7/site-packages/_pytest/main.py"
 
-    def test_pep0488(self):
-        assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-1.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
-        assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-2.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
-        assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
+
+def test_pep0488():
+    assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-1.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
+    assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.opt-2.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
+    assert pbts("/usr/lib/python3.5/site-packages/__pycache__/pytest.cpython-35.pyc") == "/usr/lib/python3.5/site-packages/pytest.py"
 
 
 def chunk_from_pyc(version, size=16):
     """Helper to get start of an example pyc file as bytes"""
-    path = Testing.getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
+    path = getTestedPath("pyc/__future__.cpython-{}.pyc".format(version))
     with open(path, 'rb') as f:
         return f.read(size)
 
 
-class TestPythonBytecodeMagic(Testing.OutputTest):
-
-    @classmethod
-    def setup_class(cls):
-        cls.check = FilesCheck.check.check
-
-    def test_python_bytecode_magic(self):
-        for package in ["python3-power"]:
-            out = self._rpm_test_output(os.path.join("binary", package))
-            assert "python-bytecode-wrong-magic-value" not in "\n".join(out)
-
-    @pytest.mark.parametrize('version, magic', ((36, 3379), (37, 3393)))
-    def test_pyc_magic_from_chunk(self, version, magic):
-        chunk = chunk_from_pyc(version)
-        assert pyc_magic_from_chunk(chunk) == magic
+@pytest.mark.parametrize('package', ['python3-power'])
+def test_python_bytecode_magic(capsys, package):
+    FilesCheck.check.check(getTestedPackage(os.path.join("binary", package)))
+    out, err = capsys.readouterr()
+    assert "python-bytecode-wrong-magic-value" not in out
 
 
-class TestPythonBytecodeMtime(object):
-
-    @pytest.mark.parametrize('version, mtime', ((36, 1513659236), (37, 1519778958)))
-    def test_pyc_mtime_from_chunk(self, version, mtime):
-        chunk = chunk_from_pyc(version)
-        assert pyc_mtime_from_chunk(chunk) == mtime
+@pytest.mark.parametrize('version, magic', ((36, 3379), (37, 3393)))
+def test_pyc_magic_from_chunk(version, magic):
+    chunk = chunk_from_pyc(version)
+    assert pyc_magic_from_chunk(chunk) == magic
 
 
-class TestDevelFiles(Testing.OutputTest):
+@pytest.mark.parametrize('version, mtime', ((36, 1513659236), (37, 1519778958)))
+def test_pyc_mtime_from_chunk(version, mtime):
+    chunk = chunk_from_pyc(version)
+    assert pyc_mtime_from_chunk(chunk) == mtime
 
-    @classmethod
-    def setup_class(cls):
-        cls.check = FilesCheck.check.check
 
-    def test_python_bytecode_magic(self):
-        for package in ["netmask-debugsource"]:
-            out = self._rpm_test_output(os.path.join("binary", package))
-            assert "devel-file-in-non-devel-package" not in "\n".join(out)
+@pytest.mark.parametrize('package', ['netmask-debugsource'])
+def test_devel_files(capsys, package):
+    FilesCheck.check.check(getTestedPackage(os.path.join("binary", package)))
+    out, err = capsys.readouterr()
+    assert "devel-file-in-non-devel-package" not in out
 
 
 def test_script_interpreter():

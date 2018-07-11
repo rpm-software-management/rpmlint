@@ -1,22 +1,18 @@
 import os
 
+import pytest
 from rpmlint import TagsCheck
 
-import Testing
+from Testing import getTestedPackage
 
 
-class TestTags(Testing.OutputTest):
-
-    @classmethod
-    def setup_class(cls):
-        cls.check = TagsCheck.check.check
-
-    def test_unexpanded_macros(self):
-        for package in ['unexpanded1']:
-            out = self._rpm_test_output(os.path.join('binary', package))
-            assert 'unexpanded-macro Recommends' in "\n".join(out)
-            assert 'unexpanded-macro Provides' in "\n".join(out)
-            assert 'unexpanded-macro Conflicts' in "\n".join(out)
-            assert 'unexpanded-macro Suggests' in "\n".join(out)
-            assert 'unexpanded-macro Obsoletes' in "\n".join(out)
-            assert 'unexpanded-macro Enhances' in "\n".join(out)
+@pytest.mark.parametrize('package', ['unexpanded1'])
+def test_unexpanded_macros(capsys, package):
+    TagsCheck.check.check(getTestedPackage(os.path.join('binary', package)))
+    out, err = capsys.readouterr()
+    assert 'unexpanded-macro Recommends' in out
+    assert 'unexpanded-macro Provides' in out
+    assert 'unexpanded-macro Conflicts' in out
+    assert 'unexpanded-macro Suggests' in out
+    assert 'unexpanded-macro Obsoletes' in out
+    assert 'unexpanded-macro Enhances' in out

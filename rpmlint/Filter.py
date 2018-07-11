@@ -9,7 +9,6 @@
 
 from __future__ import print_function
 
-import codecs
 import locale
 import sys
 import textwrap
@@ -28,18 +27,13 @@ printed_messages = {"I": 0, "W": 0, "E": 0}
 
 __preferred_encoding = locale.getpreferredencoding()
 if sys.version_info[0] < 3:
-    __stdout = codecs.getwriter(__preferred_encoding)(sys.stdout, 'replace')
-
     def __print(s):
         if isinstance(s, str):
             s = s.decode(__preferred_encoding, 'replace')
-        print(s, file=__stdout)
+        print(s)
 else:
-    __stdout = codecs.getwriter(__preferred_encoding)(
-        sys.stdout.buffer, 'replace')
-
     def __print(s):
-        print(s, file=__stdout)
+        print(s)
 
 
 def printInfo(pkg, reason, *details):
@@ -80,22 +74,19 @@ def _print(msgtype, pkg, reason, details):
         s = s + " (Badness: %d)" % badness
     for d in details:
         s = s + " %s" % d
-    if Testing and Testing.isTest():
-        Testing.addOutput(s)
-    else:
-        if _rawout:
-            print(s.encode(locale.getpreferredencoding(), "replace"),
-                  file=_rawout)
-        if not Config.isFiltered(s):
-            printed_messages[msgtype] += 1
-            _badness_score += badness
-            if threshold >= 0:
-                _diagnostic.append(s + "\n")
-            else:
-                __print(s)
-                if Config.info:
-                    printDescriptions(reason)
-            return True
+    if _rawout:
+        print(s.encode(locale.getpreferredencoding(), "replace"),
+              file=_rawout)
+    if not Config.isFiltered(s):
+        printed_messages[msgtype] += 1
+        _badness_score += badness
+        if threshold >= 0:
+            _diagnostic.append(s + "\n")
+        else:
+            __print(s)
+            if Config.info:
+                printDescriptions(reason)
+        return True
 
     return False
 
