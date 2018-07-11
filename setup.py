@@ -21,13 +21,13 @@ setup(
     maintainer='Neal Gompa',
     maintainer_email='ngompa13@gmail.com',
 
-    license='License :: OSI Approved :: GNU GENERAL PUBLIC LICENSE V2 OR LATER (GPLV2+)',
+    license='License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
     classifiers=[
         # complete classifier list:
         # http://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU GENERAL PUBLIC LICENSE V2 OR LATER (GPLV2+)',
+        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Programming Language :: Python',
