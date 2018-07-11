@@ -15,8 +15,8 @@ import zipfile
 
 from . import AbstractCheck
 from . import Config
-from .Filter import addDetails, printError, printWarning
 from . import Pkg
+from .Filter import addDetails, printError, printWarning
 
 
 zip_regex = re.compile(r'\.(zip|[ewj]ar)$')

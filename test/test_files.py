@@ -1,11 +1,11 @@
 import os
 
 import pytest
-
 from rpmlint import FilesCheck
 from rpmlint.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from rpmlint.FilesCheck import python_bytecode_to_script as pbts
 from rpmlint.FilesCheck import script_interpreter as se
+
 import Testing
 
 

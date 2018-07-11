@@ -3,8 +3,8 @@
 import unittest
 
 import rpm
-
 from rpmlint import Pkg
+
 import Testing
 
 

@@ -16,8 +16,8 @@ import rpm
 
 from . import AbstractCheck
 from . import Config
-from .Filter import addDetails, printError, printWarning
 from . import Pkg
+from .Filter import addDetails, printError, printWarning
 
 
 DEFAULT_VALID_SHELLS = ('<lua>',

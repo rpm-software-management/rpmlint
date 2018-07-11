@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """Setup file for easy installation."""
-from setuptools import setup
 import glob
+
 from rpmlint import __version__
+from setuptools import setup
 
 setup(
     name='rpmlint',

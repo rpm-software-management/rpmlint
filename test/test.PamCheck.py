@@ -3,8 +3,8 @@
 import unittest
 
 from rpmlint import PamCheck
+
 import Testing
-# FIXME harcode
 
 
 class TestPamCheck(unittest.TestCase):

@@ -11,8 +11,9 @@ import os
 import re
 
 from . import AbstractCheck
-from .Filter import addDetails, printError, printWarning
 from . import Pkg
+from .Filter import addDetails, printError, printWarning
+
 
 # Compile all regexes here
 allowed_etc = re.compile(r'^/etc/(cron|profile|logrotate)\.d/', re.M)

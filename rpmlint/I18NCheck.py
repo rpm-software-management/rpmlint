@@ -11,8 +11,8 @@ import re
 
 import rpm
 
-from .__isocodes__ import COUNTRIES, LANGUAGES
 from . import AbstractCheck
+from .__isocodes__ import COUNTRIES, LANGUAGES
 from .Filter import addDetails, printError, printWarning
 
 

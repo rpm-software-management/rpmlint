@@ -21,8 +21,9 @@ import rpm
 from . import AbstractCheck
 from . import Config
 from . import FilesCheck
-from .Filter import addDetails, printError, printInfo, printWarning
 from . import Pkg
+from .Filter import addDetails, printError, printInfo, printWarning
+
 
 _use_enchant = Config.getOption("UseEnchant", None)
 if _use_enchant or _use_enchant is None:

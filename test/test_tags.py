@@ -1,6 +1,7 @@
 import os
 
 from rpmlint import TagsCheck
+
 import Testing
 
 

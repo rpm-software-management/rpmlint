@@ -4,6 +4,7 @@ import re
 import unittest
 
 from rpmlint import SpecCheck
+
 import Testing
 
 

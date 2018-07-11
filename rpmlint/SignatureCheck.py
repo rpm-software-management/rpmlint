@@ -10,8 +10,8 @@
 import re
 
 from . import AbstractCheck
-from .Filter import addDetails, printError
 from . import Pkg
+from .Filter import addDetails, printError
 
 
 class SignatureCheck(AbstractCheck.AbstractCheck):

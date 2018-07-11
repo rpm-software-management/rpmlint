@@ -14,8 +14,8 @@ import rpm
 
 from . import AbstractCheck
 from . import Config
-from .Filter import addDetails, printError, printInfo, printWarning
 from . import Pkg
+from .Filter import addDetails, printError, printInfo, printWarning
 
 
 DEFAULT_VALID_SECTIONS = (
