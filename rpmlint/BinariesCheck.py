@@ -14,10 +14,10 @@ import subprocess
 
 import rpm
 
-from . import AbstractCheck
-from . import Config
-from . import Pkg
-from .Filter import addDetails, printError, printWarning
+import rpmlint.AbstractCheck as AbstractCheck
+import rpmlint.Config as Config
+import rpmlint.Pkg as Pkg
+from rpmlint.Filter import addDetails, printError, printWarning
 
 
 DEFAULT_SYSTEM_LIB_PATHS = (

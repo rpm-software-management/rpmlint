@@ -14,8 +14,8 @@ try:
 except ImportError:
     import urllib.request as urllib2
 
-from . import Config
-from .Filter import addDetails, printInfo, printWarning
+import rpmlint.Config as Config
+from rpmlint.Filter import addDetails, printInfo, printWarning
 
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')

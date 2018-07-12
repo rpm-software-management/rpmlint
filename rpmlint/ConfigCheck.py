@@ -7,8 +7,8 @@
 # Purpose       :
 #############################################################################
 
-from . import AbstractCheck
-from .Filter import addDetails, printError, printWarning
+import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint.Filter import addDetails, printError, printWarning
 
 
 class ConfigCheck(AbstractCheck.AbstractCheck):

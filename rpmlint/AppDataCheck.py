@@ -8,10 +8,10 @@
 
 import xml.etree.ElementTree as ET
 
-from . import AbstractCheck
-from . import Config
-from .Filter import addDetails, printError
-from .Pkg import getstatusoutput
+import rpmlint.AbstractCheck as AbstractCheck
+import rpmlint.Config as Config
+from rpmlint.Filter import addDetails, printError
+from rpmlint.Pkg import getstatusoutput
 
 STANDARD_BIN_DIRS = ['/bin/', '/sbin/', '/usr/bin/', '/usr/sbin/']
 DEFAULT_APPDATA_CHECKER = ('appstream-util', 'validate-relax')

@@ -12,7 +12,7 @@ import os.path
 import re
 
 try:
-    from . import __version__
+    import __version__
 except ImportError:
     __version__ = 'devel'
 

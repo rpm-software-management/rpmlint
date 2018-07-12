@@ -9,9 +9,9 @@
 
 import re
 
-from . import AbstractCheck
-from . import Config
-from .Filter import addDetails, printError, printWarning
+import rpmlint.AbstractCheck as AbstractCheck
+import rpmlint.Config as Config
+from rpmlint.Filter import addDetails, printError, printWarning
 
 
 DEFAULT_VALID_SRC_PERMS = (0o644, 0o755)

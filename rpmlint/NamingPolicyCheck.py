@@ -10,8 +10,8 @@
 
 import re
 
-from . import AbstractCheck
-from .Filter import addDetails, printWarning
+import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint.Filter import addDetails, printWarning
 
 # could be added.
 #

@@ -30,9 +30,9 @@ except ImportError:  # Python < 2.7
 # loaded which is too early - settings from config files won't take
 # place for those variables.
 
-from rpmlint import AbstractCheck
-from rpmlint import Config
-from rpmlint import Pkg
+import rpmlint.AbstractCheck
+import rpmlint.Config as Config
+import rpmlint.Pkg as Pkg
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
     printDescriptions, printed_messages, printInfo, setRawOut
 

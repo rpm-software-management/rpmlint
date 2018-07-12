@@ -15,10 +15,10 @@ import stat
 
 import rpm
 
-from . import AbstractCheck
-from . import Config
-from .Filter import addDetails, printError, printWarning
-from .Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
+import rpmlint.AbstractCheck as AbstractCheck
+import rpmlint.Config as Config
+from rpmlint.Filter import addDetails, printError, printWarning
+from rpmlint.Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
 
 # must be kept in sync with the filesystem package

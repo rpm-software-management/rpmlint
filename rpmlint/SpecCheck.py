@@ -16,11 +16,11 @@ except ImportError:  # Python 3
 
 import rpm
 
-from . import AbstractCheck
-from . import Config
-from . import Pkg
-from .Filter import addDetails, printError, printWarning
-from .TagsCheck import VALID_GROUPS
+import rpmlint.AbstractCheck as AbstractCheck
+import rpmlint.Config as Config
+import rpmlint.Pkg as Pkg
+from rpmlint.Filter import addDetails, printError, printWarning
+from rpmlint.TagsCheck import VALID_GROUPS
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'

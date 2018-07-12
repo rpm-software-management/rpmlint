@@ -13,9 +13,9 @@ try:
 except ImportError:
     import configparser as cfgparser
 
-from . import AbstractCheck
-from .Filter import addDetails, printError, printWarning
-from .Pkg import getstatusoutput, is_utf8
+import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint.Filter import addDetails, printError, printWarning
+from rpmlint.Pkg import getstatusoutput, is_utf8
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')
 

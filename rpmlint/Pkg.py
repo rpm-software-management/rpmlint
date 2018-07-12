@@ -31,7 +31,7 @@ except ImportError:
     _magic = None
 import rpm
 
-from . import Filter
+import rpmlint.Filter
 
 # utilities
 
