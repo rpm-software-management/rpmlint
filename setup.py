@@ -13,8 +13,8 @@ from setuptools import setup
 # convert this to entrypoints
 if not os.path.exists('build/_scripts'):
     os.makedirs('build/_scripts')
-shutil.copyfile('scripts/rpmlint.py', 'build/_scripts/rpmlint')
-shutil.copyfile('scripts/rpmdiff.py', 'build/_scripts/rpmdiff')
+shutil.copyfile('scripts/lint.py', 'build/_scripts/rpmlint')
+shutil.copyfile('scripts/diff.py', 'build/_scripts/rpmdiff')
 
 setup(
     name='rpmlint',
