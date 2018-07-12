@@ -1,0 +1,11 @@
+FROM opensuse/leap:15
+
+RUN zypper -n install \
+        cpio bzip2 groff make elfutils xz \
+        perl python binutils desktop-file-utils \
+        python3-rpm \
+        python3-pytest \
+        python3-flake8
+
+WORKDIR /usr/src/rpmlint
+COPY . .
