@@ -29,8 +29,8 @@ setup(
     author='Frédéric Lepied',
     author_email='flepied@mandriva.com',
 
-    maintainer='Neal Gompa',
-    maintainer_email='ngompa13@gmail.com',
+    maintainer='RPMLint maintainers',
+    maintainer_email='rpm-ecosystem@lists.rpm.org',
 
     license='License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
     classifiers=[
