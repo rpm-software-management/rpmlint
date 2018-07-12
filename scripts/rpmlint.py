@@ -32,9 +32,9 @@ except ImportError:  # Python < 2.7
 
 from rpmlint import AbstractCheck
 from rpmlint import Config
+from rpmlint import Pkg
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
     printDescriptions, printed_messages, printInfo, setRawOut
-from rpmlint import Pkg
 
 
 _default_user_conf = '%s/rpmlint' % \

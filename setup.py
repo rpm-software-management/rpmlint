@@ -3,9 +3,18 @@
 
 """Setup file for easy installation."""
 import glob
+import os
+import shutil
 
 from rpmlint import __version__
 from setuptools import setup
+
+
+# convert this to entrypoints
+if not os.path.exists('build/_scripts'):
+    os.makedirs('build/_scripts')
+shutil.copyfile('scripts/rpmlint.py', 'build/_scripts/rpmlint')
+shutil.copyfile('scripts/rpmdiff.py', 'build/_scripts/rpmdiff')
 
 setup(
     name='rpmlint',
@@ -53,7 +62,7 @@ setup(
         ('share/rpmlint', ['config']),
     ],
     scripts=[
-        'scripts/rpmlint',
-        'scripts/rpmdiff',
+        'build/_scripts/rpmlint',
+        'build/_scripts/rpmdiff',
     ],
 )
