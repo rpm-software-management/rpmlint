@@ -10,17 +10,16 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/gtbl \
         /usr/bin/make \
         /usr/bin/man \
+        /usr/bin/perl \
+        /usr/bin/python \
         /usr/bin/readelf \
         /usr/bin/xz \
         python3-enchant \
+        python3-flake8 \
+        python3-flake8-import-order \
         python3-magic \
-        python3-devel rpm-build \
-    && \
-    # TODO: Install hacking once it's flake8 3.4+ compatible \
-    pip3 install \
-        flake8-bugbear \
-        flake8-import-order \
-        pytest
+        python3-pytest \
+        python3-devel rpm-build
 
 WORKDIR /usr/src/rpmlint
 COPY . .
