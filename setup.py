@@ -9,8 +9,9 @@ from setuptools import setup
 
 setup(
     name='rpmlint',
-    description='RPM file QA correctness validator',
-    long_description='Command-line tool for RPM files QA validation',
+    description='Check for common errors in RPM packages',
+    long_description=('Rpmlint is a tool to check common errors in RPM packages.'
+                      'Binary and source packages can be checked'),
     url='https://github.com/rpm-software-management/rpmlint',
     download_url='https://github.com/rpm-software-management/rpmlint',
 
@@ -31,10 +32,13 @@ setup(
         'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
         'Operating System :: Unix',
         'Operating System :: POSIX',
+        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Topic :: Utilities',
-        'Topic :: Text Processing',
+        'Topic :: Software Development :: Quality Assurance',
+        'Topic :: System :: Archiving :: Packaging',
     ],
     platforms=['Linux'],
     keywords=['RPM', '.spec', 'validator'],
