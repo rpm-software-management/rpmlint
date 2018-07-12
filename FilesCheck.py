@@ -178,13 +178,14 @@ DEFAULT_DISALLOWED_DIRS = (
     '/var/tmp',
 )
 
+compressions = r'\.(gz|z|Z|zip|bz2|lzma|xz|zst)'
 sub_bin_regex = re.compile(r'^(/usr)?/s?bin/\S+/')
-backup_regex = re.compile(r'(~|\#[^/]+\#|\.orig|\.rej)$')
-compr_regex = re.compile(r'\.(gz|z|Z|zip|bz2|lzma|xz)$')
+backup_regex = re.compile(r'(~|\#[^/]+\#|((\.orig|\.rej)(' + compressions + ')?))$')
+compr_regex = re.compile(compressions + r'$')
 absolute_regex = re.compile(r'^/([^/]+)')
 absolute2_regex = re.compile(r'^/?([^/]+)')
 points_regex = re.compile(r'^\.\./(.*)')
-doc_regex = re.compile(r'^/usr(/share|/X11R6)?/(doc|man|info)/')
+doc_regex = re.compile(r'^/usr(/share|/X11R6)?/(doc|man|info)/|^/usr/share/gnome/help')
 bin_regex = re.compile(r'^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
 includefile_regex = re.compile(r'\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile(r'\.(a|cmxa?|mli?|gir)$')
@@ -552,6 +553,16 @@ class FilesCheck(AbstractCheck.AbstractCheck):
                 logrotate_file = True
                 if res.group(1) != pkg.name:
                     printError(pkg, 'incoherent-logrotate-file', f)
+
+            deps = [x[0] for x in pkg.requires() + pkg.recommends() + pkg.suggests()]
+            if res and not ('logrotate' in deps) and pkg.name != "logrotate":
+                printError(pkg, 'missing-dependency-to-logrotate', "for logrotate script", f)
+            if f.startswith('/etc/cron.') \
+               and not ('cron' in deps) and pkg.name != "cron":
+                printError(pkg, 'missing-dependency-to-cron', "for cron script", f)
+            if f.startswith('/etc/xinet.d/') \
+               and not ('xinetd' in deps) and pkg.name != "xinetd":
+                printError(pkg, 'missing-dependency-to-xinetd', "for xinet.d script", f)
 
             if link != '':
                 ext = compr_regex.search(link)
@@ -1377,6 +1388,24 @@ is a sign of distro's default compiler flags ignored which might have security
 consequences), or other compiler flags which result in rpmbuild's debuginfo
 extraction not working as expected.  Verify that the binaries are not
 unexpectedly stripped and that the intended compiler flags are used.''',
+
+'missing-dependency-to-cron',
+'''This package installs a file in /etc/cron.*/ but
+doesn't require cron to be installed. as cron is not part of the essential packages,
+your package should explicitely require cron to make sure that your cron job is
+executed. If it is an optional feature of your package, recommend or suggest cron.''',
+
+'missing-dependency-to-logrotate',
+'''This package installs a file in /etc/logrotate.d/ but
+doesn't require logrotate to be installed. Because logrotate is not part of the essential packages,
+your package should explicitely depend on logrotate to make sure that your logrotate
+job is executed. If it is an optional feature of your package, recommend or suggest logrotate.''',
+
+'missing-dependency-to-xinetd',
+'''This package installs a file in /etc/xinetd.d/ but
+doesn't require xinetd to be installed. Because xinetd is not part of the essential packages,
+your package should explicitely depend on logrotate to make sure that your xinetd
+job is executed. If it is an optional feature of your package, recommend or suggest xinetd.''',
 
 'read-error',
 '''This file could not be read.  A reason for this could be that the info about

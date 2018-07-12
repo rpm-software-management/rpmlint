@@ -708,6 +708,9 @@ class TagsCheck(AbstractCheck.AbstractCheck):
             else:
                 for lang in langs:
                     self.check_description(pkg, lang, ignored_words)
+
+            if len(Pkg.b2s(description)) < len(pkg[rpm.RPMTAG_SUMMARY]):
+                printWarning(pkg, 'description-shorter-than-summary')
         else:
             printError(pkg, 'no-description-tag')
 
@@ -999,6 +1002,10 @@ Name tag.''',
 '''The major number of the library isn't included in the package's name.
 ''',
 
+'description-shorter-than-summary',
+'''The package description should be longer than the summary. Be a bit more
+verbose, please.''',
+
 'no-provides',
 '''Your library package doesn't provide the -devel name without the major
 version included.''',
@@ -1117,7 +1124,7 @@ once.''',
 '''This rpm requires a specific release of another package.''',
 
 'no-url-tag',
-'''The URL tag is missing.''',
+'''The URL tag is missing. Please add a http or ftp link to the project location.''',
 
 'name-repeated-in-summary',
 '''The name of the package is repeated in its summary.  This is often redundant

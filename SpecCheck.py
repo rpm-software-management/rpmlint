@@ -631,8 +631,8 @@ addDetails(
 SPEC file to build a valid RPM package.''',
 
 'invalid-spec-name',
-'''Your spec filename must end with '.spec'. If it's not the case, rename your
-file and rebuild your package.''',
+'''The spec file name (without the .spec suffix) must match the package name
+("Name:" tag). Either rename your package or the specfile.''',
 
 'non-utf8-spec-file',
 '''The character encoding of the spec file is not UTF-8.  Convert it for

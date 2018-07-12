@@ -1,3 +1,6 @@
+.pytest_cache
+*.orig
+*.rej
 *.pyo
 *.pyc
 *.flog

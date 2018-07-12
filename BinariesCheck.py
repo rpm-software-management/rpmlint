@@ -321,6 +321,7 @@ usr_lib_exception_regex = re.compile(Config.getOption('UsrLibBinaryException', r
 srcname_regex = re.compile(r'(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
 ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
+usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
 
 def dir_base(path):
@@ -344,6 +345,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
         binary = False
         binary_in_usr_lib = False
         has_usr_lib_file = False
+        file_in_lib64 = False
 
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
@@ -362,11 +364,22 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                     # only-non-binary-in-usr-lib false positives
                     binary_in_usr_lib = True
 
+            if stat.S_ISREG(pkgfile.mode) and \
+                    (fname.startswith("/usr/lib64") or fname.startswith("/lib64")):
+                file_in_lib64 = True
+
             is_elf = pkgfile.magic.startswith('ELF ')
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
+            is_shell = "shell script" in pkgfile.magic
             is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
+
+            if is_shell:
+                with open(pkgfile.path, 'rb') as inputf:
+                    if (b'This wrapper script should never '
+                            b'be moved out of the build directory' in inputf.read(2048)):
+                        printError(pkg, 'libtool-wrapper-in-package', fname)
 
             if not is_binary:
                 if reference_regex.search(fname):
@@ -394,7 +407,7 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             # arch dependent packages only from here on
 
             # in /usr/share ?
-            if fname.startswith('/usr/share/'):
+            if fname.startswith('/usr/share/') and not usr_arch_share_regex.search(fname):
                 printError(pkg, 'arch-dependent-file-in-usr-share', fname)
 
             # in /etc ?
@@ -568,8 +581,11 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
             if version and version != -1 and version not in pkg.name:
                 printError(pkg, 'incoherent-version-in-name', version)
 
-        if not binary and not multi_pkg and pkg.arch != 'noarch':
+        if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
             printError(pkg, 'no-binary')
+
+        if pkg.arch == 'noarch' and file_in_lib64:
+            printError(pkg, 'noarch-with-lib64')
 
         if has_usr_lib_file and not binary_in_usr_lib:
             printWarning(pkg, 'only-non-binary-in-usr-lib')
@@ -595,6 +611,11 @@ FHS and the FSSTND forbid this.''',
 # 'non-sparc32-binary',
 # '',
 
+'noarch-with-lib64',
+'''This package is marked as noarch but installs files into lib64.
+Not all architectures have this in path, so the package can't be
+noarch.''',
+
 'invalid-soname',
 '''The soname of the library is neither of the form lib<libname>.so.<major> or
 lib<libname>-<major>.so.''',
@@ -619,6 +640,12 @@ to list code compiled without -fPIC.
 
 Another common mistake that causes this problem is linking with
 ``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
+
+'libtool-wrapper-in-package',
+'''Your package contains a libtool wrapper shell script. This
+will not work. Instead of installing the libtool wrapper file run
+``libtool --mode=install install -m perm <file> <dest>'' in order
+to install the relinked file.''',
 
 'binary-or-shlib-defines-rpath',
 '''The binary or shared library defines `RPATH'. Usually this is a
