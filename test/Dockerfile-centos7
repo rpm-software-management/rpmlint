@@ -13,13 +13,13 @@ RUN yum -y install \
         /usr/bin/python \
         /usr/bin/readelf \
         /usr/bin/xz \
-        python-pip \
+        python-setuptools \
+        python-pytest \
+        python-pytest-cov \
+        python-pytest-runner \
         python-enchant \
         python-magic \
         python-rpm
-
-# workaround of too old setuptools/pytest
-RUN pip install setuptools --upgrade
 
 WORKDIR /usr/src/rpmlint
 COPY . .

@@ -6,12 +6,14 @@ services:
   - docker
 
 env:
-  - DIST=centos7 PYTHON=python
-  - DIST=fedora28 PYTHON=python3
-  - DIST=fedoradev PYTHON=python3
+  - DIST=centos7 PYTHON=python FLAKE='/usr/bin/true'
+  - DIST=fedora28 PYTHON=python3 FLAKE='/usr/bin/flake8'
+  - DIST=fedoradev PYTHON=python3 FLAKE='/usr/bin/flake8'
+#  - DIST=tumbleweed PYTHON=python3 FLAKE='/usr/bin/flake8'
 
 before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
   - docker run $DIST $PYTHON setup.py test
+  - docker run $DIST $FLAKE
