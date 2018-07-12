@@ -3,7 +3,7 @@
 # Example configuration file for rpmlint.
 
 # This line is mandatory to access the configuration functions
-from Config import *
+from rpmlint.Config import *
 
 # Additional paths to look for checks.
 # ------------------------------------
