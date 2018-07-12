@@ -15,5 +15,5 @@ before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - docker run $DIST $PYTHON setup.py test
+  - docker run -e PYTHONPATH='.' $DIST $PYTHON setup.py test
   - docker run $DIST $FLAKE
