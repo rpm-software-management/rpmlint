@@ -53,7 +53,7 @@ class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
                     e.message.partition(':')[0])
         except UnicodeDecodeError as e:
             printWarning(
-                pkg, 'invalid-desktopfile', filename, 'No valid Unicode')
+                pkg, 'invalid-desktopfile', filename, 'Unicode error: %s' % (e))
         else:
             binary = None
             if cfp.has_option('Desktop Entry', 'Exec'):
