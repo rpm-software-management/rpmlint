@@ -21,5 +21,4 @@ def test_arguments(arguments):
     out, err = process.communicate()
     print(out)
     print(err)
-    print(process.returncode)
-    assert False
+    assert process.returncode == 0 or process.returncode == 64

@@ -73,7 +73,10 @@ def loadCheck(name):
     if loaded:
         return loaded
     if importlib:
-        importlib.import_module(name)
+        try:
+            importlib.import_module('.%s' % name, package='rpmlint')
+        except ImportError:
+            importlib.import_module(name)
     else:
         (fobj, pathname, description) = imp.find_module(name)
         with fobj:
