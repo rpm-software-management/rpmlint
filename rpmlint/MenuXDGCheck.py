@@ -10,19 +10,19 @@ import codecs
 import configparser as cfgparser
 import os
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractFilesCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 from rpmlint.Pkg import getstatusoutput, is_utf8
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')
 
 
-class MenuXDGCheck(AbstractCheck.AbstractFilesCheck):
+class MenuXDGCheck(AbstractFilesCheck):
     def __init__(self):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        AbstractCheck.AbstractFilesCheck.__init__(
+        AbstractFilesCheck.__init__(
             self, "MenuXDGCheck", r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
 
     def parse_desktop_file(self, pkg, root, f, filename):

@@ -13,9 +13,9 @@ import stat
 import subprocess
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -331,10 +331,10 @@ def dir_base(path):
         return '', path
 
 
-class BinariesCheck(AbstractCheck.AbstractCheck):
+class BinariesCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'BinariesCheck')
+        AbstractCheck.__init__(self, 'BinariesCheck')
 
     def check_binary(self, pkg):
         files = pkg.files()

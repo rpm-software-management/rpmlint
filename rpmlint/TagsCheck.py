@@ -14,10 +14,10 @@ import time
 from urllib.parse import urlparse
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import FilesCheck
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.Filter import addDetails, printError, printInfo, printWarning
 
 
@@ -533,10 +533,10 @@ def spell_check(pkg, str, fmt, lang, ignored):
                 warned.add(word)
 
 
-class TagsCheck(AbstractCheck.AbstractCheck):
+class TagsCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'TagsCheck')
+        AbstractCheck.__init__(self, 'TagsCheck')
 
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
         if not value:
@@ -544,7 +544,7 @@ class TagsCheck(AbstractCheck.AbstractCheck):
         if not isinstance(value, (list, tuple)):
             value = [value]
         for val in value:
-            for match in AbstractCheck.macro_regex.findall(val):
+            for match in macro_regex.findall(val):
                 # Do not warn about %XX URL escapes
                 if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
                     continue

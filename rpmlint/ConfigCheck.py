@@ -7,14 +7,14 @@
 # Purpose       :
 #############################################################################
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
-class ConfigCheck(AbstractCheck.AbstractCheck):
+class ConfigCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "ConfigCheck")
+        AbstractCheck.__init__(self, "ConfigCheck")
 
     def check_binary(self, pkg):
         config_files = pkg.configFiles()

@@ -26,9 +26,9 @@ import tempfile
 # place for those variables.
 
 from rpmlint import __version__
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
     printDescriptions, printed_messages, printInfo, setRawOut
 
@@ -208,7 +208,7 @@ def runChecks(pkg):
         printInfo(pkg, 'checking')
 
     for name in Config.allChecks():
-        check = AbstractCheck.AbstractCheck.known_checks.get(name)
+        check = AbstractCheck.known_checks.get(name)
         if check:
             check.verbose = verbose
             check.check(pkg)
@@ -222,7 +222,7 @@ def runSpecChecks(pkg, fname, spec_lines=None):
         printInfo(pkg, 'checking')
 
     for name in Config.allChecks():
-        check = AbstractCheck.AbstractCheck.known_checks.get(name)
+        check = AbstractCheck.known_checks.get(name)
         if check:
             check.verbose = verbose
             check.check_spec(pkg, fname, spec_lines)

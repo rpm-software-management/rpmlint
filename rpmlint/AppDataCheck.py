@@ -8,8 +8,8 @@
 
 import xml.etree.ElementTree as ET
 
-from rpmlint import AbstractCheck
 from rpmlint import Config
+from rpmlint.AbstractCheck import AbstractFilesCheck
 from rpmlint.Filter import addDetails, printError
 from rpmlint.Pkg import getstatusoutput
 
@@ -19,12 +19,12 @@ DEFAULT_APPDATA_CHECKER = ('appstream-util', 'validate-relax')
 appdata_checker = Config.getOption("AppDataChecker", DEFAULT_APPDATA_CHECKER)
 
 
-class AppDataCheck(AbstractCheck.AbstractFilesCheck):
+class AppDataCheck(AbstractFilesCheck):
     def __init__(self):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        AbstractCheck.AbstractFilesCheck.__init__(
+        AbstractFilesCheck.__init__(
             self, "AppDataCheck", r"/usr/share/appdata/.*\.appdata.xml$")
 
     def check_file(self, pkg, filename):

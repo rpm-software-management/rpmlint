@@ -9,17 +9,17 @@
 
 import re
 
-from rpmlint import AbstractCheck
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError
 
 
-class SignatureCheck(AbstractCheck.AbstractCheck):
+class SignatureCheck(AbstractCheck):
     pgp_regex = re.compile(r"pgp|gpg", re.IGNORECASE)
     unknown_key_regex = re.compile(r"\(MISSING KEYS:(?:\([^)]+\))?\s+([^\)]+)\)")
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "SignatureCheck")
+        AbstractCheck.__init__(self, "SignatureCheck")
 
     def check(self, pkg):
         res = pkg.checkSignature()

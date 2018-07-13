@@ -12,9 +12,9 @@ import sys
 from urllib.parse import urlparse
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.Filter import addDetails, printError, printWarning
 from rpmlint.TagsCheck import VALID_GROUPS
 
@@ -120,10 +120,10 @@ def contains_buildroot(line):
     return False
 
 
-class SpecCheck(AbstractCheck.AbstractCheck):
+class SpecCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "SpecCheck")
+        AbstractCheck.__init__(self, "SpecCheck")
         self._spec_file = None
         self._spec_name = None
 
@@ -440,7 +440,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
                                          conf)
 
             if current_section == 'changelog':
-                for match in AbstractCheck.macro_regex.findall(line):
+                for match in macro_regex.findall(line):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         printWarning(pkg, 'macro-in-%changelog', match)
@@ -491,7 +491,7 @@ class SpecCheck(AbstractCheck.AbstractCheck):
             # Test if there are macros in comments
             if hashPos != -1 and \
                     (hashPos == 0 or line[hashPos - 1] in (" ", "\t")):
-                for match in AbstractCheck.macro_regex.findall(
+                for match in macro_regex.findall(
                         line[hashPos + 1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:

@@ -10,17 +10,16 @@
 
 import re
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractFilesCheck
 from rpmlint.Filter import addDetails, printError
 
 
 pam_stack_re = re.compile(r'^\s*[^#].*pam_stack\.so\s*service')
 
 
-class PamCheck(AbstractCheck.AbstractFilesCheck):
+class PamCheck(AbstractFilesCheck):
     def __init__(self):
-        AbstractCheck.AbstractFilesCheck.__init__(self, "PamCheck",
-                                                  r"/etc/pam\.d/.*")
+        AbstractFilesCheck.__init__(self, "PamCheck", r"/etc/pam\.d/.*")
 
     def check_file(self, pkg, filename):
         lines = pkg.grep(pam_stack_re, filename)

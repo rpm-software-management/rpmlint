@@ -10,8 +10,8 @@
 import re
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint.__isocodes__ import COUNTRIES, LANGUAGES
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -70,10 +70,10 @@ def is_valid_lang(lang):
     return True
 
 
-class I18NCheck(AbstractCheck.AbstractCheck):
+class I18NCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'I18NCheck')
+        AbstractCheck.__init__(self, 'I18NCheck')
 
     def check_binary(self, pkg):
         files = list(pkg.files().keys())

@@ -9,8 +9,8 @@
 
 import re
 
-from rpmlint import AbstractCheck
 from rpmlint import Config
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -28,10 +28,10 @@ compressed_fileext_magic = {
 }
 
 
-class SourceCheck(AbstractCheck.AbstractCheck):
+class SourceCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'SourceCheck')
+        AbstractCheck.__init__(self, 'SourceCheck')
 
     def check_source(self, pkg):
         # process file list
