@@ -17,12 +17,7 @@ import re
 import stat
 import sys
 import tempfile
-
-try:
-    import importlib
-except ImportError:  # Python < 2.7
-    importlib = None
-    import imp
+import importlib
 
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
@@ -72,16 +67,10 @@ def loadCheck(name):
     loaded = sys.modules.get(name)
     if loaded:
         return loaded
-    if importlib:
-        try:
-            importlib.import_module('.%s' % name, package='rpmlint')
-        except ImportError:
-            importlib.import_module(name)
-    else:
-        (fobj, pathname, description) = imp.find_module(name)
-        with fobj:
-            imp.load_module(name, fobj, pathname, description)
-
+    try:
+        importlib.import_module('.%s' % name, package='rpmlint')
+    except ImportError:
+        importlib.import_module(name)
 
 #############################################################################
 # main program

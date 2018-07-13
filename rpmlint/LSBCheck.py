@@ -12,8 +12,8 @@ import re
 
 import rpm
 
-import AbstractCheck
-from Filter import addDetails, printError
+from rpmlint import AbstractCheck
+from rpmlint.Filter import addDetails, printError
 
 
 version_regex = re.compile('^[a-zA-Z0-9.+]+$')

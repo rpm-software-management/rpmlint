@@ -11,10 +11,7 @@ import locale
 import os.path
 import re
 
-try:
-    import __version__
-except ImportError:
-    __version__ = 'devel'
+from rpmlint import __version__
 
 DEFAULT_CHECKS = ("DistributionCheck",
                   "TagsCheck",

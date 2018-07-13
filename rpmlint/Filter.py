@@ -25,16 +25,6 @@ _diagnostic = list()
 _badness_score = 0
 printed_messages = {"I": 0, "W": 0, "E": 0}
 
-__preferred_encoding = locale.getpreferredencoding()
-if sys.version_info[0] < 3:
-    def __print(s):
-        if isinstance(s, str):
-            s = s.decode(__preferred_encoding, 'replace')
-        print(s)
-else:
-    def __print(s):
-        print(s)
-
 
 def printInfo(pkg, reason, *details):
     _print("I", pkg, reason, details)
@@ -83,7 +73,7 @@ def _print(msgtype, pkg, reason, details):
         if threshold >= 0:
             _diagnostic.append(s + "\n")
         else:
-            __print(s)
+            print(s)
             if Config.info:
                 printDescriptions(reason)
         return True
@@ -95,8 +85,8 @@ def printDescriptions(reason):
     try:
         d = _details[reason]
         if d and d != '' and d != "\n":
-            __print(textwrap.fill(d, 78))
-            __print("")
+            print(textwrap.fill(d, 78))
+            print("")
     except KeyError:
         pass
 
@@ -121,7 +111,7 @@ def printAllReasons():
                 if len(last_reason):
                     printDescriptions(last_reason)
                 last_reason = reason
-        __print(diag)
+        print(diag)
     if Config.info and len(last_reason):
         printDescriptions(last_reason)
     _diagnostic = list()

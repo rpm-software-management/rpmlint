@@ -16,10 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
-try:
-    from urlparse import urljoin
-except ImportError:
-    from urllib.parse import urljoin
+from urllib.parse import urljoin
 
 try:
     import magic

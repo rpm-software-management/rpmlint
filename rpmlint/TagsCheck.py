@@ -11,10 +11,7 @@ import calendar
 import os
 import re
 import time
-try:
-    from urlparse import urlparse
-except ImportError:  # Python 3
-    from urllib.parse import urlparse
+from urllib.parse import urlparse
 
 import rpm
 from rpmlint import AbstractCheck

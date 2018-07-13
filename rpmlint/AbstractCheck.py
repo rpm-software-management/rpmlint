@@ -9,10 +9,7 @@
 
 import contextlib
 import re
-try:
-    import urllib2
-except ImportError:
-    import urllib.request as urllib2
+import urllib.request
 
 from rpmlint import Config
 from rpmlint.Filter import addDetails, printInfo, printWarning
@@ -21,14 +18,14 @@ from rpmlint.Filter import addDetails, printInfo, printWarning
 macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
 
 
-class _HeadRequest(urllib2.Request):
+class _HeadRequest(urllib.request.Request):
     def get_method(self):
         return "HEAD"
 
 
-class _HeadRedirectHandler(urllib2.HTTPRedirectHandler):
+class _HeadRedirectHandler(urllib.request.HTTPRedirectHandler):
     def redirect_request(*args):
-        res = urllib2.HTTPRedirectHandler.redirect_request(*args)
+        res = urllib.request.HTTPRedirectHandler.redirect_request(*args)
         if res:
             res = _HeadRequest(res.get_full_url())
         return res
@@ -75,7 +72,7 @@ class AbstractCheck(object):
 
         res = None
         try:
-            opener = urllib2.build_opener(_HeadRedirectHandler())
+            opener = urllib.request.build_opener(_HeadRedirectHandler())
             opener.addheaders = [('User-Agent',
                                   'rpmlint/%s' % Config.__version__)]
             res = opener.open(_HeadRequest(url), timeout=self.network_timeout)

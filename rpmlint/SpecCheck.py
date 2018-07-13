@@ -9,10 +9,7 @@
 
 import re
 import sys
-try:
-    from urlparse import urlparse
-except ImportError:  # Python 3
-    from urllib.parse import urlparse
+from urllib.parse import urlparse
 
 import rpm
 from rpmlint import AbstractCheck
