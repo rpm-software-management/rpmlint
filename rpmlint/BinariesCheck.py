@@ -54,16 +54,7 @@ class BinaryInfo(object):
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     chroot_call_regex = create_regexp_call('chroot')
 
-    forbidden_functions = Config.getOption("WarnOnFunction")
-    if forbidden_functions:
-        for name, func in forbidden_functions.items():
-            # precompile regexps
-            f_name = func['f_name']
-            func['f_regex'] = create_nonlibc_regexp_call(f_name)
-            if 'good_param' in func:
-                func['waiver_regex'] = re.compile(func['good_param'])
-            # register descriptions
-            addDetails(name, func['description'])
+    forbidden_functions = None
 
     chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
@@ -91,53 +82,63 @@ class BinaryInfo(object):
         self.chdir = False
         self.chroot_near_chdir = False
         self.mktemp = False
+        self.forbidden_functions = Config.getOption("WarnOnFunction")
+        if self.forbidden_functions:
+            for name, func in self.forbidden_functions.items():
+                # precompile regexps
+                f_name = func['f_name']
+                func['f_regex'] = create_nonlibc_regexp_call(f_name)
+                if 'good_param' in func:
+                    func['waiver_regex'] = re.compile(func['good_param'])
+                # register descriptions
+                addDetails(name, func['description'])
 
         is_debug = path.endswith('.debug')
         # Currently this implementation works only on specific
         # architectures due to reliance on arch specific assembly.
         if (pkg.arch.startswith('armv') or pkg.arch == 'aarch64'):
             # 10450:   ebffffec        bl      10408 <chroot@plt>
-            BinaryInfo.objdump_call_regex = re.compile(br'\sbl\s+(.*)')
+            self.objdump_call_regex = re.compile(br'\sbl\s+(.*)')
         elif (pkg.arch.endswith('86') or pkg.arch == 'x86_64'):
             # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-            BinaryInfo.objdump_call_regex = re.compile(br'callq?\s(.*)')
+            self.objdump_call_regex = re.compile(br'callq?\s(.*)')
         else:
-            BinaryInfo.objdump_call_regex = None
+            self.objdump_call_regex = None
 
         res = Pkg.getstatusoutput(
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
         if not res[0]:
             lines = res[1].splitlines()
             for line in lines:
-                r = BinaryInfo.needed_regex.search(line)
+                r = self.needed_regex.search(line)
                 if r:
                     self.needed.append(r.group(1))
                     continue
 
-                r = BinaryInfo.rpath_regex.search(line)
+                r = self.rpath_regex.search(line)
                 if r:
                     for p in r.group(1).split(':'):
                         self.rpath.append(p)
                     continue
 
-                if BinaryInfo.comment_regex.search(line):
+                if self.comment_regex.search(line):
                     self.comment = True
                     continue
 
-                if BinaryInfo.pic_regex.search(line):
+                if self.pic_regex.search(line):
                     self.non_pic = False
                     continue
 
-                r = BinaryInfo.soname_regex.search(line)
+                r = self.soname_regex.search(line)
                 if r:
                     self.soname = r.group(1)
                     continue
 
-                r = BinaryInfo.stack_regex.search(line)
+                r = self.stack_regex.search(line)
                 if r:
                     self.stack = True
                     flags = r.group(1)
-                    if flags and BinaryInfo.stack_exec_regex.search(flags):
+                    if flags and self.stack_exec_regex.search(flags):
                         self.exec_stack = True
                     continue
 
@@ -145,41 +146,41 @@ class BinaryInfo(object):
                     break
 
             for line in lines:
-                r = BinaryInfo.call_regex.search(line)
+                r = self.call_regex.search(line)
                 if not r:
                     continue
                 line = r.group(1)
 
-                if BinaryInfo.mktemp_call_regex.search(line):
+                if self.mktemp_call_regex.search(line):
                     self.mktemp = True
 
-                if BinaryInfo.setgid_call_regex.search(line):
+                if self.setgid_call_regex.search(line):
                     self.setgid = True
 
-                if BinaryInfo.setuid_call_regex.search(line):
+                if self.setuid_call_regex.search(line):
                     self.setuid = True
 
-                if BinaryInfo.setgroups_call_regex.search(line):
+                if self.setgroups_call_regex.search(line):
                     self.setgroups = True
 
-                if BinaryInfo.chdir_call_regex.search(line):
+                if self.chdir_call_regex.search(line):
                     self.chdir = True
 
-                if BinaryInfo.chroot_call_regex.search(line):
+                if self.chroot_call_regex.search(line):
                     self.chroot = True
 
-                if BinaryInfo.forbidden_functions:
-                    for r_name, func in BinaryInfo.forbidden_functions.items():
+                if self.forbidden_functions:
+                    for r_name, func in self.forbidden_functions.items():
                         ret = func['f_regex'].search(line)
                         if ret:
                             self.forbidden_calls.append(r_name)
 
                 if is_shlib:
-                    r = BinaryInfo.exit_call_regex.search(line)
+                    r = self.exit_call_regex.search(line)
                     if r:
                         self.exit_calls.append(r.group(1))
                         continue
-                    r = BinaryInfo.fork_call_regex.search(line)
+                    r = self.fork_call_regex.search(line)
                     if r:
                         fork_called = True
                         continue
@@ -193,7 +194,7 @@ class BinaryInfo(object):
                         # as we need to remove elements, iterate backwards
                         for i in range(len(self.forbidden_calls) - 1, -1, -1):
                             func = self.forbidden_calls[i]
-                            f = BinaryInfo.forbidden_functions[func]
+                            f = self.forbidden_functions[func]
                             if 'waiver_regex' not in f:
                                 continue
                             r = f['waiver_regex'].search(line)
@@ -211,7 +212,7 @@ class BinaryInfo(object):
 
             # check if chroot is near chdir (since otherwise, chroot is called
             # without chdir)
-            if not BinaryInfo.objdump_call_regex and self.chroot and self.chdir:
+            if not self.objdump_call_regex and self.chroot and self.chdir:
                 # On some architectures, e.g. PPC, it is to difficult to
                 # find the actual invocations of chroot/chdir, if both
                 # exist assume chroot is fine
@@ -226,7 +227,7 @@ class BinaryInfo(object):
                     chroot_index = -99
                     chdir_index = -99
                     for line in p.stdout:
-                        res = BinaryInfo.objdump_call_regex.search(line)
+                        res = self.objdump_call_regex.search(line)
                         if not res:
                             continue
                         if b'@plt' not in res.group(1):
@@ -271,7 +272,7 @@ class BinaryInfo(object):
             res = Pkg.getstatusoutput(('ldd', '-d', '-r', path))
             if not res[0]:
                 for line in res[1].splitlines():
-                    undef = BinaryInfo.undef_regex.search(line)
+                    undef = self.undef_regex.search(line)
                     if undef:
                         self.undef.append(undef.group(1))
                 if self.undef:
@@ -294,7 +295,7 @@ class BinaryInfo(object):
                     elif line.startswith('Unused direct dependencies'):
                         in_unused = True
                     elif in_unused:
-                        unused = BinaryInfo.unused_regex.search(line)
+                        unused = self.unused_regex.search(line)
                         if unused:
                             self.unused.append(unused.group(1))
                         else:
@@ -479,8 +480,7 @@ class BinariesCheck(AbstractCheck):
                     printWarning(pkg, 'shared-lib-calls-exit', fname, ec)
 
             for ec in bin_info.forbidden_calls:
-                printWarning(pkg, ec, fname,
-                             BinaryInfo.forbidden_functions[ec]['f_name'])
+                printWarning(pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
 
             # rpath ?
             if bin_info.rpath:
