@@ -11,8 +11,6 @@ import locale
 import os.path
 import re
 
-from rpmlint import __version__
-
 DEFAULT_CHECKS = ("DistributionCheck",
                   "TagsCheck",
                   "BinariesCheck",

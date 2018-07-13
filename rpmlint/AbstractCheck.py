@@ -11,6 +11,7 @@ import contextlib
 import re
 import urllib.request
 
+from rpmlint import __version__
 from rpmlint import Config
 from rpmlint.Filter import addDetails, printInfo, printWarning
 
@@ -74,7 +75,7 @@ class AbstractCheck(object):
         try:
             opener = urllib.request.build_opener(_HeadRedirectHandler())
             opener.addheaders = [('User-Agent',
-                                  'rpmlint/%s' % Config.__version__)]
+                                  'rpmlint/%s' % __version__)]
             res = opener.open(_HeadRequest(url), timeout=self.network_timeout)
         except Exception as e:
             errstr = str(e) or repr(e) or type(e)

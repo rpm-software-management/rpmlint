@@ -7,8 +7,8 @@
 #
 
 import codecs
-import os
 import configparser as cfgparser
+import os
 
 from rpmlint import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning

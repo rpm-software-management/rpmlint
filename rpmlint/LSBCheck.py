@@ -11,7 +11,6 @@
 import re
 
 import rpm
-
 from rpmlint import AbstractCheck
 from rpmlint.Filter import addDetails, printError
 

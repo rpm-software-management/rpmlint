@@ -11,13 +11,13 @@
 
 import getopt
 import glob
+import importlib
 import locale
 import os
 import re
 import stat
 import sys
 import tempfile
-import importlib
 
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
@@ -25,6 +25,7 @@ import importlib
 # loaded which is too early - settings from config files won't take
 # place for those variables.
 
+from rpmlint import __version__
 from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
@@ -58,7 +59,7 @@ def usage(name):
 
 # Print version information
 def printVersion():
-    print('rpmlint version %s' % Config.__version__)
+    print('rpmlint version %s' % __version__)
 
 
 def loadCheck(name):
@@ -71,6 +72,7 @@ def loadCheck(name):
         importlib.import_module('.%s' % name, package='rpmlint')
     except ImportError:
         importlib.import_module(name)
+
 
 #############################################################################
 # main program
