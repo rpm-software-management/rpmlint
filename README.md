@@ -1,47 +1,36 @@
-# rpmlint [![Build Status](https://travis-ci.org/rpm-software-management/rpmlint.svg)](https://travis-ci.org/rpm-software-management/rpmlint)
+# rpmlint
 
-rpmlint is a tool for checking common errors in rpm packages.  rpmlint
-can be used to test individual packages before uploading or to check
-an entire distribution.  By default all applicable checks are
-performed but specific checks can be performed by using command line
-parameters.
+[![Build Status](https://travis-ci.org/rpm-software-management/rpmlint.svg)](https://travis-ci.org/rpm-software-management/rpmlint)
+
+rpmlint is a tool for checking common errors in rpm packages.
+rpmlint can be used to test individual packages before uploading or to check
+an entire distribution.
+
+By default all applicable checks are performed but specific checks can be
+performed by using command line parameters.
 
 rpmlint can check binary rpms (files and installed ones), source rpms,
 and plain specfiles, but all checks do not apply to all argument
-types.  For best check coverage, run rpmlint on source rpms instead of
+types. For best check coverage, run rpmlint on source rpms instead of
 plain specfiles, and installed binary rpms instead of uninstalled
 binary rpm files.
 
 The idea for rpmlint is from the lintian tool of the Debian project.
+All the checks reside in rpmlint/ folder. Feel free to provide new
+checks and suggestions at:
 
-Comments and new checks welcome. See the project home page at
 https://github.com/rpm-software-management/rpmlint
 
-Implemented checks:
+## Configuration
 
-- Tag checks (TagsCheck).
-- Distribution specific checks (MandrakeCheck).
-- Binary checks (BinaryCheck).
-- Configuration file checks (ConfigCheck).
-- Location, permission, group and owner checks (FileCheck).
-- suid warnings (FileCheck).
-- Signature checks (SignatureCheck).
-- FHS checks (FHSCheck).
-- Source specific checks (SourceCheck).
-- i18n checks (I18NCheck).
-- Menu system checks (MenuCheck).
-- Scriptlet checks (PostCheck).
-- `/etc/rc.d/init.d` checks (InitScriptCheck).
-- Spec file checks (SpecCheck).
-- Zip/Jar file checks (ZipCheck).
-- Pam configuration file checks (PamCheck).
-- Rpm file checks (RpmFileCheck).
-- Software Collections checks (SCLCheck).
+If you want to change configuration options or the list of checks you can
+use following locations:
 
-If you want to change configuration options or the list of checks, use
-the global configuration files `/etc/rpmlint/*config` or the user
-configuration file `$XDG_CONFIG_HOME/rpmlint` (`~/.config/rpmlint` if
-`$XDG_CONFIG_HOME` is empty or not set).
+`/etc/rpmlint/*config`
+
+`$XDG_CONFIG_HOME/rpmlint`
+
+`~/.config/rpmlint` if `$XDG_CONFIG_HOME` is empty or not set
 
 Configuration files are Python source files and should begin with the
 following line:
@@ -50,9 +39,7 @@ following line:
 from rpmlint.Config import *
 ```
 
-to load configuration functions.
-
-Configuration functions:
+Possible configuration functions:
 
 `resetChecks()` resets the list of checks.
 
