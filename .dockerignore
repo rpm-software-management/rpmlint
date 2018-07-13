@@ -1,2 +1,4 @@
-*.pyo
-*.pyc
+**/__pycache__
+**/*.pyo
+**/*.pyc
+!test/pyc/*.pyc

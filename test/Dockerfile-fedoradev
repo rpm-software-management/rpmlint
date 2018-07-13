@@ -11,15 +11,19 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/make \
         /usr/bin/man \
         /usr/bin/perl \
-        /usr/bin/python \
+        /usr/bin/python3 \
         /usr/bin/readelf \
         /usr/bin/xz \
+        python3-setuptools \
         python3-enchant \
+        python3-magic \
+        python3-rpm \
+        python3-pytest \
+        python3-pytest-cov \
+        python3-pytest-runner \
         python3-flake8 \
         python3-flake8-import-order \
-        python3-magic \
-        python3-pytest \
-        python3-devel rpm-build
+        rpm-build
 
 WORKDIR /usr/src/rpmlint
 COPY . .

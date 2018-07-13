@@ -1,21 +1,20 @@
 import os
 
-import BinariesCheck
-import Testing
+import pytest
+from rpmlint import BinariesCheck
+
+from Testing import getTestedPackage
 
 
-class TestForbiddenCCalls(Testing.OutputTest):
+@pytest.mark.parametrize('package', ['cyrus-imapd', 'dovecot'])
+def test_forbidden_c_calls(capsys, package):
+    BinariesCheck.check.check(getTestedPackage(os.path.join('binary', package)))
+    out, err = capsys.readouterr()
+    assert 'crypto-policy-non-compliance' in out
 
-    @classmethod
-    def setup_class(cls):
-        cls.check = BinariesCheck.check.check
 
-    def test_forbidden_c_calls(self):
-        for package in ['cyrus-imapd', 'dovecot']:
-            out = self._rpm_test_output(os.path.join('binary', package))
-            assert 'crypto-policy-non-compliance' in "\n".join(out)
-
-    def test_waived_forbidden_c_calls(self):
-        for package in ['ngircd']:
-            out = self._rpm_test_output(os.path.join('binary', package))
-            assert 'crypto-policy-non-compliance' not in "\n".join(out)
+@pytest.mark.parametrize('package', ['ngircd'])
+def test_waived_forbidden_c_calls(capsys, package):
+    BinariesCheck.check.check(getTestedPackage(os.path.join('binary', package)))
+    out, err = capsys.readouterr()
+    assert 'crypto-policy-non-compliance' not in out

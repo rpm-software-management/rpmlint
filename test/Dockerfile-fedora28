@@ -10,13 +10,18 @@ RUN dnf -y install \
         /usr/bin/make \
         /usr/bin/man \
         /usr/bin/perl \
-        /usr/bin/py.test-3 \
-        /usr/bin/flake8-3 \
+        /usr/bin/python3 \
         /usr/bin/readelf \
         /usr/bin/xz \
+        python3-setuptools \
         python3-enchant \
-        python3-flake8-import-order \
-        python3-magic
+        python3-magic \
+        python3-rpm \
+        python3-pytest \
+        python3-pytest-cov \
+        python3-pytest-runner \
+        python3-flake8 \
+        python3-flake8-import-order
 
 WORKDIR /usr/src/rpmlint
 COPY . .

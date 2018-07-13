@@ -1,8 +1,7 @@
 You need the following utilities to run rpmlint:
-
-	o python 2.6 or newer
-	o rpm 4.4.2.2 or newer and its python bindings
-	o libmagic 5.05 and its python bindings (optional)
+	o python 2.7 or newer
+	o rpm and its python bindings
+	o libmagic and its python bindings (optional)
 	o readelf
 	o cpio
 	o desktop-file-validate
@@ -12,8 +11,7 @@ You need the following utilities to run rpmlint:
 	o appstream-util, part of appstream-glib (optional)
 
 and the following programs to install it:
-
-	o python 2.6 or newer
-	o rpm python bindings 4.4 or newer
-	o sed
-	o pytest and flake8 (for running the test suite)
+	o python 2.7 or newer
+	o python-setuptools
+	o rpm python bindings
+	o pytest and pytest-flake8 (for running the test suite)

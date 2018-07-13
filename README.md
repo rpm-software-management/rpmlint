@@ -47,7 +47,7 @@ Configuration files are Python source files and should begin with the
 following line:
 
 ```python
-from Config import *
+from rpmlint.Config import *
 ```
 
 to load configuration functions.

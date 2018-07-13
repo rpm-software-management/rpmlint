@@ -1,17 +1,14 @@
 import os
 
-import MenuXDGCheck
-import Testing
+import pytest
+from rpmlint import MenuXDGCheck
+
+from Testing import getTestedPackage
 
 
-class TestMenuXDGParsing(Testing.OutputTest):
-
-    @classmethod
-    def setup_class(cls):
-        cls.check = MenuXDGCheck.check.check
-
-    def test_raises_parse_error(self):
-        for package in ['menuxdg1']:
-            out = self._rpm_test_output(os.path.join('binary', package))
-            assert 'contains parsing error' in "\n".join(out)
-            assert ' invalid-desktopfile ' in "\n".join(out)
+@pytest.mark.parametrize('package', ['menuxdg1'])
+def test_raises_parse_error(capsys, package):
+    MenuXDGCheck.check.check(getTestedPackage(os.path.join('binary', package)))
+    out, err = capsys.readouterr()
+    assert 'contains parsing error' in out
+    assert ' invalid-desktopfile ' in out

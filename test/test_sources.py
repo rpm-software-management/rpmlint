@@ -1,16 +1,13 @@
 import os
 
-import SourceCheck
-import Testing
+import pytest
+from rpmlint import SourceCheck
+
+from Testing import getTestedPackage
 
 
-class TestSourceCheck(Testing.OutputTest):
-
-    @classmethod
-    def setup_class(cls):
-        cls.check = SourceCheck.check.check
-
-    def test_inconsistent_file_extension(self):
-        for package in ['wrongsrc']:
-            out = self._rpm_test_output(os.path.join('source', package))
-            assert 'inconsistent-file-extension' in "\n".join(out)
+@pytest.mark.parametrize('package', ['wrongsrc'])
+def test_inconsistent_file_extension(capsys, package):
+    SourceCheck.check.check(getTestedPackage(os.path.join('source', package)))
+    out, err = capsys.readouterr()
+    assert 'inconsistent-file-extension' in out

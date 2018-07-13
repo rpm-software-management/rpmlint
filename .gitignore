@@ -1,6 +1,11 @@
 .pytest_cache
 *.orig
 *.rej
+build/
+dist/
+.tox/
+*.egg-info
+.coverage
 *.pyo
 *.pyc
 *.flog
