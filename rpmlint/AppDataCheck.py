@@ -8,8 +8,8 @@
 
 import xml.etree.ElementTree as ET
 
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Config as Config
+from rpmlint import AbstractCheck
+from rpmlint import Config
 from rpmlint.Filter import addDetails, printError
 from rpmlint.Pkg import getstatusoutput
 

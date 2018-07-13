@@ -24,7 +24,7 @@ import sys
 import tempfile
 
 import rpm
-import rpmlint.Pkg
+from rpmlint import Pkg
 
 
 class Rpmdiff(object):

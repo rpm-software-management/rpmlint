@@ -10,8 +10,8 @@
 import os
 import re
 
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Pkg as Pkg
+from rpmlint import AbstractCheck
+from rpmlint import Pkg
 from rpmlint.Filter import addDetails, printError, printWarning
 
 

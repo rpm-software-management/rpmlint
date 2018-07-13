@@ -17,11 +17,10 @@ except ImportError:  # Python 3
     from urllib.parse import urlparse
 
 import rpm
-
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Config as Config
-import rpmlint.FilesCheck as FilesCheck
-import rpmlint.Pkg as Pkg
+from rpmlint import AbstractCheck
+from rpmlint import Config
+from rpmlint import FilesCheck
+from rpmlint import Pkg
 from rpmlint.Filter import addDetails, printError, printInfo, printWarning
 
 

@@ -14,7 +14,7 @@ try:
 except ImportError:
     import urllib.request as urllib2
 
-import rpmlint.Config as Config
+from rpmlint import Config
 from rpmlint.Filter import addDetails, printInfo, printWarning
 
 # Note: do not add any capturing parentheses here

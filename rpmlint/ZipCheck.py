@@ -13,9 +13,9 @@ import stat
 import sys
 import zipfile
 
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Config as Config
-import rpmlint.Pkg as Pkg
+from rpmlint import AbstractCheck
+from rpmlint import Config
+from rpmlint import Pkg
 from rpmlint.Filter import addDetails, printError, printWarning
 
 

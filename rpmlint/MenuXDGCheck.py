@@ -13,7 +13,7 @@ try:
 except ImportError:
     import configparser as cfgparser
 
-import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 from rpmlint.Pkg import getstatusoutput, is_utf8
 

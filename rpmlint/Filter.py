@@ -13,7 +13,7 @@ import locale
 import sys
 import textwrap
 
-import rpmlint.Config as Config
+from rpmlint import Config
 try:
     import Testing
 except ImportError:

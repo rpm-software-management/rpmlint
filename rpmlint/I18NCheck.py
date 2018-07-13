@@ -10,8 +10,7 @@
 import re
 
 import rpm
-
-import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint import AbstractCheck
 from rpmlint.__isocodes__ import COUNTRIES, LANGUAGES
 from rpmlint.Filter import addDetails, printError, printWarning
 

@@ -9,8 +9,8 @@
 
 import re
 
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Config as Config
+from rpmlint import AbstractCheck
+from rpmlint import Config
 from rpmlint.Filter import addDetails, printError, printWarning
 
 

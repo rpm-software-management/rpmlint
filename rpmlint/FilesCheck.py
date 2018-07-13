@@ -14,9 +14,8 @@ import re
 import stat
 
 import rpm
-
-import rpmlint.AbstractCheck as AbstractCheck
-import rpmlint.Config as Config
+from rpmlint import AbstractCheck
+from rpmlint import Config
 from rpmlint.Filter import addDetails, printError, printWarning
 from rpmlint.Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 

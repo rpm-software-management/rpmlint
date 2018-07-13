@@ -30,8 +30,7 @@ try:
 except ImportError:
     _magic = None
 import rpm
-
-import rpmlint.Filter
+from rpmlint import Filter
 
 # utilities
 

@@ -9,7 +9,7 @@
 
 import re
 
-import rpmlint.AbstractCheck as AbstractCheck
+from rpmlint import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 
 
