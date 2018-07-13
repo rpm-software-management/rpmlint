@@ -10,8 +10,8 @@
 import re
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 
 
@@ -22,10 +22,10 @@ distribution = Config.getOption("Distribution")
 compress_ext = Config.getOption("CompressExtension", "bz2")
 
 
-class DistributionCheck(AbstractCheck.AbstractCheck):
+class DistributionCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "DistributionCheck")
+        AbstractCheck.__init__(self, "DistributionCheck")
 
     def check_binary(self, pkg):
         if vendor and pkg[rpm.RPMTAG_VENDOR] != vendor:

@@ -9,11 +9,11 @@
 
 import re
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 
 
-class FHSCheck(AbstractCheck.AbstractCheck):
+class FHSCheck(AbstractCheck):
     usr_regex = re.compile("^/usr/([^/]+)/")
     usr_subdir = ('X11R6', 'bin', 'games', 'include', 'lib', 'lib64',
                   'local', 'sbin', 'share', 'src', 'tmp')
@@ -23,7 +23,7 @@ class FHSCheck(AbstractCheck.AbstractCheck):
                   'mail', 'opt', 'run', 'spool', 'tmp', 'yp', 'www', 'ftp')
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "FHSCheck")
+        AbstractCheck.__init__(self, "FHSCheck")
 
     def check_binary(self, pkg):
         var_list = []

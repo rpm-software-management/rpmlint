@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2006 Mandriva; 2009 Red Hat, Inc.; 2009 Ville Skyttä

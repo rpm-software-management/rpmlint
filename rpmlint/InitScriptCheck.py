@@ -12,9 +12,9 @@ import os
 import re
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -35,10 +35,10 @@ RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
                             'Default-Stop', 'Short-Description')
 
 
-class InitScriptCheck(AbstractCheck.AbstractCheck):
+class InitScriptCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'InitScriptCheck')
+        AbstractCheck.__init__(self, 'InitScriptCheck')
 
     def check_binary(self, pkg):
         initscript_list = []

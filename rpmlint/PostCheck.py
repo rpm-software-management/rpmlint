@@ -13,9 +13,9 @@ import re
 import tempfile
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -82,10 +82,10 @@ def check_syntax_script(prog, commandline, script):
     return ret[0]
 
 
-class PostCheck(AbstractCheck.AbstractCheck):
+class PostCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'PostCheck')
+        AbstractCheck.__init__(self, 'PostCheck')
 
     def check_binary(self, pkg):
         prereq = [x[0] for x in pkg.prereq()]

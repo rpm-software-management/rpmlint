@@ -7,17 +7,10 @@
 # Purpose       : filter the output of rpmlint to allow exceptions.
 #############################################################################
 
-from __future__ import print_function
-
 import locale
 import textwrap
 
 from rpmlint import Config
-try:
-    import Testing
-except ImportError:
-    Testing = None
-
 
 _rawout = None
 _diagnostic = list()

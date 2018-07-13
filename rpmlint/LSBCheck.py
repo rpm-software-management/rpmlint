@@ -11,7 +11,7 @@
 import re
 
 import rpm
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError
 
 
@@ -19,10 +19,10 @@ version_regex = re.compile('^[a-zA-Z0-9.+]+$')
 name_regex = re.compile('^[a-z0-9.+-]+$')
 
 
-class LSBCheck(AbstractCheck.AbstractCheck):
+class LSBCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "LSBCheck")
+        AbstractCheck.__init__(self, "LSBCheck")
 
     def check(self, pkg):
 

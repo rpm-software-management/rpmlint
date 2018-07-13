@@ -10,8 +10,8 @@
 import os
 import re
 
-from rpmlint import AbstractCheck
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -55,11 +55,11 @@ def index_or_sub(source, word, sub=0):
         return sub
 
 
-class SCLCheck(AbstractCheck.AbstractCheck):
+class SCLCheck(AbstractCheck):
     '''Software Collections checks'''
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "SCLCheck")
+        AbstractCheck.__init__(self, "SCLCheck")
         self._spec_file = None
 
     def check_source(self, pkg):

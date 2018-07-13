@@ -15,14 +15,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import rpm
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 from rpmlint.Pkg import b2s
 
 
-class DocFilesCheck(AbstractCheck.AbstractCheck):
+class DocFilesCheck(AbstractCheck):
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'DocFilesCheck')
+        AbstractCheck.__init__(self, 'DocFilesCheck')
 
     def __checkRequirements(self, pkg):
 

@@ -13,9 +13,9 @@ import stat
 import sys
 import zipfile
 
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printWarning
 
 
@@ -26,10 +26,10 @@ classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.M | re.I)
 want_indexed_jars = Config.getOption('UseIndexedJars', True)
 
 
-class ZipCheck(AbstractCheck.AbstractCheck):
+class ZipCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "ZipCheck")
+        AbstractCheck.__init__(self, "ZipCheck")
 
     def check(self, pkg):
         for fname, pkgfile in pkg.files().items():

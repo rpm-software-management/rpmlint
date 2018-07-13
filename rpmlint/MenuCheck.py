@@ -11,9 +11,9 @@ import re
 import stat
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
 from rpmlint import Pkg
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError, printInfo, printWarning
 
 
@@ -158,10 +158,10 @@ for l in launchers:
 del l
 
 
-class MenuCheck(AbstractCheck.AbstractCheck):
+class MenuCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'MenuCheck')
+        AbstractCheck.__init__(self, 'MenuCheck')
 
     def check_binary(self, pkg):
         files = pkg.files()

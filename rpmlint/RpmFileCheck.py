@@ -20,13 +20,13 @@
 
 import os
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 
 
-class RpmFileCheck(AbstractCheck.AbstractCheck):
+class RpmFileCheck(AbstractCheck):
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "RpmFileCheck")
+        AbstractCheck.__init__(self, "RpmFileCheck")
 
     def check(self, pkg):
         # http://en.wikipedia.org/wiki/Joliet_(file_system)

@@ -8,8 +8,6 @@
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
-from __future__ import print_function
-
 import os
 import re
 import stat

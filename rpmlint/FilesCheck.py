@@ -14,8 +14,8 @@ import re
 import stat
 
 import rpm
-from rpmlint import AbstractCheck
 from rpmlint import Config
+from rpmlint.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.Filter import addDetails, printError, printWarning
 from rpmlint.Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
@@ -423,10 +423,10 @@ def script_interpreter(chunk):
         if res and res.start() == 0 else (None, "")
 
 
-class FilesCheck(AbstractCheck.AbstractCheck):
+class FilesCheck(AbstractCheck):
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, 'FilesCheck')
+        AbstractCheck.__init__(self, 'FilesCheck')
 
     def check(self, pkg):
 
@@ -504,7 +504,7 @@ class FilesCheck(AbstractCheck.AbstractCheck):
             is_doc = f in doc_files
             nonexec_file = False
 
-            for match in AbstractCheck.macro_regex.findall(f):
+            for match in macro_regex.findall(f):
                 printWarning(pkg, 'unexpanded-macro', f, match)
             if standard_users and user not in standard_users:
                 printWarning(pkg, 'non-standard-uid', f, user)

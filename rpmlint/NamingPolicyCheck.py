@@ -10,7 +10,7 @@
 
 import re
 
-from rpmlint import AbstractCheck
+from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printWarning
 
 # could be added.
@@ -32,11 +32,11 @@ class NamingPolicyNotAppliedException(Exception):
     pass
 
 
-class NamingPolicyCheck(AbstractCheck.AbstractCheck):
+class NamingPolicyCheck(AbstractCheck):
     checks_ = []
 
     def __init__(self):
-        AbstractCheck.AbstractCheck.__init__(self, "NamingPolicyCheck")
+        AbstractCheck.__init__(self, "NamingPolicyCheck")
 
     def add_check(self, pkg_name, name_re, file_re):
         c = {}
