@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 #
 # check appdata file format violation

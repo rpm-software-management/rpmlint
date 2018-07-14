@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 #
 # check xdg file format violation

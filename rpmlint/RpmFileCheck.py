@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # check the rpm file for various errors.
 #
 # Copyright (C) 2006 Michael Scherer <misc@zarb.org>
