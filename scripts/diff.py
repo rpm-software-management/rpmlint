@@ -24,6 +24,7 @@ import tempfile
 
 import rpm
 from rpmlint import Pkg
+from rpmlint.helpers import print_warning
 
 
 class Rpmdiff(object):
@@ -79,7 +80,7 @@ class Rpmdiff(object):
             old = self.__load_pkg(old).header
             new = self.__load_pkg(new).header
         except KeyError as e:
-            Pkg.warn(str(e))
+            print_warning(str(e))
             sys.exit(2)
 
         # Compare single tags
@@ -267,7 +268,7 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:],
                                    "hti:", ["help", "ignore-times", "ignore="])
     except getopt.GetoptError as e:
-        Pkg.warn("Error: %s" % e)
+        print_warning("Error: %s" % e)
         _usage()
 
     for option, argument in opts:

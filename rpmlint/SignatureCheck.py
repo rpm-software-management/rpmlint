@@ -8,9 +8,9 @@
 
 import re
 
-from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import addDetails, printError
+from rpmlint.helpers import print_warning
 
 
 class SignatureCheck(AbstractCheck):
@@ -30,8 +30,8 @@ class SignatureCheck(AbstractCheck):
             if kres:
                 printError(pkg, "unknown-key", kres.group(1))
             else:
-                Pkg.warn("Error checking signature of %s: %s" %
-                         (pkg.filename, res[1]))
+                print_warning("Error checking signature of %s: %s" %
+                              (pkg.filename, res[1]))
         else:
             if not SignatureCheck.pgp_regex.search(res[1]):
                 printError(pkg, "no-signature")

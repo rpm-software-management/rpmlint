@@ -30,7 +30,7 @@ from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
     printDescriptions, printed_messages, printInfo, setRawOut
-
+from rpmlint.helpers import print_warning
 
 _default_user_conf = '%s/rpmlint' % \
     (os.environ.get('XDG_CONFIG_HOME') or '~/.config')
@@ -131,7 +131,7 @@ def main():
                 except OSError:
                     ipkgs = Pkg.getInstalledPkgs(arg)
                     if not ipkgs:
-                        Pkg.warn(
+                        print_warning(
                             '(none): E: no installed packages by name %s' % arg)
                     else:
                         ipkgs.sort(key=lambda x: locale.strxfrm(
@@ -140,13 +140,13 @@ def main():
             except KeyboardInterrupt:
                 if isfile:
                     arg = os.path.abspath(arg)
-                Pkg.warn(
+                print_warning(
                     '(none): E: interrupted, exiting while reading %s' % arg)
                 sys.exit(2)
             except Exception as e:
                 if isfile:
                     arg = os.path.abspath(arg)
-                Pkg.warn('(none): E: error while reading %s: %s' % (arg, e))
+                print_warning('(none): E: error while reading %s: %s' % (arg, e))
                 pkgs = []
                 continue
 
@@ -173,22 +173,22 @@ def main():
                                 specfiles_checked += 1
 
                         except KeyboardInterrupt:
-                            Pkg.warn(
+                            print_warning(
                                 '(none): E: interrupted while reading %s' %
                                 fname)
                             sys.exit(2)
                         except Exception as e:
-                            Pkg.warn(
+                            print_warning(
                                 '(none): E: while reading %s: %s' % (fname, e))
                             continue
             except Exception as e:
-                Pkg.warn(
+                print_warning(
                     '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
         if printAllReasons():
-            Pkg.warn('(none): E: badness %d exceeds threshold %d, aborting.' %
-                     (badnessScore(), badnessThreshold()))
+            print_warning('(none): E: badness %d exceeds threshold %d, aborting.' %
+                          (badnessScore(), badnessThreshold()))
             sys.exit(66)
 
     finally:
@@ -212,7 +212,7 @@ def runChecks(pkg):
             check.verbose = verbose
             check.check(pkg)
         else:
-            Pkg.warn('(none): W: unknown check %s, skipping' % name)
+            print_warning('(none): W: unknown check %s, skipping' % name)
 
 
 def runSpecChecks(pkg, fname, spec_lines=None):
@@ -226,7 +226,7 @@ def runSpecChecks(pkg, fname, spec_lines=None):
             check.verbose = verbose
             check.check_spec(pkg, fname, spec_lines)
         else:
-            Pkg.warn('(none): W: unknown check %s, skipping' % name)
+            print_warning('(none): W: unknown check %s, skipping' % name)
 
 
 #############################################################################
@@ -243,7 +243,7 @@ try:
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
          'rawout='])
 except getopt.GetoptError as e:
-    Pkg.warn("%s: %s" % (argv0, e))
+    print_warning("%s: %s" % (argv0, e))
     usage(argv0)
     sys.exit(1)
 
@@ -279,7 +279,7 @@ for f in configs:
     except IOError:
         pass
     except Exception as e:
-        Pkg.warn('(none): W: error loading %s, skipping: %s' % (f, e))
+        print_warning('(none): W: error loading %s, skipping: %s' % (f, e))
 # pychecker fix
 del f
 
@@ -331,7 +331,7 @@ try:
 except IOError:
     pass
 except Exception as e:
-    Pkg.warn('(none): W: error loading %s, skipping: %s' % (conf_file, e))
+    print_warning('(none): W: error loading %s, skipping: %s' % (conf_file, e))
 
 # apply config overrides
 for key, value in config_overrides.items():

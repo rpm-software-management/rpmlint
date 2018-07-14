@@ -25,6 +25,7 @@ except ImportError:
     _magic = None
 import rpm
 from rpmlint import Filter
+from rpmlint.helpers import print_warning
 
 # utilities
 
@@ -48,13 +49,6 @@ try:
 except ImportError:
     def shquote(s):
         return '"%s"' % s
-
-
-def warn(s):
-    """
-    Print warning message to stderr.
-    """
-    print(s, file=sys.stderr)
 
 
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
@@ -559,7 +553,7 @@ class Pkg(AbstractPkg):
     # extract rpm contents
     def _extract(self):
         if not os.path.isdir(self.dirname):
-            warn('Unable to access dir %s' % self.dirname)
+            print_warning('Unable to access dir %s' % self.dirname)
             return None
         else:
             self.dirname = tempfile.mkdtemp(
