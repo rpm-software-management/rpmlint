@@ -422,7 +422,6 @@ invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNOREC
 forbidden_words_regex = re.compile(r'(%s)' % Config.getOption('ForbiddenWords'), re.IGNORECASE)
 valid_buildhost_regex = re.compile(Config.getOption('ValidBuildHost'))
 use_epoch = Config.getOption('UseEpoch', False)
-use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 max_line_len = Config.getOption('MaxLineLength', 79)
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
@@ -467,10 +466,7 @@ def spell_check(pkg, str, fmt, lang, ignored):
         if checker:
             # squeeze whitespace to ease leading context check
             checker.set_text(re.sub(r'\s+', ' ', str))
-            if use_utf8:
-                uppername = Pkg.to_unicode(pkg.header[rpm.RPMTAG_NAME]).upper()
-            else:
-                uppername = pkg.name.upper()
+            uppername = Pkg.to_unicode(pkg.header[rpm.RPMTAG_NAME]).upper()
             upperparts = uppername.split('-')
             if lang.startswith('en'):
                 ups = [x + "'S" for x in upperparts]
@@ -756,13 +752,12 @@ class TagsCheck(AbstractCheck):
                             printWarning(pkg, 'incoherent-version-in-changelog',
                                          ret.group(1), expected)
 
-            if use_utf8:
-                if clt:
-                    changelog = changelog + clt
-                for s in changelog:
-                    if not Pkg.is_utf8_bytestr(s):
-                        printError(pkg, 'tag-not-utf8', '%changelog')
-                        break
+            if clt:
+                changelog = changelog + clt
+            for s in changelog:
+                if not Pkg.is_utf8_bytestr(s):
+                    printError(pkg, 'tag-not-utf8', '%changelog')
+                    break
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
@@ -884,12 +879,9 @@ class TagsCheck(AbstractCheck):
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
-        if use_utf8:
-            if not Pkg.is_utf8_bytestr(description):
-                printError(pkg, 'tag-not-utf8', '%description', lang)
-            description = Pkg.to_unicode(description)
-        else:
-            description = Pkg.b2s(description)
+        if not Pkg.is_utf8_bytestr(description):
+            printError(pkg, 'tag-not-utf8', '%description', lang)
+        description = Pkg.to_unicode(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         spell_check(pkg, description, '%%description -l %s', lang,
                     ignored_words)
@@ -906,12 +898,9 @@ class TagsCheck(AbstractCheck):
 
     def check_summary(self, pkg, lang, ignored_words):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
-        if use_utf8:
-            if not Pkg.is_utf8_bytestr(summary):
-                printError(pkg, 'tag-not-utf8', 'Summary', lang)
-            summary = Pkg.to_unicode(summary)
-        else:
-            summary = Pkg.b2s(summary)
+        if not Pkg.is_utf8_bytestr(summary):
+            printError(pkg, 'tag-not-utf8', 'Summary', lang)
+        summary = Pkg.to_unicode(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         spell_check(pkg, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:

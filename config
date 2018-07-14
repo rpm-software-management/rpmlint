@@ -158,10 +158,6 @@ from rpmlint.Config import *
 # Type: boolean, default: True
 #setOption("UseRelativeSymlinks", True)
 
-# Whether the UTF-8 character encoding should be used where applicable.
-# Type: boolean, default: autodetected from environment
-#setOption("UseUTF8", True)
-
 # Whether debug sources are expected to be in separate packages from
 # -debuginfo, typically -debugsource.
 # Type: boolean, default: False

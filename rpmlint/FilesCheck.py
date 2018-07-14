@@ -226,7 +226,6 @@ shebang_regex = re.compile(br'^#!\s*(\S+)(.*?)$', re.M)
 interpreter_regex = re.compile(r'^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile(r'^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile(r'^/etc/(bash_completion\.d|profile\.d)/')
-use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 skipdocs_regex = re.compile(Config.getOption('SkipDocsRegexp', r'\.(?:rtf|x?html?|svg|ml[ily]?)$'), re.IGNORECASE)
 meta_package_regex = re.compile(Config.getOption('MetaPackageRegexp', r'^(bundle|task)-'))
 filesys_packages = ['filesystem']  # TODO: make configurable?
@@ -429,10 +428,9 @@ class FilesCheck(AbstractCheck):
 
     def check(self, pkg):
 
-        if use_utf8:
-            for filename in pkg.header[rpm.RPMTAG_FILENAMES] or ():
-                if not is_utf8_bytestr(filename):
-                    printError(pkg, 'filename-not-utf8', b2s(filename))
+        for filename in pkg.header[rpm.RPMTAG_FILENAMES] or ():
+            if not is_utf8_bytestr(filename):
+                printError(pkg, 'filename-not-utf8', b2s(filename))
 
         # Rest of the checks are for binary packages only
         if pkg.isSource():
@@ -836,7 +834,7 @@ class FilesCheck(AbstractCheck):
                 res = man_base_regex.search(f)
                 if res:
                     man_basenames.add(res.group(1))
-                    if use_utf8 and chunk:
+                    if chunk:
                         # TODO: sequence based invocation
                         cmd = getstatusoutput(
                             '%s %s | gtbl | groff -mtty-char -Tutf8 '
@@ -908,7 +906,7 @@ class FilesCheck(AbstractCheck):
                         # We check only doc text files for UTF-8-ness;
                         # checking everything may be slow and can generate
                         # lots of unwanted noise.
-                        if use_utf8 and not is_utf8(pkgfile.path):
+                        if not is_utf8(pkgfile.path):
                             printWarning(pkg, 'file-not-utf8', f)
                     if fsf_license_regex.search(chunk) and \
                             fsf_wrong_address_regex.search(chunk):
@@ -918,7 +916,7 @@ class FilesCheck(AbstractCheck):
                     ff = compr_regex.sub('', f)
                     if not skipdocs_regex.search(ff):
                         # compressed docs, eg. info and man files etc
-                        if use_utf8 and not is_utf8(pkgfile.path):
+                        if not is_utf8(pkgfile.path):
                             printWarning(pkg, 'file-not-utf8', f)
 
             # normal dir check

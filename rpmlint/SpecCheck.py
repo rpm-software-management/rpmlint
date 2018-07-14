@@ -55,7 +55,6 @@ if_regex = re.compile(r'^\s*%if\s')
 endif_regex = re.compile(r'^\s*%endif\b')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 hardcoded_lib_path_exceptions_regex = re.compile(Config.getOption('HardcodedLibPathExceptions', DEFAULT_HARDCODED_LIB_PATH_EXCEPTIONS))
-use_utf8 = Config.getOption('UseUTF8', Config.USEUTF8_DEFAULT)
 libdir_regex = re.compile(r'%{?_lib(?:dir)?\}?\b')
 section_regexs = dict(
     ([x, re.compile('^%' + x + r'(?:\s|$)')]
@@ -177,11 +176,8 @@ class SpecCheck(AbstractCheck):
         current_package = None
         package_noarch = {}
 
-        is_utf8 = False
-        if self._spec_file and use_utf8:
-            if Pkg.is_utf8(self._spec_file):
-                is_utf8 = True
-            else:
+        if self._spec_file:
+            if not Pkg.is_utf8(self._spec_file):
                 printError(pkg, "non-utf8-spec-file",
                            self._spec_name or self._spec_file)
 
@@ -189,15 +185,11 @@ class SpecCheck(AbstractCheck):
 
         pkg.current_linenum = 0
 
-        nbsp = UNICODE_NBSP if is_utf8 else chr(0xA0)
-        do_unicode = is_utf8 and sys.version_info[0] <= 2
+        nbsp = UNICODE_NBSP
 
         for line in spec_lines:
 
             pkg.current_linenum += 1
-
-            if do_unicode:
-                line = unicode(line, "utf-8", "replace")  # noqa false positive
 
             char = line.find(nbsp)
             if char != -1:

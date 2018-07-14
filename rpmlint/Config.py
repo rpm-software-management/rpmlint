@@ -32,17 +32,6 @@ DEFAULT_CHECKS = ("DistributionCheck",
                   "AppDataCheck",
                   )
 
-USEUTF8_DEFAULT = False
-try:
-    if locale.getpreferredencoding() == 'UTF-8':
-        USEUTF8_DEFAULT = True
-except UnicodeError:
-    try:
-        if re.match('utf', locale.getdefaultlocale()[1], re.I):
-            USEUTF8_DEFAULT = True
-    except UnicodeError:
-        pass
-
 info = False
 no_exception = False
 
