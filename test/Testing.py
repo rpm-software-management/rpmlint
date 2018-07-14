@@ -6,20 +6,15 @@ import tempfile
 from rpmlint.Pkg import FakePkg, Pkg
 
 
-def _testpath():
-    return os.environ.get(
-        'TESTPATH',
-        os.path.dirname(__file__)
-    )
+def testpath():
+    return os.environ.get('TESTPATH', os.path.dirname(__file__))
 
 
-TEST_CONFIG = os.path.join(_testpath(), "test.config")
-with open(TEST_CONFIG) as f:
-    exec(compile(f.read(), TEST_CONFIG, 'exec'))
+TEST_CONFIG = os.path.join(testpath(), "configs/test.config")
 
 
 def getTestedPath(path):
-    return os.path.join(_testpath(), path)
+    return os.path.join(testpath(), path)
 
 
 def getTestedPackage(name):

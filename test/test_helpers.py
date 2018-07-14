@@ -1,5 +1,5 @@
-import pytest
 from rpmlint import helpers
+
 
 def test_warnprint(capsys):
     """
