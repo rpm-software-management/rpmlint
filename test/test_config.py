@@ -1,5 +1,4 @@
 import os
-from typing.re import Pattern
 
 from rpmlint.Config import Config
 
@@ -93,7 +92,6 @@ def test_filters():
     cfg = Config(TEST_CONFIG_FILTERS)
     assert len(cfg.configuration['Filters']) == 9
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
-    assert isinstance(cfg.filters_re, Pattern)
 
 
 def test_list_merging():
@@ -132,6 +130,7 @@ def test_badness_functions():
     cfg.set_badness('suse-dbus-unauthorized-service', 15)
     assert len(cfg.configuration['Scoring']) == 1
     assert cfg.configuration['Scoring']['suse-dbus-unauthorized-service'] == 15
+
 
 def test_rpmlint_loading():
     """

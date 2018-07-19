@@ -1,7 +1,7 @@
 # This line is mandatory to access the configuration functions
 from Config import *
 setBadness('suse-dbus-unauthorized-service', 0)
-    setBadness('suse-other-error','0')
+    setBadness('suse-other-error','20')
 # # Output filters
 addFilter("arch-independent-package-contains-binary-or-object ")
 addFilter('.*arch-independent-package-contains-binary-or-object.*/boot/vc/.*.elf')

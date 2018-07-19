@@ -42,18 +42,15 @@ class Config(object):
     )
     # filename with configuration specifications
     __configspecfilename = os.path.join(os.path.dirname(__file__), 'configspec.cfg')
-    # ordered list of configuration files we loaded
-    # usefull when debugging where from we got all the config options
-    conf_files = list()
-    # Configuration content parsed from the ini file
-    configuration = None
-    # filters regular expression string, compiled from configuration[filter]
-    filters_re = None
-    non_named_group_re = re.compile(r'[^\\](\()[^:]')
-    # wether to print more informations or not
-    info = False
 
     def __init__(self, config=None):
+        # ordered list of configuration files we loaded
+        # usefull when debugging where from we got all the config options
+        self.conf_files = list()
+        # Configuration content parsed from the ini file
+        self.configuration = None
+        # wether to print more informations or not
+        self.info = False
         self.find_configs(config)
         for config in self.conf_files:
             self.load_config(config)
@@ -155,8 +152,6 @@ class Config(object):
         else:
             self.configuration = cfg
 
-        self._populate_filter_regexp()
-
     def _load_defaults(self, config, keywords={}):
         """
         In case of multiline/dictionary defaults specified in configspec the
@@ -186,23 +181,6 @@ class Config(object):
                     config[keyword] = tuple(config[keyword])
         return config
 
-    def _populate_filter_regexp(self):
-        """
-        From configuration Filters generate regexp we will use later for results
-        filtering/ignoring.
-        """
-        if not self.configuration or not self.configuration['Filters']:
-            return
-        filters_re = '(?:' + self.configuration['Filters'][0] + ')'
-        for idx in range(1, len(self.configuration['Filters'])):
-            # to prevent named group overflow that happen when there is too
-            # many () in a single regexp: AssertionError: sorry, but this
-            # version only supports 100 named groups
-            if '(' in self.configuration['Filters'][idx]:
-                self.non_named_group_re.subn('(:?', self.configuration['Filters'][idx])
-            filters_re = filters_re + '|(?:' + self.configuration['Filters'][idx] + ')'
-        self.filters_re = re.compile(filters_re)
-
     def load_rpmlintrc(self, rpmlint_file):
         """
         Function to load up existing rpmlintrc files
@@ -217,7 +195,6 @@ class Config(object):
             rpmlintrc_content = f.read()
         filters = re_addFilter.findall(rpmlintrc_content)
         self.configuration['Filters'] += filters
-        self._populate_filter_regexp()
         badness = re_setBadness.findall(rpmlintrc_content)
         for entry in badness:
             self.configuration['Scoring'].update({entry[0]: entry[1]})
