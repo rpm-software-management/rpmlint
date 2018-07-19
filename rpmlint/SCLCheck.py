@@ -11,7 +11,6 @@ import re
 
 from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printError, printWarning
 
 
 # Compile all regexes here
@@ -57,9 +56,10 @@ def index_or_sub(source, word, sub=0):
 class SCLCheck(AbstractCheck):
     '''Software Collections checks'''
 
-    def __init__(self):
-        AbstractCheck.__init__(self, "SCLCheck")
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, "SCLCheck")
         self._spec_file = None
+        self.output.error_details.update(scl_details_dict)
 
     def check_source(self, pkg):
         # lookup spec file
@@ -76,7 +76,7 @@ class SCLCheck(AbstractCheck):
         elif scl_package_definition.search(spec):
             self.check_scl_spec(pkg, spec)
         elif scl_use.search(spec):
-            printError(pkg, 'undeclared-scl')
+            self.output.add_info('E', pkg, 'undeclared-scl')
 
     def check_binary(self, pkg):
         '''SCL binary package checks'''
@@ -108,19 +108,19 @@ class SCLCheck(AbstractCheck):
                     continue
                 if fname.startswith('/etc/rpm/'):
                     if not is_build:
-                        printWarning(pkg, 'scl-rpm-macros-outside-of-build',
-                                     fname)
+                        self.output.add_info('W', pkg, 'scl-rpm-macros-outside-of-build',
+                                             fname)
                     continue
                 if is_runtime and \
                    fname == os.path.join('/etc/scl/prefixes', scl_name):
                     continue
-                printError(pkg, 'file-outside-of-scl-tree', fname)
+                self.output.add_info('E', pkg, 'file-outside-of-scl-tree', fname)
             else:
                 if fname.split('/')[3] != scl_name:
                     good = False
 
         if not good:
-            printError(pkg, 'scl-name-screwed-up')
+            self.output.add_info('E', pkg, 'scl-name-screwed-up')
 
     def check_metapackage(self, pkg, spec):
         '''SCL metapackage spec checks'''
@@ -128,29 +128,28 @@ class SCLCheck(AbstractCheck):
         # Examine subpackages
         runtime = subpackage_runtime.search(spec)
         if not runtime:
-            printError(pkg, 'no-runtime-in-scl-metapackage')
+            self.output.add_info('E', pkg, 'no-runtime-in-scl-metapackage')
 
         build = subpackage_build.search(spec)
         if not build:
-            printError(pkg, 'no-build-in-scl-metapackage')
+            self.output.add_info('E', pkg, 'no-build-in-scl-metapackage')
         else:
             # Get (B)Rs section for build subpackage
             end = index_or_sub(spec[build.end():], '%package', -1)
             if 'scl-utils-build' not in \
                ' '.join(self.get_requires(spec[build.end():end])):
-                printWarning(pkg,
-                             'scl-build-without-requiring-scl-utils-build')
+                self.output.add_info('W', pkg, 'scl-build-without-requiring-scl-utils-build')
 
         alien = subpackage_alien.search(spec)
         if alien:
-            printError(pkg, 'weird-subpackage-in-scl-metapackage',
-                       alien.group()[9:])
+            self.output.add_info('E', pkg, 'weird-subpackage-in-scl-metapackage',
+                                 alien.group()[9:])
 
         # Get (B)Rs section for main package
         end = index_or_sub(spec, '%package', -1)
         if 'scl-utils-build' not in \
            ' '.join(self.get_build_requires(spec[:end])):
-            printError(pkg, 'scl-metapackage-without-scl-utils-build-br')
+            self.output.add_info('E', pkg, 'scl-metapackage-without-scl-utils-build-br')
 
         # Enter %install section
         install_start = index_or_sub(spec, '%install')
@@ -163,47 +162,45 @@ class SCLCheck(AbstractCheck):
             install_end = index_or_sub(spec, '%changelog', -1)
         # Search %scl_install
         if not scl_install.search(spec[install_start:install_end]):
-            printError(pkg, 'scl-metapackage-without-%scl_install')
+            self.output.add_info('E', pkg, 'scl-metapackage-without-%scl_install')
         if noarch.search(spec[:install_start]) and \
            libdir.search(spec[install_start:install_end]):
-            printError(pkg, 'noarch-scl-metapackage-with-libdir')
+            self.output.add_info('E', pkg, 'noarch-scl-metapackage-with-libdir')
 
         # Analyze %files
         files = self.get_files(spec)
         if files:
-            printWarning(pkg, 'scl-main-metapackage-contains-files',
-                         ', '.join(files))
+            self.output.add_info('W', pkg, 'scl-main-metapackage-contains-files',
+                                 ', '.join(files))
         if runtime:
-            if not scl_files.search(
-                    '\n'.join(self.get_files(spec, 'runtime'))):
-                printError(pkg, 'scl-runtime-package-without-%scl_files')
+            if not scl_files.search('\n'.join(self.get_files(spec, 'runtime'))):
+                self.output.add_info('E', pkg, 'scl-runtime-package-without-%scl_files')
         if build:
-            if not scl_macros.search(
-                    '\n'.join(self.get_files(spec, 'build'))):
-                printError(pkg, 'scl-build-package-without-rpm-macros')
+            if not scl_macros.search('\n'.join(self.get_files(spec, 'build'))):
+                self.output.add_info('E', pkg, 'scl-build-package-without-rpm-macros')
 
     def check_scl_spec(self, pkg, spec):
         '''SCL ready spec checks'''
 
         # For the entire spec
         if not pkg_name.search(spec):
-            printWarning(pkg, 'missing-pkg_name-definition')
+            self.output.add_info('W', pkg, 'missing-pkg_name-definition')
         if scl_prefix_noncond.search(self.remove_scl_conds(spec)):
-            printWarning(pkg, 'scl-prefix-without-condition')
+            self.output.add_info('W', pkg, 'scl-prefix-without-condition')
         if not scl_prefix.search(self.get_name(spec)):
-            printError(pkg, 'name-without-scl-prefix')
+            self.output.add_info('E', pkg, 'name-without-scl-prefix')
         for item in self.get_obsoletes_and_conflicts(spec):
             if not scl_prefix.search(item):
-                printError(pkg, 'obsoletes-or-conflicts-without-scl-prefix')
+                self.output.add_info('E', pkg, 'obsoletes-or-conflicts-without-scl-prefix')
                 break
         for item in self.get_provides(spec):
             if not scl_prefix.search(item):
-                printError(pkg, 'provides-without-scl-prefix')
+                self.output.add_info('E', pkg, 'provides-without-scl-prefix')
                 break
         setup_opts = setup.search(spec)
         if setup_opts:
             if '-n' not in setup_opts.groups()[0]:
-                printError(pkg, 'scl-setup-without-n')
+                self.output.add_info('E', pkg, 'scl-setup-without-n')
 
         # Examine main package and subpackages one by one
         borders = []
@@ -215,7 +212,7 @@ class SCLCheck(AbstractCheck):
             splits = more.groups()[1].split()
             if len(splits) > 1 and splits[0] == '-n':
                 if not scl_prefix_start.search(splits[-1]):
-                    printError(pkg, 'subpackage-with-n-without-scl-prefix')
+                    self.output.add_info('E', pkg, 'subpackage-with-n-without-scl-prefix')
             # current end is counted only from last one
             borders.append(borders[-1] + more.end())
         subpackages = [(borders[i], borders[i + 1])
@@ -235,8 +232,7 @@ class SCLCheck(AbstractCheck):
                     ok = True
                     break
             if not ok:
-                printError(pkg,
-                           'doesnt-require-scl-runtime-or-other-scl-package')
+                self.output.add_info('E', pkg, 'doesnt-require-scl-runtime-or-other-scl-package')
                 break
 
     def get_requires(self, text, build=False):
@@ -323,95 +319,92 @@ class SCLCheck(AbstractCheck):
         return text
 
 
-# Create an object to enable the auto registration of the test
-check = SCLCheck()
-
 # Add information about checks
-addDetails(
-'undeclared-scl',
+scl_details_dict = {
+'undeclared-scl':
 '''Specfile contains %scl* macros, but was not recognized as SCL metapackage or
 SCL ready package. If this should be an SCL metapackage, don't forget to define
 the %scl macro. If this should be an SCL ready package, run %scl
 conditionalized %scl_package macro, e.g. %{?scl:%scl_package foo}.''',
 
-'no-runtime-in-scl-metapackage',
+'no-runtime-in-scl-metapackage':
 'SCL metapackage must have runtime subpackage.',
 
-'no-build-in-scl-metapackage',
+'no-build-in-scl-metapackage':
 'SCL metapackage must have build subpackage.',
 
-'weird-subpackage-in-scl-metapackage',
+'weird-subpackage-in-scl-metapackage':
 'Only allowed subpackages in SCL metapackage are build and runtime.',
 
-'scl-metapackage-without-scl-utils-build-br',
+'scl-metapackage-without-scl-utils-build-br':
 'SCL metapackage must BuildRequire scl-utils-build.',
 
-'scl-build-without-requiring-scl-utils-build',
+'scl-build-without-requiring-scl-utils-build':
 'SCL runtime package should Require scl-utils-build.',
 
-'scl-metapackage-without-%scl_install',
+'scl-metapackage-without-%scl_install':
 'SCL metapackage must call %scl_install in the %install section.',
 
-'noarch-scl-metapackage-with-libdir',
+'noarch-scl-metapackage-with-libdir':
 '''If "enable" script of SCL metapackage contains %{_libdir}, the package must
 be arch specific, otherwise it may be noarch.''',
 
-'scl-main-metapackage-contains-files',
+'scl-main-metapackage-contains-files':
 'Main package of SCL metapackage should not contain any files.',
 
-'scl-runtime-package-without-%scl_files',
+'scl-runtime-package-without-%scl_files':
 'SCL runtime package must contain %scl_files in %files section.',
 
-'scl-build-package-without-rpm-macros',
+'scl-build-package-without-rpm-macros':
 '''SCL build package must contain %{_root_sysconfdir}/rpm/macros. %{scl}-config
 in %files section.''',
 
-'missing-pkg_name-definition',
+'missing-pkg_name-definition':
 '%{!?scl:%global pkg_name %{name}} is missing in the specfile.',
 
-'name-without-scl-prefix',
+'name-without-scl-prefix':
 'Name of SCL package must start with %{?scl_prefix}.',
 
-'scl-prefix-without-condition',
+'scl-prefix-without-condition':
 '''The SCL prefix is used without condition - this won't work if the package is
 build outside of SCL - use %{?scl_prefix} with questionmark.''',
 
-'obsoletes-or-conflicts-without-scl-prefix',
+'obsoletes-or-conflicts-without-scl-prefix':
 '''Obsoletes, Conflicts and Build Conflicts must always be prefixed with
 %{?scl_prefix}. This is extremely important, as the SCLs are often used for
 deploying new packages on older systems (that may contain old packages, now
 obsoleted by the new ones), but they shouldn't Obsolete or Conflict with the
 non-SCL RPMs installed on the system (that's the idea of SCL).''',
 
-'provides-without-scl-prefix',
+'provides-without-scl-prefix':
 'Provides tag must always be prefixed with %{?scl_prefix}.',
 
-'doesnt-require-scl-runtime-or-other-scl-package',
+'doesnt-require-scl-runtime-or-other-scl-package':
 '''The package must require %{scl}-runtime, unless it depends on another
 package that requires %{scl}-runtime. It's impossible to check what other
 packages require, so this simply checks if this package requires at least
 something from its collection.''',
 
-'subpackage-with-n-without-scl-prefix',
+'subpackage-with-n-without-scl-prefix':
 '''If (and only if) a package defines its name with -n, the name must be
 prefixed with %{?scl_prefix}.''',
 
-'scl-setup-without-n',
+'scl-setup-without-n':
 '''The %setup macro needs the -n argument for SCL builds, because the directory
 with source probably doesn't include SCL prefix in its name.''',
 
-'scl-name-screwed-up',
+'scl-name-screwed-up':
 '''SCL package's name starts with SCL prefix. That prefix is used as a
 directory, where files are stored: If the prefix is foo, the directory is
 /opt/provides/foo. This package doesn't respect that. This means either the
 name of the package is wrong, or the directory.''',
 
-'file-outside-of-scl-tree',
+'file-outside-of-scl-tree':
 '''SCL package should only contain files in /opt/provider/scl-name directory or
 in other allowed directories such as some directories in /etc or /var. Wrapper
 scripts in /usr/bin are also allowed.''',
 
-'scl-rpm-macros-outside-of-build',
+'scl-rpm-macros-outside-of-build':
 '''RPM macros in SCL packages should belong to -build subpackage of the SCL
 metapackage.''',
-)
+}

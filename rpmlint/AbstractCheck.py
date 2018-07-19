@@ -11,8 +11,6 @@ import re
 import urllib.request
 
 from rpmlint import __version__
-from rpmlint import Config
-from rpmlint.Filter import addDetails, printInfo, printWarning
 
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
@@ -34,13 +32,16 @@ class _HeadRedirectHandler(urllib.request.HTTPRedirectHandler):
 class AbstractCheck(object):
     known_checks = {}
 
-    def __init__(self, name):
+    def __init__(self, config, output, name):
         if not AbstractCheck.known_checks.get(name):
             AbstractCheck.known_checks[name] = self
         self.name = name
+        self.config = config
+        self.output = output
         self.verbose = False
-        self.network_enabled = Config.getOption("NetworkEnabled", False)
-        self.network_timeout = Config.getOption("NetworkTimeout", 10)
+        self.network_enabled = config.configuration['NetworkEnabled']
+        self.network_timeout = config.configuration['NetworkTimeout']
+        self.output.error_details.update(abstract_details_dict)
 
     def check(self, pkg):
         if pkg.isSource():
@@ -63,12 +64,12 @@ class AbstractCheck(object):
         """
         if not self.network_enabled:
             if self.verbose:
-                printInfo(pkg, 'network-checks-disabled', url)
+                self.output.add_info('W', pkg, 'network-checks-disabled', url)
             return
 
         if self.verbose:
-            printInfo(pkg, 'checking-url', url,
-                      '(timeout %s seconds)' % self.network_timeout)
+            self.output.add_info('W', pkg, 'checking-url', url,
+                                 '(timeout %s seconds)' % self.network_timeout)
 
         res = None
         try:
@@ -78,7 +79,7 @@ class AbstractCheck(object):
             res = opener.open(_HeadRequest(url), timeout=self.network_timeout)
         except Exception as e:
             errstr = str(e) or repr(e) or type(e)
-            printWarning(pkg, 'invalid-url', '%s:' % tag, url, errstr)
+            self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url, errstr)
         info = None
         if res:
             with contextlib.closing(res):
@@ -87,9 +88,9 @@ class AbstractCheck(object):
 
 
 class AbstractFilesCheck(AbstractCheck):
-    def __init__(self, name, file_regexp):
+    def __init__(self, config, output, name, file_regexp):
         self.__files_re = re.compile(file_regexp)
-        AbstractCheck.__init__(self, name)
+        super().__init__(config, output, name)
 
     def check_binary(self, pkg):
         ghosts = pkg.ghostFiles()
@@ -104,13 +105,10 @@ class AbstractFilesCheck(AbstractCheck):
         raise NotImplementedError('check must be implemented in subclass')
 
 
-addDetails(
-'invalid-url',
-'''The value should be a valid, public HTTP, HTTPS, or FTP URL.''',
-
-'network-checks-disabled',
-'''Checks requiring network access have not been enabled in configuration,
-see the NetworkEnabled option.''',
-)
-
-# AbstractCheck.py ends here
+abstract_details_dict = {
+    'invalid-url':
+    '''The value should be a valid, public HTTP, HTTPS, or FTP URL.''',
+    'network-checks-disabled':
+    '''Checks requiring network access have not been enabled in configuration,
+    see the NetworkEnabled option.''',
+}

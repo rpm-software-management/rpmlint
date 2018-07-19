@@ -11,10 +11,8 @@ import os
 import re
 
 import rpm
-from rpmlint import Config
 from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printError, printWarning
 
 
 chkconfig_content_regex = re.compile(r'^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
@@ -22,10 +20,8 @@ subsys_regex = re.compile(r'/var/lock/subsys/([^/"\'\s;&|]+)', re.MULTILINE)
 chkconfig_regex = re.compile(r'^[^#]*(chkconfig|add-service|del-service)', re.MULTILINE)
 status_regex = re.compile(r'^[^#]*status', re.MULTILINE)
 reload_regex = re.compile(r'^[^#]*reload', re.MULTILINE)
-use_deflevels = Config.getOption('UseDefaultRunlevels', True)
 lsb_tags_regex = re.compile(r'^# ([\w-]+):\s*(.*?)\s*$')
 lsb_cont_regex = re.compile(r'^#(?:%s|  )(.*?)\s*$' % "\t")
-use_subsys = Config.getOption('UseVarLockSubsys', True)
 
 LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',
                 'Should-Stop', 'Default-Start', 'Default-Stop',
@@ -36,8 +32,11 @@ RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
 
 class InitScriptCheck(AbstractCheck):
 
-    def __init__(self):
-        AbstractCheck.__init__(self, 'InitScriptCheck')
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, 'InitScriptCheck')
+        self.output.error_details.update(init_detals_dict)
+        self.use_deflevels = self.config.configuration['UseDefaultRunlevels']
+        self.use_subsys = self.config.configuration['UseVarLockSubsys']
 
     def check_binary(self, pkg):
         initscript_list = []
@@ -50,25 +49,25 @@ class InitScriptCheck(AbstractCheck):
             basename = os.path.basename(fname)
             initscript_list.append(basename)
             if pkgfile.mode & 0o500 != 0o500:
-                printError(pkg, 'init-script-non-executable', fname)
+                self.output.add_info('E', pkg, 'init-script-non-executable', fname)
 
             if "." in basename:
-                printError(pkg, 'init-script-name-with-dot', fname)
+                self.output.add_info('E', pkg, 'init-script-name-with-dot', fname)
 
             # check chkconfig call in %post and %preun
             postin = pkg[rpm.RPMTAG_POSTIN] or \
                 pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
             if not postin:
-                printError(pkg, 'init-script-without-chkconfig-postin', fname)
+                self.output.add_info('E', pkg, 'init-script-without-chkconfig-postin', fname)
             elif not chkconfig_regex.search(postin):
-                printError(pkg, 'postin-without-chkconfig', fname)
+                self.output.add_info('E', pkg, 'postin-without-chkconfig', fname)
 
             preun = pkg[rpm.RPMTAG_PREUN] or \
                 pkg.scriptprog(rpm.RPMTAG_PREUNPROG)
             if not preun:
-                printError(pkg, 'init-script-without-chkconfig-preun', fname)
+                self.output.add_info('E', pkg, 'init-script-without-chkconfig-preun', fname)
             elif not chkconfig_regex.search(preun):
-                printError(pkg, 'preun-without-chkconfig', fname)
+                self.output.add_info('E', pkg, 'preun-without-chkconfig', fname)
 
             status_found = False
             reload_found = False
@@ -83,7 +82,7 @@ class InitScriptCheck(AbstractCheck):
             try:
                 content = [x for x in Pkg.readlines(pkgfile.path)]
             except Exception as e:
-                printWarning(pkg, 'read-error', e)
+                self.output.add_info('W', pkg, 'read-error', e)
                 continue
             content_str = "".join(content)
             for line in content:
@@ -96,12 +95,12 @@ class InitScriptCheck(AbstractCheck):
                     in_lsb_tag = False
                     for kw, vals in lsb_tags.items():
                         if len(vals) != 1:
-                            printError(pkg, 'redundant-lsb-keyword', kw)
+                            self.output.add_info('E', pkg, 'redundant-lsb-keyword', kw)
 
                     for kw in RECOMMENDED_LSB_KEYWORDS:
                         if kw not in lsb_tags:
-                            printWarning(pkg, 'missing-lsb-keyword',
-                                         "%s in %s" % (kw, fname))
+                            self.output.add_info('W', pkg, 'missing-lsb-keyword',
+                                                 "%s in %s" % (kw, fname))
                 if in_lsb_tag:
                     # TODO maybe we do not have to handle this ?
                     if lastline.endswith('\\'):
@@ -112,9 +111,9 @@ class InitScriptCheck(AbstractCheck):
                             cres = lsb_cont_regex.search(line)
                             if not (in_lsb_description and cres):
                                 in_lsb_description = False
-                                printError(
-                                    pkg, 'malformed-line-in-lsb-comment-block',
-                                    line)
+                                self.output.add_info('E',
+                                                     pkg, 'malformed-line-in-lsb-comment-block',
+                                                     line)
                             else:
                                 lsb_tags["Description"][-1] += \
                                     " " + cres.group(1)
@@ -122,7 +121,7 @@ class InitScriptCheck(AbstractCheck):
                             tag = res.group(1)
                             if not tag.startswith('X-') and \
                                     tag not in LSB_KEYWORDS:
-                                printError(pkg, 'unknown-lsb-keyword', line)
+                                self.output.add_info('E', pkg, 'unknown-lsb-keyword', line)
                             else:
                                 in_lsb_description = (tag == 'Description')
                                 if tag not in lsb_tags:
@@ -139,17 +138,17 @@ class InitScriptCheck(AbstractCheck):
                 res = chkconfig_content_regex.search(line)
                 if res:
                     chkconfig_content_found = True
-                    if use_deflevels:
+                    if self.use_deflevels:
                         if res.group(1) == '-':
-                            printWarning(pkg, 'no-default-runlevel', fname)
+                            self.output.add_info('W', pkg, 'no-default-runlevel', fname)
                     elif res.group(1) != '-':
-                        printWarning(pkg, 'service-default-enabled', fname)
+                        self.output.add_info('W', pkg, 'service-default-enabled', fname)
 
                 res = subsys_regex.search(line)
                 if res:
                     subsys_regex_found = True
                     name = res.group(1)
-                    if use_subsys and name != basename:
+                    if self.use_subsys and name != basename:
                         error = True
                         if name[0] == '$':
                             value = Pkg.substitute_shell_vars(name,
@@ -163,93 +162,90 @@ class InitScriptCheck(AbstractCheck):
                                 error = name != basename
                         if error and len(name):
                             if name[0] == '$':
-                                printWarning(pkg, 'incoherent-subsys', fname,
-                                             name)
+                                self.output.add_info('W', pkg, 'incoherent-subsys', fname,
+                                                     name)
                             else:
-                                printError(pkg, 'incoherent-subsys', fname,
-                                           name)
+                                self.output.add_info('E', pkg, 'incoherent-subsys', fname,
+                                                     name)
 
             if "Default-Start" in lsb_tags:
                 if "".join(lsb_tags["Default-Start"]):
-                    printWarning(pkg, 'service-default-enabled', fname)
+                    self.output.add_info('W', pkg, 'service-default-enabled', fname)
 
             if not status_found:
-                printError(pkg, 'no-status-entry', fname)
+                self.output.add_info('E', pkg, 'no-status-entry', fname)
             if not reload_found:
-                printWarning(pkg, 'no-reload-entry', fname)
+                self.output.add_info('W', pkg, 'no-reload-entry', fname)
             if not chkconfig_content_found:
-                printError(pkg, 'no-chkconfig-line', fname)
-            if not subsys_regex_found and use_subsys:
-                printError(pkg, 'subsys-not-used', fname)
-            elif subsys_regex_found and not use_subsys:
-                printError(pkg, 'subsys-unsupported', fname)
+                self.output.add_info('E', pkg, 'no-chkconfig-line', fname)
+            if not subsys_regex_found and self.use_subsys:
+                self.output.add_info('E', pkg, 'subsys-not-used', fname)
+            elif subsys_regex_found and not self.use_subsys:
+                self.output.add_info('E', pkg, 'subsys-unsupported', fname)
 
         if len(initscript_list) == 1:
             pkgname = re.sub("-sysvinit$", "", pkg.name.lower())
             goodnames = (pkgname, pkgname + 'd')
             if initscript_list[0] not in goodnames:
-                printWarning(pkg, 'incoherent-init-script-name',
-                             initscript_list[0], str(goodnames))
+                self.output.add_info('W', pkg, 'incoherent-init-script-name',
+                                     initscript_list[0], str(goodnames))
 
 
-# Create an object to enable the auto registration of the test
-check = InitScriptCheck()
-
-addDetails(
-'init-script-without-chkconfig-postin',
+init_detals_dict = {
+'init-script-without-chkconfig-postin':
 '''The package contains an init script but doesn't contain a %post with
 a call to chkconfig.''',
 
-'postin-without-chkconfig',
+'postin-without-chkconfig':
 '''The package contains an init script but doesn't call chkconfig in its
 %post script.''',
 
-'init-script-without-chkconfig-preun',
+'init-script-without-chkconfig-preun':
 '''The package contains an init script but doesn't contain a %preun with
 a call to chkconfig.''',
 
-'preun-without-chkconfig',
+'preun-without-chkconfig':
 '''The package contains an init script but doesn't call chkconfig in its
 %preun script.''',
 
-'missing-lsb-keyword',
+'missing-lsb-keyword':
 '''The package contains an init script that does not contain one of the LSB
 init script comment block convention keywords that are recommendable for all
 init scripts.  If there is nothing to add to a keyword's value, include the
 keyword in the script with an empty value.  Note that as of version 3.2, the
 LSB specification does not mandate presence of any keywords.''',
 
-'no-status-entry',
+'no-status-entry':
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
 have a 'status' entry, which is necessary for good functionality.''',
 
-'no-reload-entry',
+'no-reload-entry':
 '''In your init script (/etc/rc.d/init.d/your_file), you don't
 have a 'reload' entry, which is necessary for good functionality.''',
 
-'no-chkconfig-line',
+'no-chkconfig-line':
 '''The init script doesn't contain a chkconfig line to specify the runlevels
 at which to start and stop it.''',
 
-'no-default-runlevel',
+'no-default-runlevel':
 '''The default runlevel isn't specified in the init script.''',
 
-'service-default-enabled',
+'service-default-enabled':
 '''The service is enabled by default after "chkconfig --add"; for security
 reasons, most services should not be. Use "-" as the default runlevel in the
 init script's "chkconfig:" line and/or remove the "Default-Start:" LSB keyword
 to fix this if appropriate for this service.''',
 
-'subsys-unsupported',
+'subsys-unsupported':
 '''The init script uses /var/lock/subsys which is not supported by
 this distribution.''',
 
-'subsys-not-used',
+'subsys-not-used':
 '''While your daemon is running, you have to put a lock file in
 /var/lock/subsys/. To see an example, look at this directory on your
 machine and examine the corresponding init scripts.''',
 
-'incoherent-subsys',
+'incoherent-subsys':
 '''The filename of your lock file in /var/lock/subsys/ is incoherent
 with your actual init script name. For example, if your script name
 is httpd, you have to use 'httpd' as the filename in your subsys directory.
@@ -259,17 +255,15 @@ cases usually manifest themselves when rpmlint reports that the subsys name
 starts a with '$'; in these cases a warning instead of an error is reported
 and you should check the script manually.''',
 
-'incoherent-init-script-name',
+'incoherent-init-script-name':
 '''The init script name should be the same as the package name in lower case,
 or one with 'd' appended if it invokes a process by that name.''',
 
-'init-script-name-with-dot',
+'init-script-name-with-dot':
 '''The init script name should not contain a dot in its name. Some versions
 of chkconfig don't work as expected with init script names like that.''',
 
-'init-script-non-executable',
+'init-script-non-executable':
 '''The init script should have at least the execution bit set for root
 in order for it to run at boot time.''',
-)
-
-# InitScriptCheck.py ends here
+}

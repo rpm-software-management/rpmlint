@@ -2,16 +2,20 @@ import os
 import re
 
 import pytest
-from rpmlint import SpecCheck
+from rpmlint.Filter import Filter
+from rpmlint.SpecCheck import SpecCheck
 
-from Testing import getTestedSpecPackage
+from Testing import CONFIG, getTestedSpecPackage
 
 
 @pytest.mark.parametrize('package', ['SpecCheck'])
-def test_distribution_tags(capsys, package):
+def test_distribution_tags(package):
     pkg = getTestedSpecPackage(os.path.join('spec', package))
-    SpecCheck.check.check_spec(pkg, pkg.name)
-    out, err = capsys.readouterr()
+    CONFIG.info = True
+    output = Filter(CONFIG)
+    test = SpecCheck(CONFIG, output)
+    test.check_spec(pkg, pkg.name)
+    out = output.print_results(output.results)
     assert 'patch-not-applied Patch3' in out
     assert not re.search(r'patch-not-applied Patch\b', out)
     assert not re.search('patch-not-applied Patch[0124567]', out)

@@ -1,14 +1,20 @@
 import os
 
 import pytest
-from rpmlint import MenuXDGCheck
+from rpmlint.Filter import Filter
+from rpmlint.MenuXDGCheck import MenuXDGCheck
 
-from Testing import getTestedPackage
+from Testing import CONFIG, getTestedPackage
 
 
 @pytest.mark.parametrize('package', ['menuxdg1'])
-def test_raises_parse_error(capsys, package):
-    MenuXDGCheck.check.check(getTestedPackage(os.path.join('binary', package)))
-    out, err = capsys.readouterr()
+def test_raises_parse_error(package):
+    CONFIG.info = True
+    output = Filter(CONFIG)
+    test = MenuXDGCheck(CONFIG, output)
+    test.check(getTestedPackage(os.path.join('binary', package)))
+    assert len(output.results) == 4
+    out = output.print_results(output.results)
     assert 'contains parsing error' in out
     assert ' invalid-desktopfile ' in out
+    assert 'check with desktop-file-validate' in out

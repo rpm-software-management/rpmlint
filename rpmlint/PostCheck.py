@@ -12,25 +12,10 @@ import re
 import tempfile
 
 import rpm
-from rpmlint import Config
 from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printError, printWarning
 
 
-DEFAULT_VALID_SHELLS = ('<lua>',
-                        '/bin/sh',
-                        '/bin/bash',
-                        '/sbin/sash',
-                        '/usr/bin/perl',
-                        '/sbin/ldconfig',
-                        )
-
-DEFAULT_EMPTY_SHELLS = ('/sbin/ldconfig',
-                        )
-
-valid_shells = Config.getOption('ValidShells', DEFAULT_VALID_SHELLS)
-empty_shells = Config.getOption('ValidEmptyShells', DEFAULT_EMPTY_SHELLS)
 # shells that grok the -n switch for debugging
 syntaxcheck_shells = ('/bin/sh', '/bin/bash')
 
@@ -83,8 +68,48 @@ def check_syntax_script(prog, commandline, script):
 
 class PostCheck(AbstractCheck):
 
-    def __init__(self):
-        AbstractCheck.__init__(self, 'PostCheck')
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, 'PostCheck')
+        self.valid_shells = config.configuration['ValidShells']
+        self.empty_shells = config.configuration['ValidEmptyShells']
+        post_details_dict = {
+            'postin-without-ghost-file-creation':
+            '''A file tagged as ghost is not created during %prein nor during %postin.''',
+        }
+        for scriptlet in map(lambda x: '%' + x, Pkg.RPM_SCRIPTLETS):
+            post_details_dict.update({
+                'one-line-command-in-%s' % scriptlet:
+                '''You should use %s -p <command> instead of using:
+
+                %s
+                <command>
+
+                It will avoid the fork of a shell interpreter to execute your command as
+                well as allows rpm to automatically mark the dependency on your command
+                for the execution of the scriptlet.''' % (scriptlet, scriptlet),
+
+                'percent-in-%s' % scriptlet:
+                '''The %s scriptlet contains a "%%" in a context which might indicate it being
+                fallout from an rpm macro/variable which was not expanded during build.
+                Investigate whether this is the case and fix if appropriate.''' % scriptlet,
+
+                'spurious-bracket-in-%s' % scriptlet:
+                '''The %s scriptlet contains an "if []" construct without a space before
+                the "]".''' % scriptlet,
+
+                'forbidden-selinux-command-in-%s' % scriptlet:
+                '''A command which requires intimate knowledge about a specific SELinux
+                policy type was found in the scriptlet. These types are subject to change
+                on a policy version upgrade. Use the restorecon command which queries the
+                currently loaded policy for the correct type instead.''',
+
+                'non-empty-%s' % scriptlet:
+                '''Scriptlets for the interpreter mentioned in the message should be empty.
+                One common case where they are unintentionally not is when the specfile
+                contains comments after the scriptlet and before the next section. Review
+                and clean up the scriptlet contents if appropriate.''',
+            })
+        self.output.error_details.update(post_details_dict)
 
     def check_binary(self, pkg):
         prereq = [x[0] for x in pkg.prereq()]
@@ -114,33 +139,33 @@ class PostCheck(AbstractCheck):
                 if f in pkg.missingOkFiles():
                     continue
                 if not postin and not prein:
-                    printWarning(pkg, 'ghost-files-without-postin')
+                    self.output.add_info('W', pkg, 'ghost-files-without-postin')
                 if (not postin or f not in postin) and \
                         (not prein or f not in prein):
-                    printWarning(pkg,
-                                 'postin-without-ghost-file-creation', f)
+                    self.output.add_info('W', pkg,
+                                         'postin-without-ghost-file-creation', f)
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
             script_str = Pkg.b2s(script)
             if prog:
-                if prog not in valid_shells:
-                    printError(pkg, 'invalid-shell-in-' + tag, prog)
-                if prog in empty_shells:
-                    printError(pkg, 'non-empty-' + tag, prog)
+                if prog not in self.valid_shells:
+                    self.output.add_info('E', pkg, 'invalid-shell-in-' + tag, prog)
+                if prog in self.empty_shells:
+                    self.output.add_info('E', pkg, 'non-empty-' + tag, prog)
             if prog in syntaxcheck_shells or prog == '/usr/bin/perl':
                 if percent_regex.search(script_str):
-                    printWarning(pkg, 'percent-in-' + tag)
+                    self.output.add_info('W', pkg, 'percent-in-' + tag)
                 if bracket_regex.search(script_str):
-                    printWarning(pkg, 'spurious-bracket-in-' + tag)
+                    self.output.add_info('W', pkg, 'spurious-bracket-in-' + tag)
                 res = dangerous_command_regex.search(script_str)
                 if res:
-                    printWarning(pkg, 'dangerous-command-in-' + tag,
-                                 res.group(2))
+                    self.output.add_info('W', pkg, 'dangerous-command-in-' + tag,
+                                         res.group(2))
                 res = selinux_regex.search(script_str)
                 if res:
-                    printError(pkg, 'forbidden-selinux-command-in-' + tag,
-                               res.group(2))
+                    self.output.add_info('E', pkg, 'forbidden-selinux-command-in-' + tag,
+                                         res.group(2))
 
                 if 'update-menus' in script_str:
                     menu_error = True
@@ -149,11 +174,10 @@ class PostCheck(AbstractCheck):
                             menu_error = False
                             break
                     if menu_error:
-                        printError(
-                            pkg,
-                            'update-menus-without-menu-file-in-' + tag)
+                        self.output.add_info('E', pkg,
+                                             'update-menus-without-menu-file-in-' + tag)
                 if tmp_regex.search(script_str):
-                    printError(pkg, 'use-tmp-in-' + tag)
+                    self.output.add_info('E', pkg, 'use-tmp-in-' + tag)
                 for c in prereq_assoc:
                     if c[0].search(script_str):
                         found = False
@@ -162,71 +186,26 @@ class PostCheck(AbstractCheck):
                                 found = True
                                 break
                         if not found:
-                            printError(pkg, 'no-prereq-on', c[1][0])
+                            self.output.add_info('E', pkg, 'no-prereq-on', c[1][0])
 
             if prog in syntaxcheck_shells:
                 if incorrect_shell_script(prog, script):
-                    printError(pkg, 'shell-syntax-error-in-' + tag)
+                    self.output.add_info('E', pkg, 'shell-syntax-error-in-' + tag)
                 if home_regex.search(script_str):
-                    printError(pkg, 'use-of-home-in-' + tag)
+                    self.output.add_info('E', pkg, 'use-of-home-in-' + tag)
                 res = bogus_var_regex.search(script_str)
                 if res:
-                    printWarning(pkg, 'bogus-variable-use-in-' + tag,
-                                 res.group(1))
+                    self.output.add_info('W', pkg, 'bogus-variable-use-in-' + tag,
+                                         res.group(1))
 
             if prog == '/usr/bin/perl':
                 if incorrect_perl_script(prog, script):
-                    printError(pkg, 'perl-syntax-error-in-' + tag)
+                    self.output.add_info('E', pkg, 'perl-syntax-error-in-' + tag)
             elif prog.endswith('sh'):
                 res = single_command_regex.search(script_str)
                 if res:
-                    printWarning(pkg, 'one-line-command-in-' + tag,
-                                 res.group(1))
+                    self.output.add_info('W', pkg, 'one-line-command-in-' + tag,
+                                         res.group(1))
 
-        elif prog not in empty_shells and prog in valid_shells:
-            printWarning(pkg, 'empty-' + tag)
-
-
-# Create an object to enable the auto registration of the test
-check = PostCheck()
-
-# Add information about checks
-addDetails(
-'postin-without-ghost-file-creation',
-'''A file tagged as ghost is not created during %prein nor during %postin.''',
-)
-for scriptlet in map(lambda x: '%' + x, Pkg.RPM_SCRIPTLETS):
-    addDetails(
-'one-line-command-in-%s' % scriptlet,
-'''You should use %s -p <command> instead of using:
-
-%s
-<command>
-
-It will avoid the fork of a shell interpreter to execute your command as
-well as allows rpm to automatically mark the dependency on your command
-for the execution of the scriptlet.''' % (scriptlet, scriptlet),
-
-'percent-in-%s' % scriptlet,
-'''The %s scriptlet contains a "%%" in a context which might indicate it being
-fallout from an rpm macro/variable which was not expanded during build.
-Investigate whether this is the case and fix if appropriate.''' % scriptlet,
-
-'spurious-bracket-in-%s' % scriptlet,
-'''The %s scriptlet contains an "if []" construct without a space before
-the "]".''' % scriptlet,
-
-'forbidden-selinux-command-in-%s' % scriptlet,
-'''A command which requires intimate knowledge about a specific SELinux
-policy type was found in the scriptlet. These types are subject to change
-on a policy version upgrade. Use the restorecon command which queries the
-currently loaded policy for the correct type instead.''',
-
-'non-empty-%s' % scriptlet,
-'''Scriptlets for the interpreter mentioned in the message should be empty.
-One common case where they are unintentionally not is when the specfile
-contains comments after the scriptlet and before the next section. Review
-and clean up the scriptlet contents if appropriate.''',
-)
-
-# PostCheck.py ends here
+        elif prog not in self.empty_shells and prog in self.valid_shells:
+            self.output.add_info('W', pkg, 'empty-' + tag)

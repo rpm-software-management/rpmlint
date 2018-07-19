@@ -3,6 +3,7 @@ import glob
 import os
 import tempfile
 
+from rpmlint.Config import Config
 from rpmlint.Pkg import FakePkg, Pkg
 
 
@@ -11,6 +12,7 @@ def testpath():
 
 
 TEST_CONFIG = os.path.join(testpath(), "configs/test.config")
+CONFIG = Config(TEST_CONFIG)
 
 
 def getTestedPath(path):
