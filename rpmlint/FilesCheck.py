@@ -304,6 +304,9 @@ def peek(filename, pkg, length=1024):
     # Ditto RDoc RI files
     if fl.endswith('.ri') and '/ri/' in fl:
         return (chunk, False)
+    # And Sphinx inventory files
+    if fl.endswith('.inv') and chunk.startsWith('# Sphinx inventory'):
+        return (chunk, False)
 
     # Binary if control chars are > 30% of the string
     control_chars = chunk.translate(None, printable_extended_ascii)
