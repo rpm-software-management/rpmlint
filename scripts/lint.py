@@ -9,14 +9,11 @@
 #############################################################################
 
 import getopt
-import glob
 import importlib
 import locale
 import os
-import re
 import stat
 import sys
-import tempfile
 
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
@@ -25,15 +22,12 @@ import tempfile
 # place for those variables.
 
 from rpmlint import __version__
-from rpmlint import Config
 from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.Config import Config
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
     printDescriptions, printed_messages, printInfo, setRawOut
 from rpmlint.helpers import print_warning
-
-_default_user_conf = '%s/rpmlint' % \
-    (os.environ.get('XDG_CONFIG_HOME') or '~/.config')
 
 
 # Print usage information
@@ -51,9 +45,9 @@ def usage(name):
 \t[-V|--version]
 \t[-n|--noexception]
 \t[   --rawout <file>]
-\t[-f|--file <user config file to use instead of %s]
+\t[-f|--file <user config file to use>]
 \t[-o|--option <key value>]'''
-          % (name, _default_user_conf))
+          % (name))
 
 
 # Print version information
@@ -80,11 +74,8 @@ def main():
 
     locale.setlocale(locale.LC_COLLATE, '')
 
-    # Add check dirs to the front of load path
-    sys.path[0:0] = Config.checkDirs()
-
     # Load all checks
-    for c in Config.allChecks():
+    for c in cfg.configuration['Checks']:
         loadCheck(c)
 
     packages_checked = 0
@@ -206,7 +197,7 @@ def runChecks(pkg):
     if verbose:
         printInfo(pkg, 'checking')
 
-    for name in Config.allChecks():
+    for name in cfg.configuration['Checks']:
         check = AbstractCheck.known_checks.get(name)
         if check:
             check.verbose = verbose
@@ -220,7 +211,7 @@ def runSpecChecks(pkg, fname, spec_lines=None):
     if verbose:
         printInfo(pkg, 'checking')
 
-    for name in Config.allChecks():
+    for name in cfg.configuration['Checks']:
         check = AbstractCheck.known_checks.get(name)
         if check:
             check.verbose = verbose
@@ -239,7 +230,7 @@ argv0 = os.path.basename(sys.argv[0])
 try:
     (opt, args) = getopt.getopt(
         sys.argv[1:], 'iI:c:C:hVvanE:f:o:',
-        ['info', 'explain=', 'check=', 'checkdir=', 'help', 'version',
+        ['info', 'explain=', 'check=', 'help', 'version',
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
          'rawout='])
 except getopt.GetoptError as e:
@@ -248,42 +239,15 @@ except getopt.GetoptError as e:
     sys.exit(1)
 
 # process options
-checkdir = '/usr/share/rpmlint'
 checks = []
 verbose = False
 extract_dir = None
-conf_file = _default_user_conf
 info_error = set()
 
-# load global config files
-configs = glob.glob('/etc/rpmlint/*config')
-configs.sort()
-
-# Was rpmlint invoked as a prefixed variant?
-m = re.match(r"(?P<prefix>[\w-]+)-rpmlint(\.py)?", argv0)
-if m:
-    # Okay, we're a prefixed variant. Look for the variant config.
-    # If we find it, use it. If not, fallback to the default.
-    prefix = m.group('prefix')
-    if os.path.isfile('/usr/share/rpmlint/config.%s' % prefix):
-        configs.insert(0, '/usr/share/rpmlint/config.%s' % prefix)
-    else:
-        configs.insert(0, '/usr/share/rpmlint/config')
-else:
-    configs.insert(0, '/usr/share/rpmlint/config')
-
-for f in configs:
-    try:
-        with open(f) as fobj:
-            exec(compile(fobj.read(), f, 'exec'))
-    except IOError:
-        pass
-    except Exception as e:
-        print_warning('(none): W: error loading %s, skipping: %s' % (f, e))
-# pychecker fix
-del f
-
 config_overrides = {}
+
+# load global config files
+cfg = Config()
 
 # process command line options
 for o in opt:
@@ -297,8 +261,6 @@ for o in opt:
     elif o[0] in ('-h', '--help'):
         usage(argv0)
         sys.exit(0)
-    elif o[0] in ('-C', '--checkdir'):
-        Config.addCheckDir(o[1])
     elif o[0] in ('-v', '--verbose'):
         verbose = True
     elif o[0] in ('-V', '--version'):
@@ -306,14 +268,14 @@ for o in opt:
         sys.exit(0)
     elif o[0] in ('-E', '--extractdir'):
         extract_dir = o[1]
-        Config.setOption('ExtractDir', extract_dir)
+        cfg.configuration['ExtractDir'] = extract_dir
     elif o[0] in ('-n', '--noexception'):
-        Config.no_exception = True
+        cfg.no_exception = True
     elif o[0] in ('-a', '--all'):
         if '*' not in args:
             args.append('*')
     elif o[0] in ('-f', '--file'):
-        conf_file = o[1]
+        cfg.load_config(o[1])
     elif o[0] in ('-o', '--option'):
         kv = o[1].split(None, 1)
         if len(kv) == 1:
@@ -323,29 +285,18 @@ for o in opt:
     elif o[0] in ('--rawout',):
         setRawOut(o[1])
 
-# load user config file
-try:
-    expconf = os.path.expanduser(conf_file)
-    with open(expconf) as fobj:
-        exec(compile(fobj.read(), expconf, 'exec'))
-except IOError:
-    pass
-except Exception as e:
-    print_warning('(none): W: error loading %s, skipping: %s' % (conf_file, e))
-
 # apply config overrides
 for key, value in config_overrides.items():
-    Config.setOption(key, value)
+    cfg.configuration[key] = value
 
 if not extract_dir:
-    extract_dir = Config.getOption('ExtractDir', tempfile.gettempdir())
+    extract_dir = cfg.configuration['ExtractDir']
 
 if info_error:
-    Config.info = True
-    sys.path[0:0] = Config.checkDirs()
+    cfg.info = True
     for c in checks:
-        Config.addCheck(c)
-    for c in Config.allChecks():
+        cfg.add_check(c)
+    for c in cfg.configuration['Checks']:
         loadCheck(c)
     for e in sorted(info_error):
         print("%s:" % e)
@@ -359,9 +310,9 @@ if not args:
 
 if __name__ == '__main__':
     if checks:
-        Config.resetChecks()
+        cfg.reset_checks()
         for check in checks:
-            Config.addCheck(check)
+            cfg.add_check(check)
     main()
 
 # rpmlint ends here
