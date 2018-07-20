@@ -11,7 +11,6 @@ import textwrap
 
 from rpmlint import Config
 
-_rawout = None
 _diagnostic = list()
 _badness_score = 0
 printed_messages = {"I": 0, "W": 0, "E": 0}
@@ -55,9 +54,6 @@ def _print(msgtype, pkg, reason, details):
         s = s + " (Badness: %d)" % badness
     for d in details:
         s = s + " %s" % d
-    if _rawout:
-        print(s.encode(locale.getpreferredencoding(), "replace"),
-              file=_rawout)
     if not Config.isFiltered(s):
         printed_messages[msgtype] += 1
         _badness_score += badness
@@ -124,12 +120,5 @@ def badnessScore():
 
 def badnessThreshold():
     return Config.getOption("BadnessThreshold", -1)
-
-
-def setRawOut(file):
-    global _rawout
-    if _rawout:
-        _rawout.close()
-    _rawout = open(file, "w")
 
 # Filter.py ends here

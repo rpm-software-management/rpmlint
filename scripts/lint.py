@@ -26,7 +26,7 @@ from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Config import Config
 from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
-    printDescriptions, printed_messages, printInfo, setRawOut
+    printDescriptions, printed_messages, printInfo
 from rpmlint.helpers import print_warning
 
 
@@ -44,7 +44,6 @@ def usage(name):
 \t[-E|--extractdir <dir>]
 \t[-V|--version]
 \t[-n|--noexception]
-\t[   --rawout <file>]
 \t[-f|--file <user config file to use>]
 \t[-o|--option <key value>]'''
           % (name))
@@ -232,7 +231,7 @@ try:
         sys.argv[1:], 'iI:c:C:hVvanE:f:o:',
         ['info', 'explain=', 'check=', 'help', 'version',
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
-         'rawout='])
+        ])
 except getopt.GetoptError as e:
     print_warning("%s: %s" % (argv0, e))
     usage(argv0)
@@ -282,8 +281,6 @@ for o in opt:
             config_overrides[kv[0]] = None
         else:
             config_overrides[kv[0]] = eval(kv[1])
-    elif o[0] in ('--rawout',):
-        setRawOut(o[1])
 
 # apply config overrides
 for key, value in config_overrides.items():
