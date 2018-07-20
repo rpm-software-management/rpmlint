@@ -203,6 +203,21 @@ class Config(object):
             filters_re = filters_re + '|(?:' + self.configuration['Filters'][idx] + ')'
         self.filters_re = re.compile(filters_re)
 
-# TODO: add wrapper helpers to read up rpmlintrc, can't be ini as we would be
-#       very backwards incompatible
-#       Parse only setBadness and addFilter options otherwise load up as ini file
+    def load_rpmlintrc(self, rpmlint_file):
+        """
+        Function to load up existing rpmlintrc files
+        Only setBadness and addFilter are processed
+        """
+        if not self.configuration:
+            print_warning('(none): W: loading rpmlint before configuration is not allowed: {}'.format(rpmlint_file))
+            return
+        re_addFilter = re.compile(r'\s*addFilter\([\"\'](.*)[\"\']\)')
+        re_setBadness = re.compile(r'\s*setBadness\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
+        with open(rpmlint_file) as f:
+            rpmlintrc_content = f.read()
+        filters = re_addFilter.findall(rpmlintrc_content)
+        self.configuration['Filters'] += filters
+        self._populate_filter_regexp()
+        badness = re_setBadness.findall(rpmlintrc_content)
+        for entry in badness:
+            self.configuration['Scoring'].update({entry[0]: entry[1]})

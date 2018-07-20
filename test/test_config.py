@@ -10,6 +10,7 @@ TEST_CONFIG_2 = os.path.join(testpath(), "configs/test2.config")
 TEST_CONFIG_FILTERS = os.path.join(testpath(), "configs/testfilters.config")
 TEST_LIST1 = os.path.join(testpath(), "configs/testlists1.config")
 TEST_LIST2 = os.path.join(testpath(), "configs/testlists2.config")
+TEST_RPMLINTRC = os.path.join(testpath(), "configs/testing-rpmlintrc")
 
 
 def test_printing(capsys):
@@ -131,3 +132,12 @@ def test_badness_functions():
     cfg.set_badness('suse-dbus-unauthorized-service', 15)
     assert len(cfg.configuration['Scoring']) == 1
     assert cfg.configuration['Scoring']['suse-dbus-unauthorized-service'] == 15
+
+def test_rpmlint_loading():
+    """
+    Make sure we can load up rpmlintrc file without executing any code
+    """
+    cfg = Config(TEST_CONFIG)
+    cfg.load_rpmlintrc(TEST_RPMLINTRC)
+    assert len(cfg.configuration['Filters']) == 109
+    assert len(cfg.configuration['Scoring']) == 2
