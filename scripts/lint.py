@@ -14,6 +14,7 @@ import locale
 import os
 import stat
 import sys
+import tempfile
 
 # Do not import anything that initializes its global variables from
 # Config at load time here (or anything that imports such a thing),
@@ -25,8 +26,7 @@ from rpmlint import __version__
 from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
 from rpmlint.Config import Config
-from rpmlint.Filter import badnessScore, badnessThreshold, printAllReasons, \
-    printDescriptions, printed_messages, printInfo
+from rpmlint.Filter import Filter
 from rpmlint.helpers import print_warning
 
 
@@ -54,16 +54,16 @@ def printVersion():
     print('rpmlint version %s' % __version__)
 
 
-def loadCheck(name):
+def loadCheck(name, config, output):
     '''Load a (check) module by its name, unless it is already loaded.'''
     # Avoid loading more than once (initialization costs)
     loaded = sys.modules.get(name)
     if loaded:
-        return loaded
-    try:
-        importlib.import_module('.%s' % name, package='rpmlint')
-    except ImportError:
-        importlib.import_module(name)
+        return
+    module = importlib.import_module('.{}'.format(name), package='rpmlint')
+    klass = getattr(module, name)
+    obj = klass(config, output)
+    return obj
 
 
 #############################################################################
@@ -73,9 +73,11 @@ def main():
 
     locale.setlocale(locale.LC_COLLATE, '')
 
+    output = Filter(cfg)
+
     # Load all checks
     for c in cfg.configuration['Checks']:
-        loadCheck(c)
+        loadCheck(c, cfg, output)
 
     packages_checked = 0
     specfiles_checked = 0
@@ -176,17 +178,19 @@ def main():
                     '(none): E: error while reading dir %s: %s' % (dname, e))
                 continue
 
-        if printAllReasons():
+        print(output.print_results(output.results))
+
+        if output.badness_threshold > 0 and output.score > output.badness_threshold:
             print_warning('(none): E: badness %d exceeds threshold %d, aborting.' %
-                          (badnessScore(), badnessThreshold()))
+                          (output.score, output.badness_threshold))
             sys.exit(66)
 
     finally:
         print("%d packages and %d specfiles checked; %d errors, %d warnings."
               % (packages_checked, specfiles_checked,
-                 printed_messages["E"], printed_messages["W"]))
+                 output.printed_messages["E"], output.printed_messages["W"]))
 
-    if printed_messages["E"] > 0:
+    if output.printed_messages["E"] > 0:
         sys.exit(64)
     sys.exit(0)
 
@@ -231,7 +235,7 @@ try:
         sys.argv[1:], 'iI:c:C:hVvanE:f:o:',
         ['info', 'explain=', 'check=', 'help', 'version',
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
-        ])
+         ])
 except getopt.GetoptError as e:
     print_warning("%s: %s" % (argv0, e))
     usage(argv0)
@@ -247,13 +251,14 @@ config_overrides = {}
 
 # load global config files
 cfg = Config()
+extract_dir = cfg.configuration['ExtractDir']
 
 # process command line options
 for o in opt:
     if o[0] in ('-c', '--check'):
         checks.append(o[1])
     elif o[0] in ('-i', '--info'):
-        Config.info = True
+        cfg.info = True
     elif o[0] in ('-I', '--explain'):
         # split by comma for deprecated backwards compatibility with < 1.2
         info_error.update(o[1].split(','))
@@ -287,17 +292,18 @@ for key, value in config_overrides.items():
     cfg.configuration[key] = value
 
 if not extract_dir:
-    extract_dir = cfg.configuration['ExtractDir']
+    extract_dir = tempfile.gettempdir()
 
 if info_error:
     cfg.info = True
+    output = Filter(cfg)
     for c in checks:
         cfg.add_check(c)
     for c in cfg.configuration['Checks']:
-        loadCheck(c)
+        loadCheck(c, cfg, output)
     for e in sorted(info_error):
-        print("%s:" % e)
-        printDescriptions(e)
+        print('{}:'.format(e))
+        print(output.get_description(e))
     sys.exit(0)
 
 # if no argument print usage

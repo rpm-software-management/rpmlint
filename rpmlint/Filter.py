@@ -82,14 +82,14 @@ class Filter(object):
                 # print out details for each reason we had
                 if reason != last_reason:
                     if last_reason:
-                        output += self._get_description(last_reason)
+                        output += self.get_description(last_reason)
                     last_reason = reason
             output += diag + '\n'
         if self.info and last_reason:
-            output += self._get_description(last_reason)
+            output += self.get_description(last_reason)
         return output
 
-    def _get_description(self, reason):
+    def get_description(self, reason):
         """
         Return description for specified result.
         Empty content does not cause an issue and we just return empty content
