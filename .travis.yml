@@ -7,7 +7,7 @@ services:
 
 env:
   - DIST=fedora28 PYTHON=python3 FLAKE='/usr/bin/flake8'
-  - DIST=fedoradev PYTHON=python3 FLAKE='/usr/bin/flake8'
+#  - DIST=fedoradev PYTHON=python3 FLAKE='/usr/bin/flake8'
   - DIST=leap15 PYTHON=python3 FLAKE='/usr/bin/flake8'
   - DIST=tumbleweed PYTHON=python3 FLAKE='/usr/bin/flake8'
 
