@@ -331,3 +331,4 @@ DICT_DEFAULTS['MenuLaunchers'] = {
         'binaries': None,
     },
 }
+DICT_DEFAULTS['DanglingSymlinkExceptions'] = {}

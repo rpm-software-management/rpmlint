@@ -924,9 +924,9 @@ class FilesCheck(AbstractCheck):
                     if not is_so and link not in files and \
                             link not in req_names:
                         is_exception = False
-                        for e in self.dangling_exceptions:
-                            if e[0].search(link):
-                                is_exception = e[1]
+                        for e in self.dangling_exceptions.values():
+                            if e['path'].search(link):
+                                is_exception = e['name']
                                 break
                         if is_exception:
                             if is_exception not in req_names:
@@ -948,9 +948,9 @@ class FilesCheck(AbstractCheck):
                         abslink = os.path.normpath(abslink)
                         if abslink not in files and abslink not in req_names:
                             is_exception = False
-                            for e in self.dangling_exceptions:
-                                if e[0].search(link):
-                                    is_exception = e[1]
+                            for e in self.dangling_exceptions.values():
+                                if e['path'].search(link):
+                                    is_exception = e['name']
                                     break
                             if is_exception:
                                 if is_exception not in req_names:
