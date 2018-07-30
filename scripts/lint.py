@@ -196,10 +196,6 @@ def main():
 
 
 def runChecks(pkg):
-
-    if verbose:
-        printInfo(pkg, 'checking')
-
     for name in cfg.configuration['Checks']:
         check = AbstractCheck.known_checks.get(name)
         if check:
@@ -210,10 +206,6 @@ def runChecks(pkg):
 
 
 def runSpecChecks(pkg, fname, spec_lines=None):
-
-    if verbose:
-        printInfo(pkg, 'checking')
-
     for name in cfg.configuration['Checks']:
         check = AbstractCheck.known_checks.get(name)
         if check:
