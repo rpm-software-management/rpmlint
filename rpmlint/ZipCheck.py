@@ -1,22 +1,14 @@
-#############################################################################
-# File          : ZipCheck.py
-# Package       : rpmlint
-# Author        : Ville Skyttä
-# Created on    : Thu Oct 30 00:14:45 EET 2003
-# Purpose       : Verify Zip/Jar file correctness
-#############################################################################
-
 import os
 import re
-import stat
-import sys
-import zipfile
+from zipfile import BadZipFile, is_zipfile, ZipFile
 
-from rpmlint import Pkg
 from rpmlint.AbstractCheck import AbstractCheck
 
 
 class ZipCheck(AbstractCheck):
+    """
+    Validate zip and jar files correctness.
+    """
     zip_regex = re.compile(r'\.(zip|[ewj]ar)$')
     jar_regex = re.compile(r'\.[ewj]ar$')
     classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
@@ -33,59 +25,83 @@ class ZipCheck(AbstractCheck):
             """The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
             These entries do not work with older Java versions and even if they do work,
             they are inflexible and usually cause nasty surprises.""",
-            'jar-indexed':
-            """The jar file is indexed, ie. it contains the META-INF/INDEX.LIST file.
-            These files are known to cause problems with some older Java versions.""",
             'jar-not-indexed':
             """The jar file is not indexed, ie. it does not contain the META-INF/INDEX.LIST
             file.  Indexed jars speed up the class searching process of classloaders
             in some situations.""",
         }
         self.output.error_details.update(zip_details_dict)
-        self.want_indexed_jars = config.configuration['UseIndexedJars']
 
     def check(self, pkg):
         for fname, pkgfile in pkg.files().items():
             path = pkgfile.path
             if self.zip_regex.search(fname) and os.path.exists(path) and \
-               stat.S_ISREG(os.lstat(path)[stat.ST_MODE]) and \
-               zipfile.is_zipfile(path):
-                z = None  # TODO ZipFile is context manager in 2.7+
+               os.path.isfile(path) and is_zipfile(path):
                 try:
-                    z = zipfile.ZipFile(path, 'r')
-                    badcrc = z.testzip()
-                    if badcrc:
-                        self.output.add_info('E', pkg, 'bad-crc-in-zip', badcrc, fname)
-                except zipfile.error:
-                    self.output.add_info('W', pkg, 'unable-to-read-zip', '%s: %s' %
-                                         (fname, sys.exc_info()[1]))
-                else:
-                    compressed = False
-                    for zinfo in z.infolist():
-                        if zinfo.compress_type != zipfile.ZIP_STORED:
-                            compressed = True
-                            break
-                    if not compressed:
-                        self.output.add_info('W', pkg, 'uncompressed-zip', fname)
+                    with ZipFile(path, 'r') as z:
+                        # Check CRC issues
+                        badcrc = z.testzip()
+                        if badcrc:
+                            self.output.add_info('E', pkg, 'bad-crc-in-zip', badcrc, fname)
+                        # Check compression
+                        if not self._check_compression(z):
+                            self.output.add_info('E', pkg, 'uncompressed-zip', fname)
 
-                    # additional jar checks
-                    if self.jar_regex.search(fname):
-                        try:
-                            mf = Pkg.b2s(z.read('META-INF/MANIFEST.MF'))
-                            if self.classpath_regex.search(mf):
-                                self.output.add_info('W', pkg,
-                                                     'class-path-in-manifest', fname)
-                        except KeyError:
-                            # META-INF/* are optional:
-                            # http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html
-                            pass
-                        try:
-                            zinfo = z.getinfo('META-INF/INDEX.LIST')
-                            if not self.want_indexed_jars:
-                                self.output.add_info('W', pkg, 'jar-indexed', fname)
-                        except KeyError:
-                            if self.want_indexed_jars:
+                        # additional jar checks
+                        if self.jar_regex.search(fname):
+                            if self._check_classpath(z):
+                                self.output.add_info('W', pkg, 'class-path-in-manifest', fname)
+                            if self._check_jarindex(z):
                                 self.output.add_info('W', pkg, 'jar-not-indexed', fname)
-                            pass
+                except BadZipFile as err:
+                    self.output.add_info('E', pkg, 'unable-to-read-zip', f'{fname}: {err}')
+                except RuntimeError as err:
+                    self.output.add_info('W', pkg, 'unable-to-read-zip', f'{fname}: {err}')
 
-                z and z.close()
+    @staticmethod
+    def _check_compression(zipfile):
+        """
+        Check if zip is actually compressed.
+        One file with smaller size is enough.
+        """
+        # check for empty archives which are walid
+        filecount = len(zipfile.namelist())
+        nullcount = 0
+        for zinfo in zipfile.infolist():
+            if zinfo.file_size == 0:
+                nullcount += 1
+            if zinfo.compress_size != zinfo.file_size:
+                return True
+        # empty files only
+        if filecount == nullcount:
+            return True
+        return False
+
+    def _check_classpath(self, zipfile):
+        """
+        Check if package contains MANIFEST.MF without classpath
+        """
+        mf = 'META-INF/MANIFEST.MF'
+        # The META-INF is optional so skip if it is not present
+        if mf not in zipfile.namelist():
+            return False
+        # otherwise check for the classpath
+        manifest = zipfile.read(mf).decode()
+        if self.classpath_regex.search(manifest):
+            return True
+        return False
+
+    @staticmethod
+    def _check_jarindex(zipfile):
+        """
+        Check if there is index in the jar
+        """
+        mf = 'META-INF/MANIFEST.MF'
+        # The META-INF is optional so skip if it is not present
+        if mf not in zipfile.namelist():
+            return True
+        # otherwise we have to have index
+        index = 'META-INF/INDEX.LIST'
+        if index not in zipfile.namelist():
+            return False
+        return True

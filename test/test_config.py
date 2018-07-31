@@ -64,7 +64,7 @@ def test_parsing():
     assert cfg.configuration['Distribution'] == 'Fedora Project'
     assert cfg.configuration['WarnOnFunction'] == call_blacklist
     # default value check
-    assert cfg.configuration['UseIndexedJars'] is True
+    assert cfg.configuration['UseDefaultRunlevels'] is True
 
 
 def test_double_config():
