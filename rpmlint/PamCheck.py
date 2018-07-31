@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #############################################################################
 # Project         : Mandriva Linux
 # Module          : rpmlint
@@ -11,26 +10,23 @@
 import re
 
 from rpmlint.AbstractCheck import AbstractFilesCheck
-from rpmlint.Filter import addDetails, printError
-
-
-pam_stack_re = re.compile(r'^\s*[^#].*pam_stack\.so\s*service')
 
 
 class PamCheck(AbstractFilesCheck):
-    def __init__(self):
-        AbstractFilesCheck.__init__(self, "PamCheck", r"/etc/pam\.d/.*")
+    pam_stack_re = re.compile(r'^\s*[^#].*pam_stack\.so\s*service')
+
+    def __init__(self, config, output):
+        AbstractFilesCheck.__init__(self, config, output, "PamCheck", r"/etc/pam\.d/.*")
+        self.output.error_details.update(pam_details_dict)
 
     def check_file(self, pkg, filename):
-        lines = pkg.grep(pam_stack_re, filename)
+        lines = pkg.grep(self.pam_stack_re, filename)
         if lines:
-            printError(pkg, 'use-old-pam-stack', filename,
-                       '(line %s)' % ", ".join(lines))
+            self.output.add_info('E', pkg, 'use-old-pam-stack', filename,
+                                 '(line %s)' % ", ".join(lines))
 
 
-check = PamCheck()
-
-addDetails(
-'use-old-pam-stack',
+pam_details_dict = {
+'use-old-pam-stack':
 '''Update pam file to use include instead of pam_stack.''',
-)
+}

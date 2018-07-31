@@ -4,6 +4,7 @@
 build/
 dist/
 .tox/
+.eggs
 *.egg-info
 .coverage
 *.pyo

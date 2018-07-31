@@ -23,6 +23,8 @@ RUN dnf --nogpgcheck -y install \
         python3-pytest-runner \
         python3-flake8 \
         python3-flake8-import-order \
+        python3-pyxdg \
+        python3-configobj \
         rpm-build
 
 WORKDIR /usr/src/rpmlint

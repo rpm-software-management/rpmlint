@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #############################################################################
 # File          : I18NCheck.py
 # Package       : rpmlint
@@ -12,7 +11,6 @@ import re
 import rpm
 from rpmlint.__isocodes__ import COUNTRIES, LANGUAGES
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printError, printWarning
 
 
 # Associative array of invalid value => correct value
@@ -72,8 +70,9 @@ def is_valid_lang(lang):
 
 class I18NCheck(AbstractCheck):
 
-    def __init__(self):
-        AbstractCheck.__init__(self, 'I18NCheck')
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, 'I18NCheck')
+        self.output.error_details.update(i18n_details_dict)
 
     def check_binary(self, pkg):
         files = list(pkg.files().keys())
@@ -86,7 +85,7 @@ class I18NCheck(AbstractCheck):
         for i in i18n_tags:
             try:
                 correct = INCORRECT_LOCALES[i]
-                printError(pkg, 'incorrect-i18n-tag-' + correct, i)
+                self.output.add_info('E', pkg, 'incorrect-i18n-tag-' + correct, i)
             except KeyError:
                 pass
 
@@ -108,12 +107,12 @@ class I18NCheck(AbstractCheck):
                     res2 = correct_subdir_regex.search(locale)
                     if not res2:
                         if locale not in EXCEPTION_DIRS:
-                            printError(pkg, 'incorrect-locale-subdir', f)
+                            self.output.add_info('E', pkg, 'incorrect-locale-subdir', f)
                     else:
                         locale_name = res2.group(2)
                         try:
                             correct = INCORRECT_LOCALES[locale_name]
-                            printError(pkg, 'incorrect-locale-' + correct, f)
+                            self.output.add_info('E', pkg, 'incorrect-locale-' + correct, f)
                         except KeyError:
                             pass
             res = lc_messages_regex.search(f)
@@ -121,7 +120,7 @@ class I18NCheck(AbstractCheck):
             if res:
                 subdir = res.group(1)
                 if not is_valid_lang(subdir):
-                    printError(pkg, 'invalid-lc-messages-dir', f)
+                    self.output.add_info('E', pkg, 'invalid-lc-messages-dir', f)
             else:
                 res = man_regex.search(f)
                 if res:
@@ -129,17 +128,17 @@ class I18NCheck(AbstractCheck):
                     if is_valid_lang(subdir):
                         subdir = None
                     else:
-                        printError(pkg, 'invalid-locale-man-dir', f)
+                        self.output.add_info('E', pkg, 'invalid-locale-man-dir', f)
 
             if f.endswith('.mo') or subdir:
                 if pkg.files()[f].lang == '' and not webapp:
-                    printWarning(pkg, 'file-not-in-%lang', f)
+                    self.output.add_info('W', pkg, 'file-not-in-%lang', f)
 
         main_dir, main_lang = ("", "")
         for f in files:
             lang = pkg.files()[f].lang
             if main_lang and lang == "" and is_prefix(main_dir + '/', f):
-                printError(pkg, 'subfile-not-in-%lang', f)
+                self.output.add_info('E', pkg, 'subfile-not-in-%lang', f)
             if main_lang != lang:
                 main_dir, main_lang = f, lang
 
@@ -149,50 +148,44 @@ class I18NCheck(AbstractCheck):
             locales = 'locales-' + res.group(1)
             if locales != name:
                 if locales not in (x[0] for x in pkg.requires()):
-                    printError(pkg, 'no-dependency-on', locales)
+                    self.output.add_info('E', pkg, 'no-dependency-on', locales)
 
 
 def is_prefix(p, s):
     return len(p) <= len(s) and p == s[:len(p)]
 
 
-# Create an object to enable the auto registration of the test
-check = I18NCheck()
-
-addDetails(
+i18n_details_dict = {
 # Need to add a function to list all the locales
-'incorrect-i18n-tag-',
+'incorrect-i18n-tag-':
 """
 """,
 
-'incorrect-locale-subdir',
+'incorrect-locale-subdir':
 """
 """,
 
-'incorrect-locale-',
+'incorrect-locale-':
 """
 """,
 
-'invalid-lc-messages-dir',
+'invalid-lc-messages-dir':
 """
 """,
 
-'invalid-locale-man-dir',
+'invalid-locale-man-dir':
 """
 """,
 
-'file-not-in-lang',
+'file-not-in-lang':
 """
 """,
 
-'no-dependency-on',
+'no-dependency-on':
 """
 """,
 
-'subfile-not-in-%lang',
+'subfile-not-in-%lang':
 """ If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be
 installable if XX is not in %_install_langs.""",
-
-)
-
-# I18NCheck.py ends here
+}

@@ -1,166 +1,200 @@
-# -*- coding: utf-8 -*-
-#############################################################################
-# File          : Config.py
-# Package       : rpmlint
-# Author        : Frederic Lepied
-# Created on    : Fri Oct 15 20:04:25 1999
-# Purpose       : handle configuration options. To be used from config files.
-#############################################################################
-
-import locale
-import os.path
+from glob import glob
+from importlib.util import find_spec
+import os
+from pprint import pprint
 import re
 
-DEFAULT_CHECKS = ("DistributionCheck",
-                  "TagsCheck",
-                  "BinariesCheck",
-                  "ConfigCheck",
-                  "FilesCheck",
-                  "DocFilesCheck",
-                  "FHSCheck",
-                  "SignatureCheck",
-                  "I18NCheck",
-                  "MenuCheck",
-                  "PostCheck",
-                  "InitScriptCheck",
-                  "SourceCheck",
-                  "SpecCheck",
-                  "NamingPolicyCheck",
-                  "ZipCheck",
-                  "PamCheck",
-                  "RpmFileCheck",
-                  "MenuXDGCheck",
-                  "AppDataCheck",
-                  )
-
-USEUTF8_DEFAULT = False
-try:
-    if locale.getpreferredencoding() == 'UTF-8':
-        USEUTF8_DEFAULT = True
-except UnicodeError:
-    try:
-        if re.match('utf', locale.getdefaultlocale()[1], re.I):
-            USEUTF8_DEFAULT = True
-    except UnicodeError:
-        pass
-
-info = False
-no_exception = False
-
-# handle the list of checks to load
-_checks = []
-_checks.extend(DEFAULT_CHECKS)
+from configobj import ConfigObj
+from rpmlint.ConfigDefaults import DEFAULTS, DICT_DEFAULTS
+from rpmlint.helpers import print_warning
+# This is shipped by ConfigObj upstream
+from validate import Validator
+from xdg.BaseDirectory import xdg_config_dirs
 
 
-def addCheck(check):
-    check = re.sub(r'\.py[co]?$', '', check)
-    if check not in _checks:
-        _checks.append(check)
+class Config(object):
+    """
+    Class wrapping testing loading and parsing.
+    By default it loads all default locations and initializes basic testing
+    layout for the rpmlint binary.
+    Based on the opening order "newer" configuration takes precedence over
+    already existing one.
+    """
 
+    # config elements that are known lists and append to each other
+    known_lists_merged = (
+        'Filters',
+        'Checks',
+    )
+    # config elements that are known lists and override each other
+    known_lists_override = (
+        'ExtraMenuNeeds',
+        'ValidMenuSections',
+        'InvalidRequires',
+        'DisallowedDirs',
+        'StandardGroups',
+        'StandardUsers',
+        'SystemLibPaths',
+        'ValidEmptyShells',
+        'ValidGroups',
+        'ValidLicenses',
+        'ValidShells',
+    )
+    # filename with configuration specifications
+    __configspecfilename = os.path.join(os.path.dirname(__file__), 'configspec.cfg')
 
-def allChecks():
-    if _checks == []:
-        defaultChecks()
-    return _checks
+    def __init__(self, config=None):
+        # ordered list of configuration files we loaded
+        # usefull when debugging where from we got all the config options
+        self.conf_files = list()
+        # Configuration content parsed from the ini file
+        self.configuration = None
+        # wether to print more informations or not
+        self.info = False
+        self.find_configs(config)
+        for config in self.conf_files:
+            self.load_config(config)
+        if not self.configuration:
+            # now in a case there is nada wrt configurations
+            self.load_config('nill-temporary')
 
+    def reset_checks(self):
+        """
+        Remove all planned checks from the loaded config.
+        """
+        self.configuration['Checks'] = list()
 
-def defaultChecks():
-    resetChecks()
-    _checks.extend(DEFAULT_CHECKS)
+    def add_check(self, check):
+        """
+        Add specified file to be loaded up by checks.
+        Check is just a string file.
+        It used to be possible to specify additional locations for checks
+        but to keep it simple all checks must be part of rpmlint package
+         -> from rpmlint.<CHECKNAME> import *
+        """
+        # Validate first if it is possible to import the added check
+        if find_spec('.{}'.format(check), package='rpmlint'):
+            self.configuration['Checks'].append(check)
+        else:
+            print_warning('(none): W: error adding requested check: {}'.format(check))
 
+    def set_badness(self, result, badness):
+        """
+        Set specific badness for some result
+        """
+        self.configuration['Scoring'][result] = badness
 
-def resetChecks():
-    global _checks
+    def find_configs(self, config=None):
+        """
+        Load all the configuration files from XDG_CONFIG_DIRS.
+        User can override and then only his config is loaded.
+        """
 
-    _checks = []
+        if config:
+            if os.path.exists(config):
+                # load this only if it really exist
+                self.conf_files = [config]
+                return
+            else:
+                print_warning('(none): W: error locating user requested configuration: {}'.format(config))
 
+        for directory in reversed(xdg_config_dirs):
+            confdir = os.path.join(directory, 'rpmlint')
+            if os.path.isdir(confdir):
+                # load all configs in the folders
+                confopts = glob('{}/*config'.format(confdir))
+                confopts.sort()
+                self.conf_files += confopts
 
-# handle the list of directories to look for checks
+    def print_config(self):
+        """
+        Just pretty print the current state of the config
+        """
+        if self.configuration:
+            pprint(self.configuration)
 
-_dirs = ["/usr/share/rpmlint"]
+    def load_config(self, config):
+        """
+        Load the configuration file and append it to local dictionary with the
+        content of already loaded options.
+        """
+        if config not in self.conf_files:
+            # just add the config for tracking purposes, someone injected
+            # config file to us
+            self.conf_files.append(config)
 
+        # load and validate initial config
+        val = Validator()
+        configspec = ConfigObj(self.__configspecfilename, _inspec=True)
+        cfg = ConfigObj(config, configspec=configspec)
+        if not cfg.validate(val):
+            print_warning('(none): W: error parsing configuration file: {}'.format(config))
+        # load multiline defaults
+        cfg = self._load_defaults(cfg, DEFAULTS)
+        cfg = self._load_defaults(cfg, DICT_DEFAULTS)
+        # convert all list items to real lists
+        cfg = self._convert_known_lists(cfg, self.known_lists_merged)
+        cfg = self._convert_known_lists(cfg, self.known_lists_override, True)
+        # for merging we have duplicate object without filled in defaults
+        result = ConfigObj(config)
+        # conver the result stuff to lists too
+        result = self._convert_known_lists(result, self.known_lists_merged)
+        result = self._convert_known_lists(result, self.known_lists_override, True)
+        # merge the dict on where we are merging lists
+        for i in self.known_lists_merged:
+            if self.configuration:
+                if i in self.configuration and i in result:
+                    result[i] = result[i] + self.configuration[i]
 
-def addCheckDir(dir):
-    d = os.path.expanduser(dir)
-    if d not in _dirs:
-        _dirs.insert(0, d)
+        # Merge stuff in a case we alrady have config
+        if self.configuration:
+            self.configuration.merge(result)
+        else:
+            self.configuration = cfg
 
+    def _load_defaults(self, config, keywords={}):
+        """
+        In case of multiline/dictionary defaults specified in configspec the
+        configobj crashes.
+        As such we have all the content strings stored in separate class
+        where we will assign them to here.
+        """
+        for keyword in keywords:
+            # store only in a case there is already not some user value
+            if not config[keyword]:
+                config[keyword] = keywords[keyword]
+        return config
 
-def checkDirs():
-    return _dirs
+    def _convert_known_lists(self, config, keywords, tuplify=False):
+        """
+        Convert known mutliline strings to known lists, as the ConfigObj parser
+        really sucks at parsing multiline lists.
+        We also ommit all the whitespace around the elements to avoid random
+        copy&pastos
+        If we specify tuplify argument we rather return tuple over list
+        """
+        for keyword in keywords:
+            if keyword in config:
+                config[keyword] = \
+                    ([s.strip() for s in config[keyword].strip().splitlines() if s.strip() and not s.lstrip().startswith('#')])
+                if tuplify:
+                    config[keyword] = tuple(config[keyword])
+        return config
 
-
-# handle options
-
-_options = {}
-
-
-def setOption(name, value):
-    _options[name] = value
-
-
-def getOption(name, default=""):
-    return _options.get(name, default)
-
-
-# List of filters
-_filters = []
-_filters_re = None
-
-
-def addFilter(s):
-    global _filters_re
-
-    _filters.append(s)
-    _filters_re = None
-
-
-def removeFilter(s):
-    global _filters_re
-
-    try:
-        _filters.remove(s)
-    except ValueError:
-        pass
-    else:
-        _filters_re = None
-
-
-_scoring = {}
-
-
-def setBadness(s, score):
-    _scoring[s] = score
-
-
-def badness(s):
-    return _scoring.get(s, 0)
-
-
-_non_named_group_re = re.compile(r'[^\\](\()[^:]')
-
-
-def isFiltered(s):
-    global _filters_re
-
-    if _filters_re is None:
-        # no filter
-        if len(_filters) == 0:
-            return False
-        _filters_re = '(?:' + _filters[0] + ')'
-
-        for idx in range(1, len(_filters)):
-            # to prevent named group overflow that happen when there is too
-            # many () in a single regexp: AssertionError: sorry, but this
-            # version only supports 100 named groups
-            if '(' in _filters[idx]:
-                _non_named_group_re.subn('(:?', _filters[idx])
-            _filters_re = _filters_re + '|(?:' + _filters[idx] + ')'
-        _filters_re = re.compile(_filters_re)
-
-    if not no_exception:
-        if _filters_re.search(s):
-            return True
-    return False
-
-# Config.py ends here
+    def load_rpmlintrc(self, rpmlint_file):
+        """
+        Function to load up existing rpmlintrc files
+        Only setBadness and addFilter are processed
+        """
+        if not self.configuration:
+            print_warning('(none): W: loading rpmlint before configuration is not allowed: {}'.format(rpmlint_file))
+            return
+        re_addFilter = re.compile(r'\s*addFilter\([\"\'](.*)[\"\']\)')
+        re_setBadness = re.compile(r'\s*setBadness\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
+        with open(rpmlint_file) as f:
+            rpmlintrc_content = f.read()
+        filters = re_addFilter.findall(rpmlintrc_content)
+        self.configuration['Filters'] += filters
+        badness = re_setBadness.findall(rpmlintrc_content)
+        for entry in badness:
+            self.configuration['Scoring'].update({entry[0]: entry[1]})

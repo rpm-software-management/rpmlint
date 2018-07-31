@@ -1,0 +1,102 @@
+import os
+from typing.re import Pattern
+
+from rpmlint.Config import Config
+from rpmlint.Filter import Filter
+
+from Testing import getTestedPackage, testpath
+
+TEST_CONFIG_FILTERS = os.path.join(testpath(), "configs/testfilters.config")
+TEST_RPMLINTRC = os.path.join(testpath(), "configs/testing-rpmlintrc")
+TEST_PACKAGE = os.path.join('binary', 'ngircd')
+TEST_PACKAGE2 = os.path.join('binary', 'dovecot')
+
+
+def test_filters_regexp():
+    """
+    Load some filters and make sure we generate nice regexp
+    """
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    assert len(cfg.configuration['Filters']) == 9
+    assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
+    assert isinstance(result.filters_re, Pattern)
+
+
+def test_data_storing():
+    """
+    Load some filters and make sure we generate nice regexp
+    """
+    cfg = Config(TEST_CONFIG_FILTERS)
+    cfg.load_rpmlintrc(TEST_RPMLINTRC)
+    result = Filter(cfg)
+    pkg = getTestedPackage(TEST_PACKAGE)
+    # this should be filtered
+    result.add_info('E', pkg, 'invalid-vendor', '')
+    assert len(result.results) == 0
+    # this should be upgraded to error
+    result.add_info('I', pkg, 'suse-other-error', '')
+    assert len(result.results) == 1
+    assert result.printed_messages['I'] == 0
+    assert result.printed_messages['E'] == 1
+    # this should be downgraded
+    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    assert len(result.results) == 2
+    assert result.printed_messages['W'] == 1
+    assert result.printed_messages['E'] == 1
+
+
+def test_description_storing():
+    """
+    Test if we can store extra destcriptions and formatting is up par
+    """
+    lorem_formated = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+in culpa qui officia deserunt mollit anim id est laborum.\n\n'''
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    pkg = getTestedPackage(TEST_PACKAGE)
+    assert len(result.results) == 0
+    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    # two options so we check the description is added only once
+    result.add_info('I', pkg, 'suse-other-error', '/usr/bin/1')
+    # nothing is populated
+    assert not result.get_description('suse-other-error')
+    # add descriptions
+    result.error_details.update({'suse-other-error': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'})
+    assert result.get_description('suse-other-error') == lorem_formated
+
+
+def test_output():
+    """
+    Test the actual output of rpmlint on one file
+    """
+    expected_output = '''ngircd.x86_64: I: suse-other-error /usr/bin/1
+ngircd.x86_64: I: suse-other-error /usr/bin/2
+dovecot.x86_64: E: suse-other-error /usr/bin/3
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+in culpa qui officia deserunt mollit anim id est laborum.
+
+ngircd.x86_64: E: suse-dbus-unauthorized-service\n'''
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    pkg = getTestedPackage(TEST_PACKAGE)
+    pkg2 = getTestedPackage(TEST_PACKAGE2)
+    # here we check if empty detail will not add whitespace
+    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    # two options so we check the description is added only once
+    result.add_info('I', pkg, 'suse-other-error', '/usr/bin/1')
+    result.add_info('I', pkg, 'suse-other-error', '/usr/bin/2')
+    result.add_info('E', pkg2, 'suse-other-error', '/usr/bin/3')
+    result.error_details.update({'suse-other-error': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'})
+    assert len(result.print_results(result.results).splitlines()) == 4
+    result.info = True
+    assert len(result.print_results(result.results).splitlines()) == 11
+    assert result.print_results(result.results) == expected_output

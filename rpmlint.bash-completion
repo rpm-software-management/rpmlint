@@ -17,16 +17,15 @@ _rpmlint()
     local cur=$2 # for _rpm_installed_packages, _filedir
 
     case $3 in
-        -C|--checkdir|-E|--extractdir)
+        |-E|--extractdir)
             _filedir -d
             return 0
             ;;
-        -f|--file|--rawout)
+        -f|--file|)
             _filedir
             return 0
             ;;
         -c|--check)
-            # should take --checkdir, python path, inheritance into account...
             COMPREPLY=( $( compgen -W \
                 "$( command ls /usr/share/rpmlint/*Check.py* 2>/dev/null |
                     sed -e '/^AbstractCheck/d' \
@@ -34,7 +33,6 @@ _rpmlint()
             return 0
             ;;
         -I|--explain)
-            # should take --checkdir into account...
             COMPREPLY=( $( compgen -W "$( sed -e '1,/^addDetails/d' \
                 -ne "s/^'\([^'[:space:]]\{1,\}\)',\$/\1/p" \
                 /usr/share/rpmlint/*Check.py 2>/dev/null )" -- "$cur" ) ) #'
@@ -47,7 +45,7 @@ _rpmlint()
     esac
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W '--info --explain --check --all --checkdir
+        COMPREPLY=( $( compgen -W '--info --explain --check --all
                         --help --verbose --extractdir --version --noexception
                         --file --option' -- "$cur" ) )
     else

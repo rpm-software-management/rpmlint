@@ -1,14 +1,18 @@
 import os
 
 import pytest
-from rpmlint import SpecCheck
+from rpmlint.Filter import Filter
+from rpmlint.SpecCheck import SpecCheck
 
-from Testing import getTestedSpecPackage
+from Testing import CONFIG, getTestedSpecPackage
 
 
 @pytest.mark.parametrize('package', ['SpecCheck2', 'SpecCheck3'])
-def test_patch_not_applied(capsys, package):
+def test_patch_not_applied(package):
     pkg = getTestedSpecPackage(os.path.join('spec', package))
-    SpecCheck.check.check_spec(pkg, pkg.name)
-    out, err = capsys.readouterr()
+    CONFIG.info = True
+    output = Filter(CONFIG)
+    test = SpecCheck(CONFIG, output)
+    test.check_spec(pkg, pkg.name)
+    out = output.print_results(output.results)
     assert 'patch-not-applied' not in out

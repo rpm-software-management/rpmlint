@@ -51,6 +51,7 @@ setup(
     platforms=['Linux'],
     keywords=['RPM', '.spec', 'validator'],
 
+    install_requires=['pyxdg', 'ConfigObj'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-cov'],
 

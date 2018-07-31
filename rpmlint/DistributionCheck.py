@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #############################################################################
 # File          : DistributionCheck.py
 # Package       : rpmlint
@@ -10,71 +9,60 @@
 import re
 
 import rpm
-from rpmlint import Config
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printWarning
-
-
-man_regex = re.compile(r"/man(?:\d[px]?|n)/")
-info_regex = re.compile(r"(/usr/share|/usr)/info/")
-vendor = Config.getOption("Vendor")
-distribution = Config.getOption("Distribution")
-compress_ext = Config.getOption("CompressExtension", "bz2")
 
 
 class DistributionCheck(AbstractCheck):
 
-    def __init__(self):
-        AbstractCheck.__init__(self, "DistributionCheck")
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, "DistributionCheck")
+        self.man_regex = re.compile(r"/man(?:\d[px]?|n)/")
+        self.info_regex = re.compile(r"(/usr/share|/usr)/info/")
+        self.vendor = self.config.configuration['Vendor']
+        self.distribution = self.config.configuration['Distribution']
+        self.compress_ext = self.config.configuration['CompressExtension']
+        distribution_details_dict = {
+            'invalid-vendor':
+            'In the "%s" distribution, vendor should be "%s".' % (self.distribution, self.vendor),
+
+            'invalid-distribution':
+            'The distribution value should be "' + self.distribution + '".',
+
+            'manpage-not-compressed':
+            '''This manual page is not compressed with the %s compression method
+            (does not have the %s extension). If the compression does not happen
+            automatically when the package is rebuilt, make sure that you have the
+            appropriate rpm helper and/or config packages for your target distribution
+            installed and try rebuilding again; if it still does not happen automatically,
+            you can compress this file in the %%install section of the spec file.'''
+            % (self.compress_ext, self.compress_ext),
+
+            'infopage-not-compressed':
+            '''This info page is not compressed with the %s compression method
+            (does not have the %s extension). If the compression does not happen
+            automatically when the package is rebuilt, make sure that you have the
+            appropriate rpm helper and/or config packages for your target distribution
+            installed and try rebuilding again; if it still does not happen automatically,
+            you can compress this file in the %%install section of the spec file.'''
+            % (self.compress_ext, self.compress_ext),
+        }
+        self.output.error_details.update(distribution_details_dict)
 
     def check_binary(self, pkg):
-        if vendor and pkg[rpm.RPMTAG_VENDOR] != vendor:
-            printWarning(pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
+        if self.vendor and pkg[rpm.RPMTAG_VENDOR] != self.vendor:
+            self.output.add_info('W', pkg, "invalid-vendor", pkg[rpm.RPMTAG_VENDOR])
 
-        if distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != distribution:
-            printWarning(pkg, "invalid-distribution",
-                         pkg[rpm.RPMTAG_DISTRIBUTION])
+        if self.distribution and pkg[rpm.RPMTAG_DISTRIBUTION] != self.distribution:
+            self.output.add_info('W', pkg, "invalid-distribution", pkg[rpm.RPMTAG_DISTRIBUTION])
 
-        if compress_ext:
+        if self.compress_ext:
             for fname in pkg.files():
-                if man_regex.search(fname):
-                    if not fname.endswith(compress_ext):
-                        printWarning(pkg, 'manpage-not-compressed',
-                                     compress_ext, fname)
-                elif info_regex.search(fname) and \
+                if self.man_regex.search(fname):
+                    if not fname.endswith(self.compress_ext):
+                        self.output.add_info('W', pkg, 'manpage-not-compressed',
+                                             self.compress_ext, fname)
+                elif self.info_regex.search(fname) and \
                         not fname.endswith("/info/dir"):
-                    if not fname.endswith(compress_ext):
-                        printWarning(pkg, 'infopage-not-compressed',
-                                     compress_ext, fname)
-
-
-# Create an object to enable the auto registration of the test
-check = DistributionCheck()
-
-addDetails(
-'invalid-vendor',
-'In the "%s" distribution, vendor should be "%s".' % (distribution, vendor),
-
-'invalid-distribution',
-'The distribution value should be "' + distribution + '".',
-
-'manpage-not-compressed',
-'''This manual page is not compressed with the %s compression method
-(does not have the %s extension). If the compression does not happen
-automatically when the package is rebuilt, make sure that you have the
-appropriate rpm helper and/or config packages for your target distribution
-installed and try rebuilding again; if it still does not happen automatically,
-you can compress this file in the %%install section of the spec file.'''
-% (compress_ext, compress_ext),
-
-'infopage-not-compressed',
-'''This info page is not compressed with the %s compression method
-(does not have the %s extension). If the compression does not happen
-automatically when the package is rebuilt, make sure that you have the
-appropriate rpm helper and/or config packages for your target distribution
-installed and try rebuilding again; if it still does not happen automatically,
-you can compress this file in the %%install section of the spec file.'''
-% (compress_ext, compress_ext),
-)
-
-# DistributionCheck.py ends here
+                    if not fname.endswith(self.compress_ext):
+                        self.output.add_info('W', pkg, 'infopage-not-compressed',
+                                             self.compress_ext, fname)

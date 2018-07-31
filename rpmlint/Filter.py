@@ -1,136 +1,126 @@
-# -*- coding: utf-8 -*-
-#############################################################################
-# File          : Filter.py
-# Package       : rpmlint
-# Author        : Frederic Lepied
-# Created on    : Sat Oct 23 15:52:27 1999
-# Purpose       : filter the output of rpmlint to allow exceptions.
-#############################################################################
-
-import locale
+import re
 import textwrap
 
-from rpmlint import Config
 
-_rawout = None
-_diagnostic = list()
-_badness_score = 0
-printed_messages = {"I": 0, "W": 0, "E": 0}
+class Filter(object):
+    """
+    Class containing all printing/formatting/filtering of the rpmlint output.
+    Nothing gets printed out until the end of all runs and all errors are
+    sorted and formatted based on the rules specified by the user/config
+    """
 
+    def __init__(self, config):
+        # badness stuff
+        self.badness_threshold = config.configuration['BadnessThreshold']
+        self.badness = config.configuration['Scoring']
+        # filters regular expression string, compiled from configuration[filter]
+        self.filters_re = None
+        self.non_named_group_re = re.compile(r'[^\\](\()[^:]')
+        # compile filters regexp
+        self._populate_filter_regexp(config.configuration['Filters'])
+        # informative or quiet
+        self.info = config.info
+        # How many bad hits we already collected while collecting issues
+        self.score = 0
+        # Dictionary containing mapped values of descriptions for the errors.
+        # This must get populated by the tests for each of the issues it finds.
+        # You can populate this by having conffile that generates the
+        # dictionary content for you, or you can just pass the dictionary
+        self.error_details = {}
+        # Counter of how many issues we encountered
+        self.printed_messages = {"I": 0, "W": 0, "E": 0}
+        # Messages
+        self.results = list()
 
-def printInfo(pkg, reason, *details):
-    _print("I", pkg, reason, details)
+    def add_info(self, level, package, reason, *details):
+        """
+        Add the issue to the store for later usage
+        """
+        # we can be completely filtered for the reason
+        if self.filters_re and self.filters_re.search(reason):
+            return
 
+        # we can get badness treshold
+        badness = 0
+        if reason in self.badness:
+            badness = int(self.badness[reason])
+            # If we have any badness configured then we "stricten" and call the
+            # result Error. Otherwise we downgrade the error to Warn.
+            if badness > 0:
+                level = 'E'
+            elif badness <= 0 and level == 'E':
+                level = 'W'
+        # raise the counters
+        self.score += badness
+        self.printed_messages[level] += 1
+        # compile the message
+        line = '{}:'.format(package.current_linenum) if package.current_linenum else ''
+        arch = '.{}'.format(package.arch) if package.arch else ''
+        bad_output = ' (Badness: {})'.format(badness) if badness else ''
+        detail_output = ''
+        for detail in details:
+            if detail:
+                detail_output += ' {}'.format(detail)
+        result = '{}{}:{} {}: {}'.format(package.name, arch, line, level, reason)
+        result += bad_output
+        result += detail_output
+        self.results.append(result)
 
-def printWarning(pkg, reason, *details):
-    _print("W", pkg, reason, details)
+    def print_results(self, results):
+        """
+        Printout function to provide all the information about the specified
+        package as a return content.
+        If there is description to be provided it needs to be provided only
+        once per reason.
+        """
+        output = ""
+        results.sort(key=self.__diag_sortkey, reverse=True)
+        last_reason = ''
+        for diag in results:
+            if self.info:
+                reason = diag.split()[2]
+                # print out details for each reason we had
+                if reason != last_reason:
+                    if last_reason:
+                        output += self.get_description(last_reason)
+                    last_reason = reason
+            output += diag + '\n'
+        if self.info and last_reason:
+            output += self.get_description(last_reason)
+        return output
 
+    def get_description(self, reason):
+        """
+        Return description for specified result.
+        Empty content does not cause an issue and we just return empty content
+        """
+        description = ''
+        if reason in self.error_details:
+            # we need 2 enters at the end for whitespace purposes
+            description = textwrap.fill(self.error_details[reason], 78) + '\n\n'
+        return description
 
-def printError(pkg, reason, *details):
-    _print("E", pkg, reason, details)
+    def _populate_filter_regexp(self, filters):
+        """
+        From configuration Filters generate regexp we will use later for results
+        filtering/ignoring.
+        """
+        if not filters:
+            return
+        filters_re = '(?:' + filters[0] + ')'
+        for idx in range(1, len(filters)):
+            # to prevent named group overflow that happen when there is too
+            # many () in a single regexp: AssertionError: sorry, but this
+            # version only supports 100 named groups
+            if '(' in filters[idx]:
+                self.non_named_group_re.subn('(:?', filters[idx])
+            filters_re = filters_re + '|(?:' + filters[idx] + ')'
+        self.filters_re = re.compile(filters_re)
 
-
-def _print(msgtype, pkg, reason, details):
-    global _badness_score
-
-    threshold = badnessThreshold()
-
-    badness = 0
-    if threshold >= 0:
-        badness = Config.badness(reason)
-        # anything with badness is an error
-        if badness:
-            msgtype = 'E'
-        # errors without badness become warnings
-        elif msgtype == 'E':
-            msgtype = 'W'
-
-    ln = ""
-    if pkg.current_linenum is not None:
-        ln = "%s:" % pkg.current_linenum
-    arch = ""
-    if pkg.arch is not None:
-        arch = ".%s" % pkg.arch
-    s = "%s%s:%s %s: %s" % (pkg.name, arch, ln, msgtype, reason)
-    if badness:
-        s = s + " (Badness: %d)" % badness
-    for d in details:
-        s = s + " %s" % d
-    if _rawout:
-        print(s.encode(locale.getpreferredencoding(), "replace"),
-              file=_rawout)
-    if not Config.isFiltered(s):
-        printed_messages[msgtype] += 1
-        _badness_score += badness
-        if threshold >= 0:
-            _diagnostic.append(s + "\n")
-        else:
-            print(s)
-            if Config.info:
-                printDescriptions(reason)
-        return True
-
-    return False
-
-
-def printDescriptions(reason):
-    try:
-        d = _details[reason]
-        if d and d != '' and d != "\n":
-            print(textwrap.fill(d, 78))
-            print("")
-    except KeyError:
-        pass
-
-
-def _diag_sortkey(x):
-    xs = x.split()
-    return (xs[2], xs[1])
-
-
-def printAllReasons():
-    threshold = badnessThreshold()
-    if threshold < 0:
-        return False
-
-    global _diagnostic
-    _diagnostic.sort(key=_diag_sortkey, reverse=True)
-    last_reason = ''
-    for diag in _diagnostic:
-        if Config.info:
-            reason = diag.split()[2]
-            if reason != last_reason:
-                if len(last_reason):
-                    printDescriptions(last_reason)
-                last_reason = reason
-        print(diag)
-    if Config.info and len(last_reason):
-        printDescriptions(last_reason)
-    _diagnostic = list()
-    return _badness_score > threshold
-
-
-_details = {}
-
-
-def addDetails(*details):
-    for idx in range(int(len(details) / 2)):
-        if not details[idx * 2] in _details:
-            _details[details[idx * 2]] = details[idx * 2 + 1]
-
-
-def badnessScore():
-    return _badness_score
-
-
-def badnessThreshold():
-    return Config.getOption("BadnessThreshold", -1)
-
-
-def setRawOut(file):
-    global _rawout
-    if _rawout:
-        _rawout.close()
-    _rawout = open(file, "w")
-
-# Filter.py ends here
+    def __diag_sortkey(self, x):
+        """
+        Sorting helper, xs[1] is packagename line architecture
+                        xs[2] is the reason of the error
+        """
+        xs = x.split()
+        return (xs[2], xs[1])

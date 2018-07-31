@@ -34,13 +34,6 @@ check.
 \fB\-a\fR, \fB\-\-all\fR
 Check all installed packages.
 .TP
-\fB\-C\fR, \fB\-\-checkdir\fR=\fIdir\fR
-Insert \fIdir\fR to the front of the list of paths to load checks
-from, unless it is already in the list.  The default list of check
-dirs typically contains only /usr/share/rpmlint.  Directories in the
-check dirs list are also inserted to the front of the list of paths to
-load Python modules from when the check process begins.
-.TP
 \fB\-h\fR, \fB\-\-help\fR
 Display summary of command line options and exit.
 .TP
@@ -56,9 +49,6 @@ Display version information and exit.
 .TP
 \fB\-n\fR, \fB\-\-noexception\fR
 Ignore output filters.
-.TP
-\fB\-\-rawout\fR=\fIfile\fR
-Write unfiltered output to \fIfile\fR.
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fIconffile\fR
 Load user configuration from the specified file, default is

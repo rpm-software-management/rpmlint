@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #############################################################################
 # File          : ConfigCheck.py
 # Package       : rpmlint
@@ -8,13 +7,12 @@
 #############################################################################
 
 from rpmlint.AbstractCheck import AbstractCheck
-from rpmlint.Filter import addDetails, printError, printWarning
 
 
 class ConfigCheck(AbstractCheck):
-
-    def __init__(self):
-        AbstractCheck.__init__(self, "ConfigCheck")
+    def __init__(self, config, output):
+        AbstractCheck.__init__(self, config, output, "ConfigCheck")
+        self.output.error_details.update(config_details_dict)
 
     def check_binary(self, pkg):
         config_files = pkg.configFiles()
@@ -22,34 +20,27 @@ class ConfigCheck(AbstractCheck):
 
         for c in config_files:
             if c.startswith("/var/lib/games/"):
-                printError(pkg, "score-file-must-not-be-conffile", c)
+                self.output.add_info('E', pkg, "score-file-must-not-be-conffile", c)
             elif not c.startswith("/etc/") and not c.startswith("/var/"):
-                printWarning(pkg, "non-etc-or-var-file-marked-as-conffile", c)
-
+                self.output.add_info('W', pkg, "non-etc-or-var-file-marked-as-conffile", c)
             if c not in noreplace_files:
-                printWarning(pkg, "conffile-without-noreplace-flag", c)
+                self.output.add_info('W', pkg, "conffile-without-noreplace-flag", c)
 
-
-# Create an object to enable the auto registration of the test
-check = ConfigCheck()
 
 # Add information about checks
-addDetails(
-'score-file-must-not-be-conffile',
+config_details_dict = {
+'score-file-must-not-be-conffile':
 """A file in /var/lib/games/ is a configuration file. Store your conf
 files in /etc instead.""",
 
-'non-etc-or-var-file-marked-as-conffile',
+'non-etc-or-var-file-marked-as-conffile':
 """A file not in /etc or /var is marked as being a configuration file.
 Please put your conf files in /etc or /var.""",
 
-'conffile-without-noreplace-flag',
+'conffile-without-noreplace-flag':
 """A configuration file is stored in your package without the noreplace flag.
 A way to resolve this is to put the following in your SPEC file:
 
 %config(noreplace) /etc/your_config_file_here
 """,
-
-)
-
-# ConfigCheck.py ends here
+}
