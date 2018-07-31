@@ -20,7 +20,7 @@ from rpmlint.Pkg import b2s
 
 class DocFilesCheck(AbstractCheck):
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'DocFilesCheck')
+        super().__init__(config, output, 'DocFilesCheck')
         self.output.error_details.update(docfiles_details_dict)
 
     def __checkRequirements(self, pkg):

@@ -69,7 +69,7 @@ def check_syntax_script(prog, commandline, script):
 class PostCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'PostCheck')
+        super().__init__(config, output, 'PostCheck')
         self.valid_shells = config.configuration['ValidShells']
         self.empty_shells = config.configuration['ValidEmptyShells']
         post_details_dict = {

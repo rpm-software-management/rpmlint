@@ -20,7 +20,7 @@ name_regex = re.compile('^[a-z0-9.+-]+$')
 class LSBCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, "LSBCheck")
+        super().__init__(config, output, "LSBCheck")
         self.output.error_details.update(lsb_details_dict)
 
     def check(self, pkg):
