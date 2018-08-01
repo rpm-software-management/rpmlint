@@ -75,7 +75,7 @@ class BinaryInfo(object):
         self.mktemp = False
         self.forbidden_functions = self.config.configuration['WarnOnFunction']
         if self.forbidden_functions:
-            for name, func in self.forbidden_functions.iteritems():
+            for name, func in self.forbidden_functions.items():
                 # precompile regexps
                 f_name = func['f_name']
                 func['f_regex'] = create_nonlibc_regexp_call(f_name)
@@ -161,7 +161,7 @@ class BinaryInfo(object):
                     self.chroot = True
 
                 if self.forbidden_functions:
-                    for r_name, func in self.forbidden_functions.iteritems():
+                    for r_name, func in self.forbidden_functions.items():
                         ret = func['f_regex'].search(line)
                         if ret:
                             self.forbidden_calls.append(r_name)
