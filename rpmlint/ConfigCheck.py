@@ -11,7 +11,7 @@ from rpmlint.AbstractCheck import AbstractCheck
 
 class ConfigCheck(AbstractCheck):
     def __init__(self, config, output):
-        super().__init__(config, output, "ConfigCheck")
+        super().__init__(config, output, 'ConfigCheck')
         self.output.error_details.update(config_details_dict)
 
     def check_binary(self, pkg):
@@ -19,12 +19,12 @@ class ConfigCheck(AbstractCheck):
         noreplace_files = pkg.noreplaceFiles()
 
         for c in config_files:
-            if c.startswith("/var/lib/games/"):
-                self.output.add_info('E', pkg, "score-file-must-not-be-conffile", c)
-            elif not c.startswith("/etc/") and not c.startswith("/var/"):
-                self.output.add_info('W', pkg, "non-etc-or-var-file-marked-as-conffile", c)
+            if c.startswith('/var/lib/games/'):
+                self.output.add_info('E', pkg, 'score-file-must-not-be-conffile', c)
+            elif not c.startswith('/etc/') and not c.startswith('/var/'):
+                self.output.add_info('W', pkg, 'non-etc-or-var-file-marked-as-conffile', c)
             if c not in noreplace_files:
-                self.output.add_info('W', pkg, "conffile-without-noreplace-flag", c)
+                self.output.add_info('W', pkg, 'conffile-without-noreplace-flag', c)
 
 
 # Add information about checks

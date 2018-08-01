@@ -21,7 +21,7 @@ chkconfig_regex = re.compile(r'^[^#]*(chkconfig|add-service|del-service)', re.MU
 status_regex = re.compile(r'^[^#]*status', re.MULTILINE)
 reload_regex = re.compile(r'^[^#]*reload', re.MULTILINE)
 lsb_tags_regex = re.compile(r'^# ([\w-]+):\s*(.*?)\s*$')
-lsb_cont_regex = re.compile(r'^#(?:%s|  )(.*?)\s*$' % "\t")
+lsb_cont_regex = re.compile(r'^#(?:%s|  )(.*?)\s*$' % '\t')
 
 LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop', 'Should-Start',
                 'Should-Stop', 'Default-Start', 'Default-Stop',
@@ -51,7 +51,7 @@ class InitScriptCheck(AbstractCheck):
             if pkgfile.mode & 0o500 != 0o500:
                 self.output.add_info('E', pkg, 'init-script-non-executable', fname)
 
-            if "." in basename:
+            if '.' in basename:
                 self.output.add_info('E', pkg, 'init-script-name-with-dot', fname)
 
             # check chkconfig call in %post and %preun
@@ -84,7 +84,7 @@ class InitScriptCheck(AbstractCheck):
             except Exception as e:
                 self.output.add_info('W', pkg, 'read-error', e)
                 continue
-            content_str = "".join(content)
+            content_str = ''.join(content)
             for line in content:
                 line = line[:-1]  # chomp
                 # TODO check if there is only one line like this
@@ -100,7 +100,7 @@ class InitScriptCheck(AbstractCheck):
                     for kw in RECOMMENDED_LSB_KEYWORDS:
                         if kw not in lsb_tags:
                             self.output.add_info('W', pkg, 'missing-lsb-keyword',
-                                                 "%s in %s" % (kw, fname))
+                                                 '%s in %s' % (kw, fname))
                 if in_lsb_tag:
                     # TODO maybe we do not have to handle this ?
                     if lastline.endswith('\\'):
@@ -115,8 +115,8 @@ class InitScriptCheck(AbstractCheck):
                                                      pkg, 'malformed-line-in-lsb-comment-block',
                                                      line)
                             else:
-                                lsb_tags["Description"][-1] += \
-                                    " " + cres.group(1)
+                                lsb_tags['Description'][-1] += \
+                                    ' ' + cres.group(1)
                         else:
                             tag = res.group(1)
                             if not tag.startswith('X-') and \
@@ -168,8 +168,8 @@ class InitScriptCheck(AbstractCheck):
                                 self.output.add_info('E', pkg, 'incoherent-subsys', fname,
                                                      name)
 
-            if "Default-Start" in lsb_tags:
-                if "".join(lsb_tags["Default-Start"]):
+            if 'Default-Start' in lsb_tags:
+                if ''.join(lsb_tags['Default-Start']):
                     self.output.add_info('W', pkg, 'service-default-enabled', fname)
 
             if not status_found:
@@ -184,7 +184,7 @@ class InitScriptCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'subsys-unsupported', fname)
 
         if len(initscript_list) == 1:
-            pkgname = re.sub("-sysvinit$", "", pkg.name.lower())
+            pkgname = re.sub('-sysvinit$', '', pkg.name.lower())
             goodnames = (pkgname, pkgname + 'd')
             if initscript_list[0] not in goodnames:
                 self.output.add_info('W', pkg, 'incoherent-init-script-name',
@@ -193,77 +193,77 @@ class InitScriptCheck(AbstractCheck):
 
 init_detals_dict = {
 'init-script-without-chkconfig-postin':
-'''The package contains an init script but doesn't contain a %post with
-a call to chkconfig.''',
+"""The package contains an init script but doesn't contain a %post with
+a call to chkconfig.""",
 
 'postin-without-chkconfig':
-'''The package contains an init script but doesn't call chkconfig in its
-%post script.''',
+"""The package contains an init script but doesn't call chkconfig in its
+%post script.""",
 
 'init-script-without-chkconfig-preun':
-'''The package contains an init script but doesn't contain a %preun with
-a call to chkconfig.''',
+"""The package contains an init script but doesn't contain a %preun with
+a call to chkconfig.""",
 
 'preun-without-chkconfig':
-'''The package contains an init script but doesn't call chkconfig in its
-%preun script.''',
+"""The package contains an init script but doesn't call chkconfig in its
+%preun script.""",
 
 'missing-lsb-keyword':
-'''The package contains an init script that does not contain one of the LSB
+"""The package contains an init script that does not contain one of the LSB
 init script comment block convention keywords that are recommendable for all
 init scripts.  If there is nothing to add to a keyword's value, include the
 keyword in the script with an empty value.  Note that as of version 3.2, the
-LSB specification does not mandate presence of any keywords.''',
+LSB specification does not mandate presence of any keywords.""",
 
 'no-status-entry':
-'''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'status' entry, which is necessary for good functionality.''',
+"""In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'status' entry, which is necessary for good functionality.""",
 
 'no-reload-entry':
-'''In your init script (/etc/rc.d/init.d/your_file), you don't
-have a 'reload' entry, which is necessary for good functionality.''',
+"""In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'reload' entry, which is necessary for good functionality.""",
 
 'no-chkconfig-line':
-'''The init script doesn't contain a chkconfig line to specify the runlevels
-at which to start and stop it.''',
+"""The init script doesn't contain a chkconfig line to specify the runlevels
+at which to start and stop it.""",
 
 'no-default-runlevel':
-'''The default runlevel isn't specified in the init script.''',
+"""The default runlevel isn't specified in the init script.""",
 
 'service-default-enabled':
-'''The service is enabled by default after "chkconfig --add"; for security
-reasons, most services should not be. Use "-" as the default runlevel in the
-init script's "chkconfig:" line and/or remove the "Default-Start:" LSB keyword
-to fix this if appropriate for this service.''',
+"""The service is enabled by default after 'chkconfig --add'; for security
+reasons, most services should not be. Use '-' as the default runlevel in the
+init script's 'chkconfig:' line and/or remove the 'Default-Start:' LSB keyword
+to fix this if appropriate for this service.""",
 
 'subsys-unsupported':
-'''The init script uses /var/lock/subsys which is not supported by
-this distribution.''',
+"""The init script uses /var/lock/subsys which is not supported by
+this distribution.""",
 
 'subsys-not-used':
-'''While your daemon is running, you have to put a lock file in
+"""While your daemon is running, you have to put a lock file in
 /var/lock/subsys/. To see an example, look at this directory on your
-machine and examine the corresponding init scripts.''',
+machine and examine the corresponding init scripts.""",
 
 'incoherent-subsys':
-'''The filename of your lock file in /var/lock/subsys/ is incoherent
+"""The filename of your lock file in /var/lock/subsys/ is incoherent
 with your actual init script name. For example, if your script name
 is httpd, you have to use 'httpd' as the filename in your subsys directory.
 It is also possible that rpmlint gets this wrong, especially if the init
 script contains nontrivial shell variables and/or assignments.  These
 cases usually manifest themselves when rpmlint reports that the subsys name
 starts a with '$'; in these cases a warning instead of an error is reported
-and you should check the script manually.''',
+and you should check the script manually.""",
 
 'incoherent-init-script-name':
-'''The init script name should be the same as the package name in lower case,
-or one with 'd' appended if it invokes a process by that name.''',
+"""The init script name should be the same as the package name in lower case,
+or one with 'd' appended if it invokes a process by that name.""",
 
 'init-script-name-with-dot':
-'''The init script name should not contain a dot in its name. Some versions
-of chkconfig don't work as expected with init script names like that.''',
+"""The init script name should not contain a dot in its name. Some versions
+of chkconfig don't work as expected with init script names like that.""",
 
 'init-script-non-executable':
-'''The init script should have at least the execution bit set for root
-in order for it to run at boot time.''',
+"""The init script should have at least the execution bit set for root
+in order for it to run at boot time.""",
 }

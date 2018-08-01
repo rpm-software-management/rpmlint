@@ -17,7 +17,7 @@ class Config(object):
     Class wrapping testing loading and parsing.
     By default it loads all default locations and initializes basic testing
     layout for the rpmlint binary.
-    Based on the opening order "newer" configuration takes precedence over
+    Based on the opening order 'newer' configuration takes precedence over
     already existing one.
     """
 

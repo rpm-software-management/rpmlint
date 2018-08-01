@@ -22,24 +22,24 @@ class ZipCheck(AbstractCheck):
     classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
 
     def __init__(self, config, output):
-        super().__init__(config, output, "ZipCheck")
+        super().__init__(config, output, 'ZipCheck')
         zip_details_dict = {
             'bad-crc-in-zip':
-            '''The reported file in the zip fails the CRC check. Usually this is a
-            sign of a corrupt zip file.''',
+            """The reported file in the zip fails the CRC check. Usually this is a
+            sign of a corrupt zip file.""",
             'uncompressed-zip':
-            '''The zip file is not compressed.''',
+            """The zip file is not compressed.""",
             'class-path-in-manifest':
-            '''The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
+            """The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
             These entries do not work with older Java versions and even if they do work,
-            they are inflexible and usually cause nasty surprises.''',
+            they are inflexible and usually cause nasty surprises.""",
             'jar-indexed':
-            '''The jar file is indexed, ie. it contains the META-INF/INDEX.LIST file.
-            These files are known to cause problems with some older Java versions.''',
+            """The jar file is indexed, ie. it contains the META-INF/INDEX.LIST file.
+            These files are known to cause problems with some older Java versions.""",
             'jar-not-indexed':
-            '''The jar file is not indexed, ie. it does not contain the META-INF/INDEX.LIST
+            """The jar file is not indexed, ie. it does not contain the META-INF/INDEX.LIST
             file.  Indexed jars speed up the class searching process of classloaders
-            in some situations.''',
+            in some situations.""",
         }
         self.output.error_details.update(zip_details_dict)
         self.want_indexed_jars = config.configuration['UseIndexedJars']

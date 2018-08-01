@@ -5,7 +5,7 @@
 # They are named as DEFAULT_<theoption>
 DEFAULTS = {}
 DICT_DEFAULTS = {}
-DEFAULTS['Checks'] = '''
+DEFAULTS['Checks'] = """
     DistributionCheck
     TagsCheck
     BinariesCheck
@@ -26,14 +26,14 @@ DEFAULTS['Checks'] = '''
     RpmFileCheck
     MenuXDGCheck
     AppDataCheck
-'''
-DEFAULTS['ExtraMenuNeeds'] = '''
+"""
+DEFAULTS['ExtraMenuNeeds'] = """
     gnome
     icewm
     kde
     wmaker
-'''
-DEFAULTS['ValidMenuSections'] = '''
+"""
+DEFAULTS['ValidMenuSections'] = """
     Office/Accessories
     Office/Address Books
     Office/Communications/Fax
@@ -127,8 +127,8 @@ DEFAULTS['ValidMenuSections'] = '''
     More Applications/Sciences/Robotics
     More Applications/Sciences/Other
     More Applications/Other
-'''
-DEFAULTS['InvalidRequires'] = '''
+"""
+DEFAULTS['InvalidRequires'] = """
     ^is$
     ^not$
     ^owned$
@@ -136,8 +136,8 @@ DEFAULTS['InvalidRequires'] = '''
     ^any$
     ^package$
     r'^libsafe\.so\.'
-'''
-DEFAULTS['DisallowedDirs'] = '''
+"""
+DEFAULTS['DisallowedDirs'] = """
     /home
     /mnt
     /opt
@@ -148,8 +148,8 @@ DEFAULTS['DisallowedDirs'] = '''
     /var/lock
     /var/run
     /var/tmp
-'''
-DEFAULTS['StandardGroups'] = '''
+"""
+DEFAULTS['StandardGroups'] = """
     root
     bin
     daemon
@@ -163,8 +163,8 @@ DEFAULTS['StandardGroups'] = '''
     uucp
     man
     nobody
-'''
-DEFAULTS['StandardUsers'] = '''
+"""
+DEFAULTS['StandardUsers'] = """
     root
     bin
     daemon
@@ -179,29 +179,29 @@ DEFAULTS['StandardUsers'] = '''
     operator
     man
     nobody
-'''
-DEFAULTS['SystemLibPaths'] = '''
+"""
+DEFAULTS['SystemLibPaths'] = """
     /lib
     /usr/lib
     /usr/X11R6/lib
     /lib64
     /usr/lib64
     /usr/X11R6/lib64
-'''
-DEFAULTS['ValidEmptyShells'] = '''
+"""
+DEFAULTS['ValidEmptyShells'] = """
     /sbin/ldconfig
-'''
-DEFAULTS['ValidShells'] = '''
+"""
+DEFAULTS['ValidShells'] = """
     <lua>
     /bin/sh
     /bin/bash
     /sbin/sash
     /usr/bin/perl
     /sbin/ldconfig
-'''
-DEFAULTS['ValidLicenses'] = '''
+"""
+DEFAULTS['ValidLicenses'] = """
     # OSI approved licenses, http://www.opensource.org/licenses/ (unversioned,
-    # trailing "license" dropped based on fuzzy logic, and in well-known cases,
+    # trailing 'license' dropped based on fuzzy logic, and in well-known cases,
     # the abbreviation used instead of the full name, but list kept sorted by
     # the full name).  Updated 2010-02-01.
     Academic Free License
@@ -302,7 +302,7 @@ DEFAULTS['ValidLicenses'] = '''
     Non-distributable
     Proprietary
     Shareware
-'''
+"""
 DICT_DEFAULTS['IconPath'] = {
     '/usr/share/icons/': {
         'path': '/usr/share/icons/',

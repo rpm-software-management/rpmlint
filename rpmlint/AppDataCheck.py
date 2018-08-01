@@ -13,11 +13,11 @@ class AppDataCheck(AbstractFilesCheck):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        super().__init__(config, output, "AppDataCheck", r"/usr/share/appdata/.*\.appdata.xml$")
+        super().__init__(config, output, 'AppDataCheck', r'/usr/share/appdata/.*\.appdata.xml$')
         self.appdata_checker = self.config.configuration['AppDataChecker']
         appdata_details_dict = {
             'invalid-appdata-file':
-            'appdata file is not valid, check with {}'.format(" ".join(self.appdata_checker)),
+            'appdata file is not valid, check with {}'.format(' '.join(self.appdata_checker)),
         }
         self.output.error_details.update(appdata_details_dict)
 
@@ -26,8 +26,8 @@ class AppDataCheck(AbstractFilesCheck):
         f = root + filename
 
         checker = self.appdata_checker
-        if checker[0] == "appstream-util" and not self.network_enabled:
-            checker += ("--nonet",)
+        if checker[0] == 'appstream-util' and not self.network_enabled:
+            checker += ('--nonet',)
         validation_failed = False
         try:
             st = getstatusoutput(checker + (f,))

@@ -5,11 +5,11 @@ from rpmlint.AbstractCheck import AbstractCheck
 
 class RpmFileCheck(AbstractCheck):
     def __init__(self, config, output):
-        super().__init__(config, output, "RpmFileCheck")
+        super().__init__(config, output, 'RpmFileCheck')
         rpmfile_details_dict = {
             'filename-too-long-for-joliet':
-            '''This filename is too long to fit on a joliet filesystem (limit is 64 unicode
-        chars).''',
+            """This filename is too long to fit on a joliet filesystem (limit is 64 unicode
+        chars).""",
         }
         self.output.error_details.update(rpmfile_details_dict)
 

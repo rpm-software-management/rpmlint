@@ -21,7 +21,7 @@ class MenuXDGCheck(AbstractFilesCheck):
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
         AbstractFilesCheck.__init__(
-            self, config, output, "MenuXDGCheck", r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
+            self, config, output, 'MenuXDGCheck', r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
         self.output.error_details.update(menuxdg_details_dict)
 
     def parse_desktop_file(self, pkg, root, f, filename):
@@ -85,23 +85,23 @@ class MenuXDGCheck(AbstractFilesCheck):
 
 menuxdg_details_dict = {
 'invalid-desktopfile':
-'''.desktop file is not valid, check with desktop-file-validate''',
+""".desktop file is not valid, check with desktop-file-validate""",
 
 'non-utf8-desktopfile':
-'''.desktop file is not encoded in UTF-8''',
+""".desktop file is not encoded in UTF-8""",
 
 'desktopfile-without-binary':
-'''the .desktop file is for a file not present in the package. You
-should check the requires or see if this is not a error''',
+"""the .desktop file is for a file not present in the package. You
+should check the requires or see if this is not a error""",
 
 'desktopfile-duplicate-section':
-'''The .desktop file contains the mentioned section name twice, which
-can trigger parsing ambiguities. Remove the duplicate.''',
+"""The .desktop file contains the mentioned section name twice, which
+can trigger parsing ambiguities. Remove the duplicate.""",
 
 'desktopfile-duplicate-option':
-'''The .desktop file contains the mentioned option key twice,
-which can trigger parsing ambiguities. Remove the duplicate.''',
+"""The .desktop file contains the mentioned option key twice,
+which can trigger parsing ambiguities. Remove the duplicate.""",
 
 'desktopfile-missing-header':
-'''The .desktop file should start with a section header.''',
+"""The .desktop file should start with a section header.""",
 }

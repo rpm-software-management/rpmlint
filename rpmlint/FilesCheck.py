@@ -328,7 +328,7 @@ def python_bytecode_to_script(path):
 def script_interpreter(chunk):
     res = shebang_regex.search(chunk) if chunk else None
     return (b2s(res.group(1)), b2s(res.group(2)).strip()) \
-        if res and res.start() == 0 else (None, "")
+        if res and res.start() == 0 else (None, '')
 
 
 class FilesCheck(AbstractCheck):
@@ -351,19 +351,19 @@ class FilesCheck(AbstractCheck):
         self.disallowed_dirs = self.config.configuration['DisallowedDirs']
         self.output.error_details.update({
             'non-standard-uid':
-            '''A file in this package is owned by a non standard user.
+            """A file in this package is owned by a non standard user.
             Standard users are:
-            %s.''' % ", ".join(self.standard_users),
+            %s.""" % ', '.join(self.standard_users),
 
             'non-standard-gid':
-            '''A file in this package is owned by a non standard group.
+            """A file in this package is owned by a non standard group.
             Standard groups are:
-            %s.''' % ", ".join(self.standard_groups),
+            %s.""" % ', '.join(self.standard_groups),
         })
         for i in self.disallowed_dirs:
             self.output.error_details.update({'dir-or-file-in-%s' % '-'.join(i.split('/')[1:]):
-                                             '''A file in the package is located in %s. It's not permitted
-        for packages to install files in this directory.''' % i})
+                                             """A file in the package is located in %s. It's not permitted
+        for packages to install files in this directory.""" % i})
 
     def peek(self, filename, pkg, length=1024):
         """
@@ -461,7 +461,7 @@ class FilesCheck(AbstractCheck):
         # to duplicate binary check, but yes for man page existence check)
         bindir_exes = {}
 
-        # All man page "base" names (without section etc extensions)
+        # All man page 'base' names (without section etc extensions)
         man_basenames = set()
 
         for f, pkgfile in files.items():
@@ -484,7 +484,7 @@ class FilesCheck(AbstractCheck):
 
             if not self.module_rpms_ok and kernel_modules_regex.search(f) and not \
                     is_kernel_package:
-                self.output.add_info('E', pkg, "kernel-modules-not-in-kernel-packages", f)
+                self.output.add_info('E', pkg, 'kernel-modules-not-in-kernel-packages', f)
 
             for i in self.disallowed_dirs:
                 if f.startswith(i):
@@ -511,7 +511,7 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 self.output.add_info('E', pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f) and not f.startswith("/etc/skel/") and not f.endswith("/.build-id"):
+            elif hidden_file_regex.search(f) and not f.startswith('/etc/skel/') and not f.endswith('/.build-id'):
                 self.output.add_info('W', pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 self.output.add_info('W', pkg, 'manifest-in-perl-module', f)
@@ -525,14 +525,14 @@ class FilesCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'incoherent-logrotate-file', f)
 
             deps = [x[0] for x in pkg.requires() + pkg.recommends() + pkg.suggests()]
-            if res and not ('logrotate' in deps) and pkg.name != "logrotate":
-                self.output.add_info('E', pkg, 'missing-dependency-to-logrotate', "for logrotate script", f)
+            if res and not ('logrotate' in deps) and pkg.name != 'logrotate':
+                self.output.add_info('E', pkg, 'missing-dependency-to-logrotate', 'for logrotate script', f)
             if f.startswith('/etc/cron.') \
-               and not ('cron' in deps) and pkg.name != "cron":
-                self.output.add_info('E', pkg, 'missing-dependency-to-cron', "for cron script", f)
+               and not ('cron' in deps) and pkg.name != 'cron':
+                self.output.add_info('E', pkg, 'missing-dependency-to-cron', 'for cron script', f)
             if f.startswith('/etc/xinet.d/') \
-               and not ('xinetd' in deps) and pkg.name != "xinetd":
-                self.output.add_info('E', pkg, 'missing-dependency-to-xinetd', "for xinet.d script", f)
+               and not ('xinetd' in deps) and pkg.name != 'xinetd':
+                self.output.add_info('E', pkg, 'missing-dependency-to-xinetd', 'for xinet.d script', f)
 
             if link != '':
                 ext = compr_regex.search(link)
@@ -559,17 +559,17 @@ class FilesCheck(AbstractCheck):
                 # set[ug]id bit check
                 if stat.S_ISGID & mode or stat.S_ISUID & mode:
                     if stat.S_ISUID & mode:
-                        self.output.add_info('E', pkg, 'setuid-binary', f, user, "%o" % perm)
+                        self.output.add_info('E', pkg, 'setuid-binary', f, user, '%o' % perm)
                     if stat.S_ISGID & mode:
                         if not (group == 'games' and
                                 (games_path_regex.search(f) or
                                  self.games_group_regex.search(
                                     pkg[rpm.RPMTAG_GROUP]))):
                             self.output.add_info('E', pkg, 'setgid-binary', f, group,
-                                                 "%o" % perm)
+                                                 '%o' % perm)
                     if mode & 0o777 != 0o755:
                         self.output.add_info('E', pkg, 'non-standard-executable-perm', f,
-                                             "%o" % perm)
+                                             '%o' % perm)
 
                 if not devel_pkg:
                     if lib_path_regex.search(f):
@@ -679,10 +679,10 @@ class FilesCheck(AbstractCheck):
                 if res:
                     if not mode_is_exec:
                         self.output.add_info('W', pkg, 'non-executable-in-bin', f,
-                                             "%o" % perm)
+                                             '%o' % perm)
                     else:
                         exe = res.group(1)
-                        if "/" not in exe:
+                        if '/' not in exe:
                             bindir_exes.setdefault(exe, []).append(f)
 
                 if (not devel_pkg and not is_doc and
@@ -696,13 +696,13 @@ class FilesCheck(AbstractCheck):
                             ok_nonreadable = True
                             break
                     if not ok_nonreadable:
-                        self.output.add_info('E', pkg, 'non-readable', f, "%o" % perm)
+                        self.output.add_info('E', pkg, 'non-readable', f, '%o' % perm)
                 if size == 0 and not normal_zero_length_regex.search(f) and \
                         f not in ghost_files:
                     self.output.add_info('E', pkg, 'zero-length', f)
 
                 if mode & stat.S_IWOTH:
-                    self.output.add_info('E', pkg, 'world-writable', f, "%o" % perm)
+                    self.output.add_info('E', pkg, 'world-writable', f, '%o' % perm)
 
                 if not perl_dep_error:
                     res = perl_regex.search(f)
@@ -745,8 +745,8 @@ class FilesCheck(AbstractCheck):
                                 # issue # an error, otherwise a warning.
                                 msg = (pkg,
                                        'python-bytecode-wrong-magic-value',
-                                       f, "expected %s (%s), found %d (%s)" %
-                                       (" or ".join(map(str, exp_magic)),
+                                       f, 'expected %s (%s), found %d (%s)' %
+                                       (' or '.join(map(str, exp_magic)),
                                         exp_version or self.python_default_version,
                                         found_magic, found_version))
                                 if exp_version is not None:
@@ -776,7 +776,7 @@ class FilesCheck(AbstractCheck):
                 # normal executable check
                 if mode & stat.S_IXUSR and perm != 0o755:
                     self.output.add_info('E', pkg, 'non-standard-executable-perm',
-                                         f, "%o" % perm)
+                                         f, '%o' % perm)
                 if mode_is_exec:
                     if f in config_files:
                         self.output.add_info('E', pkg, 'executable-marked-as-config-file', f)
@@ -814,17 +814,17 @@ class FilesCheck(AbstractCheck):
                             '-P-c -mandoc -w%s >%s' %
                             (catcmd(f), shquote(pkgfile.path),
                              shquote(self.man_warn_category), os.devnull),
-                            shell=True, lc_all="en_US.UTF-8")
-                        for line in cmd[1].split("\n"):
+                            shell=True, lc_all='en_US.UTF-8')
+                        for line in cmd[1].split('\n'):
                             res = man_warn_regex.search(line)
                             if not res or man_nowarn_regex.search(line):
                                 continue
-                            self.output.add_info('W', pkg, "manual-page-warning", f,
+                            self.output.add_info('W', pkg, 'manual-page-warning', f,
                                                  line[res.end(1):])
 
-                if f.endswith(".svgz") and f[0:-1] not in files \
+                if f.endswith('.svgz') and f[0:-1] not in files \
                         and scalable_icon_regex.search(f):
-                    self.output.add_info('W', pkg, "gzipped-svg-icon", f)
+                    self.output.add_info('W', pkg, 'gzipped-svg-icon', f)
 
                 if f.endswith('.pem') and f not in ghost_files:
                     if pkg.grep(start_certificate_regex, f):
@@ -845,7 +845,7 @@ class FilesCheck(AbstractCheck):
                                                  interpreter, interpreter_args)
                         if mode_is_exec:
                             self.output.add_info('E', pkg, 'executable-sourced-script',
-                                                 f, "%o" % perm)
+                                                 f, '%o' % perm)
                     # ...but executed ones should
                     elif interpreter or mode_is_exec or script_regex.search(f):
                         if interpreter:
@@ -865,9 +865,9 @@ class FilesCheck(AbstractCheck):
                             self.output.add_info('E', pkg, 'script-without-shebang', f)
 
                         if not mode_is_exec and not is_doc and \
-                                interpreter and interpreter.startswith("/"):
+                                interpreter and interpreter.startswith('/'):
                             self.output.add_info('E', pkg, 'non-executable-script', f,
-                                                 "%o" % perm, interpreter,
+                                                 '%o' % perm, interpreter,
                                                  interpreter_args)
                         if b'\r' in chunk:
                             self.output.add_info('E', pkg, 'wrong-script-end-of-line-encoding', f)
@@ -893,12 +893,12 @@ class FilesCheck(AbstractCheck):
             # normal dir check
             elif stat.S_ISDIR(mode):
                 if mode & 0o1002 == 2:  # world writable w/o sticky bit
-                    self.output.add_info('E', pkg, 'world-writable', f, "%o" % perm)
+                    self.output.add_info('E', pkg, 'world-writable', f, '%o' % perm)
                 if perm != 0o755:
-                    self.output.add_info('E', pkg, 'non-standard-dir-perm', f, "%o" % perm)
+                    self.output.add_info('E', pkg, 'non-standard-dir-perm', f, '%o' % perm)
                 if pkg.name not in filesys_packages and f in STANDARD_DIRS:
                     self.output.add_info('E', pkg, 'standard-dir-owned-by-package', f)
-                if hidden_file_regex.search(f) and not f.endswith("/.build-id"):
+                if hidden_file_regex.search(f) and not f.endswith('/.build-id'):
                     self.output.add_info('W', pkg, 'hidden-file-or-dir', f)
 
             # symbolic link check
@@ -915,7 +915,7 @@ class FilesCheck(AbstractCheck):
                     res = bin_regex.search(f)
                     if res:
                         exe = res.group(1)
-                        if "/" not in exe:
+                        if '/' not in exe:
                             bindir_exes.setdefault(exe, [])
 
                 # absolute link
@@ -1020,264 +1020,264 @@ class FilesCheck(AbstractCheck):
 
         for exe, paths in bindir_exes.items():
             if len(paths) > 1:
-                self.output.add_info('W', pkg, "duplicate-executable", exe, paths)
+                self.output.add_info('W', pkg, 'duplicate-executable', exe, paths)
             if exe not in man_basenames:
-                self.output.add_info('W', pkg, "no-manual-page-for-binary", exe)
+                self.output.add_info('W', pkg, 'no-manual-page-for-binary', exe)
 
 
 files_details_dict = {
 'no-documentation':
-'''The package contains no documentation (README, doc, etc).
-You have to include documentation files.''',
+"""The package contains no documentation (README, doc, etc).
+You have to include documentation files.""",
 
 'not-listed-as-documentation':
-'''The documentation files of this package are not listed with
-the standard %doc tag.''',
+"""The documentation files of this package are not listed with
+the standard %doc tag.""",
 
 'library-without-ldconfig-postin':
-'''This package contains a library and provides no %post scriptlet containing
-a call to ldconfig.''',
+"""This package contains a library and provides no %post scriptlet containing
+a call to ldconfig.""",
 
 'postin-without-ldconfig':
-'''This package contains a library and its %post scriptlet doesn't call
-ldconfig.''',
+"""This package contains a library and its %post scriptlet doesn't call
+ldconfig.""",
 
 'library-without-ldconfig-postun':
-'''This package contains a library and provides no %postun scriptlet containing
-a call to ldconfig.''',
+"""This package contains a library and provides no %postun scriptlet containing
+a call to ldconfig.""",
 
 'postun-without-ldconfig':
-'''This package contains a library and its %postun doesn't call ldconfig.''',
+"""This package contains a library and its %postun doesn't call ldconfig.""",
 
 'info-files-without-install-info-postin':
-'''This package contains info files and provides no %post scriptlet containing
-a call to install-info.''',
+"""This package contains info files and provides no %post scriptlet containing
+a call to install-info.""",
 
 'postin-without-install-info':
 'This package contains info files and its %post doesn\'t call install-info.',
 
 'info-files-without-install-info-postun':
-'''This package contains info files and provides no %postun scriptlet
-containing a call to install-info.''',
+"""This package contains info files and provides no %postun scriptlet
+containing a call to install-info.""",
 
 'postun-without-install-info':
-'''This package contains info files and its %postun doesn't call
-install-info.''',
+"""This package contains info files and its %postun doesn't call
+install-info.""",
 
 'perl-temp-file':
-'''You have a perl temporary file in your package. Usually, this
-file is beginning with a dot (.) and contain "perl" in its name.''',
+"""You have a perl temporary file in your package. Usually, this
+file is beginning with a dot (.) and contain 'perl' in its name.""",
 
 'non-ghost-in-run':
-'''A file or directory in the package is located in /run. Files installed
+"""A file or directory in the package is located in /run. Files installed
 in this directory should be marked as %ghost and created at runtime to work
-properly in tmpfs /run setups.''',
+properly in tmpfs /run setups.""",
 
 'systemd-unit-in-etc':
-'''A systemd unit has been packaged in /etc/systemd/system. These units should
-be installed in the system unit dir instead.''',
+"""A systemd unit has been packaged in /etc/systemd/system. These units should
+be installed in the system unit dir instead.""",
 
 'udev-rule-in-etc':
-'''A udev rule has been packaged in /etc/udev/rules.d. These rules should be
-installed in the system rules dir instead.''',
+"""A udev rule has been packaged in /etc/udev/rules.d. These rules should be
+installed in the system rules dir instead.""",
 
 'tmpfiles-conf-in-etc':
-'''A tmpfiles config has been packaged in /etc/tmpfiles.d. These rules should be
-installed in the system tmpfiles dir instead.''',
+"""A tmpfiles config has been packaged in /etc/tmpfiles.d. These rules should be
+installed in the system tmpfiles dir instead.""",
 
 'subdir-in-bin':
-'''The package contains a subdirectory in /usr/bin. It's not permitted to
-create a subdir there. Create it in /usr/lib/ instead.''',
+"""The package contains a subdirectory in /usr/bin. It's not permitted to
+create a subdir there. Create it in /usr/lib/ instead.""",
 
 'backup-file-in-package':
-'''You have a file whose name looks like one for backup files, usually created
+"""You have a file whose name looks like one for backup files, usually created
 by an editor or resulting from applying unclean (fuzzy, or ones with line
-offsets) patches.''',
+offsets) patches.""",
 
 'version-control-internal-file':
-'''You have included file(s) internally used by a version control system
-in the package. Move these files out of the package and rebuild it.''',
+"""You have included file(s) internally used by a version control system
+in the package. Move these files out of the package and rebuild it.""",
 
 'htaccess-file':
-'''You have individual apache configuration .htaccess file(s) in your package.
+"""You have individual apache configuration .htaccess file(s) in your package.
 Replace them by a central configuration file in /etc/, according to the web
-application packaging policy for your distribution.''',
+application packaging policy for your distribution.""",
 
 'info-dir-file':
-'''You have /usr/info/dir or /usr/share/info/dir in your package. It will cause
+"""You have /usr/info/dir or /usr/share/info/dir in your package. It will cause
 conflicts with other packages and thus is not allowed. Please remove it and
-rebuild your package.''',
+rebuild your package.""",
 
 'non-conffile-in-etc':
-'''A non-executable file in your package is being installed in /etc, but is not
+"""A non-executable file in your package is being installed in /etc, but is not
 a configuration file. All non-executable files in /etc should be configuration
-files. Mark the file as %config in the spec file.''',
+files. Mark the file as %config in the spec file.""",
 
 'compressed-symlink-with-wrong-ext':
-'''The symlink points to a compressed file but doesn't use the same
-extension.''',
+"""The symlink points to a compressed file but doesn't use the same
+extension.""",
 
 'setuid-binary':
-'''The file is setuid; this may be dangerous, especially if this
+"""The file is setuid; this may be dangerous, especially if this
 file is setuid root. Sometimes file capabilities can be used instead of
-setuid bits.''',
+setuid bits.""",
 
 'setgid-binary':
-'''The file is setgid. Usually this is a packaging bug. If this is a game,
-then, you should use the proper rpm group, or location.''',
+"""The file is setgid. Usually this is a packaging bug. If this is a game,
+then, you should use the proper rpm group, or location.""",
 
 'non-standard-executable-perm':
-'''A standard executable should have permission set to 0755. If you get this
+"""A standard executable should have permission set to 0755. If you get this
 message, it means that you have a wrong executable permissions in some files
-included in your package.''',
+included in your package.""",
 
 'non-executable-in-bin':
-'''A file is being installed in /usr/bin, but is not an executable. Be sure
-that the file is an executable or that it has executable permissions.''',
+"""A file is being installed in /usr/bin, but is not an executable. Be sure
+that the file is an executable or that it has executable permissions.""",
 
 'devel-file-in-non-devel-package':
-'''A file that is needed only e.g. when developing or building software is
-included in a non-devel package. These files should go in devel packages.''',
+"""A file that is needed only e.g. when developing or building software is
+included in a non-devel package. These files should go in devel packages.""",
 
 'non-devel-file-in-devel-package':
-'''A non-development file is located in a devel package.''',
+"""A non-development file is located in a devel package.""",
 
 'non-standard-dir-perm':
-'''A standard directory should have permission set to 0755. If you get this
+"""A standard directory should have permission set to 0755. If you get this
 message, it means that you have wrong directory permissions in some dirs
-included in your package.''',
+included in your package.""",
 
 'spurious-executable-perm':
-'''The file is installed with executable permissions, but was identified as one
+"""The file is installed with executable permissions, but was identified as one
 that probably should not be executable.  Verify if the executable bits are
-desired, and remove if not.''',
+desired, and remove if not.""",
 
 'world-writable':
-'''A file or directory in the package is installed with world writable
-permissions, which is most likely a security issue.''',
+"""A file or directory in the package is installed with world writable
+permissions, which is most likely a security issue.""",
 
 'standard-dir-owned-by-package':
-'''This package owns a directory that is part of the standard hierarchy, which
+"""This package owns a directory that is part of the standard hierarchy, which
 can lead to default directory permissions or ownerships being changed to
-something non-standard.''',
+something non-standard.""",
 
 'no-dependency-on':
-'''
-''',
+"""
+""",
 
 'cross-directory-hard-link':
-'''File is hard linked across directories.  This can cause problems in
-installations where the directories are located on different devices.''',
+"""File is hard linked across directories.  This can cause problems in
+installations where the directories are located on different devices.""",
 
 'dangling-symlink':
-'''The target of the symbolic link does not exist within this package or its
+"""The target of the symbolic link does not exist within this package or its
 file based dependencies.  Verify spelling of the link target and that the
-target is included in a package in this package's dependency chain.''',
+target is included in a package in this package's dependency chain.""",
 
 'symlink-should-be-relative':
-'''Absolute symlinks are problematic eg. when working with chroot environments.
+"""Absolute symlinks are problematic eg. when working with chroot environments.
 symlinks(8) is a tool that can be useful for creating/dealing with relative
-symlinks at package build time.''',
+symlinks at package build time.""",
 
 'dangling-relative-symlink':
-'''The target of the symbolic link does not exist within this package or its
+"""The target of the symbolic link does not exist within this package or its
 file based dependencies.  Verify spelling of the link target and that the
-target is included in a package in this package's dependency chain.''',
+target is included in a package in this package's dependency chain.""",
 
 'symlink-has-too-many-up-segments':
-'''
-''',
+"""
+""",
 
 'symlink-should-be-absolute':
-'''
-''',
+"""
+""",
 
 'symlink-contains-up-and-down-segments':
-'''
-''',
+"""
+""",
 
 'non-readable':
-'''The file can't be read by everybody. Review if this is expected.''',
+"""The file can't be read by everybody. Review if this is expected.""",
 
 'incoherent-logrotate-file':
-'''Your logrotate file should be named /etc/logrotate.d/<package name>.''',
+"""Your logrotate file should be named /etc/logrotate.d/<package name>.""",
 
 'non-root-user-log-file':
-'''If you need log files owned by a non-root user, just create a subdir in
-/var/log and put your log files in it.''',
+"""If you need log files owned by a non-root user, just create a subdir in
+/var/log and put your log files in it.""",
 
 'non-root-group-log-file':
-'''If you need log files owned by a non-root group, just create a subdir in
-/var/log and put your log files in it.''',
+"""If you need log files owned by a non-root group, just create a subdir in
+/var/log and put your log files in it.""",
 
 'non-ghost-file':
-'''File should be tagged %ghost.''',
+"""File should be tagged %ghost.""",
 
 'outside-libdir-files':
-'''This library package must not contain non library files to allow 64
-and 32 bits versions of the package to coexist.''',
+"""This library package must not contain non library files to allow 64
+and 32 bits versions of the package to coexist.""",
 
 'hidden-file-or-dir':
-'''The file or directory is hidden. You should see if this is normal,
-and delete it from the package if not.''',
+"""The file or directory is hidden. You should see if this is normal,
+and delete it from the package if not.""",
 
 'module-without-depmod-postin':
-'''This package contains a kernel module but provides no call to depmod in the
-%post scriptlet.''',
+"""This package contains a kernel module but provides no call to depmod in the
+%post scriptlet.""",
 
 'postin-with-wrong-depmod':
-'''This package contains a kernel module but its %post scriptlet calls depmod
-for the wrong kernel.''',
+"""This package contains a kernel module but its %post scriptlet calls depmod
+for the wrong kernel.""",
 
 'module-without-depmod-postun':
-'''This package contains a kernel module but provides no call to depmod in the
-%postun scriptlet.''',
+"""This package contains a kernel module but provides no call to depmod in the
+%postun scriptlet.""",
 
 'postun-with-wrong-depmod':
-'''This package contains a kernel module but its %postun scriptlet calls depmod
-for the wrong kernel.''',
+"""This package contains a kernel module but its %postun scriptlet calls depmod
+for the wrong kernel.""",
 
 'log-files-without-logrotate':
-'''This package contains files in /var/log/ without adding logrotate
-configuration for them.''',
+"""This package contains files in /var/log/ without adding logrotate
+configuration for them.""",
 
 'unexpanded-macro':
-'''This package contains a file whose path contains something that looks like
+"""This package contains a file whose path contains something that looks like
 an unexpanded macro; this is often the sign of a misspelling. Please check your
-specfile.''',
+specfile.""",
 
 'manifest-in-perl-module':
-'''This perl module package contains a MANIFEST or a MANIFEST.SKIP file
-in the documentation directory.''',
+"""This perl module package contains a MANIFEST or a MANIFEST.SKIP file
+in the documentation directory.""",
 
 'siteperl-in-perl-module':
-'''This perl module package installs files under the subdirectory site_perl,
-while they must appear under vendor_perl.''',
+"""This perl module package installs files under the subdirectory site_perl,
+while they must appear under vendor_perl.""",
 
 'executable-marked-as-config-file':
-'''Executables must not be marked as config files because that may
+"""Executables must not be marked as config files because that may
 prevent upgrades from working correctly. If you need to be able to
 customize an executable, make it for example read a config file in
-/etc/sysconfig.''',
+/etc/sysconfig.""",
 
 'sourced-script-with-shebang':
-'''This text file contains a shebang, but is meant to be sourced, not
-executed.''',
+"""This text file contains a shebang, but is meant to be sourced, not
+executed.""",
 
 'executable-sourced-script':
-'''This text file has executable bit set, but is meant to be sourced, not
-executed.''',
+"""This text file has executable bit set, but is meant to be sourced, not
+executed.""",
 
 'wrong-script-interpreter':
-'''This script uses an interpreter which is either an inappropriate one
+"""This script uses an interpreter which is either an inappropriate one
 or located in an inappropriate directory for packaged system software.
 
 Alternatively, if the file should not be executed, then ensure that
 it is not marked as executable.
-''',
+""",
 
 'env-script-interpreter':
-'''This script uses 'env' as an interpreter.
+"""This script uses 'env' as an interpreter.
 For the rpm runtime dependency detection to work, the shebang
 #!/usr/bin/env python
 
@@ -1290,148 +1290,148 @@ on /usr/bin/env rather than the actual interpreter /usr/bin/python.
 Alternatively, if the file should not be executed, then ensure that
 it is not marked as executable or don't install it in a path that
 is reserved for executables.
-''',
+""",
 
 'non-executable-script':
-'''This text file contains a shebang or is located in a path dedicated for
+"""This text file contains a shebang or is located in a path dedicated for
 executables, but lacks the executable bits and cannot thus be executed.  If
 the file is meant to be an executable script, add the executable bits,
-otherwise remove the shebang or move the file elsewhere.''',
+otherwise remove the shebang or move the file elsewhere.""",
 
 'script-without-shebang':
-'''This text file has executable bits set or is located in a path dedicated
+"""This text file has executable bits set or is located in a path dedicated
 for executables, but lacks a shebang and cannot thus be executed.  If the file
 is meant to be an executable script, add the shebang, otherwise remove the
-executable bits or move the file elsewhere.''',
+executable bits or move the file elsewhere.""",
 
 'wrong-script-end-of-line-encoding':
-'''This script has wrong end-of-line encoding, usually caused by creation or
-modification on a non-Unix system. It will prevent its execution.''',
+"""This script has wrong end-of-line encoding, usually caused by creation or
+modification on a non-Unix system. It will prevent its execution.""",
 
 'wrong-file-end-of-line-encoding':
-'''This file has wrong end-of-line encoding, usually caused by creation or
+"""This file has wrong end-of-line encoding, usually caused by creation or
 modification on a non-Unix system. It could prevent it from being displayed
-correctly in some circumstances.''',
+correctly in some circumstances.""",
 
 'file-not-utf8':
-'''The character encoding of this file is not UTF-8.  Consider converting it
-in the specfile's %prep section for example using iconv(1).''',
+"""The character encoding of this file is not UTF-8.  Consider converting it
+in the specfile's %prep section for example using iconv(1).""",
 
 'filename-not-utf8':
-'''The character encoding of the name of this file is not UTF-8.
-Rename it.''',
+"""The character encoding of the name of this file is not UTF-8.
+Rename it.""",
 
 'file-in-meta-package':
-'''This package seems to be a meta-package (an empty package used to require
+"""This package seems to be a meta-package (an empty package used to require
 other packages), but it is not empty. You should remove or rename it, see the
-option MetaPackageRegexp.''',
+option MetaPackageRegexp.""",
 
 'empty-debuginfo-package':
-'''This debuginfo package contains no files.  This is often a sign of binaries
+"""This debuginfo package contains no files.  This is often a sign of binaries
 being unexpectedly stripped too early during the build, rpmbuild not being able
 to strip the binaries, the package actually being a noarch one but erratically
 packaged as arch dependent, or something else.  Verify what the case is, and
 if there's no way to produce useful debuginfo out of it, disable creation of
-the debuginfo package.''',
+the debuginfo package.""",
 
 'debuginfo-without-sources':
-'''This debuginfo package appears to contain debug symbols but no source files.
+"""This debuginfo package appears to contain debug symbols but no source files.
 This is often a sign of binaries being unexpectedly stripped too early during
 the build, or being compiled without compiler debug flags (which again often
 is a sign of distro's default compiler flags ignored which might have security
 consequences), or other compiler flags which result in rpmbuild's debuginfo
 extraction not working as expected.  Verify that the binaries are not
-unexpectedly stripped and that the intended compiler flags are used.''',
+unexpectedly stripped and that the intended compiler flags are used.""",
 
 'missing-dependency-to-cron':
-'''This package installs a file in /etc/cron.*/ but
+"""This package installs a file in /etc/cron.*/ but
 doesn't require cron to be installed. as cron is not part of the essential packages,
 your package should explicitely require cron to make sure that your cron job is
-executed. If it is an optional feature of your package, recommend or suggest cron.''',
+executed. If it is an optional feature of your package, recommend or suggest cron.""",
 
 'missing-dependency-to-logrotate':
-'''This package installs a file in /etc/logrotate.d/ but
+"""This package installs a file in /etc/logrotate.d/ but
 doesn't require logrotate to be installed. Because logrotate is not part of the essential packages,
 your package should explicitely depend on logrotate to make sure that your logrotate
-job is executed. If it is an optional feature of your package, recommend or suggest logrotate.''',
+job is executed. If it is an optional feature of your package, recommend or suggest logrotate.""",
 
 'missing-dependency-to-xinetd':
-'''This package installs a file in /etc/xinetd.d/ but
+"""This package installs a file in /etc/xinetd.d/ but
 doesn't require xinetd to be installed. Because xinetd is not part of the essential packages,
 your package should explicitely depend on logrotate to make sure that your xinetd
-job is executed. If it is an optional feature of your package, recommend or suggest xinetd.''',
+job is executed. If it is an optional feature of your package, recommend or suggest xinetd.""",
 
 'read-error':
-'''This file could not be read.  A reason for this could be that the info about
+"""This file could not be read.  A reason for this could be that the info about
 it in the rpm header indicates that it is supposed to be a readable normal file
 but it actually is not in the filesystem.  Because of this, some checks will
-be skipped.''',
+be skipped.""",
 
 'inaccessible-filename':
-'''An error occurred while trying to access this file due to some characters
+"""An error occurred while trying to access this file due to some characters
 in its name. Because of this, some checks will be skipped. Access could work
-with some other locale settings.''',
+with some other locale settings.""",
 
 'executable-crontab-file':
-'''This crontab file has executable bit set, which is refused by newer version
-of cron''',
+"""This crontab file has executable bit set, which is refused by newer version
+of cron""",
 
 'non-owner-writeable-only-crontab-file':
-'''This crontab file is writeable by other users as its owner, which is refused
-by newer version of cron and insecure''',
+"""This crontab file is writeable by other users as its owner, which is refused
+by newer version of cron and insecure""",
 
 'symlink-crontab-file':
-'''This crontab file is a symbolic link, which is insecure and refused by newer
-version of cron''',
+"""This crontab file is a symbolic link, which is insecure and refused by newer
+version of cron""",
 
 'rpath-in-buildconfig':
-'''This build configuration file contains rpaths which will be introduced into
-dependent packages.''',
+"""This build configuration file contains rpaths which will be introduced into
+dependent packages.""",
 
 'python-bytecode-wrong-magic-value':
-'''The "magic" ABI version embedded in this python bytecode file isn't equal
+"""The 'magic' ABI version embedded in this python bytecode file isn't equal
 to that of the corresponding runtime, which will force the interpreter to
-recompile the .py source every time, ignoring the saved bytecode.''',
+recompile the .py source every time, ignoring the saved bytecode.""",
 
 'python-bytecode-inconsistent-mtime':
-'''The timestamp embedded in this python bytecode file isn't equal to the mtime
+"""The timestamp embedded in this python bytecode file isn't equal to the mtime
 of the original source file, which will force the interpreter to recompile the
-.py source every time, ignoring the saved bytecode.''',
+.py source every time, ignoring the saved bytecode.""",
 
 'python-bytecode-without-source':
-'''This python bytecode file (.pyo/.pyc) is not accompanied by its original
-source file (.py)''',
+"""This python bytecode file (.pyo/.pyc) is not accompanied by its original
+source file (.py)""",
 
 'duplicate-executable':
-'''This executable file exists in more than one standard binary directories.
-It can cause problems when dirs in $PATH are reordered.''',
+"""This executable file exists in more than one standard binary directories.
+It can cause problems when dirs in $PATH are reordered.""",
 
 'no-manual-page-for-binary':
-'''Each executable in standard binary directories should have a man page.''',
+"""Each executable in standard binary directories should have a man page.""",
 
 'manual-page-warning':
-'''This man page may contain problems that can cause it not to be formatted
-as intended.''',
+"""This man page may contain problems that can cause it not to be formatted
+as intended.""",
 
 'incorrect-fsf-address':
-'''The Free Software Foundation address in this file seems to be outdated or
+"""The Free Software Foundation address in this file seems to be outdated or
 misspelled.  Ask upstream to update the address, or if this is a license file,
-possibly the entire file with a new copy available from the FSF.''',
+possibly the entire file with a new copy available from the FSF.""",
 
 'gzipped-svg-icon':
-'''Not all desktop environments that support SVG icons support them gzipped
-(.svgz).  Install the icon as plain uncompressed SVG.''',
+"""Not all desktop environments that support SVG icons support them gzipped
+(.svgz).  Install the icon as plain uncompressed SVG.""",
 
 'pem-certificate':
-'''Shipping a PEM certificate is likely wrong. If used for the default
+"""Shipping a PEM certificate is likely wrong. If used for the default
 configuration, this is insecure ( since the certificate is public ). If this
 is used for validation, ie a CA certificate store, then this must be kept up
 to date due to CA compromise. The only valid reason is for testing purpose,
-so ignore this warning if this is the case.''',
+so ignore this warning if this is the case.""",
 
 'pem-private-key':
-'''Private key in a .pem file should not be shipped in a rpm, unless
+"""Private key in a .pem file should not be shipped in a rpm, unless
 this is for testing purpose ( ie, run by the test suite ). Shipping it
 as part of the example documentation mean that someone will sooner or later
-use it and setup a insecure configuration.''',
+use it and setup a insecure configuration.""",
 }

@@ -21,7 +21,7 @@ class NamingPolicyCheck(AbstractCheck):
     checks_ = []
 
     def __init__(self, config, output):
-        super().__init__(config, output, "NamingPolicyCheck")
+        super().__init__(config, output, 'NamingPolicyCheck')
         # TODO: rewrite this sanely
         self.add_check('xmms', '^xmms(-|$)', '^/usr/lib(64)?/xmms/')
         self.add_check('python', '^python(-|$)', '^/usr/lib(64)?/python[1-9](-[1-9])?')
@@ -40,9 +40,9 @@ class NamingPolicyCheck(AbstractCheck):
         self.checks_.append(c)
 
         if self.simple_naming_policy_re.search(name_re):
-            details = "Its name should begin with " + name_re[1:]
+            details = 'Its name should begin with ' + name_re[1:]
         else:
-            details = "Its name should match the regular expression " + name_re
+            details = 'Its name should match the regular expression ' + name_re
 
         self.output.error_details.update({pkg_name + '-naming-policy-not-applied':
                                          """This package doesn't respect the naming policy for %s
