@@ -21,6 +21,8 @@ class Config(object):
     already existing one.
     """
 
+    re_filter = re.compile(r'\s*addFilter\([\"\'](.*)[\"\']\)')
+    re_badness = re.compile(r'\s*setBadness\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
     # config elements that are known lists and append to each other
     known_lists_merged = (
         'Filters',
@@ -152,7 +154,7 @@ class Config(object):
         else:
             self.configuration = cfg
 
-    def _load_defaults(self, config, keywords={}):
+    def _load_defaults(self, config, keywords):
         """
         In case of multiline/dictionary defaults specified in configspec the
         configobj crashes.
@@ -189,12 +191,10 @@ class Config(object):
         if not self.configuration:
             print_warning('(none): W: loading rpmlint before configuration is not allowed: {}'.format(rpmlint_file))
             return
-        re_addFilter = re.compile(r'\s*addFilter\([\"\'](.*)[\"\']\)')
-        re_setBadness = re.compile(r'\s*setBadness\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
         with open(rpmlint_file) as f:
             rpmlintrc_content = f.read()
-        filters = re_addFilter.findall(rpmlintrc_content)
+        filters = self.re_filter.findall(rpmlintrc_content)
         self.configuration['Filters'] += filters
-        badness = re_setBadness.findall(rpmlintrc_content)
+        badness = self.re_badness.findall(rpmlintrc_content)
         for entry in badness:
             self.configuration['Scoring'].update({entry[0]: entry[1]})
