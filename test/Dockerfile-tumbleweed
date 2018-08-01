@@ -15,6 +15,8 @@ RUN zypper -n install \
         python3-pytest \
         python3-flake8 \
         python3-flake8-import-order \
+        python3-flake8-bugbear \
+        python3-flake8-quotes \
         python3-pyxdg \
         python3-configobj
 
