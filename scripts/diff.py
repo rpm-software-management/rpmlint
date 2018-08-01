@@ -143,7 +143,9 @@ class Rpmdiff(object):
         self.result.append((format, data))
 
     # load a package from a file or from the installed ones
-    def __load_pkg(self, name, tmpdir=tempfile.gettempdir()):
+    def __load_pkg(self, name, tmpdir):
+        if not tmpdir:
+            tmpdir = tempfile.gettempdir()
         try:
             if os.path.isfile(name):
                 return Pkg.Pkg(name, tmpdir)
