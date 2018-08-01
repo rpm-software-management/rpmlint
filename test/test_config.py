@@ -5,11 +5,11 @@ from rpmlint.Config import Config
 from Testing import TEST_CONFIG, testpath
 
 
-TEST_CONFIG_2 = os.path.join(testpath(), "configs/test2.config")
-TEST_CONFIG_FILTERS = os.path.join(testpath(), "configs/testfilters.config")
-TEST_LIST1 = os.path.join(testpath(), "configs/testlists1.config")
-TEST_LIST2 = os.path.join(testpath(), "configs/testlists2.config")
-TEST_RPMLINTRC = os.path.join(testpath(), "configs/testing-rpmlintrc")
+TEST_CONFIG_2 = os.path.join(testpath(), 'configs/test2.config')
+TEST_CONFIG_FILTERS = os.path.join(testpath(), 'configs/testfilters.config')
+TEST_LIST1 = os.path.join(testpath(), 'configs/testlists1.config')
+TEST_LIST2 = os.path.join(testpath(), 'configs/testlists2.config')
+TEST_RPMLINTRC = os.path.join(testpath(), 'configs/testing-rpmlintrc')
 
 
 def test_printing(capsys):
@@ -37,10 +37,10 @@ def test_custom_config(capsys):
 def test_parsing():
     # ugly content variables from old config
     bad_crypto_warning = \
-        '''This application package calls a function to explicitly set crypto ciphers
+        """This application package calls a function to explicitly set crypto ciphers
         for SSL/TLS. That may cause the application not to use the system-wide set
         cryptographic policy and should be modified in accordance to:
-        https://fedoraproject.org/wiki/Packaging:CryptoPolicies'''
+        https://fedoraproject.org/wiki/Packaging:CryptoPolicies"""
     call_blacklist = {
         'crypto-policy-non-compliance-openssl': {
             'f_name': 'SSL_CTX_set_cipher_list',

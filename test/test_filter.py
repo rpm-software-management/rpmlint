@@ -4,10 +4,10 @@ from typing.re import Pattern
 from rpmlint.Config import Config
 from rpmlint.Filter import Filter
 
-from Testing import getTestedPackage, testpath
+from Testing import get_tested_package, testpath
 
-TEST_CONFIG_FILTERS = os.path.join(testpath(), "configs/testfilters.config")
-TEST_RPMLINTRC = os.path.join(testpath(), "configs/testing-rpmlintrc")
+TEST_CONFIG_FILTERS = os.path.join(testpath(), 'configs/testfilters.config')
+TEST_RPMLINTRC = os.path.join(testpath(), 'configs/testing-rpmlintrc')
 TEST_PACKAGE = os.path.join('binary', 'ngircd')
 TEST_PACKAGE2 = os.path.join('binary', 'dovecot')
 
@@ -30,7 +30,7 @@ def test_data_storing():
     cfg = Config(TEST_CONFIG_FILTERS)
     cfg.load_rpmlintrc(TEST_RPMLINTRC)
     result = Filter(cfg)
-    pkg = getTestedPackage(TEST_PACKAGE)
+    pkg = get_tested_package(TEST_PACKAGE)
     # this should be filtered
     result.add_info('E', pkg, 'invalid-vendor', '')
     assert len(result.results) == 0
@@ -50,15 +50,15 @@ def test_description_storing():
     """
     Test if we can store extra destcriptions and formatting is up par
     """
-    lorem_formated = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+    lorem_formated = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-in culpa qui officia deserunt mollit anim id est laborum.\n\n'''
+in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = getTestedPackage(TEST_PACKAGE)
+    pkg = get_tested_package(TEST_PACKAGE)
     assert len(result.results) == 0
     result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
     # two options so we check the description is added only once
@@ -74,7 +74,7 @@ def test_output():
     """
     Test the actual output of rpmlint on one file
     """
-    expected_output = '''ngircd.x86_64: I: suse-other-error /usr/bin/1
+    expected_output = """ngircd.x86_64: I: suse-other-error /usr/bin/1
 ngircd.x86_64: I: suse-other-error /usr/bin/2
 dovecot.x86_64: E: suse-other-error /usr/bin/3
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -84,11 +84,11 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.
 
-ngircd.x86_64: E: suse-dbus-unauthorized-service\n'''
+ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = getTestedPackage(TEST_PACKAGE)
-    pkg2 = getTestedPackage(TEST_PACKAGE2)
+    pkg = get_tested_package(TEST_PACKAGE)
+    pkg2 = get_tested_package(TEST_PACKAGE2)
     # here we check if empty detail will not add whitespace
     result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
     # two options so we check the description is added only once

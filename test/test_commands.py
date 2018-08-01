@@ -11,7 +11,7 @@ def test_execution(script):
     process = Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
     out, err = process.communicate()
     assert not err
-    assert '.py [<options>]' in out.decode("utf-8")
+    assert '.py [<options>]' in out.decode('utf-8')
 
 
 @pytest.mark.parametrize('arguments', ['test/*/*.rpm test/spec/*.spec', '- < $TESTPATH/spec/SpecCheck.spec'])
