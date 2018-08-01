@@ -23,7 +23,7 @@ class DocFilesCheck(AbstractCheck):
         super().__init__(config, output, 'DocFilesCheck')
         self.output.error_details.update(docfiles_details_dict)
 
-    def __checkRequirements(self, pkg):
+    def __check_requirements(self, pkg):
 
         doc_files = pkg.docFiles()
         files = pkg.files()
@@ -66,7 +66,7 @@ class DocFilesCheck(AbstractCheck):
                 for f in req_files:
                     self.output.add_info('W', pkg, 'doc-file-dependency', f, dep)
 
-    def __checkUnwantedFiles(self, pkg):
+    def __check_unwanted_files(self, pkg):
 
         for docfile in pkg.docFiles():
             if docfile.endswith('/INSTALL'):
@@ -77,8 +77,8 @@ class DocFilesCheck(AbstractCheck):
         if not pkg.docFiles():
             return
 
-        self.__checkRequirements(pkg)
-        self.__checkUnwantedFiles(pkg)
+        self.__check_requirements(pkg)
+        self.__check_unwanted_files(pkg)
 
 
 docfiles_details_dict = {
