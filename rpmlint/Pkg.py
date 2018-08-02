@@ -68,11 +68,11 @@ SCRIPT_TAGS = [
     (rpm.RPMTAG_POSTTRANS, rpm.RPMTAG_POSTTRANSPROG, '%posttrans'),
     (rpm.RPMTAG_VERIFYSCRIPT, rpm.RPMTAG_VERIFYSCRIPTPROG, '%verifyscript'),
     # file triggers: rpm >= 4.12.90
-    (getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTS", 5066),
-     getattr(rpm, "RPMTAG_FILETRIGGERSCRIPTPROG", 5067),
+    (getattr(rpm, 'RPMTAG_FILETRIGGERSCRIPTS', 5066),
+     getattr(rpm, 'RPMTAG_FILETRIGGERSCRIPTPROG', 5067),
      '%filetrigger'),
-    (getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTS", 5076),
-     getattr(rpm, "RPMTAG_TRANSFILETRIGGERSCRIPTPROG", 5077),
+    (getattr(rpm, 'RPMTAG_TRANSFILETRIGGERSCRIPTS', 5076),
+     getattr(rpm, 'RPMTAG_TRANSFILETRIGGERSCRIPTPROG', 5077),
      '%transfiletrigger'),
 ]
 
@@ -113,7 +113,7 @@ def substitute_shell_vars(val, script):
         return val
 
 
-def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all="C"):
+def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all='C'):
     """
     A version of commands.getstatusoutput() which can take cmd as a
     sequence, thus making it potentially more secure.
@@ -179,7 +179,7 @@ def to_unicode(string):
         else:
             if x.encode(enc) == string:
                 return x
-    return unicode(string, "ascii", errors="replace")
+    return unicode(string, 'ascii', errors='replace')
 
 
 def readlines(path):
@@ -218,7 +218,7 @@ def get_default_valid_rpmgroups(filename=None):
     groups = []
     if not filename:
         try:
-            with InstalledPkg("rpm") as p:
+            with InstalledPkg('rpm') as p:
                 groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
                 if groupsfiles:
                     filename = groupsfiles[0]
@@ -275,7 +275,7 @@ def rangeCompare(reqtuple, provtuple):
     if reqr is None:
         r = None
     # rpmlint mod: don't mess with provided Epoch, doing so breaks e.g.
-    # "Requires: foo < 1.0" should not be satisfied by "Provides: foo = 1:0.5"
+    # 'Requires: foo < 1.0' should not be satisfied by 'Provides: foo = 1:0.5'
     # if reqe is None:
     #    e = None
     if reqv is None:  # just for the record if ver is None then we're going to segfault
@@ -340,14 +340,14 @@ def formatRequire(name, flags, evr):
     if flags:
         if flags & (rpm.RPMSENSE_LESS | rpm.RPMSENSE_GREATER |
                     rpm.RPMSENSE_EQUAL):
-            s = s + " "
+            s = s + ' '
             if flags & rpm.RPMSENSE_LESS:
-                s = s + "<"
+                s = s + '<'
             if flags & rpm.RPMSENSE_GREATER:
-                s = s + ">"
+                s = s + '>'
             if flags & rpm.RPMSENSE_EQUAL:
-                s = s + "="
-            s = "%s %s" % (s, versionToString(evr))
+                s = s + '='
+            s = '%s %s' % (s, versionToString(evr))
     return s
 
 
@@ -355,13 +355,13 @@ def versionToString(evr):
     if not isinstance(evr, (list, tuple)):
         # assume string
         return evr
-    ret = ""
-    if evr[0] is not None and evr[0] != "":
-        ret += str(evr[0]) + ":"
+    ret = ''
+    if evr[0] is not None and evr[0] != '':
+        ret += str(evr[0]) + ':'
     if evr[1] is not None:
         ret += evr[1]
-        if evr[2] is not None and evr[2] != "":
-            ret += "-" + evr[2]
+        if evr[2] is not None and evr[2] != '':
+            ret += '-' + evr[2]
     return ret
 
 
@@ -427,13 +427,13 @@ def parse_deps(line):
 
         elif plen == 1:
             flags = 0
-            if token[0] in ("=", "<", "<=", ">", ">="):
+            if token[0] in ('=', '<', '<=', '>', '>='):
                 # versioned, flags
-                if "=" in token:
+                if '=' in token:
                     flags |= rpm.RPMSENSE_EQUAL
-                if "<" in token:
+                if '<' in token:
                     flags |= rpm.RPMSENSE_LESS
-                if ">" in token:
+                if '>' in token:
                     flags |= rpm.RPMSENSE_GREATER
                 prco.append(flags)
             else:
@@ -512,7 +512,7 @@ class Pkg(AbstractPkg):
         elif self.isSource():
             self.arch = 'src'
         else:
-            self.arch = self.header.format("%{ARCH}")
+            self.arch = self.header.format('%{ARCH}')
 
     # Return true if the package is a source package
     def isSource(self):
@@ -706,7 +706,7 @@ class Pkg(AbstractPkg):
                     if stat.S_ISDIR(pkgfile.mode):
                         pkgfile.magic = 'directory'
                     elif stat.S_ISLNK(pkgfile.mode):
-                        pkgfile.magic = "symbolic link to `%s'" % pkgfile.linkto
+                        pkgfile.magic = 'symbolic link to `%s\'' % pkgfile.linkto
                     elif not pkgfile.size:
                         pkgfile.magic = 'empty'
                 if (not pkgfile.magic and
@@ -722,7 +722,7 @@ class Pkg(AbstractPkg):
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
-                    # Discard magic from inside compressed files ("file -z")
+                    # Discard magic from inside compressed files ('file -z')
                     # until PkgFile gets decompression support.  We may get
                     # such magic strings from package headers already now;
                     # for example Fedora's rpmbuild as of F-11's 4.7.1 is
@@ -775,7 +775,7 @@ class Pkg(AbstractPkg):
         return self._req_names
 
     def check_versioned_dep(self, name, version):
-        # try to match name%_isa as well (e.g. "foo(x86-64)", "foo(x86-32)")
+        # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
         name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
         for d in self.requires() + self.prereq():
             if name_re.match(d[0]):
@@ -878,22 +878,22 @@ class Pkg(AbstractPkg):
                              rpm.RPMTAG_OBSOLETENAME,
                              rpm.RPMTAG_OBSOLETEFLAGS,
                              rpm.RPMTAG_OBSOLETEVERSION)
-            if hasattr(rpm, "RPMTAG_RECOMMENDNAME"):  # rpm >= 4.12
+            if hasattr(rpm, 'RPMTAG_RECOMMENDNAME'):  # rpm >= 4.12
                 self._gather_aux(self.header, self._recommends,
                                  rpm.RPMTAG_RECOMMENDNAME,
                                  rpm.RPMTAG_RECOMMENDFLAGS,
                                  rpm.RPMTAG_RECOMMENDVERSION)
-            if hasattr(rpm, "RPMTAG_SUGGESTNAME"):  # rpm >= 4.12
+            if hasattr(rpm, 'RPMTAG_SUGGESTNAME'):  # rpm >= 4.12
                 self._gather_aux(self.header, self._suggests,
                                  rpm.RPMTAG_SUGGESTNAME,
                                  rpm.RPMTAG_SUGGESTFLAGS,
                                  rpm.RPMTAG_SUGGESTVERSION)
-            if hasattr(rpm, "RPMTAG_ENHANCENAME"):  # rpm >= 4.12
+            if hasattr(rpm, 'RPMTAG_ENHANCENAME'):  # rpm >= 4.12
                 self._gather_aux(self.header, self._enhances,
                                  rpm.RPMTAG_ENHANCENAME,
                                  rpm.RPMTAG_ENHANCEFLAGS,
                                  rpm.RPMTAG_ENHANCEVERSION)
-            if hasattr(rpm, "RPMTAG_SUPPLEMENTNAME"):  # rpm >= 4.12
+            if hasattr(rpm, 'RPMTAG_SUPPLEMENTNAME'):  # rpm >= 4.12
                 self._gather_aux(self.header, self._supplements,
                                  rpm.RPMTAG_SUPPLEMENTNAME,
                                  rpm.RPMTAG_SUPPLEMENTFLAGS,
@@ -912,7 +912,7 @@ class Pkg(AbstractPkg):
             prog = ''
         elif isinstance(prog, (list, tuple)):
             # http://rpm.org/ticket/847#comment:2
-            prog = "".join(prog)
+            prog = ''.join(prog)
         return prog
 
 
@@ -923,9 +923,9 @@ def getInstalledPkgs(name):
     ts = rpm.TransactionSet()
     if re.search(r'[?*]|\[.+\]', name):
         mi = ts.dbMatch()
-        mi.pattern("name", rpm.RPMMIRE_GLOB, name)
+        mi.pattern('name', rpm.RPMMIRE_GLOB, name)
     else:
-        mi = ts.dbMatch("name", name)
+        mi = ts.dbMatch('name', name)
 
     for hdr in mi:
         pkgs.append(InstalledPkg(name, hdr))
@@ -961,7 +961,7 @@ class InstalledPkg(Pkg):
         return (0, 'fake: pgp md5 OK')
 
 
-# Class to provide an API to a "fake" package, eg. for specfile-only checks
+# Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
     def __init__(self, name):
         self.name = name

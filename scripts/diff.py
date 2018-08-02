@@ -143,7 +143,9 @@ class Rpmdiff(object):
         self.result.append((format, data))
 
     # load a package from a file or from the installed ones
-    def __load_pkg(self, name, tmpdir=tempfile.gettempdir()):
+    def __load_pkg(self, name, tmpdir):
+        if not tmpdir:
+            tmpdir = tempfile.gettempdir()
         try:
             if os.path.isfile(name):
                 return Pkg.Pkg(name, tmpdir)
@@ -151,45 +153,45 @@ class Rpmdiff(object):
             pass
         inst = Pkg.getInstalledPkgs(name)
         if not inst:
-            raise KeyError("No installed packages by name %s" % name)
+            raise KeyError('No installed packages by name %s' % name)
         if len(inst) > 1:
-            raise KeyError("More than one installed packages by name %s" % name)
+            raise KeyError('More than one installed packages by name %s' % name)
         return inst[0]
 
     # output the right string according to RPMSENSE_* const
     def sense2str(self, sense):
-        s = ""
-        for tag, char in ((rpm.RPMSENSE_LESS, "<"),
-                          (rpm.RPMSENSE_GREATER, ">"),
-                          (rpm.RPMSENSE_EQUAL, "=")):
+        s = ''
+        for tag, char in ((rpm.RPMSENSE_LESS, '<'),
+                          (rpm.RPMSENSE_GREATER, '>'),
+                          (rpm.RPMSENSE_EQUAL, '=')):
             if sense & tag:
                 s += char
         return s
 
     # output the right requires string according to RPMSENSE_* const
     def req2str(self, req):
-        s = "REQUIRES"
+        s = 'REQUIRES'
         # we want to use 64 even with rpm versions that define RPMSENSE_PREREQ
         # as 0 to get sane results when comparing packages built with an old
         # (64) version and a new (0) one
         if req & (rpm.RPMSENSE_PREREQ or 64):
-            s = "PREREQ"
+            s = 'PREREQ'
 
         ss = []
         if req & rpm.RPMSENSE_SCRIPT_PRE:
-            ss.append("pre")
+            ss.append('pre')
         if req & rpm.RPMSENSE_SCRIPT_POST:
-            ss.append("post")
+            ss.append('post')
         if req & rpm.RPMSENSE_SCRIPT_PREUN:
-            ss.append("preun")
+            ss.append('preun')
         if req & rpm.RPMSENSE_SCRIPT_POSTUN:
-            ss.append("postun")
-        if req & getattr(rpm, "RPMSENSE_PRETRANS", 1 << 7):  # rpm >= 4.9.0
-            ss.append("pretrans")
-        if req & getattr(rpm, "RPMSENSE_POSTTRANS", 1 << 5):  # rpm >= 4.9.0
-            ss.append("posttrans")
+            ss.append('postun')
+        if req & getattr(rpm, 'RPMSENSE_PRETRANS', 1 << 7):  # rpm >= 4.9.0
+            ss.append('pretrans')
+        if req & getattr(rpm, 'RPMSENSE_POSTTRANS', 1 << 5):  # rpm >= 4.9.0
+            ss.append('posttrans')
         if ss:
-            s += "(%s)" % ",".join(ss)
+            s += '(%s)' % ','.join(ss)
 
         return s
 
@@ -216,11 +218,11 @@ class Rpmdiff(object):
 
         # filter self provides, TODO: self %name(%_isa) as well
         if name == 'PROVIDES':
-            oldE = old['epoch'] is not None and str(old['epoch']) + ":" or ""
-            oldV = "%s%s" % (oldE, old.format("%{VERSION}-%{RELEASE}"))
+            oldE = old['epoch'] is not None and str(old['epoch']) + ':' or ''
+            oldV = '%s%s' % (oldE, old.format('%{VERSION}-%{RELEASE}'))
             oldNV = (old['name'], rpm.RPMSENSE_EQUAL, oldV.encode())
-            newE = new['epoch'] is not None and str(new['epoch']) + ":" or ""
-            newV = "%s%s" % (newE, new.format("%{VERSION}-%{RELEASE}"))
+            newE = new['epoch'] is not None and str(new['epoch']) + ':' or ''
+            newV = '%s%s' % (newE, new.format('%{VERSION}-%{RELEASE}'))
             newNV = (new['name'], rpm.RPMSENSE_EQUAL, newV.encode())
             o = [entry for entry in o if entry != oldNV]
             n = [entry for entry in n if entry != newNV]
@@ -250,13 +252,13 @@ class Rpmdiff(object):
 
 
 def _usage(exit=1):
-    print('''Usage: %s [<options>] <old package> <new package>
+    print("""Usage: %s [<options>] <old package> <new package>
 Options:
   -h, --help     Output this message and exit
   -i, --ignore   File property to ignore when calculating differences (may be
                  used multiple times); valid values are: S (size), M (mode),
                  5 (checksum), D (device), N (inode), L (number of links),
-                 V (vflags), U (user), G (group), F (digest), T (time)'''
+                 V (vflags), U (user), G (group), F (digest), T (time)"""
           % sys.argv[0])
     sys.exit(exit)
 
@@ -266,18 +268,18 @@ def main():
     ignore_tags = []
     try:
         opts, args = getopt.getopt(sys.argv[1:],
-                                   "hti:", ["help", "ignore-times", "ignore="])
+                                   'hti:', ['help', 'ignore-times', 'ignore='])
     except getopt.GetoptError as e:
-        print_warning("Error: %s" % e)
+        print_warning('Error: %s' % e)
         _usage()
 
     for option, argument in opts:
-        if option in ("-h", "--help"):
+        if option in ('-h', '--help'):
             _usage(0)
-        if option in ("-t", "--ignore-times"):
+        if option in ('-t', '--ignore-times'):
             # deprecated; --ignore=T should be used instead
-            ignore_tags.append("T")
-        if option in ("-i", "--ignore"):
+            ignore_tags.append('T')
+        if option in ('-i', '--ignore'):
             ignore_tags.append(argument)
 
     if len(args) != 2:

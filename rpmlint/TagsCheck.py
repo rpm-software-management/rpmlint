@@ -303,7 +303,7 @@ punct = '.,:;!?'
 sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
 # we assume that no rpm packages existed before rpm itself existed...
-oldest_changelog_timestamp = calendar.timegm(time.strptime("1995-01-01", "%Y-%m-%d"))
+oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-%d'))
 
 private_so_paths = set()
 for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
@@ -344,7 +344,7 @@ def spell_check(pkg, output, str, fmt, lang, ignored):
             uppername = Pkg.to_unicode(pkg.header[rpm.RPMTAG_NAME]).upper()
             upperparts = uppername.split('-')
             if lang.startswith('en'):
-                ups = [x + "'S" for x in upperparts]
+                ups = [x + '\'S' for x in upperparts]
                 upperparts.extend(ups)
             for err in checker:
 
@@ -364,7 +364,7 @@ def spell_check(pkg, output, str, fmt, lang, ignored):
                     continue
 
                 # Skip errors containing package name or equal to a
-                # "component" of it, case insensitively
+                # 'component' of it, case insensitively
                 if uppername in upperword or upperword in upperparts:
                     continue
 
@@ -406,7 +406,7 @@ def spell_check(pkg, output, str, fmt, lang, ignored):
 class TagsCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'TagsCheck')
+        super().__init__(config, output, 'TagsCheck')
         self.output.error_details.update(tags_details_dict)
         self.valid_groups = config.configuration['ValidGroups']
         self.valid_licenses = config.configuration['ValidLicenses']
@@ -421,24 +421,24 @@ class TagsCheck(AbstractCheck):
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
 
-        for i in ("obsoletes", "conflicts", "provides", "recommends", "suggests",
-                  "enhances", "supplements"):
+        for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
+                  'enhances', 'supplements'):
             self.output.error_details.update({'no-epoch-in-{}'.format(i):
-                                              "Your package contains a versioned %s entry without an Epoch."
+                                              'Your package contains a versioned %s entry without an Epoch.'
                                               % i.capitalize()})
         self.output.error_details.update({'non-standard-group':
-                                          '''The value of the Group tag in the package is not valid.  Valid groups are:
-                                          "%s".''' % '", "'.join(self.valid_groups),
+                                          """The value of the Group tag in the package is not valid.  Valid groups are:
+                                          '%s'.""" % ', '.join(self.valid_groups),
                                           'not-standard-release-extension':
                                           'Your release tag must match the regular expression ' + self.release_ext + '.',
                                           'summary-too-long':
-                                          'The "Summary:" must not exceed %d characters.' % self.max_line_len,
+                                          'The \'Summary:\' must not exceed %d characters.' % self.max_line_len,
                                           'description-line-too-long':
-                                          '''Your description lines must not exceed %d characters. If a line is exceeding
-                                          this number, cut it to fit in two lines.''' % self.max_line_len,
+                                          """Your description lines must not exceed %d characters. If a line is exceeding
+                                          this number, cut it to fit in two lines.""" % self.max_line_len,
                                           'invalid-license':
-                                          '''The value of the License tag was not recognized.  Known values are:
-                                          "%s".''' % '", "'.join(self.valid_licenses),
+                                          """The value of the License tag was not recognized.  Known values are:
+                                          '%s'.""" % ', '.join(self.valid_licenses),
                                           })
 
     def _unexpanded_macros(self, pkg, tagname, value, is_url=False):
@@ -491,8 +491,8 @@ class TagsCheck(AbstractCheck):
             epoch = str(epoch)
 
         if self.use_epoch:
-            for tag in ("obsoletes", "conflicts", "provides", "recommends",
-                        "suggests", "enhances", "supplements"):
+            for tag in ('obsoletes', 'conflicts', 'provides', 'recommends',
+                        'suggests', 'enhances', 'supplements'):
                 for x in (x for x in getattr(pkg, tag)()
                           if x[1] and x[2][0] is None):
                     self.output.add_info('W', pkg, 'no-epoch-in-%s' % tag,
@@ -545,7 +545,7 @@ class TagsCheck(AbstractCheck):
                         break
                 if has_so:
                     base_or_libs = base + '/' + base + '-libs/lib' + base
-                    # try to match *%_isa as well (e.g. "(x86-64)", "(x86-32)")
+                    # try to match *%_isa as well (e.g. '(x86-64)', '(x86-32)')
                     base_or_libs_re = re.compile(
                         r'^(lib)?%s(-libs)?(\(\w+-\d+\))?$' % re.escape(base))
                     for d in deps:
@@ -671,10 +671,10 @@ class TagsCheck(AbstractCheck):
                 clt -= clt % (24 * 3600)  # roll back to 00:00:00, see #246
                 if clt < oldest_changelog_timestamp:
                     self.output.add_info('W', pkg, 'changelog-time-overflow',
-                                         time.strftime("%Y-%m-%d", time.gmtime(clt)))
+                                         time.strftime('%Y-%m-%d', time.gmtime(clt)))
                 elif clt > time.time():
                     self.output.add_info('E', pkg, 'changelog-time-in-future',
-                                         time.strftime("%Y-%m-%d", time.gmtime(clt)))
+                                         time.strftime('%Y-%m-%d', time.gmtime(clt)))
 
 #         for provide_name in (x[0] for x in pkg.provides()):
 #             if name == provide_name:
@@ -707,7 +707,7 @@ class TagsCheck(AbstractCheck):
                 self._unexpanded_macros(pkg, tag, url, is_url=True)
                 if url:
                     (scheme, netloc) = urlparse(url)[0:2]
-                    if not scheme or not netloc or "." not in netloc or \
+                    if not scheme or not netloc or '.' not in netloc or \
                             scheme not in ('http', 'https', 'ftp') or \
                             (self.config.configuration['InvalidURL'] and
                              self.invalid_url_regex.search(url)):
@@ -760,12 +760,12 @@ class TagsCheck(AbstractCheck):
                                              (Pkg.formatRequire(*obs),
                                               Pkg.formatRequire(*prov)))
 
-        expfmt = rpm.expandMacro("%{_build_name_fmt}")
+        expfmt = rpm.expandMacro('%{_build_name_fmt}')
         if pkg.isSource():
             # _build_name_fmt often (always?) ends up not outputting src/nosrc
             # as arch for source packages, do it ourselves
             expfmt = re.sub(r'(?i)%\{?ARCH\b\}?', pkg.arch, expfmt)
-        expected = pkg.header.sprintf(expfmt).split("/")[-1]
+        expected = pkg.header.sprintf(expfmt).split('/')[-1]
         basename = os.path.basename(pkg.filename)
         if basename != expected:
             self.output.add_info('W', pkg, 'non-coherent-filename', basename, expected)
@@ -781,7 +781,7 @@ class TagsCheck(AbstractCheck):
                 if fname.startswith(path):
                     for prov in pkgfile.provides:
                         if so_dep_regex.search(prov[0]):
-                            self.output.add_info('W', pkg, "private-shared-object-provides",
+                            self.output.add_info('W', pkg, 'private-shared-object-provides',
                                                  fname, Pkg.formatRequire(*prov))
 
     def check_description(self, pkg, lang, ignored_words):
@@ -837,193 +837,193 @@ class TagsCheck(AbstractCheck):
 # Add information about checks
 tags_details_dict = {
 'invalid-version':
-'''The version string must not contain the pre, alpha, beta or rc suffixes
+"""The version string must not contain the pre, alpha, beta or rc suffixes
 because when the final version will be out, you will have to use an Epoch tag
 to make the package upgradable. Instead put it in the release tag, prefixed
-with something you have control over.''',
+with something you have control over.""",
 
 'spelling-error':
-'''The value of this tag appears to be misspelled. Please double-check.''',
+"""The value of this tag appears to be misspelled. Please double-check.""",
 
 'no-packager-tag':
-'''There is no Packager tag in your package. You have to specify a packager
-using the Packager tag. Ex: Packager: John Doe <john.doe@example.com>.''',
+"""There is no Packager tag in your package. You have to specify a packager
+using the Packager tag. Ex: Packager: John Doe <john.doe@example.com>.""",
 
 'invalid-packager':
-'''The packager email must end with an email compatible with the Packager
-option of rpmlint. Please change it and rebuild your package.''',
+"""The packager email must end with an email compatible with the Packager
+option of rpmlint. Please change it and rebuild your package.""",
 
 'no-version-tag':
-'''There is no Version tag in your package. You have to specify a version using
-the Version tag.''',
+"""There is no Version tag in your package. You have to specify a version using
+the Version tag.""",
 
 'no-release-tag':
-'''There is no Release tag in your package. You have to specify a release using
-the Release tag.''',
+"""There is no Release tag in your package. You have to specify a release using
+the Release tag.""",
 
 'no-name-tag':
-'''There is no Name tag in your package. You have to specify a name using the
-Name tag.''',
+"""There is no Name tag in your package. You have to specify a name using the
+Name tag.""",
 
 'non-coherent-filename':
-'''The file which contains the package should be named
-<NAME>-<VERSION>-<RELEASE>.<ARCH>.rpm.''',
+"""The file which contains the package should be named
+<NAME>-<VERSION>-<RELEASE>.<ARCH>.rpm.""",
 
 'no-dependency-on':
-'''
-''',
+"""
+""",
 
 'incoherent-version-dependency-on':
-'''
-''',
+"""
+""",
 
 'no-version-dependency-on':
-'''
-''',
+"""
+""",
 
 'no-major-in-name':
-'''The major number of the library isn't included in the package's name.
-''',
+"""The major number of the library isn't included in the package's name.
+""",
 
 'description-shorter-than-summary':
-'''The package description should be longer than the summary. Be a bit more
-verbose, please.''',
+"""The package description should be longer than the summary. Be a bit more
+verbose, please.""",
 
 'no-provides':
-'''Your library package doesn't provide the -devel name without the major
-version included.''',
+"""Your library package doesn't provide the -devel name without the major
+version included.""",
 
 'no-summary-tag':
-'''There is no Summary tag in your package. You have to describe your package
-using this tag. To insert it, just insert a tag 'Summary'.''',
+"""There is no Summary tag in your package. You have to describe your package
+using this tag. To insert it, just insert a tag 'Summary'.""",
 
 'summary-on-multiple-lines':
-'''Your summary must fit on one line. Please make it shorter and rebuild the
-package.''',
+"""Your summary must fit on one line. Please make it shorter and rebuild the
+package.""",
 
 'summary-not-capitalized':
-'''Summary doesn't begin with a capital letter.''',
+"""Summary doesn't begin with a capital letter.""",
 
 'summary-ended-with-dot':
-'''Summary ends with a dot.''',
+"""Summary ends with a dot.""",
 
 'summary-has-leading-spaces':
-'''Summary begins with whitespace which will waste space when displayed.''',
+"""Summary begins with whitespace which will waste space when displayed.""",
 
 'no-description-tag':
-'''The description of the package is empty or missing. To add it, insert a
+"""The description of the package is empty or missing. To add it, insert a
 %description section in your spec file, add a textual description of the
-package after it, and rebuild the package.''',
+package after it, and rebuild the package.""",
 
 'tag-in-description':
-'''Something that looks like a tag was found in the package's description.
+"""Something that looks like a tag was found in the package's description.
 This may indicate a problem where the tag was not actually parsed as a tag
 but just textual description content, thus being a no-op.  Verify if this is
 the case, and move the tag to a place in the specfile where %description
-won't fool the specfile parser, and rebuild the package.''',
+won't fool the specfile parser, and rebuild the package.""",
 
 'no-group-tag':
-'''There is no Group tag in your package. You have to specify a valid group
-in your spec file using the Group tag.''',
+"""There is no Group tag in your package. You have to specify a valid group
+in your spec file using the Group tag.""",
 
 'no-changelogname-tag':
-'''There is no %changelog tag in your spec file. To insert it, just insert a
-'%changelog' in your spec file and rebuild it.''',
+"""There is no %changelog tag in your spec file. To insert it, just insert a
+'%changelog' in your spec file and rebuild it.""",
 
 'no-version-in-last-changelog':
-'''The latest changelog entry doesn't contain a version. Please insert the
-version that is coherent with the version of the package and rebuild it.''',
+"""The latest changelog entry doesn't contain a version. Please insert the
+version that is coherent with the version of the package and rebuild it.""",
 
 'incoherent-version-in-changelog':
-'''The latest entry in %changelog contains a version identifier that is not
-coherent with the epoch:version-release tuple of the package.''',
+"""The latest entry in %changelog contains a version identifier that is not
+coherent with the epoch:version-release tuple of the package.""",
 
 'changelog-time-overflow':
-'''The timestamp of the latest entry in %changelog is suspiciously far away in
+"""The timestamp of the latest entry in %changelog is suspiciously far away in
 the past; it is possible that it is actually so much in the future that it
-has overflowed rpm's timestamp representation.''',
+has overflowed rpm's timestamp representation.""",
 
 'changelog-time-in-future':
-'''The timestamp of the latest entry in %changelog is in the future.''',
+"""The timestamp of the latest entry in %changelog is in the future.""",
 
 'no-license':
-'''There is no License tag in your spec file. You have to specify one license
+"""There is no License tag in your spec file. You have to specify one license
 for your program (eg. GPL). To insert this tag, just insert a 'License' in
-your specfile.''',
+your specfile.""",
 
 'obsolete-not-provided':
-'''If a package is obsoleted by a compatible replacement, the obsoleted package
+"""If a package is obsoleted by a compatible replacement, the obsoleted package
 should also be provided in order to not cause unnecessary dependency breakage.
 If the obsoleting package is not a compatible replacement for the old one,
-leave out the Provides.''',
+leave out the Provides.""",
 
 'invalid-dependency':
-'''An invalid dependency has been detected. It usually means that the build of
-the package was buggy.''',
+"""An invalid dependency has been detected. It usually means that the build of
+the package was buggy.""",
 
 'no-epoch-tag':
-'''There is no Epoch tag in your package. You have to specify an epoch using
-the Epoch tag.''',
+"""There is no Epoch tag in your package. You have to specify an epoch using
+the Epoch tag.""",
 
 'unreasonable-epoch':
-'''The value of your Epoch tag is unreasonably large (> 99).''',
+"""The value of your Epoch tag is unreasonably large (> 99).""",
 
 'no-epoch-in-dependency':
-'''Your package contains a versioned dependency without an Epoch.''',
+"""Your package contains a versioned dependency without an Epoch.""",
 
 'devel-dependency':
-'''Your package has a dependency on a devel package but it's not a devel
-package itself.''',
+"""Your package has a dependency on a devel package but it's not a devel
+package itself.""",
 
 'invalid-build-requires':
-'''Your source package contains a dependency not compliant with the lib64
+"""Your source package contains a dependency not compliant with the lib64
 naming. This BuildRequires dependency will not be resolved on lib64 platforms
-(eg. amd64).''',
+(eg. amd64).""",
 
 'explicit-lib-dependency':
-'''You must let rpm find the library dependencies by itself. Do not put
-unneeded explicit Requires: tags.''',
+"""You must let rpm find the library dependencies by itself. Do not put
+unneeded explicit Requires: tags.""",
 
 'useless-provides':
-'''This package provides 2 times the same capacity. It should only provide it
-once.''',
+"""This package provides 2 times the same capacity. It should only provide it
+once.""",
 
 'tag-not-utf8':
-'''The character encoding of the value of this tag is not UTF-8.''',
+"""The character encoding of the value of this tag is not UTF-8.""",
 
 'requires-on-release':
-'''This rpm requires a specific release of another package.''',
+"""This rpm requires a specific release of another package.""",
 
 'no-url-tag':
-'''The URL tag is missing. Please add a http or ftp link to the project location.''',
+"""The URL tag is missing. Please add a http or ftp link to the project location.""",
 
 'name-repeated-in-summary':
-'''The name of the package is repeated in its summary.  This is often redundant
+"""The name of the package is repeated in its summary.  This is often redundant
 information and looks silly in various programs' output.  Make the summary
-brief and to the point without including redundant information in it.''',
+brief and to the point without including redundant information in it.""",
 
 'enchant-dictionary-not-found':
-'''A dictionary for the Enchant spell checking library is not available for
+"""A dictionary for the Enchant spell checking library is not available for
 the language given in the info message.  Spell checking will proceed with
 rpmlint's built-in implementation for localized tags in this language.
 For better spell checking results in this language, install the appropriate
 dictionary that Enchant will use for this language, often for example
-hunspell-* or aspell-*.''',
+hunspell-* or aspell-*.""",
 
 'self-obsoletion':
-'''The package obsoletes itself.  This is known to cause errors in various
+"""The package obsoletes itself.  This is known to cause errors in various
 tools and should thus be avoided, usually by using appropriately versioned
-Obsoletes and/or Provides and avoiding unversioned ones.''',
+Obsoletes and/or Provides and avoiding unversioned ones.""",
 
 'unexpanded-macro':
-'''This tag contains something that looks like an unexpanded macro; this is
-often the sign of a misspelling. Please check your specfile.''',
+"""This tag contains something that looks like an unexpanded macro; this is
+often the sign of a misspelling. Please check your specfile.""",
 
 'private-shared-object-provides':
-'''A shared object soname provides is provided by a file in a path from which
+"""A shared object soname provides is provided by a file in a path from which
 other packages should not directly load shared objects from.  Such shared
 objects should thus not be depended on and they should not result in provides
 in the containing package.  Get rid of the provides if appropriate, for example
 by filtering it out during build.  Note that in some cases this may require
-disabling rpmbuild's internal dependency generator.''',
+disabling rpmbuild's internal dependency generator.""",
 }

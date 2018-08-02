@@ -21,28 +21,28 @@ class SourceCheck(AbstractCheck):
     }
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'SourceCheck')
+        super().__init__(config, output, 'SourceCheck')
         self.compress_ext = config.configuration['CompressExtension']
         self.valid_src_perms = config.configuration['ValidSrcPerms']
 
         source_details_dict = {
             'multiple-specfiles':
-            '''Your package contains multiple spec files. To build a
+            """Your package contains multiple spec files. To build a
             correct package, you need to have only one spec file containing
-            all your RPM information.''',
+            all your RPM information.""",
 
             'source-or-patch-not-compressed':
-            '''A source archive or file in your package is not compressed using the %s
-            compression method (doesn't have the %s extension).''' %
+            """A source archive or file in your package is not compressed using the %s
+            compression method (doesn't have the %s extension).""" %
             (self.compress_ext, self.compress_ext),
 
             'strange-permission':
-            '''A file that you listed to include in your package has strange
-            permissions. Usually, a file should have 0644 permissions.''',
+            """A file that you listed to include in your package has strange
+            permissions. Usually, a file should have 0644 permissions.""",
 
             'inconsistent-file-extension':
-            '''The file name extension indicates a different compression format than
-            what is actually used (as checked by file(1))''',
+            """The file name extension indicates a different compression format than
+            what is actually used (as checked by file(1))""",
         }
         self.output.error_details.update(source_details_dict)
 
@@ -67,4 +67,4 @@ class SourceCheck(AbstractCheck):
                                      self.compress_ext, fname)
             perm = pkgfile.mode & 0o7777
             if perm not in self.valid_src_perms:
-                self.output.add_info('W', pkg, 'strange-permission', fname, "%o" % perm)
+                self.output.add_info('W', pkg, 'strange-permission', fname, '%o' % perm)

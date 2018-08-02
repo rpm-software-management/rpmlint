@@ -47,12 +47,12 @@ EXCEPTION_DIRS = (
 
 def is_valid_lang(lang):
     # TODO: @Foo and charset handling
-    lang = re.sub("[@.].*$", "", lang)
+    lang = re.sub('[@.].*$', '', lang)
 
     if lang in LANGUAGES:
         return True
 
-    ix = lang.find("_")
+    ix = lang.find('_')
     if ix == -1:
         return False
 
@@ -71,7 +71,7 @@ def is_valid_lang(lang):
 class I18NCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'I18NCheck')
+        super().__init__(config, output, 'I18NCheck')
         self.output.error_details.update(i18n_details_dict)
 
     def check_binary(self, pkg):
@@ -134,10 +134,10 @@ class I18NCheck(AbstractCheck):
                 if pkg.files()[f].lang == '' and not webapp:
                     self.output.add_info('W', pkg, 'file-not-in-%lang', f)
 
-        main_dir, main_lang = ("", "")
+        main_dir, main_lang = ('', '')
         for f in files:
             lang = pkg.files()[f].lang
-            if main_lang and lang == "" and is_prefix(main_dir + '/', f):
+            if main_lang and lang == '' and is_prefix(main_dir + '/', f):
                 self.output.add_info('E', pkg, 'subfile-not-in-%lang', f)
             if main_lang != lang:
                 main_dir, main_lang = f, lang

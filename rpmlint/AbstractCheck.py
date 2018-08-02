@@ -18,7 +18,7 @@ macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
 
 class _HeadRequest(urllib.request.Request):
     def get_method(self):
-        return "HEAD"
+        return 'HEAD'
 
 
 class _HeadRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -107,8 +107,8 @@ class AbstractFilesCheck(AbstractCheck):
 
 abstract_details_dict = {
     'invalid-url':
-    '''The value should be a valid, public HTTP, HTTPS, or FTP URL.''',
+    """The value should be a valid, public HTTP, HTTPS, or FTP URL.""",
     'network-checks-disabled':
-    '''Checks requiring network access have not been enabled in configuration,
-    see the NetworkEnabled option.''',
+    """Checks requiring network access have not been enabled in configuration,
+    see the NetworkEnabled option.""",
 }

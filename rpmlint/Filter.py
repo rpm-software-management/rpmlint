@@ -28,7 +28,7 @@ class Filter(object):
         # dictionary content for you, or you can just pass the dictionary
         self.error_details = {}
         # Counter of how many issues we encountered
-        self.printed_messages = {"I": 0, "W": 0, "E": 0}
+        self.printed_messages = {'I': 0, 'W': 0, 'E': 0}
         # Messages
         self.results = list()
 
@@ -44,7 +44,7 @@ class Filter(object):
         badness = 0
         if reason in self.badness:
             badness = int(self.badness[reason])
-            # If we have any badness configured then we "stricten" and call the
+            # If we have any badness configured then we 'stricten' and call the
             # result Error. Otherwise we downgrade the error to Warn.
             if badness > 0:
                 level = 'E'
@@ -73,7 +73,7 @@ class Filter(object):
         If there is description to be provided it needs to be provided only
         once per reason.
         """
-        output = ""
+        output = ''
         results.sort(key=self.__diag_sortkey, reverse=True)
         last_reason = ''
         for diag in results:

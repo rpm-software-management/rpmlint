@@ -17,11 +17,11 @@ from rpmlint.AbstractCheck import AbstractCheck
 menu_file_regex = re.compile(r'^/usr/lib/menu/([^/]+)$')
 old_menu_file_regex = re.compile(r'^/usr/share/(gnome/apps|applnk)/([^/]+)$')
 package_regex = re.compile(r'\?package\((.*)\):')
-needs_regex = re.compile(r'needs=(\"([^\"]+)\"|([^ %s\"]+))' % "\t")
-section_regex = re.compile(r'section=(\"([^\"]+)\"|([^ %s\"]+))' % "\t")
-title_regex = re.compile(r'[\"\s]title=(\"([^\"]+)\"|([^ %s\"]+))' % "\t")
-longtitle_regex = re.compile(r'longtitle=(\"([^\"]+)\"|([^ %s\"]+))' % "\t")
-command_regex = re.compile(r'command=(?:\"([^\"]+)\"|([^ %s\"]+))' % "\t")
+needs_regex = re.compile(r'needs=(\"([^\"]+)\"|([^ %s\"]+))' % '\t')
+section_regex = re.compile(r'section=(\"([^\"]+)\"|([^ %s\"]+))' % '\t')
+title_regex = re.compile(r'[\"\s]title=(\"([^\"]+)\"|([^ %s\"]+))' % '\t')
+longtitle_regex = re.compile(r'longtitle=(\"([^\"]+)\"|([^ %s\"]+))' % '\t')
+command_regex = re.compile(r'command=(?:\"([^\"]+)\"|([^ %s\"]+))' % '\t')
 icon_regex = re.compile(r'icon=\"?([^\" ]+)')
 update_menus_regex = re.compile(r'^[^#]*update-menus', re.MULTILINE)
 xpm_ext_regex = re.compile(r'/usr/share/icons/(mini/|large/).*\.xpm$')
@@ -32,7 +32,7 @@ xdg_migrated_regex = re.compile(r'xdg=\"?([^\" ]+)')
 class MenuCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'MenuCheck')
+        super().__init__(config, output, 'MenuCheck')
         self.output.error_details.update(menu_details_dict)
         self.valid_sections = self.config.configuration['ValidMenuSections']
         self.standard_needs = self.config.configuration['ExtraMenuNeeds']
@@ -222,7 +222,7 @@ class MenuCheck(AbstractCheck):
 
                     res = xdg_migrated_regex.search(line)
                     if res:
-                        if not res.group(1).lower() == "true":
+                        if not res.group(1).lower() == 'true':
                             self.output.add_info('E', pkg, 'non-xdg-migrated-menu')
                     else:
                         self.output.add_info('E', pkg, 'non-xdg-migrated-menu')
@@ -230,98 +230,98 @@ class MenuCheck(AbstractCheck):
 
 menu_details_dict = {
 'non-file-in-menu-dir':
-'''/usr/lib/menu must not contain anything else than normal files.''',
+"""/usr/lib/menu must not contain anything else than normal files.""",
 
 'non-coherent-menu-filename':
-'''The menu file name should be /usr/lib/menu/<package>.''',
+"""The menu file name should be /usr/lib/menu/<package>.""",
 
 'non-readable-menu-file':
-'''The menu file isn't readable. Check the permissions.''',
+"""The menu file isn't readable. Check the permissions.""",
 
 'old-menu-entry':
-'''
-''',
+"""
+""",
 
 'non-transparent-xpm':
-'''xpm icon should be transparent for use in menus.''',
+"""xpm icon should be transparent for use in menus.""",
 
 'menu-without-postin':
-'''A menu file exists in the package but no %post scriptlet is present to call
-update-menus.''',
+"""A menu file exists in the package but no %post scriptlet is present to call
+update-menus.""",
 
 'postin-without-update-menus':
-'''A menu file exists in the package but its %post scriptlet doesn't call
-update-menus.''',
+"""A menu file exists in the package but its %post scriptlet doesn't call
+update-menus.""",
 
 'menu-without-postun':
-'''A menu file exists in the package but no %postun scriptlet is present to
-call update-menus.''',
+"""A menu file exists in the package but no %postun scriptlet is present to
+call update-menus.""",
 
 'postun-without-update-menus':
-'''A menu file exists in the package but its %postun scriptlet doesn't call
-update-menus.''',
+"""A menu file exists in the package but its %postun scriptlet doesn't call
+update-menus.""",
 
 'incoherent-package-value-in-menu':
-'''The package field of the menu entry isn't the same as the package name.''',
+"""The package field of the menu entry isn't the same as the package name.""",
 
 'use-of-launcher-in-menu-but-no-requires-on':
-'''The menu command uses a launcher but there is no dependency in the package
-that contains it.''',
+"""The menu command uses a launcher but there is no dependency in the package
+that contains it.""",
 
 'menu-command-not-in-package':
-'''The command used in the menu isn't included in the package.''',
+"""The command used in the menu isn't included in the package.""",
 
 'menu-longtitle-not-capitalized':
-'''The longtitle field of the menu doesn't start with a capital letter.''',
+"""The longtitle field of the menu doesn't start with a capital letter.""",
 
 'version-in-menu-longtitle':
-'''The longtitle filed of the menu entry contains a version. This is bad
-because it will be prone to error when the version of the package changes.''',
+"""The longtitle filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.""",
 
 'no-longtitle-in-menu':
-'''The longtitle field isn't present in the menu entry.''',
+"""The longtitle field isn't present in the menu entry.""",
 
 'menu-title-not-capitalized':
-'''The title field of the menu entry doesn't start with a capital letter.''',
+"""The title field of the menu entry doesn't start with a capital letter.""",
 
 'version-in-menu-title':
-'''The title filed of the menu entry contains a version. This is bad
-because it will be prone to error when the version of the package changes.''',
+"""The title filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.""",
 
 'no-title-in-menu':
-'''The title field isn't present in the menu entry.''',
+"""The title field isn't present in the menu entry.""",
 
 'invalid-menu-section':
-'''The section field of the menu entry isn't standard.''',
+"""The section field of the menu entry isn't standard.""",
 
 'unable-to-parse-menu-section':
-'''rpmlint wasn't able to parse the menu section. Please report.''',
+"""rpmlint wasn't able to parse the menu section. Please report.""",
 
 'hardcoded-path-in-menu-icon':
-'''The path of the icon is hardcoded in the menu entry. This prevent multiple
-sizes of the icon from being found.''',
+"""The path of the icon is hardcoded in the menu entry. This prevent multiple
+sizes of the icon from being found.""",
 
 'normal-icon-not-in-package':
-'''The normal icon isn't present in the package.''',
+"""The normal icon isn't present in the package.""",
 
 'mini-icon-not-in-package':
-'''The mini icon isn't present in the package.''',
+"""The mini icon isn't present in the package.""",
 
 'large-icon-not-in-package':
-'''The large icon isn't present in the package.''',
+"""The large icon isn't present in the package.""",
 
 'no-icon-in-menu':
-'''The menu entry doesn't contain an icon field.''',
+"""The menu entry doesn't contain an icon field.""",
 
 'invalid-title':
-'''The menu title contains invalid characters like /.''',
+"""The menu title contains invalid characters like /.""",
 
 'missing-menu-command':
-'''The menu file doesn't contain a command.''',
+"""The menu file doesn't contain a command.""",
 
 'menu-in-wrong-directory':
-'''The menu files must be under /usr/lib/menu.''',
+"""The menu files must be under /usr/lib/menu.""",
 
 'non-xdg-migrated-menu':
-'''The menu file has not been migrated to new XDG menu system.''',
+"""The menu file has not been migrated to new XDG menu system.""",
 }

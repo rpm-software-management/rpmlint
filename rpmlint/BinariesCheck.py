@@ -17,12 +17,12 @@ from rpmlint.AbstractCheck import AbstractCheck
 
 
 def create_regexp_call(call):
-    r = r".*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)" % call
+    r = r'.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
     return re.compile(r)
 
 
 def create_nonlibc_regexp_call(call):
-    r = r".*?\s+UND\s+(%s)\s?.*$" % call
+    r = r'.*?\s+UND\s+(%s)\s?.*$' % call
     return re.compile(r)
 
 
@@ -73,9 +73,9 @@ class BinaryInfo(object):
         self.chdir = False
         self.chroot_near_chdir = False
         self.mktemp = False
-        self.forbidden_functions = self.config.configuration["WarnOnFunction"]
+        self.forbidden_functions = self.config.configuration['WarnOnFunction']
         if self.forbidden_functions:
-            for name, func in self.forbidden_functions.iteritems():
+            for name, func in self.forbidden_functions.items():
                 # precompile regexps
                 f_name = func['f_name']
                 func['f_regex'] = create_nonlibc_regexp_call(f_name)
@@ -133,7 +133,7 @@ class BinaryInfo(object):
                         self.exec_stack = True
                     continue
 
-                if line.startswith("Symbol table"):
+                if line.startswith('Symbol table'):
                     break
 
             for line in lines:
@@ -161,7 +161,7 @@ class BinaryInfo(object):
                     self.chroot = True
 
                 if self.forbidden_functions:
-                    for r_name, func in self.forbidden_functions.iteritems():
+                    for r_name, func in self.forbidden_functions.items():
                         ret = func['f_regex'].search(line)
                         if ret:
                             self.forbidden_calls.append(r_name)
@@ -212,7 +212,7 @@ class BinaryInfo(object):
             elif self.chroot and self.chdir:
                 p = subprocess.Popen(('objdump', '-d', path),
                                      stdout=subprocess.PIPE, bufsize=-1,
-                                     env=dict(os.environ, LC_ALL="C"))
+                                     env=dict(os.environ, LC_ALL='C'))
                 with p.stdout:
                     index = 0
                     chroot_index = -99
@@ -321,7 +321,7 @@ def dir_base(path):
 class BinariesCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, 'BinariesCheck')
+        super().__init__(config, output, 'BinariesCheck')
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
@@ -358,16 +358,16 @@ class BinariesCheck(AbstractCheck):
                     binary_in_usr_lib = True
 
             if stat.S_ISREG(pkgfile.mode) and \
-                    (fname.startswith("/usr/lib64") or fname.startswith("/lib64")):
+                    (fname.startswith('/usr/lib64') or fname.startswith('/lib64')):
                 file_in_lib64 = True
 
-            # "is binary" stuff borrowed from https://pypi.python.org/pypi/binaryornot
+            # 'is binary' stuff borrowed from https://pypi.python.org/pypi/binaryornot
             # TODO: switch to it sometime later instead of embedding our own copy
             is_elf = pkgfile.magic.startswith('ELF ')
             is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
-            is_shell = "shell script" in pkgfile.magic
+            is_shell = 'shell script' in pkgfile.magic
             is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
 
             if is_shell:
@@ -381,7 +381,7 @@ class BinariesCheck(AbstractCheck):
                     lines = pkg.grep(invalid_dir_ref_regex, fname)
                     if lines:
                         self.output.add_info('E', pkg, 'invalid-directory-reference', fname,
-                                             '(line %s)' % ", ".join(lines))
+                                             '(line %s)' % ', '.join(lines))
                 continue
 
             # binary files only from here on
@@ -445,8 +445,8 @@ class BinariesCheck(AbstractCheck):
                                 self.output.add_info('E', pkg, 'invalid-ldconfig-symlink',
                                                      fname, link)
                         except KeyError:
-                            if base.startswith("lib") or \
-                               base.startswith("ld-"):
+                            if base.startswith('lib') or \
+                               base.startswith('ld-'):
                                 self.output.add_info('E', pkg, 'no-ldconfig-symlink', fname)
 
                     res = soversion_regex.search(bin_info.soname)
@@ -493,7 +493,7 @@ class BinariesCheck(AbstractCheck):
 
             if is_shobj and not is_exec and '.so' not in fname and \
                     bin_regex.search(fname):
-                # pkgfile.magic does not contain "executable" for PIEs
+                # pkgfile.magic does not contain 'executable' for PIEs
                 is_exec = True
 
             if is_exec:
@@ -524,14 +524,14 @@ class BinariesCheck(AbstractCheck):
 
             else:
                 # linked against libc ?
-                if "libc." not in fname and \
+                if 'libc.' not in fname and \
                    (not bin_info.soname or
-                    ("libc." not in bin_info.soname and
+                    ('libc.' not in bin_info.soname and
                      not ldso_soname_regex.search(bin_info.soname))):
 
                     found_libc = False
                     for lib in bin_info.needed:
-                        if "libc." in lib:
+                        if 'libc.' in lib:
                             found_libc = True
                             break
 
@@ -547,9 +547,9 @@ class BinariesCheck(AbstractCheck):
                 if bin_info.exec_stack:
                     self.output.add_info('W', pkg, 'executable-stack', fname)
             elif not bin_info.readelf_error and (
-                    pkg.arch.endswith("86") or
-                    pkg.arch.startswith("pentium") or
-                    pkg.arch in ("athlon", "x86_64")):
+                    pkg.arch.endswith('86') or
+                    pkg.arch.startswith('pentium') or
+                    pkg.arch in ('athlon', 'x86_64')):
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
@@ -587,176 +587,176 @@ class BinariesCheck(AbstractCheck):
 # Add information about checks
 binaries_details_dict = {
 'arch-independent-package-contains-binary-or-object':
-'''The package contains a binary or object file but is tagged
-noarch.''',
+"""The package contains a binary or object file but is tagged
+noarch.""",
 
 'arch-dependent-file-in-usr-share':
-'''This package installs an ELF binary in the /usr/share
- hierarchy, which is reserved for architecture-independent files.''',
+"""This package installs an ELF binary in the /usr/share
+ hierarchy, which is reserved for architecture-independent files.""",
 
 'binary-in-etc':
-'''This package installs an ELF binary in /etc.  Both the
-FHS and the FSSTND forbid this.''',
+"""This package installs an ELF binary in /etc.  Both the
+FHS and the FSSTND forbid this.""",
 
 # 'non-sparc32-binary',
 # '',
 
 'noarch-with-lib64':
-'''This package is marked as noarch but installs files into lib64.
+"""This package is marked as noarch but installs files into lib64.
 Not all architectures have this in path, so the package can't be
-noarch.''',
+noarch.""",
 
 'invalid-soname':
-'''The soname of the library is neither of the form lib<libname>.so.<major> or
-lib<libname>-<major>.so.''',
+"""The soname of the library is neither of the form lib<libname>.so.<major> or
+lib<libname>-<major>.so.""",
 
 'invalid-ldconfig-symlink':
-'''The symbolic link references the wrong file. It should reference
-the shared library.''',
+"""The symbolic link references the wrong file. It should reference
+the shared library.""",
 
 'no-ldconfig-symlink':
-'''The package should not only include the shared library itself, but
+"""The package should not only include the shared library itself, but
 also the symbolic link which ldconfig would produce. (This is
 necessary, so that the link gets removed by rpm automatically when
 the package gets removed, even if for some reason ldconfig would not be
-run at package postinstall phase.)''',
+run at package postinstall phase.)""",
 
 'shlib-with-non-pic-code':
-'''The listed shared libraries contain object code that was compiled
+"""The listed shared libraries contain object code that was compiled
 without -fPIC. All object code in shared libraries should be
 recompiled separately from the static libraries with the -fPIC option.
 Use the ``eu-findtextrel'' command on a library with debugging symbols
 to list code compiled without -fPIC.
 
 Another common mistake that causes this problem is linking with
-``gcc -Wl,-shared'' instead of ``gcc -shared''.''',
+``gcc -Wl,-shared'' instead of ``gcc -shared''.""",
 
 'libtool-wrapper-in-package':
-'''Your package contains a libtool wrapper shell script. This
+"""Your package contains a libtool wrapper shell script. This
 will not work. Instead of installing the libtool wrapper file run
 ``libtool --mode=install install -m perm <file> <dest>'' in order
-to install the relinked file.''',
+to install the relinked file.""",
 
 'binary-or-shlib-defines-rpath':
-'''The binary or shared library defines `RPATH'. Usually this is a
+"""The binary or shared library defines `RPATH'. Usually this is a
 bad thing because it hardcodes the path to search libraries and so
 makes it difficult to move libraries around.  Most likely you will find a
 Makefile with a line like: gcc test.o -o test -Wl,--rpath.  Also, sometimes
-configure scripts provide a --disable-rpath flag to avoid this.''',
+configure scripts provide a --disable-rpath flag to avoid this.""",
 
 'statically-linked-binary':
-'''The package installs a statically linked binary or object file.
+"""The package installs a statically linked binary or object file.
 
 Usually this is a packaging bug. If not, contact your rpmlint distributor
 about this so that this error gets included in the exception file for rpmlint
 and will not be flagged as a packaging bug in the future (or add it to your
-local configuration if you installed rpmlint from the source tarball).''',
+local configuration if you installed rpmlint from the source tarball).""",
 
 'executable-in-library-package':
-'''The package mixes up libraries and executables. Mixing up these
-both types of files makes upgrades quite impossible.''',
+"""The package mixes up libraries and executables. Mixing up these
+both types of files makes upgrades quite impossible.""",
 
 'non-versioned-file-in-library-package':
-'''The package contains files in non versioned directories. This makes it
+"""The package contains files in non versioned directories. This makes it
 impossible to have multiple major versions of the libraries installed.
 One solution can be to change the directories which contain the files
 to subdirs of /usr/lib/<name>-<version> or /usr/share/<name>-<version>.
 Another solution can be to include a version number in the file names
-themselves.''',
+themselves.""",
 
 'incoherent-version-in-name':
-'''The package name should contain the major version of the library.''',
+"""The package name should contain the major version of the library.""",
 
 'invalid-directory-reference':
 'This file contains a reference to /tmp or /home.',
 
 'no-binary':
-'''The package should be of the noarch architecture because it doesn't contain
-any binaries.''',
+"""The package should be of the noarch architecture because it doesn't contain
+any binaries.""",
 
 # http://sources.redhat.com/ml/libc-alpha/2003-05/msg00034.html
 'undefined-non-weak-symbol':
-'''The binary contains undefined non-weak symbols.  This may indicate improper
-linkage; check that the binary has been linked as expected.''',
+"""The binary contains undefined non-weak symbols.  This may indicate improper
+linkage; check that the binary has been linked as expected.""",
 
 # http://www.redhat.com/archives/fedora-maintainers/2006-June/msg00176.html
 'unused-direct-shlib-dependency':
-'''The binary contains unused direct shared library dependencies.  This may
+"""The binary contains unused direct shared library dependencies.  This may
 indicate gratuitously bloated linkage; check that the binary has been linked
-with the intended shared libraries only.''',
+with the intended shared libraries only.""",
 
 'only-non-binary-in-usr-lib':
-'''There are only non binary files in /usr/lib so they should be in
-/usr/share.''',
+"""There are only non binary files in /usr/lib so they should be in
+/usr/share.""",
 
 'binaryinfo-readelf-failed':
-'''Executing readelf on this file failed, all checks could not be run.''',
+"""Executing readelf on this file failed, all checks could not be run.""",
 
 'binaryinfo-objdump-failed':
-'''Executing objdump on this file failed, all checks could not be run.''',
+"""Executing objdump on this file failed, all checks could not be run.""",
 
 'binaryinfo-tail-failed':
-'''Reading trailing bytes of this file failed, all checks could not be run.''',
+"""Reading trailing bytes of this file failed, all checks could not be run.""",
 
 'ldd-failed':
-'''Executing ldd on this file failed, all checks could not be run.''',
+"""Executing ldd on this file failed, all checks could not be run.""",
 
 'executable-stack':
-'''The binary declares the stack as executable.  Executable stack is usually an
+"""The binary declares the stack as executable.  Executable stack is usually an
 error as it is only needed if the code contains GCC trampolines or similar
 constructs which uses code on the stack.  One common source for needlessly
 executable stack cases are object files built from assembler files which
-don\'t define a proper .note.GNU-stack section.''',
+don\'t define a proper .note.GNU-stack section.""",
 
 'missing-PT_GNU_STACK-section':
-'''The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
+"""The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
 make the stack executable.  Usual suspects include use of a non-GNU linker or
-an old GNU linker version.''',
+an old GNU linker version.""",
 
 'shared-lib-calls-exit':
-'''This library package calls exit() or _exit(), probably in a non-fork()
+"""This library package calls exit() or _exit(), probably in a non-fork()
 context. Doing so from a library is strongly discouraged - when a library
 function calls exit(), it prevents the calling program from handling the
 error, reporting it to the user, closing files properly, and cleaning up any
 state that the program has. It is preferred for the library to return an
 actual error code and let the calling program decide how to handle the
-situation.''',
+situation.""",
 
 'ocaml-mixed-executable':
-'''Executables built with ocamlc -custom are deprecated.  Packagers should ask
+"""Executables built with ocamlc -custom are deprecated.  Packagers should ask
 upstream maintainers to build these executables without the -custom option.  If
 this cannot be changed and the executable needs to be packaged in its current
 form, make sure that rpmbuild does not strip it during the build, and on setups
 that use prelink, make sure that prelink does not strip it either, usually by
 placing a blacklist file in /etc/prelink.conf.d.  For more information, see
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49''',
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49""",
 
 'non-position-independent-executable':
-'''This executable must be position independent.  Check that it is built with
--fPIE/-fpie in compiler flags and -pie in linker flags.''',
+"""This executable must be position independent.  Check that it is built with
+-fPIE/-fpie in compiler flags and -pie in linker flags.""",
 
 'missing-call-to-setgroups-before-setuid':
-'''This executable is calling setuid and setgid without setgroups or
+"""This executable is calling setuid and setgid without setgroups or
 initgroups. There is a high probability this means it didn't relinquish all
 groups, and this would be a potential security issue to be fixed. Seek POS36-C
-on the web for details about the problem.''',
+on the web for details about the problem.""",
 
 'missing-call-to-chdir-with-chroot':
-'''This executable appears to call chroot without using chdir to change the
+"""This executable appears to call chroot without using chdir to change the
 current directory. This is likely an error and permits an attacker to break out
 of the chroot by using fchdir. While that's not always a security issue, this
-has to be checked.''',
+has to be checked.""",
 
 'call-to-mktemp':
-'''This executable calls mktemp. As advised by the manpage (mktemp(3)), this
+"""This executable calls mktemp. As advised by the manpage (mktemp(3)), this
 function should be avoided. Some implementations are deeply insecure, and there
 is a race condition between the time of check and time of use (TOCTOU).
 See http://capec.mitre.org/data/definitions/29.html for details, and contact
-upstream to have this issue fixed.''',
+upstream to have this issue fixed.""",
 
 'unstripped-binary-or-object':
-'''This executable should be stripped from debugging symbols, in order to take
+"""This executable should be stripped from debugging symbols, in order to take
 less space and be loaded faster. This is usually done automatically at
 buildtime by rpm. Check the build logs and the permission on the file (some
-implementations only strip if the permission is 0755).'''
+implementations only strip if the permission is 0755)."""
 }

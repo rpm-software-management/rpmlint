@@ -18,16 +18,16 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 
 def re_tag_compile(tag):
-    r = r"^%s\s*:\s*(\S.*?)\s*$" % tag
+    r = r'^%s\s*:\s*(\S.*?)\s*$' % tag
     return re.compile(r, re.IGNORECASE)
 
 
 patch_regex = re_tag_compile(r'Patch(\d*)')
-applied_patch_regex = re.compile(r"^%patch(\d*)")
-applied_patch_p_regex = re.compile(r"\s-P\s+(\d+)\b")
+applied_patch_regex = re.compile(r'^%patch(\d*)')
+applied_patch_p_regex = re.compile(r'\s-P\s+(\d+)\b')
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
-applied_patch_i_regex = re.compile(r"(?:%\{?__)?patch\}?.*?\s+(?:<|-i)\s+%\{PATCH(\d+)\}")
-source_dir_regex = re.compile(r"^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)")
+applied_patch_i_regex = re.compile(r'(?:%\{?__)?patch\}?.*?\s+(?:<|-i)\s+%\{PATCH(\d+)\}')
+source_dir_regex = re.compile(r'^[^#]*(\$RPM_SOURCE_DIR|%{?_sourcedir}?)')
 obsolete_tags_regex = re_tag_compile(r'(?:Serial|Copyright)')
 buildroot_regex = re_tag_compile('BuildRoot')
 prefix_regex = re_tag_compile('Prefix')
@@ -92,14 +92,14 @@ UNICODE_NBSP = u'\xa0'
 
 
 def unversioned(deps):
-    '''Yield unversioned dependency names from the given list.'''
+    """Yield unversioned dependency names from the given list."""
     for dep in deps:
         if not dep[1]:
             yield dep[0]
 
 
 def contains_buildroot(line):
-    '''Check if the given line contains use of rpm buildroot.'''
+    """Check if the given line contains use of rpm buildroot."""
     res = rpm_buildroot_regex.search(line)
     if res and \
        (not res.group(1) or len(res.group(1)) % 2 == 0) and \
@@ -111,14 +111,14 @@ def contains_buildroot(line):
 class SpecCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, "SpecCheck")
+        super().__init__(config, output, 'SpecCheck')
         self._spec_file = None
         self._spec_name = None
         self.valid_groups = config.configuration['ValidGroups']
         self.output.error_details.update(spec_details_dict)
         self.output.error_details.update({'non-standard-group':
-                                         '''The value of the Group tag in the package is not valid.  Valid groups are:
-                                         "%s".''' % '", "'.join(self.valid_groups)})
+                                         """The value of the Group tag in the package is not valid.  Valid groups are:
+                                         '%s'.""" % ', '.join(self.valid_groups)})
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
 
     def check_source(self, pkg):
@@ -129,16 +129,16 @@ class SpecCheck(AbstractCheck):
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
                 self._spec_name = pkgfile.name
-                if fname == pkg.name + ".spec":
+                if fname == pkg.name + '.spec':
                     wrong_spec = False
                     break
                 else:
                     wrong_spec = True
         if not self._spec_file:
-            self.output.add_info('E', pkg, "no-spec-file")
+            self.output.add_info('E', pkg, 'no-spec-file')
         else:
             if wrong_spec:
-                self.output.add_info('E', pkg, "invalid-spec-name")
+                self.output.add_info('E', pkg, 'invalid-spec-name')
 
             # check content of spec file
             self.check_spec(pkg, self._spec_file)
@@ -155,7 +155,7 @@ class SpecCheck(AbstractCheck):
         source_dir = False
         buildroot = False
         configure_linenum = None
-        configure_cmdline = ""
+        configure_cmdline = ''
         mklibname = False
         is_lib_pkg = False
         if_depth = 0
@@ -174,7 +174,7 @@ class SpecCheck(AbstractCheck):
 
         if self._spec_file:
             if not Pkg.is_utf8(self._spec_file):
-                self.output.add_info('E', pkg, "non-utf8-spec-file",
+                self.output.add_info('E', pkg, 'non-utf8-spec-file',
                                      self._spec_name or self._spec_file)
 
         # gather info from spec lines
@@ -189,7 +189,7 @@ class SpecCheck(AbstractCheck):
 
             char = line.find(nbsp)
             if char != -1:
-                self.output.add_info('W', pkg, "non-break-space", "line %s, char %d" %
+                self.output.add_info('W', pkg, 'non-break-space', 'line %s, char %d' %
                                      (pkg.current_linenum, char))
 
             section_marker = False
@@ -290,10 +290,10 @@ class SpecCheck(AbstractCheck):
                 res = source_dir_regex.search(line)
                 if res:
                     source_dir = True
-                    self.output.add_info('E', pkg, "use-of-RPM_SOURCE_DIR")
+                    self.output.add_info('E', pkg, 'use-of-RPM_SOURCE_DIR')
 
             if configure_linenum:
-                if configure_cmdline[-1] == "\\":
+                if configure_cmdline[-1] == '\\':
                     configure_cmdline = configure_cmdline[:-1] + line.strip()
                 else:
                     res = configure_libdir_spec_regex.search(configure_cmdline)
@@ -302,16 +302,16 @@ class SpecCheck(AbstractCheck):
                         # number displayed:
                         real_linenum = pkg.current_linenum
                         pkg.current_linenum = configure_linenum
-                        self.output.add_info('W', pkg, "configure-without-libdir-spec")
+                        self.output.add_info('W', pkg, 'configure-without-libdir-spec')
                         pkg.current_linenum = real_linenum
                     elif res.group(1):
                         res = re.match(hardcoded_library_paths, res.group(1))
                         if res:
-                            self.output.add_info('E', pkg, "hardcoded-library-path",
-                                                 res.group(1), "in configure options")
+                            self.output.add_info('E', pkg, 'hardcoded-library-path',
+                                                 res.group(1), 'in configure options')
                     configure_linenum = None
 
-            hashPos = line.find("#")
+            hashPos = line.find('#')
 
             if current_section != 'changelog':
                 cfgPos = line.find('./configure')
@@ -325,7 +325,7 @@ class SpecCheck(AbstractCheck):
                     (biarch_package_regex.match(pkg.name) or
                      self.hardcoded_lib_path_exceptions_regex.search(
                          res.group(1).lstrip())):
-                self.output.add_info('E', pkg, "hardcoded-library-path", "in",
+                self.output.add_info('E', pkg, 'hardcoded-library-path', 'in',
                                      res.group(1).lstrip())
 
             if '%mklibname' in line:
@@ -345,7 +345,7 @@ class SpecCheck(AbstractCheck):
 
                 res = obsolete_tags_regex.search(line)
                 if res:
-                    self.output.add_info('W', pkg, "obsolete-tag", res.group(1))
+                    self.output.add_info('W', pkg, 'obsolete-tag', res.group(1))
 
                 res = buildroot_regex.search(line)
                 if res:
@@ -356,7 +356,7 @@ class SpecCheck(AbstractCheck):
 
                 res = buildarch_regex.search(line)
                 if res:
-                    if res.group(1) != "noarch":
+                    if res.group(1) != 'noarch':
                         self.output.add_info('E', pkg,
                                              'buildarch-instead-of-exclusivearch-tag',
                                              res.group(1))
@@ -465,19 +465,19 @@ class SpecCheck(AbstractCheck):
                     ('package', 'changelog', 'description', 'files'):
                 greps = deprecated_grep_regex.findall(line)
                 if greps:
-                    self.output.add_info('W', pkg, "deprecated-grep", greps)
+                    self.output.add_info('W', pkg, 'deprecated-grep', greps)
 
             # If not checking spec file only, we're checking one inside a
             # SRPM -> skip this check to avoid duplicate warnings (#167)
             if spec_only and self.valid_groups and \
-               line.lower().startswith("group:"):
+               line.lower().startswith('group:'):
                 group = line[6:].strip()
                 if group not in self.valid_groups:
                     self.output.add_info('W', pkg, 'non-standard-group', group)
 
             # Test if there are macros in comments
             if hashPos != -1 and \
-                    (hashPos == 0 or line[hashPos - 1] in (" ", "\t")):
+                    (hashPos == 0 or line[hashPos - 1] in (' ', '\t')):
                 for match in macro_regex.findall(
                         line[hashPos + 1:]):
                     res = re.match('%+', match)
@@ -521,11 +521,11 @@ class SpecCheck(AbstractCheck):
         if not patches_auto_applied:
             for pnum, pfile in patches.items():
                 if pnum in applied_patches_ifarch:
-                    self.output.add_info('W', pkg, "%ifarch-applied-patch",
-                                         "Patch%d:" % pnum, pfile)
+                    self.output.add_info('W', pkg, '%ifarch-applied-patch',
+                                         'Patch%d:' % pnum, pfile)
                 if pnum not in applied_patches:
-                    self.output.add_info('W', pkg, "patch-not-applied",
-                                         "Patch%d:" % pnum, pfile)
+                    self.output.add_info('W', pkg, 'patch-not-applied',
+                                         'Patch%d:' % pnum, pfile)
 
         # Rest of the checks require a real spec file
         if not self._spec_file:
@@ -568,24 +568,24 @@ class SpecCheck(AbstractCheck):
                     (url, num, flags) = src
                     (scheme, netloc) = urlparse(url)[0:2]
                     if flags & 1:  # rpmspec.h, rpm.org ticket #123
-                        srctype = "Source"
+                        srctype = 'Source'
                     else:
-                        srctype = "Patch"
+                        srctype = 'Patch'
                     tag = '%s%s' % (srctype, num)
                     if scheme and netloc:
                         info = self.check_url(pkg, tag, url)
                         if not info or not hasattr(pkg, 'files'):
                             continue
-                        clen = info.get("Content-Length")
+                        clen = info.get('Content-Length')
                         if clen is not None:
                             clen = int(clen)
-                        cmd5 = info.get("Content-MD5")
+                        cmd5 = info.get('Content-MD5')
                         if cmd5 is not None:
                             cmd5 = cmd5.lower()
                         if clen is not None or cmd5 is not None:
                             # Not using path from urlparse results to match how
                             # rpm itself parses the basename.
-                            pkgfile = pkg.files().get(url.split("/")[-1])
+                            pkgfile = pkg.files().get(url.split('/')[-1])
                             if pkgfile:
                                 if clen is not None and pkgfile.size != clen:
                                     self.output.add_info('W', pkg, 'file-size-mismatch',
@@ -600,219 +600,219 @@ class SpecCheck(AbstractCheck):
                                                          '%s = %s, %s = %s' %
                                                          (pkgfile.name, pkgfile.md5,
                                                           url, cmd5))
-                    elif srctype == "Source" and tarball_regex.search(url):
+                    elif srctype == 'Source' and tarball_regex.search(url):
                         self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url)
 
 
 spec_details_dict = {
 'no-spec-file':
-'''No spec file was specified in your RPM building. Please specify a valid
-SPEC file to build a valid RPM package.''',
+"""No spec file was specified in your RPM building. Please specify a valid
+SPEC file to build a valid RPM package.""",
 
 'invalid-spec-name':
-'''The spec file name (without the .spec suffix) must match the package name
-("Name:" tag). Either rename your package or the specfile.''',
+"""The spec file name (without the .spec suffix) must match the package name
+('Name:' tag). Either rename your package or the specfile.""",
 
 'non-utf8-spec-file':
-'''The character encoding of the spec file is not UTF-8.  Convert it for
-example using iconv(1).''',
+"""The character encoding of the spec file is not UTF-8.  Convert it for
+example using iconv(1).""",
 
 'use-of-RPM_SOURCE_DIR':
-'''You use $RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
-use a directory for building, use $RPM_BUILD_ROOT instead.''',
+"""You use $RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
+use a directory for building, use $RPM_BUILD_ROOT instead.""",
 
 'patch-not-applied':
-'''A patch is included in your package but was not applied. Refer to the
-patches documentation to see what's wrong.''',
+"""A patch is included in your package but was not applied. Refer to the
+patches documentation to see what's wrong.""",
 
 'obsolete-tag':
-'''The following tags are obsolete: Copyright and Serial. They must
-be replaced by License and Epoch respectively.''',
+"""The following tags are obsolete: Copyright and Serial. They must
+be replaced by License and Epoch respectively.""",
 
 'deprecated-grep':
-'''Direct use of grep as egrep or fgrep is deprecated in GNU grep and
-historical in POSIX, use grep -E and grep -F instead.''',
+"""Direct use of grep as egrep or fgrep is deprecated in GNU grep and
+historical in POSIX, use grep -E and grep -F instead.""",
 
 'no-buildroot-tag':
-'''The BuildRoot tag isn't used in your spec. It must be used in order to
+"""The BuildRoot tag isn't used in your spec. It must be used in order to
 allow building the package as non root on some systems. For some rpm versions
 (e.g. rpm.org >= 4.6) the BuildRoot tag is not necessary in specfiles and is
 ignored by rpmbuild; if your package is only going to be built with such rpm
-versions you can ignore this warning.''',
+versions you can ignore this warning.""",
 
 'hardcoded-path-in-buildroot-tag':
-'''A path is hardcoded in your Buildroot tag. It should be replaced
-by something like %{_tmppath}/%{name}-%{version}-build.''',
+"""A path is hardcoded in your Buildroot tag. It should be replaced
+by something like %{_tmppath}/%{name}-%{version}-build.""",
 
 'hardcoded-packager-tag':
-'''The Packager tag is hardcoded in your spec file. It should be removed, so
-as to use rebuilder's own defaults.''',
+"""The Packager tag is hardcoded in your spec file. It should be removed, so
+as to use rebuilder's own defaults.""",
 
 'buildarch-instead-of-exclusivearch-tag':
-'''Use ExclusiveArch instead of BuildArch (or BuildArchitectures)
+"""Use ExclusiveArch instead of BuildArch (or BuildArchitectures)
 to restrict build on some specific architectures.
-Only use BuildArch with noarch''',
+Only use BuildArch with noarch""",
 
 'hardcoded-prefix-tag':
-'''The Prefix tag is hardcoded in your spec file. It should be removed, so as
-to allow package relocation.''',
+"""The Prefix tag is hardcoded in your spec file. It should be removed, so as
+to allow package relocation.""",
 
 'hardcoded-library-path':
-'''A library path is hardcoded to one of the following paths: /lib,
-/usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.''',
+"""A library path is hardcoded to one of the following paths: /lib,
+/usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.""",
 
 'configure-without-libdir-spec':
-'''A configure script is run without specifying the libdir. configure
+"""A configure script is run without specifying the libdir. configure
 options must be augmented with something like --libdir=%{_libdir} whenever
-the script supports it.''',
+the script supports it.""",
 
 'no-%prep-section':
-'''The spec file does not contain a %prep section.  Even if some packages don't
+"""The spec file does not contain a %prep section.  Even if some packages don't
 directly need it, section markers may be overridden in rpm's configuration
-to provide additional "under the hood" functionality.  Add the section, even
-if empty.''',
+to provide additional 'under the hood' functionality.  Add the section, even
+if empty.""",
 
 'no-%build-section':
-'''The spec file does not contain a %build section.  Even if some packages
+"""The spec file does not contain a %build section.  Even if some packages
 don't directly need it, section markers may be overridden in rpm's
-configuration to provide additional "under the hood" functionality, such as
+configuration to provide additional 'under the hood' functionality, such as
 injection of automatic -debuginfo subpackages.  Add the section, even if
-empty.''',
+empty.""",
 
 'no-%install-section':
-'''The spec file does not contain an %install section.  Even if some packages
+"""The spec file does not contain an %install section.  Even if some packages
 don't directly need it, section markers may be overridden in rpm's
-configuration to provide additional "under the hood" functionality.  Add the
-section, even if empty.''',
+configuration to provide additional 'under the hood' functionality.  Add the
+section, even if empty.""",
 
 'no-%clean-section':
-'''The spec file doesn't contain a %clean section to remove the files installed
-by the %install section.''',
+"""The spec file doesn't contain a %clean section to remove the files installed
+by the %install section.""",
 
 'more-than-one-%changelog-section':
-'''The spec file unnecessarily contains more than one %changelog section;
-remove the extra ones.''',
+"""The spec file unnecessarily contains more than one %changelog section;
+remove the extra ones.""",
 
 'lib-package-without-%mklibname':
-'''The package name must be built using %mklibname to allow lib64 and lib32
-coexistence.''',
+"""The package name must be built using %mklibname to allow lib64 and lib32
+coexistence.""",
 
 '%ifarch-applied-patch':
-'''A patch is applied inside an %ifarch block. Patches must be applied
+"""A patch is applied inside an %ifarch block. Patches must be applied
 on all architectures and may contain necessary configure and/or code
-patch to be effective only on a given arch.''',
+patch to be effective only on a given arch.""",
 
 'prereq-use':
-'''The use of PreReq is deprecated. In the majority of cases, a plain Requires
+"""The use of PreReq is deprecated. In the majority of cases, a plain Requires
 is enough and the right thing to do. Sometimes Requires(pre), Requires(post),
-Requires(preun) and/or Requires(postun) can also be used instead of PreReq.''',
+Requires(preun) and/or Requires(postun) can also be used instead of PreReq.""",
 
 'buildprereq-use':
-'''The use of BuildPreReq is deprecated, build dependencies are always required
-before a package can be built.  Use plain BuildRequires instead.''',
+"""The use of BuildPreReq is deprecated, build dependencies are always required
+before a package can be built.  Use plain BuildRequires instead.""",
 
 'broken-syntax-in-scriptlet-requires':
-'''Comma separated context marked dependencies are silently broken in some
+"""Comma separated context marked dependencies are silently broken in some
 versions of rpm.  One way to work around it is to split them into several ones,
-eg. replace "Requires(post,preun): foo" with "Requires(post): foo" and
-"Requires(preun): foo".''',
+eg. replace 'Requires(post,preun): foo' with 'Requires(post): foo' and
+'Requires(preun): foo'.""",
 
 'setup-not-in-prep':
-'''The %setup macro should only be used within the %prep section because it may
+"""The %setup macro should only be used within the %prep section because it may
 not expand to anything outside of it and can break the build in unpredictable
-ways.''',
+ways.""",
 
 'setup-not-quiet':
-'''Use the -q option to the %setup macro to avoid useless build output from
-unpacking the sources.''',
+"""Use the -q option to the %setup macro to avoid useless build output from
+unpacking the sources.""",
 
 'no-cleaning-of-buildroot':
-'''You should clean $RPM_BUILD_ROOT in the %clean section and in the beginning
-of the %install section. Use "rm -rf $RPM_BUILD_ROOT". Some rpm configurations
+"""You should clean $RPM_BUILD_ROOT in the %clean section and in the beginning
+of the %install section. Use 'rm -rf $RPM_BUILD_ROOT'. Some rpm configurations
 do this automatically; if your package is only going to be built in such
 configurations, you can ignore this warning for the section(s) where your rpm
-takes care of it.''',
+takes care of it.""",
 
 'rpm-buildroot-usage':
-'''$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
-may break short circuit builds.''',
+"""$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
+may break short circuit builds.""",
 
 'make-check-outside-check-section':
-'''Make check or other automated regression test should be run in %check, as
-they can be disabled with a rpm macro for short circuiting purposes.''',
+"""Make check or other automated regression test should be run in %check, as
+they can be disabled with a rpm macro for short circuiting purposes.""",
 
 'macro-in-%changelog':
-'''Macros are expanded in %changelog too, which can in unfortunate cases lead
+"""Macros are expanded in %changelog too, which can in unfortunate cases lead
 to the package not building at all, or other subtle unexpected conditions that
 affect the build.  Even when that doesn\'t happen, the expansion results in
-possibly "rewriting history" on subsequent package revisions and generally
+possibly 'rewriting history' on subsequent package revisions and generally
 odd entries eg. in source rpms, which is rarely wanted.  Avoid use of macros
-in %changelog altogether, or use two '%'s to escape them, like '%%foo'.''',
+in %changelog altogether, or use two '%'s to escape them, like '%%foo'.""",
 
 'depscript-without-disabling-depgen':
-'''In some common rpm configurations/versions, defining __find_provides and/or
+"""In some common rpm configurations/versions, defining __find_provides and/or
 __find_requires has no effect if rpm's internal dependency generator has not
 been disabled for the build.  %define _use_internal_dependency_generator to 0
-to disable it in the specfile, or don't define __find_provides/requires.''',
+to disable it in the specfile, or don't define __find_provides/requires.""",
 
 'mixed-use-of-spaces-and-tabs':
-'''The specfile mixes use of spaces and tabs for indentation, which is a
-cosmetic annoyance.  Use either spaces or tabs for indentation, not both.''',
+"""The specfile mixes use of spaces and tabs for indentation, which is a
+cosmetic annoyance.  Use either spaces or tabs for indentation, not both.""",
 
 'unversioned-explicit-provides':
-'''The specfile contains an unversioned Provides: token, which will match all
+"""The specfile contains an unversioned Provides: token, which will match all
 older, equal, and newer versions of the provided thing.  This may cause
 update problems and will make versioned dependencies, obsoletions and conflicts
-on the provided thing useless -- make the Provides versioned if possible.''',
+on the provided thing useless -- make the Provides versioned if possible.""",
 
 'unversioned-explicit-obsoletes':
-'''The specfile contains an unversioned Obsoletes: token, which will match all
+"""The specfile contains an unversioned Obsoletes: token, which will match all
 older, equal and newer versions of the obsoleted thing.  This may cause update
 problems, restrict future package/provides naming, and may match something it
 was originally not inteded to match -- make the Obsoletes versioned if
-possible.''',
+possible.""",
 
 'libdir-macro-in-noarch-package':
-'''The %{_libdir} or %{_lib} macro was found in a noarch package in a section
+"""The %{_libdir} or %{_lib} macro was found in a noarch package in a section
 that gets included in binary packages.  This is most likely an error because
 these macros are expanded on the build host and their values vary between
 architectures, probably resulting in a package that does not work properly
 on all architectures at runtime. Investigate whether the package is really
-architecture independent or if some other dir/macro should be instead.''',
+architecture independent or if some other dir/macro should be instead.""",
 
 'non-break-space':
-'''The spec file contains a non-break space, which looks like a regular space
+"""The spec file contains a non-break space, which looks like a regular space
 in some editors but can lead to obscure errors. It should be replaced by a
-regular space.''',
+regular space.""",
 
 'specfile-error':
-'''This error occurred when rpmlint used rpm to query the specfile.  The error
-is output by rpm and the message should contain more information.''',
+"""This error occurred when rpmlint used rpm to query the specfile.  The error
+is output by rpm and the message should contain more information.""",
 
 'comparison-operator-in-deptoken':
-'''This dependency token contains a comparison operator (<, > or =).  This is
+"""This dependency token contains a comparison operator (<, > or =).  This is
 usually not intended and may be caused by missing whitespace between the
-token's name, the comparison operator and the version string.''',
+token's name, the comparison operator and the version string.""",
 
 'macro-in-comment':
-'''There is a unescaped macro after a shell style comment in the specfile.
+"""There is a unescaped macro after a shell style comment in the specfile.
 Macros are expanded everywhere, so check if it can cause a problem in this
-case and escape the macro with another leading % if appropriate.''',
+case and escape the macro with another leading % if appropriate.""",
 
 'file-size-mismatch':
-'''The size of the file in the package does not match the size indicated by
+"""The size of the file in the package does not match the size indicated by
 peeking at its URL.  Verify that the file in the package has the intended
-contents.''',
+contents.""",
 
 'file-md5-mismatch':
-'''The MD5 hash of the file in the package does not match the MD5 hash
+"""The MD5 hash of the file in the package does not match the MD5 hash
 indicated by peeking at its URL.  Verify that the file in the package has the
-intended contents.''',
+intended contents.""",
 
 'patch-fuzz-is-changed':
-'''The internal patch fuzz value was changed, and could hide patchs issues, or
+"""The internal patch fuzz value was changed, and could hide patchs issues, or
 could lead to applying a patch at the wrong location. Usually, this is often
 the sign that someone didn't check if a patch is still needed and do not want
 to rediff it. It is usually better to rediff the patch and try to send it
-upstream.'''
+upstream."""
 }

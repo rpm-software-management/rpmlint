@@ -32,7 +32,7 @@ from rpmlint.helpers import print_warning
 
 # Print usage information
 def usage(name):
-    print('''usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
+    print("""usage: %s [<options>] <rpm files|installed packages|specfiles|dirs>
   options:
 \t[-i|--info]
 \t[-I|--explain <messageid>]
@@ -45,7 +45,7 @@ def usage(name):
 \t[-V|--version]
 \t[-n|--noexception]
 \t[-f|--file <user config file to use>]
-\t[-o|--option <key value>]'''
+\t[-o|--option <key value>]"""
           % (name))
 
 
@@ -55,7 +55,7 @@ def printVersion():
 
 
 def loadCheck(name, config, output):
-    '''Load a (check) module by its name, unless it is already loaded.'''
+    """Load a (check) module by its name, unless it is already loaded."""
     # Avoid loading more than once (initialization costs)
     loaded = sys.modules.get(name)
     if loaded:
@@ -89,8 +89,8 @@ def main():
             pkgs = []
             isfile = False
             try:
-                if arg == "-":
-                    arg = "(standard input)"
+                if arg == '-':
+                    arg = '(standard input)'
                     # Short-circuit stdin spec file check
                     stdin = sys.stdin.readlines()
                     if not stdin:
@@ -104,13 +104,13 @@ def main():
                     st = os.stat(arg)
                     isfile = True
                     if stat.S_ISREG(st[stat.ST_MODE]):
-                        if arg.endswith(".spec"):
+                        if arg.endswith('.spec'):
                             # Short-circuit spec file checks
                             with Pkg.FakePkg(arg) as pkg:
                                 runSpecChecks(pkg, arg)
                             specfiles_checked += 1
-                        elif "/" in arg or arg.endswith(".rpm") or \
-                                arg.endswith(".spm"):
+                        elif '/' in arg or arg.endswith('.rpm') or \
+                                arg.endswith('.spm'):
                             pkgs.append(Pkg.Pkg(arg, extract_dir))
                         else:
                             raise OSError
@@ -127,7 +127,7 @@ def main():
                             '(none): E: no installed packages by name %s' % arg)
                     else:
                         ipkgs.sort(key=lambda x: locale.strxfrm(
-                            x.header.sprintf("%{NAME}.%{ARCH}")))
+                            x.header.sprintf('%{NAME}.%{ARCH}')))
                         pkgs.extend(ipkgs)
             except KeyboardInterrupt:
                 if isfile:
@@ -186,11 +186,11 @@ def main():
             sys.exit(66)
 
     finally:
-        print("%d packages and %d specfiles checked; %d errors, %d warnings."
+        print('%d packages and %d specfiles checked; %d errors, %d warnings.'
               % (packages_checked, specfiles_checked,
-                 output.printed_messages["E"], output.printed_messages["W"]))
+                 output.printed_messages['E'], output.printed_messages['W']))
 
-    if output.printed_messages["E"] > 0:
+    if output.printed_messages['E'] > 0:
         sys.exit(64)
     sys.exit(0)
 
@@ -229,7 +229,7 @@ try:
          'verbose', 'all', 'noexception', 'extractdir=', 'file=', 'option=',
          ])
 except getopt.GetoptError as e:
-    print_warning("%s: %s" % (argv0, e))
+    print_warning('%s: %s' % (argv0, e))
     usage(argv0)
     sys.exit(1)
 

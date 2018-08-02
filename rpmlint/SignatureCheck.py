@@ -13,18 +13,18 @@ from rpmlint.helpers import print_warning
 
 
 class SignatureCheck(AbstractCheck):
-    pgp_regex = re.compile(r"pgp|gpg", re.IGNORECASE)
-    unknown_key_regex = re.compile(r"\(MISSING KEYS:(?:\([^)]+\))?\s+([^\)]+)\)")
+    pgp_regex = re.compile(r'pgp|gpg', re.IGNORECASE)
+    unknown_key_regex = re.compile(r'\(MISSING KEYS:(?:\([^)]+\))?\s+([^\)]+)\)')
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, "SignatureCheck")
+        super().__init__(config, output, 'SignatureCheck')
         self.output.error_details.update({
         'no-signature':
-            '''You have to include your pgp or gpg signature in your package.
-            For more information on signatures, please refer to www.gnupg.org.''',
+            """You have to include your pgp or gpg signature in your package.
+            For more information on signatures, please refer to www.gnupg.org.""",
         'unknown-key':
-            '''The package was signed, but with an unknown key.
-            See the rpm --import option for more information.''',
+            """The package was signed, but with an unknown key.
+            See the rpm --import option for more information.""",
         })
 
     def check(self, pkg):
@@ -35,10 +35,10 @@ class SignatureCheck(AbstractCheck):
             else:
                 kres = None
             if kres:
-                self.output.add_info('E', pkg, "unknown-key", kres.group(1))
+                self.output.add_info('E', pkg, 'unknown-key', kres.group(1))
             else:
-                print_warning("Error checking signature of %s: %s" %
+                print_warning('Error checking signature of %s: %s' %
                               (pkg.filename, res[1]))
         else:
             if not SignatureCheck.pgp_regex.search(res[1]):
-                self.output.add_info('E', pkg, "no-signature")
+                self.output.add_info('E', pkg, 'no-signature')

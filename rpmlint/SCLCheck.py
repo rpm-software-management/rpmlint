@@ -54,10 +54,10 @@ def index_or_sub(source, word, sub=0):
 
 
 class SCLCheck(AbstractCheck):
-    '''Software Collections checks'''
+    """Software Collections checks"""
 
     def __init__(self, config, output):
-        AbstractCheck.__init__(self, config, output, "SCLCheck")
+        super().__init__(config, output, 'SCLCheck')
         self._spec_file = None
         self.output.error_details.update(scl_details_dict)
 
@@ -69,7 +69,7 @@ class SCLCheck(AbstractCheck):
                 self.check_spec(pkg, self._spec_file)
 
     def check_spec(self, pkg, spec_file, spec_lines=None):
-        '''SCL spec file checks'''
+        """SCL spec file checks"""
         spec = '\n'.join(Pkg.readlines(spec_file))
         if global_scl_definition.search(spec):
             self.check_metapackage(pkg, spec)
@@ -79,7 +79,7 @@ class SCLCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'undeclared-scl')
 
     def check_binary(self, pkg):
-        '''SCL binary package checks'''
+        """SCL binary package checks"""
         # Assume that no dash in package name means no SCL
         splits = pkg.name.split('-')
         if len(splits) < 2:
@@ -123,7 +123,7 @@ class SCLCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'scl-name-screwed-up')
 
     def check_metapackage(self, pkg, spec):
-        '''SCL metapackage spec checks'''
+        """SCL metapackage spec checks"""
 
         # Examine subpackages
         runtime = subpackage_runtime.search(spec)
@@ -180,7 +180,7 @@ class SCLCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'scl-build-package-without-rpm-macros')
 
     def check_scl_spec(self, pkg, spec):
-        '''SCL ready spec checks'''
+        """SCL ready spec checks"""
 
         # For the entire spec
         if not pkg_name.search(spec):
@@ -236,7 +236,7 @@ class SCLCheck(AbstractCheck):
                 break
 
     def get_requires(self, text, build=False):
-        '''For given piece of spec, find Requires (or BuildRequires)'''
+        """For given piece of spec, find Requires (or BuildRequires)"""
         if build:
             search = buildrequires
         else:
@@ -251,18 +251,18 @@ class SCLCheck(AbstractCheck):
         return res
 
     def get_build_requires(self, text):
-        '''Call get_requires() with build = True'''
+        """Call get_requires() with build = True"""
         return self.get_requires(text, True)
 
     def get_name(self, text):
-        '''For given piece of spec, get the Name of the main package'''
+        """For given piece of spec, get the Name of the main package"""
         sname = name.search(text)
         if not sname:
             return None
         return sname.groups()[0].strip()
 
     def get_obsoletes_and_conflicts(self, text):
-        '''For given piece of spec, find Obsoletes and Conflicts'''
+        """For given piece of spec, find Obsoletes and Conflicts"""
         res = []
         while True:
             more = obsoletes_conflicts.search(text)
@@ -274,7 +274,7 @@ class SCLCheck(AbstractCheck):
         return res
 
     def get_provides(self, text):
-        '''For given piece of spec, find Provides'''
+        """For given piece of spec, find Provides"""
         res = []
         while True:
             more = provides.search(text)
@@ -304,7 +304,7 @@ class SCLCheck(AbstractCheck):
         return list(filter(None, text[start:start + end].strip().split('\n')))
 
     def remove_scl_conds(self, text):
-        '''Returns given text without %scl conds blocks'''
+        """Returns given text without %scl conds blocks"""
         while text.count('%{?scl:') > 0:
             spos = text.index('%{?scl:')
             pos = spos + 7
@@ -322,10 +322,10 @@ class SCLCheck(AbstractCheck):
 # Add information about checks
 scl_details_dict = {
 'undeclared-scl':
-'''Specfile contains %scl* macros, but was not recognized as SCL metapackage or
+"""Specfile contains %scl* macros, but was not recognized as SCL metapackage or
 SCL ready package. If this should be an SCL metapackage, don't forget to define
 the %scl macro. If this should be an SCL ready package, run %scl
-conditionalized %scl_package macro, e.g. %{?scl:%scl_package foo}.''',
+conditionalized %scl_package macro, e.g. %{?scl:%scl_package foo}.""",
 
 'no-runtime-in-scl-metapackage':
 'SCL metapackage must have runtime subpackage.',
@@ -346,8 +346,8 @@ conditionalized %scl_package macro, e.g. %{?scl:%scl_package foo}.''',
 'SCL metapackage must call %scl_install in the %install section.',
 
 'noarch-scl-metapackage-with-libdir':
-'''If "enable" script of SCL metapackage contains %{_libdir}, the package must
-be arch specific, otherwise it may be noarch.''',
+"""If 'enable' script of SCL metapackage contains %{_libdir}, the package must
+be arch specific, otherwise it may be noarch.""",
 
 'scl-main-metapackage-contains-files':
 'Main package of SCL metapackage should not contain any files.',
@@ -356,8 +356,8 @@ be arch specific, otherwise it may be noarch.''',
 'SCL runtime package must contain %scl_files in %files section.',
 
 'scl-build-package-without-rpm-macros':
-'''SCL build package must contain %{_root_sysconfdir}/rpm/macros. %{scl}-config
-in %files section.''',
+"""SCL build package must contain %{_root_sysconfdir}/rpm/macros. %{scl}-config
+in %files section.""",
 
 'missing-pkg_name-definition':
 '%{!?scl:%global pkg_name %{name}} is missing in the specfile.',
@@ -366,45 +366,45 @@ in %files section.''',
 'Name of SCL package must start with %{?scl_prefix}.',
 
 'scl-prefix-without-condition':
-'''The SCL prefix is used without condition - this won't work if the package is
-build outside of SCL - use %{?scl_prefix} with questionmark.''',
+"""The SCL prefix is used without condition - this won't work if the package is
+build outside of SCL - use %{?scl_prefix} with questionmark.""",
 
 'obsoletes-or-conflicts-without-scl-prefix':
-'''Obsoletes, Conflicts and Build Conflicts must always be prefixed with
+"""Obsoletes, Conflicts and Build Conflicts must always be prefixed with
 %{?scl_prefix}. This is extremely important, as the SCLs are often used for
 deploying new packages on older systems (that may contain old packages, now
 obsoleted by the new ones), but they shouldn't Obsolete or Conflict with the
-non-SCL RPMs installed on the system (that's the idea of SCL).''',
+non-SCL RPMs installed on the system (that's the idea of SCL).""",
 
 'provides-without-scl-prefix':
 'Provides tag must always be prefixed with %{?scl_prefix}.',
 
 'doesnt-require-scl-runtime-or-other-scl-package':
-'''The package must require %{scl}-runtime, unless it depends on another
+"""The package must require %{scl}-runtime, unless it depends on another
 package that requires %{scl}-runtime. It's impossible to check what other
 packages require, so this simply checks if this package requires at least
-something from its collection.''',
+something from its collection.""",
 
 'subpackage-with-n-without-scl-prefix':
-'''If (and only if) a package defines its name with -n, the name must be
-prefixed with %{?scl_prefix}.''',
+"""If (and only if) a package defines its name with -n, the name must be
+prefixed with %{?scl_prefix}.""",
 
 'scl-setup-without-n':
-'''The %setup macro needs the -n argument for SCL builds, because the directory
-with source probably doesn't include SCL prefix in its name.''',
+"""The %setup macro needs the -n argument for SCL builds, because the directory
+with source probably doesn't include SCL prefix in its name.""",
 
 'scl-name-screwed-up':
-'''SCL package's name starts with SCL prefix. That prefix is used as a
+"""SCL package's name starts with SCL prefix. That prefix is used as a
 directory, where files are stored: If the prefix is foo, the directory is
 /opt/provides/foo. This package doesn't respect that. This means either the
-name of the package is wrong, or the directory.''',
+name of the package is wrong, or the directory.""",
 
 'file-outside-of-scl-tree':
-'''SCL package should only contain files in /opt/provider/scl-name directory or
+"""SCL package should only contain files in /opt/provider/scl-name directory or
 in other allowed directories such as some directories in /etc or /var. Wrapper
-scripts in /usr/bin are also allowed.''',
+scripts in /usr/bin are also allowed.""",
 
 'scl-rpm-macros-outside-of-build':
-'''RPM macros in SCL packages should belong to -build subpackage of the SCL
-metapackage.''',
+"""RPM macros in SCL packages should belong to -build subpackage of the SCL
+metapackage.""",
 }
