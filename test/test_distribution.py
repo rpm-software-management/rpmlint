@@ -5,12 +5,18 @@ from rpmlint.Filter import Filter
 from Testing import CONFIG, get_tested_package
 
 
-@pytest.mark.parametrize('package', ['binary/ngircd'])
-def test_distribution_tags(package):
+@pytest.fixture(scope='function', autouse=True)
+def distributioncheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = DistributionCheck(CONFIG, output)
-    test.check(get_tested_package(package))
+    return output, test
+
+
+@pytest.mark.parametrize('package', ['binary/ngircd'])
+def test_distribution_tags(tmpdir, package):
+    output, test = distributioncheck()
+    test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 2
     out = output.print_results(output.results)
     assert 'manpage-not-compressed' in out

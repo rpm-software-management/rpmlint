@@ -5,12 +5,18 @@ from rpmlint.RpmFileCheck import RpmFileCheck
 from Testing import CONFIG, get_tested_package
 
 
-@pytest.mark.parametrize('package', ['binary/apache-commons-collections-testframework-javadoc'])
-def test_distribution_tags(package):
+@pytest.fixture(scope='function', autouse=True)
+def rpmfilescheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = RpmFileCheck(CONFIG, output)
-    test.check(get_tested_package(package))
+    return output, test
+
+
+@pytest.mark.parametrize('package', ['binary/apache-commons-collections-testframework-javadoc'])
+def test_distribution_tags(tmpdir, package):
+    output, test = rpmfilescheck()
+    test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'filename-too-long-for-joliet' in out
     assert 'filename is too long to fit on a joliet filesystem' in out

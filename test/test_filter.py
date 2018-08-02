@@ -23,14 +23,14 @@ def test_filters_regexp():
     assert isinstance(result.filters_re, Pattern)
 
 
-def test_data_storing():
+def test_data_storing(tmpdir):
     """
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
     cfg.load_rpmlintrc(TEST_RPMLINTRC)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE)
+    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
     # this should be filtered
     result.add_info('E', pkg, 'invalid-vendor', '')
     assert len(result.results) == 0
@@ -46,7 +46,7 @@ def test_data_storing():
     assert result.printed_messages['E'] == 1
 
 
-def test_description_storing():
+def test_description_storing(tmpdir):
     """
     Test if we can store extra destcriptions and formatting is up par
     """
@@ -58,7 +58,7 @@ eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE)
+    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
     assert len(result.results) == 0
     result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
     # two options so we check the description is added only once
@@ -70,7 +70,7 @@ in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     assert result.get_description('suse-other-error') == lorem_formated
 
 
-def test_output():
+def test_output(tmpdir):
     """
     Test the actual output of rpmlint on one file
     """
@@ -87,8 +87,8 @@ in culpa qui officia deserunt mollit anim id est laborum.
 ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE)
-    pkg2 = get_tested_package(TEST_PACKAGE2)
+    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    pkg2 = get_tested_package(TEST_PACKAGE2, tmpdir)
     # here we check if empty detail will not add whitespace
     result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
     # two options so we check the description is added only once

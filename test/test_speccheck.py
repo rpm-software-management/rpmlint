@@ -4,15 +4,38 @@ import pytest
 from rpmlint.Filter import Filter
 from rpmlint.SpecCheck import SpecCheck
 
-from Testing import CONFIG, get_tested_spec_package
+from Testing import CONFIG, get_tested_package, get_tested_spec_package
+
+
+@pytest.fixture(scope='function', autouse=True)
+def speccheck():
+    CONFIG.info = True
+    output = Filter(CONFIG)
+    test = SpecCheck(CONFIG, output)
+    return output, test
+
+
+def test_check_include(tmpdir):
+    output, test = speccheck()
+    test.check_source(get_tested_package('source/CheckInclude', tmpdir))
+    out = output.print_results(output.results)
+    assert 'no-buildroot-tag' in out
+    assert 'E: specfile-error error: query of specfile' not in out
+
+
+@pytest.mark.parametrize('package', ['spec/SpecCheck2', 'spec/SpecCheck3'])
+def test_patch_not_applied(package):
+    output, test = speccheck()
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg, pkg.name)
+    out = output.print_results(output.results)
+    assert 'patch-not-applied' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck'])
 def test_distribution_tags(package):
+    output, test = speccheck()
     pkg = get_tested_spec_package(package)
-    CONFIG.info = True
-    output = Filter(CONFIG)
-    test = SpecCheck(CONFIG, output)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
     assert 'patch-not-applied Patch3' in out

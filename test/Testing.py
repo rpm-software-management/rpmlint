@@ -1,7 +1,5 @@
-
 import glob
 import os
-import tempfile
 
 from rpmlint.Config import Config
 from rpmlint.Pkg import FakePkg, Pkg
@@ -19,9 +17,9 @@ def get_tested_path(path):
     return os.path.join(testpath(), path)
 
 
-def get_tested_package(name):
+def get_tested_package(name, testdir):
     pkg_path = glob.glob(get_tested_path(name) + '-*.rpm')[0]
-    return Pkg(pkg_path, tempfile.gettempdir())
+    return Pkg(pkg_path, testdir)
 
 
 def get_tested_spec_package(name):
