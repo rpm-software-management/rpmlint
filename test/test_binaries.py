@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from rpmlint.BinariesCheck import BinariesCheck
 from rpmlint.Filter import Filter
@@ -7,20 +5,20 @@ from rpmlint.Filter import Filter
 from Testing import CONFIG, get_tested_package
 
 
-@pytest.mark.parametrize('package', ['cyrus-imapd', 'dovecot'])
+@pytest.mark.parametrize('package', ['binary/cyrus-imapd', 'binary/dovecot'])
 def test_forbidden_c_calls(package):
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+    test.check(get_tested_package(package))
     assert 'crypto-policy-non-compliance' in output.print_results(output.results)
 
 
-@pytest.mark.parametrize('package', ['ngircd'])
+@pytest.mark.parametrize('package', ['binary/ngircd'])
 def test_waived_forbidden_c_calls(package):
     CONFIG.info = True
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+    test.check(get_tested_package(package))
     # there are 3 warnings/etc
     assert len(output.results) == 3
     # assert the details are properly printed to the content

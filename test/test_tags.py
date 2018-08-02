@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from rpmlint.Filter import Filter
 from rpmlint.TagsCheck import TagsCheck
@@ -7,12 +5,12 @@ from rpmlint.TagsCheck import TagsCheck
 from Testing import CONFIG, get_tested_package
 
 
-@pytest.mark.parametrize('package', ['unexpanded1'])
+@pytest.mark.parametrize('package', ['binary/unexpanded1'])
 def test_unexpanded_macros(package):
     CONFIG.info = True
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+    test.check(get_tested_package(package))
     out = output.print_results(output.results)
     assert 'unexpanded-macro Recommends' in out
     assert 'unexpanded-macro Provides' in out

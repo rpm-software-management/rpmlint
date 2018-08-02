@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from rpmlint.FilesCheck import FilesCheck
 from rpmlint.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
@@ -33,12 +31,12 @@ def chunk_from_pyc(version, size=16):
         return f.read(size)
 
 
-@pytest.mark.parametrize('package', ['python3-power'])
+@pytest.mark.parametrize('package', ['binary/python3-power'])
 def test_python_bytecode_magic(package):
     CONFIG.info = True
     output = Filter(CONFIG)
     test = FilesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+    test.check(get_tested_package(package))
     assert not output.results
     out = output.print_results(output.results)
     assert 'python-bytecode-wrong-magic-value' not in out
@@ -56,12 +54,12 @@ def test_pyc_mtime_from_chunk(version, mtime):
     assert pyc_mtime_from_chunk(chunk) == mtime
 
 
-@pytest.mark.parametrize('package', ['netmask-debugsource'])
+@pytest.mark.parametrize('package', ['binary/netmask-debugsource'])
 def test_devel_files(package):
     CONFIG.info = True
     output = Filter(CONFIG)
     test = FilesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+    test.check(get_tested_package(package))
     assert len(output.results) == 5
     out = output.print_results(output.results)
     assert 'devel-file-in-non-devel-package' not in out
