@@ -13,7 +13,7 @@ import re
 import stat
 
 import rpm
-from rpmlint.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
 # must be kept in sync with the filesystem package

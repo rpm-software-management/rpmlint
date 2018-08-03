@@ -10,7 +10,7 @@
 import re
 
 import rpm
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 version_regex = re.compile('^[a-zA-Z0-9.+]+$')

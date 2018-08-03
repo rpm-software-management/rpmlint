@@ -10,7 +10,7 @@ import re
 
 import rpm
 from rpmlint.__isocodes__ import COUNTRIES, LANGUAGES
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 # Associative array of invalid value => correct value

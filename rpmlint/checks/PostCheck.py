@@ -13,7 +13,7 @@ import tempfile
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 # shells that grok the -n switch for debugging

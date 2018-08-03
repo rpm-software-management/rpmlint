@@ -13,7 +13,7 @@ import subprocess
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 def create_regexp_call(call):

@@ -1,13 +1,19 @@
-import os
-
 import pytest
-from rpmlint.FilesCheck import FilesCheck
-from rpmlint.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
-from rpmlint.FilesCheck import python_bytecode_to_script as pbts
-from rpmlint.FilesCheck import script_interpreter as se
+from rpmlint.checks.FilesCheck import FilesCheck
+from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
+from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
+from rpmlint.checks.FilesCheck import script_interpreter as se
 from rpmlint.Filter import Filter
 
 from Testing import CONFIG, get_tested_package, get_tested_path
+
+
+@pytest.fixture(scope='function', autouse=True)
+def filescheck():
+    CONFIG.info = True
+    output = Filter(CONFIG)
+    test = FilesCheck(CONFIG, output)
+    return output, test
 
 
 def test_pep3147():
@@ -33,12 +39,10 @@ def chunk_from_pyc(version, size=16):
         return f.read(size)
 
 
-@pytest.mark.parametrize('package', ['python3-power'])
-def test_python_bytecode_magic(package):
-    CONFIG.info = True
-    output = Filter(CONFIG)
-    test = FilesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+@pytest.mark.parametrize('package', ['binary/python3-power'])
+def test_python_bytecode_magic(tmpdir, package):
+    output, test = filescheck()
+    test.check(get_tested_package(package, tmpdir))
     assert not output.results
     out = output.print_results(output.results)
     assert 'python-bytecode-wrong-magic-value' not in out
@@ -56,12 +60,10 @@ def test_pyc_mtime_from_chunk(version, mtime):
     assert pyc_mtime_from_chunk(chunk) == mtime
 
 
-@pytest.mark.parametrize('package', ['netmask-debugsource'])
-def test_devel_files(package):
-    CONFIG.info = True
-    output = Filter(CONFIG)
-    test = FilesCheck(CONFIG, output)
-    test.check(get_tested_package(os.path.join('binary', package)))
+@pytest.mark.parametrize('package', ['binary/netmask-debugsource'])
+def test_devel_files(tmpdir, package):
+    output, test = filescheck()
+    test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 5
     out = output.print_results(output.results)
     assert 'devel-file-in-non-devel-package' not in out
@@ -78,7 +80,7 @@ def test_script_interpreter():
 
 
 def test_scm_regex():
-    from rpmlint.FilesCheck import scm_regex
+    from rpmlint.checks.FilesCheck import scm_regex
 
     assert scm_regex.search('/foo/CVS/bar')
     assert scm_regex.search('/foo/RCS/bar')
@@ -88,7 +90,7 @@ def test_scm_regex():
 
 
 def test_lib_regex():
-    from rpmlint.FilesCheck import lib_regex
+    from rpmlint.checks.FilesCheck import lib_regex
 
     # true matches
     assert all(

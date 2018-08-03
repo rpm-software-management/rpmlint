@@ -11,7 +11,7 @@ import stat
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 menu_file_regex = re.compile(r'^/usr/lib/menu/([^/]+)$')

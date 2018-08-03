@@ -10,7 +10,7 @@ import os
 import re
 
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 # Compile all regexes here

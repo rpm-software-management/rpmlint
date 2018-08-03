@@ -8,7 +8,7 @@
 
 import re
 
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import print_warning
 
 

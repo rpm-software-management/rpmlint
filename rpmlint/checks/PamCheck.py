@@ -9,7 +9,7 @@
 
 import re
 
-from rpmlint.AbstractCheck import AbstractFilesCheck
+from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 
 
 class PamCheck(AbstractFilesCheck):

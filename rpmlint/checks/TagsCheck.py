@@ -13,9 +13,9 @@ import time
 from urllib.parse import urlparse
 
 import rpm
-from rpmlint import FilesCheck
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks import FilesCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 
 
 _use_enchant = True  # FIXME: kill the option always enchant

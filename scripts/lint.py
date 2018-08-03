@@ -24,7 +24,7 @@ import tempfile
 
 from rpmlint import __version__
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.Config import Config
 from rpmlint.Filter import Filter
 from rpmlint.helpers import print_warning
@@ -60,7 +60,7 @@ def loadCheck(name, config, output):
     loaded = sys.modules.get(name)
     if loaded:
         return
-    module = importlib.import_module('.{}'.format(name), package='rpmlint')
+    module = importlib.import_module('.{}'.format(name), package='rpmlint.checks')
     klass = getattr(module, name)
     obj = klass(config, output)
     return obj
