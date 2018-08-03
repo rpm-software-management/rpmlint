@@ -9,7 +9,7 @@ import codecs
 import configparser as cfgparser
 import os
 
-from rpmlint.AbstractCheck import AbstractFilesCheck
+from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 from rpmlint.Pkg import getstatusoutput, is_utf8
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')

@@ -75,7 +75,7 @@ class Config(object):
          -> from rpmlint.<CHECKNAME> import *
         """
         # Validate first if it is possible to import the added check
-        if find_spec('.{}'.format(check), package='rpmlint'):
+        if find_spec('.{}'.format(check), package='rpmlint.checks'):
             self.configuration['Checks'].append(check)
         else:
             print_warning('(none): W: error adding requested check: {}'.format(check))

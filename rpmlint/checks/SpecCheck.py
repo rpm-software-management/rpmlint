@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'

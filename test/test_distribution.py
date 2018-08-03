@@ -1,5 +1,5 @@
 import pytest
-from rpmlint.DistributionCheck import DistributionCheck
+from rpmlint.checks.DistributionCheck import DistributionCheck
 from rpmlint.Filter import Filter
 
 from Testing import CONFIG, get_tested_package

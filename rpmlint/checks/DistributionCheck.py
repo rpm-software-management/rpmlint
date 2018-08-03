@@ -9,7 +9,7 @@
 import re
 
 import rpm
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class DistributionCheck(AbstractCheck):

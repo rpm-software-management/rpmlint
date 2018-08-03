@@ -1,5 +1,5 @@
 import pytest
-from rpmlint.BinariesCheck import BinariesCheck
+from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.Filter import Filter
 
 from Testing import CONFIG, get_tested_package

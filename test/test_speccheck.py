@@ -1,8 +1,8 @@
 import re
 
 import pytest
+from rpmlint.checks.SpecCheck import SpecCheck
 from rpmlint.Filter import Filter
-from rpmlint.SpecCheck import SpecCheck
 
 from Testing import CONFIG, get_tested_package, get_tested_spec_package
 

@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-from rpmlint.AbstractCheck import AbstractFilesCheck
+from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 from rpmlint.Pkg import getstatusoutput
 
 

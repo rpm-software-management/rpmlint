@@ -14,7 +14,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import rpm
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.Pkg import b2s
 
 

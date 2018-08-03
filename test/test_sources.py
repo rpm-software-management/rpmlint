@@ -1,6 +1,6 @@
 import pytest
+from rpmlint.checks.SourceCheck import SourceCheck
 from rpmlint.Filter import Filter
-from rpmlint.SourceCheck import SourceCheck
 
 from Testing import CONFIG, get_tested_package
 

@@ -1,6 +1,6 @@
 import os
 
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class RpmFileCheck(AbstractCheck):

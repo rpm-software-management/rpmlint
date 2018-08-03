@@ -1,6 +1,6 @@
 import pytest
+from rpmlint.checks.MenuXDGCheck import MenuXDGCheck
 from rpmlint.Filter import Filter
-from rpmlint.MenuXDGCheck import MenuXDGCheck
 
 from Testing import CONFIG, get_tested_package
 

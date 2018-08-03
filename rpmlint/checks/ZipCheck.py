@@ -2,7 +2,7 @@ import os
 import re
 from zipfile import BadZipFile, is_zipfile, ZipFile
 
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class ZipCheck(AbstractCheck):

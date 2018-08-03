@@ -12,7 +12,7 @@ import re
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 chkconfig_content_regex = re.compile(r'^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')

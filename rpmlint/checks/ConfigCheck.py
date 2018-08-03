@@ -6,7 +6,7 @@
 # Purpose       :
 #############################################################################
 
-from rpmlint.AbstractCheck import AbstractCheck
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class ConfigCheck(AbstractCheck):

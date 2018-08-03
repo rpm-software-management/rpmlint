@@ -1,8 +1,8 @@
 import os
 
 import pytest
+from rpmlint.checks.SCLCheck import SCLCheck
 from rpmlint.Filter import Filter
-from rpmlint.SCLCheck import SCLCheck
 
 from Testing import CONFIG, get_tested_package, get_tested_spec_package
 

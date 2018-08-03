@@ -1,8 +1,8 @@
 import pytest
-from rpmlint.FilesCheck import FilesCheck
-from rpmlint.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
-from rpmlint.FilesCheck import python_bytecode_to_script as pbts
-from rpmlint.FilesCheck import script_interpreter as se
+from rpmlint.checks.FilesCheck import FilesCheck
+from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
+from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
+from rpmlint.checks.FilesCheck import script_interpreter as se
 from rpmlint.Filter import Filter
 
 from Testing import CONFIG, get_tested_package, get_tested_path
@@ -80,7 +80,7 @@ def test_script_interpreter():
 
 
 def test_scm_regex():
-    from rpmlint.FilesCheck import scm_regex
+    from rpmlint.checks.FilesCheck import scm_regex
 
     assert scm_regex.search('/foo/CVS/bar')
     assert scm_regex.search('/foo/RCS/bar')
@@ -90,7 +90,7 @@ def test_scm_regex():
 
 
 def test_lib_regex():
-    from rpmlint.FilesCheck import lib_regex
+    from rpmlint.checks.FilesCheck import lib_regex
 
     # true matches
     assert all(
