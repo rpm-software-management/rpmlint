@@ -1,22 +1,3 @@
-#!/usr/bin/python3
-#
-# Copyright (C) 2006 Mandriva; 2009 Red Hat, Inc.; 2009 Ville Skyttä
-# Authors: Frederic Lepied, Florian Festi
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Library General Public License as published by
-# the Free Software Foundation; version 2 only
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public License
-# along with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-import getopt
 import itertools
 import os.path
 import sys
@@ -28,9 +9,7 @@ from rpmlint.helpers import print_warning
 
 
 class Rpmdiff(object):
-
     # constants
-
     TAGS = (rpm.RPMTAG_NAME, rpm.RPMTAG_SUMMARY,
             rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_GROUP,
             rpm.RPMTAG_LICENSE, rpm.RPMTAG_URL,
@@ -60,8 +39,6 @@ class Rpmdiff(object):
 
     ADDED = 'added'
     REMOVED = 'removed'
-
-    # code starts here
 
     def __init__(self, old, new, ignore=None):
         self.result = []
@@ -143,9 +120,8 @@ class Rpmdiff(object):
         self.result.append((format, data))
 
     # load a package from a file or from the installed ones
-    def __load_pkg(self, name, tmpdir):
-        if not tmpdir:
-            tmpdir = tempfile.gettempdir()
+    def __load_pkg(self, name):
+        tmpdir = tempfile.gettempdir()
         try:
             if os.path.isfile(name):
                 return Pkg.Pkg(name, tmpdir)
@@ -249,50 +225,3 @@ class Rpmdiff(object):
         for filedata in fi:
             result[filedata[0]] = filedata[1:]
         return result
-
-
-def _usage(exit=1):
-    print("""Usage: %s [<options>] <old package> <new package>
-Options:
-  -h, --help     Output this message and exit
-  -i, --ignore   File property to ignore when calculating differences (may be
-                 used multiple times); valid values are: S (size), M (mode),
-                 5 (checksum), D (device), N (inode), L (number of links),
-                 V (vflags), U (user), G (group), F (digest), T (time)"""
-          % sys.argv[0])
-    sys.exit(exit)
-
-
-def main():
-
-    ignore_tags = []
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],
-                                   'hti:', ['help', 'ignore-times', 'ignore='])
-    except getopt.GetoptError as e:
-        print_warning('Error: %s' % e)
-        _usage()
-
-    for option, argument in opts:
-        if option in ('-h', '--help'):
-            _usage(0)
-        if option in ('-t', '--ignore-times'):
-            # deprecated; --ignore=T should be used instead
-            ignore_tags.append('T')
-        if option in ('-i', '--ignore'):
-            ignore_tags.append(argument)
-
-    if len(args) != 2:
-        _usage()
-
-    d = Rpmdiff(args[0], args[1], ignore=ignore_tags)
-    textdiff = d.textdiff()
-    if textdiff:
-        print(textdiff)
-    sys.exit(int(d.differs()))
-
-
-if __name__ == '__main__':
-    main()
-
-# rpmdiff ends here

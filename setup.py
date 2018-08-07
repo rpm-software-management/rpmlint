@@ -14,7 +14,6 @@ from setuptools import setup
 if not os.path.exists('build/_scripts'):
     os.makedirs('build/_scripts')
 shutil.copyfile('scripts/lint.py', 'build/_scripts/rpmlint')
-shutil.copyfile('scripts/diff.py', 'build/_scripts/rpmdiff')
 
 setup(
     name='rpmlint',
@@ -63,6 +62,10 @@ setup(
     ],
     scripts=[
         'build/_scripts/rpmlint',
-        'build/_scripts/rpmdiff',
     ],
+    entry_points={
+        'console_scripts': [
+            'rpmdiff = rpmlint:diff',
+        ]
+    },
 )

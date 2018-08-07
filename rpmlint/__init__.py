@@ -1,1 +1,56 @@
+import argparse
+import os
+import sys
+
+from rpmlint.Rpmdiff import Rpmdiff
+
+
 __version__ = '2.0.0'
+
+
+def process_diff_args(argv):
+    """
+    Process the parsed arguments and return the result
+    :param argv: passed arguments
+    """
+
+    parser = argparse.ArgumentParser(prog='rpmdiff',
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     description='Shows basic differences between two rpm packages')
+    parser.add_argument('old_package', metavar='RPM_ORIG', type=str, help='The old package')
+    parser.add_argument('new_package', metavar='RPM_NEW', type=str, help='The new package')
+    parser.add_argument('-i', '--ignore', nargs='*', default='', choices=['S', 'M', '5', 'D', 'N', 'L', 'V', 'U', 'G', 'F', 'T'],
+                        help="""File property to ignore when calculating differences.
+                                Valid values are: S (size), M (mode), 5 (checksum), D (device),
+                                N (inode), L (number of links), V (vflags), U (user), G (group),
+                                F (digest), T (time)""")
+
+    # print help if there is no argument or less than the 2 mandatory ones
+    if len(argv) < 2:
+        parser.print_help()
+        sys.exit(0)
+
+    options = parser.parse_args(args=argv)
+    # the rpms must exist for us to do anything
+    if not os.path.exists(options.old_package):
+        print(f'The file \'{options.old_package}\' does not exist')
+        exit(2)
+    if not os.path.exists(options.old_package):
+        print(f'The file \'{options.new_package}\' does not exist')
+        exit(2)
+
+    # convert options to dict
+    options_dict = vars(options)
+    return options_dict
+
+
+def diff():
+    """
+    Main wrapper for diff command parsing arguments and passing them out
+    """
+    options = process_diff_args(sys.argv[1:])
+    d = Rpmdiff(options['old_package'], options['new_package'], ignore=options['ignore'])
+    textdiff = d.textdiff()
+    if textdiff:
+        print(textdiff)
+    sys.exit(int(d.differs()))

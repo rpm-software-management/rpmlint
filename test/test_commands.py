@@ -5,7 +5,7 @@ from sys import executable
 import pytest
 
 
-@pytest.mark.parametrize('script', ['lint.py', 'diff.py'])
+@pytest.mark.parametrize('script', ['lint.py'])
 def test_execution(script):
     args = split(executable + ' ./scripts/' + script)
     process = Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
