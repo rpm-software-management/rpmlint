@@ -28,31 +28,15 @@ use following locations:
 
 `/etc/rpmlint/*config`
 
-`$XDG_CONFIG_HOME/rpmlint`
+`$XDG_CONFIG_HOME/rpmlint/*config`
 
-`~/.config/rpmlint` if `$XDG_CONFIG_HOME` is empty or not set
+Configuration itself is a normal ini file where for some basic inspiration
+you can check up `rpmlint/configspec.cfg` which specifies format/defaults.
 
-Configuration files are Python source files and should begin with the
-following line:
+Additional option to control rpmlint behaviour is addition of rpmlintrc file
+which uses old syntax for compatibility with old rpmlint releases, yet
+it can be normal ini file if you wish:
 
-```python
-from rpmlint.Config import *
-```
+`setBadness('check', 0)`
 
-Possible configuration functions:
-
-`resetChecks()` resets the list of checks.
-
-`addCheck(check)` adds the check to the list of checks to try.
-
-`addCheckDir(path)` adds a path to look for checks.
-
-`setOption(name, value)` sets the value of the configuration option.
-See below for the list of available options.
-
-`addFilter(regexp)` adds a filter to remove the output of a check, and
-`removeFilter(regexp)` removes one (for use eg. in per-user configuration
-files to remove filters added in system config files).
-
-See the file `config` shipped with rpmlint for examples, available
-options and their default values.
+`addFilter('test-i-ignore')`
