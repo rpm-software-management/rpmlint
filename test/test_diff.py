@@ -1,7 +1,9 @@
 import os
 
 from rpmlint.Rpmdiff import Rpmdiff
+
 from Testing import testpath
+
 
 def test_distribution_tags():
     print(testpath())

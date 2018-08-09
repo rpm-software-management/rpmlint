@@ -55,10 +55,12 @@ setup(
     tests_require=['pytest', 'pytest-cov'],
 
     packages=['rpmlint'],
-
+    package_data={
+        'rpmlint': ['rpmlint/configspec.cfg'],
+    },
+    include_package_data=True,
     data_files=[
         ('share/man/man1', glob.glob('man/*.1')),
-        ('share/rpmlint', ['config']),
     ],
     scripts=[
         'build/_scripts/rpmlint',
