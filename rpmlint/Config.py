@@ -72,7 +72,7 @@ class Config(object):
         Check is just a string file.
         It used to be possible to specify additional locations for checks
         but to keep it simple all checks must be part of rpmlint package
-         -> from rpmlint.<CHECKNAME> import *
+         -> from rpmlint.checks.<CHECKNAME> import *
         """
         # Validate first if it is possible to import the added check
         if find_spec('.{}'.format(check), package='rpmlint.checks'):
