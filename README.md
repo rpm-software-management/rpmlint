@@ -1,6 +1,7 @@
 # rpmlint
 
 [![Build Status](https://travis-ci.org/rpm-software-management/rpmlint.svg)](https://travis-ci.org/rpm-software-management/rpmlint)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3539541ffbaf442ab34a098d30af166f)](https://www.codacy.com/app/scarabeusiv/rpmlint?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rpm-software-management/rpmlint&amp;utm_campaign=Badge_Grade)
 
 rpmlint is a tool for checking common errors in rpm packages.
 rpmlint can be used to test individual packages before uploading or to check
