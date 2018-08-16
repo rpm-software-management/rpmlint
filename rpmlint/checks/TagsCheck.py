@@ -12,281 +12,14 @@ import re
 import time
 from urllib.parse import urlparse
 
+import enchant
+import enchant.checker
 import rpm
 from rpmlint import Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
 
-
-_use_enchant = True  # FIXME: kill the option always enchant
-if _use_enchant or _use_enchant is None:
-    try:
-        import enchant
-        import enchant.checker
-    except ImportError:
-        enchant = None
-else:
-    enchant = None
-del _use_enchant
-
-BAD_WORDS = {
-    'alot': 'a lot',
-    'accesnt': 'accent',
-    'accelleration': 'acceleration',
-    'accessable': 'accessible',
-    'accomodate': 'accommodate',
-    'acess': 'access',
-    'acording': 'according',
-    'additionaly': 'additionally',
-    'adress': 'address',
-    'adresses': 'addresses',
-    'adviced': 'advised',
-    'albumns': 'albums',
-    'alegorical': 'allegorical',
-    'algorith': 'algorithm',
-    'allpication': 'application',
-    'altough': 'although',
-    'alows': 'allows',
-    'amoung': 'among',
-    'amout': 'amount',
-    'analysator': 'analyzer',
-    'ang': 'and',
-    'appropiate': 'appropriate',
-    'arraival': 'arrival',
-    'artifical': 'artificial',
-    'artillary': 'artillery',
-    'attemps': 'attempts',
-    'automatize': 'automate',
-    'automatized': 'automated',
-    'automatizes': 'automates',
-    'auxilliary': 'auxiliary',
-    'availavility': 'availability',
-    'availble': 'available',
-    'avaliable': 'available',
-    'availiable': 'available',
-    'backgroud': 'background',
-    'baloons': 'balloons',
-    'becomming': 'becoming',
-    'becuase': 'because',
-    'cariage': 'carriage',
-    'challanges': 'challenges',
-    'changable': 'changeable',
-    'charachters': 'characters',
-    'charcter': 'character',
-    'choosen': 'chosen',
-    'colorfull': 'colorful',
-    'comand': 'command',
-    'commerical': 'commercial',
-    'comminucation': 'communication',
-    'commoditiy': 'commodity',
-    'compability': 'compatibility',
-    'compatability': 'compatibility',
-    'compatable': 'compatible',
-    'compatibiliy': 'compatibility',
-    'compatibilty': 'compatibility',
-    'compleatly': 'completely',
-    'complient': 'compliant',
-    'compres': 'compress',
-    'containes': 'contains',
-    'containts': 'contains',
-    'contence': 'contents',
-    'continous': 'continuous',
-    'contraints': 'constraints',
-    'convertor': 'converter',
-    'convinient': 'convenient',
-    'cryptocraphic': 'cryptographic',
-    'deamon': 'daemon',
-    'debians': 'Debian\'s',
-    'decompres': 'decompress',
-    'definate': 'definite',
-    'definately': 'definitely',
-    'dependancies': 'dependencies',
-    'dependancy': 'dependency',
-    'dependant': 'dependent',
-    'developement': 'development',
-    'developped': 'developed',
-    'deveolpment': 'development',
-    'devided': 'divided',
-    'dictionnary': 'dictionary',
-    'diplay': 'display',
-    'disapeared': 'disappeared',
-    'dissapears': 'disappears',
-    'documentaion': 'documentation',
-    'docuentation': 'documentation',
-    'documantation': 'documentation',
-    'dont': 'don\'t',
-    'easilly': 'easily',
-    'ecspecially': 'especially',
-    'edditable': 'editable',
-    'editting': 'editing',
-    'eletronic': 'electronic',
-    'enchanced': 'enhanced',
-    'encorporating': 'incorporating',
-    'enlightnment': 'enlightenment',
-    'enterily': 'entirely',
-    'enviroiment': 'environment',
-    'environement': 'environment',
-    'excellant': 'excellent',
-    'exlcude': 'exclude',
-    'exprimental': 'experimental',
-    'extention': 'extension',
-    'failuer': 'failure',
-    'familar': 'familiar',
-    'fatser': 'faster',
-    'fetaures': 'features',
-    'forse': 'force',
-    'fortan': 'fortran',
-    'framwork': 'framework',
-    'fuction': 'function',
-    'fuctions': 'functions',
-    'functionnality': 'functionality',
-    'functonality': 'functionality',
-    'functionaly': 'functionally',
-    'futhermore': 'furthermore',
-    'generiously': 'generously',
-    'grahical': 'graphical',
-    'grahpical': 'graphical',
-    'grapic': 'graphic',
-    'guage': 'gauge',
-    'halfs': 'halves',
-    'heirarchically': 'hierarchically',
-    'helpfull': 'helpful',
-    'hierachy': 'hierarchy',
-    'hierarchie': 'hierarchy',
-    'howver': 'however',
-    'implemantation': 'implementation',
-    'incomming': 'incoming',
-    'incompatabilities': 'incompatibilities',
-    'indended': 'intended',
-    'indendation': 'indentation',
-    'independant': 'independent',
-    'informatiom': 'information',
-    'initalize': 'initialize',
-    'inofficial': 'unofficial',
-    'integreated': 'integrated',
-    'integrety': 'integrity',
-    'integrey': 'integrity',
-    'intendet': 'intended',
-    'interchangable': 'interchangeable',
-    'intermittant': 'intermittent',
-    'jave': 'java',
-    'langage': 'language',
-    'langauage': 'language',
-    'langugage': 'language',
-    'lauch': 'launch',
-    'lesstiff': 'lesstif',
-    'libaries': 'libraries',
-    'licenceing': 'licencing',
-    'loggin': 'login',
-    'logile': 'logfile',
-    'loggging': 'logging',
-    'mandrivalinux': 'Mandriva Linux',
-    'maintainance': 'maintenance',
-    'maintainence': 'maintenance',
-    'makeing': 'making',
-    'managable': 'manageable',
-    'manoeuvering': 'maneuvering',
-    'ment': 'meant',
-    'modulues': 'modules',
-    'monochromo': 'monochrome',
-    'multidimensionnal': 'multidimensional',
-    'navagating': 'navigating',
-    'nead': 'need',
-    'neccesary': 'necessary',
-    'neccessary': 'necessary',
-    'necesary': 'necessary',
-    'nescessary': 'necessary',
-    'noticable': 'noticeable',
-    'optionnal': 'optional',
-    'orientied': 'oriented',
-    'pacakge': 'package',
-    'pachage': 'package',
-    'packacge': 'package',
-    'packege': 'package',
-    'packge': 'package',
-    'pakage': 'package',
-    'particularily': 'particularly',
-    'persistant': 'persistent',
-    'plattform': 'platform',
-    'ploting': 'plotting',
-    'posible': 'possible',
-    'powerfull': 'powerful',
-    'prefered': 'preferred',
-    'prefferably': 'preferably',
-    'prepaired': 'prepared',
-    'princliple': 'principle',
-    'priorty': 'priority',
-    'proccesors': 'processors',
-    'proces': 'process',
-    'processsing': 'processing',
-    'processessing': 'processing',
-    'progams': 'programs',
-    'programers': 'programmers',
-    'programm': 'program',
-    'programms': 'programs',
-    'promps': 'prompts',
-    'pronnounced': 'pronounced',
-    'prononciation': 'pronunciation',
-    'pronouce': 'pronounce',
-    'protcol': 'protocol',
-    'protocoll': 'protocol',
-    'recieve': 'receive',
-    'recieved': 'received',
-    'redircet': 'redirect',
-    'regulamentations': 'regulations',
-    'remoote': 'remote',
-    'repectively': 'respectively',
-    'replacments': 'replacements',
-    'requiere': 'require',
-    'runnning': 'running',
-    'safly': 'safely',
-    'savable': 'saveable',
-    'searchs': 'searches',
-    'separatly': 'separately',
-    'seperate': 'separate',
-    'seperately': 'separately',
-    'seperatly': 'separately',
-    'serveral': 'several',
-    'setts': 'sets',
-    'similiar': 'similar',
-    'simliar': 'similar',
-    'speach': 'speech',
-    'standart': 'standard',
-    'staically': 'statically',
-    'staticly': 'statically',
-    'succesful': 'successful',
-    'succesfully': 'successfully',
-    'suplied': 'supplied',
-    'suport': 'support',
-    'suppport': 'support',
-    'supportin': 'supporting',
-    'synchonized': 'synchronized',
-    'syncronize': 'synchronize',
-    'syncronizing': 'synchronizing',
-    'syncronus': 'synchronous',
-    'syste': 'system',
-    'sythesis': 'synthesis',
-    'taht': 'that',
-    'throught': 'through',
-    'useable': 'usable',
-    'usefull': 'useful',
-    'usera': 'users',
-    'usetnet': 'Usenet',
-    'utilites': 'utilities',
-    'utillities': 'utilities',
-    'utilties': 'utilities',
-    'utiltity': 'utility',
-    'utitlty': 'utility',
-    'variantions': 'variations',
-    'varient': 'variant',
-    'verson': 'version',
-    'vicefersa': 'vice-versa',
-    'yur': 'your',
-    'wheter': 'whether',
-    'wierd': 'weird',
-    'xwindows': 'X'
-}
 
 CAPITALIZED_IGNORE_LIST = ('jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
 
@@ -320,88 +53,64 @@ _enchant_checkers = {}
 
 
 def spell_check(pkg, output, str, fmt, lang, ignored):
-
-    dict_found = True
     warned = set()
-    if enchant:
-        if lang == 'C':
-            lang = 'en_US'
+    if lang == 'C':
+        lang = 'en_US'
 
-        checker = _enchant_checkers.get(lang)
-        if not checker and lang not in _enchant_checkers:
-            try:
-                checker = enchant.checker.SpellChecker(
-                    lang, filters=[enchant.tokenize.EmailFilter,
-                                   enchant.tokenize.URLFilter,
-                                   enchant.tokenize.WikiWordFilter])
-            except enchant.DictNotFoundError:
-                output.add_info('I', pkg, 'enchant-dictionary-not-found', lang)
-                pass
-            _enchant_checkers[lang] = checker
+    checker = _enchant_checkers.get(lang)
+    if not checker and lang not in _enchant_checkers:
+        try:
+            checker = enchant.checker.SpellChecker(
+                lang, filters=[enchant.tokenize.EmailFilter,
+                               enchant.tokenize.URLFilter,
+                               enchant.tokenize.WikiWordFilter])
+        except enchant.DictNotFoundError:
+            output.add_info('I', pkg, 'enchant-dictionary-not-found', lang)
+            pass
+        _enchant_checkers[lang] = checker
 
-        if checker:
-            # squeeze whitespace to ease leading context check
-            checker.set_text(re.sub(r'\s+', ' ', str))
-            uppername = pkg.header[rpm.RPMTAG_NAME].decode('utf-8').upper()
-            upperparts = uppername.split('-')
-            if lang.startswith('en'):
-                ups = [x + '\'S' for x in upperparts]
-                upperparts.extend(ups)
-            for err in checker:
+    if checker:
+        # squeeze whitespace to ease leading context check
+        checker.set_text(re.sub(r'\s+', ' ', str))
+        uppername = byte_to_string(pkg.header[rpm.RPMTAG_NAME]).upper()
+        upperparts = uppername.split('-')
+        if lang.startswith('en'):
+            ups = [x + '\'S' for x in upperparts]
+            upperparts.extend(ups)
+        for err in checker:
 
-                # Skip already warned and ignored words
-                if err.word in warned or err.word in ignored:
-                    continue
+            # Skip already warned and ignored words
+            if err.word in warned or err.word in ignored:
+                continue
 
-                # Skip all capitalized words that do not start a sentence
-                if err.word[0].isupper() and not \
-                        sentence_break_regex.search(checker.leading_context(3)):
-                    continue
+            # Skip all capitalized words that do not start a sentence
+            if err.word[0].isupper() and not \
+                    sentence_break_regex.search(checker.leading_context(3)):
+                continue
 
-                upperword = err.word.upper()
+            upperword = err.word.upper()
 
-                # Skip all uppercase words
-                if err.word == upperword:
-                    continue
+            # Skip all uppercase words
+            if err.word == upperword:
+                continue
 
-                # Skip errors containing package name or equal to a
-                # 'component' of it, case insensitively
-                if uppername in upperword or upperword in upperparts:
-                    continue
+            # Skip errors containing package name or equal to a
+            # 'component' of it, case insensitively
+            if uppername in upperword or upperword in upperparts:
+                continue
 
-                # Work around enchant's digit tokenizing behavior:
-                # http://github.com/rfk/pyenchant/issues/issue/3
-                if checker.leading_context(1).isdigit() or \
-                        checker.trailing_context(1).isdigit():
-                    continue
+            # Work around enchant's digit tokenizing behavior:
+            # http://github.com/rfk/pyenchant/issues/issue/3
+            if checker.leading_context(1).isdigit() or \
+                    checker.trailing_context(1).isdigit():
+                continue
 
-                # Warn and suggest
-                sug = ', '.join(checker.suggest()[:3])
-                if sug:
-                    sug = '-> %s' % sug
-                output.add_info('W', pkg, 'spelling-error', fmt % lang, err.word, sug)
-                warned.add(err.word)
-
-        else:
-            dict_found = False
-
-    if not enchant or not dict_found:
-        for seq in str.split():
-            for word in re.split(r'[^a-z]+', seq.lower()):
-                if len(word) == 0:
-                    continue
-                correct = BAD_WORDS.get(word)
-                if not correct:
-                    continue
-                if word[0] == '\'':
-                    word = word[1:]
-                if word[-1] == '\'':
-                    word = word[:-1]
-                if word in warned or word in ignored:
-                    continue
-                output.add_info('W', pkg, 'spelling-error', fmt % lang, word, '->',
-                                correct)
-                warned.add(word)
+            # Warn and suggest
+            sug = ', '.join(checker.suggest()[:3])
+            if sug:
+                sug = '-> %s' % sug
+            output.add_info('W', pkg, 'spelling-error', fmt % lang, err.word, sug)
+            warned.add(err.word)
 
 
 class TagsCheck(AbstractCheck):
