@@ -341,7 +341,7 @@ def spell_check(pkg, output, str, fmt, lang, ignored):
         if checker:
             # squeeze whitespace to ease leading context check
             checker.set_text(re.sub(r'\s+', ' ', str))
-            uppername = Pkg.to_unicode(pkg.header[rpm.RPMTAG_NAME]).upper()
+            uppername = pkg.header[rpm.RPMTAG_NAME].decode('utf-8').upper()
             upperparts = uppername.split('-')
             if lang.startswith('en'):
                 ups = [x + '\'S' for x in upperparts]
@@ -600,7 +600,7 @@ class TagsCheck(AbstractCheck):
         else:
             self.output.add_info('E', pkg, 'no-summary-tag')
 
-        description = pkg[rpm.RPMTAG_DESCRIPTION]
+        description = pkg[rpm.RPMTAG_DESCRIPTION].decode('utf-8')
         if description:
             if not langs:
                 self._unexpanded_macros(pkg, '%description',
@@ -788,7 +788,7 @@ class TagsCheck(AbstractCheck):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
         if not Pkg.is_utf8_bytestr(description):
             self.output.add_info('E', pkg, 'tag-not-utf8', '%description', lang)
-        description = Pkg.to_unicode(description)
+        description = description.decode('utf-8')
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         spell_check(pkg, self.output, description, '%%description -l %s', lang,
                     ignored_words)
@@ -807,7 +807,7 @@ class TagsCheck(AbstractCheck):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
         if not Pkg.is_utf8_bytestr(summary):
             self.output.add_info('E', pkg, 'tag-not-utf8', 'Summary', lang)
-        summary = Pkg.to_unicode(summary)
+        summary = summary.decode('utf-8')
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:

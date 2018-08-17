@@ -166,22 +166,6 @@ def is_utf8_bytestr(s):
     return True
 
 
-def to_unicode(string):
-    if string is None:
-        return unicode('')
-    elif isinstance(string, unicode):
-        return string
-    for enc in ('utf-8', 'iso-8859-1', 'iso-8859-15', 'iso-8859-2'):
-        try:
-            x = unicode(string, enc)
-        except UnicodeError:
-            pass
-        else:
-            if x.encode(enc) == string:
-                return x
-    return unicode(string, 'ascii', errors='replace')
-
-
 def readlines(path):
     with open(path, 'rb') as fobj:
         for line in fobj:
