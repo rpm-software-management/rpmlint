@@ -188,12 +188,6 @@ def readlines(path):
             yield b2s(line)
 
 
-def mktemp():
-    tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
-    tmpfile = os.fdopen(tmpfd, 'w')
-    return tmpfile, tmpname
-
-
 slash_regex = re.compile(r'/+')
 slashdot_regex = re.compile(r'/(\.(/|$))+')
 slashend_regex = re.compile(r'([^/])/+$')
