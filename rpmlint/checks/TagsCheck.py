@@ -12,13 +12,19 @@ import re
 import time
 from urllib.parse import urlparse
 
-import enchant
-import enchant.checker
 import rpm
 from rpmlint import Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
+
+try:
+    import enchant
+    import enchant.checker
+except ImportError:
+    # if the enchant is not present we simply continue but without
+    # spellchecking work being done
+    pass
 
 
 CAPITALIZED_IGNORE_LIST = ('jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
@@ -130,6 +136,7 @@ class TagsCheck(AbstractCheck):
         self.valid_buildhost_regex = re.compile(config.configuration['ValidBuildHost'])
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
+        self.spellcheck = config.configuration['SpellCheck']
 
         for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
                   'enhances', 'supplements'):
@@ -499,8 +506,9 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'tag-not-utf8', '%description', lang)
         description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
-        spell_check(pkg, self.output, description, '%%description -l %s', lang,
-                    ignored_words)
+        if self.spellcheck:
+            spell_check(pkg, self.output, description, '%%description -l %s', lang,
+                        ignored_words)
         for l in description.splitlines():
             if len(l) > self.max_line_len:
                 self.output.add_info('E', pkg, 'description-line-too-long', lang, l)
@@ -518,7 +526,8 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'tag-not-utf8', 'Summary', lang)
         summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
-        spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
+        if self.spellcheck:
+            spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:
             self.output.add_info('E', pkg, 'summary-on-multiple-lines', lang)
         if (summary[0] != summary[0].upper() and
