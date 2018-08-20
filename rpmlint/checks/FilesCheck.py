@@ -14,7 +14,8 @@ import stat
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
-from rpmlint.Pkg import b2s, catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
+from rpmlint.helpers import byte_to_string
+from rpmlint.Pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -327,7 +328,7 @@ def python_bytecode_to_script(path):
 
 def script_interpreter(chunk):
     res = shebang_regex.search(chunk) if chunk else None
-    return (b2s(res.group(1)), b2s(res.group(2)).strip()) \
+    return (byte_to_string(res.group(1)), byte_to_string(res.group(2)).strip()) \
         if res and res.start() == 0 else (None, '')
 
 
@@ -404,7 +405,7 @@ class FilesCheck(AbstractCheck):
 
         for filename in pkg.header[rpm.RPMTAG_FILENAMES] or ():
             if not is_utf8_bytestr(filename):
-                self.output.add_info('E', pkg, 'filename-not-utf8', b2s(filename))
+                self.output.add_info('E', pkg, 'filename-not-utf8', byte_to_string(filename))
 
         # Rest of the checks are for binary packages only
         if pkg.isSource():

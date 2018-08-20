@@ -25,25 +25,9 @@ except ImportError:
     _magic = None
 import rpm
 from rpmlint import Filter
-from rpmlint.helpers import print_warning
+from rpmlint.helpers import byte_to_string, print_warning
 
 # utilities
-
-# b2s():  bytes to str
-if sys.version_info[0] > 2:
-    long = int
-    unicode = str
-
-    def b2s(b):
-        if b is None or isinstance(b, str):
-            return b
-        if isinstance(b, (list, tuple)):
-            return [b2s(x) for x in b]
-        return b.decode(errors='replace')
-else:
-    def b2s(b):
-        return b
-
 try:
     from shlex import quote as shquote
 except ImportError:
@@ -131,7 +115,7 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all='C'):
         text = proc.stdout.read()
     sts = proc.wait()
     if not raw:
-        text = b2s(text)
+        text = byte_to_string(text)
         if text.endswith('\n'):
             text = text[:-1]
     if sts is None:
@@ -169,7 +153,7 @@ def is_utf8_bytestr(s):
 def readlines(path):
     with open(path, 'rb') as fobj:
         for line in fobj:
-            yield b2s(line)
+            yield byte_to_string(line)
 
 
 slash_regex = re.compile(r'/+')
@@ -351,7 +335,7 @@ def stringToVersion(verstring):
     i = verstring.find(':')
     if i != -1:
         try:
-            epoch = str(long(verstring[:i]))
+            epoch = str(int(verstring[:i]))
         except ValueError:
             # garbage in epoch, ignore it
             pass
@@ -519,7 +503,7 @@ class Pkg(AbstractPkg):
                        rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
             or key in (x[0] for x in SCRIPT_TAGS) \
             or key in (x[1] for x in SCRIPT_TAGS):
-                val = b2s(val)
+                val = byte_to_string(val)
             return val
 
     # return the name of the directory where the package is extracted
@@ -640,17 +624,17 @@ class Pkg(AbstractPkg):
         modes = self.header[rpm.RPMTAG_FILEMODES]
         users = self.header[rpm.RPMTAG_FILEUSERNAME]
         groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
-        links = [b2s(x) for x in self.header[rpm.RPMTAG_FILELINKTOS]]
+        links = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILELINKTOS]]
         sizes = self.header[rpm.RPMTAG_FILESIZES]
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
         langs = self.header[rpm.RPMTAG_FILELANGS]
         inodes = self.header[rpm.RPMTAG_FILEINODES]
-        requires = [b2s(x) for x in self.header[rpm.RPMTAG_FILEREQUIRE]]
-        provides = [b2s(x) for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
-        files = [b2s(x) for x in self.header[rpm.RPMTAG_FILENAMES]]
-        magics = [b2s(x) for x in self.header[rpm.RPMTAG_FILECLASS]]
+        requires = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILEREQUIRE]]
+        provides = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILEPROVIDE]]
+        files = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILENAMES]]
+        magics = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILECLASS]]
         try:  # rpm >= 4.7.0
             filecaps = self.header[rpm.RPMTAG_FILECAPS]
         except AttributeError:
@@ -668,8 +652,8 @@ class Pkg(AbstractPkg):
                     self.dirName() or '/', pkgfile.name.lstrip('/')))
                 pkgfile.flags = flags[idx]
                 pkgfile.mode = modes[idx]
-                pkgfile.user = b2s(users[idx])
-                pkgfile.group = b2s(groups[idx])
+                pkgfile.user = byte_to_string(users[idx])
+                pkgfile.group = byte_to_string(groups[idx])
                 pkgfile.linkto = links[idx] and safe_normpath(links[idx])
                 pkgfile.size = sizes[idx]
                 pkgfile.md5 = md5s[idx]
@@ -678,7 +662,7 @@ class Pkg(AbstractPkg):
                 pkgfile.inode = inodes[idx]
                 pkgfile.requires = parse_deps(requires[idx])
                 pkgfile.provides = parse_deps(provides[idx])
-                pkgfile.lang = b2s(langs[idx])
+                pkgfile.lang = byte_to_string(langs[idx])
                 pkgfile.magic = magics[idx]
                 if not pkgfile.magic:
                     if stat.S_ISDIR(pkgfile.mode):
@@ -693,7 +677,7 @@ class Pkg(AbstractPkg):
                     # use descriptor() method instead
                     try:
                         fd = os.open(pkgfile.path, os.O_RDONLY)
-                        pkgfile.magic = b2s(_magic.descriptor(fd))
+                        pkgfile.magic = byte_to_string(_magic.descriptor(fd))
                         os.close(fd)
                     except OSError:
                         pass
@@ -820,8 +804,8 @@ class Pkg(AbstractPkg):
 
         if versions:
             for loop in range(len(versions)):
-                name = b2s(names[loop])
-                evr = stringToVersion(b2s(versions[loop]))
+                name = byte_to_string(names[loop])
+                evr = stringToVersion(byte_to_string(versions[loop]))
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:

@@ -16,6 +16,7 @@ import rpm
 from rpmlint import Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.helpers import byte_to_string
 
 
 _use_enchant = True  # FIXME: kill the option always enchant
@@ -590,26 +591,25 @@ class TagsCheck(AbstractCheck):
 
         langs = pkg[rpm.RPMTAG_HEADERI18NTABLE]
 
-        summary = pkg[rpm.RPMTAG_SUMMARY]
+        summary = byte_to_string(pkg[rpm.RPMTAG_SUMMARY])
         if summary:
             if not langs:
-                self._unexpanded_macros(pkg, 'Summary', Pkg.b2s(summary))
+                self._unexpanded_macros(pkg, 'Summary', summary)
             else:
                 for lang in langs:
                     self.check_summary(pkg, lang, ignored_words)
         else:
             self.output.add_info('E', pkg, 'no-summary-tag')
 
-        description = pkg[rpm.RPMTAG_DESCRIPTION].decode('utf-8')
+        description = byte_to_string(pkg[rpm.RPMTAG_DESCRIPTION])
         if description:
             if not langs:
-                self._unexpanded_macros(pkg, '%description',
-                                        Pkg.b2s(description))
+                self._unexpanded_macros(pkg, '%description', description)
             else:
                 for lang in langs:
                     self.check_description(pkg, lang, ignored_words)
 
-            if len(Pkg.b2s(description)) < len(pkg[rpm.RPMTAG_SUMMARY]):
+            if len(description) < len(pkg[rpm.RPMTAG_SUMMARY]):
                 self.output.add_info('W', pkg, 'description-shorter-than-summary')
         else:
             self.output.add_info('E', pkg, 'no-description-tag')
@@ -635,11 +635,11 @@ class TagsCheck(AbstractCheck):
         else:
             clt = pkg[rpm.RPMTAG_CHANGELOGTEXT]
             if self.use_version_in_changelog:
-                ret = changelog_version_regex.search(Pkg.b2s(changelog[0]))
+                ret = changelog_version_regex.search(byte_to_string(changelog[0]))
                 if not ret and clt:
                     # we also allow the version specified as the first
                     # thing on the first line of the text
-                    ret = changelog_text_version_regex.search(Pkg.b2s(clt[0]))
+                    ret = changelog_text_version_regex.search(byte_to_string(clt[0]))
                 if not ret:
                     self.output.add_info('W', pkg, 'no-version-in-last-changelog')
                 elif version and release:
@@ -703,7 +703,7 @@ class TagsCheck(AbstractCheck):
 
         for tag in ('URL', 'DistURL', 'BugURL'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
-                url = Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
+                url = byte_to_string(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
                 self._unexpanded_macros(pkg, tag, url, is_url=True)
                 if url:
                     (scheme, netloc) = urlparse(url)[0:2]
@@ -773,7 +773,7 @@ class TagsCheck(AbstractCheck):
         for tag in ('Distribution', 'DistTag', 'ExcludeArch', 'ExcludeOS',
                     'Vendor'):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
-                res = Pkg.b2s(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
+                res = byte_to_string(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
                 self._unexpanded_macros(pkg, tag, res)
 
         for path in private_so_paths:
@@ -788,7 +788,7 @@ class TagsCheck(AbstractCheck):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
         if not Pkg.is_utf8_bytestr(description):
             self.output.add_info('E', pkg, 'tag-not-utf8', '%description', lang)
-        description = description.decode('utf-8')
+        description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         spell_check(pkg, self.output, description, '%%description -l %s', lang,
                     ignored_words)
@@ -807,7 +807,7 @@ class TagsCheck(AbstractCheck):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
         if not Pkg.is_utf8_bytestr(summary):
             self.output.add_info('E', pkg, 'tag-not-utf8', 'Summary', lang)
-        summary = summary.decode('utf-8')
+        summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
         if '\n' in summary:

@@ -14,6 +14,7 @@ import subprocess
 import rpm
 from rpmlint import Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import byte_to_string
 
 
 def create_regexp_call(call):
@@ -251,7 +252,7 @@ class BinaryInfo(object):
         try:
             with open(path, 'rb') as fobj:
                 fobj.seek(-12, os.SEEK_END)
-                self.tail = Pkg.b2s(fobj.read())
+                self.tail = byte_to_string(fobj.read())
         except Exception as e:
             self.output.add_info('W', pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
 
