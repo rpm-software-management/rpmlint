@@ -5,7 +5,7 @@ import tempfile
 
 import rpm
 from rpmlint import Pkg
-from rpmlint.helpers import print_warning
+from rpmlint.helpers import byte_to_string, print_warning
 
 
 class Rpmdiff(object):
@@ -209,16 +209,16 @@ class Rpmdiff(object):
                 if namestr == 'REQUIRES':
                     namestr = self.req2str(oldentry[1])
                 self.__add(self.DEPFORMAT,
-                           (self.REMOVED, namestr, Pkg.b2s(oldentry[0]),
-                            self.sense2str(oldentry[1]), Pkg.b2s(oldentry[2])))
+                           (self.REMOVED, namestr, byte_to_string(oldentry[0]),
+                            self.sense2str(oldentry[1]), byte_to_string(oldentry[2])))
         for newentry in n:
             if newentry not in o:
                 namestr = name
                 if namestr == 'REQUIRES':
                     namestr = self.req2str(newentry[1])
                 self.__add(self.DEPFORMAT,
-                           (self.ADDED, namestr, Pkg.b2s(newentry[0]),
-                            self.sense2str(newentry[1]), Pkg.b2s(newentry[2])))
+                           (self.ADDED, namestr, byte_to_string(newentry[0]),
+                            self.sense2str(newentry[1]), byte_to_string(newentry[2])))
 
     def __fileIteratorToDict(self, fi):
         result = {}
