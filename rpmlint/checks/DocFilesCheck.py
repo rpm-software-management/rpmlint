@@ -15,7 +15,7 @@
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.Pkg import b2s
+from rpmlint.helpers import byte_to_string
 
 
 class DocFilesCheck(AbstractCheck):
@@ -43,7 +43,7 @@ class DocFilesCheck(AbstractCheck):
 
         # register things which are provided by the package
         for i in pkg.header[rpm.RPMTAG_PROVIDES]:
-            core_reqs[b2s(i)] = []
+            core_reqs[byte_to_string(i)] = []
         for i in files:
             core_reqs[i] = []
 

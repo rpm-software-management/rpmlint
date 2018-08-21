@@ -19,10 +19,3 @@ def test_range_compare():
          ('foo', rpm.RPMSENSE_EQUAL, ('1', '0.5', None))),
     ):
         assert not Pkg.rangeCompare(req, prov)
-
-
-def test_b2s():
-    for thing in ('foo', ['foo'], None, []):
-        assert thing == Pkg.b2s(thing)
-    assert 'foo' == Pkg.b2s(b'foo')
-    assert ['foo'] == Pkg.b2s([b'foo'])

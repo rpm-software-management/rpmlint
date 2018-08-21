@@ -14,6 +14,7 @@ import tempfile
 import rpm
 from rpmlint import Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import byte_to_string
 
 
 # shells that grok the -n switch for debugging
@@ -147,7 +148,7 @@ class PostCheck(AbstractCheck):
 
     def check_aux(self, pkg, files, prog, script, tag, prereq):
         if script:
-            script_str = Pkg.b2s(script)
+            script_str = byte_to_string(script)
             if prog:
                 if prog not in self.valid_shells:
                     self.output.add_info('E', pkg, 'invalid-shell-in-' + tag, prog)
