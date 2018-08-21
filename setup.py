@@ -14,7 +14,6 @@ from setuptools import setup
 if not os.path.exists('build/_scripts'):
     os.makedirs('build/_scripts')
 shutil.copyfile('scripts/lint.py', 'build/_scripts/rpmlint')
-shutil.copyfile('scripts/diff.py', 'build/_scripts/rpmdiff')
 
 setup(
     name='rpmlint',
@@ -56,13 +55,19 @@ setup(
     tests_require=['pytest', 'pytest-cov'],
 
     packages=['rpmlint'],
-
+    package_data={
+        'rpmlint': ['rpmlint/configspec.cfg'],
+    },
+    include_package_data=True,
     data_files=[
         ('share/man/man1', glob.glob('man/*.1')),
-        ('share/rpmlint', ['config']),
     ],
     scripts=[
         'build/_scripts/rpmlint',
-        'build/_scripts/rpmdiff',
     ],
+    entry_points={
+        'console_scripts': [
+            'rpmdiff = rpmlint:diff',
+        ]
+    },
 )
