@@ -17,15 +17,7 @@ from rpmlint import Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
-
-try:
-    import enchant
-    import enchant.checker
-except ImportError:
-    # if the enchant is not present we simply continue but without
-    # spellchecking work being done
-    pass
-
+from rpmlint.Spellcheck import Spellcheck
 
 CAPITALIZED_IGNORE_LIST = ('jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
 
@@ -40,7 +32,6 @@ invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNOREC
 # () are here for grouping purpose in the regexp
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
-sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
 # we assume that no rpm packages existed before rpm itself existed...
 oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-%d'))
@@ -54,69 +45,6 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
         private_so_paths.add(epath)
         private_so_paths.add(re.sub(r'/lib64(?=/|$)', '/lib', epath))
         private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
-
-_enchant_checkers = {}
-
-
-def spell_check(pkg, output, str, fmt, lang, ignored):
-    warned = set()
-    if lang == 'C':
-        lang = 'en_US'
-
-    checker = _enchant_checkers.get(lang)
-    if not checker and lang not in _enchant_checkers:
-        try:
-            checker = enchant.checker.SpellChecker(
-                lang, filters=[enchant.tokenize.EmailFilter,
-                               enchant.tokenize.URLFilter,
-                               enchant.tokenize.WikiWordFilter])
-        except enchant.DictNotFoundError:
-            output.add_info('I', pkg, 'enchant-dictionary-not-found', lang)
-            pass
-        _enchant_checkers[lang] = checker
-
-    if checker:
-        # squeeze whitespace to ease leading context check
-        checker.set_text(re.sub(r'\s+', ' ', str))
-        uppername = byte_to_string(pkg.header[rpm.RPMTAG_NAME]).upper()
-        upperparts = uppername.split('-')
-        if lang.startswith('en'):
-            ups = [x + '\'S' for x in upperparts]
-            upperparts.extend(ups)
-        for err in checker:
-
-            # Skip already warned and ignored words
-            if err.word in warned or err.word in ignored:
-                continue
-
-            # Skip all capitalized words that do not start a sentence
-            if err.word[0].isupper() and not \
-                    sentence_break_regex.search(checker.leading_context(3)):
-                continue
-
-            upperword = err.word.upper()
-
-            # Skip all uppercase words
-            if err.word == upperword:
-                continue
-
-            # Skip errors containing package name or equal to a
-            # 'component' of it, case insensitively
-            if uppername in upperword or upperword in upperparts:
-                continue
-
-            # Work around enchant's digit tokenizing behavior:
-            # http://github.com/rfk/pyenchant/issues/issue/3
-            if checker.leading_context(1).isdigit() or \
-                    checker.trailing_context(1).isdigit():
-                continue
-
-            # Warn and suggest
-            sug = ', '.join(checker.suggest()[:3])
-            if sug:
-                sug = '-> %s' % sug
-            output.add_info('W', pkg, 'spelling-error', fmt % lang, err.word, sug)
-            warned.add(err.word)
 
 
 class TagsCheck(AbstractCheck):
@@ -137,6 +65,8 @@ class TagsCheck(AbstractCheck):
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
         self.spellcheck = config.configuration['UseEnchant']
+        if self.spellcheck:
+            self.spellchecker = Spellcheck()
 
         for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
                   'enhances', 'supplements'):
@@ -507,8 +437,10 @@ class TagsCheck(AbstractCheck):
         description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         if self.spellcheck:
-            spell_check(pkg, self.output, description, '%%description -l %s', lang,
-                        ignored_words)
+            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
+            typos = self.spellchecker.spell_check(description, '%description -l {}', lang, pkgname, ignored_words)
+            for typo in typos.items():
+                self.output.add_info('E', pkg, 'spelling-error', typo)
         for l in description.splitlines():
             if len(l) > self.max_line_len:
                 self.output.add_info('E', pkg, 'description-line-too-long', lang, l)
@@ -527,7 +459,10 @@ class TagsCheck(AbstractCheck):
         summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         if self.spellcheck:
-            spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
+            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
+            typos = self.spellchecker.spell_check(summary, 'Summary({})', lang, pkgname, ignored_words)
+            for typo in typos.items():
+                self.output.add_info('E', pkg, 'spelling-error', typo)
         if '\n' in summary:
             self.output.add_info('E', pkg, 'summary-on-multiple-lines', lang)
         if (summary[0] != summary[0].upper() and
