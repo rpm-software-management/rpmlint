@@ -136,7 +136,7 @@ class TagsCheck(AbstractCheck):
         self.valid_buildhost_regex = re.compile(config.configuration['ValidBuildHost'])
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
-        self.spellcheck = config.configuration['SpellCheck']
+        self.spellcheck = config.configuration['UseEnchant']
 
         for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
                   'enhances', 'supplements'):
