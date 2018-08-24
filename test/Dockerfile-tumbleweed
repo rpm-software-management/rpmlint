@@ -4,6 +4,7 @@ RUN zypper -n install \
         cpio gzip bzip2 groff make elfutils xz \
         perl binutils desktop-file-utils \
         man appstream-glib \
+        myspell-en_US myspell-cs_CZ \
         python3-magic \
         python3-pyenchant \
         python3-rpm \
