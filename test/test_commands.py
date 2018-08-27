@@ -19,6 +19,4 @@ def test_arguments(arguments):
     args = split(executable + ' ./scripts/lint.py ' + arguments)
     process = Popen(args, stdout=PIPE, stderr=PIPE, shell=False)
     out, err = process.communicate()
-    print(out)
-    print(err)
     assert process.returncode == 0 or process.returncode == 64
