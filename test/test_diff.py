@@ -6,7 +6,6 @@ from Testing import testpath
 
 
 def test_distribution_tags():
-    print(testpath())
     oldpkg = os.path.join(testpath(), 'binary/mc-4.8.15-10.3.1.x86_64.rpm')
     newpkg = os.path.join(testpath(), 'binary/mc-4.8.21-2.1.x86_64.rpm')
     ignore = list()
