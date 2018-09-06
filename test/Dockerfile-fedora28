@@ -13,6 +13,8 @@ RUN dnf -y install \
         /usr/bin/python3 \
         /usr/bin/readelf \
         /usr/bin/xz \
+        hunspell-en \
+        hunspell-cs \
         python3-setuptools \
         python3-enchant \
         python3-magic \

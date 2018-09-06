@@ -17,276 +17,7 @@ from rpmlint import Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
-
-
-_use_enchant = True  # FIXME: kill the option always enchant
-if _use_enchant or _use_enchant is None:
-    try:
-        import enchant
-        import enchant.checker
-    except ImportError:
-        enchant = None
-else:
-    enchant = None
-del _use_enchant
-
-BAD_WORDS = {
-    'alot': 'a lot',
-    'accesnt': 'accent',
-    'accelleration': 'acceleration',
-    'accessable': 'accessible',
-    'accomodate': 'accommodate',
-    'acess': 'access',
-    'acording': 'according',
-    'additionaly': 'additionally',
-    'adress': 'address',
-    'adresses': 'addresses',
-    'adviced': 'advised',
-    'albumns': 'albums',
-    'alegorical': 'allegorical',
-    'algorith': 'algorithm',
-    'allpication': 'application',
-    'altough': 'although',
-    'alows': 'allows',
-    'amoung': 'among',
-    'amout': 'amount',
-    'analysator': 'analyzer',
-    'ang': 'and',
-    'appropiate': 'appropriate',
-    'arraival': 'arrival',
-    'artifical': 'artificial',
-    'artillary': 'artillery',
-    'attemps': 'attempts',
-    'automatize': 'automate',
-    'automatized': 'automated',
-    'automatizes': 'automates',
-    'auxilliary': 'auxiliary',
-    'availavility': 'availability',
-    'availble': 'available',
-    'avaliable': 'available',
-    'availiable': 'available',
-    'backgroud': 'background',
-    'baloons': 'balloons',
-    'becomming': 'becoming',
-    'becuase': 'because',
-    'cariage': 'carriage',
-    'challanges': 'challenges',
-    'changable': 'changeable',
-    'charachters': 'characters',
-    'charcter': 'character',
-    'choosen': 'chosen',
-    'colorfull': 'colorful',
-    'comand': 'command',
-    'commerical': 'commercial',
-    'comminucation': 'communication',
-    'commoditiy': 'commodity',
-    'compability': 'compatibility',
-    'compatability': 'compatibility',
-    'compatable': 'compatible',
-    'compatibiliy': 'compatibility',
-    'compatibilty': 'compatibility',
-    'compleatly': 'completely',
-    'complient': 'compliant',
-    'compres': 'compress',
-    'containes': 'contains',
-    'containts': 'contains',
-    'contence': 'contents',
-    'continous': 'continuous',
-    'contraints': 'constraints',
-    'convertor': 'converter',
-    'convinient': 'convenient',
-    'cryptocraphic': 'cryptographic',
-    'deamon': 'daemon',
-    'debians': 'Debian\'s',
-    'decompres': 'decompress',
-    'definate': 'definite',
-    'definately': 'definitely',
-    'dependancies': 'dependencies',
-    'dependancy': 'dependency',
-    'dependant': 'dependent',
-    'developement': 'development',
-    'developped': 'developed',
-    'deveolpment': 'development',
-    'devided': 'divided',
-    'dictionnary': 'dictionary',
-    'diplay': 'display',
-    'disapeared': 'disappeared',
-    'dissapears': 'disappears',
-    'documentaion': 'documentation',
-    'docuentation': 'documentation',
-    'documantation': 'documentation',
-    'dont': 'don\'t',
-    'easilly': 'easily',
-    'ecspecially': 'especially',
-    'edditable': 'editable',
-    'editting': 'editing',
-    'eletronic': 'electronic',
-    'enchanced': 'enhanced',
-    'encorporating': 'incorporating',
-    'enlightnment': 'enlightenment',
-    'enterily': 'entirely',
-    'enviroiment': 'environment',
-    'environement': 'environment',
-    'excellant': 'excellent',
-    'exlcude': 'exclude',
-    'exprimental': 'experimental',
-    'extention': 'extension',
-    'failuer': 'failure',
-    'familar': 'familiar',
-    'fatser': 'faster',
-    'fetaures': 'features',
-    'forse': 'force',
-    'fortan': 'fortran',
-    'framwork': 'framework',
-    'fuction': 'function',
-    'fuctions': 'functions',
-    'functionnality': 'functionality',
-    'functonality': 'functionality',
-    'functionaly': 'functionally',
-    'futhermore': 'furthermore',
-    'generiously': 'generously',
-    'grahical': 'graphical',
-    'grahpical': 'graphical',
-    'grapic': 'graphic',
-    'guage': 'gauge',
-    'halfs': 'halves',
-    'heirarchically': 'hierarchically',
-    'helpfull': 'helpful',
-    'hierachy': 'hierarchy',
-    'hierarchie': 'hierarchy',
-    'howver': 'however',
-    'implemantation': 'implementation',
-    'incomming': 'incoming',
-    'incompatabilities': 'incompatibilities',
-    'indended': 'intended',
-    'indendation': 'indentation',
-    'independant': 'independent',
-    'informatiom': 'information',
-    'initalize': 'initialize',
-    'inofficial': 'unofficial',
-    'integreated': 'integrated',
-    'integrety': 'integrity',
-    'integrey': 'integrity',
-    'intendet': 'intended',
-    'interchangable': 'interchangeable',
-    'intermittant': 'intermittent',
-    'jave': 'java',
-    'langage': 'language',
-    'langauage': 'language',
-    'langugage': 'language',
-    'lauch': 'launch',
-    'lesstiff': 'lesstif',
-    'libaries': 'libraries',
-    'licenceing': 'licencing',
-    'loggin': 'login',
-    'logile': 'logfile',
-    'loggging': 'logging',
-    'mandrivalinux': 'Mandriva Linux',
-    'maintainance': 'maintenance',
-    'maintainence': 'maintenance',
-    'makeing': 'making',
-    'managable': 'manageable',
-    'manoeuvering': 'maneuvering',
-    'ment': 'meant',
-    'modulues': 'modules',
-    'monochromo': 'monochrome',
-    'multidimensionnal': 'multidimensional',
-    'navagating': 'navigating',
-    'nead': 'need',
-    'neccesary': 'necessary',
-    'neccessary': 'necessary',
-    'necesary': 'necessary',
-    'nescessary': 'necessary',
-    'noticable': 'noticeable',
-    'optionnal': 'optional',
-    'orientied': 'oriented',
-    'pacakge': 'package',
-    'pachage': 'package',
-    'packacge': 'package',
-    'packege': 'package',
-    'packge': 'package',
-    'pakage': 'package',
-    'particularily': 'particularly',
-    'persistant': 'persistent',
-    'plattform': 'platform',
-    'ploting': 'plotting',
-    'posible': 'possible',
-    'powerfull': 'powerful',
-    'prefered': 'preferred',
-    'prefferably': 'preferably',
-    'prepaired': 'prepared',
-    'princliple': 'principle',
-    'priorty': 'priority',
-    'proccesors': 'processors',
-    'proces': 'process',
-    'processsing': 'processing',
-    'processessing': 'processing',
-    'progams': 'programs',
-    'programers': 'programmers',
-    'programm': 'program',
-    'programms': 'programs',
-    'promps': 'prompts',
-    'pronnounced': 'pronounced',
-    'prononciation': 'pronunciation',
-    'pronouce': 'pronounce',
-    'protcol': 'protocol',
-    'protocoll': 'protocol',
-    'recieve': 'receive',
-    'recieved': 'received',
-    'redircet': 'redirect',
-    'regulamentations': 'regulations',
-    'remoote': 'remote',
-    'repectively': 'respectively',
-    'replacments': 'replacements',
-    'requiere': 'require',
-    'runnning': 'running',
-    'safly': 'safely',
-    'savable': 'saveable',
-    'searchs': 'searches',
-    'separatly': 'separately',
-    'seperate': 'separate',
-    'seperately': 'separately',
-    'seperatly': 'separately',
-    'serveral': 'several',
-    'setts': 'sets',
-    'similiar': 'similar',
-    'simliar': 'similar',
-    'speach': 'speech',
-    'standart': 'standard',
-    'staically': 'statically',
-    'staticly': 'statically',
-    'succesful': 'successful',
-    'succesfully': 'successfully',
-    'suplied': 'supplied',
-    'suport': 'support',
-    'suppport': 'support',
-    'supportin': 'supporting',
-    'synchonized': 'synchronized',
-    'syncronize': 'synchronize',
-    'syncronizing': 'synchronizing',
-    'syncronus': 'synchronous',
-    'syste': 'system',
-    'sythesis': 'synthesis',
-    'taht': 'that',
-    'throught': 'through',
-    'useable': 'usable',
-    'usefull': 'useful',
-    'usera': 'users',
-    'usetnet': 'Usenet',
-    'utilites': 'utilities',
-    'utillities': 'utilities',
-    'utilties': 'utilities',
-    'utiltity': 'utility',
-    'utitlty': 'utility',
-    'variantions': 'variations',
-    'varient': 'variant',
-    'verson': 'version',
-    'vicefersa': 'vice-versa',
-    'yur': 'your',
-    'wheter': 'whether',
-    'wierd': 'weird',
-    'xwindows': 'X'
-}
+from rpmlint.Spellcheck import Spellcheck
 
 CAPITALIZED_IGNORE_LIST = ('jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
 
@@ -301,7 +32,6 @@ invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNOREC
 # () are here for grouping purpose in the regexp
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
-sentence_break_regex = re.compile(r'(^|[.:;!?])\s*$')
 so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
 # we assume that no rpm packages existed before rpm itself existed...
 oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-%d'))
@@ -315,93 +45,6 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
         private_so_paths.add(epath)
         private_so_paths.add(re.sub(r'/lib64(?=/|$)', '/lib', epath))
         private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
-
-_enchant_checkers = {}
-
-
-def spell_check(pkg, output, str, fmt, lang, ignored):
-
-    dict_found = True
-    warned = set()
-    if enchant:
-        if lang == 'C':
-            lang = 'en_US'
-
-        checker = _enchant_checkers.get(lang)
-        if not checker and lang not in _enchant_checkers:
-            try:
-                checker = enchant.checker.SpellChecker(
-                    lang, filters=[enchant.tokenize.EmailFilter,
-                                   enchant.tokenize.URLFilter,
-                                   enchant.tokenize.WikiWordFilter])
-            except enchant.DictNotFoundError:
-                output.add_info('I', pkg, 'enchant-dictionary-not-found', lang)
-                pass
-            _enchant_checkers[lang] = checker
-
-        if checker:
-            # squeeze whitespace to ease leading context check
-            checker.set_text(re.sub(r'\s+', ' ', str))
-            uppername = pkg.header[rpm.RPMTAG_NAME].decode('utf-8').upper()
-            upperparts = uppername.split('-')
-            if lang.startswith('en'):
-                ups = [x + '\'S' for x in upperparts]
-                upperparts.extend(ups)
-            for err in checker:
-
-                # Skip already warned and ignored words
-                if err.word in warned or err.word in ignored:
-                    continue
-
-                # Skip all capitalized words that do not start a sentence
-                if err.word[0].isupper() and not \
-                        sentence_break_regex.search(checker.leading_context(3)):
-                    continue
-
-                upperword = err.word.upper()
-
-                # Skip all uppercase words
-                if err.word == upperword:
-                    continue
-
-                # Skip errors containing package name or equal to a
-                # 'component' of it, case insensitively
-                if uppername in upperword or upperword in upperparts:
-                    continue
-
-                # Work around enchant's digit tokenizing behavior:
-                # http://github.com/rfk/pyenchant/issues/issue/3
-                if checker.leading_context(1).isdigit() or \
-                        checker.trailing_context(1).isdigit():
-                    continue
-
-                # Warn and suggest
-                sug = ', '.join(checker.suggest()[:3])
-                if sug:
-                    sug = '-> %s' % sug
-                output.add_info('W', pkg, 'spelling-error', fmt % lang, err.word, sug)
-                warned.add(err.word)
-
-        else:
-            dict_found = False
-
-    if not enchant or not dict_found:
-        for seq in str.split():
-            for word in re.split(r'[^a-z]+', seq.lower()):
-                if len(word) == 0:
-                    continue
-                correct = BAD_WORDS.get(word)
-                if not correct:
-                    continue
-                if word[0] == '\'':
-                    word = word[1:]
-                if word[-1] == '\'':
-                    word = word[:-1]
-                if word in warned or word in ignored:
-                    continue
-                output.add_info('W', pkg, 'spelling-error', fmt % lang, word, '->',
-                                correct)
-                warned.add(word)
 
 
 class TagsCheck(AbstractCheck):
@@ -421,6 +64,9 @@ class TagsCheck(AbstractCheck):
         self.valid_buildhost_regex = re.compile(config.configuration['ValidBuildHost'])
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
+        self.spellcheck = config.configuration['UseEnchant']
+        if self.spellcheck:
+            self.spellchecker = Spellcheck()
 
         for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
                   'enhances', 'supplements'):
@@ -790,8 +436,11 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'tag-not-utf8', '%description', lang)
         description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
-        spell_check(pkg, self.output, description, '%%description -l %s', lang,
-                    ignored_words)
+        if self.spellcheck:
+            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
+            typos = self.spellchecker.spell_check(description, '%description -l {}', lang, pkgname, ignored_words)
+            for typo in typos.items():
+                self.output.add_info('E', pkg, 'spelling-error', typo)
         for l in description.splitlines():
             if len(l) > self.max_line_len:
                 self.output.add_info('E', pkg, 'description-line-too-long', lang, l)
@@ -809,7 +458,11 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'tag-not-utf8', 'Summary', lang)
         summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
-        spell_check(pkg, self.output, summary, 'Summary(%s)', lang, ignored_words)
+        if self.spellcheck:
+            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
+            typos = self.spellchecker.spell_check(summary, 'Summary({})', lang, pkgname, ignored_words)
+            for typo in typos.items():
+                self.output.add_info('E', pkg, 'spelling-error', typo)
         if '\n' in summary:
             self.output.add_info('E', pkg, 'summary-on-multiple-lines', lang)
         if (summary[0] != summary[0].upper() and
