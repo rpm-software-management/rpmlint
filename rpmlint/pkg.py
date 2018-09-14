@@ -24,7 +24,7 @@ try:
 except ImportError:
     _magic = None
 import rpm
-from rpmlint import Filter
+from rpmlint import filter
 from rpmlint.helpers import byte_to_string, print_warning
 
 # utilities

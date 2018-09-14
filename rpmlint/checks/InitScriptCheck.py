@@ -11,7 +11,7 @@ import os
 import re
 
 import rpm
-from rpmlint import Pkg
+from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 

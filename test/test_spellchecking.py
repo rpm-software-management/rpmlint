@@ -1,4 +1,4 @@
-from rpmlint.Spellcheck import Spellcheck
+from rpmlint.spellcheck import Spellcheck
 
 
 def test_spelldict(capsys):

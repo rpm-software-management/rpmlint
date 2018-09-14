@@ -1,6 +1,6 @@
 import pytest
 from rpmlint.checks.ZipCheck import ZipCheck
-from rpmlint.Filter import Filter
+from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_package
 

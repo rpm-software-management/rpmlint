@@ -4,7 +4,7 @@ import sys
 import tempfile
 
 import rpm
-from rpmlint import Pkg
+from rpmlint import pkg
 from rpmlint.helpers import byte_to_string, print_warning
 
 

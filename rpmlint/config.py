@@ -5,7 +5,7 @@ from pprint import pprint
 import re
 
 from configobj import ConfigObj
-from rpmlint.ConfigDefaults import DEFAULTS, DICT_DEFAULTS
+from rpmlint.configdefaults import DEFAULTS, DICT_DEFAULTS
 from rpmlint.helpers import print_warning
 # This is shipped by ConfigObj upstream
 from validate import Validator

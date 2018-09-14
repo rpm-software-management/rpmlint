@@ -1,8 +1,8 @@
 import os
 from typing.re import Pattern
 
-from rpmlint.Config import Config
-from rpmlint.Filter import Filter
+from rpmlint.config import Config
+from rpmlint.filter import Filter
 
 from Testing import get_tested_package, testpath
 

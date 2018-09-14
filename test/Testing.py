@@ -1,8 +1,8 @@
 import glob
 import os
 
-from rpmlint.Config import Config
-from rpmlint.Pkg import FakePkg, Pkg
+from rpmlint.config import Config
+from rpmlint.pkg import FakePkg, Pkg
 
 
 def testpath():

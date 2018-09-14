@@ -13,11 +13,11 @@ import time
 from urllib.parse import urlparse
 
 import rpm
-from rpmlint import Pkg
+from rpmlint import pkg as Pkg
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
-from rpmlint.Spellcheck import Spellcheck
+from rpmlint.spellcheck import Spellcheck
 
 CAPITALIZED_IGNORE_LIST = ('jQuery', 'openSUSE', 'wxWidgets', 'a', 'an', 'uWSGI')
 

@@ -1,6 +1,6 @@
 import os
 
-from rpmlint.Rpmdiff import Rpmdiff
+from rpmlint.rpmdiff import Rpmdiff
 
 from Testing import testpath
 
