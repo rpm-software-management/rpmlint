@@ -4,8 +4,8 @@ import sys
 import tempfile
 
 import rpm
-from rpmlint.pkg import getInstalledPkgs, Pkg
 from rpmlint.helpers import byte_to_string, print_warning
+from rpmlint.pkg import getInstalledPkgs, Pkg
 
 
 class Rpmdiff(object):
