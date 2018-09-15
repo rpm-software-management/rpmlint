@@ -24,7 +24,6 @@ try:
 except ImportError:
     _magic = None
 import rpm
-from rpmlint import Filter
 from rpmlint.helpers import byte_to_string, print_warning
 
 # utilities
@@ -551,7 +550,7 @@ class Pkg(AbstractPkg):
                         ret.append(str(lineno))
                         break
         except Exception as e:
-            Filter.printWarning(self, 'read-error', filename, e)
+            print_warning(f'Unable to read {filename}: {e}')
         return ret
 
     def langtag(self, tag, lang):

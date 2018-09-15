@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-from rpmlint.Rpmdiff import Rpmdiff
+from rpmlint.rpmdiff import Rpmdiff
 
 
 __version__ = '2.0.0'

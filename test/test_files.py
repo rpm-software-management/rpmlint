@@ -3,7 +3,7 @@ from rpmlint.checks.FilesCheck import FilesCheck
 from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
 from rpmlint.checks.FilesCheck import script_interpreter as se
-from rpmlint.Filter import Filter
+from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_package, get_tested_path
 

@@ -1,6 +1,6 @@
 import pytest
 from rpmlint.checks.PamCheck import PamCheck
-from rpmlint.Filter import Filter
+from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_package
 

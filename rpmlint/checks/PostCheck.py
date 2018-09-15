@@ -12,7 +12,7 @@ import re
 import tempfile
 
 import rpm
-from rpmlint import Pkg
+from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
 

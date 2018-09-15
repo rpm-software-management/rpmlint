@@ -15,7 +15,7 @@ import stat
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 from rpmlint.helpers import byte_to_string
-from rpmlint.Pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
+from rpmlint.pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (

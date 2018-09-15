@@ -1,6 +1,6 @@
 import os
 
-from rpmlint.Config import Config
+from rpmlint.config import Config
 
 from Testing import TEST_CONFIG, testpath
 

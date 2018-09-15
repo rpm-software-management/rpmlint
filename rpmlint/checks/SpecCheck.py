@@ -10,7 +10,7 @@ import re
 from urllib.parse import urlparse
 
 import rpm
-from rpmlint import Pkg
+from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
 
 # Don't check for hardcoded library paths in biarch packages
