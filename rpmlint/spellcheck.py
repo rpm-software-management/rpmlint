@@ -6,11 +6,11 @@ try:
     from enchant import Broker
     from enchant.checker import SpellChecker
     from enchant.tokenize import EmailFilter, URLFilter, WikiWordFilter
-    enchant = True
+    ENCHANT = True
 except ImportError:
     # if the enchant is not present we simply continue but without
     # spellchecking work being done
-    enchant = None
+    ENCHANT = None
 
 
 class Spellcheck(object):
@@ -23,7 +23,7 @@ class Spellcheck(object):
 
     def __init__(self):
         # test if we actually have working enchant
-        if not enchant:
+        if not ENCHANT:
             print_warning('(none): W: unable to init enchant, spellchecking disabled.')
 
     def _init_checker(self, lang='en_US'):
