@@ -1,19 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Setup file for easy installation."""
 import glob
-import os
-import shutil
 
 from rpmlint.version import __version__
 from setuptools import setup
 
-
-# convert this to entrypoints
-if not os.path.exists('build/_scripts'):
-    os.makedirs('build/_scripts')
-shutil.copyfile('scripts/lint.py', 'build/_scripts/rpmlint')
 
 setup(
     name='rpmlint',
@@ -42,7 +35,8 @@ setup(
         'Operating System :: POSIX',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Utilities',
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: System :: Archiving :: Packaging',
@@ -62,12 +56,10 @@ setup(
     data_files=[
         ('share/man/man1', glob.glob('man/*.1')),
     ],
-    scripts=[
-        'build/_scripts/rpmlint',
-    ],
     entry_points={
         'console_scripts': [
             'rpmdiff = rpmlint:diff',
-        ]
+            'rpmlint = rpmlint:lint',
+        ],
     },
 )

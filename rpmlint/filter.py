@@ -1,5 +1,5 @@
-import re
 from os.path import basename
+import re
 import textwrap
 
 

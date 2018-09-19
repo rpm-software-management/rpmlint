@@ -105,7 +105,7 @@ class TagsCheck(AbstractCheck):
         packager = pkg[rpm.RPMTAG_PACKAGER]
         if packager:
             self._unexpanded_macros(pkg, 'Packager', packager)
-            if self.configuration['Packager'] and \
+            if self.config.configuration['Packager'] and \
                not self.packager_regex.search(packager):
                 self.output.add_info('W', pkg, 'invalid-packager', packager)
         else:
