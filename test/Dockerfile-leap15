@@ -1,7 +1,7 @@
 FROM opensuse/leap:15
 
 RUN zypper -n install \
-        cpio bzip2 groff make elfutils xz \
+        cpio gzip bzip2 groff make elfutils xz \
         perl binutils desktop-file-utils \
         man appstream-glib \
         myspell-en_US myspell-cs_CZ \
