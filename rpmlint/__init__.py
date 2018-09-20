@@ -5,7 +5,6 @@ import sys
 from rpmlint.rpmdiff import Rpmdiff
 
 
-__version__ = '2.0.0'
 __copyright__ = """
     Copyright (C) 2006 Mandriva
     Copyright (C) 2009 Red Hat, Inc.

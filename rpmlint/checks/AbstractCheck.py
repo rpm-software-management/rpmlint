@@ -10,7 +10,7 @@ import contextlib
 import re
 import urllib.request
 
-from rpmlint import __version__
+from rpmlint.version import __version__
 
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')

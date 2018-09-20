@@ -6,7 +6,7 @@ import glob
 import os
 import shutil
 
-from rpmlint import __version__
+from rpmlint.version import __version__
 from setuptools import setup
 
 

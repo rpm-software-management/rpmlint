@@ -23,7 +23,7 @@ import tempfile
 # loaded which is too early - settings from config files won't take
 # place for those variables.
 
-from rpmlint import __version__
+from rpmlint.version import __version__
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.config import Config
