@@ -38,7 +38,6 @@ class AbstractCheck(object):
         self.name = name
         self.config = config
         self.output = output
-        self.verbose = False
         self.network_enabled = config.configuration['NetworkEnabled']
         self.network_timeout = config.configuration['NetworkTimeout']
         self.output.error_details.update(abstract_details_dict)
@@ -63,13 +62,7 @@ class AbstractCheck(object):
         Return info() of the response if available.
         """
         if not self.network_enabled:
-            if self.verbose:
-                self.output.add_info('W', pkg, 'network-checks-disabled', url)
             return
-
-        if self.verbose:
-            self.output.add_info('W', pkg, 'checking-url', url,
-                                 '(timeout %s seconds)' % self.network_timeout)
 
         res = None
         try:
