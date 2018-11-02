@@ -14,8 +14,8 @@ def menuxdgcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/menuxdg1'])
-def test_raises_parse_error(tmpdir, package):
-    output, test = menuxdgcheck()
+def test_raises_parse_error(tmpdir, package, menuxdgcheck):
+    output, test = menuxdgcheck
     test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 4
     out = output.print_results(output.results)

@@ -40,8 +40,8 @@ def chunk_from_pyc(version, size=16):
 
 
 @pytest.mark.parametrize('package', ['binary/python3-power'])
-def test_python_bytecode_magic(tmpdir, package):
-    output, test = filescheck()
+def test_python_bytecode_magic(tmpdir, package, filescheck):
+    output, test = filescheck
     test.check(get_tested_package(package, tmpdir))
     assert not output.results
     out = output.print_results(output.results)
@@ -61,8 +61,8 @@ def test_pyc_mtime_from_chunk(version, mtime):
 
 
 @pytest.mark.parametrize('package', ['binary/netmask-debugsource'])
-def test_devel_files(tmpdir, package):
-    output, test = filescheck()
+def test_devel_files(tmpdir, package, filescheck):
+    output, test = filescheck
     test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 5
     out = output.print_results(output.results)

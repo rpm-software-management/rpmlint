@@ -14,8 +14,8 @@ def tagscheck():
 
 
 @pytest.mark.parametrize('package', ['binary/unexpanded1'])
-def test_unexpanded_macros(tmpdir, package):
-    output, test = tagscheck()
+def test_unexpanded_macros(tmpdir, package, tagscheck):
+    output, test = tagscheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'unexpanded-macro Recommends' in out

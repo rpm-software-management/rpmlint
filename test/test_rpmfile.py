@@ -14,8 +14,8 @@ def rpmfilescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/apache-commons-collections-testframework-javadoc'])
-def test_distribution_tags(tmpdir, package):
-    output, test = rpmfilescheck()
+def test_distribution_tags(tmpdir, package, rpmfilescheck):
+    output, test = rpmfilescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'filename-too-long-for-joliet' in out

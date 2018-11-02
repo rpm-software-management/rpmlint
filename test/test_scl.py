@@ -16,9 +16,9 @@ def sclcheck():
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck'])
-def test_nonscl_spec_silent(package):
+def test_nonscl_spec_silent(package, sclcheck):
     """SCL check on non-SCL spec has to be silent"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -26,9 +26,9 @@ def test_nonscl_spec_silent(package):
 
 
 @pytest.mark.parametrize('package', ['binary/python3-power'])
-def test_nonscl_binary_silent(tmpdir, package):
+def test_nonscl_binary_silent(tmpdir, package, sclcheck):
     """SCL check on non-SCL spec has to be silent"""
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert not out
@@ -36,13 +36,13 @@ def test_nonscl_binary_silent(tmpdir, package):
 
 @pytest.mark.parametrize('package', ['nodejs010-1', 'nodejs010-nodejs-0.10.3',
                                      'nodejs010-nodejs-forever'])
-def test_scl_source_rpm(tmpdir, package):
+def test_scl_source_rpm(tmpdir, package, sclcheck):
     """
     A bunch of testing source RPM packages using SCL
     Assuming they are all OK and except silent output
     While adding more checks, this might change
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(os.path.join('source', package), tmpdir))
     out = output.print_results(output.results)
     assert not out
@@ -50,22 +50,22 @@ def test_scl_source_rpm(tmpdir, package):
 
 @pytest.mark.parametrize('package', ['nodejs010-runtime', 'nodejs010-nodejs-0.10.3',
                                      'nodejs010-nodejs-oauth'])
-def test_scl_binary_rpm(tmpdir, package):
+def test_scl_binary_rpm(tmpdir, package, sclcheck):
     """
     A bunch of testing binary RPM packages using SCL
     Assuming they are all OK and except silent output
     While adding more checks, this might change
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(os.path.join('binary', package), tmpdir))
     out = output.print_results(output.results)
     assert not out
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-good', 'spec/nodejs010'])
-def test_correct_spec(package):
+def test_correct_spec(package, sclcheck):
     """Tests probably correct nodejs.spec and nodejs010.spec"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -73,9 +73,9 @@ def test_correct_spec(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-undeclared', 'spec/nodejs010-undeclared'])
-def test_undeclared(package):
+def test_undeclared(package, sclcheck):
     """Tests SCL specs without %scl definition or %scl_package calls"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -83,9 +83,9 @@ def test_undeclared(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-nobuild'])
-def test_nobuild(package):
+def test_nobuild(package, sclcheck):
     """Tests SCL metapackage without build subpackage"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -93,9 +93,9 @@ def test_nobuild(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-noruntime'])
-def test_noruntime(package):
+def test_noruntime(package, sclcheck):
     """Tests SCL metapackage without runtime subpackage"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -104,9 +104,9 @@ def test_noruntime(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-missing-requires'])
-def test_missing_requires(package):
+def test_missing_requires(package, sclcheck):
     """Tests SCL metapackage without scl-utils-build (B)Rs"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -115,9 +115,9 @@ def test_missing_requires(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-alien-subpackage', 'spec/nodejs010-alien-subpackage-n'])
-def test_alien_subpackage(package):
+def test_alien_subpackage(package, sclcheck):
     """Tests SCL metapackage with extra subpackage"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -126,9 +126,9 @@ def test_alien_subpackage(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-nosclinstall'])
-def test_nosclinstall(package):
+def test_nosclinstall(package, sclcheck):
     """Tests SCL metapackage that doesn't call %scl_install"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -136,9 +136,9 @@ def test_nosclinstall(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-noarch-libdir'])
-def test_noarch(package):
+def test_noarch(package, sclcheck):
     """Tests noarch SCL metapackages (not) containing %{_libdir}"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -146,9 +146,9 @@ def test_noarch(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs010-badfiles'])
-def test_badfiles(package):
+def test_badfiles(package, sclcheck):
     """Tests SCL metapackage %files section checks"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -158,9 +158,9 @@ def test_badfiles(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-no-pkg_name'])
-def test_no_pkg_name(package):
+def test_no_pkg_name(package, sclcheck):
     """Tests SCL spec without pkg_name definition"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -168,9 +168,9 @@ def test_no_pkg_name(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-name-without-prefix'])
-def test_name_without_prefix(package):
+def test_name_without_prefix(package, sclcheck):
     """Tests SCL spec without prefixed name"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -178,11 +178,11 @@ def test_name_without_prefix(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-name-with-noncondition-prefix'])
-def test_name_with_prefix_without_condition(package):
+def test_name_with_prefix_without_condition(package, sclcheck):
     """
     Tests SCL spec with prefixed name without condition in scl_prefix macro
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -190,9 +190,9 @@ def test_name_with_prefix_without_condition(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-conflicts-without-prefix'])
-def test_conflicts_without_prefix(package):
+def test_conflicts_without_prefix(package, sclcheck):
     """Tests SCL spec with nonprefixed conflicts"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -200,9 +200,9 @@ def test_conflicts_without_prefix(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-provides-without-prefix'])
-def test_provides_without_prefix(package):
+def test_provides_without_prefix(package, sclcheck):
     """Tests SCL spec with nonprefixed provides"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -210,12 +210,12 @@ def test_provides_without_prefix(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-norequire'])
-def test_main_package_without_scl_require(package):
+def test_main_package_without_scl_require(package, sclcheck):
     """
     Tests SCL spec where the main package doesn't require anything
     from collection
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -223,12 +223,12 @@ def test_main_package_without_scl_require(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-n-noprefix'])
-def test_n_supbackage_without_prefix(package):
+def test_n_supbackage_without_prefix(package, sclcheck):
     """
     Tests SCL spec where a subpackage uses -n and doesn't start with
     SCL prefix
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -236,9 +236,9 @@ def test_n_supbackage_without_prefix(package):
 
 
 @pytest.mark.parametrize('package', ['spec/nodejs-setup-no-n'])
-def test_setup_without_n(package):
+def test_setup_without_n(package, sclcheck):
     """Tests SCL spec where setup doesn't use -n option"""
-    output, test = sclcheck()
+    output, test = sclcheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -246,29 +246,29 @@ def test_setup_without_n(package):
 
 
 @pytest.mark.parametrize('package', ['binary/nodejs110-nodejs-oauth'])
-def test_scl_name_screwed_up(tmpdir, package):
+def test_scl_name_screwed_up(tmpdir, package, sclcheck):
     """
     SCL check on SCL package that differs it's name from scl tree folder
     """
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'scl-name-screwed-up' in out
 
 
 @pytest.mark.parametrize('package', ['binary/outside-nodejs010-nodejs-oauth'])
-def test_scl_forbidden_folders(tmpdir, package):
+def test_scl_forbidden_folders(tmpdir, package, sclcheck):
     """SCL check on SCL package that has files in forbidden folders"""
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'file-outside-of-scl-tree' in out
 
 
 @pytest.mark.parametrize('package', ['binary/macros-nodejs010-nodejs-oauth'])
-def test_scl_macros_outside_of_build(tmpdir, package):
+def test_scl_macros_outside_of_build(tmpdir, package, sclcheck):
     """SCL check on SCL package that has files in forbidden folders"""
-    output, test = sclcheck()
+    output, test = sclcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'scl-rpm-macros-outside-of-build' in out
