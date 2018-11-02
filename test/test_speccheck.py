@@ -15,8 +15,8 @@ def speccheck():
     return output, test
 
 
-def test_check_include(tmpdir):
-    output, test = speccheck()
+def test_check_include(tmpdir, speccheck):
+    output, test = speccheck
     test.check_source(get_tested_package('source/CheckInclude', tmpdir))
     out = output.print_results(output.results)
     assert 'no-buildroot-tag' in out
@@ -24,8 +24,8 @@ def test_check_include(tmpdir):
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck2', 'spec/SpecCheck3'])
-def test_patch_not_applied(package):
-    output, test = speccheck()
+def test_patch_not_applied(package, speccheck):
+    output, test = speccheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)
@@ -33,8 +33,8 @@ def test_patch_not_applied(package):
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck'])
-def test_distribution_tags(package):
-    output, test = speccheck()
+def test_distribution_tags(package, speccheck):
+    output, test = speccheck
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg, pkg.name)
     out = output.print_results(output.results)

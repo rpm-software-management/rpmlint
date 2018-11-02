@@ -14,8 +14,8 @@ def zipcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/asm'])
-def test_jarfile(tmpdir, package):
-    output, test = zipcheck()
+def test_jarfile(tmpdir, package, zipcheck):
+    output, test = zipcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'class-path-in-manifest' in out
@@ -23,8 +23,8 @@ def test_jarfile(tmpdir, package):
 
 
 @pytest.mark.parametrize('package', ['binary/ruby2.5-rubygem-rubyzip-testsuite'])
-def test_zip1(tmpdir, package):
-    output, test = zipcheck()
+def test_zip1(tmpdir, package, zipcheck):
+    output, test = zipcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     # these are PW protected not broken so do not error about them
@@ -34,8 +34,8 @@ def test_zip1(tmpdir, package):
 
 
 @pytest.mark.parametrize('package', ['binary/texlive-codepage-doc'])
-def test_zip2(tmpdir, package):
-    output, test = zipcheck()
+def test_zip2(tmpdir, package, zipcheck):
+    output, test = zipcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'W: unable-to-read-zip' in out

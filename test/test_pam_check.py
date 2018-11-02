@@ -14,8 +14,8 @@ def pamcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/PamCheck'])
-def test_pam_check(tmpdir, package):
-    output, test = pamcheck()
+def test_pam_check(tmpdir, package, pamcheck):
+    output, test = pamcheck
     test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 1
     out = output.print_results(output.results)

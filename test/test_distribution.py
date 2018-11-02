@@ -14,8 +14,8 @@ def distributioncheck():
 
 
 @pytest.mark.parametrize('package', ['binary/ngircd'])
-def test_distribution_tags(tmpdir, package):
-    output, test = distributioncheck()
+def test_distribution_tags(tmpdir, package, distributioncheck):
+    output, test = distributioncheck
     test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 2
     out = output.print_results(output.results)

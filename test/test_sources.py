@@ -14,8 +14,8 @@ def sourcescheck():
 
 
 @pytest.mark.parametrize('package', ['source/wrongsrc'])
-def test_inconsistent_file_extension(tmpdir, package):
-    output, test = sourcescheck()
+def test_inconsistent_file_extension(tmpdir, package, sourcescheck):
+    output, test = sourcescheck
     test.check(get_tested_package(package, tmpdir))
     assert len(output.results) == 3
     out = output.print_results(output.results)
