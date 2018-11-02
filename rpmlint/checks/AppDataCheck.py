@@ -13,7 +13,7 @@ class AppDataCheck(AbstractFilesCheck):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        super().__init__(config, output, 'AppDataCheck', r'/usr/share/appdata/.*\.appdata.xml$')
+        super().__init__(config, output, r'/usr/share/appdata/.*\.appdata.xml$')
         self.appdata_checker = self.config.configuration['AppDataChecker']
         appdata_details_dict = {
             'invalid-appdata-file':

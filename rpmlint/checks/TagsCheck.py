@@ -50,7 +50,7 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
 class TagsCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'TagsCheck')
+        super().__init__(config, output)
         self.output.error_details.update(tags_details_dict)
         self.valid_groups = config.configuration['ValidGroups']
         self.valid_licenses = config.configuration['ValidLicenses']

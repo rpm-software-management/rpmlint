@@ -112,7 +112,7 @@ def contains_buildroot(line):
 class SpecCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SpecCheck')
+        super().__init__(config, output)
         self._spec_file = None
         self._spec_name = None
         self.valid_groups = config.configuration['ValidGroups']

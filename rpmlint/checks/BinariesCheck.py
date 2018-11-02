@@ -327,7 +327,7 @@ def dir_base(path):
 class BinariesCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'BinariesCheck')
+        super().__init__(config, output)
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']

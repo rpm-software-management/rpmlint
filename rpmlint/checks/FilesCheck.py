@@ -335,7 +335,7 @@ def script_interpreter(chunk):
 class FilesCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'FilesCheck')
+        super().__init__(config, output)
         self.output.error_details.update(files_details_dict)
         self.use_debugsource = self.config.configuration['UseDebugSource']
         self.games_group_regex = re.compile(self.config.configuration['RpmGamesGroup'])

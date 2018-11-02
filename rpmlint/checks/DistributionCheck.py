@@ -15,7 +15,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 class DistributionCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'DistributionCheck')
+        super().__init__(config, output)
         self.man_regex = re.compile(r'/man(?:\d[px]?|n)/')
         self.info_regex = re.compile(r'(/usr/share|/usr)/info/')
         self.vendor = self.config.configuration['Vendor']

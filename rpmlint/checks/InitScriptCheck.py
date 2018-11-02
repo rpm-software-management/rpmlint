@@ -33,7 +33,7 @@ RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
 class InitScriptCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'InitScriptCheck')
+        super().__init__(config, output)
         self.output.error_details.update(init_detals_dict)
         self.use_deflevels = self.config.configuration['UseDefaultRunlevels']
         self.use_subsys = self.config.configuration['UseVarLockSubsys']

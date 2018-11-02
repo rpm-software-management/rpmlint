@@ -57,7 +57,7 @@ class SCLCheck(AbstractCheck):
     """Software Collections checks"""
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SCLCheck')
+        super().__init__(config, output)
         self._spec_file = None
         self.output.error_details.update(scl_details_dict)
 

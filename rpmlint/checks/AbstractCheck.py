@@ -30,14 +30,10 @@ class _HeadRedirectHandler(urllib.request.HTTPRedirectHandler):
 
 
 class AbstractCheck(object):
-    known_checks = {}
-
-    def __init__(self, config, output, name):
-        if not AbstractCheck.known_checks.get(name):
-            AbstractCheck.known_checks[name] = self
-        self.name = name
+    def __init__(self, config, output):
         self.config = config
         self.output = output
+        # FIXME: kill network from rpmlint, everything should be offline
         self.network_enabled = config.configuration['NetworkEnabled']
         self.network_timeout = config.configuration['NetworkTimeout']
         self.output.error_details.update(abstract_details_dict)
@@ -90,9 +86,9 @@ class AbstractCheck(object):
 
 
 class AbstractFilesCheck(AbstractCheck):
-    def __init__(self, config, output, name, file_regexp):
+    def __init__(self, config, output, file_regexp):
         self.__files_re = re.compile(file_regexp)
-        super().__init__(config, output, name)
+        super().__init__(config, output)
 
     def check_binary(self, pkg):
         ghosts = pkg.ghostFiles()

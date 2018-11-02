@@ -11,7 +11,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 class ConfigCheck(AbstractCheck):
     def __init__(self, config, output):
-        super().__init__(config, output, 'ConfigCheck')
+        super().__init__(config, output)
         self.output.error_details.update(config_details_dict)
 
     def check_binary(self, pkg):
