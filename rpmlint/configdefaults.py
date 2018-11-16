@@ -128,7 +128,7 @@ DEFAULTS['ValidMenuSections'] = """
     More Applications/Sciences/Other
     More Applications/Other
 """
-DEFAULTS['InvalidRequires'] = """
+DEFAULTS['InvalidRequires'] = r"""
     ^is$
     ^not$
     ^owned$
