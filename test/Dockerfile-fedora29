@@ -1,6 +1,7 @@
-FROM fedora:28
+FROM fedora:29
 
-RUN dnf -y install \
+# --nogpgcheck: Ignore transient(?) package signature failures
+RUN dnf --nogpgcheck -y install \
         /usr/bin/appstream-util \
         /usr/bin/cpio \
         /usr/bin/bzip2 \
@@ -25,7 +26,8 @@ RUN dnf -y install \
         python3-flake8 \
         python3-flake8-import-order \
         python3-pyxdg \
-        python3-configobj
+        python3-configobj \
+        rpm-build
 
 WORKDIR /usr/src/rpmlint
 COPY . .
