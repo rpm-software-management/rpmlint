@@ -22,9 +22,7 @@ class Spellcheck(object):
     _enchant_checkers = {}
 
     def __init__(self):
-        # test if we actually have working enchant
-        if not ENCHANT:
-            print_warning('(none): W: unable to init enchant, spellchecking disabled.')
+        pass
 
     def _init_checker(self, lang='en_US'):
         """
@@ -35,6 +33,11 @@ class Spellcheck(object):
         # C language means English
         if lang == 'C':
             lang = 'en_US'
+
+        # test if we actually have working enchant
+        if not ENCHANT:
+            print_warning('(none): W: unable to init enchant, spellchecking disabled.')
+            return
 
         # there might not be myspell/aspell/etc dicts present
         broker = Broker()

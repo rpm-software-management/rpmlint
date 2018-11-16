@@ -1,11 +1,13 @@
-from rpmlint.spellcheck import Spellcheck
+import pytest
+import rpmlint.spellcheck
 
 
+@pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
 def test_spelldict(capsys):
     """
     Check we can init dictionary spellchecker
     """
-    spell = Spellcheck()
+    spell = rpmlint.spellcheck.Spellcheck()
     spell._init_checker()
     out, err = capsys.readouterr()
     assert not out
@@ -22,11 +24,12 @@ def test_spelldict(capsys):
     assert 'not-existing-language' not in spell._enchant_checkers
 
 
+@pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
 def test_spellchecking():
     """
     Check if we can test the spelling
     """
-    spell = Spellcheck()
+    spell = rpmlint.spellcheck.Spellcheck()
 
     # correct text
     text = 'I swear this text is proper English'
@@ -51,8 +54,9 @@ def test_spellchecking():
     assert not result
 
 
+@pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
 def test_pkgname_spellchecking():
-    spell = Spellcheck()
+    spell = rpmlint.spellcheck.Spellcheck()
 
     pkgname = 'python-squeqe'
     text = 'This package is squeqe\'s framework helper'
@@ -60,8 +64,9 @@ def test_pkgname_spellchecking():
     assert not result
 
 
+@pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
 def test_ignorelist_spellchecking():
-    spell = Spellcheck()
+    spell = rpmlint.spellcheck.Spellcheck()
 
     ignore = ['wrod', 'žížala']
     text = 'This package should not have any typos in wrod or žíŽala'
