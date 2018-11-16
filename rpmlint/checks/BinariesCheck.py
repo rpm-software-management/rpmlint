@@ -372,10 +372,15 @@ class BinariesCheck(AbstractCheck):
             is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
 
             if is_shell:
-                with open(pkgfile.path, 'rb') as inputf:
-                    if (b'This wrapper script should never '
-                            b'be moved out of the build directory' in inputf.read(2048)):
-                        self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
+                file_start = None
+                try:
+                    with open(pkgfile.path, 'rb') as inputf:
+                        file_start = inputf.read(2048)
+                except IOError:
+                    pass
+                if (file_start and b'This wrapper script should never '
+                        b'be moved out of the build directory' in file_start):
+                    self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
 
             if not is_binary:
                 if reference_regex.search(fname):
