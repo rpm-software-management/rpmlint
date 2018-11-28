@@ -29,3 +29,10 @@ def test_waived_forbidden_c_calls(tmpdir, package, binariescheck):
     # assert the details are properly printed to the content
     assert len(output.print_results(output.results).splitlines()) == 13
     assert 'crypto-policy-non-compliance' not in output.print_results(output.results)
+
+
+@pytest.mark.parametrize('package', ['binary/libreiserfscore-devel'])
+def test_lto_bytecode(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    assert 'lto-bytecode' in output.print_results(output.results)
