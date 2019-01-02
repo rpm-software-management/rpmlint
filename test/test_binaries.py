@@ -19,3 +19,8 @@ class TestForbiddenCCalls(Testing.OutputTest):
         for package in ['ngircd']:
             out = self._rpm_test_output(os.path.join('binary', package))
             assert 'crypto-policy-non-compliance' not in "\n".join(out)
+
+    def test_lto_bytecode(self):
+        for package in ['libreiserfscore-devel']:
+            out = self._rpm_test_output(os.path.join('binary', package))
+            assert 'lto-bytecode' in "\n".join(out)

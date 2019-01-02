@@ -68,6 +68,7 @@ class BinaryInfo(object):
 
     chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
+    lto_section_name_prefix = '.gnu.lto_.'
 
     def __init__(self, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
@@ -84,6 +85,7 @@ class BinaryInfo(object):
         self.forbidden_calls = []
         fork_called = False
         self.tail = ''
+        self.lto_sections = False
 
         self.setgid = False
         self.setuid = False
@@ -110,6 +112,9 @@ class BinaryInfo(object):
         if not res[0]:
             lines = res[1].splitlines()
             for line in lines:
+                if BinaryInfo.lto_section_name_prefix in line:
+                    self.lto_sections = True
+
                 r = BinaryInfo.needed_regex.search(line)
                 if r:
                     self.needed.append(r.group(1))
@@ -484,6 +489,9 @@ class BinariesCheck(AbstractCheck.AbstractCheck):
                 for ec in bin_info.exit_calls:
                     printWarning(pkg, 'shared-lib-calls-exit', fname, ec)
 
+            if bin_info.lto_sections:
+                printError(pkg, 'lto-bytecode', fname)
+
             for ec in bin_info.forbidden_calls:
                 printWarning(pkg, ec, fname,
                              BinaryInfo.forbidden_functions[ec]['f_name'])
@@ -773,7 +781,11 @@ upstream to have this issue fixed.''',
 '''This executable should be stripped from debugging symbols, in order to take
 less space and be loaded faster. This is usually done automatically at
 buildtime by rpm. Check the build logs and the permission on the file (some
-implementations only strip if the permission is 0755).'''
+implementations only strip if the permission is 0755).''',
+
+'lto-bytecode',
+'''This executable contains a LTO section.  LTO bytecode is not portable
+and should not be distributed in static libraries or e.g. Python modules.''',
 )
 
 # BinariesCheck.py ends here
