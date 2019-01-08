@@ -776,5 +776,5 @@ implementations only strip if the permission is 0755).""",
 
 'lto-bytecode':
 """This executable contains a LTO section.  LTO bytecode is not portable
-and should not be distributes in static libraries or e.g. Python modules.""",
+and should not be distributed in static libraries or e.g. Python modules.""",
 }
