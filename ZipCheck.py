@@ -43,7 +43,7 @@ class ZipCheck(AbstractCheck.AbstractCheck):
                     badcrc = z.testzip()
                     if badcrc:
                         printError(pkg, 'bad-crc-in-zip', badcrc, fname)
-                except zipfile.error:
+                except (RuntimeError, zipfile.error):
                     printWarning(pkg, 'unable-to-read-zip', '%s: %s' %
                                  (fname, sys.exc_info()[1]))
                 else:
