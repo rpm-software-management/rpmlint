@@ -8,6 +8,7 @@
 #                 the checks.
 #############################################################################
 
+import contextlib
 import getopt
 import importlib
 import locale
@@ -71,7 +72,9 @@ def loadCheck(name, config, output):
 #############################################################################
 def main():
 
-    locale.setlocale(locale.LC_COLLATE, '')
+    # we'll try to sort with locale settings, but we don't fail if not possible
+    with contextlib.suppress(locale.Error):
+        locale.setlocale(locale.LC_COLLATE, '')
 
     output = Filter(cfg)
 
