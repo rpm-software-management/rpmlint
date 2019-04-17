@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 from rpmlint.pkg import getstatusoutput
@@ -36,8 +36,8 @@ class AppDataCheck(AbstractFilesCheck):
         except OSError:
             # checker is not installed, do a validation manually
             try:
-                ET.parse(pkg.dirName() + filename)
-            except ET.ParseError:
+                ElementTree.parse(pkg.dirName() + filename)
+            except ElementTree.ParseError:
                 validation_failed = True
         if validation_failed:
             self.output.add_info('E', pkg, 'invalid-appdata-file', filename)
