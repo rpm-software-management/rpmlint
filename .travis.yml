@@ -6,14 +6,14 @@ services:
   - docker
 
 env:
-  - DIST=fedora29 PYTHON=python3 FLAKE='/usr/bin/flake8'
-  - DIST=fedoradev PYTHON=python3 FLAKE='/usr/bin/flake8'
-  - DIST=opensuselp15 PYTHON=python3 FLAKE='/usr/bin/flake8'
-  - DIST=opensusetw PYTHON=python3 FLAKE='/usr/bin/flake8'
+  - DIST=fedora29
+  - DIST=fedoradev
+  - DIST=opensuselp15
+  - DIST=opensusetw
 
 before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - docker run -e PYTHONPATH='.' $DIST $PYTHON setup.py test
-  - docker run $DIST $FLAKE
+  - docker run -e PYTHONPATH='.' $DIST python3 setup.py test
+  - docker run $DIST flake8
