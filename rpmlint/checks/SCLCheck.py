@@ -68,7 +68,7 @@ class SCLCheck(AbstractCheck):
                 self._spec_file = pkgfile.path
                 self.check_spec(pkg, self._spec_file)
 
-    def check_spec(self, pkg, spec_file, spec_lines=None):
+    def check_spec(self, pkg, spec_file):
         """SCL spec file checks"""
         spec = '\n'.join(Pkg.readlines(spec_file))
         if global_scl_definition.search(spec):

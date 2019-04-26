@@ -143,11 +143,10 @@ class SpecCheck(AbstractCheck):
             # check content of spec file
             self.check_spec(pkg, self._spec_file)
 
-    def check_spec(self, pkg, spec_file, spec_lines=None):
+    def check_spec(self, pkg, spec_file):
         self._spec_file = spec_file
         spec_only = isinstance(pkg, Pkg.FakePkg)
-        if not spec_lines:
-            spec_lines = Pkg.readlines(spec_file)
+        spec_lines = Pkg.readlines(spec_file)
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
