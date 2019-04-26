@@ -20,7 +20,7 @@ def test_nonscl_spec_silent(package, sclcheck):
     """SCL check on non-SCL spec has to be silent"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert not out
 
@@ -67,7 +67,7 @@ def test_correct_spec(package, sclcheck):
     """Tests probably correct nodejs.spec and nodejs010.spec"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert not out
 
@@ -77,7 +77,7 @@ def test_undeclared(package, sclcheck):
     """Tests SCL specs without %scl definition or %scl_package calls"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'undeclared-scl' in out
 
@@ -87,7 +87,7 @@ def test_nobuild(package, sclcheck):
     """Tests SCL metapackage without build subpackage"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'no-build-in-scl-metapackage' in out
 
@@ -97,7 +97,7 @@ def test_noruntime(package, sclcheck):
     """Tests SCL metapackage without runtime subpackage"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'no-runtime-in-scl-metapackage' in out
     assert 'scl-main-metapackage-contains-files' in out
@@ -108,7 +108,7 @@ def test_missing_requires(package, sclcheck):
     """Tests SCL metapackage without scl-utils-build (B)Rs"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'scl-metapackage-without-scl-utils-build-br' in out
     assert 'scl-build-without-requiring-scl-utils-build' in out
@@ -119,7 +119,7 @@ def test_alien_subpackage(package, sclcheck):
     """Tests SCL metapackage with extra subpackage"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'weird-subpackage-in-scl-metapackage' in out
     assert 'hehe' in out
@@ -130,7 +130,7 @@ def test_nosclinstall(package, sclcheck):
     """Tests SCL metapackage that doesn't call %scl_install"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'scl-metapackage-without-%scl_install' in out
 
@@ -140,7 +140,7 @@ def test_noarch(package, sclcheck):
     """Tests noarch SCL metapackages (not) containing %{_libdir}"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'noarch-scl-metapackage-with-libdir' in out
 
@@ -150,7 +150,7 @@ def test_badfiles(package, sclcheck):
     """Tests SCL metapackage %files section checks"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'scl-main-metapackage-contains-files' in out
     assert 'scl-runtime-package-without-%scl_files' in out
@@ -162,7 +162,7 @@ def test_no_pkg_name(package, sclcheck):
     """Tests SCL spec without pkg_name definition"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'missing-pkg_name-definition' in out
 
@@ -172,7 +172,7 @@ def test_name_without_prefix(package, sclcheck):
     """Tests SCL spec without prefixed name"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'name-without-scl-prefix' in out
 
@@ -184,7 +184,7 @@ def test_name_with_prefix_without_condition(package, sclcheck):
     """
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'scl-prefix-without-condition' in out
 
@@ -194,7 +194,7 @@ def test_conflicts_without_prefix(package, sclcheck):
     """Tests SCL spec with nonprefixed conflicts"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'obsoletes-or-conflicts-without-scl-prefix' in out
 
@@ -204,7 +204,7 @@ def test_provides_without_prefix(package, sclcheck):
     """Tests SCL spec with nonprefixed provides"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'provides-without-scl-prefix' in out
 
@@ -217,7 +217,7 @@ def test_main_package_without_scl_require(package, sclcheck):
     """
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'doesnt-require-scl-runtime-or-other-scl-package' in out
 
@@ -230,7 +230,7 @@ def test_n_supbackage_without_prefix(package, sclcheck):
     """
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'subpackage-with-n-without-scl-prefix' in out
 
@@ -240,7 +240,7 @@ def test_setup_without_n(package, sclcheck):
     """Tests SCL spec where setup doesn't use -n option"""
     output, test = sclcheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'scl-setup-without-n' in out
 

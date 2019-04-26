@@ -54,7 +54,7 @@ class AbstractCheck(object):
     def check_binary(self, pkg):
         return
 
-    def check_spec(self, pkg, spec_file):
+    def check_spec(self, pkg):
         return
 
     def check_url(self, pkg, tag, url):
