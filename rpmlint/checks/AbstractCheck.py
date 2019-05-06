@@ -85,7 +85,7 @@ class AbstractCheck(object):
                 https = 'https://' + url[len('http://'):]
                 try:
                     opener.open(_HeadRequest(https), timeout=self.network_timeout)
-                except Exception as e:
+                except Exception:
                     pass
                 else:
                     self.output.add_info('W', pkg, 'non-https-url', '%s:' % tag, url)
