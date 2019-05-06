@@ -80,6 +80,15 @@ class AbstractCheck(object):
         except Exception as e:
             errstr = str(e) or repr(e) or type(e)
             self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url, errstr)
+        else:
+            if url.startswith('http://'):
+                https = 'https://' + url[len('http://'):]
+                try:
+                    opener.open(_HeadRequest(https), timeout=self.network_timeout)
+                except Exception:
+                    pass
+                else:
+                    self.output.add_info('W', pkg, 'non-https-url', '%s:' % tag, url)
         info = None
         if res:
             with contextlib.closing(res):
@@ -111,4 +120,7 @@ abstract_details_dict = {
     'network-checks-disabled':
     """Checks requiring network access have not been enabled in configuration,
     see the NetworkEnabled option.""",
+    'non-https-url':
+    """The URLs uses http:// while https:// appears to work,
+    always prefer HTTPS URLs.""",
 }
