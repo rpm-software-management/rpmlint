@@ -23,7 +23,7 @@ class DistributionCheck(AbstractCheck):
         self.compress_ext = self.config.configuration['CompressExtension']
         distribution_details_dict = {
             'invalid-vendor':
-            'In the \'%s\' distribution, vendor should be \'%s\'.' % (self.distribution, self.vendor),
+            "In the '%s' distribution, vendor should be '%s'." % (self.distribution, self.vendor),
 
             'invalid-distribution':
             'The distribution value should be '' + self.distribution + ''.',

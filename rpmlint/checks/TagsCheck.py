@@ -79,7 +79,7 @@ class TagsCheck(AbstractCheck):
                                           'not-standard-release-extension':
                                           'Your release tag must match the regular expression ' + self.release_ext + '.',
                                           'summary-too-long':
-                                          'The \'Summary:\' must not exceed %d characters.' % self.max_line_len,
+                                          "The 'Summary:' must not exceed %d characters." % self.max_line_len,
                                           'description-line-too-long':
                                           """Your description lines must not exceed %d characters. If a line is exceeding
                                           this number, cut it to fit in two lines.""" % self.max_line_len,

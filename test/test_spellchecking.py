@@ -37,7 +37,7 @@ def test_spellchecking():
     assert not result
 
     # english 2 typos
-    text = 'I don\'t think tihs tetx is correct English'
+    text = "I don't think tihs tetx is correct English"
     result = spell.spell_check(text, 'Description({}):')
     assert len(result) == 2
     assert result['tihs'] == 'Description(en_US): tihs -> this, hits, ties'
@@ -59,7 +59,7 @@ def test_pkgname_spellchecking():
     spell = rpmlint.spellcheck.Spellcheck()
 
     pkgname = 'python-squeqe'
-    text = 'This package is squeqe\'s framework helper'
+    text = "This package is squeqe's framework helper"
     result = spell.spell_check(text, 'Description({}):', 'en_US', pkgname)
     assert not result
 

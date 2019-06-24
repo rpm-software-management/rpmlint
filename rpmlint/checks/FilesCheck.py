@@ -1055,7 +1055,7 @@ a call to ldconfig.""",
 a call to install-info.""",
 
 'postin-without-install-info':
-'This package contains info files and its %post doesn\'t call install-info.',
+"This package contains info files and its %post doesn't call install-info.",
 
 'info-files-without-install-info-postun':
 """This package contains info files and provides no %postun scriptlet

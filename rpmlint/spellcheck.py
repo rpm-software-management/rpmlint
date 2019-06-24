@@ -77,7 +77,7 @@ class Spellcheck(object):
             upperparts = uppername.split('-')
             # In english we can have ie. django's (so ignore such words)
             if lang.startswith('en'):
-                ups = [x + '\'S' for x in upperparts]
+                ups = [x + "'S" for x in upperparts]
                 upperparts.extend(ups)
             # uppercase all ignorewords
             if ignored_words:
