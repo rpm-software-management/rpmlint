@@ -52,10 +52,10 @@ def process_diff_args(argv):
     options = parser.parse_args(args=argv)
     # the rpms must exist for us to do anything
     if not os.path.exists(options.old_package):
-        print(f'The file \'{options.old_package}\' does not exist')
+        print(f"The file '{options.old_package}' does not exist")
         exit(2)
     if not os.path.exists(options.old_package):
-        print(f'The file \'{options.new_package}\' does not exist')
+        print(f"The file '{options.new_package}' does not exist")
         exit(2)
 
     # convert options to dict
