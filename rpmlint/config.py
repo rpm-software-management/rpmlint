@@ -1,6 +1,5 @@
-from glob import glob
 from importlib.util import find_spec
-import os
+from pathlib import Path
 from pprint import pprint
 import re
 
@@ -43,7 +42,7 @@ class Config(object):
         'ValidShells',
     )
     # filename with configuration specifications
-    __configspecfilename = os.path.join(os.path.dirname(__file__), 'configspec.cfg')
+    __configspecfilename = Path(__file__).parent / 'configspec.cfg'
 
     def __init__(self, config=None):
         # ordered list of configuration files we loaded
@@ -93,7 +92,7 @@ class Config(object):
         """
 
         if config:
-            if os.path.exists(config):
+            if config.exists():
                 # load this only if it really exist
                 self.conf_files = [config]
                 return
@@ -101,11 +100,10 @@ class Config(object):
                 print_warning('(none): W: error locating user requested configuration: {}'.format(config))
 
         for directory in reversed(xdg_config_dirs):
-            confdir = os.path.join(directory, 'rpmlint')
-            if os.path.isdir(confdir):
+            confdir = Path(directory) / 'rpmlint'
+            if confdir.is_dir():
                 # load all configs in the folders
-                confopts = glob('{}/*config'.format(confdir))
-                confopts.sort()
+                confopts = sorted(confdir.glob('*config'))
                 self.conf_files += confopts
 
     def print_config(self):
@@ -124,10 +122,11 @@ class Config(object):
             # just add the config for tracking purposes, someone injected
             # config file to us
             self.conf_files.append(config)
-
+        # ConfigObj still dont known Path-like objects
+        config = str(config)
         # load and validate initial config
         val = Validator()
-        configspec = ConfigObj(self.__configspecfilename, _inspec=True)
+        configspec = ConfigObj(str(self.__configspecfilename), _inspec=True)
         cfg = ConfigObj(config, configspec=configspec)
         if not cfg.validate(val):
             print_warning('(none): W: error parsing configuration file: {}'.format(config))

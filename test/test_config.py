@@ -1,15 +1,15 @@
-import os
+from pathlib import Path
 
 from rpmlint.config import Config
 
 from Testing import TEST_CONFIG, testpath
 
 
-TEST_CONFIG_2 = os.path.join(testpath(), 'configs/test2.config')
-TEST_CONFIG_FILTERS = os.path.join(testpath(), 'configs/testfilters.config')
-TEST_LIST1 = os.path.join(testpath(), 'configs/testlists1.config')
-TEST_LIST2 = os.path.join(testpath(), 'configs/testlists2.config')
-TEST_RPMLINTRC = os.path.join(testpath(), 'configs/testing-rpmlintrc')
+TEST_CONFIG_2 = testpath() / 'configs/test2.config'
+TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
+TEST_LIST1 = testpath() / 'configs/testlists1.config'
+TEST_LIST2 = testpath() / 'configs/testlists2.config'
+TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 
 
 def test_printing(capsys):
@@ -23,9 +23,9 @@ def test_printing(capsys):
 def test_custom_config(capsys):
     cfg = Config()
     # bullshit config
-    cfg.find_configs('BULLSHIT')
+    cfg.find_configs(Path('BULLSHIT'))
     out, err = capsys.readouterr()
-    assert 'BULLSHIT' not in cfg.conf_files
+    assert Path('BULLSHIT') not in cfg.conf_files
     assert 'BULLSHIT' in err
     # existing config
     cfg.find_configs(TEST_CONFIG)

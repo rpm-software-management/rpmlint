@@ -552,7 +552,7 @@ class SpecCheck(AbstractCheck):
             rpm.addMacro('_sourcedir', pkg.dirName())
             try:
                 ts = rpm.TransactionSet()
-                spec_obj = ts.parseSpec(self._spec_file)
+                spec_obj = ts.parseSpec(str(self._spec_file))
             except (ValueError, rpm.error):
                 # errors logged above already
                 pass
