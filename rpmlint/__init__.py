@@ -1,5 +1,5 @@
 import argparse
-import os
+from pathlib import Path
 import sys
 
 from rpmlint.rpmdiff import Rpmdiff
@@ -34,10 +34,9 @@ def process_diff_args(argv):
     """
 
     parser = argparse.ArgumentParser(prog='rpmdiff',
-                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      description='Shows basic differences between two rpm packages')
-    parser.add_argument('old_package', metavar='RPM_ORIG', type=str, help='The old package')
-    parser.add_argument('new_package', metavar='RPM_NEW', type=str, help='The new package')
+    parser.add_argument('old_package', metavar='RPM_ORIG', type=Path, help='The old package')
+    parser.add_argument('new_package', metavar='RPM_NEW', type=Path, help='The new package')
     parser.add_argument('-i', '--ignore', nargs='*', default='', choices=['S', 'M', '5', 'D', 'N', 'L', 'V', 'U', 'G', 'F', 'T'],
                         help="""File property to ignore when calculating differences.
                                 Valid values are: S (size), M (mode), 5 (checksum), D (device),
@@ -51,10 +50,10 @@ def process_diff_args(argv):
 
     options = parser.parse_args(args=argv)
     # the rpms must exist for us to do anything
-    if not os.path.exists(options.old_package):
+    if not options.old_package.exists():
         print(f"The file '{options.old_package}' does not exist")
         exit(2)
-    if not os.path.exists(options.old_package):
+    if not options.old_package.exists():
         print(f"The file '{options.new_package}' does not exist")
         exit(2)
 
