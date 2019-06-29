@@ -28,7 +28,7 @@ class MenuXDGCheck(AbstractFilesCheck):
         cfp = cfgparser.RawConfigParser()
         try:
             with codecs.open(f, encoding='utf-8') as inputf:
-                cfp.readfp(inputf, filename)
+                cfp.read_file(inputf, filename)
         except cfgparser.DuplicateSectionError as e:
             self.output.add_info('E',
                                  pkg, 'desktopfile-duplicate-section', filename,
