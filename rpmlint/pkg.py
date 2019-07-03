@@ -128,6 +128,7 @@ xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
 
 def catcmd(fname):
     """Get a 'cat' command that handles possibly compressed files."""
+    fname = str(fname)
     cat = 'gzip -dcf'
     if bz2_regex.search(fname):
         cat = 'bzip2 -dcf'
@@ -524,7 +525,7 @@ class Pkg(AbstractPkg):
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
                 'rpm2cpio %(f)s | (cd %(d)s; cpio -id); chmod -R +rX %(d)s' % \
-                {'f': shquote(self.filename), 'd': shquote(self.dirname)}
+                {'f': shquote(str(self.filename)), 'd': shquote(str(self.dirname))}
             cmd = getstatusoutput(command_str, shell=True)
             self.extracted = True
             return cmd

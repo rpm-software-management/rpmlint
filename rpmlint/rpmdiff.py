@@ -1,5 +1,4 @@
-import itertools
-import os.path
+from itertools import chain
 import sys
 import tempfile
 
@@ -81,8 +80,7 @@ class Rpmdiff(object):
 
         old_files_dict = self.__fileIteratorToDict(old.fiFromHeader())
         new_files_dict = self.__fileIteratorToDict(new.fiFromHeader())
-        files = list(set(itertools.chain(iter(old_files_dict),
-                                         iter(new_files_dict))))
+        files = list(set(chain(iter(old_files_dict), iter(new_files_dict))))
         files.sort()
 
         for f in files:
@@ -123,15 +121,15 @@ class Rpmdiff(object):
     def __load_pkg(self, name):
         tmpdir = tempfile.gettempdir()
         try:
-            if os.path.isfile(name):
+            if name.is_file():
                 return Pkg(name, tmpdir)
         except TypeError:
             pass
         inst = getInstalledPkgs(name)
         if not inst:
-            raise KeyError('No installed packages by name %s' % name)
+            raise KeyError(f'No installed packages by name {name}')
         if len(inst) > 1:
-            raise KeyError('More than one installed packages by name %s' % name)
+            raise KeyError(f'More than one installed packages by name {name}')
         return inst[0]
 
     # output the right string according to RPMSENSE_* const

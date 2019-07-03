@@ -6,8 +6,8 @@ from rpmlint.filter import Filter
 
 from Testing import get_tested_package, testpath
 
-TEST_CONFIG_FILTERS = os.path.join(testpath(), 'configs/testfilters.config')
-TEST_RPMLINTRC = os.path.join(testpath(), 'configs/testing-rpmlintrc')
+TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
+TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 TEST_PACKAGE = os.path.join('binary', 'ngircd')
 TEST_PACKAGE2 = os.path.join('binary', 'dovecot')
 
