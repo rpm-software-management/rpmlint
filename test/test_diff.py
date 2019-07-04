@@ -11,7 +11,7 @@ def test_distribution_tags():
     textdiff = diff.textdiff()
     print(textdiff)
     # the count always reports one less
-    assert textdiff.count('\n') + 1 == 231
+    assert 231 <= len(textdiff.splitlines()) <= 233
 
     ignore.append('T')
     ignore.append('5')
@@ -19,6 +19,6 @@ def test_distribution_tags():
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
     print('----\n' + textdiff)
-    assert textdiff.count('\n') + 1 == 36
+    assert 36 <= len(textdiff.splitlines()) <= 38
 
     assert 'added       /usr/share/mc/syntax/yaml.syntax' in textdiff
