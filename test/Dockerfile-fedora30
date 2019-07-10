@@ -1,4 +1,4 @@
-FROM fedora:29
+FROM fedora:30
 
 # --nogpgcheck: Ignore transient(?) package signature failures
 RUN dnf --nogpgcheck -y install \
