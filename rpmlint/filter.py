@@ -91,6 +91,8 @@ class Filter(object):
             output += diag + '\n'
         if self.info and last_reason:
             output += self.get_description(last_reason)
+        # normalize the output as rpm 4.15 uses surrogates
+        output = output.encode('utf-8', errors='surrogateescape').decode('utf-8', errors='replace')
         return output
 
     def get_description(self, reason):

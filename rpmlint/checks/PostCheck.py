@@ -54,6 +54,8 @@ def incorrect_perl_script(prog, perlscript):
 def check_syntax_script(prog, commandline, script):
     if not script:
         return False
+    if isinstance(script, str):
+        script = script.encode('utf-8')
     # TODO: test that 'prog' is available/executable
     tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
     tmpfile = os.fdopen(tmpfd, 'wb')
