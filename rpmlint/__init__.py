@@ -97,6 +97,7 @@ def process_lint_args(argv):
             exit(2)
     # validate all the rpmlfile options to be either file or folder
     f_path = []
+    invalid_path = False
     for item in options.rpmfile:
         p_path = Path()
         pattern = None
@@ -110,9 +111,11 @@ def process_lint_args(argv):
         for path in p_path:
             if not path.exists():
                 print(f"The file or directory '{path}' does not exist", file=sys.stderr)
-                exit(2)
+                invalid_path = True
         f_path += p_path
 
+    if invalid_path:
+        exit(2)
     # convert options to dict
     options_dict = vars(options)
     # use computed rpmfile
