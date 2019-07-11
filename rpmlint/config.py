@@ -190,8 +190,7 @@ class Config(object):
         if not self.configuration:
             print_warning('(none): W: loading rpmlint before configuration is not allowed: {}'.format(rpmlint_file))
             return
-        with open(rpmlint_file) as f:
-            rpmlintrc_content = f.read()
+        rpmlintrc_content = rpmlint_file.read_text()
         filters = self.re_filter.findall(rpmlintrc_content)
         self.configuration['Filters'] += filters
         badness = self.re_badness.findall(rpmlintrc_content)

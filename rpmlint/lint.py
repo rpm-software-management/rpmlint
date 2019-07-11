@@ -23,6 +23,8 @@ class Lint(object):
             self.config = Config(options['config'])
         else:
             self.config = Config()
+        if options['rpmlintrc']:
+            self.config.load_rpmlintrc(options['rpmlintrc'])
         if options['verbose']:
             self.config.info = options['verbose']
         if not self.config.configuration['ExtractDir']:

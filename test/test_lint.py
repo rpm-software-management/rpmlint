@@ -11,6 +11,7 @@ options_preset = {
     'print_config': False,
     'explain': False,
     'rpmfile': False,
+    'rpmlintrc': False,
 }
 
 basic_tests = [
