@@ -32,7 +32,7 @@ invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNOREC
 # () are here for grouping purpose in the regexp
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
 punct = '.,:;!?'
-so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-z]+)*(\([^)]*\))*$')
+so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-Z]+)*(\([^)]*\))*$')
 # we assume that no rpm packages existed before rpm itself existed...
 oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-%d'))
 

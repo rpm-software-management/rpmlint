@@ -52,7 +52,7 @@ class Filter(object):
             # result Error. Otherwise we downgrade the error to Warn.
             if badness > 0:
                 level = 'E'
-            elif badness <= 0 and level == 'E':
+            elif level == 'E':
                 level = 'W'
         # raise the counters
         self.score += badness
