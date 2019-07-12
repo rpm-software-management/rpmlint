@@ -30,4 +30,4 @@ RUN dnf --nogpgcheck -y install \
         rpm-build
 
 WORKDIR /usr/src/rpmlint
-COPY . .
+VOLUME /usr/src/rpmlint

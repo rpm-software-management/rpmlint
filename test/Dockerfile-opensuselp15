@@ -19,4 +19,4 @@ RUN zypper -n install \
         python3-configobj
 
 WORKDIR /usr/src/rpmlint
-COPY . .
+VOLUME /usr/src/rpmlint

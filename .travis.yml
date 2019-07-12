@@ -15,5 +15,5 @@ before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - docker run $DIST python3 setup.py test
-  - docker run $DIST flake8
+  - docker run -v $(pwd):/usr/src/rpmlint/ $DIST python3 setup.py test
+  - docker run -v $(pwd):/usr/src/rpmlint/ $DIST flake8
