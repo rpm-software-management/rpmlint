@@ -25,4 +25,7 @@ script:
   - docker run -v $(pwd):/usr/src/rpmlint/ $DIST python3 setup.py test
 
 after_success:
+  - coverage combine
+  # above does not really work as promised
+  - sed -i s/"\/usr\/src\/rpmlint"/./g .coverage
   - coveralls
