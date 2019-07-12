@@ -54,6 +54,8 @@ def incorrect_perl_script(prog, perlscript):
 def check_syntax_script(prog, commandline, script):
     if not script:
         return False
+    if isinstance(script, str):
+        script = script.encode('utf-8')
     # TODO: test that 'prog' is available/executable
     tmpfd, tmpname = tempfile.mkstemp(prefix='rpmlint.')
     tmpfile = os.fdopen(tmpfd, 'wb')
@@ -70,7 +72,7 @@ def check_syntax_script(prog, commandline, script):
 class PostCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'PostCheck')
+        super().__init__(config, output)
         self.valid_shells = config.configuration['ValidShells']
         self.empty_shells = config.configuration['ValidEmptyShells']
         post_details_dict = {

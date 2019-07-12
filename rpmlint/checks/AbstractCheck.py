@@ -10,7 +10,7 @@ import contextlib
 import re
 import urllib.request
 
-from rpmlint import __version__
+from rpmlint.version import __version__
 
 # Note: do not add any capturing parentheses here
 macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
@@ -30,15 +30,10 @@ class _HeadRedirectHandler(urllib.request.HTTPRedirectHandler):
 
 
 class AbstractCheck(object):
-    known_checks = {}
-
-    def __init__(self, config, output, name):
-        if not AbstractCheck.known_checks.get(name):
-            AbstractCheck.known_checks[name] = self
-        self.name = name
+    def __init__(self, config, output):
         self.config = config
         self.output = output
-        self.verbose = False
+        # FIXME: kill network from rpmlint, everything should be offline
         self.network_enabled = config.configuration['NetworkEnabled']
         self.network_timeout = config.configuration['NetworkTimeout']
         self.output.error_details.update(abstract_details_dict)
@@ -54,7 +49,7 @@ class AbstractCheck(object):
     def check_binary(self, pkg):
         return
 
-    def check_spec(self, pkg, spec_file, spec_lines=None):
+    def check_spec(self, pkg):
         return
 
     def check_url(self, pkg, tag, url):
@@ -63,13 +58,7 @@ class AbstractCheck(object):
         Return info() of the response if available.
         """
         if not self.network_enabled:
-            if self.verbose:
-                self.output.add_info('W', pkg, 'network-checks-disabled', url)
             return
-
-        if self.verbose:
-            self.output.add_info('W', pkg, 'checking-url', url,
-                                 '(timeout %s seconds)' % self.network_timeout)
 
         res = None
         try:
@@ -97,9 +86,9 @@ class AbstractCheck(object):
 
 
 class AbstractFilesCheck(AbstractCheck):
-    def __init__(self, config, output, name, file_regexp):
+    def __init__(self, config, output, file_regexp):
         self.__files_re = re.compile(file_regexp)
-        super().__init__(config, output, name)
+        super().__init__(config, output)
 
     def check_binary(self, pkg):
         ghosts = pkg.ghostFiles()

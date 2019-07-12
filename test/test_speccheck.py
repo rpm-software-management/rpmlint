@@ -19,6 +19,7 @@ def test_check_include(tmpdir, speccheck):
     output, test = speccheck
     test.check_source(get_tested_package('source/CheckInclude', tmpdir))
     out = output.print_results(output.results)
+    assert '/tmp/' not in out
     assert 'no-buildroot-tag' in out
     assert 'E: specfile-error error: query of specfile' not in out
 
@@ -27,7 +28,7 @@ def test_check_include(tmpdir, speccheck):
 def test_patch_not_applied(package, speccheck):
     output, test = speccheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'patch-not-applied' not in out
 
@@ -36,7 +37,7 @@ def test_patch_not_applied(package, speccheck):
 def test_distribution_tags(package, speccheck):
     output, test = speccheck
     pkg = get_tested_spec_package(package)
-    test.check_spec(pkg, pkg.name)
+    test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'patch-not-applied Patch3' in out
     assert not re.search(r'patch-not-applied Patch\b', out)

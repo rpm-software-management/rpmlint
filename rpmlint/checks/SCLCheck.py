@@ -57,7 +57,7 @@ class SCLCheck(AbstractCheck):
     """Software Collections checks"""
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SCLCheck')
+        super().__init__(config, output)
         self._spec_file = None
         self.output.error_details.update(scl_details_dict)
 
@@ -66,11 +66,12 @@ class SCLCheck(AbstractCheck):
         for fname, pkgfile in pkg.files().items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
-                self.check_spec(pkg, self._spec_file)
+                with Pkg.FakePkg(pkgfile.path) as package:
+                    self.check_spec(package)
 
-    def check_spec(self, pkg, spec_file, spec_lines=None):
+    def check_spec(self, pkg):
         """SCL spec file checks"""
-        spec = '\n'.join(Pkg.readlines(spec_file))
+        spec = '\n'.join(Pkg.readlines(pkg.name))
         if global_scl_definition.search(spec):
             self.check_metapackage(pkg, spec)
         elif scl_package_definition.search(spec):

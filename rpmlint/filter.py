@@ -1,3 +1,4 @@
+from os.path import basename
 import re
 import textwrap
 
@@ -40,6 +41,9 @@ class Filter(object):
         if self.filters_re and self.filters_re.search(reason):
             return
 
+        # filename in some cases can contain tmp paths and we don't need it
+        # for the printout
+        filename = basename(package.name)
         # we can get badness treshold
         badness = 0
         if reason in self.badness:
@@ -54,14 +58,14 @@ class Filter(object):
         self.score += badness
         self.printed_messages[level] += 1
         # compile the message
-        line = '{}:'.format(package.current_linenum) if package.current_linenum else ''
-        arch = '.{}'.format(package.arch) if package.arch else ''
-        bad_output = ' (Badness: {})'.format(badness) if badness else ''
+        line = f'{package.current_linenum}:' if package.current_linenum else ''
+        arch = f'.{package.arch}' if package.arch else ''
+        bad_output = f' (Badness: {badness})' if badness else ''
         detail_output = ''
         for detail in details:
             if detail:
-                detail_output += ' {}'.format(detail)
-        result = '{}{}:{} {}: {}'.format(package.name, arch, line, level, reason)
+                detail_output += f' {detail}'
+        result = f'{filename}{arch}:{line} {level}: {reason}'
         result += bad_output
         result += detail_output
         self.results.append(result)
@@ -87,6 +91,8 @@ class Filter(object):
             output += diag + '\n'
         if self.info and last_reason:
             output += self.get_description(last_reason)
+        # normalize the output as rpm 4.15 uses surrogates
+        output = output.encode('utf-8', errors='surrogateescape').decode('utf-8', errors='replace')
         return output
 
     def get_description(self, reason):

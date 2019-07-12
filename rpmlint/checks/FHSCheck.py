@@ -21,7 +21,7 @@ class FHSCheck(AbstractCheck):
                   'mail', 'opt', 'run', 'spool', 'tmp', 'yp', 'www', 'ftp')
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'FHSCheck')
+        super().__init__(config, output)
         self.output.error_details.update(fhs_details_dict)
 
     def check_binary(self, pkg):

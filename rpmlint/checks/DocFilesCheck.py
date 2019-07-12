@@ -5,7 +5,7 @@ from rpmlint.helpers import byte_to_string
 
 class DocFilesCheck(AbstractCheck):
     def __init__(self, config, output):
-        super().__init__(config, output, 'DocFilesCheck')
+        super().__init__(config, output)
         self.output.error_details.update(docfiles_details_dict)
 
     def __check_requirements(self, pkg):

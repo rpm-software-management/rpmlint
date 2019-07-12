@@ -21,7 +21,7 @@ class NamingPolicyCheck(AbstractCheck):
     checks_ = []
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'NamingPolicyCheck')
+        super().__init__(config, output)
         # TODO: rewrite this sanely
         self.add_check('xmms', '^xmms(-|$)', '^/usr/lib(64)?/xmms/')
         self.add_check('python', '^python(-|$)', '^/usr/lib(64)?/python[1-9](-[1-9])?')

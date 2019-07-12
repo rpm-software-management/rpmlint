@@ -1,6 +1,7 @@
 .pytest_cache
 *.orig
 *.rej
+.*.swp
 build/
 dist/
 .tox/

@@ -6,7 +6,7 @@ services:
   - docker
 
 env:
-  - DIST=fedora29
+  - DIST=fedora30
   - DIST=fedoradev
   - DIST=opensuselp15
   - DIST=opensusetw
@@ -15,5 +15,5 @@ before_install:
   - docker build -t $DIST -f test/Dockerfile-$DIST .
 
 script:
-  - docker run -e PYTHONPATH='.' $DIST python3 setup.py test
+  - docker run $DIST python3 setup.py test
   - docker run $DIST flake8

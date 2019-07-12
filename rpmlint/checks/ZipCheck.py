@@ -14,7 +14,7 @@ class ZipCheck(AbstractCheck):
     classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'ZipCheck')
+        super().__init__(config, output)
         zip_details_dict = {
             'bad-crc-in-zip':
             """The reported file in the zip fails the CRC check. Usually this is a

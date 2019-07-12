@@ -935,7 +935,7 @@ class InstalledPkg(Pkg):
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
     def __init__(self, name):
-        self.name = name
+        self.name = str(name)
         self.arch = None
         self.current_linenum = None
         self.dirname = None

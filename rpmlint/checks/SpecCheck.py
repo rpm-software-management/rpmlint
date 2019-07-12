@@ -6,6 +6,7 @@
 # Purpose       : check the spec file of a source rpm.
 #############################################################################
 
+import os
 import re
 from urllib.parse import urlparse
 
@@ -111,7 +112,7 @@ def contains_buildroot(line):
 class SpecCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SpecCheck')
+        super().__init__(config, output)
         self._spec_file = None
         self._spec_name = None
         self.valid_groups = config.configuration['ValidGroups']
@@ -141,13 +142,13 @@ class SpecCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'invalid-spec-name')
 
             # check content of spec file
-            self.check_spec(pkg, self._spec_file)
+            with Pkg.FakePkg(self._spec_file) as package:
+                self.check_spec(package)
 
-    def check_spec(self, pkg, spec_file, spec_lines=None):
-        self._spec_file = spec_file
+    def check_spec(self, pkg):
+        self._spec_file = pkg.name
         spec_only = isinstance(pkg, Pkg.FakePkg)
-        if not spec_lines:
-            spec_lines = Pkg.readlines(spec_file)
+        spec_lines = Pkg.readlines(self._spec_file)
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
@@ -536,7 +537,7 @@ class SpecCheck(AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
 
         out = Pkg.getstatusoutput(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % pkg.dirName(), '--specfile', self._spec_file))
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % os.path.dirname(self._spec_file), '--specfile', self._spec_file))
         parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855

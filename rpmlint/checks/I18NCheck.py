@@ -71,7 +71,7 @@ def is_valid_lang(lang):
 class I18NCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'I18NCheck')
+        super().__init__(config, output)
         self.output.error_details.update(i18n_details_dict)
 
     def check_binary(self, pkg):

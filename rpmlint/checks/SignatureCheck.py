@@ -17,7 +17,7 @@ class SignatureCheck(AbstractCheck):
     unknown_key_regex = re.compile(r'\(MISSING KEYS:(?:\([^)]+\))?\s+([^\)]+)\)')
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SignatureCheck')
+        super().__init__(config, output)
         self.output.error_details.update({
         'no-signature':
             """You have to include your pgp or gpg signature in your package.

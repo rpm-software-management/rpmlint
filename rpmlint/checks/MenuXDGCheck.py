@@ -21,7 +21,7 @@ class MenuXDGCheck(AbstractFilesCheck):
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
         AbstractFilesCheck.__init__(
-            self, config, output, 'MenuXDGCheck', r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
+            self, config, output, r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
         self.output.error_details.update(menuxdg_details_dict)
 
     def parse_desktop_file(self, pkg, root, f, filename):

@@ -50,7 +50,7 @@ for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
 class TagsCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'TagsCheck')
+        super().__init__(config, output)
         self.output.error_details.update(tags_details_dict)
         self.valid_groups = config.configuration['ValidGroups']
         self.valid_licenses = config.configuration['ValidLicenses']
@@ -105,7 +105,7 @@ class TagsCheck(AbstractCheck):
         packager = pkg[rpm.RPMTAG_PACKAGER]
         if packager:
             self._unexpanded_macros(pkg, 'Packager', packager)
-            if self.configuration['Packager'] and \
+            if self.config.configuration['Packager'] and \
                not self.packager_regex.search(packager):
                 self.output.add_info('W', pkg, 'invalid-packager', packager)
         else:

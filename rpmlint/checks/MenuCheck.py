@@ -32,7 +32,7 @@ xdg_migrated_regex = re.compile(r'xdg=\"?([^\" ]+)')
 class MenuCheck(AbstractCheck):
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'MenuCheck')
+        super().__init__(config, output)
         self.output.error_details.update(menu_details_dict)
         self.valid_sections = self.config.configuration['ValidMenuSections']
         self.standard_needs = self.config.configuration['ExtraMenuNeeds']

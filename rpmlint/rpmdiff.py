@@ -119,6 +119,8 @@ class Rpmdiff(object):
 
     # load a package from a file or from the installed ones
     def __load_pkg(self, name):
+        # FIXME: redo to try file/installed and proceed based on that, or pick
+        # one of the selected first
         tmpdir = tempfile.gettempdir()
         try:
             if name.is_file():

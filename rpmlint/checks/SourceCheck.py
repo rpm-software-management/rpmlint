@@ -21,7 +21,7 @@ class SourceCheck(AbstractCheck):
     }
 
     def __init__(self, config, output):
-        super().__init__(config, output, 'SourceCheck')
+        super().__init__(config, output)
         self.compress_ext = config.configuration['CompressExtension']
         self.valid_src_perms = config.configuration['ValidSrcPerms']
 
