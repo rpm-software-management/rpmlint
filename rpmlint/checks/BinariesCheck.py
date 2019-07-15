@@ -332,8 +332,9 @@ class BinariesCheck(AbstractCheck):
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
         pie_exec_re = config.configuration['PieExecutables']
-        if pie_exec_re:
-            self.pie_exec_re = re.compile(pie_exec_re)
+        if not pie_exec_re:
+            pie_exec_re = ''
+        self.pie_exec_re = re.compile(pie_exec_re)
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
     def check_binary(self, pkg):

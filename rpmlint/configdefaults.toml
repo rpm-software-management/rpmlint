@@ -1,0 +1,326 @@
+# Enabled checks for the rpmlint to be run
+Checks = [
+    "DistributionCheck",
+    "TagsCheck",
+    "BinariesCheck",
+    "ConfigCheck",
+    "FilesCheck",
+    "DocFilesCheck",
+    "FHSCheck",
+    "SignatureCheck",
+    "I18NCheck",
+    "MenuCheck",
+    "PostCheck",
+    "InitScriptCheck",
+    "SourceCheck",
+    "SpecCheck",
+    "NamingPolicyCheck",
+    "ZipCheck",
+    "PamCheck",
+    "RpmFileCheck",
+    "MenuXDGCheck",
+    "AppDataCheck",
+]
+# Various output filters, list of regexp strings eg. "E: .* no-signature"
+Filters = []
+# Treshold where we should error out, by default single error is enough
+BadnessThreshold = -1
+# When checking that various files that should be compressed are
+# indeed compressed, look for this filename extension
+CompressExtension = "bz2"
+# Permitted Distribution Tag value in preamble
+Distribution = ""
+# Permitted value for the Vendor tag in preamble
+Vendor = ""
+# Base directory where to extract uninstalled packages while checking
+# Default is to use mktemp from python to provide one
+ExtractDir = ""
+# Regexp string for words that must never exist in preamble tag values
+ForbiddenWords = ""
+# Accepted non-XDG legacy icon filenames, string regexp format
+IconFilename = '.*\.png$'
+# Regexp string to disallow in various URL tags
+InvalidURL = ""
+# Whether to allow packaging kernel modules in non-kernel packages.
+KernelModuleRPMsOK = true
+# Maximum allowed line length for Summary and Description tags
+MaxLineLength = 79
+# Regexp string with names of packages to treat as "meta" ones.
+MetaPackageRegexp = '^(bundle|task)-'
+# Whether to enable checks that require networking
+NetworkEnabled = false
+# Timeout for network operations in seconds
+NetworkTimeout = 10
+# String regexp validating value for the Packager tag.
+Packager = ""
+# Assumed default version of Python if one cannot be determined from files
+PythonDefaultVersion = ""
+# Trick in perl version handling
+PerlVersionTrick = true
+# Regexp string with expected suffix in Release tags.
+ReleaseExtension = ""
+# Regexp string with allowed Group tag for games
+RpmGamesGroup = "Games"
+# Doc files to which end of line and UTF-8 checks should not be applied
+SkipDocsRegexp = '\.(?:rtf|x?html?|svg|ml[ily]?)$'
+# Whether to use the Enchant spell checker for spell checking
+UseEnchant = true
+# Whether debug sources are expected to be in separate packages from
+# -debuginfo, typically -debugsource.
+UseDebugSource = false
+# Whether an explicit Epoch should always be specified in preamble
+UseEpoch = false
+# Whether to want default start/stop runlevels specified in init scripts
+UseDefaultRunlevels = true
+# Whether symlinks between directories should be relative.
+UseRelativeSymlinks = true
+# Whether %changelog entries should contain a version
+UseVersionInChangelog = true
+# Whether init scripts must use /var/lock/subsys
+UseVarLockSubsys = true
+# Regexp string with value for the BuildHost preamble tag
+ValidBuildHost = ''
+# Standard "needs" values for non-XDG legacy menu items
+ExtraMenuNeeds = [
+    "gnome",
+    "icewm",
+    "kde",
+    "wmaker",
+]
+# Regexp string with exceptions for hardcoded library paths.
+HardcodedLibPathExceptions = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware|systemd)($|[\s/,])'
+# Values for non-XDG legacy menu item sections
+ValidMenuSections = [
+    "Office/Accessories",
+    "Office/Address Books",
+    "Office/Communications/Fax",
+    "Office/Communications/PDA",
+    "Office/Communications/Phone",
+    "Office/Communications/Other",
+    "Office/Drawing",
+    "Office/Graphs",
+    "Office/Presentations",
+    "Office/Publishing",
+    "Office/Spreadsheets",
+    "Office/Tasks Management",
+    "Office/Time Management",
+    "Office/Wordprocessors",
+    "Office/Other",
+    "Internet/Chat",
+    "Internet/File Transfer",
+    "Internet/Instant Messaging",
+    "Internet/Mail",
+    "Internet/News",
+    "Internet/Remote Access",
+    "Internet/Video Conference",
+    "Internet/Web Browsers",
+    "Internet/Web Editors",
+    "Internet/Other",
+    "Multimedia/Graphics",
+    "Multimedia/Sound",
+    "Multimedia/Video",
+    "Multimedia/Other",
+    "System/Archiving/Backup",
+    "System/Archiving/CD Burning",
+    "System/Archiving/Compression",
+    "System/Archiving/Other",
+    "System/Configuration/Boot and Init",
+    "System/Configuration/GNOME",
+    "System/Configuration/Hardware",
+    "System/Configuration/KDE",
+    "System/Configuration/Networking",
+    "System/Configuration/Packaging",
+    "System/Configuration/Printing",
+    "System/Configuration/Users",
+    "System/Configuration/Other",
+    "System/File Tools",
+    "System/Monitoring",
+    "System/Session/Windowmanagers",
+    "System/Terminals",
+    "System/Text Tools",
+    "System/Other",
+    "More Applications/Accessibility",
+    "More Applications/Communications",
+    "More Applications/Databases",
+    "More Applications/Development/Code Generators",
+    "More Applications/Development/Development Environments",
+    "More Applications/Development/Interpreters",
+    "More Applications/Development/Tools",
+    "More Applications/Development/Other",
+    "More Applications/Documentation",
+    "More Applications/Editors",
+    "More Applications/Education/Economy",
+    "More Applications/Education/Geography",
+    "More Applications/Education/History",
+    "More Applications/Education/Languages",
+    "More Applications/Education/Literature",
+    "More Applications/Education/Sciences",
+    "More Applications/Education/Sports",
+    "More Applications/Education/Other",
+    "More Applications/Emulators",
+    "More Applications/Finances",
+    "More Applications/Games/Adventure",
+    "More Applications/Games/Arcade",
+    "More Applications/Games/Boards",
+    "More Applications/Games/Cards",
+    "More Applications/Games/Puzzles",
+    "More Applications/Games/Sports",
+    "More Applications/Games/Strategy",
+    "More Applications/Games/Toys",
+    "More Applications/Games/Other",
+    "More Applications/Sciences/Artificial Intelligence",
+    "More Applications/Sciences/Astronomy",
+    "More Applications/Sciences/Biology",
+    "More Applications/Sciences/Chemistry",
+    "More Applications/Sciences/Computer Science",
+    "More Applications/Sciences/Data visualization",
+    "More Applications/Sciences/Electricity",
+    "More Applications/Sciences/Geosciences",
+    "More Applications/Sciences/Image Processing",
+    "More Applications/Sciences/Mathematics",
+    "More Applications/Sciences/Numerical Analysis",
+    "More Applications/Sciences/Parallel Computing",
+    "More Applications/Sciences/Physics",
+    "More Applications/Sciences/Robotics",
+    "More Applications/Sciences/Other",
+    "More Applications/Other",
+]
+# Disallowed Runtime dependencies
+InvalidRequires = [
+    '^is$',
+    '^not$',
+    '^owned$',
+    '^by$',
+    '^any$',
+    '^package$',
+    '^libsafe\.so\.',
+]
+# List of directory prefixes that are not allowed in packages
+DisallowedDirs = [
+    "/home",
+    "/mnt",
+    "/opt",
+    "/tmp",
+    "/usr/local",
+    "/usr/tmp",
+    "/var/local",
+    "/var/lock",
+    "/var/run",
+    "/var/tmp",
+]
+# Standard OS groups
+StandardGroups = [
+    "root",
+    "bin",
+    "daemon",
+    "adm",
+    "lp",
+    "sync",
+    "shutdown",
+    "halt",
+    "mail",
+    "news",
+    "uucp",
+    "man",
+    "nobody",
+]
+# Standard OS users
+StandardUsers = [
+    "root",
+    "bin",
+    "daemon",
+    "adm",
+    "lp",
+    "sync",
+    "shutdown",
+    "halt",
+    "mail",
+    "news",
+    "uucp",
+    "operator",
+    "man",
+    "nobody",
+]
+# List of directories considered to be system default library search paths.
+SystemLibPaths = [
+    "/lib",
+    "/usr/lib",
+    "/usr/X11R6/lib",
+    "/lib64",
+    "/usr/lib64",
+    "/usr/X11R6/lib64",
+]
+# Regexp string with executables that must be compiled as position independent
+PieExecutables = ''
+# Architecture dependent paths in which packages are allowed to install files
+# even if they are all non-binary
+UsrLibBinaryException = '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/|\.build-id|firmware)'
+# Interpreters whose scriptlets are allowed to be empty
+ValidEmptyShells = [
+    "/sbin/ldconfig",
+]
+# Package scriptlet interpreters
+ValidShells = [
+    "<lua>",
+    "/bin/sh",
+    "/bin/bash",
+    "/sbin/sash",
+    "/usr/bin/perl",
+    "/sbin/ldconfig",
+]
+# Man page warning category, passed to groff -w while checking man pages.
+# See the groff(1) or troff(1) man pages for available categories.
+ManWarningCategory = "mac"
+# Values for the Group tag, if not specified pulled from RPM
+ValidGroups = []
+# Permissions for files in source packages
+ValidSrcPerms = [
+    "0o644",
+    "0o755",
+]
+# Command and arguments to validate appdata files
+AppDataChecker = [
+    "appstream-util",
+    "validate-relax",
+]
+# Valid values for the License tag
+ValidLicenses = []
+# Additional warnings on specific function calls
+[WarnOnFunction]
+#[WarnOnFunction.testname]
+#f_name = ""
+#good_param = ""
+#description = ""
+# Set badness tweaking for various options
+[Scoring]
+#function=0
+
+# Paths in which non-XDG legacy icons should be installed
+[IconPath]
+[IconPath."/usr/share/icons/"]
+path = "/usr/share/icons/"
+type = "normal"
+[IconPath."/usr/share/icons/mini"]
+path = "/usr/share/icons/mini"
+type = "mini"
+[IconPath."/usr/share/icons/large"]
+path = "/usr/share/icons/large"
+type = "large"
+
+# Default known application launchers for desktop entries
+[MenuLaunchers]
+[MenuLaunchers.kdesu]
+regexp = '(?:/usr/bin/)?kdesu'
+binaries = ['/usr/bin/kdesu', 'kdesu']
+[MenuLaunchers.x11_clanapp]
+regexp = '(?:/usr/bin/)?launch_x11_clanapp'
+binaries = ['/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0']
+[MenuLaunchers.soundwrapper]
+regexp = '(?:/usr/bin/)?soundwrapper'
+binaries = false
+
+# Exception list for dangling symlink checks.  The first in each pair
+# is a regexp, and the second the package in which the target of the
+# dangling symlink is shipped
+[DanglingSymlinkExceptions]
+
