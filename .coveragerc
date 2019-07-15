@@ -1,0 +1,13 @@
+[run]
+source = .
+
+; Run in parallel mode so that coverage can canonicalize the source paths
+; regardless of whether it runs locally or within a Docker container.
+parallel = True
+
+[paths]
+; the first path is the path on the local filesystem
+; the second path is the path as it appears within the Docker container
+source =
+  .
+  /usr/src/rpmlint/rpmlint/rpmlint

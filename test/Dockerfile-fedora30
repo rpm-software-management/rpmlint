@@ -23,6 +23,7 @@ RUN dnf --nogpgcheck -y install \
         python3-pytest \
         python3-pytest-cov \
         python3-pytest-runner \
+        python3-pytest-flake8 \
         python3-flake8 \
         python3-flake8-import-order \
         python3-pyxdg \
@@ -30,4 +31,4 @@ RUN dnf --nogpgcheck -y install \
         rpm-build
 
 WORKDIR /usr/src/rpmlint
-COPY . .
+VOLUME /usr/src/rpmlint
