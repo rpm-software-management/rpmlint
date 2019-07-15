@@ -27,5 +27,5 @@ script:
 after_success:
   - coverage combine
   # above does not really work as promised
-  - sed -i s/"\/usr\/src\/rpmlint"/./g .coverage
+  - sed -i -e "s#/usr/src/rpmlint#$(pwd)#g" .coverage
   - coveralls
