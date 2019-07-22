@@ -50,6 +50,10 @@ class BinaryInfo(object):
     mktemp_call_regex = create_regexp_call('mktemp')
     lto_section_name_prefix = '.gnu.lto_.'
 
+    # [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
+    # [ 1] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  1
+    text_section_regex = re.compile(r'.*\.text\s*\w+\s*\w*\s*\w*\w*\s*(\w*).*')
+
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
         self.needed = []
@@ -68,6 +72,7 @@ class BinaryInfo(object):
         fork_called = False
         self.tail = ''
         self.lto_sections = False
+        self.no_text_in_archive = False
 
         self.setgid = False
         self.setuid = False
@@ -88,6 +93,7 @@ class BinaryInfo(object):
                 self.output.error_details.update({name: func['description']})
 
         is_debug = path.endswith('.debug')
+        is_archive = path.endswith('.a')
         # Currently this implementation works only on specific
         # architectures due to reliance on arch specific assembly.
         if (pkg.arch.startswith('armv') or pkg.arch == 'aarch64'):
@@ -103,6 +109,22 @@ class BinaryInfo(object):
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
         if not res[0]:
             lines = res[1].splitlines()
+
+            # For an archive, test if all .text sections are empty
+            if is_archive:
+                has_text_segment = False
+                non_zero_text_segment = False
+
+                for line in lines:
+                    r = self.text_section_regex.search(line)
+                    if r:
+                        has_text_segment = True
+                        size = int(r.group(1), 16)
+                        if size > 0:
+                            non_zero_text_segment = True
+                if has_text_segment and not non_zero_text_segment:
+                    self.no_text_in_archive = True
+
             for line in lines:
                 if self.lto_section_name_prefix in line:
                     self.lto_sections = True
@@ -487,6 +509,9 @@ class BinariesCheck(AbstractCheck):
             if bin_info.lto_sections:
                 self.output.add_info('E', pkg, 'lto-bytecode', fname)
 
+            if bin_info.no_text_in_archive:
+                self.output.add_info('E', pkg, 'lto-no-text-in-archive', fname)
+
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
 
@@ -777,4 +802,8 @@ implementations only strip if the permission is 0755).""",
 'lto-bytecode':
 """This executable contains a LTO section.  LTO bytecode is not portable
 and should not be distributed in static libraries or e.g. Python modules.""",
+
+'lto-no-text-in-archive':
+"""This archive does not contain a non-empty .text section.  The archive
+was not created with -ffat-lto-objects option.""",
 }
