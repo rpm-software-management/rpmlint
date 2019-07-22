@@ -36,3 +36,9 @@ def test_lto_bytecode(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     assert 'lto-bytecode' in output.print_results(output.results)
+
+@pytest.mark.parametrize('package', ['binary/binutils-devel'])
+def test_lto_bytecode(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    assert 'lto-no-text-in-archive' in output.print_results(output.results)
