@@ -24,10 +24,10 @@ def test_forbidden_c_calls(tmpdir, package, binariescheck):
 def test_waived_forbidden_c_calls(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
-    # there are 3 warnings/etc
-    assert len(output.results) == 3
+    # there are 2 warnings/etc
+    assert len(output.results) == 2
     # assert the details are properly printed to the content
-    assert len(output.print_results(output.results).splitlines()) == 13
+    assert len(output.print_results(output.results).splitlines()) == 7
     assert 'crypto-policy-non-compliance' not in output.print_results(output.results)
 
 

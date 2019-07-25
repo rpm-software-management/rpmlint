@@ -45,8 +45,6 @@ class BinaryInfo(object):
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
-    chroot_call_regex = create_regexp_call('chroot')
-    chdir_call_regex = create_regexp_call('chdir')
     mktemp_call_regex = create_regexp_call('mktemp')
     lto_section_name_prefix = '.gnu.lto_.'
 
@@ -77,9 +75,6 @@ class BinaryInfo(object):
         self.setgid = False
         self.setuid = False
         self.setgroups = False
-        self.chroot = False
-        self.chdir = False
-        self.chroot_near_chdir = False
         self.mktemp = False
         self.forbidden_functions = self.config.configuration['WarnOnFunction']
         if self.forbidden_functions:
@@ -94,16 +89,6 @@ class BinaryInfo(object):
 
         is_debug = path.endswith('.debug')
         is_archive = path.endswith('.a')
-        # Currently this implementation works only on specific
-        # architectures due to reliance on arch specific assembly.
-        if (pkg.arch.startswith('armv') or pkg.arch == 'aarch64'):
-            # 10450:   ebffffec        bl      10408 <chroot@plt>
-            self.objdump_call_regex = re.compile(br'\sbl\s+(.*)')
-        elif (pkg.arch.endswith('86') or pkg.arch == 'x86_64'):
-            # 401eb8:   e8 c3 f0 ff ff          callq  400f80 <chdir@plt>
-            self.objdump_call_regex = re.compile(br'callq?\s(.*)')
-        else:
-            self.objdump_call_regex = None
 
         res = Pkg.getstatusoutput(
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
@@ -182,12 +167,6 @@ class BinaryInfo(object):
                 if self.setgroups_call_regex.search(line):
                     self.setgroups = True
 
-                if self.chdir_call_regex.search(line):
-                    self.chdir = True
-
-                if self.chroot_call_regex.search(line):
-                    self.chroot = True
-
                 if self.forbidden_functions:
                     for r_name, func in self.forbidden_functions.items():
                         ret = func['f_regex'].search(line)
@@ -228,46 +207,6 @@ class BinaryInfo(object):
             # number of false positives would probably be intolerable.
             if fork_called:
                 self.exit_calls = []
-
-            # check if chroot is near chdir (since otherwise, chroot is called
-            # without chdir)
-            if not self.objdump_call_regex and self.chroot and self.chdir:
-                # On some architectures, e.g. PPC, it is to difficult to
-                # find the actual invocations of chroot/chdir, if both
-                # exist assume chroot is fine
-                self.chroot_near_chdir = True
-
-            elif self.chroot and self.chdir:
-                p = subprocess.Popen(('objdump', '-d', path),
-                                     stdout=subprocess.PIPE, bufsize=-1,
-                                     env=dict(os.environ, LC_ALL='C'))
-                with p.stdout:
-                    index = 0
-                    chroot_index = -99
-                    chdir_index = -99
-                    for line in p.stdout:
-                        res = self.objdump_call_regex.search(line)
-                        if not res:
-                            continue
-                        if b'@plt' not in res.group(1):
-                            pass
-                        elif b'chroot@plt' in res.group(1):
-                            chroot_index = index
-                            if abs(chroot_index - chdir_index) <= 2:
-                                self.chroot_near_chdir = True
-                                break
-                        elif b'chdir@plt' in res.group(1):
-                            chdir_index = index
-                            if abs(chroot_index - chdir_index) <= 2:
-                                self.chroot_near_chdir = True
-                                break
-                        index += 1
-                if p.wait() and not self.chroot_near_chdir:
-                    self.output.add_info('W', pkg, 'binaryinfo-objdump-failed', fname)
-                    self.chroot_near_chdir = True  # avoid false positive
-                elif chroot_index == -99 and chdir_index == -99:
-                    self.chroot_near_chdir = True  # avoid false positive
-
         else:
             self.readelf_error = True
             # Go and others are producing ar archives that don't have ELF
@@ -595,9 +534,6 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid',
                                      fname)
 
-            if bin_info.chroot and not bin_info.chroot_near_chdir:
-                self.output.add_info('E', pkg, 'missing-call-to-chdir-with-chroot', fname)
-
             if bin_info.mktemp:
                 self.output.add_info('E', pkg, 'call-to-mktemp', fname)
 
@@ -731,9 +667,6 @@ with the intended shared libraries only.""",
 'binaryinfo-readelf-failed':
 """Executing readelf on this file failed, all checks could not be run.""",
 
-'binaryinfo-objdump-failed':
-"""Executing objdump on this file failed, all checks could not be run.""",
-
 'binaryinfo-tail-failed':
 """Reading trailing bytes of this file failed, all checks could not be run.""",
 
@@ -779,12 +712,6 @@ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49""",
 initgroups. There is a high probability this means it didn't relinquish all
 groups, and this would be a potential security issue to be fixed. Seek POS36-C
 on the web for details about the problem.""",
-
-'missing-call-to-chdir-with-chroot':
-"""This executable appears to call chroot without using chdir to change the
-current directory. This is likely an error and permits an attacker to break out
-of the chroot by using fchdir. While that's not always a security issue, this
-has to be checked.""",
 
 'call-to-mktemp':
 """This executable calls mktemp. As advised by the manpage (mktemp(3)), this
