@@ -105,20 +105,6 @@ def test_list_merging():
     assert cfg.configuration['ValidGroups'][0] == 'System/Libraries'
 
 
-def test_checks_functions():
-    """
-    Test resetting of the tests and loading new ones
-    """
-    cfg = Config(TEST_CONFIG)
-    assert len(cfg.configuration['Checks']) == 20
-    cfg.reset_checks()
-    assert len(cfg.configuration['Checks']) == 0
-    cfg.add_check('TagsCheck')
-    assert len(cfg.configuration['Checks']) == 1
-    cfg.add_check('CompleteFakeTestsThatDoesNotExist')
-    assert len(cfg.configuration['Checks']) == 1
-
-
 def test_badness_functions():
     """
     Test badness settings

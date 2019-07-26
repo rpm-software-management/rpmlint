@@ -36,26 +36,6 @@ class Config(object):
             self.conf_files = [self.config_defaults]
             self.load_config()
 
-    def reset_checks(self):
-        """
-        Remove all planned checks from the loaded config.
-        """
-        self.configuration['Checks'] = list()
-
-    def add_check(self, check):
-        """
-        Add specified file to be loaded up by checks.
-        Check is just a string file.
-        It used to be possible to specify additional locations for checks
-        but to keep it simple all checks must be part of rpmlint package
-         -> from rpmlint.checks.<CHECKNAME> import *
-        """
-        # Validate first if it is possible to import the added check
-        if find_spec('.{}'.format(check), package='rpmlint.checks'):
-            self.configuration['Checks'].append(check)
-        else:
-            print_warning('(none): W: unable to add the requested check: {}'.format(check))
-
     def set_badness(self, result, badness):
         """
         Set specific badness for some result
@@ -108,6 +88,7 @@ class Config(object):
             cfg = toml.load(self.conf_files)
         except toml.decoder.TomlDecodeError as terr:
             print_warning(f'(none): W: error parsing configuration files: {terr}')
+            cfg = None
         self.configuration = cfg
 
     def load_rpmlintrc(self, rpmlint_file):
