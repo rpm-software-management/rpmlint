@@ -67,7 +67,7 @@ you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
 
 Additional option to control rpmlint behaviour is addition of rpmlintrc file
 which uses old syntax for compatibility with old rpmlint releases, yet
-it can be normal ini file if you wish:
+it can be normal toml file if you wish:
 
 `setBadness('check', 0)`
 
