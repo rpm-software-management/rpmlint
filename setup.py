@@ -50,7 +50,7 @@ setup(
 
     packages=['rpmlint'],
     package_data={
-        'rpmlint': ['rpmlint/configspec.cfg'],
+        'rpmlint': ['rpmlint/configdefaults.toml'],
     },
     include_package_data=True,
     data_files=[

@@ -82,7 +82,7 @@ class BinaryInfo(object):
                 # precompile regexps
                 f_name = func['f_name']
                 func['f_regex'] = create_nonlibc_regexp_call(f_name)
-                if func['good_param']:
+                if 'good_param' in func and func['good_param']:
                     func['waiver_regex'] = re.compile(func['good_param'])
                 # register descriptions
                 self.output.error_details.update({name: func['description']})
@@ -293,8 +293,9 @@ class BinariesCheck(AbstractCheck):
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
         pie_exec_re = config.configuration['PieExecutables']
-        if pie_exec_re:
-            self.pie_exec_re = re.compile(pie_exec_re)
+        if not pie_exec_re:
+            pie_exec_re = ''
+        self.pie_exec_re = re.compile(pie_exec_re)
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
     def check_binary(self, pkg):

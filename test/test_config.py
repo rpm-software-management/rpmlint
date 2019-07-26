@@ -44,12 +44,10 @@ def test_parsing():
     call_blacklist = {
         'crypto-policy-non-compliance-openssl': {
             'f_name': 'SSL_CTX_set_cipher_list',
-            'good_param': '',
             'description': bad_crypto_warning,
         },
         'crypto-policy-non-compliance-gnutls-1': {
             'f_name': 'gnutls_priority_set_direct',
-            'good_param': '',
             'description': bad_crypto_warning,
         },
         'crypto-policy-non-compliance-gnutls-2': {
@@ -58,7 +56,6 @@ def test_parsing():
             'description': bad_crypto_warning
         },
     }
-
     cfg = Config(TEST_CONFIG)
     assert cfg.configuration
     assert cfg.configuration['Distribution'] == 'Fedora Project'
@@ -69,18 +66,17 @@ def test_parsing():
 
 def test_double_config():
     """
-    Load two configs and make sure we overshadow, not replace
+    Load two configs and make sure we properly load all the values
     """
     cfg = Config(TEST_CONFIG)
-    assert len(cfg.conf_files) == 1
+    assert len(cfg.conf_files) == 2
     assert cfg.configuration['ExtraMenuNeeds'][0] == 'gnome'
     # shovel in another config
     cfg.load_config(TEST_CONFIG_2)
-    assert len(cfg.conf_files) == 2
+    assert len(cfg.conf_files) == 3
     assert cfg.configuration['Distribution'] == 'Fedora Project'
     assert cfg.configuration['Vendor'] == 'SUSE'
     assert cfg.configuration['ExtraMenuNeeds'][0] == 'windows'
-    assert cfg.configuration['WarnOnFunction']['crypto-policy-non-compliance-gnutls-1']
     assert cfg.configuration['WarnOnFunction']['crypto-policy-non-compliance-openssl']['f_name'] == 'REPLACED'
     assert cfg.configuration['WarnOnFunction']['crypto-policy-3']['f_name'] == 'new_blobie'
 
@@ -96,29 +92,17 @@ def test_filters():
 
 def test_list_merging():
     """
-    Load two configs and check we properly either override or append
+    Load two configs and check we loaded up in proper older with
+    replacing based on TOML syntax
     """
     cfg = Config(TEST_LIST1)
     assert len(cfg.configuration['Filters']) == 1
     assert cfg.configuration['ValidGroups'][0] == 'bullshitgroup'
     cfg.load_config(TEST_LIST2)
-    assert len(cfg.configuration['Filters']) == 2
+    assert len(cfg.conf_files) == 3
+    assert len(cfg.configuration['Filters']) == 1
     assert len(cfg.configuration['ValidGroups']) == 1
     assert cfg.configuration['ValidGroups'][0] == 'System/Libraries'
-
-
-def test_checks_functions():
-    """
-    Test resetting of the tests and loading new ones
-    """
-    cfg = Config(TEST_CONFIG)
-    assert len(cfg.configuration['Checks']) == 20
-    cfg.reset_checks()
-    assert len(cfg.configuration['Checks']) == 0
-    cfg.add_check('TagsCheck')
-    assert len(cfg.configuration['Checks']) == 1
-    cfg.add_check('CompleteFakeTestsThatDoesNotExist')
-    assert len(cfg.configuration['Checks']) == 1
 
 
 def test_badness_functions():

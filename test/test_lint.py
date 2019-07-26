@@ -52,7 +52,7 @@ def test_configoutput(capsys):
     linter.run()
     out, err = capsys.readouterr()
     assert out
-    assert "'Vendor': 'Fedora Project'" in out
+    assert 'Vendor = "Fedora Project"' in out
     assert not err
 
 

@@ -20,18 +20,38 @@ checks and suggestions at:
 
 https://github.com/rpm-software-management/rpmlint
 
-# Testing
+## Install
+
+For installation on your machine you will need following packages:
+
+- Python 3.6 or newer
+- Python setuptoools
+- rpm and its python bindings
+- readelf, cpio, gzip, bzip and xz
+- libmagic and its python bindings (optional)
+- groff and gtbl (optional)
+- enchant and its python bindings (optional)
+- appstream-util, part of appstream-glib (optional)
+
+## Testing
 
 If you want to test the rpmlint when developing best is to use docker
 to provide the enviroment for you. There are various distribution
 dockerfiles in `test/` folder.
 
-Ie. on openSUSE you can test using following commands.
-
-First you build the docker enviroment:
+Ie. if you want to test on latest openSUSE you can test using following commands:
 
 `docker build -t opensusetw -f test/Dockerfile-opensusetw .`
+
 `docker run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 setup.py test`
+
+Another option is to run the tests on your system directly. If you
+have all the required modules as listed on the Install section above.
+You will also need `pytest` and `pytest-cov` and `pytest-flake8`.
+
+If all the dependencies are present you can just execute tests using:
+
+`python3 setup.py test`
 
 ## Configuration
 
@@ -43,7 +63,7 @@ use following locations:
 `$XDG_CONFIG_HOME/rpmlint/*config`
 
 Configuration itself is a normal ini file where for some basic inspiration
-you can check up `rpmlint/configspec.cfg` which specifies format/defaults.
+you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
 
 Additional option to control rpmlint behaviour is addition of rpmlintrc file
 which uses old syntax for compatibility with old rpmlint releases, yet
