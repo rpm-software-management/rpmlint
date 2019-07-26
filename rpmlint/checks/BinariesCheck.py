@@ -9,7 +9,6 @@
 import os
 import re
 import stat
-import subprocess
 
 import rpm
 from rpmlint import pkg as Pkg
