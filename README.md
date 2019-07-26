@@ -15,7 +15,7 @@ For best check coverage, run rpmlint on source rpms instead of
 plain specfiles.
 
 The idea for rpmlint is from the lintian tool of the Debian project.
-All the checks reside in rpmlint/ folder. Feel free to provide new
+All the checks reside in rpmlint/checks folder. Feel free to provide new
 checks and suggestions at:
 
 https://github.com/rpm-software-management/rpmlint
