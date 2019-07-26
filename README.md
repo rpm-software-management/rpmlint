@@ -53,6 +53,10 @@ If all the dependencies are present you can just execute tests using:
 
 `python3 setup.py test`
 
+Or even pick one of the tests using pytest:
+
+`python3 -m pytest test/test_config.py`
+
 ## Configuration
 
 If you want to change configuration options or the list of checks you can
