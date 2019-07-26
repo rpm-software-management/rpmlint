@@ -15,7 +15,7 @@ For best check coverage, run rpmlint on source rpms instead of
 plain specfiles.
 
 The idea for rpmlint is from the lintian tool of the Debian project.
-All the checks reside in rpmlint/ folder. Feel free to provide new
+All the checks reside in rpmlint/checks folder. Feel free to provide new
 checks and suggestions at:
 
 https://github.com/rpm-software-management/rpmlint
@@ -53,6 +53,43 @@ If all the dependencies are present you can just execute tests using:
 
 `python3 setup.py test`
 
+Or even pick one of the tests using pytest:
+
+`python3 -m pytest test/test_config.py`
+
+## Bugfixing and contributing
+
+Any help of course welcome but honestly most probable cause for your visit
+here is that rpmlint is marking something as invalid while it shouldn't or
+it is marking something as correct while it should not either :)
+
+Now there is easy way how to fix that. Our testsuite simply needs an
+extension to take the above problem into the account.
+
+Primarily we just need the offending rpm file (best the smallest you can
+find or we would soon take few GB to take a checkout) and some basic
+expectation of what should happen.
+
+Now lets look on an example workflow:
+
+1) I have rpmfile that should report unreadable zip file
+2) I store this file in git under `test/binary/texlive-codepage-doc-2018.151.svn21126-38.1.noarch.rpm`
+3) Now I need to figure out what `check` should test this, in this case `test_zip.py`
+4) For the testing I will have to devise a small function that validates my expectations:
+
+```
+@pytest.mark.parametrize('package', ['binary/texlive-codepage-doc'])
+def test_zip2(tmpdir, package, zipcheck):
+    output, test = zipcheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: unable-to-read-zip' in out
+```
+
+As you can see it is not so hard and with each added test we get better
+coverage on what is really expected from rpmlint and avoid naughty regressions
+in a long run.
+
 ## Configuration
 
 If you want to change configuration options or the list of checks you can
@@ -67,7 +104,7 @@ you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
 
 Additional option to control rpmlint behaviour is addition of rpmlintrc file
 which uses old syntax for compatibility with old rpmlint releases, yet
-it can be normal ini file if you wish:
+it can be normal toml file if you wish:
 
 `setBadness('check', 0)`
 

@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""Setup file for easy installation."""
-import glob
-
 from rpmlint.version import __version__
 from setuptools import setup
 
@@ -44,18 +38,15 @@ setup(
     platforms=['Linux'],
     keywords=['RPM', '.spec', 'validator'],
 
-    install_requires=['pyxdg', 'ConfigObj'],
+    install_requires=['pyxdg', 'toml'],
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-cov'],
+    tests_require=['pytest', 'pytest-cov', 'pytest-flake8'],
 
     packages=['rpmlint'],
     package_data={
         'rpmlint': ['rpmlint/configdefaults.toml'],
     },
     include_package_data=True,
-    data_files=[
-        ('share/man/man1', glob.glob('man/*.1')),
-    ],
     entry_points={
         'console_scripts': [
             'rpmdiff = rpmlint:diff',
