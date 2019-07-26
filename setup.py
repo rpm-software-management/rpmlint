@@ -53,9 +53,6 @@ setup(
         'rpmlint': ['rpmlint/configdefaults.toml'],
     },
     include_package_data=True,
-    data_files=[
-        ('share/man/man1', glob.glob('man/*.1')),
-    ],
     entry_points={
         'console_scripts': [
             'rpmdiff = rpmlint:diff',
