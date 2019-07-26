@@ -38,9 +38,9 @@ setup(
     platforms=['Linux'],
     keywords=['RPM', '.spec', 'validator'],
 
-    install_requires=['pyxdg', 'ConfigObj'],
+    install_requires=['pyxdg', 'toml'],
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-cov'],
+    tests_require=['pytest', 'pytest-cov', 'pytest-flake8'],
 
     packages=['rpmlint'],
     package_data={
