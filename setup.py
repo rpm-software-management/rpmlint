@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""Setup file for easy installation."""
-import glob
-
 from rpmlint.version import __version__
 from setuptools import setup
 
