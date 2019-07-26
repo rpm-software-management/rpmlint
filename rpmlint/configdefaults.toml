@@ -200,6 +200,8 @@ DisallowedDirs = [
     "/home",
     "/mnt",
     "/opt",
+    "/proc",
+    "/run",
     "/tmp",
     "/usr/local",
     "/usr/tmp",
