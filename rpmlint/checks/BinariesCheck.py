@@ -50,7 +50,7 @@ class BinaryInfo(object):
 
     # [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
     # [ 1] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  1
-    text_section_regex = re.compile(r'.*\.text\s*\w+\s*\w*\s*\w*\w*\s*(\w*).*')
+    text_section_regex = re.compile(r'\s*\[[ 0-9]+\]\s*\.text\s*\w+\s*\w*\s*\w*\w*\s*(\w*).*.')
 
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
