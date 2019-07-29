@@ -31,7 +31,6 @@ class BinaryInfo(object):
     needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
-    comment_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.comment\s+')
     pic_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
     #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
     stack_regex = re.compile(r'^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
@@ -59,7 +58,6 @@ class BinaryInfo(object):
         self.unused = []
         self.config = config
         self.output = output
-        self.comment = False
         self.soname = False
         self.non_pic = True
         self.stack = False
@@ -122,10 +120,6 @@ class BinaryInfo(object):
                 if r:
                     for p in r.group(1).split(':'):
                         self.rpath.append(p)
-                    continue
-
-                if self.comment_regex.search(line):
-                    self.comment = True
                     continue
 
                 if self.pic_regex.search(line):
