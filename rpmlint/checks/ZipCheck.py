@@ -11,7 +11,6 @@ class ZipCheck(AbstractCheck):
     """
     zip_regex = re.compile(r'\.(zip|[ewj]ar)$')
     jar_regex = re.compile(r'\.[ewj]ar$')
-    classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -77,17 +76,20 @@ class ZipCheck(AbstractCheck):
             return True
         return False
 
-    def _check_classpath(self, zipfile):
+    @staticmethod
+    def _check_classpath(zipfile):
         """
         Check if package contains MANIFEST.MF without classpath
         """
+        classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
+
         mf = 'META-INF/MANIFEST.MF'
         # The META-INF is optional so skip if it is not present
         if mf not in zipfile.namelist():
             return False
         # otherwise check for the classpath
         manifest = zipfile.read(mf).decode()
-        if self.classpath_regex.search(manifest):
+        if classpath_regex.search(manifest):
             return True
         return False
 

@@ -1,0 +1,9 @@
+include Makefile
+include COPYING
+include README.md
+recursive-include test/binary *
+recursive-include test/configs *
+recursive-include test/pyc *
+recursive-include test/source *
+recursive-include test/spec *
+include test/Dockerfile*
