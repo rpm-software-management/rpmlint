@@ -99,7 +99,7 @@ use following locations:
 
 `$XDG_CONFIG_HOME/rpmlint/*config`
 
-Configuration itself is a normal ini file where for some basic inspiration
+Configuration itself is a toml file where for some basic inspiration
 you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
 
 Additional option to control rpmlint behaviour is addition of rpmlintrc file
