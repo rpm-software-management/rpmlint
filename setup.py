@@ -38,13 +38,23 @@ setup(
     platforms=['Linux'],
     keywords=['RPM', '.spec', 'validator'],
 
-    install_requires=['pyxdg', 'toml'],
+    install_requires=[
+        'pyxdg',
+        'toml',
+    ],
     setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-cov', 'pytest-flake8'],
+    tests_require=[
+        'pytest',
+        'pytest-cov',
+        'pytest-flake8'
+    ],
 
-    packages=['rpmlint'],
+    packages=[
+        'rpmlint',
+        'rpmlint.checks',
+    ],
     package_data={
-        'rpmlint': ['rpmlint/configdefaults.toml'],
+        'rpmlint': ['configdefaults.toml'],
     },
     include_package_data=True,
     entry_points={
