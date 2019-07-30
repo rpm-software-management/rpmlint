@@ -70,7 +70,7 @@ def test_explain_unknown(capsys):
 
 
 def test_explain_known(capsys):
-    message = 'infopage-not-compressed'
+    message = ['infopage-not-compressed']
     additional_options = {
         'explain': message,
     }
@@ -80,6 +80,20 @@ def test_explain_known(capsys):
     out, err = capsys.readouterr()
     assert 'This info page is not compressed' in out
     assert 'Unknown message' not in out
+    assert not err
+
+
+def test_explain_with_uknown(capsys):
+    message = ['infopage-not-compressed', 'blablablabla']
+    additional_options = {
+        'explain': message,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert 'This info page is not compressed' in out
+    assert 'Unknown message' in out
     assert not err
 
 
