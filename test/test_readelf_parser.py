@@ -65,6 +65,13 @@ def test_lto_archive_text(binariescheck):
     assert 'E: lto-no-text-in-archive' in output.results[0]
 
 
+def test_executable_stack(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
+    assert len(output.results) == 1
+    assert 'E: executable-stack' in output.results[0]
+
+
 def test_readelf_failure():
     readelf = readelfparser('no-existing-file')
     assert readelf.parsing_failed

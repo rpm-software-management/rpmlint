@@ -33,9 +33,6 @@ class BinaryInfo(object):
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
     pic_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
-    #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
-    stack_regex = re.compile(r'^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
-    stack_exec_regex = re.compile(r'^..E$')
     undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
     unused_regex = re.compile(r'^\s+(\S+)')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
@@ -56,7 +53,6 @@ class BinaryInfo(object):
         self.output = output
         self.soname = False
         self.non_pic = True
-        self.stack = False
         self.exec_stack = False
         self.exit_calls = []
         self.forbidden_calls = []
@@ -104,14 +100,6 @@ class BinaryInfo(object):
                 r = self.soname_regex.search(line)
                 if r:
                     self.soname = r.group(1)
-                    continue
-
-                r = self.stack_regex.search(line)
-                if r:
-                    self.stack = True
-                    flags = r.group(1)
-                    if flags and self.stack_exec_regex.search(flags):
-                        self.exec_stack = True
                     continue
 
                 if line.startswith('Symbol table'):
@@ -268,7 +256,8 @@ class BinariesCheck(AbstractCheck):
 
         # register all check functions
         self.check_functions = [self.check_lto_section,
-                                self.check_no_text_in_archive]
+                                self.check_no_text_in_archive,
+                                self.check_executable_stack]
 
     # For an archive, test if any .text sections is empty
     def check_no_text_in_archive(self, pkg, path):
@@ -286,6 +275,14 @@ class BinariesCheck(AbstractCheck):
                 if '.gnu.lto_.' in section.name:
                     self.output.add_info('E', pkg, 'lto-bytecode', path)
                     return
+
+    def check_executable_stack(self, pkg, path):
+        if not path.endswith('.a'):
+            stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
+            if len(stack_headers) == 0:
+                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
+            elif 'E' in stack_headers[0].flags:
+                self.output.add_info('E', pkg, 'executable-stack', path)
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path)
@@ -514,15 +511,6 @@ class BinariesCheck(AbstractCheck):
                         else:
                             self.output.add_info('E', pkg, 'program-not-linked-against-libc',
                                                  fname)
-
-            if bin_info.stack:
-                if bin_info.exec_stack:
-                    self.output.add_info('W', pkg, 'executable-stack', fname)
-            elif not bin_info.readelf_error and (
-                    pkg.arch.endswith('86') or
-                    pkg.arch.startswith('pentium') or
-                    pkg.arch in ('athlon', 'x86_64')):
-                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
                 self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid',
