@@ -102,15 +102,16 @@ class Lint(object):
         """
         self.config.print_config()
 
-    def print_explanation(self, message):
+    def print_explanation(self, messages):
         """
-        Print out detailed explanation for the specified message
+        Print out detailed explanation for the specified messages
         """
-        explanation = self.output.get_description(message)
-        if explanation:
-            print(explanation)
-        else:
-            print(f'Unknown message {message}, or no known description')
+        for message in messages:
+            explanation = self.output.get_description(message)
+            if explanation:
+                print(explanation)
+            else:
+                print(f'Unknown message {message}, or no known description')
 
     def load_checks(self):
         """
