@@ -222,7 +222,6 @@ versioned_dir_regex = re.compile(r'[^.][0-9]')
 ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
 validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
-sparc_regex = re.compile(r'SPARC32PLUS|SPARC V9|UltraSPARC')
 usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
 bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
 soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
@@ -373,9 +372,6 @@ class BinariesCheck(AbstractCheck):
             # in /etc ?
             if fname.startswith('/etc/'):
                 self.output.add_info('E', pkg, 'binary-in-etc', fname)
-
-            if pkg.arch == 'sparc' and sparc_regex.search(pkgfile.magic):
-                self.output.add_info('E', pkg, 'non-sparc32-binary', fname)
 
             if is_ocaml_native or is_lua_bytecode or fname.endswith('.o') or \
                     fname.endswith('.static'):
@@ -554,9 +550,6 @@ noarch.""",
 'binary-in-etc':
 """This package installs an ELF binary in /etc.  Both the
 FHS and the FSSTND forbid this.""",
-
-# 'non-sparc32-binary',
-# '',
 
 'noarch-with-lib64':
 """This package is marked as noarch but installs files into lib64.
