@@ -32,7 +32,6 @@ class BinaryInfo(object):
     needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
-    pic_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
     undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
     unused_regex = re.compile(r'^\s+(\S+)')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
@@ -50,7 +49,6 @@ class BinaryInfo(object):
         self.config = config
         self.output = output
         self.soname = False
-        self.non_pic = True
         self.exec_stack = False
         self.forbidden_calls = []
         self.tail = ''
@@ -87,10 +85,6 @@ class BinaryInfo(object):
                 if r:
                     for p in r.group(1).split(':'):
                         self.rpath.append(p)
-                    continue
-
-                if self.pic_regex.search(line):
-                    self.non_pic = False
                     continue
 
                 r = self.soname_regex.search(line)
@@ -140,9 +134,6 @@ class BinaryInfo(object):
                             r = f['waiver_regex'].search(line)
                             if r:
                                 del self.forbidden_calls[i]
-
-            if self.non_pic:
-                self.non_pic = 'TEXTREL' in res[1]
         else:
             self.readelf_error = True
             # Go and others are producing ar archives that don't have ELF
@@ -201,10 +192,8 @@ numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz
 versioned_dir_regex = re.compile(r'[^.][0-9]')
 ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
 usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
 bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
-soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\\.so|.*\\.so\\.([0-9][.0-9]*).*')
 reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
 srcname_regex = re.compile(r'(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
@@ -222,8 +211,12 @@ def dir_base(path):
 
 class BinariesCheck(AbstractCheck):
 
+    validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
+    soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
+
     def __init__(self, config, output):
         super().__init__(config, output)
+        self.files = {}
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
@@ -234,13 +227,14 @@ class BinariesCheck(AbstractCheck):
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
         # register all check functions
-        self.check_functions = [self.check_lto_section,
-                                self.check_no_text_in_archive,
-                                self.check_executable_stack]
+        self.check_functions = [self._check_lto_section,
+                                self._check_no_text_in_archive,
+                                self._check_executable_stack,
+                                self._check_shared_library]
 
     # For an archive, test if any .text sections is empty
-    def check_no_text_in_archive(self, pkg, path):
-        if path.endswith('.a'):
+    def _check_no_text_in_archive(self, pkg, path):
+        if self.readelf_parser.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
                     if section.name == '.text' and section.size == 0:
@@ -248,23 +242,74 @@ class BinariesCheck(AbstractCheck):
                         return
 
     # Check for LTO sections
-    def check_lto_section(self, pkg, path):
+    def _check_lto_section(self, pkg, path):
         for elf_file in self.readelf_parser.section_info.elf_files:
             for section in elf_file:
                 if '.gnu.lto_.' in section.name:
                     self.output.add_info('E', pkg, 'lto-bytecode', path)
                     return
 
-    def check_executable_stack(self, pkg, path):
-        if not path.endswith('.a'):
+    def _check_executable_stack(self, pkg, path):
+        if not self.readelf_parser.is_archive:
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if len(stack_headers) == 0:
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
             elif 'E' in stack_headers[0].flags:
                 self.output.add_info('E', pkg, 'executable-stack', path)
 
+    def _check_soname_symlink(self, pkg, path, soname):
+        (directory, base) = dir_base(path)
+        symlink = directory + soname
+        try:
+            # check that we have a symlink with the soname in the package
+            # and it points to the checked shared library
+            link = pkg.files()[symlink].linkto
+            if link not in (path, base, ''):
+                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', path, link)
+        except KeyError:
+            # if we do not have a symlink, report an issue
+            if base.startswith('lib') or base.startswith('ld-'):
+                self.output.add_info('E', pkg, 'no-ldconfig-symlink', path)
+
+    def _check_shared_library(self, pkg, path):
+        if not self.readelf_parser.is_shlib:
+            return
+        soname = self.readelf_parser.dynamic_section_info.soname
+        if not soname:
+            self.output.add_info('W', pkg, 'no-soname', path)
+        else:
+            if not self.validso_regex.search(soname):
+                self.output.add_info('E', pkg, 'invalid-soname', path, soname)
+            else:
+                self._check_soname_symlink(pkg, path, soname)
+
+                res = self.soversion_regex.search(soname)
+                if res:
+                    soversion = res.group(1) or res.group(2)
+                    if soversion and soversion not in pkg.name:
+                        self.output.add_info('E', pkg, 'incoherent-version-in-name', soversion)
+
+        if not self.readelf_parser.section_info.pic:
+            self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
+
+    """
+    TODO:
+                    # It could be useful to check these for others than shared
+                    # libs only, but that has potential to generate lots of
+                    # false positives and noise.
+                    for s in bin_info.undef:
+                        self.output.add_info('W', pkg, 'undefined-non-weak-symbol', fname, s)
+                    for s in bin_info.unused:
+                        self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
+                                             fname, s)
+
+                    # calls exit() or _exit()?
+                    for ec in bin_info.exit_calls:
+                        self.output.add_info('W', pkg, 'shared-lib-calls-exit', fname, ec)
+    """
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
-        self.readelf_parser = ReadelfParser(pkgfile_path)
+        self.readelf_parser = ReadelfParser(pkgfile_path, path)
         if self.readelf_parser.parsing_failed():
             self.output.add_info('E', pkg, 'binaryinfo-readelf-failed', path)
         else:
@@ -272,10 +317,9 @@ class BinariesCheck(AbstractCheck):
                 fn(pkg, path)
 
     def check_binary(self, pkg):
-        files = pkg.files()
+        self.files = pkg.files()
         exec_files = []
         has_lib = False
-        version = None
         binary = False
         binary_in_usr_lib = False
         has_usr_lib_file = False
@@ -288,7 +332,7 @@ class BinariesCheck(AbstractCheck):
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 
-        for fname, pkgfile in files.items():
+        for fname, pkgfile in self.files.items():
 
             if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
                 has_usr_lib_file = True
@@ -361,58 +405,15 @@ class BinariesCheck(AbstractCheck):
             if 'not stripped' in pkgfile.magic:
                 self.output.add_info('W', pkg, 'unstripped-binary-or-object', fname)
 
-            # inspect binary file
-            is_shlib = so_regex.search(fname)
-            bin_info = BinaryInfo(self.config, self.output, pkg, pkgfile.path, fname, is_ar, is_shlib)
-
             # run ELF checks
             self.run_elf_checks(pkg, pkgfile.path, fname)
 
+            # inspect binary file
+            is_shlib = self.readelf_parser.is_shlib
+            bin_info = BinaryInfo(self.config, self.output, pkg, pkgfile.path, fname, is_ar, is_shlib)
+
             if is_shlib:
                 has_lib = True
-
-            # shared libs
-            if is_shlib and not bin_info.readelf_error:
-
-                # so name in library
-                if not bin_info.soname:
-                    self.output.add_info('W', pkg, 'no-soname', fname)
-                else:
-                    if not validso_regex.search(bin_info.soname):
-                        self.output.add_info('E', pkg, 'invalid-soname', fname,
-                                             bin_info.soname)
-                    else:
-                        (directory, base) = dir_base(fname)
-                        try:
-                            symlink = directory + bin_info.soname
-                            link = files[symlink].linkto
-                            if link not in (fname, base, ''):
-                                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink',
-                                                     fname, link)
-                        except KeyError:
-                            if base.startswith('lib') or \
-                               base.startswith('ld-'):
-                                self.output.add_info('E', pkg, 'no-ldconfig-symlink', fname)
-
-                    res = soversion_regex.search(bin_info.soname)
-                    if res:
-                        soversion = res.group(1) or res.group(2)
-                        if version is None:
-                            version = soversion
-                        elif version != soversion:
-                            version = -1
-
-                if bin_info.non_pic:
-                    self.output.add_info('E', pkg, 'shlib-with-non-pic-code', fname)
-
-                # It could be useful to check these for others than shared
-                # libs only, but that has potential to generate lots of
-                # false positives and noise.
-                for s in bin_info.undef:
-                    self.output.add_info('W', pkg, 'undefined-non-weak-symbol', fname, s)
-                for s in bin_info.unused:
-                    self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
-                                         fname, s)
 
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
@@ -494,14 +495,12 @@ class BinariesCheck(AbstractCheck):
         if has_lib:
             for f in exec_files:
                 self.output.add_info('E', pkg, 'executable-in-library-package', f)
-            for f in files:
+            for f in self.files:
                 res = numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
                 if f not in exec_files and not so_regex.search(f) and \
                         not versioned_dir_regex.search(fn):
                     self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
-            if version and version != -1 and version not in pkg.name:
-                self.output.add_info('E', pkg, 'incoherent-version-in-name', version)
 
         if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
             self.output.add_info('E', pkg, 'no-binary')
