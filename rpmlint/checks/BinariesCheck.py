@@ -14,6 +14,7 @@ import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
+from rpmlint.readelfparser import ReadelfParser
 
 
 def create_regexp_call(call):
@@ -32,9 +33,6 @@ class BinaryInfo(object):
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
     pic_regex = re.compile(r'^\s+\[\s*\d+\]\s+\.rela?\.(data|text)')
-    #   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x4
-    stack_regex = re.compile(r'^\s+GNU_STACK\s+(?:(?:\S+\s+){5}(\S+)\s+)?')
-    stack_exec_regex = re.compile(r'^..E$')
     undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
     unused_regex = re.compile(r'^\s+(\S+)')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
@@ -44,11 +42,6 @@ class BinaryInfo(object):
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     mktemp_call_regex = create_regexp_call('mktemp')
-    lto_section_name_prefix = '.gnu.lto_.'
-
-    # [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
-    # [ 1] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  1
-    text_section_regex = re.compile(r'\s*\[[ 0-9]+\]\s*\.text\s*\w+\s*\w*\s*\w*\w*\s*(\w*).*.')
 
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
@@ -60,14 +53,11 @@ class BinaryInfo(object):
         self.output = output
         self.soname = False
         self.non_pic = True
-        self.stack = False
         self.exec_stack = False
         self.exit_calls = []
         self.forbidden_calls = []
         fork_called = False
         self.tail = ''
-        self.lto_sections = False
-        self.no_text_in_archive = False
 
         self.setgid = False
         self.setuid = False
@@ -85,32 +75,13 @@ class BinaryInfo(object):
                 self.output.error_details.update({name: func['description']})
 
         is_debug = path.endswith('.debug')
-        is_archive = path.endswith('.a')
 
         res = Pkg.getstatusoutput(
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
         if not res[0]:
             lines = res[1].splitlines()
 
-            # For an archive, test if all .text sections are empty
-            if is_archive:
-                has_text_segment = False
-                non_zero_text_segment = False
-
-                for line in lines:
-                    r = self.text_section_regex.search(line)
-                    if r:
-                        has_text_segment = True
-                        size = int(r.group(1), 16)
-                        if size > 0:
-                            non_zero_text_segment = True
-                if has_text_segment and not non_zero_text_segment:
-                    self.no_text_in_archive = True
-
             for line in lines:
-                if self.lto_section_name_prefix in line:
-                    self.lto_sections = True
-
                 r = self.needed_regex.search(line)
                 if r:
                     self.needed.append(r.group(1))
@@ -129,14 +100,6 @@ class BinaryInfo(object):
                 r = self.soname_regex.search(line)
                 if r:
                     self.soname = r.group(1)
-                    continue
-
-                r = self.stack_regex.search(line)
-                if r:
-                    self.stack = True
-                    flags = r.group(1)
-                    if flags and self.stack_exec_regex.search(flags):
-                        self.exec_stack = True
                     continue
 
                 if line.startswith('Symbol table'):
@@ -205,7 +168,7 @@ class BinaryInfo(object):
             # Go and others are producing ar archives that don't have ELF
             # headers, so don't complain about it
             if not is_ar:
-                self.output.add_info('W', pkg, 'binaryinfo-readelf-failed',
+                self.output.add_info('E', pkg, 'binaryinfo-readelf-failed',
                                      fname, re.sub('\n.*', '', res[1]))
 
         try:
@@ -291,6 +254,44 @@ class BinariesCheck(AbstractCheck):
         self.pie_exec_re = re.compile(pie_exec_re)
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
+        # register all check functions
+        self.check_functions = [self.check_lto_section,
+                                self.check_no_text_in_archive,
+                                self.check_executable_stack]
+
+    # For an archive, test if any .text sections is empty
+    def check_no_text_in_archive(self, pkg, path):
+        if path.endswith('.a'):
+            for elf_file in self.readelf_parser.section_info.elf_files:
+                for section in elf_file:
+                    if section.name == '.text' and section.size == 0:
+                        self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
+                        return
+
+    # Check for LTO sections
+    def check_lto_section(self, pkg, path):
+        for elf_file in self.readelf_parser.section_info.elf_files:
+            for section in elf_file:
+                if '.gnu.lto_.' in section.name:
+                    self.output.add_info('E', pkg, 'lto-bytecode', path)
+                    return
+
+    def check_executable_stack(self, pkg, path):
+        if not path.endswith('.a'):
+            stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
+            if len(stack_headers) == 0:
+                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
+            elif 'E' in stack_headers[0].flags:
+                self.output.add_info('E', pkg, 'executable-stack', path)
+
+    def run_elf_checks(self, pkg, pkgfile_path, path):
+        self.readelf_parser = ReadelfParser(pkgfile_path)
+        if self.readelf_parser.parsing_failed():
+            self.output.add_info('E', pkg, 'binaryinfo-readelf-failed', path)
+        else:
+            for fn in self.check_functions:
+                fn(pkg, path)
+
     def check_binary(self, pkg):
         files = pkg.files()
         exec_files = []
@@ -351,7 +352,6 @@ class BinariesCheck(AbstractCheck):
                 continue
 
             # binary files only from here on
-
             binary = True
 
             if has_usr_lib_file and not binary_in_usr_lib and \
@@ -388,6 +388,9 @@ class BinariesCheck(AbstractCheck):
             # inspect binary file
             is_shlib = so_regex.search(fname)
             bin_info = BinaryInfo(self.config, self.output, pkg, pkgfile.path, fname, is_ar, is_shlib)
+
+            # run ELF checks
+            self.run_elf_checks(pkg, pkgfile.path, fname)
 
             if is_shlib:
                 has_lib = True
@@ -438,12 +441,6 @@ class BinariesCheck(AbstractCheck):
                 # calls exit() or _exit()?
                 for ec in bin_info.exit_calls:
                     self.output.add_info('W', pkg, 'shared-lib-calls-exit', fname, ec)
-
-            if bin_info.lto_sections:
-                self.output.add_info('E', pkg, 'lto-bytecode', fname)
-
-            if bin_info.no_text_in_archive:
-                self.output.add_info('E', pkg, 'lto-no-text-in-archive', fname)
 
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
@@ -514,15 +511,6 @@ class BinariesCheck(AbstractCheck):
                         else:
                             self.output.add_info('E', pkg, 'program-not-linked-against-libc',
                                                  fname)
-
-            if bin_info.stack:
-                if bin_info.exec_stack:
-                    self.output.add_info('W', pkg, 'executable-stack', fname)
-            elif not bin_info.readelf_error and (
-                    pkg.arch.endswith('86') or
-                    pkg.arch.startswith('pentium') or
-                    pkg.arch in ('athlon', 'x86_64')):
-                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', fname)
 
             if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
                 self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid',
