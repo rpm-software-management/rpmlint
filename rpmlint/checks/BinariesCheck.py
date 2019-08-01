@@ -7,6 +7,7 @@
 #############################################################################
 
 import os
+from pathlib import Path
 import re
 import stat
 
@@ -145,7 +146,6 @@ class BinaryInfo(object):
             self.output.add_info('W', pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
 
 
-path_regex = re.compile(r'(.*/)([^/]+)')
 numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile(r'[^.][0-9]')
 ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
@@ -157,14 +157,6 @@ srcname_regex = re.compile(r'(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
 ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
 usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
-
-
-def dir_base(path):
-    res = path_regex.search(path)
-    if res:
-        return res.group(1), res.group(2)
-    else:
-        return '', path
 
 
 class BinariesCheck(AbstractCheck):
@@ -215,19 +207,19 @@ class BinariesCheck(AbstractCheck):
             elif 'E' in stack_headers[0].flags:
                 self.output.add_info('E', pkg, 'executable-stack', path)
 
-    def _check_soname_symlink(self, pkg, path, soname):
-        (directory, base) = dir_base(path)
-        symlink = directory + soname
+    def _check_soname_symlink(self, pkg, file_path, soname):
+        path = Path(file_path)
+        symlink = path.parent / soname
         try:
             # check that we have a symlink with the soname in the package
             # and it points to the checked shared library
-            link = pkg.files()[symlink].linkto
-            if link not in (path, base, ''):
-                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', path, link)
+            link = pkg.files()[str(symlink)].linkto
+            if link not in (file_path, path.parent, ''):
+                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', file_path, link)
         except KeyError:
             # if we do not have a symlink, report an issue
-            if base.startswith('lib') or base.startswith('ld-'):
-                self.output.add_info('E', pkg, 'no-ldconfig-symlink', path)
+            if path.name.startswith('lib') or path.name.startswith('ld-'):
+                self.output.add_info('E', pkg, 'no-ldconfig-symlink', file_path)
 
     def _check_shared_library(self, pkg, path):
         if not self.readelf_parser.is_shlib:
