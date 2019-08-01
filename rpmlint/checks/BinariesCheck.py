@@ -36,8 +36,6 @@ class BinaryInfo(object):
     undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
     unused_regex = re.compile(r'^\s+(\S+)')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
-    exit_call_regex = create_regexp_call(r'_?exit')
-    fork_call_regex = create_regexp_call(r'fork')
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
@@ -54,9 +52,7 @@ class BinaryInfo(object):
         self.soname = False
         self.non_pic = True
         self.exec_stack = False
-        self.exit_calls = []
         self.forbidden_calls = []
-        fork_called = False
         self.tail = ''
 
         self.setgid = False
@@ -129,16 +125,6 @@ class BinaryInfo(object):
                         if ret:
                             self.forbidden_calls.append(r_name)
 
-                if is_shlib:
-                    r = self.exit_call_regex.search(line)
-                    if r:
-                        self.exit_calls.append(r.group(1))
-                        continue
-                    r = self.fork_call_regex.search(line)
-                    if r:
-                        fork_called = True
-                        continue
-
             # check if we don't have a string that will automatically
             # waive the presence of a forbidden call
             if self.forbidden_calls:
@@ -157,12 +143,6 @@ class BinaryInfo(object):
 
             if self.non_pic:
                 self.non_pic = 'TEXTREL' in res[1]
-
-            # Ignore all exit() calls if fork() is being called.
-            # Does not have any context at all but without this kludge, the
-            # number of false positives would probably be intolerable.
-            if fork_called:
-                self.exit_calls = []
         else:
             self.readelf_error = True
             # Go and others are producing ar archives that don't have ELF
@@ -434,10 +414,6 @@ class BinariesCheck(AbstractCheck):
                     self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
                                          fname, s)
 
-                # calls exit() or _exit()?
-                for ec in bin_info.exit_calls:
-                    self.output.add_info('W', pkg, 'shared-lib-calls-exit', fname, ec)
-
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
 
@@ -659,15 +635,6 @@ don\'t define a proper .note.GNU-stack section.""",
 """The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
 make the stack executable.  Usual suspects include use of a non-GNU linker or
 an old GNU linker version.""",
-
-'shared-lib-calls-exit':
-"""This library package calls exit() or _exit(), probably in a non-fork()
-context. Doing so from a library is strongly discouraged - when a library
-function calls exit(), it prevents the calling program from handling the
-error, reporting it to the user, closing files properly, and cleaning up any
-state that the program has. It is preferred for the library to return an
-actual error code and let the calling program decide how to handle the
-situation.""",
 
 'ocaml-mixed-executable':
 """Executables built with ocamlc -custom are deprecated.  Packagers should ask
