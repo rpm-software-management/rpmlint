@@ -237,6 +237,7 @@ class ReadelfParser:
     def __init__(self, pkgfile_path, path):
         self.is_archive = path.endswith('.a')
         self.is_shlib = self.so_regex.search(path)
+        self.is_debug = path.endswith('.debug')
 
         self.section_info = ElfSectionInfo(pkgfile_path)
         self.program_header_info = ElfProgramHeaderInfo(pkgfile_path)

@@ -71,7 +71,7 @@ def test_lto_bytecode(binariescheck):
     test.run_elf_checks(FakePkg('fake'), get_full_path('lto-object.o'), 'x.a')
     assert not test.readelf_parser.parsing_failed()
     out = output.print_results(output.results)
-    'lto-bytecode' in out
+    assert 'lto-bytecode' in out
 
 
 def test_lto_archive_text(binariescheck):

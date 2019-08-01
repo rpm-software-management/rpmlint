@@ -2,7 +2,7 @@ FROM opensuse/tumbleweed
 
 RUN zypper -n install \
         cpio gzip bzip2 groff make elfutils xz \
-        perl binutils desktop-file-utils \
+        perl binutils glibc desktop-file-utils \
         man appstream-glib \
         myspell-en_US myspell-cs_CZ \
         python3-magic \

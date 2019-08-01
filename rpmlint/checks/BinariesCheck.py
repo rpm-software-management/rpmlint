@@ -14,6 +14,7 @@ import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
+from rpmlint.lddparser import LddParser
 from rpmlint.readelfparser import ReadelfParser
 
 
@@ -32,8 +33,6 @@ class BinaryInfo(object):
     needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
-    undef_regex = re.compile(r'^undefined symbol:\s+(\S+)')
-    unused_regex = re.compile(r'^\s+(\S+)')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
@@ -44,8 +43,6 @@ class BinaryInfo(object):
         self.readelf_error = False
         self.needed = []
         self.rpath = []
-        self.undef = []
-        self.unused = []
         self.config = config
         self.output = output
         self.soname = False
@@ -67,8 +64,6 @@ class BinaryInfo(object):
                     func['waiver_regex'] = re.compile(func['good_param'])
                 # register descriptions
                 self.output.error_details.update({name: func['description']})
-
-        is_debug = path.endswith('.debug')
 
         res = Pkg.getstatusoutput(
             ('readelf', '-W', '-S', '-l', '-d', '-s', path))
@@ -148,43 +143,6 @@ class BinaryInfo(object):
                 self.tail = byte_to_string(fobj.read())
         except Exception as e:
             self.output.add_info('W', pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
-
-        # Undefined symbol and unused direct dependency checks make sense only
-        # for installed packages.
-        # skip debuginfo: https://bugzilla.redhat.com/190599
-        if not is_ar and not is_debug and isinstance(pkg, Pkg.InstalledPkg):
-            # We could do this with objdump, but it's _much_ simpler with ldd.
-            res = Pkg.getstatusoutput(('ldd', '-d', '-r', path))
-            if not res[0]:
-                for line in res[1].splitlines():
-                    undef = self.undef_regex.search(line)
-                    if undef:
-                        self.undef.append(undef.group(1))
-                if self.undef:
-                    try:
-                        res = Pkg.getstatusoutput(['c++filt'] + self.undef)
-                        if not res[0]:
-                            self.undef = res[1].splitlines()
-                    except OSError:
-                        pass
-            else:
-                self.output.add_info('W', pkg, 'ldd-failed', fname)
-            res = Pkg.getstatusoutput(('ldd', '-r', '-u', path))
-            if res[0]:
-                # Either ldd doesn't grok -u (added in glibc 2.3.4) or we have
-                # unused direct dependencies
-                in_unused = False
-                for line in res[1].splitlines():
-                    if not line.rstrip():
-                        pass
-                    elif line.startswith('Unused direct dependencies'):
-                        in_unused = True
-                    elif in_unused:
-                        unused = self.unused_regex.search(line)
-                        if unused:
-                            self.unused.append(unused.group(1))
-                        else:
-                            in_unused = False
 
 
 path_regex = re.compile(r'(.*/)([^/]+)')
@@ -292,29 +250,30 @@ class BinariesCheck(AbstractCheck):
         if not self.readelf_parser.section_info.pic:
             self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
 
-    """
-    TODO:
-                    # It could be useful to check these for others than shared
-                    # libs only, but that has potential to generate lots of
-                    # false positives and noise.
-                    for s in bin_info.undef:
-                        self.output.add_info('W', pkg, 'undefined-non-weak-symbol', fname, s)
-                    for s in bin_info.unused:
-                        self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
-                                             fname, s)
-
-                    # calls exit() or _exit()?
-                    for ec in bin_info.exit_calls:
-                        self.output.add_info('W', pkg, 'shared-lib-calls-exit', fname, ec)
-    """
+        if not self.readelf_parser.is_archive and not self.readelf_parser.is_debug:
+            # It could be useful to check these for others than shared
+            # libs only, but that has potential to generate lots of
+            # false positives and noise.
+            for symbol in self.ldd_parser.undefined_symbols:
+                self.output.add_info('W', pkg, 'undefined-non-weak-symbol', path, symbol)
+            for dependency in self.ldd_parser.unused_dependencies:
+                self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
+                                     path, dependency)
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         if self.readelf_parser.parsing_failed():
             self.output.add_info('E', pkg, 'binaryinfo-readelf-failed', path)
-        else:
-            for fn in self.check_functions:
-                fn(pkg, path)
+            return
+
+        if not self.readelf_parser.is_archive:
+            self.ldd_parser = LddParser(pkgfile_path, path)
+            if self.ldd_parser.parsing_failed:
+                self.output.add_info('E', pkg, 'binaryinfo-ldd-failed', path)
+                return
+
+        for fn in self.check_functions:
+            fn(pkg, path)
 
     def check_binary(self, pkg):
         self.files = pkg.files()

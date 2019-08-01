@@ -13,7 +13,10 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/perl \
         /usr/bin/python3 \
         /usr/bin/readelf \
+        /usr/bin/ldd \
+        /usr/bin/c++filt \
         /usr/bin/xz \
+        glibc \
         hunspell-en \
         hunspell-cs \
         python3-setuptools \
