@@ -21,6 +21,15 @@ class ElfProgramHeader:
         self.flags = flags.replace(' ', '')
 
 
+class ElfDynamicSection:
+    """
+    A simple wrapper representing one ELF dynamic section entry.
+    """
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+
+
 class ElfSectionInfo:
     """
     Class contains information about ELF sections of an ELF file. The information
@@ -52,12 +61,14 @@ class ElfSectionInfo:
     """
 
     section_regex = re.compile(r'.*\] (?P<section>[^\s]*)\s*\w+\s*\w*\s*\w*\w*\s*(?P<size>\w*)')
+    pic_regex = re.compile(r'\.rela?\.(data|text)')
 
     def __init__(self, path):
         self.path = path
         self.elf_files = []
-        self.parse()
         self.parsing_failed = False
+        self.pic = False
+        self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-S', self.path], encoding='utf8',
@@ -80,8 +91,13 @@ class ElfSectionInfo:
 
             sections = list(takewhile(lambda x: 'Key to Flags:' not in x, lines))
             for s in sections:
-                r = ElfSectionInfo.section_regex.search(s)
-                parsed_sections.append(ElfSection(r.group('section'), r.group('size')))
+                r = self.section_regex.search(s)
+                section = ElfSection(r.group('section'), r.group('size'))
+                parsed_sections.append(section)
+
+                # detect a PIC section
+                if self.pic_regex.search(section.name) is not None:
+                    self.pic = True
 
             lines = lines[len(sections):]
             if len(parsed_sections) > 0:
@@ -111,8 +127,8 @@ class ElfProgramHeaderInfo:
     def __init__(self, path):
         self.path = path
         self.headers = []
-        self.parse()
         self.parsing_failed = False
+        self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-l', self.path], encoding='utf8',
@@ -132,11 +148,82 @@ class ElfProgramHeaderInfo:
 
             sections = list(takewhile(lambda x: x.strip() != '', lines))
             for s in sections:
-                r = ElfProgramHeaderInfo.header_regex.search(s)
+                r = self.header_regex.search(s)
                 if r is not None:
                     self.headers.append(ElfProgramHeader(r.group('header'), r.group('flags')))
 
             lines = lines[len(sections):]
+
+
+class ElfDynamicSectionInfo:
+    """
+    0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
+    0x000000000000000e (SONAME)             Library soname: [libc.so.6]
+    0x000000000000000c (INIT)               0x26950
+    0x0000000000000019 (INIT_ARRAY)         0x1ba330
+    0x000000000000001b (INIT_ARRAYSZ)       16 (bytes)
+    0x0000000000000004 (HASH)               0x328
+    0x000000006ffffef5 (GNU_HASH)           0x37f8
+    0x0000000000000005 (STRTAB)             0x151e0
+    0x0000000000000006 (SYMTAB)             0x7488
+    0x000000000000000a (STRSZ)              24691 (bytes)
+    0x000000000000000b (SYMENT)             24 (bytes)
+    0x0000000000000003 (PLTGOT)             0x1bcbd0
+    0x0000000000000002 (PLTRELSZ)           1152 (bytes)
+    0x0000000000000014 (PLTREL)             RELA
+    0x0000000000000017 (JMPREL)             0x24538
+    0x0000000000000007 (RELA)               0x1c948
+    0x0000000000000008 (RELASZ)             31728 (bytes)
+    0x0000000000000009 (RELAENT)            24 (bytes)
+    0x000000006ffffffc (VERDEF)             0x1c4c8
+    0x000000006ffffffd (VERDEFNUM)          31
+    0x000000000000001e (FLAGS)              BIND_NOW STATIC_TLS
+    0x000000006ffffffb (FLAGS_1)            Flags: NOW
+    0x000000006ffffffe (VERNEED)            0x1c918
+    0x000000006fffffff (VERNEEDNUM)         1
+    0x000000006ffffff0 (VERSYM)             0x1b254
+    0x000000006ffffff9 (RELACOUNT)          1232
+    0x0000000000000000 (NULL)               0x0
+    """
+
+    section_regex = re.compile('\\s+\\w*\\s+\\((?P<key>\\w+)\\)\\s+(?P<value>.*)')
+
+    def __init__(self, path):
+        self.path = path
+        self.sections = []
+        self.parsing_failed = False
+        self.parse()
+        self.parse_meta()
+
+    def parse(self):
+        r = subprocess.run(['readelf', '-W', '-d', self.path], encoding='utf8',
+                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        if r.returncode != 0:
+            self.parsing_failed = True
+            return
+
+        lines = [l for l in r.stdout.strip().split('\n')]
+        needle = 'Dynamic section at offset'
+
+        lines = list(dropwhile(lambda x: needle not in x, lines))
+        # skip header
+        lines = lines[2:]
+        for line in lines:
+            r = self.section_regex.search(line)
+            self.sections.append(ElfDynamicSection(r.group('key'), r.group('value')))
+
+    def parse_meta(self):
+        self.soname = None
+        soname = self['SONAME']
+        if len(soname) == 1:
+            value = soname[0]
+            token = 'Library soname: ['
+            assert value.startswith(token)
+            assert value.endswith(']')
+            self.soname = value[len(token):-1]
+
+    def __getitem__(self, key):
+        return [x.value for x in self.sections if x.key == key]
 
 
 class ReadelfParser:
@@ -145,9 +232,18 @@ class ReadelfParser:
     in a structured format.
     """
 
-    def __init__(self, path):
-        self.section_info = ElfSectionInfo(path)
-        self.program_header_info = ElfProgramHeaderInfo(path)
+    so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
+
+    def __init__(self, pkgfile_path, path):
+        self.is_archive = path.endswith('.a')
+        self.is_shlib = self.so_regex.search(path)
+        self.is_debug = path.endswith('.debug')
+
+        self.section_info = ElfSectionInfo(pkgfile_path)
+        self.program_header_info = ElfProgramHeaderInfo(pkgfile_path)
+        self.dynamic_section_info = ElfDynamicSectionInfo(pkgfile_path)
 
     def parsing_failed(self):
-        return self.section_info.parsing_failed or self.program_header_info.parsing_failed
+        return (self.section_info.parsing_failed or
+                self.program_header_info.parsing_failed or
+                self.dynamic_section_info.parsing_failed)

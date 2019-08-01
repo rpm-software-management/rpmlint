@@ -934,11 +934,14 @@ class InstalledPkg(Pkg):
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
-    def __init__(self, name):
+    def __init__(self, name, files=None):
         self.name = str(name)
         self.arch = None
         self.current_linenum = None
         self.dirname = None
+
+        # files are dictionary where key is name of a file
+        self._files = {f.name: f for f in files} if files else {}
 
     def dirName(self):
         if not self.dirname:
@@ -949,6 +952,9 @@ class FakePkg(AbstractPkg):
     def cleanup(self):
         if self.dirname:
             getstatusoutput(('rm', '-rf', self.dirname))
+
+    def files(self):
+        return self._files
 
 
 # Class for files in packages
