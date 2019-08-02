@@ -12,6 +12,7 @@ options_preset = {
     'explain': False,
     'rpmfile': False,
     'rpmlintrc': False,
+    'installed': False,
 }
 
 basic_tests = [
@@ -107,6 +108,48 @@ def test_run_single(capsys, packages):
     linter.run()
     out, err = capsys.readouterr()
     assert 'E: no-signature' in out
+    assert '1 packages and 0 specfiles checked' in out
+    assert not err
+
+
+@pytest.mark.parametrize('packages', [Path('test/source/wrongsrc-0-0.src.rpm')])
+def test_run_installed(capsys, packages):
+    # load up 1 normal path file and 2 installed packages
+    additional_options = {
+        'rpmfile': [packages],
+        'installed': ['python3-rpm', 'rpm'],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert '3 packages and 0 specfiles checked' in out
+    assert not err
+
+
+def test_run_installed_not_present(capsys):
+    additional_options = {
+        'rpmfile': [],
+        'installed': ['non-existing-package'],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert '0 packages and 0 specfiles checked' in out
+    assert 'there is no installed rpm' in err
+    assert 'There are no files to process' in err
+
+
+def test_run_installed_and_no_files(capsys):
+    additional_options = {
+        'rpmfile': [],
+        'installed': ['python3-rpm'],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
     assert '1 packages and 0 specfiles checked' in out
     assert not err
 

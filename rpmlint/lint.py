@@ -5,7 +5,7 @@ from tempfile import gettempdir
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 from rpmlint.helpers import print_warning
-from rpmlint.pkg import FakePkg, Pkg
+from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
 
 
 class Lint(object):
@@ -43,6 +43,10 @@ class Lint(object):
         if self.options['explain']:
             self.print_explanation(self.options['explain'])
             return 0
+        # if there are installed arguments just load them up as extra
+        # items to the rpmfile option
+        if self.options['installed']:
+            self.validate_installed_packages(self._load_installed_rpms(self.options['installed']))
         # if no exclusive option is passed then just loop over all the
         # arguments that are supposed to be either rpm or spec files
         self.validate_files(self.options['rpmfile'])
@@ -64,13 +68,29 @@ class Lint(object):
             print(f'{e}:')
             print(self.output.get_description(e))
 
+    def _load_installed_rpms(self, packages):
+        existing_packages = []
+        for name in packages:
+            pkg = getInstalledPkgs(name)
+            if pkg:
+                existing_packages.extend(pkg)
+            else:
+                print_warning(f'(none): E: there is no installed rpm "{name}".')
+        return existing_packages
+
+    def validate_installed_packages(self, packages):
+        for pkg in packages:
+            self.run_checks(pkg)
+
     def validate_files(self, files):
         """
         Run all the check for passed file list
         """
         if not files:
-            print('There are no files to process nor additional arguments.', file=sys.stderr)
-            print('Nothing to do, aborting.', file=sys.stderr)
+            if self.packages_checked == 0:
+                # print warning only if we didn't process even installed files
+                print('There are no files to process nor additional arguments.', file=sys.stderr)
+                print('Nothing to do, aborting.', file=sys.stderr)
             return
         # check all elements if they are a folder or a file with proper suffix
         # and expand everything
@@ -98,21 +118,21 @@ class Lint(object):
             if pname.suffix == '.rpm' or pname.suffix == '.spm':
                 with Pkg(pname, self.config.configuration['ExtractDir']) as pkg:
                     self.run_checks(pkg)
-                    self.packages_checked += 1
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:
                     self.run_spec_checks(pkg)
-                    self.specfiles_checked += 1
         except Exception as e:
             print_warning(f'(none): E: while reading {pname}: {e}')
 
     def run_checks(self, pkg):
         for checker in self.checks:
             self.checks[checker].check(pkg)
+        self.packages_checked += 1
 
     def run_spec_checks(self, pkg):
         for checker in self.checks:
             self.checks[checker].check_spec(pkg)
+        self.specfiles_checked += 1
 
     def print_config(self):
         """
