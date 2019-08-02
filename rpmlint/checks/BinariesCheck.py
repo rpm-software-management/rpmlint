@@ -19,11 +19,6 @@ from rpmlint.lddparser import LddParser
 from rpmlint.readelfparser import ReadelfParser
 
 
-def create_regexp_call(call):
-    r = r'.*?\s+(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
-    return re.compile(r)
-
-
 def create_nonlibc_regexp_call(call):
     r = r'.*?\s+UND\s+(%s)\s?.*$' % call
     return re.compile(r)
@@ -35,10 +30,6 @@ class BinaryInfo(object):
     rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
-    setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
-    setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
-    setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
-    mktemp_call_regex = create_regexp_call('mktemp')
 
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
@@ -51,10 +42,6 @@ class BinaryInfo(object):
         self.forbidden_calls = []
         self.tail = ''
 
-        self.setgid = False
-        self.setuid = False
-        self.setgroups = False
-        self.mktemp = False
         self.forbidden_functions = self.config.configuration['WarnOnFunction']
         if self.forbidden_functions:
             for name, func in self.forbidden_functions.items():
@@ -96,18 +83,6 @@ class BinaryInfo(object):
                 if not r:
                     continue
                 line = r.group(1)
-
-                if self.mktemp_call_regex.search(line):
-                    self.mktemp = True
-
-                if self.setgid_call_regex.search(line):
-                    self.setgid = True
-
-                if self.setuid_call_regex.search(line):
-                    self.setuid = True
-
-                if self.setgroups_call_regex.search(line):
-                    self.setgroups = True
 
                 if self.forbidden_functions:
                     for r_name, func in self.forbidden_functions.items():
@@ -159,10 +134,20 @@ ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
 usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
 
+def create_regexp_call(call):
+    r = r'(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
+    return re.compile(r)
+
+
 class BinariesCheck(AbstractCheck):
 
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
+
+    setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
+    setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
+    setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
+    mktemp_call_regex = create_regexp_call('mktemp')
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -180,7 +165,8 @@ class BinariesCheck(AbstractCheck):
         self.check_functions = [self._check_lto_section,
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
-                                self._check_shared_library]
+                                self._check_shared_library,
+                                self._check_security_functions]
 
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, path):
@@ -255,6 +241,18 @@ class BinariesCheck(AbstractCheck):
             for dependency in self.ldd_parser.unused_dependencies:
                 self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
                                      path, dependency)
+
+    def _check_security_functions(self, pkg, path):
+        setgid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgid_call_regex))
+        setuid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setuid_call_regex))
+        setgroups = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgroups_call_regex))
+        mktemp = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.mktemp_call_regex))
+
+        if setgid and setuid and not setgroups:
+            self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid', path)
+
+        if mktemp:
+            self.output.add_info('E', pkg, 'call-to-mktemp', path)
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
@@ -439,13 +437,6 @@ class BinariesCheck(AbstractCheck):
                         else:
                             self.output.add_info('E', pkg, 'program-not-linked-against-libc',
                                                  fname)
-
-            if bin_info.setgid and bin_info.setuid and not bin_info.setgroups:
-                self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid',
-                                     fname)
-
-            if bin_info.mktemp:
-                self.output.add_info('E', pkg, 'call-to-mktemp', fname)
 
         if has_lib:
             for f in exec_files:
