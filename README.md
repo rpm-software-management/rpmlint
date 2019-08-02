@@ -95,7 +95,7 @@ in a long run.
 If you want to change configuration options or the list of checks you can
 use following locations:
 
-`/etc/rpmlint/*config`
+`/etc/xdg/rpmlint/*config`
 
 `$XDG_CONFIG_HOME/rpmlint/*config`
 
