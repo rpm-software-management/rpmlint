@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 import sys
 
+from rpmlint.helpers import print_warning
 from rpmlint.lint import Lint
 from rpmlint.rpmdiff import Rpmdiff
 from rpmlint.version import __version__
@@ -53,10 +54,11 @@ def process_diff_args(argv):
     options = parser.parse_args(args=argv)
     # the rpms must exist for us to do anything
     if not options.old_package.exists():
-        print(f"The file '{options.old_package}' does not exist")
+        print_warning(f"The file '{options.old_package}' does not exist")
         exit(2)
-    if not options.old_package.exists():
-        print(f"The file '{options.new_package}' does not exist")
+    if not options.new_package.exists():
+        print_warning(f"The file '{options.new_package}' does not exist")
+        exit(2)
 
     # convert options to dict
     options_dict = vars(options)
@@ -89,12 +91,12 @@ def process_lint_args(argv):
     # make sure config exist
     if options.config:
         if not options.config.exists():
-            print(f"User specified configuration '{options.config}' does not exist", file=sys.stderr)
+            print_warning(f"User specified configuration '{options.config}' does not exist")
             exit(2)
     # make sure rpmlintrc exists
     if options.rpmlintrc:
         if options.rpmlintrc.exists():
-            print(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist", file=sys.stderr)
+            print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
             exit(2)
     # validate all the rpmlfile options to be either file or folder
     f_path = []
@@ -111,7 +113,7 @@ def process_lint_args(argv):
 
         for path in p_path:
             if not path.exists():
-                print(f"The file or directory '{path}' does not exist", file=sys.stderr)
+                print_warning(f"The file or directory '{path}' does not exist")
                 invalid_path = True
         f_path += p_path
 

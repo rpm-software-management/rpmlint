@@ -1,5 +1,4 @@
 import importlib
-import sys
 from tempfile import gettempdir
 
 from rpmlint.config import Config
@@ -89,8 +88,8 @@ class Lint(object):
         if not files:
             if self.packages_checked == 0:
                 # print warning only if we didn't process even installed files
-                print('There are no files to process nor additional arguments.', file=sys.stderr)
-                print('Nothing to do, aborting.', file=sys.stderr)
+                print_warning('There are no files to process nor additional arguments.')
+                print_warning('Nothing to do, aborting.')
             return
         # check all elements if they are a folder or a file with proper suffix
         # and expand everything
