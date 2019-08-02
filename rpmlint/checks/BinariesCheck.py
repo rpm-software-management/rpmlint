@@ -186,10 +186,14 @@ class BinariesCheck(AbstractCheck):
     def _check_no_text_in_archive(self, pkg, path):
         if self.readelf_parser.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
+                code_in_text = False
                 for section in elf_file:
-                    if section.name == '.text' and section.size == 0:
-                        self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
-                        return
+                    if section.name.startswith('.text') and section.size > 0:
+                        code_in_text = True
+                        break
+                if not code_in_text:
+                    self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
+                    return
 
     # Check for LTO sections
     def _check_lto_section(self, pkg, path):
