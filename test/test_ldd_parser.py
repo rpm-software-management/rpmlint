@@ -41,6 +41,11 @@ def test_undefined_symbol():
     assert 'GSS_C_NT_HOSTBASED_SERVICE' in ldd.undefined_symbols
 
 
+def test_ldd_parser_failure():
+    ldd = lddparser('not-existing-file')
+    assert ldd.parsing_failed
+
+
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
