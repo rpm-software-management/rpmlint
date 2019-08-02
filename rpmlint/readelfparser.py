@@ -88,8 +88,7 @@ class ElfSectionInfo:
             self.parsing_failed = True
             return
 
-        lines = [l for l in r.stdout.split('\n')]
-
+        lines = r.stdout.splitlines()
         needle = 'Section Headers:'
 
         # archive files can contain multiple files
@@ -148,7 +147,7 @@ class ElfProgramHeaderInfo:
             self.parsing_failed = True
             return
 
-        lines = [l for l in r.stdout.split('\n')]
+        lines = r.stdout.splitlines()
         needle = 'Program Headers:'
 
         while len(lines) > 0:
@@ -213,7 +212,7 @@ class ElfDynamicSectionInfo:
             self.parsing_failed = True
             return
 
-        lines = [l for l in r.stdout.strip().split('\n')]
+        lines = r.stdout.splitlines()
         needle = 'Dynamic section at offset'
 
         lines = list(dropwhile(lambda x: needle not in x, lines))
@@ -261,7 +260,7 @@ class ElfSymbolTableInfo:
             self.parsing_failed = True
             return
 
-        lines = [l for l in r.stdout.strip().split('\n')]
+        lines = r.stdout.splitlines()
         for line in lines:
             r = self.section_regex.search(line)
             if r:
