@@ -269,7 +269,9 @@ class ElfSymbolTableInfo:
                                               r.group('visibility'), r.group('name')))
 
     def get_functions_for_regex(self, regex):
-        return [sym for sym in self.symbols if sym.type == 'FUNC' and re.search(sym.name, regex)]
+        for sym in self.symbols:
+            if sym.type == 'FUNC' and regex.search(sym.name):
+                yield sym
 
 
 class ReadelfParser:

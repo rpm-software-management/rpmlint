@@ -1,4 +1,5 @@
 import os
+import re
 
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
@@ -52,7 +53,7 @@ def test_simple_archive():
     assert sym1.type == 'FUNC'
     assert sym1.bind == 'GLOBAL'
     assert sym1.visibility == 'DEFAULT'
-    assert len(readelf.symbol_table_info.get_functions_for_regex('main.')) == 1
+    assert len(list(readelf.symbol_table_info.get_functions_for_regex(re.compile('mai.')))) == 1
 
 
 def test_program_header_parsing():
@@ -153,3 +154,19 @@ def test_invalid_ldconfig_symlink(binariescheck):
     test.run_elf_checks(fakepkg, get_full_path('libutil-2.29.so'), '/lib64/libutil-2.29.so')
     out = output.print_results(output.results)
     assert 'invalid-ldconfig-symlink /lib64/libutil-2.29.so' in out
+
+
+def test_call_mktemp(binariescheck):
+    output, test = binariescheck
+
+    test.run_elf_checks(FakePkg('fake'), get_full_path('call-mktemp'), '/bin/call-mktemp')
+    out = output.print_results(output.results)
+    assert 'E: call-to-mktemp /bin/call-mktemp' in out
+
+
+def test_call_setgroups(binariescheck):
+    output, test = binariescheck
+
+    test.run_elf_checks(FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
+    out = output.print_results(output.results)
+    assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
