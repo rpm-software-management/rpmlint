@@ -81,6 +81,12 @@ def test_lto_archive_text(binariescheck):
     assert 'E: lto-no-text-in-archive' in output.results[0]
 
 
+def test_lto_archive_text_function_sections(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
+    assert len(output.results) == 0
+
+
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
