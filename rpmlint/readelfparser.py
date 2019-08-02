@@ -30,6 +30,17 @@ class ElfDynamicSection:
         self.value = value
 
 
+class ElfSymbol:
+    """
+    A simple wrapper representing one ELF symbol.
+    """
+    def __init__(self, type, bind, visibility, name):
+        self.type = type
+        self.bind = bind
+        self.visibility = visibility
+        self.name = name
+
+
 class ElfSectionInfo:
     """
     Class contains information about ELF sections of an ELF file. The information
@@ -226,6 +237,41 @@ class ElfDynamicSectionInfo:
         return [x.value for x in self.sections if x.key == key]
 
 
+class ElfSymbolTableInfo:
+    """
+     7: 0000000000000000     0 SECTION LOCAL  DEFAULT    7
+     8: 0000000000000000     0 SECTION LOCAL  DEFAULT    8
+     9: 0000000000000000     0 SECTION LOCAL  DEFAULT    6
+    10: 0000000000000000    18 FUNC    GLOBAL DEFAULT    4 main
+    11: 0000000000000000    11 FUNC    GLOBAL DEFAULT    5 foo
+    """
+
+    section_regex = re.compile('\\s+[0-9]+:\\s\\w+\\s+(\\w+)\\s+(?P<type>\\w+)\\s+(?P<bind>\\w+)\\s+(?P<visibility>\\w+)\\s+\\w+\\s+(?P<name>\\S+)')
+
+    def __init__(self, path):
+        self.path = path
+        self.symbols = []
+        self.parsing_failed = False
+        self.parse()
+
+    def parse(self):
+        r = subprocess.run(['readelf', '-W', '-s', self.path], encoding='utf8',
+                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        if r.returncode != 0:
+            self.parsing_failed = True
+            return
+
+        lines = [l for l in r.stdout.strip().split('\n')]
+        for line in lines:
+            r = self.section_regex.search(line)
+            if r:
+                self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
+                                              r.group('visibility'), r.group('name')))
+
+    def get_functions_for_regex(self, regex):
+        return [sym for sym in self.symbols if sym.type == 'FUNC' and re.search(sym.name, regex)]
+
+
 class ReadelfParser:
     """
     Class contains all information obtained by readelf command
@@ -242,8 +288,10 @@ class ReadelfParser:
         self.section_info = ElfSectionInfo(pkgfile_path)
         self.program_header_info = ElfProgramHeaderInfo(pkgfile_path)
         self.dynamic_section_info = ElfDynamicSectionInfo(pkgfile_path)
+        self.symbol_table_info = ElfSymbolTableInfo(pkgfile_path)
 
     def parsing_failed(self):
         return (self.section_info.parsing_failed or
                 self.program_header_info.parsing_failed or
-                self.dynamic_section_info.parsing_failed)
+                self.dynamic_section_info.parsing_failed or
+                self.symbol_table_info.parsing_failed)
