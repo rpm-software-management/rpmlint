@@ -9,6 +9,7 @@
 
 import os
 import re
+from shlex import quote
 import stat
 import subprocess
 import sys
@@ -25,13 +26,6 @@ except ImportError:
     _magic = None
 import rpm
 from rpmlint.helpers import byte_to_string, print_warning
-
-# utilities
-try:
-    from shlex import quote as shquote
-except ImportError:
-    def shquote(s):
-        return '"%s"' % s
 
 
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
@@ -534,7 +528,7 @@ class Pkg(AbstractPkg):
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
                 'rpm2cpio %(f)s | (cd %(d)s; cpio -id); chmod -R +rX %(d)s' % \
-                {'f': shquote(str(self.filename)), 'd': shquote(str(self.dirname))}
+                {'f': quote(str(self.filename)), 'd': quote(str(self.dirname))}
             cmd = getstatusoutput(command_str, shell=True)
             self.extracted = True
             return cmd
