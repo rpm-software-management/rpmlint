@@ -10,6 +10,7 @@ TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
 TEST_LIST1 = testpath() / 'configs/testlists1.config'
 TEST_LIST2 = testpath() / 'configs/testlists2.config'
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
+TEST_BROKEN = testpath() / 'configs/broken.config'
 
 
 def test_printing(capsys):
@@ -32,6 +33,14 @@ def test_custom_config(capsys):
     out, err = capsys.readouterr()
     assert cfg.conf_files
     assert not err
+
+
+def test_broken_config(capsys):
+    cfg = Config(TEST_BROKEN)
+    out, err = capsys.readouterr()
+    assert 'error parsing configuration' in err
+    assert cfg.conf_files
+    assert len(cfg.conf_files) == 1
 
 
 def test_parsing():
