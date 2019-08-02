@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import rpm
 from rpmlint import pkg as Pkg
-from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -428,7 +428,7 @@ class SpecCheck(AbstractCheck):
                                                  conf)
 
             if current_section == 'changelog':
-                for match in macro_regex.findall(line):
+                for match in self.macro_regex.findall(line):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         self.output.add_info('W', pkg, 'macro-in-%changelog', match)
@@ -479,7 +479,7 @@ class SpecCheck(AbstractCheck):
             # Test if there are macros in comments
             if hashPos != -1 and \
                     (hashPos == 0 or line[hashPos - 1] in (' ', '\t')):
-                for match in macro_regex.findall(
+                for match in self.macro_regex.findall(
                         line[hashPos + 1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:

@@ -1,11 +1,10 @@
 import re
 
-# Note: do not add any capturing parentheses here
-macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
-
 
 class AbstractCheck(object):
     def __init__(self, config, output):
+        # Note: do not add any capturing parentheses here
+        self.macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
         self.config = config
         self.output = output
 

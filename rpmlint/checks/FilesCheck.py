@@ -13,7 +13,7 @@ import re
 import stat
 
 import rpm
-from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
 from rpmlint.pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
 
@@ -476,7 +476,7 @@ class FilesCheck(AbstractCheck):
             is_doc = f in doc_files
             nonexec_file = False
 
-            for match in macro_regex.findall(f):
+            for match in self.macro_regex.findall(f):
                 self.output.add_info('W', pkg, 'unexpanded-macro', f, match)
             if user not in self.standard_users:
                 self.output.add_info('W', pkg, 'non-standard-uid', f, user)

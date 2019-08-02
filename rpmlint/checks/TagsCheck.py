@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks import FilesCheck
-from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
 from rpmlint.spellcheck import Spellcheck
 
@@ -94,7 +94,7 @@ class TagsCheck(AbstractCheck):
         if not isinstance(value, (list, tuple)):
             value = [value]
         for val in value:
-            for match in macro_regex.findall(val):
+            for match in self.macro_regex.findall(val):
                 # Do not warn about %XX URL escapes
                 if is_url and re.match('^%[0-9A-F][0-9A-F]$', match, re.I):
                     continue
