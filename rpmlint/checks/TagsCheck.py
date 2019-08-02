@@ -358,8 +358,6 @@ class TagsCheck(AbstractCheck):
                             (self.config.configuration['InvalidURL'] and
                              self.invalid_url_regex.search(url)):
                         self.output.add_info('W', pkg, 'invalid-url', tag, url)
-                    else:
-                        self.check_url(pkg, tag, url)
                 elif tag == 'URL':
                     self.output.add_info('W', pkg, 'no-url-tag')
 
