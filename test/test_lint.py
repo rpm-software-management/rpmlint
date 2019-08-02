@@ -145,6 +145,25 @@ def test_run_full_specs(capsys, packages):
     assert not err
 
 
+@pytest.mark.parametrize('packages', [Path('test/spec')])
+def test_run_full_directory(capsys, packages):
+    assert packages.is_dir()
+    file_list = []
+    for item in packages.iterdir():
+        if item.is_file():
+            file_list.append(item)
+    number_of_pkgs = len(file_list)
+    additional_options = {
+        'rpmfile': [packages],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert f'0 packages and {number_of_pkgs} specfiles checked' in out
+    assert not err
+
+
 def test_run_empty(capsys):
     linter = Lint(options_preset)
     linter.run()

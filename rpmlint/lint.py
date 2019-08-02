@@ -72,8 +72,26 @@ class Lint(object):
             print('There are no files to process nor additional arguments.', file=sys.stderr)
             print('Nothing to do, aborting.', file=sys.stderr)
             return
-        for pkg in files:
+        # check all elements if they are a folder or a file with proper suffix
+        # and expand everything
+        packages = self._expand_filelist(files)
+        for pkg in packages:
             self.validate_file(pkg)
+
+    def _expand_filelist(self, files):
+        packages = []
+        for pkg in files:
+            if pkg.is_file() and self._check_valid_suffix(pkg):
+                packages.append(pkg)
+            elif pkg.is_dir():
+                packages.extend(self._expand_filelist(pkg.iterdir()))
+        return packages
+
+    @staticmethod
+    def _check_valid_suffix(filename):
+        if any(ext == filename.suffix for ext in ['.rpm', '.spm', '.spec']):
+            return True
+        return False
 
     def validate_file(self, pname):
         try:
