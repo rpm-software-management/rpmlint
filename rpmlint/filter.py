@@ -1,6 +1,10 @@
 from os.path import basename
+from pathlib import Path
 import re
 import textwrap
+
+from rpmlint.helpers import print_warning
+import toml
 
 
 class Filter(object):
@@ -24,14 +28,24 @@ class Filter(object):
         # How many bad hits we already collected while collecting issues
         self.score = 0
         # Dictionary containing mapped values of descriptions for the errors.
-        # This must get populated by the tests for each of the issues it finds.
-        # You can populate this by having conffile that generates the
-        # dictionary content for you, or you can just pass the dictionary
         self.error_details = {}
+        # Load it up with the toml descriptions
+        self.error_details.update(self._load_descriptions())
         # Counter of how many issues we encountered
         self.printed_messages = {'I': 0, 'W': 0, 'E': 0}
         # Messages
-        self.results = list()
+        self.results = []
+
+    @staticmethod
+    def _load_descriptions():
+        descriptions = {}
+        descr_folder = Path(__file__).parent / 'descriptions'
+        try:
+            description_files = sorted(descr_folder.glob('*.toml'))
+            descriptions = toml.load(description_files)
+        except toml.decoder.TomlDecodeError as terr:
+            print_warning(f'(none): W: unable to parse description files: {terr}')
+        return descriptions
 
     def add_info(self, level, package, reason, *details):
         """

@@ -70,6 +70,16 @@ in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     assert result.get_description('suse-other-error') == lorem_formated
 
 
+def test_description_from_toml(tmpdir):
+    """
+    Test if description loaded from toml shows up details
+    """
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    assert result.get_description('uncompressed-zip')
+    assert result.get_description('uncompressed-zip') == 'The zip file is not compressed.\n\n'
+
+
 def test_output(tmpdir):
     """
     Test the actual output of rpmlint on one file
