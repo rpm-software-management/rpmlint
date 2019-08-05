@@ -101,14 +101,14 @@ def test_lto_bytecode(binariescheck):
 def test_lto_archive_text(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-lto.a'), 'x.a')
-    assert len(output.results) == 1
-    assert 'E: lto-no-text-in-archive' in output.results[0]
+    out = output.print_results(output.results)
+    assert 'E: lto-no-text-in-archive' in out
 
 
 def test_lto_archive_text_function_sections(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
-    assert len(output.results) == 0
+    assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
 def test_executable_stack(binariescheck):
@@ -182,10 +182,14 @@ def test_call_setgroups(binariescheck):
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
 
 
-def test_rpath_check(binariescheck):
+def test_missing_dependecy(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('rpath-lib.so'), '/lib64/rpath-lib.so')
+    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
     out = output.print_results(output.results)
-    print(out)
-    assert 'E: binary-or-shlib-defines-rpath /lib64/rpath-lib.so /tmp/termcap.so.4' in out
+    assert 'E: statically-linked-binary' in out
+
+    test.is_shobj = True
+    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
+    out = output.print_results(output.results)
+    assert 'E: shared-lib-without-dependency-information' in out

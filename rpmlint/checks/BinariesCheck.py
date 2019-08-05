@@ -26,17 +26,12 @@ def create_nonlibc_regexp_call(call):
 
 class BinaryInfo(object):
 
-    needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
-    soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
 
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
-        self.needed = []
         self.config = config
         self.output = output
-        self.soname = False
-        self.exec_stack = False
         self.forbidden_calls = []
         self.tail = ''
 
@@ -57,16 +52,6 @@ class BinaryInfo(object):
             lines = res[1].splitlines()
 
             for line in lines:
-                r = self.needed_regex.search(line)
-                if r:
-                    self.needed.append(r.group(1))
-                    continue
-
-                r = self.soname_regex.search(line)
-                if r:
-                    self.soname = r.group(1)
-                    continue
-
                 if line.startswith('Symbol table'):
                     break
 
@@ -115,7 +100,6 @@ class BinaryInfo(object):
 
 numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile(r'[^.][0-9]')
-ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
 bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
 reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
@@ -135,6 +119,7 @@ class BinariesCheck(AbstractCheck):
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
+    ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
@@ -144,6 +129,7 @@ class BinariesCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.files = {}
+        self.is_shobj = False
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
@@ -159,7 +145,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_executable_stack,
                                 self._check_shared_library,
                                 self._check_security_functions,
-                                self._check_rpath]
+                                self._check_rpath,
+                                self._check_library_dependency]
 
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, path):
@@ -252,6 +239,38 @@ class BinariesCheck(AbstractCheck):
             if runpath in self.system_lib_paths or not self.usr_lib_regex.search(runpath):
                 self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', path, runpath)
                 return
+
+    def _check_library_dependency(self, pkg, path):
+        dyn_section = self.readelf_parser.dynamic_section_info
+        if not len(dyn_section.needed) and not (dyn_section.soname and
+                                                self.ldso_soname_regex.search(dyn_section.soname)):
+            if self.is_shobj:
+                self.output.add_info('E', pkg,
+                                     'shared-lib-without-dependency-information',
+                                     path)
+            else:
+                self.output.add_info('E', pkg, 'statically-linked-binary', path)
+
+        else:
+            # linked against libc ?
+            if 'libc.' not in dyn_section.runpath and \
+               (not dyn_section.soname or
+                ('libc.' not in dyn_section.soname and
+                 not self.ldso_soname_regex.search(dyn_section.soname))):
+
+                found_libc = False
+                for lib in dyn_section.needed:
+                    if 'libc.' in lib:
+                        found_libc = True
+                        break
+
+                if not found_libc:
+                    if self.is_shobj:
+                        self.output.add_info('E', pkg, 'library-not-linked-against-libc',
+                                             path)
+                    else:
+                        self.output.add_info('E', pkg, 'program-not-linked-against-libc',
+                                             path)
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
@@ -357,6 +376,10 @@ class BinariesCheck(AbstractCheck):
             if 'not stripped' in pkgfile.magic:
                 self.output.add_info('W', pkg, 'unstripped-binary-or-object', fname)
 
+            is_exec = 'executable' in pkgfile.magic
+            self.is_shobj = 'shared object' in pkgfile.magic
+            is_pie_exec = 'pie executable' in pkgfile.magic
+
             # run ELF checks
             self.run_elf_checks(pkg, pkgfile.path, fname)
 
@@ -370,14 +393,10 @@ class BinariesCheck(AbstractCheck):
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
 
-            is_exec = 'executable' in pkgfile.magic
-            is_shobj = 'shared object' in pkgfile.magic
-            is_pie_exec = 'pie executable' in pkgfile.magic
-
-            if not is_exec and not is_shobj:
+            if not is_exec and not self.is_shobj:
                 continue
 
-            if is_shobj and not is_exec and '.so' not in fname and \
+            if self.is_shobj and not is_exec and '.so' not in fname and \
                     bin_regex.search(fname):
                 # pkgfile.magic does not contain 'executable' for PIEs
                 is_exec = True
@@ -390,44 +409,13 @@ class BinariesCheck(AbstractCheck):
                 if ocaml_mixed_regex.search(bin_info.tail):
                     self.output.add_info('W', pkg, 'ocaml-mixed-executable', fname)
 
-                if ((not is_shobj and not is_pie_exec) and
+                if ((not self.is_shobj and not is_pie_exec) and
                         self.pie_exec_re and self.pie_exec_re.search(fname)):
                     self.output.add_info('E', pkg, 'non-position-independent-executable',
                                          fname)
 
             if bin_info.readelf_error:
                 continue
-
-            if not bin_info.needed and not (
-                    bin_info.soname and
-                    ldso_soname_regex.search(bin_info.soname)):
-                if is_shobj:
-                    self.output.add_info('E', pkg,
-                                         'shared-lib-without-dependency-information',
-                                         fname)
-                else:
-                    self.output.add_info('E', pkg, 'statically-linked-binary', fname)
-
-            else:
-                # linked against libc ?
-                if 'libc.' not in fname and \
-                   (not bin_info.soname or
-                    ('libc.' not in bin_info.soname and
-                     not ldso_soname_regex.search(bin_info.soname))):
-
-                    found_libc = False
-                    for lib in bin_info.needed:
-                        if 'libc.' in lib:
-                            found_libc = True
-                            break
-
-                    if not found_libc:
-                        if is_shobj:
-                            self.output.add_info('E', pkg, 'library-not-linked-against-libc',
-                                                 fname)
-                        else:
-                            self.output.add_info('E', pkg, 'program-not-linked-against-libc',
-                                                 fname)
 
         if has_lib:
             for f in exec_files:
