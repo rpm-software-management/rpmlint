@@ -17,16 +17,6 @@ from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
 
-numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
-versioned_dir_regex = re.compile(r'[^.][0-9]')
-so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
-reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
-srcname_regex = re.compile(r'(.*?)-[0-9]')
-invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
-usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
-
-
 def create_nonlibc_regexp_call(call):
     r = r'(%s)\s?.*$' % call
     return re.compile(r)
@@ -48,6 +38,15 @@ class BinariesCheck(AbstractCheck):
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     mktemp_call_regex = create_regexp_call('mktemp')
+
+    numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
+    versioned_dir_regex = re.compile(r'[^.][0-9]')
+    so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
+    bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
+    reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
+    srcname_regex = re.compile(r'(.*?)-[0-9]')
+    invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
+    usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -265,7 +264,7 @@ class BinariesCheck(AbstractCheck):
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
         if srpm:
-            res = srcname_regex.search(srpm)
+            res = self.srcname_regex.search(srpm)
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 
@@ -304,8 +303,8 @@ class BinariesCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
 
             if not is_binary:
-                if reference_regex.search(fname):
-                    lines = pkg.grep(invalid_dir_ref_regex, fname)
+                if self.reference_regex.search(fname):
+                    lines = pkg.grep(self.invalid_dir_ref_regex, fname)
                     if lines:
                         self.output.add_info('E', pkg, 'invalid-directory-reference', fname,
                                              '(line %s)' % ', '.join(lines))
@@ -327,7 +326,7 @@ class BinariesCheck(AbstractCheck):
             # arch dependent packages only from here on
 
             # in /usr/share ?
-            if fname.startswith('/usr/share/') and not usr_arch_share_regex.search(fname):
+            if fname.startswith('/usr/share/') and not self.usr_arch_share_regex.search(fname):
                 self.output.add_info('E', pkg, 'arch-dependent-file-in-usr-share', fname)
 
             # in /etc ?
@@ -359,13 +358,13 @@ class BinariesCheck(AbstractCheck):
                 continue
 
             if self.is_shobj and not self.is_exec and '.so' not in fname and \
-                    bin_regex.search(fname):
+                    self.bin_regex.search(fname):
                 # pkgfile.magic does not contain 'executable' for PIEs
                 self.is_exec = True
 
             if self.is_exec:
 
-                if bin_regex.search(fname):
+                if self.bin_regex.search(fname):
                     exec_files.append(fname)
 
                 if ((not self.is_shobj and not is_pie_exec) and
@@ -377,10 +376,10 @@ class BinariesCheck(AbstractCheck):
             for f in exec_files:
                 self.output.add_info('E', pkg, 'executable-in-library-package', f)
             for f in self.files:
-                res = numeric_dir_regex.search(f)
+                res = self.numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
-                if f not in exec_files and not so_regex.search(f) and \
-                        not versioned_dir_regex.search(fn):
+                if f not in exec_files and not self.so_regex.search(f) and \
+                        not self.versioned_dir_regex.search(fn):
                     self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
 
         if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
