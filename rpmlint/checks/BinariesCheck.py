@@ -6,7 +6,6 @@
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 
-import os
 from pathlib import Path
 import re
 import stat
@@ -14,9 +13,9 @@ import stat
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string
 from rpmlint.lddparser import LddParser
 from rpmlint.readelfparser import ReadelfParser
+from rpmlint.stringsparser import StringsParser
 
 
 def create_nonlibc_regexp_call(call):
@@ -33,7 +32,6 @@ class BinaryInfo(object):
         self.config = config
         self.output = output
         self.forbidden_calls = []
-        self.tail = ''
 
         self.forbidden_functions = self.config.configuration['WarnOnFunction']
         if self.forbidden_functions:
@@ -90,13 +88,6 @@ class BinaryInfo(object):
                 self.output.add_info('E', pkg, 'binaryinfo-readelf-failed',
                                      fname, re.sub('\n.*', '', res[1]))
 
-        try:
-            with open(path, 'rb') as fobj:
-                fobj.seek(-12, os.SEEK_END)
-                self.tail = byte_to_string(fobj.read())
-        except Exception as e:
-            self.output.add_info('W', pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
-
 
 numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
 versioned_dir_regex = re.compile(r'[^.][0-9]')
@@ -105,7 +96,6 @@ bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
 reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
 srcname_regex = re.compile(r'(.*?)-[0-9]')
 invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
-ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
 usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
 
@@ -120,6 +110,7 @@ class BinariesCheck(AbstractCheck):
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
     ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
+    ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
 
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
@@ -129,6 +120,7 @@ class BinariesCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.files = {}
+        self.is_exec = False
         self.is_shobj = False
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
@@ -146,7 +138,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_shared_library,
                                 self._check_security_functions,
                                 self._check_rpath,
-                                self._check_library_dependency]
+                                self._check_library_dependency,
+                                self._check_ocaml_mixed]
 
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, path):
@@ -272,6 +265,11 @@ class BinariesCheck(AbstractCheck):
                         self.output.add_info('E', pkg, 'program-not-linked-against-libc',
                                              path)
 
+    def _check_ocaml_mixed(self, pkg, path):
+        strings = self.strings_parser.strings
+        if len(strings) and self.ocaml_mixed_regex.search(strings[-1]):
+            self.output.add_info('W', pkg, 'ocaml-mixed-executable', path)
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         if self.readelf_parser.parsing_failed():
@@ -283,6 +281,11 @@ class BinariesCheck(AbstractCheck):
             if self.ldd_parser.parsing_failed:
                 self.output.add_info('E', pkg, 'binaryinfo-ldd-failed', path)
                 return
+
+        self.strings_parser = StringsParser(pkgfile_path)
+        if self.strings_parser.parsing_failed:
+            self.output.add_info('E', pkg, 'binaryinfo-strings-failed', path)
+            return
 
         for fn in self.check_functions:
             fn(pkg, path)
@@ -376,7 +379,7 @@ class BinariesCheck(AbstractCheck):
             if 'not stripped' in pkgfile.magic:
                 self.output.add_info('W', pkg, 'unstripped-binary-or-object', fname)
 
-            is_exec = 'executable' in pkgfile.magic
+            self.is_exec = 'executable' in pkgfile.magic
             self.is_shobj = 'shared object' in pkgfile.magic
             is_pie_exec = 'pie executable' in pkgfile.magic
 
@@ -393,21 +396,18 @@ class BinariesCheck(AbstractCheck):
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
 
-            if not is_exec and not self.is_shobj:
+            if not self.is_exec and not self.is_shobj:
                 continue
 
-            if self.is_shobj and not is_exec and '.so' not in fname and \
+            if self.is_shobj and not self.is_exec and '.so' not in fname and \
                     bin_regex.search(fname):
                 # pkgfile.magic does not contain 'executable' for PIEs
-                is_exec = True
+                self.is_exec = True
 
-            if is_exec:
+            if self.is_exec:
 
                 if bin_regex.search(fname):
                     exec_files.append(fname)
-
-                if ocaml_mixed_regex.search(bin_info.tail):
-                    self.output.add_info('W', pkg, 'ocaml-mixed-executable', fname)
 
                 if ((not self.is_shobj and not is_pie_exec) and
                         self.pie_exec_re and self.pie_exec_re.search(fname)):
