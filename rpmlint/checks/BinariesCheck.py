@@ -27,14 +27,12 @@ def create_nonlibc_regexp_call(call):
 class BinaryInfo(object):
 
     needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
-    rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
     soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
     call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
 
     def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
         self.readelf_error = False
         self.needed = []
-        self.rpath = []
         self.config = config
         self.output = output
         self.soname = False
@@ -62,12 +60,6 @@ class BinaryInfo(object):
                 r = self.needed_regex.search(line)
                 if r:
                     self.needed.append(r.group(1))
-                    continue
-
-                r = self.rpath_regex.search(line)
-                if r:
-                    for p in r.group(1).split(':'):
-                        self.rpath.append(p)
                     continue
 
                 r = self.soname_regex.search(line)
@@ -125,7 +117,6 @@ numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz
 versioned_dir_regex = re.compile(r'[^.][0-9]')
 ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
 bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
 reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
 srcname_regex = re.compile(r'(.*?)-[0-9]')
@@ -143,6 +134,7 @@ class BinariesCheck(AbstractCheck):
 
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
+    usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
 
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
@@ -166,7 +158,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
-                                self._check_security_functions]
+                                self._check_security_functions,
+                                self._check_rpath]
 
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, path):
@@ -254,6 +247,12 @@ class BinariesCheck(AbstractCheck):
         if mktemp:
             self.output.add_info('E', pkg, 'call-to-mktemp', path)
 
+    def _check_rpath(self, pkg, path):
+        for runpath in self.readelf_parser.dynamic_section_info.runpath:
+            if runpath in self.system_lib_paths or not self.usr_lib_regex.search(runpath):
+                self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', path, runpath)
+                return
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         if self.readelf_parser.parsing_failed():
@@ -287,7 +286,7 @@ class BinariesCheck(AbstractCheck):
 
         for fname, pkgfile in self.files.items():
 
-            if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
+            if not stat.S_ISDIR(pkgfile.mode) and self.usr_lib_regex.search(fname):
                 has_usr_lib_file = True
                 if not binary_in_usr_lib and \
                         self.usr_lib_exception_regex.search(fname):
@@ -331,7 +330,7 @@ class BinariesCheck(AbstractCheck):
             binary = True
 
             if has_usr_lib_file and not binary_in_usr_lib and \
-                    usr_lib_regex.search(fname):
+                    self.usr_lib_regex.search(fname):
                 binary_in_usr_lib = True
 
             if pkg.arch == 'noarch':
@@ -370,14 +369,6 @@ class BinariesCheck(AbstractCheck):
 
             for ec in bin_info.forbidden_calls:
                 self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
-
-            # rpath ?
-            if bin_info.rpath:
-                for p in bin_info.rpath:
-                    if p in self.system_lib_paths or not usr_lib_regex.search(p):
-                        self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath',
-                                             fname, bin_info.rpath)
-                        break
 
             is_exec = 'executable' in pkgfile.magic
             is_shobj = 'shared object' in pkgfile.magic

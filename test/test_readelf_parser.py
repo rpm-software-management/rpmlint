@@ -78,6 +78,16 @@ def test_dynamic_section_parsing():
     assert readelf.dynamic_section_info['SYMTAB'] == ['0x4c8']
     assert readelf.dynamic_section_info['NULL'] == ['0x0']
     assert readelf.dynamic_section_info.soname == 'libutil.so.1'
+    assert len(readelf.dynamic_section_info.needed) == 1
+    assert readelf.dynamic_section_info.needed[0] == 'libc.so.6'
+
+
+def test_rpath():
+    readelf = readelfparser('rpath-lib.so', '/lib64/rpath-lib.so')
+    assert readelf.is_shlib
+    assert not readelf.is_archive
+    assert len(readelf.dynamic_section_info.runpath) == 1
+    assert '/tmp/termcap.so.4' in readelf.dynamic_section_info.runpath
 
 
 def test_lto_bytecode(binariescheck):
@@ -170,3 +180,12 @@ def test_call_setgroups(binariescheck):
     test.run_elf_checks(FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
     out = output.print_results(output.results)
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
+
+
+def test_rpath_check(binariescheck):
+    output, test = binariescheck
+
+    test.run_elf_checks(FakePkg('fake'), get_full_path('rpath-lib.so'), '/lib64/rpath-lib.so')
+    out = output.print_results(output.results)
+    print(out)
+    assert 'E: binary-or-shlib-defines-rpath /lib64/rpath-lib.so /tmp/termcap.so.4' in out
