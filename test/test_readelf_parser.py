@@ -78,6 +78,16 @@ def test_dynamic_section_parsing():
     assert readelf.dynamic_section_info['SYMTAB'] == ['0x4c8']
     assert readelf.dynamic_section_info['NULL'] == ['0x0']
     assert readelf.dynamic_section_info.soname == 'libutil.so.1'
+    assert len(readelf.dynamic_section_info.needed) == 1
+    assert readelf.dynamic_section_info.needed[0] == 'libc.so.6'
+
+
+def test_rpath():
+    readelf = readelfparser('rpath-lib.so', '/lib64/rpath-lib.so')
+    assert readelf.is_shlib
+    assert not readelf.is_archive
+    assert len(readelf.dynamic_section_info.runpath) == 1
+    assert '/tmp/termcap.so.4' in readelf.dynamic_section_info.runpath
 
 
 def test_lto_bytecode(binariescheck):
@@ -91,14 +101,14 @@ def test_lto_bytecode(binariescheck):
 def test_lto_archive_text(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-lto.a'), 'x.a')
-    assert len(output.results) == 1
-    assert 'E: lto-no-text-in-archive' in output.results[0]
+    out = output.print_results(output.results)
+    assert 'E: lto-no-text-in-archive' in out
 
 
 def test_lto_archive_text_function_sections(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
-    assert len(output.results) == 0
+    assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
 def test_executable_stack(binariescheck):
@@ -170,3 +180,16 @@ def test_call_setgroups(binariescheck):
     test.run_elf_checks(FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
     out = output.print_results(output.results)
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
+
+
+def test_missing_dependecy(binariescheck):
+    output, test = binariescheck
+
+    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
+    out = output.print_results(output.results)
+    assert 'E: statically-linked-binary' in out
+
+    test.is_shobj = True
+    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
+    out = output.print_results(output.results)
+    assert 'E: shared-lib-without-dependency-information' in out

@@ -6,132 +6,20 @@
 # Purpose       : check binary files in a binary rpm package.
 #############################################################################
 
-import os
 from pathlib import Path
 import re
 import stat
 
 import rpm
-from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string
 from rpmlint.lddparser import LddParser
 from rpmlint.readelfparser import ReadelfParser
+from rpmlint.stringsparser import StringsParser
 
 
 def create_nonlibc_regexp_call(call):
-    r = r'.*?\s+UND\s+(%s)\s?.*$' % call
+    r = r'(%s)\s?.*$' % call
     return re.compile(r)
-
-
-class BinaryInfo(object):
-
-    needed_regex = re.compile(r'\s+\(NEEDED\).*\[(\S+)\]')
-    rpath_regex = re.compile(r'\s+\(RPATH\).*\[(\S+)\]')
-    soname_regex = re.compile(r'\s+\(SONAME\).*\[(\S+)\]')
-    call_regex = re.compile(r'\s0\s+FUNC\s+(.*)')
-
-    def __init__(self, config, output, pkg, path, fname, is_ar, is_shlib):
-        self.readelf_error = False
-        self.needed = []
-        self.rpath = []
-        self.config = config
-        self.output = output
-        self.soname = False
-        self.exec_stack = False
-        self.forbidden_calls = []
-        self.tail = ''
-
-        self.forbidden_functions = self.config.configuration['WarnOnFunction']
-        if self.forbidden_functions:
-            for name, func in self.forbidden_functions.items():
-                # precompile regexps
-                f_name = func['f_name']
-                func['f_regex'] = create_nonlibc_regexp_call(f_name)
-                if 'good_param' in func and func['good_param']:
-                    func['waiver_regex'] = re.compile(func['good_param'])
-                # register descriptions
-                self.output.error_details.update({name: func['description']})
-
-        res = Pkg.getstatusoutput(
-            ('readelf', '-W', '-S', '-l', '-d', '-s', path))
-        if not res[0]:
-            lines = res[1].splitlines()
-
-            for line in lines:
-                r = self.needed_regex.search(line)
-                if r:
-                    self.needed.append(r.group(1))
-                    continue
-
-                r = self.rpath_regex.search(line)
-                if r:
-                    for p in r.group(1).split(':'):
-                        self.rpath.append(p)
-                    continue
-
-                r = self.soname_regex.search(line)
-                if r:
-                    self.soname = r.group(1)
-                    continue
-
-                if line.startswith('Symbol table'):
-                    break
-
-            for line in lines:
-                r = self.call_regex.search(line)
-                if not r:
-                    continue
-                line = r.group(1)
-
-                if self.forbidden_functions:
-                    for r_name, func in self.forbidden_functions.items():
-                        ret = func['f_regex'].search(line)
-                        if ret:
-                            self.forbidden_calls.append(r_name)
-
-            # check if we don't have a string that will automatically
-            # waive the presence of a forbidden call
-            if self.forbidden_calls:
-                res = Pkg.getstatusoutput(('strings', path))
-                if not res[0]:
-                    for line in res[1].splitlines():
-                        # as we need to remove elements, iterate backwards
-                        for i in range(len(self.forbidden_calls) - 1, -1, -1):
-                            func = self.forbidden_calls[i]
-                            f = self.forbidden_functions[func]
-                            if 'waiver_regex' not in f:
-                                continue
-                            r = f['waiver_regex'].search(line)
-                            if r:
-                                del self.forbidden_calls[i]
-        else:
-            self.readelf_error = True
-            # Go and others are producing ar archives that don't have ELF
-            # headers, so don't complain about it
-            if not is_ar:
-                self.output.add_info('E', pkg, 'binaryinfo-readelf-failed',
-                                     fname, re.sub('\n.*', '', res[1]))
-
-        try:
-            with open(path, 'rb') as fobj:
-                fobj.seek(-12, os.SEEK_END)
-                self.tail = byte_to_string(fobj.read())
-        except Exception as e:
-            self.output.add_info('W', pkg, 'binaryinfo-tail-failed %s: %s' % (fname, e))
-
-
-numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
-versioned_dir_regex = re.compile(r'[^.][0-9]')
-ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
-so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
-usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
-bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
-reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
-srcname_regex = re.compile(r'(.*?)-[0-9]')
-invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
-ocaml_mixed_regex = re.compile(r'^Caml1999X0\d\d$')
-usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
 
 def create_regexp_call(call):
@@ -143,15 +31,28 @@ class BinariesCheck(AbstractCheck):
 
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
+    usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
+    ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 
     setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
     setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
     setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
     mktemp_call_regex = create_regexp_call('mktemp')
 
+    numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
+    versioned_dir_regex = re.compile(r'[^.][0-9]')
+    so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
+    bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
+    reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
+    srcname_regex = re.compile(r'(.*?)-[0-9]')
+    invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
+    usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.files = {}
+        self.is_exec = False
+        self.is_shobj = False
         # add the dictionary content
         self.output.error_details.update(binaries_details_dict)
         self.system_lib_paths = config.configuration['SystemLibPaths']
@@ -166,10 +67,13 @@ class BinariesCheck(AbstractCheck):
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
-                                self._check_security_functions]
+                                self._check_security_functions,
+                                self._check_rpath,
+                                self._check_library_dependency,
+                                self._check_forbidden_functions]
 
     # For an archive, test if any .text sections is empty
-    def _check_no_text_in_archive(self, pkg, path):
+    def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
         if self.readelf_parser.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 code_in_text = False
@@ -182,14 +86,14 @@ class BinariesCheck(AbstractCheck):
                     return
 
     # Check for LTO sections
-    def _check_lto_section(self, pkg, path):
+    def _check_lto_section(self, pkg, pkgfile_path, path):
         for elf_file in self.readelf_parser.section_info.elf_files:
             for section in elf_file:
                 if '.gnu.lto_.' in section.name:
                     self.output.add_info('E', pkg, 'lto-bytecode', path)
                     return
 
-    def _check_executable_stack(self, pkg, path):
+    def _check_executable_stack(self, pkg, pkgfile_path, path):
         if not self.readelf_parser.is_archive:
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if len(stack_headers) == 0:
@@ -211,7 +115,7 @@ class BinariesCheck(AbstractCheck):
             if path.name.startswith('lib') or path.name.startswith('ld-'):
                 self.output.add_info('E', pkg, 'no-ldconfig-symlink', file_path)
 
-    def _check_shared_library(self, pkg, path):
+    def _check_shared_library(self, pkg, pkgfile_path, path):
         if not self.readelf_parser.is_shlib:
             return
         soname = self.readelf_parser.dynamic_section_info.soname
@@ -242,7 +146,7 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
                                      path, dependency)
 
-    def _check_security_functions(self, pkg, path):
+    def _check_security_functions(self, pkg, pkgfile_path, path):
         setgid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgid_call_regex))
         setuid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setuid_call_regex))
         setgroups = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgroups_call_regex))
@@ -253,6 +157,85 @@ class BinariesCheck(AbstractCheck):
 
         if mktemp:
             self.output.add_info('E', pkg, 'call-to-mktemp', path)
+
+    def _check_rpath(self, pkg, pkgfile_path, path):
+        for runpath in self.readelf_parser.dynamic_section_info.runpath:
+            if runpath in self.system_lib_paths or not self.usr_lib_regex.search(runpath):
+                self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', path, runpath)
+                return
+
+    def _check_library_dependency(self, pkg, pkgfile_path, path):
+        dyn_section = self.readelf_parser.dynamic_section_info
+        if not len(dyn_section.needed) and not (dyn_section.soname and
+                                                self.ldso_soname_regex.search(dyn_section.soname)):
+            if self.is_shobj:
+                self.output.add_info('E', pkg,
+                                     'shared-lib-without-dependency-information',
+                                     path)
+            else:
+                self.output.add_info('E', pkg, 'statically-linked-binary', path)
+
+        else:
+            # linked against libc ?
+            if 'libc.' not in dyn_section.runpath and \
+               (not dyn_section.soname or
+                ('libc.' not in dyn_section.soname and
+                 not self.ldso_soname_regex.search(dyn_section.soname))):
+
+                found_libc = False
+                for lib in dyn_section.needed:
+                    if 'libc.' in lib:
+                        found_libc = True
+                        break
+
+                if not found_libc:
+                    if self.is_shobj:
+                        self.output.add_info('E', pkg, 'library-not-linked-against-libc',
+                                             path)
+                    else:
+                        self.output.add_info('E', pkg, 'program-not-linked-against-libc',
+                                             path)
+
+    def _check_forbidden_functions(self, pkg, pkgfile_path, path):
+        forbidden_functions = self.config.configuration['WarnOnFunction']
+        if forbidden_functions:
+            for name, func in forbidden_functions.items():
+                # precompile regexps
+                f_name = func['f_name']
+                func['f_regex'] = create_nonlibc_regexp_call(f_name)
+                if 'good_param' in func and func['good_param']:
+                    func['waiver_regex'] = re.compile(func['good_param'])
+                # register descriptions
+                self.output.error_details.update({name: func['description']})
+
+        forbidden_calls = []
+        for r_name, func in forbidden_functions.items():
+            print(func['f_regex'])
+            if any(self.readelf_parser.symbol_table_info.get_functions_for_regex(func['f_regex'])):
+                forbidden_calls.append(r_name)
+
+        if len(forbidden_calls) == 0:
+            return
+
+        strings_parser = StringsParser(pkgfile_path)
+        if strings_parser.parsing_failed:
+            self.output.add_info('E', pkg, 'binaryinfo-strings-failed', path)
+            return
+
+        forbidden_functions_filtered = []
+
+        for fn in forbidden_calls:
+            f = forbidden_functions[fn]
+            if 'waiver_regex' not in f:
+                forbidden_functions_filtered.append(fn)
+                continue
+
+            waiver = any(map(lambda string: f['waiver_regex'].search(string), strings_parser.strings))
+            if not waiver:
+                forbidden_functions_filtered.append(fn)
+
+        for fn in forbidden_functions_filtered:
+            self.output.add_info('W', pkg, fn, path, forbidden_functions[fn]['f_name'])
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
@@ -267,7 +250,7 @@ class BinariesCheck(AbstractCheck):
                 return
 
         for fn in self.check_functions:
-            fn(pkg, path)
+            fn(pkg, pkgfile_path, path)
 
     def check_binary(self, pkg):
         self.files = pkg.files()
@@ -281,13 +264,13 @@ class BinariesCheck(AbstractCheck):
         multi_pkg = False
         srpm = pkg[rpm.RPMTAG_SOURCERPM]
         if srpm:
-            res = srcname_regex.search(srpm)
+            res = self.srcname_regex.search(srpm)
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 
         for fname, pkgfile in self.files.items():
 
-            if not stat.S_ISDIR(pkgfile.mode) and usr_lib_regex.search(fname):
+            if not stat.S_ISDIR(pkgfile.mode) and self.usr_lib_regex.search(fname):
                 has_usr_lib_file = True
                 if not binary_in_usr_lib and \
                         self.usr_lib_exception_regex.search(fname):
@@ -320,8 +303,8 @@ class BinariesCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
 
             if not is_binary:
-                if reference_regex.search(fname):
-                    lines = pkg.grep(invalid_dir_ref_regex, fname)
+                if self.reference_regex.search(fname):
+                    lines = pkg.grep(self.invalid_dir_ref_regex, fname)
                     if lines:
                         self.output.add_info('E', pkg, 'invalid-directory-reference', fname,
                                              '(line %s)' % ', '.join(lines))
@@ -331,7 +314,7 @@ class BinariesCheck(AbstractCheck):
             binary = True
 
             if has_usr_lib_file and not binary_in_usr_lib and \
-                    usr_lib_regex.search(fname):
+                    self.usr_lib_regex.search(fname):
                 binary_in_usr_lib = True
 
             if pkg.arch == 'noarch':
@@ -343,7 +326,7 @@ class BinariesCheck(AbstractCheck):
             # arch dependent packages only from here on
 
             # in /usr/share ?
-            if fname.startswith('/usr/share/') and not usr_arch_share_regex.search(fname):
+            if fname.startswith('/usr/share/') and not self.usr_arch_share_regex.search(fname):
                 self.output.add_info('E', pkg, 'arch-dependent-file-in-usr-share', fname)
 
             # in /etc ?
@@ -358,94 +341,45 @@ class BinariesCheck(AbstractCheck):
             if 'not stripped' in pkgfile.magic:
                 self.output.add_info('W', pkg, 'unstripped-binary-or-object', fname)
 
+            self.is_exec = 'executable' in pkgfile.magic
+            self.is_shobj = 'shared object' in pkgfile.magic
+            is_pie_exec = 'pie executable' in pkgfile.magic
+
             # run ELF checks
             self.run_elf_checks(pkg, pkgfile.path, fname)
 
             # inspect binary file
             is_shlib = self.readelf_parser.is_shlib
-            bin_info = BinaryInfo(self.config, self.output, pkg, pkgfile.path, fname, is_ar, is_shlib)
 
             if is_shlib:
                 has_lib = True
 
-            for ec in bin_info.forbidden_calls:
-                self.output.add_info('W', pkg, ec, fname, bin_info.forbidden_functions[ec]['f_name'])
-
-            # rpath ?
-            if bin_info.rpath:
-                for p in bin_info.rpath:
-                    if p in self.system_lib_paths or not usr_lib_regex.search(p):
-                        self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath',
-                                             fname, bin_info.rpath)
-                        break
-
-            is_exec = 'executable' in pkgfile.magic
-            is_shobj = 'shared object' in pkgfile.magic
-            is_pie_exec = 'pie executable' in pkgfile.magic
-
-            if not is_exec and not is_shobj:
+            if not self.is_exec and not self.is_shobj:
                 continue
 
-            if is_shobj and not is_exec and '.so' not in fname and \
-                    bin_regex.search(fname):
+            if self.is_shobj and not self.is_exec and '.so' not in fname and \
+                    self.bin_regex.search(fname):
                 # pkgfile.magic does not contain 'executable' for PIEs
-                is_exec = True
+                self.is_exec = True
 
-            if is_exec:
+            if self.is_exec:
 
-                if bin_regex.search(fname):
+                if self.bin_regex.search(fname):
                     exec_files.append(fname)
 
-                if ocaml_mixed_regex.search(bin_info.tail):
-                    self.output.add_info('W', pkg, 'ocaml-mixed-executable', fname)
-
-                if ((not is_shobj and not is_pie_exec) and
+                if ((not self.is_shobj and not is_pie_exec) and
                         self.pie_exec_re and self.pie_exec_re.search(fname)):
                     self.output.add_info('E', pkg, 'non-position-independent-executable',
                                          fname)
-
-            if bin_info.readelf_error:
-                continue
-
-            if not bin_info.needed and not (
-                    bin_info.soname and
-                    ldso_soname_regex.search(bin_info.soname)):
-                if is_shobj:
-                    self.output.add_info('E', pkg,
-                                         'shared-lib-without-dependency-information',
-                                         fname)
-                else:
-                    self.output.add_info('E', pkg, 'statically-linked-binary', fname)
-
-            else:
-                # linked against libc ?
-                if 'libc.' not in fname and \
-                   (not bin_info.soname or
-                    ('libc.' not in bin_info.soname and
-                     not ldso_soname_regex.search(bin_info.soname))):
-
-                    found_libc = False
-                    for lib in bin_info.needed:
-                        if 'libc.' in lib:
-                            found_libc = True
-                            break
-
-                    if not found_libc:
-                        if is_shobj:
-                            self.output.add_info('E', pkg, 'library-not-linked-against-libc',
-                                                 fname)
-                        else:
-                            self.output.add_info('E', pkg, 'program-not-linked-against-libc',
-                                                 fname)
 
         if has_lib:
             for f in exec_files:
                 self.output.add_info('E', pkg, 'executable-in-library-package', f)
             for f in self.files:
-                res = numeric_dir_regex.search(f)
+                res = self.numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
-                if f not in exec_files and not so_regex.search(f) and \
-                        not versioned_dir_regex.search(fn):
+                if f not in exec_files and not self.so_regex.search(f) and \
+                        not self.versioned_dir_regex.search(fn):
                     self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
 
         if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
@@ -580,15 +514,6 @@ don\'t define a proper .note.GNU-stack section.""",
 """The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
 make the stack executable.  Usual suspects include use of a non-GNU linker or
 an old GNU linker version.""",
-
-'ocaml-mixed-executable':
-"""Executables built with ocamlc -custom are deprecated.  Packagers should ask
-upstream maintainers to build these executables without the -custom option.  If
-this cannot be changed and the executable needs to be packaged in its current
-form, make sure that rpmbuild does not strip it during the build, and on setups
-that use prelink, make sure that prelink does not strip it either, usually by
-placing a blacklist file in /etc/prelink.conf.d.  For more information, see
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=256900#49""",
 
 'non-position-independent-executable':
 """This executable must be position independent.  Check that it is built with

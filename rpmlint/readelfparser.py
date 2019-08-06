@@ -197,6 +197,9 @@ class ElfDynamicSectionInfo:
     """
 
     section_regex = re.compile('\\s+\\w*\\s+\\((?P<key>\\w+)\\)\\s+(?P<value>.*)')
+    soname_regex = re.compile('Library soname: \\[(?P<soname>[^\\]]+)\\]')
+    needed_regex = re.compile('Shared library: \\[(?P<library>[^\\]]+)\\]')
+    rpath_regex = re.compile('Library runpath: \\[(?P<path>[^\\]]+)\\]')
 
     def __init__(self, path):
         self.path = path
@@ -226,11 +229,21 @@ class ElfDynamicSectionInfo:
         self.soname = None
         soname = self['SONAME']
         if len(soname) == 1:
-            value = soname[0]
-            token = 'Library soname: ['
-            assert value.startswith(token)
-            assert value.endswith(']')
-            self.soname = value[len(token):-1]
+            r = self.soname_regex.search(soname[0])
+            if r:
+                self.soname = r.group('soname')
+
+        self.needed = []
+        for line in self['NEEDED']:
+            r = self.needed_regex.search(line)
+            if r:
+                self.needed.append(r.group('library'))
+
+        self.runpath = []
+        for line in self['RUNPATH']:
+            r = self.rpath_regex.search(line)
+            if r:
+                self.runpath.append(r.group('path'))
 
     def __getitem__(self, key):
         return [x.value for x in self.sections if x.key == key]
