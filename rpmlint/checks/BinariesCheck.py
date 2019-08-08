@@ -78,7 +78,9 @@ class BinariesCheck(AbstractCheck):
             for elf_file in self.readelf_parser.section_info.elf_files:
                 code_in_text = False
                 for section in elf_file:
-                    if section.name.startswith('.text') and section.size > 0:
+                    sn = section.name
+                    if ((sn == '.init_array' or sn == '.fini_array' or sn.startswith('.text')) and
+                            section.size > 0):
                         code_in_text = True
                         break
                 if not code_in_text:

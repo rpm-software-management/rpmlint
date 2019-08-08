@@ -111,6 +111,12 @@ def test_lto_archive_text_function_sections(binariescheck):
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
+def test_lto_archive_init_array(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('libbsd-ctor.a'), 'x.a')
+    assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
+
+
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
