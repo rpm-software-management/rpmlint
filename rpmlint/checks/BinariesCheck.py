@@ -1,11 +1,3 @@
-#############################################################################
-# File          : BinariesCheck.py
-# Package       : rpmlint
-# Author        : Frederic Lepied
-# Created on    : Tue Sep 28 07:01:42 1999
-# Purpose       : check binary files in a binary rpm package.
-#############################################################################
-
 from pathlib import Path
 import re
 import stat
@@ -17,27 +9,12 @@ from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
 
-def create_nonlibc_regexp_call(call):
-    r = r'(%s)\s?.*$' % call
-    return re.compile(r)
-
-
-def create_regexp_call(call):
-    r = r'(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
-    return re.compile(r)
-
-
 class BinariesCheck(AbstractCheck):
 
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
     ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
-
-    setgid_call_regex = create_regexp_call(r'set(?:res|e)?gid')
-    setuid_call_regex = create_regexp_call(r'set(?:res|e)?uid')
-    setgroups_call_regex = create_regexp_call(r'(?:ini|se)tgroups')
-    mktemp_call_regex = create_regexp_call('mktemp')
 
     numeric_dir_regex = re.compile(r'/usr(?:/share)/man/man./(.*)\.[0-9](?:\.gz|\.bz2)')
     versioned_dir_regex = re.compile(r'[^.][0-9]')
@@ -62,6 +39,11 @@ class BinariesCheck(AbstractCheck):
         self.pie_exec_re = re.compile(pie_exec_re)
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
+        self.setgid_call_regex = self.create_regexp_call(r'set(?:res|e)?gid')
+        self.setuid_call_regex = self.create_regexp_call(r'set(?:res|e)?uid')
+        self.setgroups_call_regex = self.create_regexp_call(r'(?:ini|se)tgroups')
+        self.mktemp_call_regex = self.create_regexp_call('mktemp')
+
         # register all check functions
         self.check_functions = [self._check_lto_section,
                                 self._check_no_text_in_archive,
@@ -71,6 +53,16 @@ class BinariesCheck(AbstractCheck):
                                 self._check_rpath,
                                 self._check_library_dependency,
                                 self._check_forbidden_functions]
+
+    @staticmethod
+    def create_nonlibc_regexp_call(call):
+        r = r'(%s)\s?.*$' % call
+        return re.compile(r)
+
+    @staticmethod
+    def create_regexp_call(call):
+        r = r'(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
+        return re.compile(r)
 
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
@@ -99,7 +91,7 @@ class BinariesCheck(AbstractCheck):
     def _check_executable_stack(self, pkg, pkgfile_path, path):
         if not self.readelf_parser.is_archive:
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
-            if len(stack_headers) == 0:
+            if not stack_headers:
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
             elif 'E' in stack_headers[0].flags:
                 self.output.add_info('E', pkg, 'executable-stack', path)
@@ -172,32 +164,24 @@ class BinariesCheck(AbstractCheck):
         if not len(dyn_section.needed) and not (dyn_section.soname and
                                                 self.ldso_soname_regex.search(dyn_section.soname)):
             if self.is_shobj:
-                self.output.add_info('E', pkg,
-                                     'shared-lib-without-dependency-information',
-                                     path)
+                msg = 'shared-lib-without-dependency-information'
             else:
-                self.output.add_info('E', pkg, 'statically-linked-binary', path)
-
+                msg = 'statically-linked-binary'
+            self.output.add_info('E', pkg, msg, path)
         else:
             # linked against libc ?
             if 'libc.' not in dyn_section.runpath and \
                (not dyn_section.soname or
                 ('libc.' not in dyn_section.soname and
                  not self.ldso_soname_regex.search(dyn_section.soname))):
-
-                found_libc = False
                 for lib in dyn_section.needed:
                     if 'libc.' in lib:
-                        found_libc = True
-                        break
-
-                if not found_libc:
-                    if self.is_shobj:
-                        self.output.add_info('E', pkg, 'library-not-linked-against-libc',
-                                             path)
-                    else:
-                        self.output.add_info('E', pkg, 'program-not-linked-against-libc',
-                                             path)
+                        return
+                if self.is_shobj:
+                    msg = 'library-not-linked-against-libc'
+                else:
+                    msg = 'program-not-linked-against-libc'
+                self.output.add_info('E', pkg, msg, path)
 
     def _check_forbidden_functions(self, pkg, pkgfile_path, path):
         forbidden_functions = self.config.configuration['WarnOnFunction']
@@ -205,7 +189,7 @@ class BinariesCheck(AbstractCheck):
             for name, func in forbidden_functions.items():
                 # precompile regexps
                 f_name = func['f_name']
-                func['f_regex'] = create_nonlibc_regexp_call(f_name)
+                func['f_regex'] = self.create_nonlibc_regexp_call(f_name)
                 if 'good_param' in func and func['good_param']:
                     func['waiver_regex'] = re.compile(func['good_param'])
                 # register descriptions
@@ -217,7 +201,7 @@ class BinariesCheck(AbstractCheck):
             if any(self.readelf_parser.symbol_table_info.get_functions_for_regex(func['f_regex'])):
                 forbidden_calls.append(r_name)
 
-        if len(forbidden_calls) == 0:
+        if not forbidden_calls:
             return
 
         strings_parser = StringsParser(pkgfile_path)
