@@ -79,7 +79,8 @@ class BinariesCheck(AbstractCheck):
                 code_in_text = False
                 for section in elf_file:
                     sn = section.name
-                    if ((sn == '.init_array' or sn == '.fini_array' or sn.startswith('.text')) and
+                    if ((sn == '.preinit_array' or sn == '.init_array' or
+                         sn == '.fini_array' or sn.startswith('.text')) and
                             section.size > 0):
                         code_in_text = True
                         break

@@ -117,6 +117,12 @@ def test_lto_archive_init_array(binariescheck):
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
+def test_lto_archive_preinit_array(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('libclang_rt.asan-preinit-x86_64.a'), 'x.a')
+    assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
+
+
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')

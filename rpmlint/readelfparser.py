@@ -71,7 +71,7 @@ class ElfSectionInfo:
       l (large), p (processor specific)
     """
 
-    section_regex = re.compile(r'.*\] (?P<section>[^\s]*)\s*\w+\s*\w*\s*\w*\w*\s*(?P<size>\w*)')
+    section_regex = re.compile(r'.*\] (?P<section>\S*)\s*\S+\s*\S*\s*\S*\s*(?P<size>\w*)')
     pic_regex = re.compile(r'\.rela?\.(data|text)')
 
     def __init__(self, path):
