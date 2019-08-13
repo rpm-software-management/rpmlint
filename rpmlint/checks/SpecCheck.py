@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 import rpm
 from rpmlint import pkg as Pkg
-from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -428,7 +428,7 @@ class SpecCheck(AbstractCheck):
                                                  conf)
 
             if current_section == 'changelog':
-                for match in macro_regex.findall(line):
+                for match in self.macro_regex.findall(line):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         self.output.add_info('W', pkg, 'macro-in-%changelog', match)
@@ -479,7 +479,7 @@ class SpecCheck(AbstractCheck):
             # Test if there are macros in comments
             if hashPos != -1 and \
                     (hashPos == 0 or line[hashPos - 1] in (' ', '\t')):
-                for match in macro_regex.findall(
+                for match in self.macro_regex.findall(
                         line[hashPos + 1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
@@ -574,33 +574,7 @@ class SpecCheck(AbstractCheck):
                         srctype = 'Patch'
                     tag = '%s%s' % (srctype, num)
                     if scheme and netloc:
-                        info = self.check_url(pkg, tag, url)
-                        if not info or not hasattr(pkg, 'files'):
-                            continue
-                        clen = info.get('Content-Length')
-                        if clen is not None:
-                            clen = int(clen)
-                        cmd5 = info.get('Content-MD5')
-                        if cmd5 is not None:
-                            cmd5 = cmd5.lower()
-                        if clen is not None or cmd5 is not None:
-                            # Not using path from urlparse results to match how
-                            # rpm itself parses the basename.
-                            pkgfile = pkg.files().get(url.split('/')[-1])
-                            if pkgfile:
-                                if clen is not None and pkgfile.size != clen:
-                                    self.output.add_info('W', pkg, 'file-size-mismatch',
-                                                         '%s = %s, %s = %s' %
-                                                         (pkgfile.name, pkgfile.size,
-                                                          url, clen))
-                                # pkgfile.md5 could be some other digest than
-                                # MD5, treat as MD5 only if it's 32 chars long
-                                if cmd5 and len(pkgfile.md5) == 32 \
-                                        and pkgfile.md5 != cmd5:
-                                    self.output.add_info('W', pkg, 'file-md5-mismatch',
-                                                         '%s = %s, %s = %s' %
-                                                         (pkgfile.name, pkgfile.md5,
-                                                          url, cmd5))
+                        continue
                     elif srctype == 'Source' and tarball_regex.search(url):
                         self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url)
 
@@ -799,16 +773,6 @@ token's name, the comparison operator and the version string.""",
 """There is a unescaped macro after a shell style comment in the specfile.
 Macros are expanded everywhere, so check if it can cause a problem in this
 case and escape the macro with another leading % if appropriate.""",
-
-'file-size-mismatch':
-"""The size of the file in the package does not match the size indicated by
-peeking at its URL.  Verify that the file in the package has the intended
-contents.""",
-
-'file-md5-mismatch':
-"""The MD5 hash of the file in the package does not match the MD5 hash
-indicated by peeking at its URL.  Verify that the file in the package has the
-intended contents.""",
 
 'patch-fuzz-is-changed':
 """The internal patch fuzz value was changed, and could hide patchs issues, or

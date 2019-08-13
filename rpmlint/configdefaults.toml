@@ -1,25 +1,26 @@
 # Enabled checks for the rpmlint to be run
 Checks = [
-    "DistributionCheck",
-    "TagsCheck",
+    "AppDataCheck",
     "BinariesCheck",
     "ConfigCheck",
-    "FilesCheck",
+    "DistributionCheck",
     "DocFilesCheck",
     "FHSCheck",
-    "SignatureCheck",
-    "I18NCheck",
-    "MenuCheck",
-    "PostCheck",
+    "FilesCheck",
     "InitScriptCheck",
+    "I18NCheck",
+    "LSBCheck",
+    "MenuCheck",
+    "MenuXDGCheck",
+    "NamingPolicyCheck",
+    "PamCheck",
+    "PostCheck",
+    "RpmFileCheck",
+    "SignatureCheck",
     "SourceCheck",
     "SpecCheck",
-    "NamingPolicyCheck",
+    "TagsCheck",
     "ZipCheck",
-    "PamCheck",
-    "RpmFileCheck",
-    "MenuXDGCheck",
-    "AppDataCheck",
 ]
 # Various output filters, list of regexp strings eg. "E: .* no-signature"
 Filters = []
@@ -47,10 +48,6 @@ KernelModuleRPMsOK = true
 MaxLineLength = 79
 # Regexp string with names of packages to treat as "meta" ones.
 MetaPackageRegexp = '^(bundle|task)-'
-# Whether to enable checks that require networking
-NetworkEnabled = false
-# Timeout for network operations in seconds
-NetworkTimeout = 10
 # String regexp validating value for the Packager tag.
 Packager = ""
 # Assumed default version of Python if one cannot be determined from files
@@ -279,11 +276,6 @@ ValidGroups = []
 ValidSrcPerms = [
     "0o644",
     "0o755",
-]
-# Command and arguments to validate appdata files
-AppDataChecker = [
-    "appstream-util",
-    "validate-relax",
 ]
 # Valid values for the License tag
 ValidLicenses = []

@@ -10,12 +10,13 @@
 from datetime import datetime
 import os
 import re
+from shlex import quote
 import stat
 
 import rpm
-from rpmlint.checks.AbstractCheck import AbstractCheck, macro_regex
+from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
-from rpmlint.pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr, shquote
+from rpmlint.pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -476,7 +477,7 @@ class FilesCheck(AbstractCheck):
             is_doc = f in doc_files
             nonexec_file = False
 
-            for match in macro_regex.findall(f):
+            for match in self.macro_regex.findall(f):
                 self.output.add_info('W', pkg, 'unexpanded-macro', f, match)
             if user not in self.standard_users:
                 self.output.add_info('W', pkg, 'non-standard-uid', f, user)
@@ -813,8 +814,8 @@ class FilesCheck(AbstractCheck):
                         cmd = getstatusoutput(
                             '%s %s | gtbl | groff -mtty-char -Tutf8 '
                             '-P-c -mandoc -w%s >%s' %
-                            (catcmd(f), shquote(pkgfile.path),
-                             shquote(self.man_warn_category), os.devnull),
+                            (catcmd(f), quote(pkgfile.path),
+                             quote(self.man_warn_category), os.devnull),
                             shell=True, lc_all='en_US.UTF-8')
                         for line in cmd[1].split('\n'):
                             res = man_warn_regex.search(line)
