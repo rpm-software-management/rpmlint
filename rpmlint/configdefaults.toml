@@ -277,11 +277,6 @@ ValidSrcPerms = [
     "0o644",
     "0o755",
 ]
-# Command and arguments to validate appdata files
-AppDataChecker = [
-    "appstream-util",
-    "validate-relax",
-]
 # Valid values for the License tag
 ValidLicenses = []
 # Additional warnings on specific function calls
