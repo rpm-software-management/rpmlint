@@ -46,6 +46,13 @@ def test_ldd_parser_failure():
     assert ldd.parsing_failed
 
 
+def test_dependencies():
+    ldd = lddparser('libtirpc.so.3.0.0')
+    assert not ldd.parsing_failed
+    assert len(ldd.dependencies) == 5
+    assert any([d for d in ldd.dependencies if d.startswith('linux-vdso.so.1')])
+
+
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
@@ -53,3 +60,12 @@ def test_unused_dependency_in_package(binariescheck):
     assert not test.ldd_parser.parsing_failed
     out = output.print_results(output.results)
     assert 'W: unused-direct-shlib-dependency ' in out
+
+
+def test_opt_dependency(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
+    assert not test.readelf_parser.parsing_failed()
+    assert not test.ldd_parser.parsing_failed
+    out = output.print_results(output.results)
+    assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out

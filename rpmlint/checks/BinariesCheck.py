@@ -49,6 +49,7 @@ class BinariesCheck(AbstractCheck):
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
+                                self._check_opt_library_dependency,
                                 self._check_security_functions,
                                 self._check_rpath,
                                 self._check_library_dependency,
@@ -140,6 +141,13 @@ class BinariesCheck(AbstractCheck):
             for dependency in self.ldd_parser.unused_dependencies:
                 self.output.add_info('W', pkg, 'unused-direct-shlib-dependency',
                                      path, dependency)
+
+    def _check_opt_library_dependency(self, pkg, pkgfile_path, path):
+        if not self.readelf_parser.is_archive:
+            for dependency in self.ldd_parser.dependencies:
+                if dependency.startswith('/opt/'):
+                    self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
+                    return
 
     def _check_security_functions(self, pkg, pkgfile_path, path):
         setgid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgid_call_regex))
@@ -532,4 +540,7 @@ and should not be distributed in static libraries or e.g. Python modules.""",
 'lto-no-text-in-archive':
 """This archive does not contain a non-empty .text section.  The archive
 was not created with -ffat-lto-objects option.""",
+
+'linked-against-opt-library':
+"""This executable is linked against a shared library in /opt folder.""",
 }

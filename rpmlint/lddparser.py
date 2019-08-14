@@ -38,6 +38,7 @@ class LddParser:
 
     def __init__(self, pkgfile_path, path):
         self.pkgfile_path = pkgfile_path
+        self.dependencies = []
         self.unused_dependencies = []
         self.undefined_symbols = []
         self.parsing_failed = False
@@ -85,6 +86,8 @@ class LddParser:
             r = self.undef_regex.search(line)
             if r:
                 self.undefined_symbols.append(r.group('symbol'))
+            else:
+                self.dependencies.append(line.strip())
 
         # run c++filt demangler for all collected symbols
         r = subprocess.run(['c++filt'] + self.undefined_symbols, encoding='utf8',
