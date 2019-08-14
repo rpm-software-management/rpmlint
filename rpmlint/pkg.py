@@ -911,7 +911,7 @@ class InstalledPkg(Pkg):
             except StopIteration:
                 raise KeyError(name)
 
-        Pkg.__init__(self, name, '/', hdr)
+        super().__init__(name, '/', hdr)
 
         self.extracted = True
         # create a fake filename to satisfy some checks on the filename
