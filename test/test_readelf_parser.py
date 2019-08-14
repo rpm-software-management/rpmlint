@@ -139,7 +139,7 @@ def test_readelf_failure_in_package(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('not-existing.so'), '/lib64/not-existing.so')
     out = output.print_results(output.results)
-    assert 'binaryinfo-readelf-failed /lib64/not-existing.so' in out
+    assert 'readelf-failed /lib64/not-existing.so' in out
 
 
 def test_no_soname(binariescheck):

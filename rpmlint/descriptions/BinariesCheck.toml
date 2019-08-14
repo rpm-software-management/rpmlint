@@ -1,0 +1,133 @@
+arch-independent-package-contains-binary-or-object = """
+The package is marked as noarch and contains a binary or object file.
+"""
+arch-dependent-file-in-usr-share="""
+This package installs an ELF binary in the /usr/share hierarchy, which is
+reserved for architecture-independent files only.
+"""
+binary-in-etc="""
+This package installs an ELF binary in /etc.
+"""
+noarch-with-lib64="""
+This package is marked as noarch but installs files into lib64.
+Not all architectures have this in path, so the package can't be noarch.
+"""
+invalid-soname="""
+The soname of the library is neither of the form lib<libname>.so.<major> or
+lib<libname>-<major>.so.
+"""
+invalid-ldconfig-symlink="""
+The symbolic link references the wrong file. It should reference
+the shared library.
+"""
+no-ldconfig-symlink="""
+The package should not only include the shared library itself, but
+also the symbolic link which ldconfig would produce. (This is
+necessary, so that the link gets removed by rpm automatically when
+the package gets removed).
+"""
+shlib-with-non-pic-code="""
+The listed shared libraries contain object code that was compiled
+without -fPIC. All object code in shared libraries should be
+recompiled separately from the static libraries with the -fPIC option.
+Use the ``eu-findtextrel'' command on a library with debugging symbols
+to list code compiled without -fPIC.
+
+Another common mistake that causes this problem is linking with
+``gcc -Wl,-shared'' instead of ``gcc -shared''.
+"""
+libtool-wrapper-in-package="""
+The package contains a libtool wrapper shell script. Instead of installing
+the libtool wrapper file run
+``libtool --mode=install install -m perm <file> <dest>'' in order
+to install the relinked file.
+"""
+binary-or-shlib-defines-rpath="""
+The binary or shared library defines `RPATH'.
+"""
+statically-linked-binary="""
+The package installs a statically linked binary or object file.
+"""
+executable-in-library-package="""
+The package mixes up libraries and executables. Mixing up these
+both types of files makes upgrades quite impossible.
+"""
+non-versioned-file-in-library-package="""
+The package contains files in non versioned directories. This makes it
+impossible to have multiple major versions of the libraries installed.
+One solution can be to change the directories which contain the files
+to subdirs of /usr/lib/<name>-<version> or /usr/share/<name>-<version>.
+Another solution can be to include a version number in the file names
+themselves.
+"""
+incoherent-version-in-name="""
+The package name should contain the major version of the library.
+"""
+invalid-directory-reference="""
+This file contains a reference to /tmp or /home.
+"""
+no-binary="""
+The package should be of the noarch architecture because it doesn't contain
+any binaries.
+"""
+undefined-non-weak-symbol="""
+The binary contains undefined non-weak symbols.
+"""
+unused-direct-shlib-dependency="""
+The binary contains unused direct shared library dependencies.  This may
+indicate gratuitously bloated linkage; check that the binary has been linked
+with the intended shared libraries only.
+"""
+only-non-binary-in-usr-lib="""
+There are only non binary files in /usr/lib so they should be in
+/usr/share.
+"""
+readelf-failed="""
+Executing readelf on this file failed, all checks could not be run.
+"""
+ldd-failed="""
+Executing ldd on this file failed, all checks could not be run.
+"""
+strings-failed="""
+Executing strings on this file failed, all checks could not be run.
+"""
+executable-stack="""
+The binary declares the stack as executable. Executable stack is usually an
+error as it is only needed if the code contains GCC trampolines or similar
+constructs which uses code on the stack. One common source for needlessly
+executable stack cases are object files built from assembler files which
+don't define a proper .note.GNU-stack section.
+"""
+missing-PT_GNU_STACK-section="""
+The binary lacks a PT_GNU_STACK section.  This forces the dynamic linker to
+make the stack executable.
+"""
+non-position-independent-executable="""
+This executable must be position independent. Check that it is built with
+-fPIE/-fpie in compiler flags and -pie in linker flags.
+"""
+missing-call-to-setgroups-before-setuid="""
+This executable is calling setuid and setgid without setgroups or initgroups.
+This means it didn't relinquish all groups, and this would be a potential
+security issue.
+"""
+call-to-mktemp="""
+This executable calls mktemp. As advised by the manpage (mktemp(3)), this
+function should be avoided.
+"""
+unstripped-binary-or-object="""
+This executable should be stripped from debugging symbols, in order to take
+less space and be loaded faster. This is usually done automatically at
+buildtime by rpm.
+"""
+lto-bytecode="""
+This executable contains a LTO section.  LTO bytecode is not portable
+and should not be distributed in static libraries or e.g. Python modules.
+"""
+lto-no-text-in-archive="""
+This archive does not contain a non-empty .text section.  The archive
+was not created with -ffat-lto-objects option.
+"""
+linked-against-opt-library="""
+This executable is linked against a shared library in /opt folder.
+"""
