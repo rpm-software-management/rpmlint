@@ -69,11 +69,6 @@ def is_valid_lang(lang):
 
 
 class I18NCheck(AbstractCheck):
-
-    def __init__(self, config, output):
-        super().__init__(config, output)
-        self.output.error_details.update(i18n_details_dict)
-
     def check_binary(self, pkg):
         files = list(pkg.files().keys())
         files.sort()
@@ -153,39 +148,3 @@ class I18NCheck(AbstractCheck):
 
 def is_prefix(p, s):
     return len(p) <= len(s) and p == s[:len(p)]
-
-
-i18n_details_dict = {
-# Need to add a function to list all the locales
-'incorrect-i18n-tag-':
-"""
-""",
-
-'incorrect-locale-subdir':
-"""
-""",
-
-'incorrect-locale-':
-"""
-""",
-
-'invalid-lc-messages-dir':
-"""
-""",
-
-'invalid-locale-man-dir':
-"""
-""",
-
-'file-not-in-lang':
-"""
-""",
-
-'no-dependency-on':
-"""
-""",
-
-'subfile-not-in-%lang':
-""" If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be
-installable if XX is not in %_install_langs.""",
-}
