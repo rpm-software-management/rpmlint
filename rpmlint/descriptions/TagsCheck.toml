@@ -126,8 +126,9 @@ You must let rpm find the library dependencies by itself. Do not put
 unneeded explicit Requires: tags.
 """
 useless-provides="""
-This package provides 2 times the same capacity. It should only provide it
-only once.
+This package provides multiple times the same capacity.
+This means versioned and unversioned symbols are provided at once
+thus one overshadowing the other. I.e. 'foo' and 'foo = 1.0'.
 """
 tag-not-utf8="""
 The character encoding of the value of this tag is not UTF-8.
