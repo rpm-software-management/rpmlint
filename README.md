@@ -24,13 +24,13 @@ https://github.com/rpm-software-management/rpmlint
 
 For installation on your machine you will need the following packages:
 
-Mandatory
+Mandatory:
 - Python 3.6 or newer
-- Python setuptoools, python3-toml, python3-pyxdg
+- python3-setuptools, python3-toml, python3-pyxdg
 - rpm and its python bindings
 - readelf, cpio, gzip, bzip and xz
 
-Optional
+Optional:
 - libmagic and its python bindings
 - groff and gtbl
 - enchant and its python bindings
