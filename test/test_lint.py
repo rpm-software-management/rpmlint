@@ -59,7 +59,7 @@ def test_configoutput(capsys):
 
 
 def test_explain_unknown(capsys):
-    message = 'bullcrap'
+    message = ['bullcrap']
     additional_options = {
         'explain': message,
     }
@@ -67,7 +67,7 @@ def test_explain_unknown(capsys):
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
-    assert 'Unknown message' in out
+    assert 'bullcrap:\nUnknown message' in out
     assert not err
 
 
@@ -85,7 +85,7 @@ def test_explain_known(capsys):
     assert not err
 
 
-def test_explain_with_uknown(capsys):
+def test_explain_with_unknown(capsys):
     message = ['infopage-not-compressed', 'blablablabla']
     additional_options = {
         'explain': message,

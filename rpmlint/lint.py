@@ -58,15 +58,6 @@ class Lint(object):
             return 64
         return 0
 
-    def info_error(self, errors):
-        """
-        Print details for specified error/s.
-        """
-        self.output.info = True
-        for e in sorted(errors):
-            print(f'{e}:')
-            print(self.output.get_description(e))
-
     def _load_installed_rpms(self, packages):
         existing_packages = []
         for name in packages:
@@ -145,10 +136,9 @@ class Lint(object):
         """
         for message in messages:
             explanation = self.output.get_description(message)
-            if explanation:
-                print(explanation)
-            else:
-                print(f'Unknown message {message}, or no known description')
+            if not explanation:
+                explanation = 'Unknown message, please report a bug if the description should be present.\n\n'
+            print(f'{message}:\n{explanation}')
 
     def load_checks(self):
         """
