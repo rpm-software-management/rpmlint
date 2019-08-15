@@ -26,23 +26,10 @@ class SourceCheck(AbstractCheck):
         self.valid_src_perms = config.configuration['ValidSrcPerms']
 
         source_details_dict = {
-            'multiple-specfiles':
-            """Your package contains multiple spec files. To build a
-            correct package, you need to have only one spec file containing
-            all your RPM information.""",
-
             'source-or-patch-not-compressed':
             """A source archive or file in your package is not compressed using the %s
             compression method (doesn't have the %s extension).""" %
             (self.compress_ext, self.compress_ext),
-
-            'strange-permission':
-            """A file that you listed to include in your package has strange
-            permissions. Usually, a file should have 0644 permissions.""",
-
-            'inconsistent-file-extension':
-            """The file name extension indicates a different compression format than
-            what is actually used (as checked by file(1))""",
         }
         self.output.error_details.update(source_details_dict)
 
