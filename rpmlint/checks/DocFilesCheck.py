@@ -4,9 +4,6 @@ from rpmlint.helpers import byte_to_string
 
 
 class DocFilesCheck(AbstractCheck):
-    def __init__(self, config, output):
-        super().__init__(config, output)
-
     def __check_requirements(self, pkg):
 
         doc_files = pkg.docFiles()

@@ -10,9 +10,6 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class ConfigCheck(AbstractCheck):
-    def __init__(self, config, output):
-        super().__init__(config, output)
-
     def check_binary(self, pkg):
         config_files = pkg.configFiles()
         noreplace_files = pkg.noreplaceFiles()
