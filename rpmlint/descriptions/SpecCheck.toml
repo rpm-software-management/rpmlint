@@ -1,0 +1,198 @@
+no-spec-file="""
+No spec file was specified in your RPM metadata. Please specify a valid
+SPEC file to build a valid RPM package.
+"""
+invalid-spec-name="""
+The spec file name (without the .spec suffix) must match the package name
+('Name:' tag).
+"""
+non-utf8-spec-file="""
+The character encoding of the spec file is not UTF-8.
+"""
+use-of-RPM_SOURCE_DIR="""
+You use $RPM_SOURCE_DIR or %{_sourcedir} in your spec file. If you have to
+use a directory for building, use $RPM_BUILD_ROOT instead.
+"""
+patch-not-applied="""
+A patch is included in your package but was not applied.
+"""
+obsolete-tag="""
+The following tags are obsolete: Copyright and Serial. They must
+be replaced by License and Epoch respectively.
+"""
+deprecated-grep="""
+Direct use of grep as egrep or fgrep is deprecated in GNU grep and
+historical in POSIX, use grep -E and grep -F instead.
+"""
+no-buildroot-tag="""
+The BuildRoot tag isn't used in your spec. It must be used in order to
+allow building the package as non root on some systems. For some rpm versions
+(e.g. rpm.org >= 4.6) the BuildRoot tag is not necessary in specfiles and is
+ignored by rpmbuild; if your package is only going to be built with such rpm
+versions you can ignore this warning.
+"""
+hardcoded-path-in-buildroot-tag="""
+A path is hardcoded in your Buildroot tag. It should be replaced
+by something like %{_tmppath}/%{name}-%{version}-build.
+"""
+hardcoded-packager-tag="""
+The Packager tag is hardcoded in your spec file. It should be removed, so
+as to use rebuilder's own defaults.
+"""
+buildarch-instead-of-exclusivearch-tag="""
+Use ExclusiveArch instead of BuildArch (or BuildArchitectures)
+to restrict build on some specific architectures.
+Only use BuildArch with noarch
+"""
+hardcoded-prefix-tag="""
+The Prefix tag is hardcoded in your spec file. It should be removed, so as
+to allow package relocation.
+"""
+hardcoded-library-path="""
+A library path is hardcoded to one of the following paths: /lib,
+/usr/lib. It should be replaced by something like /%{_lib} or %{_libdir}.
+"""
+configure-without-libdir-spec="""
+A configure script is run without specifying the libdir. configure
+options must be augmented with something like --libdir=%{_libdir} whenever
+the script supports it.
+"""
+"no-%prep-section"="""
+The spec file does not contain a %prep section.  Even if some packages don't
+directly need it, section markers may be overridden in rpm's configuration
+to provide additional 'under the hood' functionality.  Add the section, even
+if empty.
+"""
+"no-%build-section"="""
+The spec file does not contain a %build section.  Even if some packages
+don't directly need it, section markers may be overridden in rpm's
+configuration to provide additional 'under the hood' functionality, such as
+injection of automatic -debuginfo subpackages.  Add the section, even if
+empty.
+"""
+"no-%install-section"="""
+The spec file does not contain an %install section.  Even if some packages
+don't directly need it, section markers may be overridden in rpm's
+configuration to provide additional 'under the hood' functionality.  Add the
+section, even if empty.
+"""
+"no-%clean-section"="""
+The spec file doesn't contain a %clean section to remove the files installed
+by the %install section.
+"""
+"more-than-one-%changelog-section"="""
+The spec file unnecessarily contains more than one %changelog section.
+"""
+"lib-package-without-%mklibname"="""
+The package name must be built using %mklibname to allow lib64 and lib32
+coexistence.
+"""
+"%ifarch-applied-patch"="""
+A patch is applied inside an %ifarch block. Patches must be applied
+on all architectures and may contain necessary configure and/or code
+patch to be effective only on a given arch.
+"""
+prereq-use="""
+The use of PreReq is deprecated. In the majority of cases, a plain Requires
+is enough and the right thing to do. Sometimes Requires(pre), Requires(post),
+Requires(preun) and/or Requires(postun) can also be used instead of PreReq.
+"""
+buildprereq-use="""
+The use of BuildPreReq is deprecated, build dependencies are always required
+before a package can be built.  Use plain BuildRequires instead.
+"""
+broken-syntax-in-scriptlet-requires="""
+Comma separated context marked dependencies are silently broken in some
+versions of rpm.  One way to work around it is to split them into several ones,
+eg. replace 'Requires(post,preun): foo' with 'Requires(post): foo' and
+'Requires(preun): foo'.
+"""
+setup-not-in-prep="""
+The %setup macro should only be used within the %prep section because it may
+not expand to anything outside of it and can break the build in unpredictable
+ways.
+"""
+setup-not-quiet="""
+Use the -q option to the %setup macro to avoid useless build output from
+unpacking the sources.
+"""
+no-cleaning-of-buildroot="""
+You should clean $RPM_BUILD_ROOT in the %clean section and in the beginning
+of the %install section. Use 'rm -rf $RPM_BUILD_ROOT'. Some rpm configurations
+do this automatically; if your package is only going to be built in such
+configurations, you can ignore this warning for the section(s) where your rpm
+takes care of it.
+"""
+rpm-buildroot-usage="""
+$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
+may break short circuit builds.
+"""
+make-check-outside-check-section="""
+Make check or other automated regression test should be run in %check, as
+they can be disabled with a rpm macro for short circuiting purposes.
+"""
+"macro-in-%changelog"="""
+Macros are expanded in %changelog too, which can in unfortunate cases lead
+to the package not building at all, or other subtle unexpected conditions that
+affect the build.  Even when that doesn't happen, the expansion results in
+possibly 'rewriting history' on subsequent package revisions and generally
+odd entries eg. in source rpms, which is rarely wanted. Avoid use of macros
+in %changelog altogether, or use two '%'s to escape them, like '%%foo'.
+"""
+depscript-without-disabling-depgen="""
+In some common rpm configurations/versions, defining __find_provides and/or
+__find_requires has no effect if rpm's internal dependency generator has not
+been disabled for the build.  %define _use_internal_dependency_generator to 0
+to disable it in the specfile, or don't define __find_provides/requires.
+"""
+mixed-use-of-spaces-and-tabs="""
+The specfile mixes use of spaces and tabs for indentation, which is a
+cosmetic annoyance.
+"""
+unversioned-explicit-provides="""
+The specfile contains an unversioned Provides: token, which will match all
+older, equal, and newer versions of the provided thing. This may cause
+update problems and will make versioned dependencies, obsoletions and conflicts
+on the provided thing useless -- make the Provides versioned if possible.
+"""
+unversioned-explicit-obsoletes="""
+The specfile contains an unversioned Obsoletes: token, which will match all
+older, equal and newer versions of the obsoleted thing.  This may cause update
+problems, restrict future package/provides naming, and may match something it
+was originally not inteded to match -- make the Obsoletes versioned if
+possible.
+"""
+libdir-macro-in-noarch-package="""
+The %{_libdir} or %{_lib} macro was found in a noarch package in a section
+that gets included in binary packages.  This is most likely an error because
+these macros are expanded on the build host and their values vary between
+architectures, probably resulting in a package that does not work properly
+on all architectures at runtime. Investigate whether the package is really
+architecture independent or if some other dir/macro should be instead.
+"""
+non-break-space="""
+The spec file contains a non-break space, which looks like a regular space
+in some editors but can lead to obscure errors. It should be replaced by a
+regular space.
+"""
+specfile-error="""
+This error occurred when rpmlint used rpm to query the specfile. The error
+is output by rpm and the message should contain more information.
+"""
+comparison-operator-in-deptoken="""
+This dependency token contains a comparison operator (<, > or =).  This is
+usually not intended and may be caused by missing whitespace between the
+token's name, the comparison operator and the version string.
+"""
+macro-in-comment="""
+There is a unescaped macro after a shell style comment in the specfile.
+Macros are expanded everywhere, so check if it can cause a problem in this
+case and escape the macro with another leading % if appropriate.
+"""
+patch-fuzz-is-changed="""
+The internal patch fuzz value was changed, and could hide patchs issues, or
+could lead to applying a patch at the wrong location. Usually, this is often
+the sign that someone didn't check if a patch is still needed and do not want
+to rediff it. It is usually better to rediff the patch and try to send it
+upstream.
+"""
