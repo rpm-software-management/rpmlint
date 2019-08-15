@@ -55,6 +55,7 @@ setup(
     ],
     package_data={
         'rpmlint': ['configdefaults.toml'],
+        'rpmlint.descriptions': ['*.toml'],
     },
     include_package_data=True,
     entry_points={

@@ -1,6 +1,7 @@
 include Makefile
 include COPYING
 include README.md
+recursive-include rpmlint *.toml
 recursive-include test/binary *
 recursive-include test/configs *
 recursive-include test/pyc *
