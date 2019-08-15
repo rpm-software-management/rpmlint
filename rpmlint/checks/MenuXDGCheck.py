@@ -20,8 +20,7 @@ class MenuXDGCheck(AbstractFilesCheck):
         # desktop file need to be in $XDG_DATA_DIRS
         # $ echo $XDG_DATA_DIRS/applications
         # /var/lib/menu-xdg:/usr/share
-        AbstractFilesCheck.__init__(
-            self, config, output, r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
+        super().__init__(config, output, r'(?:/usr|/etc/opt|/opt/.*)/share/applications/.*\.desktop$')
 
     def parse_desktop_file(self, pkg, root, f, filename):
         cfp = cfgparser.RawConfigParser()
