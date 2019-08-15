@@ -1,0 +1,3 @@
+invalid-appdata-file = """
+Appdata file is not valid. Check the validity with appstream-util.
+"""

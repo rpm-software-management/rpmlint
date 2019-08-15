@@ -18,11 +18,6 @@ name_regex = re.compile('^[a-z0-9.+-]+$')
 
 
 class LSBCheck(AbstractCheck):
-
-    def __init__(self, config, output):
-        super().__init__(config, output)
-        self.output.error_details.update(lsb_details_dict)
-
     def check(self, pkg):
         name = pkg.name
         if name and not name_regex.search(name):
@@ -35,18 +30,3 @@ class LSBCheck(AbstractCheck):
         release = pkg[rpm.RPMTAG_RELEASE]
         if release and not version_regex.search(release):
             self.output.add_info('E', pkg, 'non-lsb-compliant-release', release)
-
-
-lsb_details_dict = {
-'non-lsb-compliant-package-name':
-"""Your package name contains an illegal character. Use only
-alphanumeric symbols in your package name.""",
-
-'non-lsb-compliant-version':
-"""Your version number contains an illegal character. Use only
-lowercase letters and/or numbers.""",
-
-'non-lsb-compliant-release':
-"""Your version number contains an illegal character. Use only
-lowercase letters and/or numbers.""",
-}

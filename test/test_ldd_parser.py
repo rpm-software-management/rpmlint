@@ -59,7 +59,7 @@ def test_unused_dependency_in_package(binariescheck):
     assert not test.readelf_parser.parsing_failed()
     assert not test.ldd_parser.parsing_failed
     out = output.print_results(output.results)
-    assert 'W: unused-direct-shlib-dependency ' in out
+    assert 'unused-direct-shlib-dependency ' in out
 
 
 def test_opt_dependency(binariescheck):

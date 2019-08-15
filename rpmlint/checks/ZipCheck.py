@@ -12,25 +12,6 @@ class ZipCheck(AbstractCheck):
     zip_regex = re.compile(r'\.(zip|[ewj]ar)$')
     jar_regex = re.compile(r'\.[ewj]ar$')
 
-    def __init__(self, config, output):
-        super().__init__(config, output)
-        zip_details_dict = {
-            'bad-crc-in-zip':
-            """The reported file in the zip fails the CRC check. Usually this is a
-            sign of a corrupt zip file.""",
-            'uncompressed-zip':
-            """The zip file is not compressed.""",
-            'class-path-in-manifest':
-            """The META-INF/MANIFEST.MF file in the jar contains a hardcoded Class-Path.
-            These entries do not work with older Java versions and even if they do work,
-            they are inflexible and usually cause nasty surprises.""",
-            'jar-not-indexed':
-            """The jar file is not indexed, ie. it does not contain the META-INF/INDEX.LIST
-            file.  Indexed jars speed up the class searching process of classloaders
-            in some situations.""",
-        }
-        self.output.error_details.update(zip_details_dict)
-
     def check(self, pkg):
         for fname, pkgfile in pkg.files().items():
             path = pkgfile.path

@@ -1,0 +1,7 @@
+no-signature="""
+You have to include your pgp or gpg signature in your package.
+"""
+unknown-key="""
+The package was signed, but with an unknown key. See the rpm --import option
+for more information.
+"""

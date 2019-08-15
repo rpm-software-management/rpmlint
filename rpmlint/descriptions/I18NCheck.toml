@@ -1,0 +1,4 @@
+"subfile-not-in-%lang"="""
+If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be
+installable if XX is not in %_install_langs.
+"""

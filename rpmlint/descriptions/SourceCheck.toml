@@ -1,0 +1,12 @@
+multiple-specfiles="""
+Your package contains multiple spec files. To build a correct package, you need
+to have only one spec file containing all your RPM information.
+"""
+strange-permission="""
+A file that you listed to include in your package has strange
+permissions. Usually, a file should have 0644 permissions.
+"""
+inconsistent-file-extension="""
+The file name extension indicates a different compression format than
+what is actually used (as checked by file(1)).
+"""

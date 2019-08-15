@@ -1,0 +1,92 @@
+non-file-in-menu-dir="""
+The directory /usr/lib/menu must not contain anything else than normal files.
+"""
+non-coherent-menu-filename="""
+The menu file name should be /usr/lib/menu/<package>.
+"""
+non-readable-menu-file="""
+The menu file isn't readable. Check the permissions.
+"""
+non-transparent-xpm="""
+xpm icon should be transparent for use in menus.
+"""
+menu-without-postin="""
+A menu file exists in the package but no %post scriptlet is present to call
+update-menus.
+"""
+postin-without-update-menus="""
+A menu file exists in the package but its %post scriptlet doesn't call
+update-menus.
+"""
+menu-without-postun="""
+A menu file exists in the package but no %postun scriptlet is present to
+call update-menus.
+"""
+postun-without-update-menus="""
+A menu file exists in the package but its %postun scriptlet doesn't call
+update-menus.
+"""
+incoherent-package-value-in-menu="""
+The package field of the menu entry isn't the same as the package name.
+"""
+use-of-launcher-in-menu-but-no-requires-on="""
+The menu command uses a launcher but there is no dependency in the package
+that contains it.
+"""
+menu-command-not-in-package="""
+The command used in the menu isn't included in the package.
+"""
+menu-longtitle-not-capitalized="""
+The longtitle field of the menu doesn't start with a capital letter.
+"""
+version-in-menu-longtitle="""
+The longtitle filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.
+"""
+no-longtitle-in-menu="""
+The longtitle field isn't present in the menu entry.
+"""
+menu-title-not-capitalized="""
+The title field of the menu entry doesn't start with a capital letter.
+"""
+version-in-menu-title="""
+The title filed of the menu entry contains a version. This is bad
+because it will be prone to error when the version of the package changes.
+"""
+no-title-in-menu="""
+The title field isn't present in the menu entry.
+"""
+invalid-menu-section="""
+The section field of the menu entry isn't standard.
+"""
+unable-to-parse-menu-section="""
+rpmlint wasn't able to parse the menu section. Please report a bug.
+"""
+hardcoded-path-in-menu-icon="""
+The path of the icon is hardcoded in the menu entry. This prevents multiple
+sizes of the icon from being found.
+"""
+normal-icon-not-in-package="""
+The normal icon isn't present in the package.
+"""
+mini-icon-not-in-package="""
+The mini icon isn't present in the package.
+"""
+large-icon-not-in-package="""
+The large icon isn't present in the package.
+"""
+no-icon-in-menu="""
+The menu entry doesn't contain an icon field.
+"""
+invalid-title="""
+The menu title contains invalid characters like /.
+"""
+missing-menu-command="""
+The menu file doesn't contain a command.
+"""
+menu-in-wrong-directory="""
+The menu files must be under /usr/lib/menu.
+"""
+non-xdg-migrated-menu="""
+The menu file has not been migrated to new XDG menu system.
+"""

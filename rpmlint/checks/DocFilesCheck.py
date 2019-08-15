@@ -4,10 +4,6 @@ from rpmlint.helpers import byte_to_string
 
 
 class DocFilesCheck(AbstractCheck):
-    def __init__(self, config, output):
-        super().__init__(config, output)
-        self.output.error_details.update(docfiles_details_dict)
-
     def __check_requirements(self, pkg):
 
         doc_files = pkg.docFiles()
@@ -64,18 +60,3 @@ class DocFilesCheck(AbstractCheck):
 
         self.__check_requirements(pkg)
         self.__check_unwanted_files(pkg)
-
-
-docfiles_details_dict = {
-'doc-file-dependency':
-"""An included file marked as %doc creates a possible additional dependency in
-the package.  Usually, this is not wanted and may be caused by eg. example
-scripts with executable bits set included in the package's documentation.""",
-
-'install-file-in-docs':
-"""A file whose name suggests that it contains installation instructions is
-included in the package.  Such instructions are often not relevant for already
-installed packages; if this is the case for this file and it does not contain
-any information that is of interest after the package has been built and
-installed, do not include the file in the binary package.""",
-}

@@ -14,11 +14,6 @@ class AppDataCheck(AbstractFilesCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output, r'/usr/share/appdata/.*\.(appdata|metainfo).xml$')
-        appdata_details_dict = {
-            'invalid-appdata-file':
-            'appdata file is not valid, check with "appstream-util validate-relax"',
-        }
-        self.output.error_details.update(appdata_details_dict)
 
     def check_file(self, pkg, filename):
         root = pkg.dirName()

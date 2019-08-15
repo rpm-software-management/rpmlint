@@ -1,0 +1,391 @@
+no-documentation="""
+The package contains no documentation (README, doc, etc).
+You have to include documentation files.
+"""
+not-listed-as-documentation="""
+The documentation files of this package are not listed with
+the standard %doc tag.
+"""
+library-without-ldconfig-postin="""
+This package contains a library and provides no %post scriptlet containing
+a call to ldconfig.
+"""
+postin-without-ldconfig="""
+This package contains a library and its %post scriptlet doesn't call
+ldconfig.
+"""
+library-without-ldconfig-postun="""
+This package contains a library and provides no %postun scriptlet containing
+a call to ldconfig.
+"""
+postun-without-ldconfig="""
+This package contains a library and its %postun doesn't call ldconfig.
+"""
+info-files-without-install-info-postin="""
+This package contains info files and provides no %post scriptlet containing
+a call to install-info.
+"""
+postin-without-install-info="""
+This package contains info files and its %post doesn't call install-info.
+"""
+info-files-without-install-info-postun="""
+This package contains info files and provides no %postun scriptlet
+containing a call to install-info.
+"""
+postun-without-install-info="""
+This package contains info files and its %postun doesn't call
+install-info.
+"""
+perl-temp-file="""
+You have a perl temporary file in your package. Usually, this
+file is beginning with a dot (.) and contain 'perl' in its name.
+"""
+non-ghost-in-run="""
+A file or directory in the package is located in /run. Files installed
+in this directory should be marked as %ghost and created at runtime to work
+properly in tmpfs /run setups.
+"""
+systemd-unit-in-etc="""
+A systemd unit has been packaged in /etc/systemd/system. These units should
+be installed in the system unit dir instead.
+"""
+udev-rule-in-etc="""
+A udev rule has been packaged in /etc/udev/rules.d. These rules should be
+installed in the system rules dir instead.
+"""
+tmpfiles-conf-in-etc="""
+A tmpfiles config has been packaged in /etc/tmpfiles.d. These rules should be
+installed in the system tmpfiles dir instead.
+"""
+subdir-in-bin="""
+The package contains a subdirectory in /usr/bin. It's not permitted to
+create a subdir there. Create it in /usr/lib/ instead.
+"""
+backup-file-in-package="""
+You have a file whose name looks like one for backup files, usually created
+by an editor or resulting from applying unclean (fuzzy, or ones with line
+offsets) patches.
+"""
+version-control-internal-file="""
+You have included file(s) internally used by a version control system
+in the package. Move these files out of the package and rebuild it.
+"""
+htaccess-file="""
+You have individual apache configuration .htaccess file(s) in your package.
+Replace them by a central configuration file in /etc/, according to the web
+application packaging policy for your distribution.
+"""
+info-dir-file="""
+You have /usr/info/dir or /usr/share/info/dir in your package. It will cause
+conflicts with other packages and thus is not allowed. Please remove it and
+rebuild your package.
+"""
+non-conffile-in-etc="""
+A non-executable file in your package is being installed in /etc, but is not
+a configuration file. All non-executable files in /etc should be configuration
+files. Mark the file as %config in the spec file.
+"""
+compressed-symlink-with-wrong-ext="""
+The symlink points to a compressed file but doesn't use the same
+extension.
+"""
+setuid-binary="""
+The file is setuid; this may be dangerous, especially if this
+file is setuid root. Sometimes file capabilities can be used instead of
+setuid bits.
+"""
+setgid-binary="""
+The file is setgid. Usually this is a packaging bug. If this is a game,
+then, you should use the proper rpm group, or location.
+"""
+non-standard-executable-perm="""
+A standard executable should have permission set to 0755. If you get this
+message, it means that you have a wrong executable permissions in some files
+included in your package.
+"""
+non-executable-in-bin="""
+A file is being installed in /usr/bin, but is not an executable. Be sure
+that the file is an executable or that it has executable permissions.
+"""
+devel-file-in-non-devel-package="""
+A file that is needed only e.g. when developing or building software is
+included in a non-devel package. These files should go in devel packages.
+"""
+non-devel-file-in-devel-package="""
+A non-development file is located in a devel package.
+"""
+non-standard-dir-perm="""
+A standard directory should have permission set to 0755. If you get this
+message, it means that you have wrong directory permissions in some dirs
+included in your package.
+"""
+spurious-executable-perm="""
+The file is installed with executable permissions, but was identified as one
+that probably should not be executable. Verify if the executable bits are
+desired, and remove if not.
+"""
+world-writable="""
+A file or directory in the package is installed with world writable
+permissions, which is most likely a security issue.
+"""
+standard-dir-owned-by-package="""
+This package owns a directory that is part of the standard hierarchy, which
+can lead to default directory permissions or ownerships being changed to
+something non-standard.
+"""
+cross-directory-hard-link="""
+File is hard linked across directories. This can cause problems in
+installations where the directories are located on different devices.
+"""
+dangling-symlink="""
+The target of the symbolic link does not exist within this package or its
+file based dependencies. Verify spelling of the link target and that the
+target is included in a package in this package's dependency chain.
+"""
+symlink-should-be-relative="""
+Absolute symlinks are problematic eg. when working with chroot environments.
+symlinks(8) is a tool that can be useful for creating/dealing with relative
+symlinks at package build time.
+"""
+dangling-relative-symlink="""
+The target of the symbolic link does not exist within this package or its
+file based dependencies. Verify spelling of the link target and that the
+target is included in a package in this package's dependency chain.
+"""
+non-readable="""
+The file can't be read by everybody. Review if this is expected.
+"""
+incoherent-logrotate-file="""
+Your logrotate file should be named /etc/logrotate.d/<package name>.
+"""
+non-root-user-log-file="""
+If you need log files owned by a non-root user, just create a subdir in
+/var/log and put your log files in it.
+"""
+non-root-group-log-file="""
+If you need log files owned by a non-root group, just create a subdir in
+/var/log and put your log files in it.
+"""
+non-ghost-file="""
+File should be tagged %ghost.
+"""
+outside-libdir-files="""
+This library package must not contain non library files to allow 64
+and 32 bits versions of the package to coexist.
+"""
+hidden-file-or-dir="""
+The file or directory is hidden. You should see if this is normal,
+and delete it from the package if not.
+"""
+module-without-depmod-postin="""
+This package contains a kernel module but provides no call to depmod in the
+%post scriptlet.
+"""
+postin-with-wrong-depmod="""
+This package contains a kernel module but its %post scriptlet calls depmod
+for the wrong kernel.
+"""
+module-without-depmod-postun="""
+This package contains a kernel module but provides no call to depmod in the
+%postun scriptlet.
+"""
+postun-with-wrong-depmod="""
+This package contains a kernel module but its %postun scriptlet calls depmod
+for the wrong kernel.
+"""
+log-files-without-logrotate="""
+This package contains files in /var/log/ without adding logrotate
+configuration for them.
+"""
+unexpanded-macro="""
+This package contains a file whose path contains something that looks like
+an unexpanded macro; this is often the sign of a misspelling. Please check your
+specfile.
+"""
+manifest-in-perl-module="""
+This perl module package contains a MANIFEST or a MANIFEST.SKIP file
+in the documentation directory.
+"""
+siteperl-in-perl-module="""
+This perl module package installs files under the subdirectory site_perl,
+while they must appear under vendor_perl.
+"""
+executable-marked-as-config-file="""
+Executables must not be marked as config files because that may
+prevent upgrades from working correctly. If you need to be able to
+customize an executable, make it for example read a config file in
+/etc/sysconfig.
+"""
+sourced-script-with-shebang="""
+This text file contains a shebang, but is meant to be sourced, not
+executed.
+"""
+executable-sourced-script="""
+This text file has executable bit set, but is meant to be sourced, not
+executed.
+"""
+wrong-script-interpreter="""
+This script uses an interpreter which is either an inappropriate one
+or located in an inappropriate directory for packaged system software.
+
+Alternatively, if the file should not be executed, then ensure that
+it is not marked as executable.
+"""
+env-script-interpreter="""
+This script uses 'env' as an interpreter.
+For the rpm runtime dependency detection to work, the shebang
+#!/usr/bin/env python
+
+needs to be patched into
+#!/usr/bin/python
+
+otherwise the package dependency generator merely adds a dependency
+on /usr/bin/env rather than the actual interpreter /usr/bin/python.
+
+Alternatively, if the file should not be executed, then ensure that
+it is not marked as executable or don't install it in a path that
+is reserved for executables.
+"""
+non-executable-script="""
+This text file contains a shebang or is located in a path dedicated for
+executables, but lacks the executable bits and cannot thus be executed. If
+the file is meant to be an executable script, add the executable bits,
+otherwise remove the shebang or move the file elsewhere.
+"""
+script-without-shebang="""
+This text file has executable bits set or is located in a path dedicated
+for executables, but lacks a shebang and cannot thus be executed. If the file
+is meant to be an executable script, add the shebang, otherwise remove the
+executable bits or move the file elsewhere.
+"""
+wrong-script-end-of-line-encoding="""
+This script has wrong end-of-line encoding, usually caused by creation or
+modification on a non-Unix system. It will prevent its execution.
+"""
+wrong-file-end-of-line-encoding="""
+This file has wrong end-of-line encoding, usually caused by creation or
+modification on a non-Unix system. It could prevent it from being displayed
+correctly in some circumstances.
+"""
+file-not-utf8="""
+The character encoding of this file is not UTF-8. Consider converting it
+in the specfile's %prep section for example using iconv(1).
+"""
+filename-not-utf8="""
+The character encoding of the name of this file is not UTF-8.
+Rename it.
+"""
+file-in-meta-package="""
+This package seems to be a meta-package (an empty package used to require
+other packages), but it is not empty. You should remove or rename it, see the
+option MetaPackageRegexp.
+"""
+empty-debuginfo-package="""
+This debuginfo package contains no files. This is often a sign of binaries
+being unexpectedly stripped too early during the build, rpmbuild not being able
+to strip the binaries, the package actually being a noarch one but erratically
+packaged as arch dependent, or something else. Verify what the case is, and
+if there's no way to produce useful debuginfo out of it, disable creation of
+the debuginfo package.
+"""
+debuginfo-without-sources="""
+This debuginfo package appears to contain debug symbols but no source files.
+This is often a sign of binaries being unexpectedly stripped too early during
+the build, or being compiled without compiler debug flags (which again often
+is a sign of distro's default compiler flags ignored which might have security
+consequences), or other compiler flags which result in rpmbuild's debuginfo
+extraction not working as expected. Verify that the binaries are not
+unexpectedly stripped and that the intended compiler flags are used.
+"""
+missing-dependency-to-cron="""
+This package installs a file in /etc/cron.*/ but
+doesn't require cron to be installed. as cron is not part of the essential packages,
+your package should explicitely require cron to make sure that your cron job is
+executed. If it is an optional feature of your package, recommend or suggest cron.
+"""
+missing-dependency-to-logrotate="""
+This package installs a file in /etc/logrotate.d/ but
+doesn't require logrotate to be installed. Because logrotate is not part of the essential packages,
+your package should explicitely depend on logrotate to make sure that your logrotate
+job is executed. If it is an optional feature of your package, recommend or suggest logrotate.
+"""
+missing-dependency-to-xinetd="""
+This package installs a file in /etc/xinetd.d/ but
+doesn't require xinetd to be installed. Because xinetd is not part of the essential packages,
+your package should explicitely depend on logrotate to make sure that your xinetd
+job is executed. If it is an optional feature of your package, recommend or suggest xinetd.
+"""
+read-error="""
+This file could not be read. A reason for this could be that the info about
+it in the rpm header indicates that it is supposed to be a readable normal file
+but it actually is not in the filesystem. Because of this, some checks will
+be skipped.
+"""
+inaccessible-filename="""
+An error occurred while trying to access this file due to some characters
+in its name. Because of this, some checks will be skipped. Access could work
+with some other locale settings.
+"""
+executable-crontab-file="""
+This crontab file has executable bit set, which is refused by newer version
+of cron
+"""
+non-owner-writeable-only-crontab-file="""
+This crontab file is writeable by other users as its owner, which is refused
+by newer version of cron and insecure
+"""
+symlink-crontab-file="""
+This crontab file is a symbolic link, which is insecure and refused by newer
+version of cron
+"""
+rpath-in-buildconfig="""
+This build configuration file contains rpaths which will be introduced into
+dependent packages.
+"""
+python-bytecode-wrong-magic-value="""
+The 'magic' ABI version embedded in this python bytecode file isn't equal
+to that of the corresponding runtime, which will force the interpreter to
+recompile the .py source every time, ignoring the saved bytecode.
+"""
+python-bytecode-inconsistent-mtime="""
+The timestamp embedded in this python bytecode file isn't equal to the mtime
+of the original source file, which will force the interpreter to recompile the
+.py source every time, ignoring the saved bytecode.
+"""
+python-bytecode-without-source="""
+This python bytecode file (.pyo/.pyc) is not accompanied by its original
+source file (.py)
+"""
+duplicate-executable="""
+This executable file exists in more than one standard binary directories.
+It can cause problems when dirs in $PATH are reordered.
+"""
+no-manual-page-for-binary="""
+Each executable in standard binary directories should have a man page.
+"""
+manual-page-warning="""
+This man page may contain problems that can cause it not to be formatted
+as intended.
+"""
+incorrect-fsf-address="""
+The Free Software Foundation address in this file seems to be outdated or
+misspelled. Ask upstream to update the address, or if this is a license file,
+possibly the entire file with a new copy available from the FSF.
+"""
+gzipped-svg-icon="""
+Not all desktop environments that support SVG icons support them gzipped
+(.svgz). Install the icon as plain uncompressed SVG.
+"""
+pem-certificate="""
+Shipping a PEM certificate is likely wrong. If used for the default
+configuration, this is insecure ( since the certificate is public ). If this
+is used for validation, ie a CA certificate store, then this must be kept up
+to date due to CA compromise. The only valid reason is for testing purpose,
+so ignore this warning if this is the case.
+"""
+pem-private-key="""
+Private key in a .pem file should not be shipped in a rpm, unless
+this is for testing purpose ( ie, run by the test suite ). Shipping it
+as part of the example documentation mean that someone will sooner or later
+use it and setup a insecure configuration.
+"""
