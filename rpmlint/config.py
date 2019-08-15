@@ -27,6 +27,8 @@ class Config(object):
         self.configuration = None
         # wether to print more informations or not
         self.info = False
+        # wether to treat all messages as errors or not
+        self.strict = False
         self.find_configs(config)
         self.load_config()
         # loading of the configuration failed fall back only to defaults

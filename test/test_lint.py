@@ -8,6 +8,7 @@ from Testing import TEST_CONFIG
 options_preset = {
     'config': TEST_CONFIG,
     'verbose': False,
+    'strict': False,
     'print_config': False,
     'explain': False,
     'rpmfile': False,
@@ -125,6 +126,24 @@ def test_run_installed(capsys, packages):
     linter.run()
     out, err = capsys.readouterr()
     assert '3 packages and 0 specfiles checked' in out
+    assert not err
+
+
+@pytest.mark.parametrize('packages', [Path('test/binary/ruby2.5-rubygem-rubyzip-testsuite-1.2.1-0.x86_64.rpm')])
+def test_run_strict(capsys, packages):
+    """
+    Test if we convert warning to error
+    """
+    additional_options = {
+        'rpmfile': [packages],
+        'strict': True,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert 'W: unable-to-read-zip' not in out
+    assert 'E: unable-to-read-zip' in out
     assert not err
 
 
