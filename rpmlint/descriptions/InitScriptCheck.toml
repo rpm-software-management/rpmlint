@@ -1,0 +1,75 @@
+init-script-without-chkconfig-postin="""
+The package contains an init script but doesn't contain a %post with
+a call to chkconfig.
+"""
+postin-without-chkconfig="""
+The package contains an init script but doesn't call chkconfig in its
+%post script.
+"""
+init-script-without-chkconfig-preun="""
+The package contains an init script but doesn't contain a %preun with
+a call to chkconfig.
+"""
+preun-without-chkconfig="""
+The package contains an init script but doesn't call chkconfig in its
+%preun script.
+"""
+missing-lsb-keyword="""
+The package contains an init script that does not contain one of the LSB
+init script comment block convention keywords that are recommendable for all
+init scripts.  If there is nothing to add to a keyword's value, include the
+keyword in the script with an empty value.  Note that as of version 3.2, the
+LSB specification does not mandate presence of any keywords.
+"""
+no-status-entry="""
+In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'status' entry, which is necessary for good functionality.
+"""
+no-reload-entry="""
+In your init script (/etc/rc.d/init.d/your_file), you don't
+have a 'reload' entry, which is necessary for good functionality.
+"""
+no-chkconfig-line="""
+The init script doesn't contain a chkconfig line to specify the runlevels
+at which to start and stop it.
+"""
+no-default-runlevel="""
+The default runlevel isn't specified in the init script.
+"""
+service-default-enabled="""
+The service is enabled by default after 'chkconfig --add'; for security
+reasons, most services should not be. Use '-' as the default runlevel in the
+init script's 'chkconfig:' line and/or remove the 'Default-Start:' LSB keyword
+to fix this if appropriate for this service.
+"""
+subsys-unsupported="""
+The init script uses /var/lock/subsys which is not supported by
+this distribution.
+"""
+subsys-not-used="""
+While your daemon is running, you have to put a lock file in
+/var/lock/subsys/. To see an example, look at this directory on your
+machine and examine the corresponding init scripts.
+"""
+incoherent-subsys="""
+The filename of your lock file in /var/lock/subsys/ is incoherent
+with your actual init script name. For example, if your script name
+is httpd, you have to use 'httpd' as the filename in your subsys directory.
+It is also possible that rpmlint gets this wrong, especially if the init
+script contains nontrivial shell variables and/or assignments. These
+cases usually manifest themselves when rpmlint reports that the subsys name
+starts a with '$'; in these cases a warning instead of an error is reported
+and you should check the script manually.
+"""
+incoherent-init-script-name="""
+The init script name should be the same as the package name in lower case,
+or one with 'd' appended if it invokes a process by that name.
+"""
+init-script-name-with-dot="""
+The init script name should not contain a dot in its name. Some versions
+of chkconfig don't work as expected with init script names like that.
+"""
+init-script-non-executable="""
+The init script should have at least the execution bit set for root
+in order for it to run at boot time.
+"""
