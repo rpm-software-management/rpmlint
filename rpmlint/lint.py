@@ -26,6 +26,8 @@ class Lint(object):
             self.config.load_rpmlintrc(options['rpmlintrc'])
         if options['verbose']:
             self.config.info = options['verbose']
+        if options['strict']:
+            self.config.strict = options['strict']
         if not self.config.configuration['ExtractDir']:
             self.config.configuration['ExtractDir'] = gettempdir()
         # initialize output buffer

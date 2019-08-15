@@ -18,6 +18,7 @@ class Filter(object):
         # badness stuff
         self.badness_threshold = config.configuration['BadnessThreshold']
         self.badness = config.configuration['Scoring']
+        self.strict = config.strict
         # filters regular expression string, compiled from configuration[filter]
         self.filters_re = None
         self.non_named_group_re = re.compile(r'[^\\](\()[^:]')
@@ -68,6 +69,10 @@ class Filter(object):
                 level = 'E'
             elif level == 'E':
                 level = 'W'
+        # allow strict reporting where we override levels and treat everything
+        # as an error
+        if self.strict:
+            level = 'E'
         # raise the counters
         self.score += badness
         self.printed_messages[level] += 1
