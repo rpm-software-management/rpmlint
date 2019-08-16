@@ -69,3 +69,12 @@ def test_opt_dependency(binariescheck):
     assert not test.ldd_parser.parsing_failed
     out = output.print_results(output.results)
     assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out
+
+
+def test_usr_dependency(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')
+    assert not test.readelf_parser.parsing_failed()
+    assert not test.ldd_parser.parsing_failed
+    out = output.print_results(output.results)
+    assert 'W: linked-against-usr-library /bin/usr-dependency /usr/libfoo.so' in out
