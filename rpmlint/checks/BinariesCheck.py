@@ -47,7 +47,7 @@ class BinariesCheck(AbstractCheck):
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
-                                self._check_opt_library_dependency,
+                                self._check_library_dependency_location,
                                 self._check_security_functions,
                                 self._check_rpath,
                                 self._check_library_dependency,
@@ -140,12 +140,19 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'unused-direct-shlib-dependency',
                                      path, dependency)
 
-    def _check_opt_library_dependency(self, pkg, pkgfile_path, path):
+    def _check_library_dependency_location(self, pkg, pkgfile_path, path):
         if not self.readelf_parser.is_archive:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
                     self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
-                    return
+                    break
+
+        nonusr = ('/bin', '/lib', '/sbin')
+        if path.startswith(nonusr):
+            for dependency in self.ldd_parser.dependencies:
+                if dependency.startswith('/usr/'):
+                    self.output.add_info('W', pkg, 'linked-against-usr-library', path, dependency)
+                    break
 
     def _check_security_functions(self, pkg, pkgfile_path, path):
         setgid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgid_call_regex))

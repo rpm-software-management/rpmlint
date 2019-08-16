@@ -131,3 +131,7 @@ was not created with -ffat-lto-objects option.
 linked-against-opt-library="""
 This executable is linked against a shared library in /opt folder.
 """
+linked-against-usr-library="""
+Libraries and executables under /bin, /sbin, /lib and /lib64 may not link
+against a shared library in /usr folder.
+"""
