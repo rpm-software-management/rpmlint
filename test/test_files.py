@@ -71,6 +71,13 @@ def test_devel_files(tmpdir, package, filescheck):
     assert 'no-documentation' in out
 
 
+@pytest.mark.parametrize('package', ['binary/python3-greenlet'])
+def test_sphinx_inv_files(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    assert not len(output.results)
+
+
 def test_script_interpreter():
     assert se(b'#!/bin/sh\n# Hello world!\n') == ('/bin/sh', '')
     assert se(b'#!/bin/bash -e\n') == ('/bin/bash', '-e')
