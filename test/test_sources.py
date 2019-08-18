@@ -14,10 +14,28 @@ def sourcescheck():
 
 
 @pytest.mark.parametrize('package', ['source/wrongsrc'])
-def test_inconsistent_file_extension(tmpdir, package, sourcescheck):
+def test_extension_and_permissions(tmpdir, package, sourcescheck):
     output, test = sourcescheck
     test.check(get_tested_package(package, tmpdir))
-    assert len(output.results) == 3
     out = output.print_results(output.results)
+
+    assert len(output.results) == 3
+
     assert 'inconsistent-file-extension' in out
+    assert 'name extension indicates a different compression format' in out
+
+    assert 'strange-permission' in out
     assert 'a file should have' in out
+
+
+@pytest.mark.parametrize('package', ['source/not-compressed-multi-spec'])
+def test_compression_and_multispec(tmpdir, package, sourcescheck):
+    output, test = sourcescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+
+    assert 'source-or-patch-not-compressed' in out
+    assert 'source archive or file in your package is not compressed' in out
+
+    assert 'multiple-specfiles' in out
+    assert 'package contains multiple spec files' in out
