@@ -12,7 +12,6 @@ Checks = [
     "MenuCheck",
     "MenuXDGCheck",
     "NamingPolicyCheck",
-    "PamCheck",
     "PostCheck",
     "SignatureCheck",
     "SourceCheck",
