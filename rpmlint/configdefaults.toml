@@ -15,7 +15,6 @@ Checks = [
     "NamingPolicyCheck",
     "PamCheck",
     "PostCheck",
-    "RpmFileCheck",
     "SignatureCheck",
     "SourceCheck",
     "SpecCheck",

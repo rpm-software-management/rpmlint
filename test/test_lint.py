@@ -32,7 +32,6 @@ basic_tests = [
     'NamingPolicyCheck',
     'PamCheck',
     'PostCheck',
-    'RpmFileCheck',
     'SignatureCheck',
     'SourceCheck',
     'SpecCheck',
