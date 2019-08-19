@@ -29,7 +29,6 @@ basic_tests = [
     'MenuCheck',
     'MenuXDGCheck',
     'NamingPolicyCheck',
-    'PamCheck',
     'PostCheck',
     'RpmFileCheck',
     'SignatureCheck',
