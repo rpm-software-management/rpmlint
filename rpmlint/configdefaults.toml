@@ -9,7 +9,6 @@ Checks = [
     "FilesCheck",
     "InitScriptCheck",
     "I18NCheck",
-    "LSBCheck",
     "MenuCheck",
     "MenuXDGCheck",
     "NamingPolicyCheck",
