@@ -7,7 +7,7 @@ class SourceCheck(AbstractCheck):
     """
     Validate files in a source package.
     """
-    source_regex = re.compile(r'\.(tar|patch|tgz|diff)$')
+    source_regex = re.compile(r'\.(tar|tgz)$')
     compressed_fileext_magic = {
         'xz': 'XZ compressed',
         'gz': 'gzip compressed',
