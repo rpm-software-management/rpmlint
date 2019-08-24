@@ -47,6 +47,7 @@ class BinariesCheck(AbstractCheck):
                                 self._check_no_text_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
+                                self._check_dependency,
                                 self._check_library_dependency_location,
                                 self._check_security_functions,
                                 self._check_rpath,
@@ -130,14 +131,14 @@ class BinariesCheck(AbstractCheck):
         if not self.readelf_parser.section_info.pic:
             self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
 
+    def _check_dependency(self, pkg, pkgfile_path, path):
+        # following issues are errors for shared libs and warnings for executables
         if not self.readelf_parser.is_archive and not self.readelf_parser.is_debug:
-            # It could be useful to check these for others than shared
-            # libs only, but that has potential to generate lots of
-            # false positives and noise.
+            info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
-                self.output.add_info('E', pkg, 'undefined-non-weak-symbol', path, symbol)
+                self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', path, symbol)
             for dependency in self.ldd_parser.unused_dependencies:
-                self.output.add_info('E', pkg, 'unused-direct-shlib-dependency',
+                self.output.add_info(info_type, pkg, 'unused-direct-shlib-dependency',
                                      path, dependency)
 
     def _check_library_dependency_location(self, pkg, pkgfile_path, path):
@@ -210,7 +211,6 @@ class BinariesCheck(AbstractCheck):
 
         forbidden_calls = []
         for r_name, func in forbidden_functions.items():
-            print(func['f_regex'])
             if any(self.readelf_parser.symbol_table_info.get_functions_for_regex(func['f_regex'])):
                 forbidden_calls.append(r_name)
 
