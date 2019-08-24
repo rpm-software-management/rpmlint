@@ -59,7 +59,16 @@ def test_unused_dependency_in_package(binariescheck):
     assert not test.readelf_parser.parsing_failed()
     assert not test.ldd_parser.parsing_failed
     out = output.print_results(output.results)
-    assert 'unused-direct-shlib-dependency ' in out
+    assert 'E: unused-direct-shlib-dependency ' in out
+
+
+def test_unused_dependency_in_package_for_executable(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
+    assert not test.readelf_parser.parsing_failed()
+    assert not test.ldd_parser.parsing_failed
+    out = output.print_results(output.results)
+    assert 'W: unused-direct-shlib-dependency ' in out
 
 
 def test_opt_dependency(binariescheck):
