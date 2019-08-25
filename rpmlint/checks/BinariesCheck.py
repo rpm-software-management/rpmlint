@@ -45,6 +45,7 @@ class BinariesCheck(AbstractCheck):
         # register all check functions
         self.check_functions = [self._check_lto_section,
                                 self._check_no_text_in_archive,
+                                self._check_missing_symtab_in_archive,
                                 self._check_executable_stack,
                                 self._check_shared_library,
                                 self._check_dependency,
@@ -79,6 +80,15 @@ class BinariesCheck(AbstractCheck):
                 if not code_in_text:
                     self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
                     return
+
+    def _check_missing_symtab_in_archive(self, pkg, pkgfile_path, path):
+        if self.readelf_parser.is_archive:
+            for elf_file in self.readelf_parser.section_info.elf_files:
+                for section in elf_file:
+                    if section.name == '.symtab':
+                        return
+
+            self.output.add_info('E', pkg, 'static-library-without-symtab', path)
 
     # Check for LTO sections
     def _check_lto_section(self, pkg, pkgfile_path, path):
