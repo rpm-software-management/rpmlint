@@ -39,3 +39,15 @@ def test_lto_archive_text(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     assert 'lto-no-text-in-archive' in output.print_results(output.results)
+
+
+@pytest.mark.parametrize('package', ['binary/libtool-wrapper'])
+def test_libtool_wrapper(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: libtool-wrapper-in-package' in out
+    assert 'W: unstripped-binary-or-object' in out
+    assert 'E: arch-dependent-file-in-usr-share' in out
+    assert 'W: unstripped-binary-or-object /bin/main' in out
+    assert 'E: binary-in-etc /etc/main' in out
