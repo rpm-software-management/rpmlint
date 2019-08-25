@@ -7,6 +7,9 @@
 #                 the rpm file or by accessing the files contained inside.
 #############################################################################
 
+import bz2
+import gzip
+import lzma
 import os
 import re
 from shlex import quote
@@ -116,6 +119,7 @@ def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all='C'):
     return sts, text
 
 
+gzip_regex = re.compile(r'\.t?gz?$')
 bz2_regex = re.compile(r'\.t?bz2?$')
 xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
 
@@ -131,9 +135,29 @@ def catcmd(fname):
     return cat
 
 
+def compression_algorithm(fname):
+    """Return compression algorithm based on filename if known, None otherwise."""
+    fname = str(fname)
+    if gzip_regex.search(fname):
+        return gzip
+    elif bz2_regex.search(fname):
+        return bz2
+    elif xz_regex.search(fname):
+        return lzma
+    else:
+        return None
+
+
 def is_utf8(fname):
-    (sts, output) = getstatusoutput(catcmd(fname).split() + [fname], raw=True)
-    return not sts and is_utf8_bytestr(output)
+    compression = compression_algorithm(fname)
+    if compression is None:
+        return True
+
+    with compression.open(fname, 'rb') as f:
+        try:
+            return is_utf8_bytestr(f.read())
+        except OSError:
+            return True
 
 
 def is_utf8_bytestr(s):
