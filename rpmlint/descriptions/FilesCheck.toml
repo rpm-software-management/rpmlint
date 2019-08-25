@@ -389,3 +389,7 @@ this is for testing purpose ( ie, run by the test suite ). Shipping it
 as part of the example documentation mean that someone will sooner or later
 use it and setup a insecure configuration.
 """
+tcl-extension-file="""
+Script libraries for Tcl extensions should be in a package-specific
+subdir of /usr/share/tcl.
+"""

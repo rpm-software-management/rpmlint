@@ -106,6 +106,14 @@ def test_invalid_package(tmpdir, package, filescheck):
     assert 'E: info-dir-file /usr/info/dir' in out
 
 
+@pytest.mark.parametrize('package', ['binary/tclpackage'])
+def test_tcl_package(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: tcl-extension-file /usr/lib64/tcl/pkgIndex.tcl' in out
+
+
 def test_script_interpreter():
     assert se(b'#!/bin/sh\n# Hello world!\n') == ('/bin/sh', '')
     assert se(b'#!/bin/bash -e\n') == ('/bin/bash', '-e')
