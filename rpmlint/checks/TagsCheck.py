@@ -7,7 +7,7 @@
 #############################################################################
 
 import calendar
-import os
+from pathlib import Path
 import re
 import time
 from urllib.parse import urlparse
@@ -409,7 +409,7 @@ class TagsCheck(AbstractCheck):
             # as arch for source packages, do it ourselves
             expfmt = re.sub(r'(?i)%\{?ARCH\b\}?', pkg.arch, expfmt)
         expected = pkg.header.sprintf(expfmt).split('/')[-1]
-        basename = os.path.basename(pkg.filename)
+        basename = Path(pkg.filename).parent
         if basename != expected:
             self.output.add_info('W', pkg, 'non-coherent-filename', basename, expected)
 

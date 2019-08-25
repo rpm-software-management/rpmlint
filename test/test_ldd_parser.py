@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
@@ -18,7 +18,7 @@ def binariescheck():
 
 
 def get_full_path(path):
-    return str(get_tested_path(os.path.join('ldd', path)))
+    return str(get_tested_path(Path('ldd', path)))
 
 
 def lddparser(path, system_path=None):

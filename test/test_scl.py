@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import pytest
 from rpmlint.checks.SCLCheck import SCLCheck
@@ -43,7 +43,7 @@ def test_scl_source_rpm(tmpdir, package, sclcheck):
     While adding more checks, this might change
     """
     output, test = sclcheck
-    test.check(get_tested_package(os.path.join('source', package), tmpdir))
+    test.check(get_tested_package(Path('source', package), tmpdir))
     out = output.print_results(output.results)
     assert not out
 
@@ -57,7 +57,7 @@ def test_scl_binary_rpm(tmpdir, package, sclcheck):
     While adding more checks, this might change
     """
     output, test = sclcheck
-    test.check(get_tested_package(os.path.join('binary', package), tmpdir))
+    test.check(get_tested_package(Path('binary', package), tmpdir))
     out = output.print_results(output.results)
     assert not out
 

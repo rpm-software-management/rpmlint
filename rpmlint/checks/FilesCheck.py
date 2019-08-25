@@ -9,6 +9,7 @@
 
 from datetime import datetime
 import os
+from pathlib import Path
 import re
 from shlex import quote
 import stat
@@ -554,7 +555,7 @@ class FilesCheck(AbstractCheck):
 
             # Hardlink check
             for hardlink in hardlinks.get((rdev, inode), ()):
-                if os.path.dirname(hardlink) != os.path.dirname(f):
+                if Path(hardlink).parent != Path(f).parent:
                     self.output.add_info('W', pkg, 'cross-directory-hard-link', f, hardlink)
             hardlinks.setdefault((rdev, inode), []).append(f)
 
@@ -952,7 +953,7 @@ class FilesCheck(AbstractCheck):
                 # relative link
                 else:
                     if not is_so:
-                        abslink = '%s/%s' % (os.path.dirname(f), link)
+                        abslink = '%s/%s' % (Path(f).parent, link)
                         abslink = os.path.normpath(abslink)
                         if abslink not in files and abslink not in req_names:
                             is_exception = False

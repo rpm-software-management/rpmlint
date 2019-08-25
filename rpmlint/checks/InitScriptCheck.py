@@ -7,7 +7,7 @@
 # Purpose         : check init scripts (files in /etc/rc.d/init.d)
 #############################################################################
 
-import os
+from pathlib import Path
 import re
 
 import rpm
@@ -45,7 +45,7 @@ class InitScriptCheck(AbstractCheck):
                     not fname.startswith('/etc/rc.d/init.d/'):
                 continue
 
-            basename = os.path.basename(fname)
+            basename = Path(fname).name
             initscript_list.append(basename)
             if pkgfile.mode & 0o500 != 0o500:
                 self.output.add_info('E', pkg, 'init-script-non-executable', fname)

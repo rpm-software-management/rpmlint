@@ -6,7 +6,7 @@
 # Purpose       : Software Collections checks.
 #############################################################################
 
-import os
+from pathlib import Path
 import re
 
 from rpmlint import pkg as Pkg
@@ -112,7 +112,7 @@ class SCLCheck(AbstractCheck):
                                              fname)
                     continue
                 if is_runtime and \
-                   fname == os.path.join('/etc/scl/prefixes', scl_name):
+                   fname == str(Path('/etc/scl/prefixes', scl_name)):
                     continue
                 self.output.add_info('E', pkg, 'file-outside-of-scl-tree', fname)
             else:
