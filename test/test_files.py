@@ -48,6 +48,16 @@ def test_python_bytecode_magic(tmpdir, package, filescheck):
     assert 'python-bytecode-wrong-magic-value' not in out
 
 
+@pytest.mark.parametrize('package', ['binary/testdocumentation'])
+def test_file_not_utf8_for_compression_algorithms(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'file-not-utf8 /usr/share/doc/packages/testdocumentation/README1.gz' in out
+    assert 'file-not-utf8 /usr/share/doc/packages/testdocumentation/README2.bz2' in out
+    assert 'file-not-utf8 /usr/share/doc/packages/testdocumentation/README3.xz' in out
+
+
 @pytest.mark.parametrize('version, magic', ((36, 3379), (37, 3393)))
 def test_pyc_magic_from_chunk(version, magic):
     chunk = chunk_from_pyc(version)
