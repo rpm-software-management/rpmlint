@@ -213,6 +213,7 @@ fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)
 fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
 
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
+tcl_regex = re.compile(r'^/usr/lib(64)?/([^/]+/)?pkgIndex\.tcl')
 
 printable_extended_ascii = b'\n\r\t\f\b'
 if bytes is str:
@@ -835,6 +836,9 @@ class FilesCheck(AbstractCheck):
                         self.output.add_info('W', pkg, 'pem-certificate', f)
                     if pkg.grep(start_private_key_regex, f):
                         self.output.add_info('E', pkg, 'pem-private-key', f)
+
+                if tcl_regex.search(f):
+                    self.output.add_info('E', pkg, 'tcl-extension-file', f)
 
                 # text file checks
                 if istext:
