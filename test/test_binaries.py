@@ -51,3 +51,12 @@ def test_libtool_wrapper(tmpdir, package, binariescheck):
     assert 'E: arch-dependent-file-in-usr-share' in out
     assert 'W: unstripped-binary-or-object /bin/main' in out
     assert 'E: binary-in-etc /etc/main' in out
+
+
+@pytest.mark.parametrize('package', ['binary/noarch'])
+def test_no_arch_issues(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: arch-independent-package-contains-binary-or-object /bin/main' in out
+    assert 'E: noarch-with-lib64' in out
