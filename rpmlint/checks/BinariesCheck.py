@@ -41,6 +41,7 @@ class BinariesCheck(AbstractCheck):
         self.setuid_call_regex = self.create_regexp_call(r'set(?:res|e)?uid')
         self.setgroups_call_regex = self.create_regexp_call(r'(?:ini|se)tgroups')
         self.mktemp_call_regex = self.create_regexp_call('mktemp')
+        self.gethostbyname_call_regex = self.create_regexp_call(r'(gethostbyname|gethostbyname2|gethostbyaddr|gethostbyname_r|gethostbyname2_r|gethostbyaddr_r)')
 
         # register all check functions
         self.check_functions = [self._check_lto_section,
@@ -170,12 +171,16 @@ class BinariesCheck(AbstractCheck):
         setuid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setuid_call_regex))
         setgroups = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgroups_call_regex))
         mktemp = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.mktemp_call_regex))
+        gethostbyname = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.gethostbyname_call_regex))
 
         if setgid and setuid and not setgroups:
             self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid', path)
 
         if mktemp:
             self.output.add_info('E', pkg, 'call-to-mktemp', path)
+
+        if gethostbyname:
+            self.output.add_info('W', pkg, 'binary-or-shlib-calls-gethostbyname', path)
 
     def _check_rpath(self, pkg, pkgfile_path, path):
         for runpath in self.readelf_parser.dynamic_section_info.runpath:
