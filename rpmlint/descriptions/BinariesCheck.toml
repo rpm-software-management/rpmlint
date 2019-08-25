@@ -135,3 +135,7 @@ linked-against-usr-library="""
 Libraries and executables under /bin, /sbin, /lib and /lib64 may not link
 against a shared library in /usr folder.
 """
+static-library-without-symtab="""
+The static library doesn't contain any symbols and therefore can't be linked
+against. This may indicate a stripped archive.
+"""

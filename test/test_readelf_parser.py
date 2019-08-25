@@ -105,6 +105,13 @@ def test_lto_archive_text(binariescheck):
     assert 'E: lto-no-text-in-archive' in out
 
 
+def test_stripped_archive(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-archive.a'), 'x.a')
+    out = output.print_results(output.results)
+    assert 'E: static-library-without-symtab' in out
+
+
 def test_lto_archive_text_function_sections(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
