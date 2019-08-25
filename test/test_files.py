@@ -78,6 +78,24 @@ def test_sphinx_inv_files(tmpdir, package, filescheck):
     assert not len(output.results)
 
 
+@pytest.mark.parametrize('package', ['binary/filechecks'])
+def test_invalid_package(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: non-ghost-in-run /run/foo' in out
+    assert 'W: systemd-unit-in-etc /etc/systemd/system/foo' in out
+    assert 'W: udev-rule-in-etc /etc/udev/rules.d/foo' in out
+    assert 'W: tmpfiles-conf-in-etc /etc/tmpfiles.d/foo' in out
+    assert 'E: subdir-in-bin /bin/foo/bar' in out
+    assert 'W: siteperl-in-perl-module /site_perl/foo' in out
+    assert 'E: backup-file-in-package /~backup.rej' in out
+    assert 'E: version-control-internal-file /.gitignore' in out
+    assert 'E: htaccess-file /.htaccess' in out
+    assert 'W: manifest-in-perl-module /usr/share/doc/perl-foo/MANIFEST' in out
+    assert 'E: info-dir-file /usr/info/dir' in out
+
+
 def test_script_interpreter():
     assert se(b'#!/bin/sh\n# Hello world!\n') == ('/bin/sh', '')
     assert se(b'#!/bin/bash -e\n') == ('/bin/bash', '-e')
