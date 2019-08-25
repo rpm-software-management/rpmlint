@@ -142,3 +142,7 @@ against. This may indicate a stripped archive.
 binary-or-shlib-calls-gethostbyname="""
 The binary calls gethostbyname. Please port the code to use getaddrinfo.
 """
+static-library-without-debuginfo="""
+The static library doesn't contain any debuginfo. Binaries linking against
+this static library can't be properly debugged.
+"""
