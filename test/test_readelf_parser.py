@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import re
 
 import pytest
@@ -19,7 +19,7 @@ def binariescheck():
 
 
 def get_full_path(path):
-    return str(get_tested_path(os.path.join('readelf', path)))
+    return str(get_tested_path(Path('readelf', path)))
 
 
 def readelfparser(path, system_path=None):

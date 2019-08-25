@@ -6,7 +6,7 @@
 # Purpose       : check the spec file of a source rpm.
 #############################################################################
 
-import os
+from pathlib import Path
 import re
 from urllib.parse import urlparse
 
@@ -536,7 +536,7 @@ class SpecCheck(AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
 
         out = Pkg.getstatusoutput(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % os.path.dirname(self._spec_file), '--specfile', self._spec_file))
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file))
         parse_error = False
         for line in out[1].splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855

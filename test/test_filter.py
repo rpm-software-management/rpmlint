@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from typing.re import Pattern
 
 from rpmlint.config import Config
@@ -8,8 +8,8 @@ from Testing import get_tested_package, testpath
 
 TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
-TEST_PACKAGE = os.path.join('binary', 'ngircd')
-TEST_PACKAGE2 = os.path.join('binary', 'dovecot')
+TEST_PACKAGE = Path('binary', 'ngircd')
+TEST_PACKAGE2 = Path('binary', 'dovecot')
 
 
 def test_filters_regexp():
