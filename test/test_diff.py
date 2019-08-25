@@ -22,3 +22,29 @@ def test_distribution_tags():
     assert 36 <= len(textdiff.splitlines()) <= 38
 
     assert 'added       /usr/share/mc/syntax/yaml.syntax' in textdiff
+
+
+def test_exclude():
+    oldpkg = testpath() / 'binary/mc-4.8.15-10.3.1.x86_64.rpm'
+    newpkg = testpath() / 'binary/mc-4.8.21-2.1.x86_64.rpm'
+    ignore = list('T5S')
+
+    print(Rpmdiff(oldpkg, newpkg, ignore=ignore).textdiff())
+
+    for exclude in [], ['/usr/share/mc/ski'], ['/share/mc/skins'], ['skins']:
+        diff = Rpmdiff(oldpkg, newpkg, ignore, exclude)
+        textdiff = diff.textdiff()
+        assert '/usr/share/mc/skins/yadt256.ini' in textdiff
+
+    for exclude in (['/usr/share/mc/skins'], ['/usr/share/*/skins'],
+                    ['/*/*/*/skins']):
+        diff = Rpmdiff(oldpkg, newpkg, ignore, exclude)
+        textdiff = diff.textdiff()
+        assert '/usr/share/mc/skins/yadt256.ini' not in textdiff
+        assert '/usr/share/mc/syntax/cuda.syntax' in textdiff
+
+    for exclude in ['*.syntax'], ['syntax/cuda.syntax']:
+        diff = Rpmdiff(oldpkg, newpkg, ignore, exclude)
+        textdiff = diff.textdiff()
+        assert '/usr/share/mc/skins/yadt256.ini' in textdiff
+        assert '/usr/share/mc/syntax/cuda.syntax' not in textdiff

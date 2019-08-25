@@ -1,4 +1,5 @@
 from itertools import chain
+import pathlib
 import sys
 import tempfile
 
@@ -39,11 +40,10 @@ class Rpmdiff(object):
     ADDED = 'added'
     REMOVED = 'removed'
 
-    def __init__(self, old, new, ignore=None):
+    def __init__(self, old, new, ignore=None, exclude=None):
         self.result = []
-        self.ignore = ignore
-        if self.ignore is None:
-            self.ignore = []
+        self.ignore = ignore or []
+        self.exclude = exclude or []
 
         FILEIDX = self.__FILEIDX
         for tag in self.ignore:
@@ -84,6 +84,9 @@ class Rpmdiff(object):
         files.sort()
 
         for f in files:
+            if self._excluded(f):
+                continue
+
             diff = False
 
             old_file = old_files_dict.get(f)
@@ -104,6 +107,17 @@ class Rpmdiff(object):
                         format = format + '.'
                 if diff:
                     self.__add(self.FORMAT, (format, f))
+
+    def _excluded(self, f):
+        f = pathlib.PurePath(f)
+        for glob in self.exclude:
+            if f.match(glob):
+                return True
+            if glob.startswith('/'):
+                for parent in f.parents:
+                    if parent.match(glob):
+                        return True
+        return False
 
     # return a report of the differences
     def textdiff(self):

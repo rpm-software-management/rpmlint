@@ -40,11 +40,17 @@ def process_diff_args(argv):
     parser.add_argument('old_package', metavar='RPM_ORIG', type=Path, help='the old package')
     parser.add_argument('new_package', metavar='RPM_NEW', type=Path, help='the new package')
     parser.add_argument('-v', '--version', action='version', version=__version__, help='show package version and exit')
-    parser.add_argument('-i', '--ignore', nargs='*', default='', choices=['S', 'M', '5', 'D', 'N', 'L', 'V', 'U', 'G', 'F', 'T'],
+    parser.add_argument('-i', '--ignore', nargs='+', default=None, choices=['S', 'M', '5', 'D', 'N', 'L', 'V', 'U', 'G', 'F', 'T'],
                         help="""file property to ignore when calculating differences.
                                 Valid values are: S (size), M (mode), 5 (checksum), D (device),
                                 N (inode), L (number of links), V (vflags), U (user), G (group),
                                 F (digest), T (time)""")
+    parser.add_argument('-e', '--exclude', metavar='GLOB', nargs='+', default=None,
+                        help="""Paths to exclude when showing differences.
+                                Takes a glob. When absolute (starting with /)
+                                all files in a matching directory are excluded as well.
+                                When relative, files matching the pattern anywhere
+                                are excluded but not directory contents.""")
 
     # print help if there is no argument or less than the 2 mandatory ones
     if len(argv) < 2:
@@ -141,7 +147,8 @@ def diff():
     Main wrapper for diff command processing
     """
     options = process_diff_args(sys.argv[1:])
-    d = Rpmdiff(options['old_package'], options['new_package'], ignore=options['ignore'])
+    d = Rpmdiff(options['old_package'], options['new_package'],
+                ignore=options['ignore'], exclude=options['exclude'])
     textdiff = d.textdiff()
     if textdiff:
         print(textdiff)
