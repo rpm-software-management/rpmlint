@@ -201,6 +201,14 @@ def test_call_setgroups(binariescheck):
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
 
 
+def test_call_gethostbyname(binariescheck):
+    output, test = binariescheck
+
+    test.run_elf_checks(FakePkg('fake'), get_full_path('hostname'), '/usr/bin/hostname')
+    out = output.print_results(output.results)
+    assert 'W: binary-or-shlib-calls-gethostbyname' in out
+
+
 def test_missing_dependecy(binariescheck):
     output, test = binariescheck
 

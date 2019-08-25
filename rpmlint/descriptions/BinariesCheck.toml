@@ -139,3 +139,6 @@ static-library-without-symtab="""
 The static library doesn't contain any symbols and therefore can't be linked
 against. This may indicate a stripped archive.
 """
+binary-or-shlib-calls-gethostbyname="""
+The binary calls gethostbyname. Please port the code to use getaddrinfo.
+"""
