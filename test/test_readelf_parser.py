@@ -103,6 +103,7 @@ def test_lto_archive_text(binariescheck):
     test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-lto.a'), 'x.a')
     out = output.print_results(output.results)
     assert 'E: lto-no-text-in-archive' in out
+    assert 'E: static-library-without-debuginfo' in out
 
 
 def test_stripped_archive(binariescheck):
@@ -128,6 +129,12 @@ def test_lto_archive_preinit_array(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('libclang_rt.asan-preinit-x86_64.a'), 'x.a')
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
+
+
+def test_archive_with_debuginfo(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('archive-with-debuginfo.a'), 'x.a')
+    assert 'E: static-library-without-debuginfo' not in output.print_results(output.results)
 
 
 def test_executable_stack(binariescheck):
