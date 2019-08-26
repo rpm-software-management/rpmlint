@@ -60,3 +60,19 @@ def test_no_arch_issues(tmpdir, package, binariescheck):
     out = output.print_results(output.results)
     assert 'E: arch-independent-package-contains-binary-or-object /bin/main' in out
     assert 'E: noarch-with-lib64' in out
+
+
+@pytest.mark.parametrize('package', ['binary/libnoexec'])
+def test_shlib_with_no_exec(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: shared-lib-not-executable /lib64/libfoo.so' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/glibc'])
+def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: shared-lib-not-executable /lib64/libpthread.so' in out
