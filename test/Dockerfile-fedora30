@@ -16,6 +16,8 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/ldd \
         /usr/bin/c++filt \
         /usr/bin/xz \
+        dash \
+        devscripts-checkbashisms \
         glibc \
         hunspell-en \
         hunspell-cs \
