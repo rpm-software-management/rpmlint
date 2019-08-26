@@ -55,7 +55,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_security_functions,
                                 self._check_rpath,
                                 self._check_library_dependency,
-                                self._check_forbidden_functions]
+                                self._check_forbidden_functions,
+                                self._check_executable_shlib]
 
     @staticmethod
     def create_nonlibc_regexp_call(call):
@@ -261,6 +262,12 @@ class BinariesCheck(AbstractCheck):
         for fn in forbidden_functions_filtered:
             self.output.add_info('W', pkg, fn, path, forbidden_functions[fn]['f_name'])
 
+    def _check_executable_shlib(self, pkg, pkgfile_path, path):
+        if not self.is_exec and self.readelf_parser.is_shlib:
+            interp = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'INTERP']
+            if interp:
+                self.output.add_info('E', pkg, 'shared-lib-not-executable', path)
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         if self.readelf_parser.parsing_failed():
@@ -387,7 +394,6 @@ class BinariesCheck(AbstractCheck):
                 self.is_exec = True
 
             if self.is_exec:
-
                 if self.bin_regex.search(fname):
                     exec_files.append(fname)
 

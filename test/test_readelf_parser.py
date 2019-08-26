@@ -216,7 +216,7 @@ def test_call_gethostbyname(binariescheck):
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
 
 
-def test_missing_dependecy(binariescheck):
+def test_missing_dependency(binariescheck):
     output, test = binariescheck
 
     test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')

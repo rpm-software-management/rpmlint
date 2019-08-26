@@ -146,3 +146,8 @@ static-library-without-debuginfo="""
 The static library doesn't contain any debuginfo. Binaries linking against
 this static library can't be properly debugged.
 """
+shared-lib-not-executable="""
+This library doesn't have the executable bit set. Without this bit set,
+rpm for instance won't be able identify the file as a library and not
+generate dependencies or strip debug symbols from it.
+"""
