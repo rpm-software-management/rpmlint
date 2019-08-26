@@ -1,7 +1,8 @@
 FROM opensuse/tumbleweed
 
 RUN zypper -n install \
-        cpio gzip bzip2 groff make elfutils xz \
+        checkbashisms cpio dash gzip \
+        bzip2 groff make elfutils xz \
         perl binutils glibc desktop-file-utils \
         man appstream-glib \
         myspell-en_US myspell-cs_CZ \

@@ -1,0 +1,7 @@
+bin-sh-syntax-error="""
+A /bin/sh shell script contains a POSIX shell syntax error.
+This might indicate a potential bash-specific feature being used,
+try dash -n <file> for more detailed error message."""
+potential-bashisms="""
+checkbashisms reported potential bashisms in a /bin/sh shell
+script, you might want to manually check this script for bashisms."""
