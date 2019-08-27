@@ -19,6 +19,7 @@ options_preset = {
 basic_tests = [
     'AppDataCheck',
     'BinariesCheck',
+    'BuildDateCheck',
     'ConfigCheck',
     'DistributionCheck',
     'DocFilesCheck',

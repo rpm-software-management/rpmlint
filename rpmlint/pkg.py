@@ -577,8 +577,8 @@ class Pkg(AbstractPkg):
                     if regex.search(line):
                         ret.append(str(lineno))
                         break
-        except Exception as e:
-            print_warning(f'Unable to read {filename}: {e}')
+        except Exception:
+            pass
         return ret
 
     def langtag(self, tag, lang):
