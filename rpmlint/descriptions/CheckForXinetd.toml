@@ -1,0 +1,4 @@
+obsolete-xinetd-requirement="""
+Xinetd is obsolete by systemd socket activated services.
+Please stop using xinetd and switch to socket activation
+from systemd.
