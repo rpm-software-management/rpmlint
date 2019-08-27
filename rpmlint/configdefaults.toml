@@ -2,6 +2,7 @@
 Checks = [
     "AppDataCheck",
     "BinariesCheck",
+    "BuildDateCheck",
     "ConfigCheck",
     "DistributionCheck",
     "DocFilesCheck",
