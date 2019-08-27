@@ -115,10 +115,6 @@ class SpecCheck(AbstractCheck):
         super().__init__(config, output)
         self._spec_file = None
         self._spec_name = None
-        self.valid_groups = config.configuration['ValidGroups']
-        self.output.error_details.update({'non-standard-group':
-                                         """The value of the Group tag in the package is not valid.  Valid groups are:
-                                         '%s'.""" % ', '.join(self.valid_groups)})
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
 
     def check_source(self, pkg):
@@ -146,7 +142,6 @@ class SpecCheck(AbstractCheck):
 
     def check_spec(self, pkg):
         self._spec_file = pkg.name
-        spec_only = isinstance(pkg, Pkg.FakePkg)
         spec_lines = Pkg.readlines(self._spec_file)
         patches = {}
         applied_patches = []
@@ -466,14 +461,6 @@ class SpecCheck(AbstractCheck):
                 greps = deprecated_grep_regex.findall(line)
                 if greps:
                     self.output.add_info('W', pkg, 'deprecated-grep', greps)
-
-            # If not checking spec file only, we're checking one inside a
-            # SRPM -> skip this check to avoid duplicate warnings (#167)
-            if spec_only and self.valid_groups and \
-               line.lower().startswith('group:'):
-                group = line[6:].strip()
-                if group not in self.valid_groups:
-                    self.output.add_info('W', pkg, 'non-standard-group', group)
 
             # Test if there are macros in comments
             if hashPos != -1 and \

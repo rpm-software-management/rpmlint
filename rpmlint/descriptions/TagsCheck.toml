@@ -66,10 +66,6 @@ but just textual description content, thus being a no-op.  Verify if this is
 the case, and move the tag to a place in the specfile where %description
 won't fool the specfile parser, and rebuild the package.
 """
-no-group-tag="""
-There is no Group tag in your package. You have to specify a valid group
-in your spec file using the Group tag.
-"""
 no-changelogname-tag="""
 There is no %changelog tag in your spec file. To insert it, just insert a
 '%changelog' in your spec file and rebuild it.

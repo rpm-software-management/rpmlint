@@ -106,12 +106,9 @@ def test_list_merging():
     """
     cfg = Config(TEST_LIST1)
     assert len(cfg.configuration['Filters']) == 1
-    assert cfg.configuration['ValidGroups'][0] == 'bullshitgroup'
     cfg.load_config(TEST_LIST2)
     assert len(cfg.conf_files) == 3
     assert len(cfg.configuration['Filters']) == 1
-    assert len(cfg.configuration['ValidGroups']) == 1
-    assert cfg.configuration['ValidGroups'][0] == 'System/Libraries'
 
 
 def test_badness_functions():

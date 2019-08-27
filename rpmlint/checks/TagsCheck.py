@@ -51,7 +51,6 @@ class TagsCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.valid_groups = config.configuration['ValidGroups']
         self.valid_licenses = config.configuration['ValidLicenses']
         self.invalid_requires = map(re.compile, config.configuration['InvalidRequires'])
         self.packager_regex = re.compile(config.configuration['Packager'])
@@ -72,10 +71,7 @@ class TagsCheck(AbstractCheck):
             self.output.error_details.update({'no-epoch-in-{}'.format(i):
                                               'Your package contains a versioned %s entry without an Epoch.'
                                               % i.capitalize()})
-        self.output.error_details.update({'non-standard-group':
-                                          """The value of the Group tag in the package is not valid.  Valid groups are:
-                                          '%s'.""" % ', '.join(self.valid_groups),
-                                          'not-standard-release-extension':
+        self.output.error_details.update({'not-standard-release-extension':
                                           'Your release tag must match the regular expression ' + self.release_ext + '.',
                                           'summary-too-long':
                                           "The 'Summary:' must not exceed %d characters." % self.max_line_len,
@@ -258,13 +254,6 @@ class TagsCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'description-shorter-than-summary')
         else:
             self.output.add_info('E', pkg, 'no-description-tag')
-
-        group = pkg[rpm.RPMTAG_GROUP]
-        self._unexpanded_macros(pkg, 'Group', group)
-        if not group:
-            self.output.add_info('E', pkg, 'no-group-tag')
-        elif self.valid_groups and group not in self.valid_groups:
-            self.output.add_info('W', pkg, 'non-standard-group', group)
 
         buildhost = pkg[rpm.RPMTAG_BUILDHOST]
         self._unexpanded_macros(pkg, 'BuildHost', buildhost)
