@@ -20,6 +20,7 @@ basic_tests = [
     'AppDataCheck',
     'BinariesCheck',
     'BuildDateCheck',
+    'BuildRootCheck',
     'ConfigCheck',
     'DistributionCheck',
     'DocFilesCheck',
