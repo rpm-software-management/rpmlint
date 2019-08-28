@@ -4,6 +4,7 @@ Checks = [
     "BinariesCheck",
     "BuildDateCheck",
     "ConfigCheck",
+    "DBusPolicyCheck",
     "DistributionCheck",
     "DocFilesCheck",
     "FHSCheck",
