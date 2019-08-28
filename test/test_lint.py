@@ -21,6 +21,7 @@ basic_tests = [
     'BinariesCheck',
     'BuildDateCheck',
     'ConfigCheck',
+    'DBusPolicyCheck',
     'DistributionCheck',
     'DocFilesCheck',
     'FHSCheck',

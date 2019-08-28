@@ -1,0 +1,15 @@
+dbus-policy-allow-without-destination="""
+'allow' directives must always specify a 'send_destination'."""
+dbus-policy-allow-receive="""
+allow receive_* is normally not needed as that is the default."""
+dbus-policy-deny-without-destination="""
+'deny' directives must always specify a 'send_destination'
+otherwise messages to other services could be blocked."""
+dbus-policy-missing-allow="""
+Every dbus config normally needs a line of the form
+<allow send_destination="org.foo.bar"/>
+or similar. If that is missing the service
+will not work with a dbus that uses deny as default policy"""
+dbus-parsing-exception="""
+A python exception was raised which prevents further analysis
+of the DBus rule file."""
