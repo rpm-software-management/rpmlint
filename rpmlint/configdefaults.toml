@@ -8,6 +8,7 @@ Checks = [
     "DBusPolicyCheck",
     "DistributionCheck",
     "DocFilesCheck",
+    "ExecDocCheck",
     "FHSCheck",
     "FilesCheck",
     "InitScriptCheck",

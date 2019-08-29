@@ -25,6 +25,7 @@ basic_tests = [
     'DBusPolicyCheck',
     'DistributionCheck',
     'DocFilesCheck',
+    'ExecDocCheck',
     'FHSCheck',
     'FilesCheck',
     'InitScriptCheck',
