@@ -29,6 +29,7 @@ basic_tests = [
     'ExecDocCheck',
     'FHSCheck',
     'FilesCheck',
+    'IconSizesCheck',
     'InitScriptCheck',
     'I18NCheck',
     'LogrotateCheck',
