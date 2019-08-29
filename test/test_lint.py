@@ -30,6 +30,7 @@ basic_tests = [
     'FilesCheck',
     'InitScriptCheck',
     'I18NCheck',
+    'LogrotateCheck',
     'MenuCheck',
     'MenuXDGCheck',
     'NamingPolicyCheck',

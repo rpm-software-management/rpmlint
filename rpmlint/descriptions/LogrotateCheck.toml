@@ -1,0 +1,10 @@
+logrotate-duplicate="""
+There are dupliated logrotate entries with different settings for
+the specified file."""
+logrotate-user-writable-log-dir="""
+The log directory is writable by unprivileged users. Please fix
+the permissions so only root can write there or add the 'su' option
+to your logrotate config."""
+logrotate-log-dir-not-packaged="""
+Please add the specified directory to the file list to be able to
+check permissions."""
