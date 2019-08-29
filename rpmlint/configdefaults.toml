@@ -6,6 +6,7 @@ Checks = [
     "ConfigCheck",
     "DistributionCheck",
     "DocFilesCheck",
+    "ExecDocCheck",
     "FHSCheck",
     "FilesCheck",
     "InitScriptCheck",

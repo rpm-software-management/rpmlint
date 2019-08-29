@@ -23,6 +23,7 @@ basic_tests = [
     'ConfigCheck',
     'DistributionCheck',
     'DocFilesCheck',
+    'ExecDocCheck',
     'FHSCheck',
     'FilesCheck',
     'InitScriptCheck',
