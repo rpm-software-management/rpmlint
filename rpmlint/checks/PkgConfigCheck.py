@@ -31,5 +31,7 @@ class PkgConfigCheck(AbstractFilesCheck):
             for l in pc_file:
                 if l.startswith('Libs:') and self.wronglib_dir.search(l):
                     self.output.add_info('E', pkg, 'pkgconfig-invalid-libs-dir', filename, l)
+                if '//' in l and '://' not in l:
+                    self.output.add_info('E', pkg, 'double-slash-in-pkgconfig-path', filename, l)
         except Exception as e:
             self.output.add_info('E', pkg, 'pkgconfig-exception', filename, str(e))
