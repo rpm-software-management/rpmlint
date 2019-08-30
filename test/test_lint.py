@@ -30,6 +30,7 @@ basic_tests = [
     'MenuCheck',
     'MenuXDGCheck',
     'NamingPolicyCheck',
+    'PkgConfigCheck',
     'PostCheck',
     'SignatureCheck',
     'SourceCheck',

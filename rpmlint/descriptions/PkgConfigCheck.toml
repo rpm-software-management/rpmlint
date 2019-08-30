@@ -1,0 +1,9 @@
+invalid-pkgconfig-file="""
+Your .pc file appears to be invalid. Possible causes are:
+- it contains traces of $RPM_BUILD_ROOT or $RPM_BUILD_DIR.
+- it contains unreplaced macros (@have_foo@)
+- it references invalid paths (e.g. /home or /tmp)"""
+pkgconfig-invalid-libs-dir="""
+Your .pc file contains -L/usr/lib or -L/lib and is
+built on a lib64 target, or contains references to -L/usr/lib64 or
+-L/lib64 and is built for a lib target."""
