@@ -20,3 +20,4 @@ def test_pkg_config(tmpdir, package, pkgconfigcheck):
     out = output.print_results(output.results)
     assert 'E: invalid-pkgconfig-file /tmp/pkgconfig/xcb.pc' in out
     assert 'E: pkgconfig-invalid-libs-dir /tmp/pkgconfig/xcb.pc Libs: -L/usr/lib' in out
+    assert 'E: double-slash-in-pkgconfig-path /tmp/pkgconfig/xcb.pc includedir=/usr/include//xyz' in out
