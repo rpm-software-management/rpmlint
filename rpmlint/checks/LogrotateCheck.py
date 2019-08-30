@@ -27,8 +27,7 @@ class LogrotateCheck(AbstractCheck):
 
         for d in sorted(dirs.keys()):
             if d not in files:
-                if d != '/var/log':
-                    self.output.add_info('E', pkg, 'logrotate-log-dir-not-packaged', d)
+                self.output.add_info('E', pkg, 'logrotate-log-dir-not-packaged', d)
                 continue
             mode = files[d].mode & 0o777
             if files[d].user != 'root' and (dirs[d] is None or dirs[d][0] != files[d].user):
