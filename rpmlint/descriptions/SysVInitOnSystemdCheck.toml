@@ -1,0 +1,9 @@
+obsolete-insserv-requirement="""
+In systemd based distributions insserv is obsolete.
+Please remove dependencies on insserv."""
+deprecated-init-script="""
+SysV init scripts are deprecated. Please migrate to
+systemd service files."""
+deprecated-boot-script="""
+SysV boot scripts are deprecated. Please migrate to
+systemd service files."""
