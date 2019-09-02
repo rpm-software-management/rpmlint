@@ -26,7 +26,8 @@ RUN zypper -n install \
         python3-zstd \
         python3-toml \
         rpm-build \
-        sqlite3
+        sqlite3 \
+        systemd-rpm-macros
 
 WORKDIR /usr/src/rpmlint
 VOLUME /usr/src/rpmlint

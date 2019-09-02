@@ -32,7 +32,8 @@ RUN dnf --nogpgcheck -y install \
         python3-toml \
         python3-zstd \
         rpm-build \
-        sqlite
+        sqlite \
+        systemd-rpm-macros
 
 WORKDIR /usr/src/rpmlint
 VOLUME /usr/src/rpmlint
