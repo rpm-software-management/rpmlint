@@ -11,6 +11,7 @@ import bz2
 import gzip
 import lzma
 import os
+from pathlib import Path
 import re
 from shlex import quote
 import stat
@@ -183,22 +184,6 @@ def readlines(path):
             yield byte_to_string(line)
 
 
-slash_regex = re.compile(r'/+')
-slashdot_regex = re.compile(r'/(\.(/|$))+')
-slashend_regex = re.compile(r'([^/])/+$')
-
-
-def safe_normpath(path):
-    """
-    Like os.path.normpath but normalizes less aggressively thus being
-    potentially safer for paths containing symlinks.
-    """
-    ret = slash_regex.sub('/', path)
-    ret = slashdot_regex.sub('\\2', ret)
-    ret = slashend_regex.sub('\\1', ret)
-    return ret
-
-
 def get_default_valid_rpmgroups(filename=None):
     """
     Get default rpm groups from filename, or try to look them up from
@@ -213,7 +198,7 @@ def get_default_valid_rpmgroups(filename=None):
                     filename = groupsfiles[0]
         except KeyError:  # the rpm package might not be installed
             pass
-    if filename and os.path.exists(filename):
+    if filename and Path(filename).exists():
         with open(filename) as fobj:
             groups = fobj.read().strip().splitlines()
         if 'Development/Debug' not in groups:
@@ -541,12 +526,12 @@ class Pkg(AbstractPkg):
 
     # extract rpm contents
     def _extract(self):
-        if not os.path.isdir(self.dirname):
+        if not Path(self.dirname).is_dir():
             print_warning('Unable to access dir %s' % self.dirname)
             return None
         else:
             self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % os.path.basename(self.filename),
+                prefix='rpmlint.%s.' % Path(self.filename).name,
                 dir=self.dirname)
             # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
@@ -570,8 +555,7 @@ class Pkg(AbstractPkg):
         ret = []
         lineno = 0
         try:
-            with open(os.path.join(
-                    self.dirName() or '/', filename.lstrip('/'))) as in_file:
+            with open(str(Path(self.dirName() or '/', filename.lstrip('/')))) as in_file:
                 for line in in_file:
                     lineno += 1
                     if regex.search(line):
@@ -681,7 +665,7 @@ class Pkg(AbstractPkg):
                 pkgfile.mode = modes[idx]
                 pkgfile.user = byte_to_string(users[idx])
                 pkgfile.group = byte_to_string(groups[idx])
-                pkgfile.linkto = links[idx] and safe_normpath(links[idx])
+                pkgfile.linkto = links[idx] and os.path.normpath(links[idx])
                 pkgfile.size = sizes[idx]
                 pkgfile.md5 = md5s[idx]
                 pkgfile.mtime = mtimes[idx]
@@ -729,7 +713,7 @@ class Pkg(AbstractPkg):
         result = pkgfile
         while result and result.linkto:
             linkpath = urljoin(result.name, result.linkto)
-            linkpath = safe_normpath(linkpath)
+            linkpath = os.path.normpath(linkpath)
             result = self.files().get(linkpath)
         return result
 
@@ -964,7 +948,7 @@ class FakePkg(AbstractPkg):
     def dirName(self):
         if not self.dirname:
             self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % os.path.basename(self.name))
+                prefix='rpmlint.%s.' % Path(self.name).name)
         return self.dirname
 
     def cleanup(self):

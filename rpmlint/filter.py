@@ -1,4 +1,3 @@
-from os.path import basename
 from pathlib import Path
 import re
 import textwrap
@@ -58,7 +57,7 @@ class Filter(object):
 
         # filename in some cases can contain tmp paths and we don't need it
         # for the printout
-        filename = basename(package.name)
+        filename = Path(package.name).name
         # we can get badness treshold
         badness = 0
         if reason in self.badness:

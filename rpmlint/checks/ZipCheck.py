@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import re
 from zipfile import BadZipFile, is_zipfile, ZipFile
 
@@ -15,8 +15,8 @@ class ZipCheck(AbstractCheck):
     def check(self, pkg):
         for fname, pkgfile in pkg.files().items():
             path = pkgfile.path
-            if self.zip_regex.search(fname) and os.path.exists(path) and \
-               os.path.isfile(path) and is_zipfile(path):
+            if self.zip_regex.search(fname) and Path(path).exists() and \
+               Path(path).is_file() and is_zipfile(path):
                 try:
                     with ZipFile(path, 'r') as z:
                         # Check CRC issues
