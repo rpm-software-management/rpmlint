@@ -7,7 +7,7 @@
 
 import codecs
 import configparser as cfgparser
-import os
+from pathlib import Path
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 from rpmlint.pkg import getstatusoutput, is_utf8
@@ -51,10 +51,10 @@ class MenuXDGCheck(AbstractFilesCheck):
             if binary:
                 found = False
                 if binary.startswith('/'):
-                    found = os.path.exists(root + binary)
+                    found = Path(root + binary).exists()
                 else:
                     for i in STANDARD_BIN_DIRS:
-                        if os.path.exists(root + i + '/' + binary):
+                        if Path(root + i + '/' + binary).exists():
                             # no need to check if the binary is +x, rpmlint does it
                             # in another place
                             found = True
