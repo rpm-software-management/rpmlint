@@ -1,0 +1,12 @@
+systemd-service-without-service_add_pre="""
+The package contains a systemd service but doesn't contain a %pre with
+a call to service_add_pre."""
+systemd-service-without-service_add_post="""
+The package contains a systemd service but doesn't contain a %post with
+a call to service_add_post."""
+systemd-service-without-service_del_preun="""
+The package contains a systemd service but doesn't contain a %preun with
+a call to service_del_preun."""
+systemd-service-without-service_del_postun="""
+The package contains a systemd service but doesn't contain a %postun with
+a call to service_del_postun."""
