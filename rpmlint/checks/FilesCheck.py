@@ -439,7 +439,7 @@ class FilesCheck(AbstractCheck):
         debuginfo_srcs = False
         debuginfo_debugs = False
 
-        if not doc_files:
+        if not lib_package and not doc_files:
             self.output.add_info('W', pkg, 'no-documentation')
 
         if files:
