@@ -34,7 +34,8 @@ RUN dnf --nogpgcheck -y install \
         python3-flake8-import-order \
         python3-pyxdg \
         python3-toml \
-        rpm-build
+        rpm-build \
+        systemd-rpm-macros
 
 WORKDIR /usr/src/rpmlint
 VOLUME /usr/src/rpmlint
