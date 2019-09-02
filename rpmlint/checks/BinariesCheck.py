@@ -1,3 +1,4 @@
+import concurrent.futures
 from pathlib import Path
 import re
 import stat
@@ -280,8 +281,11 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'ldd-failed', path)
                 return
 
-        for fn in self.check_functions:
-            fn(pkg, pkgfile_path, path)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            futures = []
+            for fn in self.check_functions:
+                futures.append(executor.submit(fn, pkg, pkgfile_path, path))
+            concurrent.futures.wait(futures)
 
     def check_binary(self, pkg):
         self.files = pkg.files()
