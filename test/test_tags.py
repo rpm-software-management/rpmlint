@@ -24,3 +24,11 @@ def test_unexpanded_macros(tmpdir, package, tagscheck):
     assert 'unexpanded-macro Suggests' in out
     assert 'unexpanded-macro Obsoletes' in out
     assert 'unexpanded-macro Enhances' in out
+
+
+@pytest.mark.parametrize('package', ['binary/self'])
+def test_self_provides(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: useless-provides self' in out
