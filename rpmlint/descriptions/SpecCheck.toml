@@ -196,3 +196,10 @@ the sign that someone didn't check if a patch is still needed and do not want
 to rediff it. It is usually better to rediff the patch and try to send it
 upstream.
 """
+obsolete-suse-version-check="""
+The specfile contains a comparison of %suse_version against a suse release
+that is no longer in maintenance. Consider removing obsolete parts of your
+spec file to make it more readable."""
+invalid-suse-version-check="""
+The specfile contains a comparison of %suse_version against a suse release
+that does not exist. Please double check.
