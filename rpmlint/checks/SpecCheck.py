@@ -38,6 +38,7 @@ packager_regex = re_tag_compile('Packager')
 buildarch_regex = re_tag_compile('BuildArch(?:itectures)?')
 buildprereq_regex = re_tag_compile('BuildPreReq')
 prereq_regex = re_tag_compile(r'PreReq(\(.*\))')
+suse_version_regex = re.compile(r'%({\?)?suse_version}?\s*[<>=]+\s*(?P<version>\d+)')
 
 make_check_regex = re.compile(r'(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile(r'(^|\s)((.*/)?rm|%{?__rm}?) ')
@@ -373,6 +374,14 @@ class SpecCheck(AbstractCheck):
                 if res:
                     if not res.group(1).startswith('%'):
                         self.output.add_info('W', pkg, 'hardcoded-prefix-tag', res.group(1))
+
+                res = suse_version_regex.search(line)
+                if res:
+                    version = int(res.group('version'))
+                    if version > 0 and version < 1315:
+                        self.output.add_info('E', pkg, 'obsolete-suse-version-check', version)
+                    elif version > 1550:
+                        self.output.add_info('E', pkg, 'invalid-suse-version-check', version)
 
                 res = prereq_regex.search(line)
                 if res:
