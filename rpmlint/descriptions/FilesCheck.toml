@@ -123,6 +123,8 @@ spurious-executable-perm="""
 The file is installed with executable permissions, but was identified as one
 that probably should not be executable. Verify if the executable bits are
 desired, and remove if not.
+NOTE: example scripts should be packaged under %docdir/examples, which will avoid
+this warning.
 """
 world-writable="""
 A file or directory in the package is installed with world writable

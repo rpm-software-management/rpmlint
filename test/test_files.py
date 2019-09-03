@@ -149,3 +149,12 @@ def test_lib_regex():
          '/usr/share/doc/findlib/lib-1.0.so',
          '/usr/lib64/libvulkan_radeon.so',
          '/usr/lib64/rsocket/binary',))
+
+
+@pytest.mark.parametrize('package', ['binary/executableperm'])
+def test_executable_permission(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: spurious-executable-perm /usr/share/doc/packages/bwidget/Widget.html' in out
+    assert 'W: spurious-executable-perm /usr/share/doc/packages/bwidget/script/Widget2.html' not in out

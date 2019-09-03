@@ -161,6 +161,7 @@ bin_regex = re.compile(r'^/(?:usr/(?:s?bin|games)|s?bin)/(.*)')
 includefile_regex = re.compile(r'\.(c|h)(pp|xx)?$', re.IGNORECASE)
 develfile_regex = re.compile(r'\.(a|cmxa?|mli?|gir)$')
 buildconfigfile_regex = re.compile(r'(\.pc|/bin/.+-config)$')
+docdir_examples_regex = re.compile('^/usr/(?:share/doc/packages|lib(?:64))/[^/]+/(?:example|demo|script|contrib)')
 # room for improvement with catching more -R, but also for false positives...
 buildconfig_rpath_regex = re.compile(r'(?:-rpath|Wl,-R)\b')
 sofile_regex = re.compile(r'/lib(64)?/(.+/)?lib[^/]+\.so$')
@@ -795,7 +796,7 @@ class FilesCheck(AbstractCheck):
                             includefile_regex.search(f) or \
                             develfile_regex.search(f) or \
                             logrotate_regex.search(f)
-                    if nonexec_file:
+                    if nonexec_file and not docdir_examples_regex.search(f):
                         self.output.add_info('W', pkg, 'spurious-executable-perm', f)
                 elif f.startswith('/etc/') and f not in config_files and \
                         f not in ghost_files:
