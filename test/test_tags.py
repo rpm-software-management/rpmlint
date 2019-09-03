@@ -40,3 +40,11 @@ def test_development_package(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'W: devel-package-with-non-devel-group Games' in out
+
+
+@pytest.mark.parametrize('package', ['binary/missingprovides'])
+def test_missing_provides(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: no-pkg-config-provides' in out

@@ -27,6 +27,7 @@ devel_number_regex = re.compile(r'(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex = re.compile(r'^\s+')
+pkg_config_regex = re.compile(r'^/usr/(?:lib\d*|share)/pkgconfig/')
 license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or|AND|OR)\s')
 invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
@@ -185,10 +186,12 @@ class TagsCheck(AbstractCheck):
                 base = is_devel.group(1)
                 dep = None
                 has_so = False
+                has_pc = False
                 for fname in pkg.files():
                     if fname.endswith('.so'):
                         has_so = True
-                        break
+                    if pkg_config_regex.match(fname) and fname.endswith('.pc'):
+                        has_pc = True
                 if has_so:
                     base_or_libs = base + '/' + base + '-libs/lib' + base
                     # try to match *%_isa as well (e.g. '(x86-64)', '(x86-32)')
@@ -224,6 +227,15 @@ class TagsCheck(AbstractCheck):
 
                         if prov not in (x[0] for x in pkg.provides()):
                             self.output.add_info('W', pkg, 'no-provides', prov)
+
+                if has_pc:
+                    found_pkg_config_dep = False
+                    for p in (x[0] for x in pkg.provides()):
+                        if p.startswith('pkgconfig('):
+                            found_pkg_config_dep = True
+                            break
+                    if not found_pkg_config_dep:
+                        self.output.add_info('E', pkg, 'no-pkg-config-provides')
 
         # List of words to ignore in spell check
         ignored_words = set()
