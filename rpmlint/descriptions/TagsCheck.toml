@@ -168,3 +168,7 @@ devel-package-with-non-devel-group="""
 The package ends with -devel but does not have a RPM group starting with
 Development/.
 """
+no-pkg-config-provides="""
+The package installs a .pc file but does not provide pkgconfig(..) provides.
+The most likely reason for that is that it was built without BuildRequires: pkgconfig.
+Please double check your build dependencies."""
