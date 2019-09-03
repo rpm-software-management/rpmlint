@@ -1071,3 +1071,15 @@ def test_check_invalid_url_not_applied(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: invalid-url' not in out
+
+
+@pytest.mark.parametrize('package', ['spec/suse-version'])
+def test_suse_version(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: obsolete-suse-version-check 123' in out
+    assert 'E: obsolete-suse-version-check 567' in out
+    assert 'E: invalid-suse-version-check 123456789' in out
+    assert 'E: invalid-suse-version-check 56789' in out
