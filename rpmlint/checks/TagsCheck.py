@@ -263,6 +263,8 @@ class TagsCheck(AbstractCheck):
         self._unexpanded_macros(pkg, 'Group', group)
         if not group:
             self.output.add_info('E', pkg, 'no-group-tag')
+        elif pkg.name.endswith('-devel') and not group.startswith('Development/'):
+            self.output.add_info('W', pkg, 'devel-package-with-non-devel-group', group)
         elif self.valid_groups and group not in self.valid_groups:
             self.output.add_info('W', pkg, 'non-standard-group', group)
 
@@ -320,7 +322,6 @@ class TagsCheck(AbstractCheck):
                 elif clt > time.time():
                     self.output.add_info('E', pkg, 'changelog-time-in-future',
                                          time.strftime('%Y-%m-%d', time.gmtime(clt)))
-
 
         def split_license(license):
             return (x.strip() for x in
