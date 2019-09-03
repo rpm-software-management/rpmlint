@@ -149,3 +149,12 @@ def test_lib_regex():
          '/usr/share/doc/findlib/lib-1.0.so',
          '/usr/lib64/libvulkan_radeon.so',
          '/usr/lib64/rsocket/binary',))
+
+
+@pytest.mark.parametrize('package', ['binary/rust'])
+def test_rust_files(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: wrong-script-interpreter /etc/foo.rs' in out
+    assert 'E: wrong-script-interpreter /etc/bar.rs' not in out
