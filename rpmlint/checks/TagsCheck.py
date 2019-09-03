@@ -321,10 +321,6 @@ class TagsCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'changelog-time-in-future',
                                          time.strftime('%Y-%m-%d', time.gmtime(clt)))
 
-#         for provide_name in (x[0] for x in pkg.provides()):
-#             if name == provide_name:
-#                 self.output.add_info('W', pkg, 'package-provides-itself')
-#                 break
 
         def split_license(license):
             return (x.strip() for x in
