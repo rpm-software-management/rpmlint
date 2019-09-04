@@ -29,6 +29,7 @@ basic_tests = [
     'DocCheck',
     'ErlangCheck',
     'FHSCheck',
+    'FilelistCheck',
     'FilesCheck',
     'IconSizesCheck',
     'I18NCheck',
