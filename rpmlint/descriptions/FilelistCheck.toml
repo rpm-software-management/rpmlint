@@ -1,0 +1,51 @@
+filelist-forbidden="""
+File is not allowed at the location."""
+filelist-forbidden-sysconfig="""
+Please use %{_fillupdir}/sysconfig.<pkgname>
+and call %fillup_and_insserv for new sysconfig files."""
+filelist-forbidden-perl-dir="""
+Perl files installed a non-vendor installed path."""
+filelist-forbidden-python-test-dir="""
+Python package installs testsuite to the sitelib,
+which can cause file list conflict."""
+filelist-forbidden-backup-file="""
+Backup files (~, .swp or .bak) are not allowed."""
+filelist-forbidden-devel-in-lib="""
+Please move .la/.a files and .so symlinks to /usr/lib(64)."""
+filelist-forbidden-fhs23="""
+File violates FHS 2.3."""
+filelist-forbidden-yast2="""
+File is not allowed anymore in YaST2."""
+filelist-forbidden-srv="""
+Please use /srv for ftp and http data."""
+filelist-forbidden-games="""
+Static data should be in /usr/share/games,
+variable data in /var/games."""
+filelist-forbidden-noarch="""
+File is not allowed in a noarch package."""
+filelist-forbidden-debuginfo="""
+File may only be packaged in the -debuginfo subpackage."""
+filelist-forbidden-locale="""
+Please use nb or nb_NO (and nn for nynorsk),
+see https://bugzilla.novell.com/show_bug.cgi?id=42748."""
+filelist-forbidden-xorg="""
+Please use the updated paths for Xorg 7.1 and above."""
+filelist-forbidden-suseconfig="""
+SuSEconfig is unavailable in openSUSE 12.3 and newer."""
+filelist-forbidden-opt="""
+/opt may not be used by distribution packages.
+It is reserved for 3rd party packagers."""
+filelist-forbidden-systemd-userdirs="""
+This directory is for user files,
+use the system directory under /usr/lib."""
+filelist-forbidden-bashcomp-userdirs="""
+This directory is for user files,
+use /usr/share/bash-completion/completions/."""
+filelist-forbidden-xinetd-configuration="""
+Xinetd configuation files are deprecated.
+Please migrate to systemd socket activated unit files.
+http://0pointer.de/blog/projects/socket-activation.html"""
+filelist-forbidden-move-to-usr="""
+This directory has been moved to /usr."""
+wrong-suse-capitalisation="""
+This file should be renamed to README.SUSE or README.openSUSE."""
