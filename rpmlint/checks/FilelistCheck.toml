@@ -204,11 +204,6 @@ GoodPrefixes = [
         "/etc/tmpfiles.d/*",
     ]
 [[Check]]
-    Message = "filelist-forbidden-udev-userdirs"
-    Bad = [
-        "/etc/udev/rules.d/*",
-    ]
-[[Check]]
     Message = "filelist-forbidden-bashcomp-userdirs"
     Bad = [
         "/etc/bash_completion.d/*",
