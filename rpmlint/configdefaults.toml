@@ -11,6 +11,7 @@ Checks = [
     "DocCheck",
     "ErlangCheck",
     "FHSCheck",
+    "FilelistCheck",
     "FilesCheck",
     "IconSizesCheck",
     "I18NCheck",
