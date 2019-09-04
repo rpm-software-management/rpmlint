@@ -1,0 +1,227 @@
+GoodPrefixes = [
+    "/bin/",
+    "/boot/",
+    "/etc/",
+    "/lib/",
+    "/lib64/",
+    "/media/",
+    # SUSE policy handled in separate check
+    "/opt/",
+    "/sbin/",
+    "/srv/",
+    # SUSE policy handled in separate check
+    "/usr/X11R6/",
+    "/usr/bin/",
+    "/usr/etc/",
+    "/usr/games/",
+    "/usr/include/",
+    "/usr/lib/",
+    "/usr/lib64/",
+    "/usr/sbin/",
+    "/usr/share/",
+    # actually only linux is allowed by fhs
+    "/usr/src/linux",
+    "/usr/src/debug/",
+    "/usr/src/packages/",
+    "/var/account/",
+    "/var/cache/",
+    "/var/crash/",
+    "/var/games/",
+    "/var/lib/",
+    "/var/lock/",
+    "/var/log/",
+    "/var/mail/",
+    "/var/opt/",
+    "/var/run/",
+    "/var/spool/",
+    "/var/yp/",
+    # those are not in FHS!
+    "/var/adm/",
+    "/var/nis/",
+    "/emul/",
+    "/run/"
+]
+
+[[Check]]
+    Message = "filelist-forbidden"
+    Bad = [
+        "*/.xvpics",
+        "*.orig",
+        "*.orig.gz",
+        "/usr/share/*/.libs*",
+        "/usr/share/*/.deps*",
+        "/var/adm/setup",
+        "/etc/httpd/*",
+        "/etc/init.d/*/*",
+        "/usr/share/locale/LC_MESSAGES",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-sysconfig"
+    Good = [
+        "/etc/sysconfig/cbq",
+        "/etc/sysconfig/scripts",
+        "/etc/sysconfig/scripts/*",
+        "/etc/sysconfig/network",
+        "/etc/sysconfig/network/*",
+        "/etc/sysconfig/hardware",
+        "/etc/sysconfig/hardware/*",
+        "/etc/sysconfig/isdn",
+        "/etc/sysconfig/isdn/scripts",
+        "/etc/sysconfig/isdn/scripts/*",
+        "/etc/sysconfig/SuSEfirewall2.d",
+        "/etc/sysconfig/SuSEfirewall2.d/*",
+        "/etc/sysconfig/uml",
+    ]
+    Bad = [
+        "/var/adm/fillup-templates/*",
+        "/etc/sysconfig/*",
+        "/etc/rc.config.d/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-perl-dir"
+    Bad = [
+        "/usr/lib/perl5/site_perl/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-python-test-dir"
+    Bad = [
+        "/usr/lib*/python*/site-packages/test",
+        "/usr/lib*/python*/site-packages/tests",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-backup-file"
+    Bad = [
+        "*~",
+        "*.bak",
+        "*/.*.swp",
+    ]
+    IgnoreFileIf = "ghostfile"
+[[Check]]
+    Message = "filelist-forbidden-devel-in-lib"
+    Bad = [
+        "/lib/*.la",
+        "/lib/*.a",
+        "/lib64/*.la",
+        "/lib64/*.a",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-devel-in-lib"
+    Good = [
+        "/lib/security/*.so",
+        "/lib64/security/*.so",
+    ]
+    Bad = [
+        "/lib/*.so",
+        "/lib64/*.so",
+    ]
+    IgnoreFileIf = "notsymlink"
+[[Check]]
+    Message = "filelist-forbidden-fhs23"
+    Bad = [
+        "/etc/X11/app-defaults/*",
+        "/usr/local/man/*/*",
+        "/var/lib/games",
+        "/var/lib/games/*",
+        "/usr/sbin/*/*",
+        "/sbin/init.d",
+        "/sbin/init.d/*",
+        "/bin/*/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-yast2"
+    Bad = [
+        "/usr/lib/YaST2/*.ycp",
+        "/usr/lib/YaST2/*.y2cc",
+        "/usr/lib/YaST2/*.*.scr",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-srv"
+    Bad = [
+        "/usr/local/ftp",
+        "/usr/local/http",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-games"
+    Bad = [
+        "/usr/games/bin",
+        "/usr/games/lib",
+        "/usr/games/*/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-noarch"
+    Bad = [
+        "/lib64",
+        "/lib64/*",
+        "/usr/lib64",
+        "/usr/lib64/*",
+        "/usr/X11R6/lib64",
+        "/usr/X11R6/lib64/*",
+        "/opt/gnome/lib64",
+        "/opt/gnome/lib64/*",
+        "/opt/kde3/lib64",
+        "/opt/kde3/lib64/*",
+        "/usr/lib/pkgconfig/*",
+        "/usr/lib/perl5/vendor_perl/5.*/*-linux-*/*",
+    ]
+    IgnorePkgIf = "notnoarch"
+[[Check]]
+    Message = "filelist-forbidden-debuginfo"
+    Bad = [
+        "/usr/lib/debug/*",
+    ]
+    IgnorePkgIf = "isdebuginfo"
+[[Check]]
+    Message = "filelist-forbidden-locale"
+    Bad = [
+        "/opt/gnome/share/locale/no",
+        "/opt/gnome/share/locale/no/*",
+        "/opt/kde3/share/locale/no",
+        "/opt/kde3/share/locale/no/*",
+        "/usr/share/locale/no",
+        "/usr/share/locale/no/*",
+        "/usr/share/vim/*/lang/no",
+        "/usr/share/vim/*/lang/no/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-xorg"
+    Bad = [
+        "/usr/X11R6/*",
+    ]
+    IgnorePkgIf = "isfilesystem"
+[[Check]]
+    Message = "filelist-forbidden-suseconfig"
+    Bad = [
+        "/sbin/conf.d/*",
+        "/var/adm/SuSEconfig/",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-opt"
+[[Check]]
+    Message = "filelist-forbidden-systemd-userdirs"
+    Bad = [
+        "/etc/systemd/*",
+        "/etc/modules-load.d/*",
+        "/etc/tmpfiles.d/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-bashcomp-userdirs"
+    Bad = [
+        "/etc/bash_completion.d/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-xinetd-configuration"
+    Bad = [
+        "/etc/xinet.d/*",
+    ]
+[[Check]]
+    Message = "filelist-forbidden-move-to-usr"
+    Bad = [
+        "/lib/systemd/system/*",
+        "/lib/udev/rules.d/*",
+    ]
+[[Check]]
+    Message = "wrong-suse-capitalisation"
+    Bad = [
+        "*/README.SuSE",
+    ]
+    IgnoreFileIf = "ghostfile"
