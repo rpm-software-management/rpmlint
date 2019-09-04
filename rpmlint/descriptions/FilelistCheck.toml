@@ -38,9 +38,6 @@ It is reserved for 3rd party packagers."""
 filelist-forbidden-systemd-userdirs="""
 This directory is for user files,
 use the system directory under /usr/lib."""
-filelist-forbidden-udev-userdirs="""
-This directory is for user files,
-use /usr/lib/udev/rules.d."""
 filelist-forbidden-bashcomp-userdirs="""
 This directory is for user files,
 use /usr/share/bash-completion/completions/."""
