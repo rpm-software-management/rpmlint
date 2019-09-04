@@ -10,6 +10,7 @@ Checks = [
     'DuplicatesCheck',
     "DocCheck",
     "FHSCheck",
+    "FilelistCheck",
     "FilesCheck",
     "IconSizesCheck",
     "InitScriptCheck",
