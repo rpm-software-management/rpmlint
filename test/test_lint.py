@@ -27,6 +27,7 @@ basic_tests = [
     'DocFilesCheck',
     'ExecDocCheck',
     'FHSCheck',
+    'FilelistCheck',
     'FilesCheck',
     'InitScriptCheck',
     'I18NCheck',
