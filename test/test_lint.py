@@ -26,6 +26,7 @@ basic_tests = [
     'DuplicatesCheck',
     'DocCheck',
     'FHSCheck',
+    'FilelistCheck',
     'FilesCheck',
     'IconSizesCheck',
     'InitScriptCheck',
