@@ -11,7 +11,7 @@ These entries do not work with older Java versions and even if they do work,
 they are inflexible and usually cause nasty surprises.
 """
 jar-not-indexed = """
-The jar file is not indexed, ie. it does not contain the META-INF/INDEX.LIST
+The jar file is not indexed, i.e. it does not contain the META-INF/INDEX.LIST
 file. Indexed jars speed up the class searching process of classloaders
 in some situations.
 """

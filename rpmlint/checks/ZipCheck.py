@@ -19,72 +19,76 @@ class ZipCheck(AbstractCheck):
                Path(path).is_file() and is_zipfile(path):
                 try:
                     with ZipFile(path, 'r') as z:
-                        # Check CRC issues
-                        badcrc = z.testzip()
-                        if badcrc:
-                            self.output.add_info('E', pkg, 'bad-crc-in-zip', badcrc, fname)
-                        # Check compression
-                        if not self._check_compression(z):
-                            self.output.add_info('E', pkg, 'uncompressed-zip', fname)
+                        # zip checks
+                        self._check_bad_crc(pkg, fname, z)
+                        self._check_compression(pkg, fname, z)
 
-                        # additional jar checks
+                        # jar checks
                         if self.jar_regex.search(fname):
-                            if self._check_classpath(z):
-                                self.output.add_info('W', pkg, 'class-path-in-manifest', fname)
-                            if self._check_jarindex(z):
-                                self.output.add_info('W', pkg, 'jar-not-indexed', fname)
+                            self._check_classpath(pkg, fname, z)
+                            self._check_jarindex(pkg, fname, z)
                 except BadZipFile as err:
                     self.output.add_info('E', pkg, 'unable-to-read-zip', f'{fname}: {err}')
                 except RuntimeError as err:
                     self.output.add_info('W', pkg, 'unable-to-read-zip', f'{fname}: {err}')
 
-    @staticmethod
-    def _check_compression(zipfile):
+    def _check_bad_crc(self, pkg, fname, zipfile):
         """
-        Check if zip is actually compressed.
-        One file with smaller size is enough.
+        Check CRC issues for the files in the zipfile.
+
+        Print an error if there is a file in the archive that fails CRC check.
         """
-        # check for empty archives which are walid
+        badcrc = zipfile.testzip()
+        if badcrc:
+            self.output.add_info('E', pkg, 'bad-crc-in-zip', badcrc, fname)
+
+    def _check_compression(self, pkg, fname, zipfile):
+        """
+        Check if zip is actually compressed or not.
+
+        One file with smaller size is enough. Print an error if the zipfile
+        is not compressed.
+        """
+        # check for empty archives which are valid
         filecount = len(zipfile.namelist())
         nullcount = 0
         for zinfo in zipfile.infolist():
             if zinfo.file_size == 0:
                 nullcount += 1
             if zinfo.compress_size != zinfo.file_size:
-                return True
+                return
+
         # empty files only
         if filecount == nullcount:
-            return True
-        return False
+            return
+        self.output.add_info('E', pkg, 'uncompressed-zip', fname)
 
-    @staticmethod
-    def _check_classpath(zipfile):
+    def _check_classpath(self, pkg, fname, jarfile):
         """
-        Check if package contains MANIFEST.MF without classpath
+        Check if META-INF/MANIFEST.MF file in the jar contains a hardcoded
+        Class-Path.
+
+        Print a warning if the path is hardcoded.
         """
         classpath_regex = re.compile(r'^\s*Class-Path\s*:', re.MULTILINE | re.IGNORECASE)
 
+        # the META-INF is optional so skip if it is not present
         mf = 'META-INF/MANIFEST.MF'
-        # The META-INF is optional so skip if it is not present
-        if mf not in zipfile.namelist():
-            return False
-        # otherwise check for the classpath
-        manifest = zipfile.read(mf).decode()
-        if classpath_regex.search(manifest):
-            return True
-        return False
+        if mf not in jarfile.namelist():
+            return
 
-    @staticmethod
-    def _check_jarindex(zipfile):
+        # otherwise check for the hardcoded classpath
+        manifest = jarfile.read(mf).decode()
+        if classpath_regex.search(manifest):
+            self.output.add_info('W', pkg, 'class-path-in-manifest', fname)
+
+    def _check_jarindex(self, pkg, fname, jarfile):
         """
-        Check if there is index in the jar
+        Check if the .jar file is indexed.
+
+        Print a warning if 'META-INF/INDEX.LIST' file is not present in the
+        jarfile.
         """
-        mf = 'META-INF/MANIFEST.MF'
-        # The META-INF is optional so skip if it is not present
-        if mf not in zipfile.namelist():
-            return True
-        # otherwise we have to have index
         index = 'META-INF/INDEX.LIST'
-        if index not in zipfile.namelist():
-            return False
-        return True
+        if index not in jarfile.namelist():
+            self.output.add_info('W', pkg, 'jar-not-indexed', fname)
