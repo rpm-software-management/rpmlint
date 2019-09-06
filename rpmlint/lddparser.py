@@ -90,9 +90,10 @@ class LddParser:
                 self.dependencies.append(line.strip())
 
         # run c++filt demangler for all collected symbols
-        r = subprocess.run(['c++filt'] + self.undefined_symbols, encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
-        if r.returncode != 0:
-            self.parsing_failed = True
-        else:
-            self.undefined_symbols = r.stdout.splitlines()
+        if self.undefined_symbols:
+            r = subprocess.run(['c++filt'] + self.undefined_symbols, encoding='utf8',
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            if r.returncode != 0:
+                self.parsing_failed = True
+            else:
+                self.undefined_symbols = r.stdout.splitlines()
