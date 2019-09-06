@@ -28,7 +28,6 @@ class BinariesCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.files = {}
         self.is_exec = False
         self.is_shobj = False
         self.system_lib_paths = config.configuration['SystemLibPaths']
@@ -288,7 +287,7 @@ class BinariesCheck(AbstractCheck):
             concurrent.futures.wait(futures)
 
     def check_binary(self, pkg):
-        self.files = pkg.files()
+        files = pkg.files()
         exec_files = []
         has_lib = False
         binary = False
@@ -303,7 +302,7 @@ class BinariesCheck(AbstractCheck):
             if res:
                 multi_pkg = (pkg.name != res.group(1))
 
-        for fname, pkgfile in self.files.items():
+        for fname, pkgfile in files.items():
 
             if not stat.S_ISDIR(pkgfile.mode) and self.usr_lib_regex.search(fname):
                 has_usr_lib_file = True
@@ -317,16 +316,10 @@ class BinariesCheck(AbstractCheck):
                     (fname.startswith('/usr/lib64') or fname.startswith('/lib64')):
                 file_in_lib64 = True
 
-            # 'is binary' stuff borrowed from https://pypi.python.org/pypi/binaryornot
-            # TODO: switch to it sometime later instead of embedding our own copy
-            is_elf = pkgfile.magic.startswith('ELF ')
-            is_ar = 'current ar archive' in pkgfile.magic
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
-            is_shell = 'shell script' in pkgfile.magic
-            is_binary = is_elf or is_ar or is_ocaml_native or is_lua_bytecode
 
-            if is_shell:
+            if 'shell script' in pkgfile.magic:
                 file_start = None
                 try:
                     with open(pkgfile.path, 'rb') as inputf:
@@ -337,7 +330,7 @@ class BinariesCheck(AbstractCheck):
                         b'be moved out of the build directory' in file_start):
                     self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
 
-            if not is_binary:
+            if not (pkgfile.magic.startswith('ELF ') or 'current ar archive' in pkgfile.magic or is_ocaml_native or is_lua_bytecode):
                 if self.reference_regex.search(fname):
                     lines = pkg.grep(self.invalid_dir_ref_regex, fname)
                     if lines:
@@ -409,7 +402,7 @@ class BinariesCheck(AbstractCheck):
         if has_lib:
             for f in exec_files:
                 self.output.add_info('E', pkg, 'executable-in-library-package', f)
-            for f in self.files:
+            for f in files:
                 res = self.numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
                 if f not in exec_files and not self.so_regex.search(f) and \
