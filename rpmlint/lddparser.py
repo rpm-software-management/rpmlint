@@ -46,11 +46,6 @@ class LddParser:
         self.parse_undefined_symbols()
 
     def parse_dependencies(self):
-        r = subprocess.run(['ldd', '--version'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if r.returncode != 0:
-            self.parsing_failed = True
-            return
-
         r = subprocess.run(['ldd', '-u', self.pkgfile_path], encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         if r.returncode == 0:
@@ -69,11 +64,6 @@ class LddParser:
                     is_unused = False
 
     def parse_undefined_symbols(self):
-        r = subprocess.run(['c++filt', '--version'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        if r.returncode != 0:
-            self.parsing_failed = True
-            return
-
         r = subprocess.run(['ldd', '-r', self.pkgfile_path], encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # here ldd should always return 0
