@@ -1,14 +1,17 @@
-postin-without-ghost-file-creation="""
-A file tagged as ghost is not created during %prein nor during %postin."""
-postin-without-tmpfile-creation="""
+pre-with-tmpfile-creation="""
+%pre section contains %tmpfiles_create macro that should be in the
+%post section instead.
+"""
+post-without-tmpfile-creation="""
 Please use the %tmpfiles_create macro in %post for each of your
-tmpfiles.d files."""
+tmpfiles.d files if you expect this file or directory to be
+available after package installation (and before reboot).
+"""
 tmpfile-not-regular-file="""
-Files in tmpfiles.d need to be regular files."""
+Files in tmpfiles.d need to be regular files.
+"""
 tmpfile-not-in-filelist="""
 Please add the specified file to your %files section as %ghost so
 users can easily query who created the file, it gets uninstalled on
-package removal and finally other rpmlint checks see it."""
-tmpfile-not-ghost="""
-The specified file is not marked as %ghost although created at
-runtime via tmpfiles mechanism."""
+package removal and finally other rpmlint checks see it.
+"""
