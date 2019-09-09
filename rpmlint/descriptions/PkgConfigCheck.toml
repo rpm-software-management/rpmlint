@@ -2,15 +2,19 @@ invalid-pkgconfig-file="""
 Your .pc file appears to be invalid. Possible causes are:
 - it contains traces of $RPM_BUILD_ROOT or $RPM_BUILD_DIR.
 - it contains unreplaced macros (@have_foo@)
-- it references invalid paths (e.g. /home or /tmp)"""
+- it references invalid paths (e.g. /home or /tmp)
+"""
 pkgconfig-invalid-libs-dir="""
 Your .pc file contains -L/usr/lib or -L/lib and is
 built on a lib64 target, or contains references to -L/usr/lib64 or
--L/lib64 and is built for a lib target."""
+-L/lib64 and is built for a lib target.
+"""
 double-slash-in-pkgconfig-path="""
-This pkg-config file contains a path with double slash ('//') in it. This
+This pkg-config file contains a path with a double slash ('//') in it. This
 will break debugedit when stripping debug symbols during package building if
-these paths has been passed to gcc, and fail with the following error:
-canonicalization unexpectedly shrank by one character."""
+these paths have been passed to gcc, and fail with the following error:
+canonicalization unexpectedly shrank by one character.
+"""
 pkgconfig-exception="""
-An exception during parsing of .pc file has occurred."""
+An exception during parsing of .pc file has occurred.
+"""
