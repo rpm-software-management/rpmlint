@@ -7,8 +7,8 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 class SystemdInstallCheck(AbstractCheck):
     systemd_service_directory = rpm.expandMacro('%{_unitdir}')
-    checked_units = ['service', 'socket', 'target']
-    checked_units_regexp = re.compile('^' + systemd_service_directory + r'.+\.(' + '|'.join(checked_units) + ')$')
+    checked_units = ['service', 'socket', 'target', 'path']
+    checked_units_regexp = re.compile('^' + systemd_service_directory + r'.+[^@]\.(' + '|'.join(checked_units) + ')$')
 
     def check(self, pkg):
         # Check only binary package
