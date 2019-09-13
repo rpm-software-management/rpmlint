@@ -158,3 +158,12 @@ def test_rust_files(tmpdir, package, filescheck):
     out = output.print_results(output.results)
     assert 'E: wrong-script-interpreter /etc/foo.rs' in out
     assert 'E: wrong-script-interpreter /etc/bar.rs' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/ngircd'])
+def test_distribution_tags(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'manpage-not-compressed' in out
+    assert 'This manual page is not compressed with the bz2 compression' in out

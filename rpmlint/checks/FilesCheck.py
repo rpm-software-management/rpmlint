@@ -337,6 +337,9 @@ def script_interpreter(chunk):
 
 class FilesCheck(AbstractCheck):
 
+    man_regex = re.compile(r'/man(?:\d[px]?|n)/')
+    info_regex = re.compile(r'(/usr/share|/usr)/info/')
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.use_debugsource = self.config.configuration['UseDebugSource']
@@ -352,6 +355,7 @@ class FilesCheck(AbstractCheck):
         self.standard_users = self.config.configuration['StandardUsers']
         self.man_warn_category = self.config.configuration['ManWarningCategory']
         self.disallowed_dirs = self.config.configuration['DisallowedDirs']
+        self.compress_ext = self.config.configuration['CompressExtension']
         self.output.error_details.update({
             'non-standard-uid':
             """A file in this package is owned by a non standard user.
@@ -362,6 +366,24 @@ class FilesCheck(AbstractCheck):
             """A file in this package is owned by a non standard group.
             Standard groups are:
             %s.""" % ', '.join(self.standard_groups),
+
+            'manpage-not-compressed':
+                """This manual page is not compressed with the %s compression method
+                (does not have the %s extension). If the compression does not happen
+                automatically when the package is rebuilt, make sure that you have the
+                appropriate rpm helper and/or config packages for your target distribution
+                installed and try rebuilding again; if it still does not happen automatically,
+                you can compress this file in the %%install section of the spec file."""
+                % (self.compress_ext, self.compress_ext),
+
+            'infopage-not-compressed':
+                """This info page is not compressed with the %s compression method
+                (does not have the %s extension). If the compression does not happen
+                automatically when the package is rebuilt, make sure that you have the
+                appropriate rpm helper and/or config packages for your target distribution
+                installed and try rebuilding again; if it still does not happen automatically,
+                you can compress this file in the %%install section of the spec file."""
+                % (self.compress_ext, self.compress_ext),
         })
         for i in self.disallowed_dirs:
             self.output.error_details.update({'dir-or-file-in-%s' % '-'.join(i.split('/')[1:]):
@@ -480,6 +502,9 @@ class FilesCheck(AbstractCheck):
             inode = pkgfile.inode
             is_doc = f in doc_files
             nonexec_file = False
+
+            self._check_manpage_compressed(pkg, f)
+            self._check_infopage_compressed(pkg, f)
 
             for match in self.macro_regex.findall(f):
                 self.output.add_info('W', pkg, 'unexpanded-macro', f, match)
@@ -1032,3 +1057,28 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'duplicate-executable', exe, paths)
             if exe not in man_basenames:
                 self.output.add_info('W', pkg, 'no-manual-page-for-binary', exe)
+
+    def _check_manpage_compressed(self, pkg, fname):
+        """
+        Check if the the manual page is compressed with the compression method
+        stated in the rpmlint configuration (CompressExtension option).
+
+        Print a warning if it's not compressed.
+        """
+        if self.compress_ext and self.man_regex.search(fname):
+            if not fname.endswith(self.compress_ext):
+                self.output.add_info('W', pkg, 'manpage-not-compressed',
+                                     self.compress_ext, fname)
+
+    def _check_infopage_compressed(self, pkg, fname):
+        """
+        Check if the the info page is compressed with the compression method
+        stated in the rpmlint configuration (CompressExtension option).
+
+        Print a warning if it's not compressed.
+        """
+        if self.compress_ext and self.info_regex.search(fname) and \
+                not fname.endswith('/info/dir'):
+            if not fname.endswith(self.compress_ext):
+                self.output.add_info('W', pkg, 'infopage-not-compressed',
+                                     self.compress_ext, fname)
