@@ -1,6 +1,8 @@
 file-contains-current-date="""
 Your file contains the current date, this may cause the package
-to rebuild in excess."""
+to rebuild in excess.
+"""
 file-contains-date-and-time="""
-Your file uses  __DATE__ and __TIME__ this causes the package to
-rebuild when not needed."""
+Your file uses __DATE__ and __TIME__ which causes the package to
+rebuild when not needed.
+"""
