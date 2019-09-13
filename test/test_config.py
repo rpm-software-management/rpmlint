@@ -83,8 +83,6 @@ def test_double_config():
     # shovel in another config
     cfg.load_config(TEST_CONFIG_2)
     assert len(cfg.conf_files) == 3
-    assert cfg.configuration['Distribution'] == 'Fedora Project'
-    assert cfg.configuration['Vendor'] == 'SUSE'
     assert cfg.configuration['ExtraMenuNeeds'][0] == 'windows'
     assert cfg.configuration['WarnOnFunction']['crypto-policy-non-compliance-openssl']['f_name'] == 'REPLACED'
     assert cfg.configuration['WarnOnFunction']['crypto-policy-3']['f_name'] == 'new_blobie'
@@ -95,7 +93,7 @@ def test_filters():
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
-    assert len(cfg.configuration['Filters']) == 9
+    assert len(cfg.configuration['Filters']) == 7
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
 
 
