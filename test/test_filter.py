@@ -18,7 +18,7 @@ def test_filters_regexp():
     """
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    assert len(cfg.configuration['Filters']) == 9
+    assert len(cfg.configuration['Filters']) == 7
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
     assert isinstance(result.filters_re, Pattern)
 
@@ -31,9 +31,6 @@ def test_data_storing(tmpdir):
     cfg.load_rpmlintrc(TEST_RPMLINTRC)
     result = Filter(cfg)
     pkg = get_tested_package(TEST_PACKAGE, tmpdir)
-    # this should be filtered
-    result.add_info('E', pkg, 'invalid-vendor', '')
-    assert len(result.results) == 0
     # this should be upgraded to error
     result.add_info('I', pkg, 'suse-other-error', '')
     assert len(result.results) == 1

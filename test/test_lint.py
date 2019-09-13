@@ -23,7 +23,6 @@ basic_tests = [
     'BuildRootCheck',
     'ConfigFilesCheck',
     'DBusPolicyCheck',
-    'DistributionCheck',
     'DocFilesCheck',
     'DuplicatesCheck',
     'ExecDocCheck',
