@@ -9,7 +9,7 @@ Checks = [
     "DistributionCheck",
     "DocFilesCheck",
     'DuplicatesCheck',
-    "ExecDocCheck",
+    "DocCheck",
     "FHSCheck",
     "FilesCheck",
     "IconSizesCheck",

@@ -26,7 +26,7 @@ basic_tests = [
     'DistributionCheck',
     'DocFilesCheck',
     'DuplicatesCheck',
-    'ExecDocCheck',
+    'DocCheck',
     'FHSCheck',
     'FilesCheck',
     'IconSizesCheck',
