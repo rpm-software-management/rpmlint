@@ -2,7 +2,7 @@ from pathlib import Path
 import re
 import textwrap
 
-from rpmlint.helpers import print_warning
+from rpmlint.helpers import Color, print_warning
 import toml
 
 
@@ -72,6 +72,13 @@ class Filter(object):
         # as an error
         if self.strict:
             level = 'E'
+        # set coloring
+        if level == 'E':
+            lvl_color = Color.Red
+        elif level == 'W':
+            lvl_color = Color.Yellow
+        else:
+            lvl_color = Color.Bold
         # raise the counters
         self.score += badness
         self.printed_messages[level] += 1
@@ -83,7 +90,7 @@ class Filter(object):
         for detail in details:
             if detail:
                 detail_output += f' {detail}'
-        result = f'{filename}{arch}:{line} {level}: {reason}'
+        result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {reason}{Color.Reset}'
         result += bad_output
         result += detail_output
         self.results.append(result)
