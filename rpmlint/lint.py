@@ -3,7 +3,7 @@ from tempfile import gettempdir
 
 from rpmlint.config import Config
 from rpmlint.filter import Filter
-from rpmlint.helpers import print_warning
+from rpmlint.helpers import Color, print_warning, string_center
 from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
 from rpmlint.version import __version__
 
@@ -37,14 +37,15 @@ class Lint(object):
         self.load_checks()
 
     def run(self):
+        retcode = 0
         # if we just want to print config, do so and leave
         if self.options['print_config']:
             self.print_config()
-            return 0
+            return retcode
         # just explain the error and abort too
         if self.options['explain']:
             self.print_explanation(self.options['explain'])
-            return 0
+            return retcode
         # if there are installed arguments just load them up as extra
         # items to the rpmfile option
         if self.options['installed']:
@@ -54,13 +55,20 @@ class Lint(object):
         self.validate_files(self.options['rpmfile'])
         self._print_header()
         print(self.output.print_results(self.output.results))
-        print('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']))
+        quit_color = Color.Bold
+        if self.output.printed_messages['W'] > 0:
+            quit_color = Color.Yellow
         if self.output.badness_threshold > 0 and self.output.score > self.output.badness_threshold:
-            print_warning(f'(none): E: Badness {self.output.score} exceeeds threshold {self.output.badness_threshold}, aborting.')
-            return 66
+            msg = string_center(f'Badness {self.output.score} exceeeds threshold {self.output.badness_threshold}, aborting.', '-')
+            print(f'{Color.Red}{msg}{Color.Reset}')
+            quit_color = Color.Red
+            retcode = 66
         if self.output.printed_messages['E'] > 0:
-            return 64
-        return 0
+            quit_color = Color.Red
+            retcode = 64
+        msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']), '=')
+        print(f'{quit_color}{msg}{Color.Reset}')
+        return retcode
 
     def _load_installed_rpms(self, packages):
         existing_packages = []
@@ -77,27 +85,18 @@ class Lint(object):
         Print out header information about the state of the
         rpmlint prior printing out the check report.
         """
+        intro = string_center('rpmlint session starts', '=')
+        print(f'{Color.Bold}{intro}{Color.Reset}')
         print(f'rpmlint: {__version__}')
-        configs = ', '.join(str(x) for x in self.config.conf_files)
-        print(f'configuration: {configs}')
+        print(f'configuration:')
+        for config in self.config.conf_files:
+            print(f'    {config}')
         if self.options['rpmlintrc']:
             rpmlintrc = self.options['rpmlintrc']
             print(f'rpmlintrc: {rpmlintrc}')
-        # display list of checks and list of files to test in verbose mode
-        if self.config.info:
-            checks = ', '.join(str(x) for x in self.config.configuration['Checks'])
-            print(f'checks: {checks}')
-            pkgs = ''
-            pkgs_installed = ', '.join(str(x) for x in self.options['installed'])
-            if pkgs_installed:
-                pkgs = pkgs_installed
-            pkgs_files = ', '.join(str(x) for x in self.options['rpmfile'])
-            if pkgs_files:
-                join = ''
-                if pkgs_installed:
-                    join = ', '
-                pkgs = pkgs + join + pkgs_files
-            print(f'packages: {pkgs}')
+        no_checks = len(self.config.configuration['Checks'])
+        no_pkgs = len(self.options['installed']) + len(self.options['rpmfile'])
+        print(f'{Color.Bold}checks: {no_checks}, packages: {no_pkgs}{Color.Reset}')
         print('')
         print('')
 
