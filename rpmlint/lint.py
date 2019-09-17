@@ -1,9 +1,10 @@
 import importlib
 from tempfile import gettempdir
 
+from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
-from rpmlint.helpers import Color, print_warning, string_center
+from rpmlint.helpers import print_warning, string_center
 from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
 from rpmlint.version import __version__
 

@@ -3,12 +3,7 @@
 from shutil import get_terminal_size
 import sys
 
-
-class Color:
-    Bold = '\x1b[1m'
-    Red = '\x1b[31m'
-    Yellow = '\x1b[33m'
-    Reset = '\x1b[0m'
+from rpmlint.color import Color
 
 
 def string_center(message, filler=' '):

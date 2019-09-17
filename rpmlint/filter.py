@@ -2,7 +2,8 @@ from pathlib import Path
 import re
 import textwrap
 
-from rpmlint.helpers import Color, print_warning
+from rpmlint.color import Color
+from rpmlint.helpers import print_warning
 import toml
 
 
