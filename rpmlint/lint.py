@@ -52,9 +52,31 @@ class Lint(object):
         # if no exclusive option is passed then just loop over all the
         # arguments that are supposed to be either rpm or spec files
         self.validate_files(self.options['rpmfile'])
+        self._print_header()
+        print(self.output.print_results(self.output.results))
+        print('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']))
+        if self.output.badness_threshold > 0 and self.output.score > self.output.badness_threshold:
+            print_warning(f'(none): E: Badness {self.output.score} exceeeds threshold {self.output.badness_threshold}, aborting.')
+            return 66
+        if self.output.printed_messages['E'] > 0:
+            return 64
+        return 0
 
-        # first generate header with generic information about what is being
-        # tested and run
+    def _load_installed_rpms(self, packages):
+        existing_packages = []
+        for name in packages:
+            pkg = getInstalledPkgs(name)
+            if pkg:
+                existing_packages.extend(pkg)
+            else:
+                print_warning(f'(none): E: there is no installed rpm "{name}".')
+        return existing_packages
+
+    def _print_header(self):
+        """
+        Print out header information about the state of the
+        rpmlint prior printing out the check report.
+        """
         print(f'rpmlint: {__version__}')
         configs = ', '.join(str(x) for x in self.config.conf_files)
         print(f'configuration: {configs}')
@@ -78,24 +100,6 @@ class Lint(object):
             print(f'packages: {pkgs}')
         print('')
         print('')
-        print(self.output.print_results(self.output.results))
-        print('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']))
-        if self.output.badness_threshold > 0 and self.output.score > self.output.badness_threshold:
-            print_warning(f'(none): E: Badness {self.output.score} exceeeds threshold {self.output.badness_threshold}, aborting.')
-            return 66
-        if self.output.printed_messages['E'] > 0:
-            return 64
-        return 0
-
-    def _load_installed_rpms(self, packages):
-        existing_packages = []
-        for name in packages:
-            pkg = getInstalledPkgs(name)
-            if pkg:
-                existing_packages.extend(pkg)
-            else:
-                print_warning(f'(none): E: there is no installed rpm "{name}".')
-        return existing_packages
 
     def validate_installed_packages(self, packages):
         for pkg in packages:
