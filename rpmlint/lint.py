@@ -64,7 +64,7 @@ class Lint(object):
             print(f'{Color.Red}{msg}{Color.Reset}')
             quit_color = Color.Red
             retcode = 66
-        if self.output.printed_messages['E'] > 0:
+        elif self.output.printed_messages['E'] > 0:
             quit_color = Color.Red
             retcode = 64
         msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']), '=')
