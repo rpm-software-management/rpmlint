@@ -10,10 +10,10 @@ options_preset = {
     'verbose': False,
     'strict': False,
     'print_config': False,
-    'explain': False,
-    'rpmfile': False,
+    'explain': '',
+    'rpmfile': '',
     'rpmlintrc': False,
-    'installed': False,
+    'installed': '',
 }
 
 basic_tests = [
