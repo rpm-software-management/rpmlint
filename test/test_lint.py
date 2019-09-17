@@ -169,6 +169,7 @@ def test_run_installed_and_no_files(capsys):
     additional_options = {
         'rpmfile': [],
         'installed': ['python3-rpm'],
+        'verbose': True,
     }
     options = {**options_preset, **additional_options}
     linter = Lint(options)
