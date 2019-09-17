@@ -29,3 +29,15 @@ def test_bytetostr():
     result = helpers.byte_to_string(list_items)
     assert isinstance(result, list)
     assert result[0] == 'žížala'
+
+
+def test_centering(capsys):
+    """
+    Check wether centered print works
+    """
+
+    message = 'Hello there'
+    helpers.print_centered(message, '*')
+    out, err = capsys.readouterr()
+    assert f'** Hello there **' in out
+    assert not err
