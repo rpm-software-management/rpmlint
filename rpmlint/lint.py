@@ -5,6 +5,7 @@ from rpmlint.config import Config
 from rpmlint.filter import Filter
 from rpmlint.helpers import print_warning
 from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
+from rpmlint.version import __version__
 
 
 class Lint(object):
@@ -51,6 +52,32 @@ class Lint(object):
         # if no exclusive option is passed then just loop over all the
         # arguments that are supposed to be either rpm or spec files
         self.validate_files(self.options['rpmfile'])
+
+        # first generate header with generic information about what is being
+        # tested and run
+        print(f'rpmlint: {__version__}')
+        configs = ', '.join(str(x) for x in self.config.conf_files)
+        print(f'configuration: {configs}')
+        if self.options['rpmlintrc']:
+            rpmlintrc = self.options['rpmlintrc']
+            print(f'rpmlintrc: {rpmlintrc}')
+        # display list of checks and list of files to test in verbose mode
+        if self.config.info:
+            checks = ', '.join(str(x) for x in self.config.configuration['Checks'])
+            print(f'checks: {checks}')
+            pkgs = ''
+            pkgs_installed = ', '.join(str(x) for x in self.options['installed'])
+            if pkgs_installed:
+                pkgs = pkgs_installed
+            pkgs_files = ', '.join(str(x) for x in self.options['rpmfile'])
+            if pkgs_files:
+                join = ''
+                if pkgs_installed:
+                    join = ', '
+                pkgs = pkgs + join + pkgs_files
+            print(f'packages: {pkgs}')
+        print('')
+        print('')
         print(self.output.print_results(self.output.results))
         print('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']))
         if self.output.badness_threshold > 0 and self.output.score > self.output.badness_threshold:
