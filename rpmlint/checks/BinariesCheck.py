@@ -71,6 +71,10 @@ class BinariesCheck(AbstractCheck):
     # For an archive, test if any .text sections is empty
     def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
         if self.readelf_parser.is_archive:
+            for comment in self.readelf_parser.comment_section_info.comments:
+                if comment.startswith('GHC '):
+                    return
+
             for elf_file in self.readelf_parser.section_info.elf_files:
                 code_in_text = False
                 for section in elf_file:

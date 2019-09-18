@@ -286,6 +286,34 @@ class ElfSymbolTableInfo:
                 yield sym
 
 
+class ElfCommentInfo:
+    """
+    String dump of section '.comment':
+      [     1]  GHC 8.6.5
+    """
+
+    comment_regex = re.compile('\\s+\\[[\\s[0-9]+\\]\\s+(?P<comment>.*)')
+
+    def __init__(self, path):
+        self.path = path
+        self.comments = []
+        self.parsing_failed = False
+        self.parse()
+
+    def parse(self):
+        r = subprocess.run(['readelf', '-p', '.comment', self.path], encoding='utf8',
+                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        if r.returncode != 0:
+            self.parsing_failed = True
+            return
+
+        lines = r.stdout.splitlines()
+        for line in lines:
+            r = self.comment_regex.search(line)
+            if r:
+                self.comments.append(r.group('comment'))
+
+
 class ReadelfParser:
     """
     Class contains all information obtained by readelf command
@@ -303,9 +331,11 @@ class ReadelfParser:
         self.program_header_info = ElfProgramHeaderInfo(pkgfile_path)
         self.dynamic_section_info = ElfDynamicSectionInfo(pkgfile_path)
         self.symbol_table_info = ElfSymbolTableInfo(pkgfile_path)
+        self.comment_section_info = ElfCommentInfo(pkgfile_path)
 
     def parsing_failed(self):
         return (self.section_info.parsing_failed or
                 self.program_header_info.parsing_failed or
                 self.dynamic_section_info.parsing_failed or
-                self.symbol_table_info.parsing_failed)
+                self.symbol_table_info.parsing_failed or
+                self.comment_section_info.parsing_failed)
