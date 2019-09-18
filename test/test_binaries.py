@@ -41,6 +41,13 @@ def test_lto_archive_text(tmpdir, package, binariescheck):
     assert 'lto-no-text-in-archive' in output.print_results(output.results)
 
 
+@pytest.mark.parametrize('package', ['binary/ghc'])
+def test_lto_ghc_archive(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    assert 'lto-no-text-in-archive' not in output.print_results(output.results)
+
+
 @pytest.mark.parametrize('package', ['binary/libtool-wrapper'])
 def test_libtool_wrapper(tmpdir, package, binariescheck):
     output, test = binariescheck
