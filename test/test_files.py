@@ -167,3 +167,11 @@ def test_distribution_tags(tmpdir, package, filescheck):
     out = output.print_results(output.results)
     assert 'manpage-not-compressed' in out
     assert 'This manual page is not compressed with the bz2 compression' in out
+
+
+@pytest.mark.parametrize('package', ['binary/development'])
+def test_provides_devel(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: non-devel-file-in-devel-package /usr/x.typelib' in out

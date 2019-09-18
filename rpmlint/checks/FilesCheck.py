@@ -443,6 +443,12 @@ class FilesCheck(AbstractCheck):
         # Check if the package is a development package
         devel_pkg = devel_regex.search(pkg.name)
 
+        if not devel_pkg:
+            for p in pkg.provides():
+                if devel_regex.search(p[0]):
+                    devel_pkg = True
+                    break
+
         config_files = pkg.configFiles()
         ghost_files = pkg.ghostFiles()
         doc_files = pkg.docFiles()
