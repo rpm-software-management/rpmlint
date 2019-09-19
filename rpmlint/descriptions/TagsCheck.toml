@@ -172,3 +172,5 @@ no-pkg-config-provides="""
 The package installs a .pc file but does not provide pkgconfig(..) provides.
 The most likely reason for that is that it was built without BuildRequires: pkgconfig.
 Please double check your build dependencies."""
+invalid-license-exception="""
+The ' with <x> ' license exception of the License tag was not recognized."""
