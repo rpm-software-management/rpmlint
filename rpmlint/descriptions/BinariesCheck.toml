@@ -106,6 +106,10 @@ non-position-independent-executable="""
 This executable must be position independent. Check that it is built with
 -fPIE/-fpie in compiler flags and -pie in linker flags.
 """
+position-independent-executable-suggested="""
+This executable should be position independent (all binaries should).  Check
+that it is built with -fPIE/-fpie in compiler flags and -pie in linker flags.
+"""
 missing-call-to-setgroups-before-setuid="""
 This executable is calling setuid and setgid without setgroups or initgroups.
 This means it didn't relinquish all groups, and this would be a potential

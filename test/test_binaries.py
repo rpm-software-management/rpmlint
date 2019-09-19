@@ -57,7 +57,7 @@ def test_libtool_wrapper(tmpdir, package, binariescheck):
     assert 'W: unstripped-binary-or-object' in out
     assert 'E: arch-dependent-file-in-usr-share' in out
     assert 'W: unstripped-binary-or-object /bin/main' in out
-    assert 'E: binary-in-etc /etc/main' in out
+    assert 'W: position-independent-executable-suggested /usr/share/main' in out
 
 
 @pytest.mark.parametrize('package', ['binary/noarch'])
@@ -83,3 +83,13 @@ def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: shared-lib-not-executable /lib64/libpthread.so' in out
+
+
+@pytest.mark.parametrize('package', ['binary/bcc-lua'])
+def test_position_independent_executable(tmpdir, package, binariescheck):
+    CONFIG.configuration['PieExecutables'] = '.*'
+    output = Filter(CONFIG)
+    test = BinariesCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: non-position-independent-executable /usr/bin/bcc-lua' in out
