@@ -32,9 +32,7 @@ class BinariesCheck(AbstractCheck):
         self.is_shobj = False
         self.system_lib_paths = config.configuration['SystemLibPaths']
         pie_exec_re = config.configuration['PieExecutables']
-        if not pie_exec_re:
-            pie_exec_re = ''
-        self.pie_exec_re = re.compile(pie_exec_re)
+        self.pie_exec_re = re.compile(pie_exec_re) if pie_exec_re else None
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
         self.setgid_call_regex = self.create_regexp_call(r'set(?:res|e)?gid')
@@ -398,10 +396,13 @@ class BinariesCheck(AbstractCheck):
                 if self.bin_regex.search(fname):
                     exec_files.append(fname)
 
-                if ((not self.is_shobj and not is_pie_exec) and
-                        self.pie_exec_re and self.pie_exec_re.search(fname)):
-                    self.output.add_info('E', pkg, 'non-position-independent-executable',
-                                         fname)
+                if not self.is_shobj and not is_pie_exec:
+                    if self.pie_exec_re and self.pie_exec_re.search(fname):
+                        self.output.add_info('E', pkg, 'non-position-independent-executable',
+                                             fname)
+                    else:
+                        self.output.add_info('W', pkg, 'position-independent-executable-suggested',
+                                             fname)
 
         if has_lib:
             for f in exec_files:
