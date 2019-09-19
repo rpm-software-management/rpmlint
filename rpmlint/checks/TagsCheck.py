@@ -37,16 +37,6 @@ so_dep_regex = re.compile(r'\.so(\.[0-9a-zA-Z]+)*(\([^)]*\))*$')
 # we assume that no rpm packages existed before rpm itself existed...
 oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-%d'))
 
-private_so_paths = set()
-for path in ('%perl_archlib', '%perl_vendorarch', '%perl_sitearch',
-             '%python_sitearch', '%python2_sitearch', '%python3_sitearch',
-             '%ruby_sitearch', '%php_extdir'):
-    epath = rpm.expandMacro(path)
-    if epath and epath != path:
-        private_so_paths.add(epath)
-        private_so_paths.add(re.sub(r'/lib64(?=/|$)', '/lib', epath))
-        private_so_paths.add(re.sub(r'/lib(?=/|$)', '/lib64', epath))
-
 
 class TagsCheck(AbstractCheck):
 
@@ -427,14 +417,6 @@ class TagsCheck(AbstractCheck):
             if hasattr(rpm, 'RPMTAG_%s' % tag.upper()):
                 res = byte_to_string(pkg[getattr(rpm, 'RPMTAG_%s' % tag.upper())])
                 self._unexpanded_macros(pkg, tag, res)
-
-        for path in private_so_paths:
-            for fname, pkgfile in pkg.files().items():
-                if fname.startswith(path):
-                    for prov in pkgfile.provides:
-                        if so_dep_regex.search(prov[0]):
-                            self.output.add_info('W', pkg, 'private-shared-object-provides',
-                                                 fname, Pkg.formatRequire(*prov))
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
