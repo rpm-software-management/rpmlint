@@ -183,10 +183,10 @@ class TagsCheck(AbstractCheck):
                     if pkg_config_regex.match(fname) and fname.endswith('.pc'):
                         has_pc = True
                 if has_so:
-                    base_or_libs = base + '/' + base + '-libs/lib' + base
+                    base_or_libs = base + '*' + '/' + base + '-libs/lib' + base + '*'
                     # try to match *%_isa as well (e.g. '(x86-64)', '(x86-32)')
                     base_or_libs_re = re.compile(
-                        r'^(lib)?%s(-libs)?(\(\w+-\d+\))?$' % re.escape(base))
+                        r'^(lib)?%s(-libs)?[\d_-]*(\(\w+-\d+\))?$' % re.escape(base))
                     for d in deps:
                         if base_or_libs_re.match(d[0]):
                             dep = d
