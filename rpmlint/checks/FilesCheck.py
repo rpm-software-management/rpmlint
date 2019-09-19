@@ -647,7 +647,7 @@ class FilesCheck(AbstractCheck):
 
                 # check ldconfig call in %post and %postun
                 if lib_regex.search(f):
-                    if devel_pkg:
+                    if devel_pkg and not (sofile_regex.search(f) and stat.S_ISLNK(mode)):
                         self.output.add_info('E', pkg, 'non-devel-file-in-devel-package', f)
                     if not postin:
                         self.output.add_info('E', pkg, 'library-without-ldconfig-postin', f)
