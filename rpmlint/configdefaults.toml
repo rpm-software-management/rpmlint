@@ -283,6 +283,10 @@ ValidSrcPerms = [
 ]
 # Valid values for the License tag
 ValidLicenses = []
+
+# Default valid license exceptions
+ValidLicenseExceptions = []
+
 # Additional warnings on specific function calls
 [WarnOnFunction]
 #[WarnOnFunction.testname]

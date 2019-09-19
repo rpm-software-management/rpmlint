@@ -48,3 +48,22 @@ def test_missing_provides(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: no-pkg-config-provides' in out
+
+
+@pytest.mark.parametrize('package', ['binary/invalid-exception'])
+def test_invalid_license_exception(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: invalid-license-exception sparta' in out
+
+
+@pytest.mark.parametrize('package', ['binary/valid-exception'])
+def test_valid_license_exception(tmpdir, package, tagscheck):
+    CONFIG.info = True
+    CONFIG.configuration['ValidLicenseExceptions'] = ['389-exception']
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: invalid-license-exception' not in out

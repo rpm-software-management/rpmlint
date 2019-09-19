@@ -29,6 +29,7 @@ lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$',
 leading_space_regex = re.compile(r'^\s+')
 pkg_config_regex = re.compile(r'^/usr/(?:lib\d*|share)/pkgconfig/')
 license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or|AND|OR)\s')
+license_exception_regex = re.compile(r'(\S+)\s(?:WITH|with)\s(\S+)')
 invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
@@ -55,6 +56,7 @@ class TagsCheck(AbstractCheck):
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
         self.spellcheck = config.configuration['UseEnchant']
+        self.valid_license_exceptions = config.configuration['ValidLicenseExceptions']
         if self.spellcheck:
             self.spellchecker = Spellcheck()
 
@@ -329,13 +331,27 @@ class TagsCheck(AbstractCheck):
             return (x.strip() for x in
                     (l for l in license_regex.split(license) if l))
 
+        def split_license_exception(license):
+            x, y = license_exception_regex.split(license)[1:3] or (license, '')
+            return x.strip(), y.strip()
+
         rpm_license = pkg[rpm.RPMTAG_LICENSE]
         if not rpm_license:
             self.output.add_info('E', pkg, 'no-license')
         else:
             valid_license = True
             if rpm_license not in self.valid_licenses:
-                for l1 in split_license(rpm_license):
+                license_string = rpm_license
+
+                l1, lexception = split_license_exception(rpm_license)
+                # SPDX allows "<license> WITH <license-exception>"
+                if lexception:
+                    license_string = l1
+                    if lexception not in self.valid_license_exceptions:
+                        self.output.add_info('W', pkg, 'invalid-license-exception', lexception)
+                        valid_license = False
+
+                for l1 in split_license(license_string):
                     if l1 in self.valid_licenses:
                         continue
                     for l2 in split_license(l1):
