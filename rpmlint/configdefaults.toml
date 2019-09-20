@@ -33,10 +33,6 @@ BadnessThreshold = -1
 # When checking that various files that should be compressed are
 # indeed compressed, look for this filename extension
 CompressExtension = "bz2"
-# Permitted Distribution Tag value in preamble
-Distribution = ""
-# Permitted value for the Vendor tag in preamble
-Vendor = ""
 # Base directory where to extract uninstalled packages while checking
 # Default is to use mktemp from python to provide one
 ExtractDir = ""
