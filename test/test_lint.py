@@ -38,6 +38,7 @@ basic_tests = [
     'NamingPolicyCheck',
     'PkgConfigCheck',
     'PostCheck',
+    'RCLinksCheck',
     'SignatureCheck',
     'SourceCheck',
     'SpecCheck',

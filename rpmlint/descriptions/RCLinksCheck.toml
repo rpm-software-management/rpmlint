@@ -1,0 +1,6 @@
+missing-rclink="""
+The package contains an init script or systemd service file but
+lacks the symlink /usr/sbin/rcFOO -> /usr/sbin/service"""
+systemd-shadowed-initscript="""
+The package contains both an init script and a systemd service
+file. Please decide for one."""
