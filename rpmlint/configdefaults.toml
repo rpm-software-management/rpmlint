@@ -283,6 +283,9 @@ ValidLicenses = []
 # Default valid license exceptions
 ValidLicenseExceptions = []
 
+# Default white list for PAM modules
+PAMModulesWhiteList = []
+
 # Additional warnings on specific function calls
 [WarnOnFunction]
 #[WarnOnFunction.testname]
