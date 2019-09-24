@@ -1,0 +1,4 @@
+pam-unauthorized-module="""
+The package installs a PAM module. If the package
+is intended for inclusion the PAM module name must
+be included in the white list.
