@@ -20,6 +20,7 @@ Checks = [
     "NamingPolicyCheck",
     "PkgConfigCheck",
     "PostCheck",
+    "RCLinksCheck",
     "SignatureCheck",
     "SourceCheck",
     "SpecCheck",
