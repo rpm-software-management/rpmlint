@@ -6,7 +6,6 @@ Checks = [
     'BuildRootCheck',
     "ConfigFilesCheck",
     "DBusPolicyCheck",
-    "DocFilesCheck",
     'DuplicatesCheck',
     "DocCheck",
     "FHSCheck",
