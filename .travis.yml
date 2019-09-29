@@ -35,6 +35,8 @@ install:
 script:
   - podman build -t $DIST -f test/Dockerfile-$DIST .
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 -m pytest
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 test/dump_stats.py profile.stats
 
 after_success:
   - coverage combine
