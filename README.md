@@ -39,15 +39,15 @@ Optional:
 ## Testing
 
 ### Docker
-If you want to test the `rpmlint` when developing best is to use docker
+If you want to test the `rpmlint` when developing best is to use podman
 to provide the environment for you. There are various distribution
 dockerfiles in `test/` folder.
 
 I.e. if you want to test on the latest openSUSE you can test using the following commands:
 
-`docker build -t opensusetw -f test/Dockerfile-opensusetw .`
+`podman build -t opensusetw -f test/Dockerfile-opensusetw .`
 
-`docker run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 setup.py test`
+`podman run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 setup.py test`
 
 ### Directly
 
