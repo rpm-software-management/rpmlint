@@ -2,28 +2,40 @@ language: python
 
 sudo: required
 
-services:
-  - docker
-
 env:
   - DIST=fedora30
   - DIST=fedoradev
   - DIST=opensuselp15
   - DIST=opensusetw
 
+# podman is currently not in Ubuntu
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: "ppa:projectatomic/ppa"
+    packages:
+      - podman
+
 # the python here is basically no-op just used for coveralls
 python:
   - "3.6"
 
 before_install:
-  - docker build -t $DIST -f test/Dockerfile-$DIST .
+  # podman needs a basic register set up (packaging bug in the ppa)
+  - sudo mkdir -p /etc/containers
+  - echo -e "[registries.search]\nregistries = ['docker.io']" | sudo tee /etc/containers/registries.conf
+  # we need to register travis to allow subuid/gid for the rootless execution
+  - echo "travis:110000:65535" | sudo tee /etc/subuid
+  - echo "travis:110000:65535" | sudo tee /etc/subgid
 
 install:
   - pip install coveralls
 
 script:
-  - docker run -v $(pwd):/usr/src/rpmlint/ $DIST python3 setup.py test
-  - docker run -v $(pwd):/usr/src/rpmlint/ $DIST flake8
+  - podman build -t $DIST -f test/Dockerfile-$DIST .
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 setup.py test
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST flake8
 
 after_success:
   - coverage combine
