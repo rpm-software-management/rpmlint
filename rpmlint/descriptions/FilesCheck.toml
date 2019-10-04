@@ -234,13 +234,13 @@ it is not marked as executable.
 env-script-interpreter="""
 This script uses 'env' as an interpreter.
 For the rpm runtime dependency detection to work, the shebang
-#!/usr/bin/env python
+#!/usr/bin/env <interpreter>
 
 needs to be patched into
-#!/usr/bin/python
+#!/usr/bin/<interpreter>
 
 otherwise the package dependency generator merely adds a dependency
-on /usr/bin/env rather than the actual interpreter /usr/bin/python.
+on /usr/bin/env rather than the actual interpreter /usr/bin/<interpreter>.
 
 Alternatively, if the file should not be executed, then ensure that
 it is not marked as executable or don't install it in a path that
