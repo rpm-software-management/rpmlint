@@ -67,3 +67,19 @@ def test_valid_license_exception(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'W: invalid-license-exception' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/xtables-addons-kmp-default'])
+def test_forbidden_controlchar_found_requires(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: forbidden-controlchar-found' in out
+
+
+@pytest.mark.parametrize('package', ['binary/ruby2.6-rubygem-fast_gettext'])
+def test_forbidden_controlchar_found_changelog(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: forbidden-controlchar-found' in out
