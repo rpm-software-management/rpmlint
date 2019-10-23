@@ -316,6 +316,10 @@ class TagsCheck(AbstractCheck):
                 if not Pkg.is_utf8_bytestr(s):
                     self.output.add_info('E', pkg, 'tag-not-utf8', '%changelog')
                     break
+                e = Pkg.has_forbidden_controlchars(s)
+                if e:
+                    self.output.add_info('E', pkg, 'forbidden-controlchar-found', '%%changelog : %s' % e)
+                    break
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
@@ -404,8 +408,22 @@ class TagsCheck(AbstractCheck):
                 ('Enhances', pkg.enhances()),
                 ('Recommends', pkg.recommends())):
             for p in items:
+                e = Pkg.has_forbidden_controlchars(p)
+                if e:
+                    self.output.add_info('E',
+                                         pkg,
+                                         'forbidden-controlchar-found',
+                                         '%s: %s' % (tagname, e))
                 value = Pkg.formatRequire(*p)
                 self._unexpanded_macros(pkg, '%s %s' % (tagname, value), value)
+
+        for p in (pkg.requires()):
+            e = Pkg.has_forbidden_controlchars(p)
+            if e:
+                self.output.add_info('E',
+                                     pkg,
+                                     'forbidden-controlchar-found',
+                                     'Requires: %s' % e)
 
         obss = pkg.obsoletes()
         if obss:
