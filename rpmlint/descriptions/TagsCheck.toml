@@ -173,4 +173,10 @@ The package installs a .pc file but does not provide pkgconfig(..) provides.
 The most likely reason for that is that it was built without BuildRequires: pkgconfig.
 Please double check your build dependencies."""
 invalid-license-exception="""
-The ' with <x> ' license exception of the License tag was not recognized."""
+The ' with <x> ' license exception of the License tag was not recognized.
+"""
+forbidden-controlchar-found="""
+This package contains tags which contain forbidden control characters.
+These are all ASCII characters with a decimal value below 32, except TAB(9),
+LF(10) and CR(13)
+"""
