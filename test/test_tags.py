@@ -74,7 +74,7 @@ def test_forbidden_controlchar_found_requires(tmpdir, package, tagscheck):
     output, test = tagscheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: forbidden-controlchar-found' in out
+    assert 'E: forbidden-controlchar-found Requires:' in out
 
 
 @pytest.mark.parametrize('package', ['binary/ruby2.6-rubygem-fast_gettext'])
@@ -82,4 +82,16 @@ def test_forbidden_controlchar_found_changelog(tmpdir, package, tagscheck):
     output, test = tagscheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: forbidden-controlchar-found' in out
+    assert 'E: forbidden-controlchar-found %changelog' in out
+
+
+@pytest.mark.parametrize('package', ['binary/SpecCheck4'])
+def test_forbidden_controlchar_found(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: forbidden-controlchar-found Requires:' in out
+    assert 'E: forbidden-controlchar-found Provides:' in out
+    assert 'E: forbidden-controlchar-found Obsoletes:' in out
+    assert 'E: forbidden-controlchar-found Conflicts:' in out
+    assert 'E: forbidden-controlchar-found %changelog :' in out
