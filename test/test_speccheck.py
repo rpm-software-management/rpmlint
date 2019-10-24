@@ -51,3 +51,16 @@ def test_distribution_tags(package, speccheck):
     assert 'unversioned-explicit-obsoletes versioned-obsoletes' not in out
     assert 'unversioned-explicit-obsoletes /' not in out
     assert 'setup-not-quiet' in out
+
+
+@pytest.mark.parametrize('package', ['spec/SpecCheck4'])
+def test_forbidden_controlchars_found(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: forbidden-controlchar-found Requires:' in out
+    assert 'E: forbidden-controlchar-found Provides:' in out
+    assert 'E: forbidden-controlchar-found Obsoletes:' in out
+    assert 'E: forbidden-controlchar-found Conflicts:' in out
+    assert 'E: forbidden-controlchar-found %changelog:' in out
