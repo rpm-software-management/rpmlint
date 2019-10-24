@@ -387,6 +387,11 @@ class SpecCheck(AbstractCheck):
                 res = requires_regex.search(line)
                 if res:
                     reqs = Pkg.parse_deps(res.group(1))
+                    e = Pkg.has_forbidden_controlchars(reqs)
+                    if e:
+                        self.output.add_info('E', pkg,
+                                             'forbidden-controlchar-found',
+                                             'Requires: %s' % e)
                     for req in unversioned(reqs):
                         if compop_regex.search(req):
                             self.output.add_info('W', pkg,
@@ -396,6 +401,11 @@ class SpecCheck(AbstractCheck):
                 res = provides_regex.search(line)
                 if res:
                     provs = Pkg.parse_deps(res.group(1))
+                    e = Pkg.has_forbidden_controlchars(provs)
+                    if e:
+                        self.output.add_info('E', pkg,
+                                             'forbidden-controlchar-found',
+                                             'Provides: %s' % e)
                     for prov in unversioned(provs):
                         if not prov.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-provides',
@@ -408,6 +418,11 @@ class SpecCheck(AbstractCheck):
                 res = obsoletes_regex.search(line)
                 if res:
                     obses = Pkg.parse_deps(res.group(1))
+                    e = Pkg.has_forbidden_controlchars(obses)
+                    if e:
+                        self.output.add_info('E', pkg,
+                                             'forbidden-controlchar-found',
+                                             'Obsoletes: %s' % e)
                     for obs in unversioned(obses):
                         if not obs.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-obsoletes',
@@ -420,6 +435,11 @@ class SpecCheck(AbstractCheck):
                 res = conflicts_regex.search(line)
                 if res:
                     confs = Pkg.parse_deps(res.group(1))
+                    e = Pkg.has_forbidden_controlchars(confs)
+                    if e:
+                        self.output.add_info('E', pkg,
+                                             'forbidden-controlchar-found',
+                                             'Conflicts: %s' % e)
                     for conf in unversioned(confs):
                         if compop_regex.search(conf):
                             self.output.add_info('W', pkg,
@@ -427,6 +447,11 @@ class SpecCheck(AbstractCheck):
                                                  conf)
 
             if current_section == 'changelog':
+                e = Pkg.has_forbidden_controlchars(line)
+                if e:
+                    self.output.add_info('E', pkg,
+                                         'forbidden-controlchar-found',
+                                         '%%changelog: %s' % e)
                 for match in self.macro_regex.findall(line):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
