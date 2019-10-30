@@ -3,7 +3,7 @@ language: python
 sudo: required
 
 env:
-  - DIST=fedora30
+  - DIST=fedora31
   - DIST=fedoradev
   - DIST=opensuselp15
   - DIST=opensusetw
