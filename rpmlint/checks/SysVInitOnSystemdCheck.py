@@ -30,7 +30,7 @@ class SysVInitOnSystemdCheck(AbstractCheck):
 
     def _find_services_and_scripts(self, pkg):
         # Find all regular systemd services and initscripts
-        for filename, pkgfile in pkg.files().items():
+        for filename, _pkgfile in pkg.files().items():
             if filename in pkg.ghostFiles():
                 continue
 
