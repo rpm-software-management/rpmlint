@@ -11,7 +11,10 @@ from rpmlint.stringsparser import StringsParser
 
 
 class BinariesCheck(AbstractCheck):
-
+    """
+    Checks for binary files in the package.
+    """
+    srcname_regex = re.compile(r'(.*?)-[0-9]')
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
@@ -21,8 +24,7 @@ class BinariesCheck(AbstractCheck):
     versioned_dir_regex = re.compile(r'[^.][0-9]')
     so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
     bin_regex = re.compile(r'^(/usr(/X11R6)?)?/s?bin/')
-    reference_regex = re.compile(r'\.la$|^/usr/lib(64)?/pkgconfig/')
-    srcname_regex = re.compile(r'(.*?)-[0-9]')
+    la_file_regex = re.compile(r'\.la$')
     invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
     usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
@@ -66,8 +68,154 @@ class BinariesCheck(AbstractCheck):
         r = r'(%s(?:@GLIBC\S+)?)(?:\s|$)' % call
         return re.compile(r)
 
-    # For an archive, test if any .text sections is empty
+    def _check_libtool_wrapper(self, pkg, fname, pkgfile):
+        """
+        Print an error if the fname file contains a libtool wrapper shell
+        script.
+        """
+        if 'shell script' in pkgfile.magic:
+            file_start = None
+            try:
+                with open(pkgfile.path, 'rb') as inputf:
+                    file_start = inputf.read(2048)
+            except IOError:
+                pass
+            if (file_start and b'This wrapper script should never '
+                               b'be moved out of the build directory'
+                    in file_start):
+                self.output.add_info('E', pkg, 'libtool-wrapper-in-package',
+                                     fname)
+
+    def _check_invalid_la_file(self, pkg, fname):
+        """
+        Check if the fname is an .la file and contains a reference to the
+        invalid directories ('/tmp' or '/home').
+
+        If so then print a corresponding error with the matching line numbers.
+        """
+        if self.la_file_regex.search(fname):
+            lines = pkg.grep(self.invalid_dir_ref_regex, fname)
+            if lines:
+                self.output.add_info('E', pkg, 'invalid-la-file', fname,
+                                     '(line %s)' % ', '.join(lines))
+
+    def _check_binary_in_noarch(self, pkg, bin_name):
+        """
+        Print an error if the binary file bin_name is in the noarch package.
+        """
+        if pkg.arch == 'noarch':
+            self.output.add_info('E', pkg,
+                                 'arch-independent-package-contains-binary-or-object',
+                                 bin_name)
+
+    def _check_binary_in_usr_share(self, pkg, bin_name):
+        """
+        Print an error if binary file bin_name is installed in /usr/share.
+
+        We suppose that the package is arch dependent.
+        """
+        if bin_name.startswith('/usr/share/') and \
+                not self.usr_arch_share_regex.search(bin_name):
+            self.output.add_info('E', pkg, 'arch-dependent-file-in-usr-share',
+                                 bin_name)
+
+    def _check_binary_in_etc(self, pkg, bin_name):
+        """
+        Print an error if binary file bin_name is installed in /etc directory.
+
+        We suppose that the package is arch dependent.
+        """
+        if bin_name.startswith('/etc/'):
+            self.output.add_info('E', pkg, 'binary-in-etc', bin_name)
+
+    def _check_unstripped_binary(self, bin_name, pkg, pkgfile):
+        """
+        Print a warning if the bin_name binary has unstripped debug symbols.
+
+        We suppose that the package is arch dependent and bin_name is not
+        ocaml native, lua bytecode, .o or .static.
+        """
+        if 'not stripped' in pkgfile.magic:
+            self.output.add_info('W', pkg, 'unstripped-binary-or-object',
+                                 bin_name)
+
+    def _check_non_pie(self, pkg, bin_name, is_pie_exec):
+        """
+        Check if the bin_name binary is built with PIE.
+
+        Print an error message if it's not while PIE is forced in
+        configuration. Print a warning if it's not forced.
+        We suppose that the package is arch dependent and bin_name is binary
+        executable.
+        """
+        if not self.is_shobj and not is_pie_exec:
+            if self.pie_exec_re and self.pie_exec_re.search(bin_name):
+                self.output.add_info('E', pkg,
+                                     'non-position-independent-executable',
+                                     bin_name)
+            else:
+                self.output.add_info('W', pkg,
+                                     'position-independent-executable-suggested',
+                                     bin_name)
+
+    def _check_exec_in_library(self, pkg, has_lib, exec_files):
+        """
+        Check if the library package has an executable file installed.
+
+        Print an error for every such file.
+        """
+        if has_lib:
+            for f in exec_files:
+                self.output.add_info('E', pkg, 'executable-in-library-package', f)
+
+    def _check_non_versioned(self, pkg, has_lib, files, exec_files):
+        """
+        Check if the library package contains library files in non-versioned
+        directories.
+
+        Print an error for every such file.
+        """
+        if has_lib:
+            for f in files:
+                res = self.numeric_dir_regex.search(f)
+                fn = res and res.group(1) or f
+                if f not in exec_files and not self.so_regex.search(f) and \
+                        not self.versioned_dir_regex.search(fn):
+                    self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
+
+    def _check_no_binary(self, pkg, has_binary, multi_pkg, has_file_in_lib64):
+        """
+        Check if the arch dependent package contains any binaries.
+
+        Print an error if there is no binary and it's not noarch.
+        """
+        if not has_binary and not multi_pkg and not has_file_in_lib64 and \
+                pkg.arch != 'noarch':
+            self.output.add_info('E', pkg, 'no-binary')
+
+    def _check_noarch_with_lib64(self, pkg, has_file_in_lib64):
+        """
+        Print an error if we have a noarch package that contains a file
+        in /usr/lib64.
+        """
+        if pkg.arch == 'noarch' and has_file_in_lib64:
+            self.output.add_info('E', pkg, 'noarch-with-lib64')
+
+    def _check_only_non_binary_in_usrlib(self, pkg, has_usr_lib_file, has_binary_in_usr_lib):
+        """
+        Check and print a warning if we have _only_ non-binary files in the
+        '/usr/lib'.
+
+        Note: non-binaries allowed via UsrLibBinaryException config option
+        are considered binaries.
+        """
+        if has_usr_lib_file and not has_binary_in_usr_lib:
+            self.output.add_info('W', pkg, 'only-non-binary-in-usr-lib')
+
     def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
+        """
+        For an archive, test if any .text sections is empty.
+        """
         if self.readelf_parser.is_archive:
             for comment in self.readelf_parser.comment_section_info.comments:
                 if comment.startswith('GHC '):
@@ -87,6 +235,9 @@ class BinariesCheck(AbstractCheck):
                     return
 
     def _check_missing_symtab_in_archive(self, pkg, pkgfile_path, path):
+        """
+        FIXME Add test coverage.
+        """
         if self.readelf_parser.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
@@ -112,6 +263,11 @@ class BinariesCheck(AbstractCheck):
                     return
 
     def _check_executable_stack(self, pkg, pkgfile_path, path):
+        """
+        Check if the stack is declared as executable which is usually an error.
+
+        FIXME Add test coverage.
+        """
         if not self.readelf_parser.is_archive:
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
@@ -119,23 +275,39 @@ class BinariesCheck(AbstractCheck):
             elif 'E' in stack_headers[0].flags:
                 self.output.add_info('E', pkg, 'executable-stack', path)
 
-    def _check_soname_symlink(self, pkg, file_path, soname):
-        path = Path(file_path)
+    def _check_soname_symlink(self, pkg, shlib, soname):
+        """
+        Check that we have a symlink with the soname in the package and it
+        points to the checked shared library.
+
+        Print an error if the symlink is invalid or missing.
+        """
+        path = Path(shlib)
         symlink = path.parent / soname
         try:
-            # check that we have a symlink with the soname in the package
-            # and it points to the checked shared library
+
             link = pkg.files()[str(symlink)].linkto
-            if link not in (file_path, path.parent, ''):
-                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', file_path, link)
+            if link not in (shlib, path.parent, ''):
+                self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', shlib, link)
         except KeyError:
             # if we do not have a symlink, report an issue
             if path.name.startswith('lib') or path.name.startswith('ld-'):
-                self.output.add_info('E', pkg, 'no-ldconfig-symlink', file_path)
+                self.output.add_info('E', pkg, 'no-ldconfig-symlink', shlib)
 
     def _check_shared_library(self, pkg, pkgfile_path, path):
+        """
+        Various checks for the shared library.
+
+        1) Print 'no-soname' warning it the library has no soname present.
+        2) Print 'invalid-soname' error if the soname is not valid.
+        3) Print 'incoherent-version-in-name' error when the library major
+           version is not present in the package name.
+        4) Print 'shlib-with-non-pic-code' error if the library contains
+           object code that was compiled without -fPIC.
+        """
         if not self.readelf_parser.is_shlib:
             return
+
         soname = self.readelf_parser.dynamic_section_info.soname
         if not soname:
             self.output.add_info('W', pkg, 'no-soname', path)
@@ -145,16 +317,22 @@ class BinariesCheck(AbstractCheck):
             else:
                 self._check_soname_symlink(pkg, path, soname)
 
+                # check if the major version of the library is in the package
+                # name
                 res = self.soversion_regex.search(soname)
                 if res:
                     soversion = res.group(1) or res.group(2)
                     if soversion and soversion not in pkg.name:
                         self.output.add_info('E', pkg, 'incoherent-version-in-name', soversion)
 
+        # check if the object code in the library is compiled with PIC
         if not self.readelf_parser.section_info.pic:
             self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
 
     def _check_dependency(self, pkg, pkgfile_path, path):
+        """
+        FIXME Add test coverage.
+        """
         # following issues are errors for shared libs and warnings for executables
         if not self.readelf_parser.is_archive and not self.readelf_parser.is_debug:
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
@@ -165,6 +343,9 @@ class BinariesCheck(AbstractCheck):
                                      path, dependency)
 
     def _check_library_dependency_location(self, pkg, pkgfile_path, path):
+        """
+        FIXME Add test coverage.
+        """
         if not self.readelf_parser.is_archive:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
@@ -291,85 +472,73 @@ class BinariesCheck(AbstractCheck):
     def check_binary(self, pkg):
         files = pkg.files()
         exec_files = []
-        has_lib = False
-        binary = False
-        binary_in_usr_lib = False
-        has_usr_lib_file = False
-        file_in_lib64 = False
-
         multi_pkg = False
-        srpm = pkg[rpm.RPMTAG_SOURCERPM]
-        if srpm:
-            res = self.srcname_regex.search(srpm)
-            if res:
-                multi_pkg = (pkg.name != res.group(1))
+        pkg_has_lib = False
+        pkg_has_binary = False
+        pkg_has_binary_in_usrlib = False
+        pkg_has_usrlib_file = False
+        pkg_has_file_in_lib64 = False
 
+        #  go through the all files, run files checks and collect data that are
+        #  needed later
         for fname, pkgfile in files.items():
 
+            # Common tests first
+            self._check_libtool_wrapper(pkg, fname, pkgfile)
+            self._check_invalid_la_file(pkg, fname)
+
+            # consider non-binary in /usr/lib/ that is allowed by
+            # UsrLibBinaryException config option as a "fake" binary and
+            # do not throw 'only-non-binary-in-usr-lib' warning then
             if not stat.S_ISDIR(pkgfile.mode) and self.usr_lib_regex.search(fname):
-                has_usr_lib_file = True
-                if not binary_in_usr_lib and \
+                pkg_has_usrlib_file = True
+                if not pkg_has_binary_in_usrlib and \
                         self.usr_lib_exception_regex.search(fname):
                     # Fake that we have binaries there to avoid
                     # only-non-binary-in-usr-lib false positives
-                    binary_in_usr_lib = True
+                    pkg_has_binary_in_usrlib = True
 
+            # find out if we have a file in /usr/lib64/ directory (needed later
+            # for the package checks)
             if stat.S_ISREG(pkgfile.mode) and \
-                    (fname.startswith('/usr/lib64') or fname.startswith('/lib64')):
-                file_in_lib64 = True
+                    (fname.startswith('/usr/lib64') or
+                     fname.startswith('/lib64')):
+                pkg_has_file_in_lib64 = True
 
+            # skip the rest of the tests for non-binaries
+            # binary files only from here on
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
-
-            if 'shell script' in pkgfile.magic:
-                file_start = None
-                try:
-                    with open(pkgfile.path, 'rb') as inputf:
-                        file_start = inputf.read(2048)
-                except IOError:
-                    pass
-                if (file_start and b'This wrapper script should never '
-                        b'be moved out of the build directory' in file_start):
-                    self.output.add_info('E', pkg, 'libtool-wrapper-in-package', fname)
-
-            if not (pkgfile.magic.startswith('ELF ') or 'current ar archive' in pkgfile.magic or is_ocaml_native or is_lua_bytecode):
-                if self.reference_regex.search(fname):
-                    lines = pkg.grep(self.invalid_dir_ref_regex, fname)
-                    if lines:
-                        self.output.add_info('E', pkg, 'invalid-directory-reference', fname,
-                                             '(line %s)' % ', '.join(lines))
+            if not (pkgfile.magic.startswith('ELF ') or 'current ar archive'
+                    in pkgfile.magic or is_ocaml_native or is_lua_bytecode):
                 continue
 
-            # binary files only from here on
-            binary = True
+            # mark this package as a one that has binary file
+            pkg_has_binary = True
 
-            if has_usr_lib_file and not binary_in_usr_lib and \
+            # if there is a binary in /usr/lib then mark this package
+            # accordingly
+            if pkg_has_usrlib_file and not pkg_has_binary_in_usrlib and \
                     self.usr_lib_regex.search(fname):
-                binary_in_usr_lib = True
+                pkg_has_binary_in_usrlib = True
 
+            self._check_binary_in_noarch(pkg, fname)
+
+            # skip the rest of the tests for noarch packages
+            # arch dependent packages only from here on
             if pkg.arch == 'noarch':
-                self.output.add_info('E', pkg,
-                                     'arch-independent-package-contains-binary-or-object',
-                                     fname)
                 continue
 
-            # arch dependent packages only from here on
+            self._check_binary_in_usr_share(pkg, fname)
+            self._check_binary_in_etc(pkg, fname)
 
-            # in /usr/share ?
-            if fname.startswith('/usr/share/') and not self.usr_arch_share_regex.search(fname):
-                self.output.add_info('E', pkg, 'arch-dependent-file-in-usr-share', fname)
-
-            # in /etc ?
-            if fname.startswith('/etc/'):
-                self.output.add_info('E', pkg, 'binary-in-etc', fname)
-
+            # skip the rest of the tests for ocaml native, bytecode, .o and
+            # .static
             if is_ocaml_native or is_lua_bytecode or fname.endswith('.o') or \
                     fname.endswith('.static'):
                 continue
 
-            # stripped ?
-            if 'not stripped' in pkgfile.magic:
-                self.output.add_info('W', pkg, 'unstripped-binary-or-object', fname)
+            self._check_unstripped_binary(fname, pkg, pkgfile)
 
             self.is_exec = 'executable' in pkgfile.magic
             self.is_shobj = 'shared object' in pkgfile.magic
@@ -382,8 +551,10 @@ class BinariesCheck(AbstractCheck):
             is_shlib = self.readelf_parser.is_shlib
 
             if is_shlib:
-                has_lib = True
+                pkg_has_lib = True
 
+            # skip non-exec and non-SO
+            # executables and shared objects only from here on
             if not self.is_exec and not self.is_shobj:
                 continue
 
@@ -393,32 +564,25 @@ class BinariesCheck(AbstractCheck):
                 self.is_exec = True
 
             if self.is_exec:
+                # add to the list of the all exec files
                 if self.bin_regex.search(fname):
                     exec_files.append(fname)
 
-                if not self.is_shobj and not is_pie_exec:
-                    if self.pie_exec_re and self.pie_exec_re.search(fname):
-                        self.output.add_info('E', pkg, 'non-position-independent-executable',
-                                             fname)
-                    else:
-                        self.output.add_info('W', pkg, 'position-independent-executable-suggested',
-                                             fname)
+                self._check_non_pie(pkg, fname, is_pie_exec)
 
-        if has_lib:
-            for f in exec_files:
-                self.output.add_info('E', pkg, 'executable-in-library-package', f)
-            for f in files:
-                res = self.numeric_dir_regex.search(f)
-                fn = res and res.group(1) or f
-                if f not in exec_files and not self.so_regex.search(f) and \
-                        not self.versioned_dir_regex.search(fn):
-                    self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
+        # find out if we have a multi-package
+        srpm = pkg[rpm.RPMTAG_SOURCERPM]
+        if srpm:
+            srcname = self.srcname_regex.search(srpm)
+            if srcname:
+                multi_pkg = (pkg.name != srcname.group(1))
 
-        if not binary and not multi_pkg and not file_in_lib64 and pkg.arch != 'noarch':
-            self.output.add_info('E', pkg, 'no-binary')
-
-        if pkg.arch == 'noarch' and file_in_lib64:
-            self.output.add_info('E', pkg, 'noarch-with-lib64')
-
-        if has_usr_lib_file and not binary_in_usr_lib:
-            self.output.add_info('W', pkg, 'only-non-binary-in-usr-lib')
+        # run checks for the whole package
+        # it uses data collected in the previous for-cycle
+        self._check_exec_in_library(pkg, pkg_has_lib, exec_files)
+        self._check_non_versioned(pkg, pkg_has_lib, files, exec_files)
+        self._check_no_binary(pkg, pkg_has_binary, multi_pkg,
+                              pkg_has_file_in_lib64)
+        self._check_noarch_with_lib64(pkg, pkg_has_file_in_lib64)
+        self._check_only_non_binary_in_usrlib(pkg, pkg_has_usrlib_file,
+                                              pkg_has_binary_in_usrlib)
