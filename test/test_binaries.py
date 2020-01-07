@@ -79,7 +79,7 @@ def test_shlib_with_no_exec(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: shared-lib-not-executable /lib64/libfoo.so' not in out
+    assert 'E: shared-library-not-executable /lib64/libfoo.so' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/glibc'])
@@ -87,7 +87,7 @@ def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: shared-lib-not-executable /lib64/libpthread.so' in out
+    assert 'E: shared-library-not-executable /lib64/libpthread.so' in out
 
 
 @pytest.mark.parametrize('package', ['binary/bcc-lua'])

@@ -67,7 +67,7 @@ incoherent-version-in-name="""
 The package name should contain the major version of the library.
 """
 invalid-la-file="""
-This .la file contains a reference to /tmp or /home that is not allowed.
+This .la file contains a reference to /tmp or /home.
 """
 no-binary="""
 The package should be of the noarch architecture because it doesn't contain
@@ -153,7 +153,7 @@ static-library-without-debuginfo="""
 The static library doesn't contain any debuginfo. Binaries linking against
 this static library can't be properly debugged.
 """
-shared-lib-not-executable="""
+shared-library-not-executable="""
 This library doesn't have the executable bit set. Without this bit set,
 rpm for instance won't be able identify the file as a library and not
 generate dependencies or strip debug symbols from it.
@@ -164,7 +164,7 @@ The library is not dynamically linked against libc.
 program-not-linked-against-libc="""
 The binary is not dynamically linked against libc.
 """
-shared-lib-without-dependency-information="""
+shared-library-without-dependency-information="""
 The listed shared library doesn't include information about which other
 libraries the library was linked against.
 """

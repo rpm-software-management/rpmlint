@@ -386,7 +386,7 @@ class BinariesCheck(AbstractCheck):
         if not len(dyn_section.needed) and not (dyn_section.soname and
                                                 self.ldso_soname_regex.search(dyn_section.soname)):
             if self.is_shobj:
-                msg = 'shared-lib-without-dependency-information'
+                msg = 'shared-library-without-dependency-information'
             else:
                 msg = 'statically-linked-binary'
             self.output.add_info('E', pkg, msg, path)
@@ -449,7 +449,7 @@ class BinariesCheck(AbstractCheck):
         if not self.is_exec and self.readelf_parser.is_shlib:
             interp = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'INTERP']
             if interp:
-                self.output.add_info('E', pkg, 'shared-lib-not-executable', path)
+                self.output.add_info('E', pkg, 'shared-library-not-executable', path)
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
