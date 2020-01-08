@@ -161,7 +161,10 @@ def test_binary_in_etc(tmpdir, package, binariescheck):
 
 @pytest.mark.parametrize('package', ['binary/non-position-independent-exec'])
 def test_non_position_independent_sugg(tmpdir, package, binariescheck):
-    output, test = binariescheck
+    # reset PieExecutable option
+    CONFIG.configuration['PieExecutables'] = ''
+    output = Filter(CONFIG)
+    test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'W: position-independent-executable-suggested' in out
