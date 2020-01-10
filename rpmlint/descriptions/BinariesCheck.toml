@@ -12,6 +12,9 @@ noarch-with-lib64="""
 This package is marked as noarch but installs files into lib64.
 Not all architectures have this in path, so the package can't be noarch.
 """
+no-soname="""
+The library has no soname.
+"""
 invalid-soname="""
 The soname of the library is neither of the form lib<libname>.so.<major> or
 lib<libname>-<major>.so.
@@ -63,8 +66,8 @@ themselves.
 incoherent-version-in-name="""
 The package name should contain the major version of the library.
 """
-invalid-directory-reference="""
-This file contains a reference to /tmp or /home.
+invalid-la-file="""
+This .la file contains a reference to /tmp or /home.
 """
 no-binary="""
 The package should be of the noarch architecture because it doesn't contain
@@ -150,8 +153,18 @@ static-library-without-debuginfo="""
 The static library doesn't contain any debuginfo. Binaries linking against
 this static library can't be properly debugged.
 """
-shared-lib-not-executable="""
+shared-library-not-executable="""
 This library doesn't have the executable bit set. Without this bit set,
 rpm for instance won't be able identify the file as a library and not
 generate dependencies or strip debug symbols from it.
+"""
+library-not-linked-against-libc="""
+The library is not dynamically linked against libc.
+"""
+program-not-linked-against-libc="""
+The binary is not dynamically linked against libc.
+"""
+shared-library-without-dependency-information="""
+The listed shared library doesn't include information about which other
+libraries the library was linked against.
 """

@@ -226,4 +226,4 @@ def test_missing_dependency(binariescheck):
     test.is_shobj = True
     test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
     out = output.print_results(output.results)
-    assert 'E: shared-lib-without-dependency-information' in out
+    assert 'E: shared-library-without-dependency-information' in out
