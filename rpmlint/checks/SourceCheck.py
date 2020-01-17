@@ -22,7 +22,7 @@ class SourceCheck(AbstractCheck):
         self.spec_file = None
 
         source_details_dict = {
-            'source-or-patch-not-compressed':
+            'source-not-compressed':
             """A source archive or file in your package is not compressed using the %s
             compression method (doesn't have the %s extension).""" %
             (self.compress_ext, self.compress_ext),
@@ -63,7 +63,7 @@ class SourceCheck(AbstractCheck):
         """
         if (self.source_regex.search(fname) and self.compress_ext and
                 not fname.endswith(self.compress_ext)):
-            self.output.add_info('W', pkg, 'source-or-patch-not-compressed',
+            self.output.add_info('W', pkg, 'source-not-compressed',
                                  self.compress_ext, fname)
 
     def _check_multiple_specfiles(self, fname, pkg):

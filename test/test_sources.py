@@ -34,7 +34,7 @@ def test_compression_and_multispec(tmpdir, package, sourcescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
 
-    assert 'source-or-patch-not-compressed' in out
+    assert 'source-not-compressed' in out
     assert 'source archive or file in your package is not compressed' in out
 
     assert 'multiple-specfiles' in out
