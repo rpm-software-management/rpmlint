@@ -403,7 +403,7 @@ class BinariesCheck(AbstractCheck):
                     msg = 'library-not-linked-against-libc'
                 else:
                     msg = 'program-not-linked-against-libc'
-                self.output.add_info('E', pkg, msg, path)
+                self.output.add_info('W', pkg, msg, path)
 
     def _check_forbidden_functions(self, pkg, pkgfile_path, path):
         forbidden_functions = self.config.configuration['WarnOnFunction']
