@@ -1,12 +1,3 @@
-#############################################################################
-# File          : Pkg.py
-# Package       : rpmlint
-# Author        : Frederic Lepied
-# Created on    : Tue Sep 28 07:18:06 1999
-# Purpose       : provide an API to handle a rpm package either by accessing
-#                 the rpm file or by accessing the files contained inside.
-#############################################################################
-
 import bz2
 import gzip
 import lzma
@@ -16,7 +7,6 @@ import re
 from shlex import quote
 import stat
 import subprocess
-import sys
 import tempfile
 from urllib.parse import urljoin
 
@@ -1005,15 +995,3 @@ class PkgFile(object):
     is_noreplace = property(lambda self: self.flags & rpm.RPMFILE_NOREPLACE)
     is_ghost = property(lambda self: self.flags & rpm.RPMFILE_GHOST)
     is_missingok = property(lambda self: self.flags & rpm.RPMFILE_MISSINGOK)
-
-
-if __name__ == '__main__':
-    for p in sys.argv[1:]:
-        with Pkg(p, tempfile.gettempdir()) as pkg:
-            print('Requires: %s' % pkg.requires())
-            print('Prereq: %s' % pkg.prereq())
-            print('Conflicts: %s' % pkg.conflicts())
-            print('Provides: %s' % pkg.provides())
-            print('Obsoletes: %s' % pkg.obsoletes())
-
-# Pkg.py ends here
