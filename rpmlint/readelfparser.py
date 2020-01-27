@@ -77,15 +77,15 @@ class ElfSectionInfo:
     def __init__(self, path):
         self.path = path
         self.elf_files = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.pic = False
         self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-S', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         lines = r.stdout.splitlines()
@@ -137,14 +137,14 @@ class ElfProgramHeaderInfo:
     def __init__(self, path):
         self.path = path
         self.headers = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-l', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         lines = r.stdout.splitlines()
@@ -204,15 +204,15 @@ class ElfDynamicSectionInfo:
     def __init__(self, path):
         self.path = path
         self.sections = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.parse()
         self.parse_meta()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-d', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         lines = r.stdout.splitlines()
@@ -263,14 +263,14 @@ class ElfSymbolTableInfo:
     def __init__(self, path):
         self.path = path
         self.symbols = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-s', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         lines = r.stdout.splitlines()
@@ -297,14 +297,14 @@ class ElfCommentInfo:
     def __init__(self, path):
         self.path = path
         self.comments = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.parse()
 
     def parse(self):
         r = subprocess.run(['readelf', '-p', '.comment', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         lines = r.stdout.splitlines()
@@ -333,9 +333,11 @@ class ReadelfParser:
         self.symbol_table_info = ElfSymbolTableInfo(pkgfile_path)
         self.comment_section_info = ElfCommentInfo(pkgfile_path)
 
-    def parsing_failed(self):
-        return (self.section_info.parsing_failed or
-                self.program_header_info.parsing_failed or
-                self.dynamic_section_info.parsing_failed or
-                self.symbol_table_info.parsing_failed or
-                self.comment_section_info.parsing_failed)
+    def parsing_failed_reason(self):
+        reasons = [self.section_info.parsing_failed_reason,
+                   self.program_header_info.parsing_failed_reason,
+                   self.dynamic_section_info.parsing_failed_reason,
+                   self.symbol_table_info.parsing_failed_reason,
+                   self.comment_section_info.parsing_failed_reason]
+        reasons = [r for r in reasons if r]
+        return '\n'.join(reasons) if reasons else None

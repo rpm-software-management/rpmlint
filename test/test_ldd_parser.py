@@ -29,26 +29,26 @@ def lddparser(path, system_path=None):
 
 def test_unused_dependency():
     ldd = lddparser('libtirpc.so.3.0.0')
-    assert not ldd.parsing_failed
+    assert not ldd.parsing_failed_reason
     assert len(ldd.unused_dependencies) >= 1
     assert 'liXXXsapi_krb5.so.2' in ldd.unused_dependencies
 
 
 def test_undefined_symbol():
     ldd = lddparser('libtirpc.so.3.0.0')
-    assert not ldd.parsing_failed
+    assert not ldd.parsing_failed_reason
     assert len(ldd.undefined_symbols) >= 22
     assert 'GSS_C_NT_HOSTBASED_SERVICE' in ldd.undefined_symbols
 
 
 def test_ldd_parser_failure():
     ldd = lddparser('not-existing-file')
-    assert ldd.parsing_failed
+    assert 'not-existing-file: No such file or directory' in ldd.parsing_failed_reason
 
 
 def test_dependencies():
     ldd = lddparser('libtirpc.so.3.0.0')
-    assert not ldd.parsing_failed
+    assert not ldd.parsing_failed_reason
     assert len(ldd.dependencies) == 5
     assert any(d for d in ldd.dependencies if d.startswith('linux-vdso.so.1'))
 
@@ -56,8 +56,8 @@ def test_dependencies():
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
-    assert not test.readelf_parser.parsing_failed()
-    assert not test.ldd_parser.parsing_failed
+    assert not test.readelf_parser.parsing_failed_reason()
+    assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
     assert 'E: unused-direct-shlib-dependency ' in out
 
@@ -65,8 +65,8 @@ def test_unused_dependency_in_package(binariescheck):
 def test_unused_dependency_in_package_for_executable(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
-    assert not test.readelf_parser.parsing_failed()
-    assert not test.ldd_parser.parsing_failed
+    assert not test.readelf_parser.parsing_failed_reason()
+    assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
     assert 'W: unused-direct-shlib-dependency ' in out
 
@@ -74,8 +74,8 @@ def test_unused_dependency_in_package_for_executable(binariescheck):
 def test_opt_dependency(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
-    assert not test.readelf_parser.parsing_failed()
-    assert not test.ldd_parser.parsing_failed
+    assert not test.readelf_parser.parsing_failed_reason()
+    assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
     assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out
 
@@ -83,7 +83,7 @@ def test_opt_dependency(binariescheck):
 def test_usr_dependency(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')
-    assert not test.readelf_parser.parsing_failed()
-    assert not test.ldd_parser.parsing_failed
+    assert not test.readelf_parser.parsing_failed_reason()
+    assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
     assert 'W: linked-against-usr-library /bin/usr-dependency /usr/libfoo.so' in out
