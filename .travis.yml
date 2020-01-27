@@ -34,7 +34,7 @@ install:
 
 script:
   - podman build -t $DIST -f test/Dockerfile-$DIST .
-  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 setup.py test
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 -m pytest
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST flake8
 
 after_success:
