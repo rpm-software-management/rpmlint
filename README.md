@@ -38,7 +38,7 @@ Optional:
 
 ## Testing
 
-### Docker
+### Containers
 If you want to test the `rpmlint` when developing best is to use podman
 to provide the environment for you. There are various distribution
 dockerfiles in `test/` folder.
