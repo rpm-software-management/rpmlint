@@ -426,8 +426,9 @@ class BinariesCheck(AbstractCheck):
             return
 
         strings_parser = StringsParser(pkgfile_path)
-        if strings_parser.parsing_failed:
-            self.output.add_info('E', pkg, 'strings-failed', path)
+        failed_reason = strings_parser.parsing_failed_reason
+        if failed_reason:
+            self.output.add_info('E', pkg, 'strings-failed', path, failed_reason)
             return
 
         forbidden_functions_filtered = []
@@ -453,14 +454,16 @@ class BinariesCheck(AbstractCheck):
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
-        if self.readelf_parser.parsing_failed():
-            self.output.add_info('E', pkg, 'readelf-failed', path)
+        failed_reason = self.readelf_parser.parsing_failed_reason()
+        if failed_reason:
+            self.output.add_info('E', pkg, 'readelf-failed', path, failed_reason)
             return
 
         if not self.readelf_parser.is_archive:
             self.ldd_parser = LddParser(pkgfile_path, path)
-            if self.ldd_parser.parsing_failed:
-                self.output.add_info('E', pkg, 'ldd-failed', path)
+            failed_reason = self.ldd_parser.parsing_failed_reason
+            if failed_reason:
+                self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
                 return
 
         with concurrent.futures.ThreadPoolExecutor() as executor:

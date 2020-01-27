@@ -9,14 +9,14 @@ class StringsParser:
     def __init__(self, pkgfile_path):
         self.pkgfile_path = pkgfile_path
         self.strings = []
-        self.parsing_failed = False
+        self.parsing_failed_reason = None
         self.parse()
 
     def parse(self):
         r = subprocess.run(['strings', self.pkgfile_path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if r.returncode != 0:
-            self.parsing_failed = True
+            self.parsing_failed_reason = r.stderr
             return
 
         self.strings = r.stdout.splitlines()

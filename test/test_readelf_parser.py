@@ -93,7 +93,7 @@ def test_rpath():
 def test_lto_bytecode(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('lto-object.o'), 'x.a')
-    assert not test.readelf_parser.parsing_failed()
+    assert not test.readelf_parser.parsing_failed_reason()
     out = output.print_results(output.results)
     assert 'lto-bytecode' in out
 
@@ -145,8 +145,8 @@ def test_executable_stack(binariescheck):
 
 
 def test_readelf_failure():
-    readelf = readelfparser('no-existing-file')
-    assert readelf.parsing_failed
+    readelf = readelfparser('not-existing-file')
+    assert 'not-existing-file\': No such file' in readelf.parsing_failed_reason()
 
 
 def test_readelf_failure_in_package(binariescheck):
