@@ -509,11 +509,11 @@ class Pkg(AbstractPkg):
     def _extract(self):
         if not Path(self.dirname).is_dir():
             print_warning('Unable to access dir %s' % self.dirname)
-            return None
         else:
-            self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % Path(self.filename).name,
-                dir=self.dirname)
+            self.__tmpdir = tempfile.TemporaryDirectory(
+                prefix="rpmlint.%s." % Path(self.filename).name, dir=self.dirname
+            )
+            self.dirname = self.__tmpdir.name
             # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
@@ -521,7 +521,6 @@ class Pkg(AbstractPkg):
                 {'f': quote(str(self.filename)), 'd': quote(str(self.dirname))}
             cmd = getstatusoutput(command_str, shell=True)
             self.extracted = True
-            return cmd
 
     def checkSignature(self):
         return getstatusoutput(('rpm', '-K', self.filename))
@@ -529,7 +528,7 @@ class Pkg(AbstractPkg):
     # remove the extracted files from the package
     def cleanup(self):
         if self.extracted and self.dirname:
-            getstatusoutput(('rm', '-rf', self.dirname))
+            self.__tmpdir.cleanup()
 
     def grep(self, regex, filename):
         """Grep regex from a file, return matching line numbers."""
@@ -928,13 +927,13 @@ class FakePkg(AbstractPkg):
 
     def dirName(self):
         if not self.dirname:
-            self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % Path(self.name).name)
+            self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
+            self.dirname = self.__tmpdir.name
         return self.dirname
 
     def cleanup(self):
         if self.dirname:
-            getstatusoutput(('rm', '-rf', self.dirname))
+            self.__tmpdir.cleanup()
 
     def files(self):
         return self._files
