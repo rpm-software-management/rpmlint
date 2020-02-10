@@ -190,31 +190,6 @@ def readlines(path):
             yield byte_to_string(line)
 
 
-def get_default_valid_rpmgroups(filename=None):
-    """
-    Get default rpm groups from filename, or try to look them up from
-    the rpm package (if installed) if no filename is given.
-    """
-    groups = []
-    if not filename:
-        try:
-            with InstalledPkg('rpm') as p:
-                groupsfiles = [x for x in p.files() if x.endswith('/GROUPS')]
-                if groupsfiles:
-                    filename = groupsfiles[0]
-        except KeyError:  # the rpm package might not be installed
-            pass
-    if filename and Path(filename).exists():
-        with open(filename) as fobj:
-            groups = fobj.read().strip().splitlines()
-        if 'Development/Debug' not in groups:
-            groups.append('Development/Debug')
-        if 'Unspecified' not in groups:  # auto-added by rpm >= 4.6.0
-            groups.append('Unspecified')
-        groups.sort()
-    return groups
-
-
 # from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
 def compareEVR(evr1, evr2):
     (e1, v1, r1) = evr1
