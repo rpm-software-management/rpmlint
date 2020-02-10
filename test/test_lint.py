@@ -266,3 +266,42 @@ def test_run_empty(capsys):
     out, err = capsys.readouterr()
     assert err
     assert '0 packages and 0 specfiles checked; 0 errors, 0 warnings' in out
+
+
+@pytest.mark.parametrize('packages', [Path('test/rpmlintrc/single')])
+def test_run_rpmlintrc_single_dir(capsys, packages):
+    additional_options = {
+        'rpmfile': [packages],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert not err
+    assert 'rpmlintrc:' in out
+
+
+@pytest.mark.parametrize('packages', [Path('test/rpmlintrc/multiple')])
+def test_run_rpmlintrc_multiple(capsys, packages):
+    additional_options = {
+        'rpmfile': [packages],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert 'rpmlintrc:' not in out
+    assert 'There are multiple items to be loaded for rpmlintrc' in err
+
+
+@pytest.mark.parametrize('packages', [Path('test/rpmlintrc/single/sample.spec')])
+def test_run_rpmlintrc_single_file(capsys, packages):
+    additional_options = {
+        'rpmfile': [packages],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert not err
+    assert 'rpmlintrc:' in out
