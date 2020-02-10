@@ -24,8 +24,7 @@ class Lint(object):
             self.config = Config(options['config'])
         else:
             self.config = Config()
-        if options['rpmlintrc']:
-            self.config.load_rpmlintrc(options['rpmlintrc'])
+        self._load_rpmlintrc()
         if options['verbose']:
             self.config.info = options['verbose']
         if options['strict']:
@@ -80,6 +79,31 @@ class Lint(object):
             else:
                 print_warning(f'(none): E: there is no installed rpm "{name}".')
         return existing_packages
+
+    def _load_rpmlintrc(self):
+        """
+        Load rpmlintrc from argument or load up from folder
+        """
+        if self.options['rpmlintrc']:
+            self.config.load_rpmlintrc(self.options['rpmlintrc'])
+        else:
+            # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
+            # do this only in a case where there is one folder parameter or one file
+            # to avoid multiple folders handling
+            rpmlintrc = []
+            if not len(self.options['rpmfile']) == 1:
+                return
+            pkg = self.options['rpmfile'][0]
+            if pkg.is_file():
+                pkg = pkg.parent
+            rpmlintrc += sorted(pkg.glob('*.rpmlintrc'))
+            rpmlintrc += sorted(pkg.glob('*-rpmlintrc'))
+            if len(rpmlintrc) > 1:
+                # multiple rpmlintrcs are highly undesirable
+                print_warning('There are multiple items to be loaded for rpmlintrc, ignoring them: {}.'.format(' '.join(map(str, rpmlintrc))))
+            elif len(rpmlintrc) == 1:
+                self.options['rpmlintrc'] = rpmlintrc[0]
+                self.config.load_rpmlintrc(rpmlintrc[0])
 
     def _print_header(self):
         """
