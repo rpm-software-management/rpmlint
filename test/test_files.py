@@ -81,6 +81,16 @@ def test_devel_files(tmpdir, package, filescheck):
     assert 'no-documentation' in out
 
 
+@pytest.mark.parametrize('package', ['binary/makefile-junk'])
+def test_makefile_junk(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: makefile-junk /usr/share/CMakeLists.txt' in out
+    assert 'E: makefile-junk /usr/share/Makefile.am' in out
+    assert 'E: makefile-junk /usr/share/selinux' not in out
+
+
 @pytest.mark.parametrize('package', ['binary/python3-greenlet'])
 def test_sphinx_inv_files(tmpdir, package, filescheck):
     output, test = filescheck

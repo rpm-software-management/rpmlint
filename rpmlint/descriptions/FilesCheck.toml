@@ -393,3 +393,9 @@ tcl-extension-file="""
 Script libraries for Tcl extensions should be in a package-specific
 subdir of /usr/share/tcl.
 """
+makefile-junk="""
+Your package contains makefiles that only make sense in a
+source package. Did you package a complete directory from the
+tarball by using %doc? Consider removing Makefile* from this
+directory at the end of your %install section to reduce bloat.
+"""
