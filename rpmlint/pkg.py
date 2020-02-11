@@ -84,32 +84,6 @@ def substitute_shell_vars(val, script):
         return val
 
 
-def getstatusoutput(cmd, stdoutonly=False, shell=False, raw=False, lc_all='C'):
-    """
-    A version of commands.getstatusoutput() which can take cmd as a
-    sequence, thus making it potentially more secure.
-    """
-    env = dict(os.environ, LC_ALL=lc_all)
-    if stdoutonly:
-        proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE, close_fds=True, env=env)
-    else:
-        proc = subprocess.Popen(cmd, shell=shell, stdin=subprocess.PIPE,
-                                stdout=subprocess.PIPE, env=env,
-                                stderr=subprocess.STDOUT, close_fds=True)
-    proc.stdin.close()
-    with proc.stdout:
-        text = proc.stdout.read()
-    sts = proc.wait()
-    if not raw:
-        text = byte_to_string(text)
-        if text.endswith('\n'):
-            text = text[:-1]
-    if sts is None:
-        sts = 0
-    return sts, text
-
-
 gzip_regex = re.compile(r'\.t?gz?$')
 bz2_regex = re.compile(r'\.t?bz2?$')
 xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
@@ -509,34 +483,37 @@ class Pkg(AbstractPkg):
     def _extract(self):
         if not Path(self.dirname).is_dir():
             print_warning('Unable to access dir %s' % self.dirname)
-            return None
         else:
-            self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % Path(self.filename).name,
-                dir=self.dirname)
+            self.__tmpdir = tempfile.TemporaryDirectory(
+                prefix='rpmlint.%s.' % Path(self.filename).name, dir=self.dirname
+            )
+            self.dirname = self.__tmpdir.name
             # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
-                'rpm2cpio %(f)s | (cd %(d)s; cpio -id); chmod -R +rX %(d)s' % \
+                'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
                 {'f': quote(str(self.filename)), 'd': quote(str(self.dirname))}
-            cmd = getstatusoutput(command_str, shell=True)
+            subprocess.run(command_str, shell=True)
             self.extracted = True
-            return cmd
 
     def checkSignature(self):
-        return getstatusoutput(('rpm', '-K', self.filename))
+        ret = subprocess.run(('rpm', '-K', self.filename), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        text = ret.stdout.decode()
+        if text.endswith('\n'):
+            text = text[:-1]
+        return ret.returncode, text
 
     # remove the extracted files from the package
     def cleanup(self):
         if self.extracted and self.dirname:
-            getstatusoutput(('rm', '-rf', self.dirname))
+            self.__tmpdir.cleanup()
 
     def grep(self, regex, filename):
         """Grep regex from a file, return matching line numbers."""
         ret = []
         lineno = 0
         try:
-            with open(str(Path(self.dirName() or '/', filename.lstrip('/')))) as in_file:
+            with open(Path(self.dirName() or '/', filename.lstrip('/'))) as in_file:
                 for line in in_file:
                     lineno += 1
                     if regex.search(line):
@@ -928,13 +905,13 @@ class FakePkg(AbstractPkg):
 
     def dirName(self):
         if not self.dirname:
-            self.dirname = tempfile.mkdtemp(
-                prefix='rpmlint.%s.' % Path(self.name).name)
+            self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
+            self.dirname = self.__tmpdir.name
         return self.dirname
 
     def cleanup(self):
         if self.dirname:
-            getstatusoutput(('rm', '-rf', self.dirname))
+            self.__tmpdir.cleanup()
 
     def files(self):
         return self._files

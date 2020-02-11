@@ -8,9 +8,9 @@
 
 import re
 import stat
+import subprocess
 
 import rpm
-from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
@@ -95,9 +95,11 @@ class MenuCheck(AbstractCheck):
             directory = pkg.dirName()
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                cmd = Pkg.getstatusoutput(('/lib/cpp', directory + f), True)[1]
+                text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.decode()
+                if text.endswith('\n'):
+                    text = text[:-1]
 
-                for line in cmd.splitlines():
+                for line in text.splitlines():
                     if not line.startswith('?'):
                         continue
                     res = package_regex.search(line)
