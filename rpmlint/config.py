@@ -22,7 +22,7 @@ class Config(object):
     def __init__(self, config=None):
         # ordered list of configuration files we loaded
         # usefull when debugging where from we got all the config options
-        self.conf_files = list()
+        self.conf_files = []
         # Configuration content parsed from the ini file
         self.configuration = None
         # wether to print more informations or not

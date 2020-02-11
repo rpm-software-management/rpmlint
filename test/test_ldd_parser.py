@@ -50,7 +50,7 @@ def test_dependencies():
     ldd = lddparser('libtirpc.so.3.0.0')
     assert not ldd.parsing_failed
     assert len(ldd.dependencies) == 5
-    assert any([d for d in ldd.dependencies if d.startswith('linux-vdso.so.1')])
+    assert any(d for d in ldd.dependencies if d.startswith('linux-vdso.so.1'))
 
 
 def test_unused_dependency_in_package(binariescheck):

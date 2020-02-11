@@ -97,16 +97,16 @@ class Rpmdiff(object):
             elif not new_file:
                 self.__add(self.FORMAT, (self.REMOVED, f))
             else:
-                format = ''
+                fmt = ''
                 for entry in FILEIDX:
                     if entry[1] is not None and \
                             old_file[entry[1]] != new_file[entry[1]]:
-                        format = format + entry[0]
+                        fmt += entry[0]
                         diff = True
                     else:
-                        format = format + '.'
+                        fmt += '.'
                 if diff:
-                    self.__add(self.FORMAT, (format, f))
+                    self.__add(self.FORMAT, (fmt, f))
 
     def _excluded(self, f):
         f = pathlib.PurePath(f)
@@ -121,15 +121,15 @@ class Rpmdiff(object):
 
     # return a report of the differences
     def textdiff(self):
-        return '\n'.join((format % data for format, data in self.result))
+        return '\n'.join((fmt % data for fmt, data in self.result))
 
     # do the two rpms differ
     def differs(self):
         return bool(self.result)
 
     # add one differing item
-    def __add(self, format, data):
-        self.result.append((format, data))
+    def __add(self, fmt, data):
+        self.result.append((fmt, data))
 
     # load a package from a file or from the installed ones
     def __load_pkg(self, name):

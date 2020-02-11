@@ -765,7 +765,7 @@ class Pkg(AbstractPkg):
         return self._supplements
 
     # internal function to gather dependency info used by the above ones
-    def _gather_aux(self, header, list, nametag, flagstag, versiontag,
+    def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
                     prereq=None):
         names = header[nametag]
         flags = header[flagstag]
@@ -778,7 +778,7 @@ class Pkg(AbstractPkg):
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:
-                    list.append((name, flags[loop], evr))
+                    xs.append((name, flags[loop], evr))
 
     def _gatherDepInfo(self):
         if self._requires is None:
