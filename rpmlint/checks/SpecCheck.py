@@ -8,6 +8,7 @@
 
 from pathlib import Path
 import re
+import subprocess
 from urllib.parse import urlparse
 
 import rpm
@@ -560,10 +561,14 @@ class SpecCheck(AbstractCheck):
         # but it seems errors from rpmlib get logged to stderr and we can't
         # capture and print them nicely, so we do it once each way :P
 
-        out = Pkg.getstatusoutput(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file))
+        outcmd = subprocess.run(
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file), stdout=subprocess.PIPE)
+        text = outcmd.stdout.decode()
+        if text.endswith('\n'):
+            text = text[:-1]
+
         parse_error = False
-        for line in out[1].splitlines():
+        for line in text.splitlines():
             # No such file or dir hack: https://bugzilla.redhat.com/487855
             if 'No such file or directory' not in line:
                 parse_error = True
