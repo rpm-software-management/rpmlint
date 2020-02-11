@@ -29,3 +29,5 @@ def test_overshadowing_of_initscript(tmpdir, package, sysvcheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: systemd-shadowed-initscript bar' in out
+    assert 'E: missing-rc-link bar' in out
+    assert 'E: missing-rc-link foo' in out
