@@ -8,9 +8,10 @@
 import codecs
 import configparser as cfgparser
 from pathlib import Path
+import subprocess
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
-from rpmlint.pkg import getstatusoutput, is_utf8
+from rpmlint.pkg import is_utf8
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')
 
@@ -65,10 +66,11 @@ class MenuXDGCheck(AbstractFilesCheck):
     def check_file(self, pkg, filename):
         root = pkg.dirName()
         f = root + filename
-        st = getstatusoutput(('desktop-file-validate', f), True)
-        if st[0]:
+        command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        text = command.stdout.decode()
+        if command.returncode:
             error_printed = False
-            for line in st[1].splitlines():
+            for line in text.splitlines():
                 if 'error: ' in line:
                     self.output.add_info('E', pkg, 'invalid-desktopfile', filename,
                                          line.split('error: ')[1])

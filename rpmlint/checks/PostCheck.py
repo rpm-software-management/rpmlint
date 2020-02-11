@@ -9,6 +9,7 @@
 
 import os
 import re
+import subprocess
 import tempfile
 
 import rpm
@@ -62,11 +63,11 @@ def check_syntax_script(prog, commandline, script):
     try:
         tmpfile.write(script)
         tmpfile.close()
-        ret = Pkg.getstatusoutput((prog, commandline, tmpname))
+        ret = subprocess.run((prog, commandline, tmpname))
     finally:
         tmpfile.close()
         os.remove(tmpname)
-    return ret[0]
+    return ret.returncode
 
 
 class PostCheck(AbstractCheck):

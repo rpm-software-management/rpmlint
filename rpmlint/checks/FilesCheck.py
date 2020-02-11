@@ -13,11 +13,12 @@ from pathlib import Path
 import re
 from shlex import quote
 import stat
+import subprocess
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
-from rpmlint.pkg import catcmd, getstatusoutput, is_utf8, is_utf8_bytestr
+from rpmlint.pkg import catcmd, is_utf8, is_utf8_bytestr
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -217,12 +218,7 @@ scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 tcl_regex = re.compile(r'^/usr/lib(64)?/([^/]+/)?pkgIndex\.tcl')
 
 printable_extended_ascii = b'\n\r\t\f\b'
-if bytes is str:
-    # Python 2 means we need to invoke chr() explicitly
-    printable_extended_ascii += b''.join(map(chr, range(32, 256)))
-else:
-    # Python 3 means bytes accepts integer input directly
-    printable_extended_ascii += bytes(range(32, 256))
+printable_extended_ascii += bytes(range(32, 256))
 
 
 # See Python sources for a full list of the values here.
@@ -846,13 +842,15 @@ class FilesCheck(AbstractCheck):
                     man_basenames.add(res.group(1))
                     if chunk:
                         # TODO: sequence based invocation
-                        cmd = getstatusoutput(
+                        command = subprocess.run(
                             '%s %s | gtbl | groff -mtty-char -Tutf8 '
                             '-P-c -mandoc -w%s >%s' %
                             (catcmd(f), quote(pkgfile.path),
                              quote(self.man_warn_category), os.devnull),
-                            shell=True, lc_all='en_US.UTF-8')
-                        for line in cmd[1].split('\n'):
+                            shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            env=dict(os.environ, LC_ALL='en_US.UTF-8'))
+
+                        for line in command.stdout.decode().split('\n'):
                             res = man_warn_regex.search(line)
                             if not res or man_nowarn_regex.search(line):
                                 continue
