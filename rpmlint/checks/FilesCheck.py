@@ -176,6 +176,7 @@ perl_temp_file_regex = re.compile(r'.*perl.*/(\.packlist|perllocal\.pod)$')
 scm_regex = re.compile(
     r'/(?:RCS|CVS)/[^/]+$|/\.(?:bzr|cvs|git|hg|svn)ignore$|'
     r',v$|/\.hgtags$|/\.(?:bzr|git|hg|svn)/|/(?:\.arch-ids|{arch})/')
+makefile_regex = re.compile(r'Makefile(\.am|\.in|)$')
 games_path_regex = re.compile(r'^/usr(/lib(64)?)?/games/')
 logrotate_regex = re.compile(r'^/etc/logrotate\.d/(.*)')
 kernel_modules_regex = re.compile(r'^(?:/usr)/lib/modules/([0-9]+\.[0-9]+\.[0-9]+[^/]*?)/')
@@ -550,6 +551,8 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'manifest-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 self.output.add_info('E', pkg, 'info-dir-file', f)
+            elif makefile_regex.search(f):
+                self.output.add_info('E', pkg, 'makefile-junk', f)
 
             res = logrotate_regex.search(f)
             if res:
