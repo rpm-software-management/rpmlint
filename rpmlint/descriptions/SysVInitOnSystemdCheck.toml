@@ -10,3 +10,7 @@ systemd service files."""
 systemd-shadowed-initscript="""
 The package contains both an init script and a systemd service
 file for the same activity."""
+missing-rc-link="""
+The package contains systemd service file but lacks
+the convenience symlink /usr/sbin/rcFOO -> /usr/sbin/service
+"""
