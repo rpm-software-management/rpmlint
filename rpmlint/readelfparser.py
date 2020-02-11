@@ -34,8 +34,8 @@ class ElfSymbol:
     """
     A simple wrapper representing one ELF symbol.
     """
-    def __init__(self, type, bind, visibility, name):
-        self.type = type
+    def __init__(self, kind, bind, visibility, name):
+        self.type = kind
         self.bind = bind
         self.visibility = visibility
         self.name = name

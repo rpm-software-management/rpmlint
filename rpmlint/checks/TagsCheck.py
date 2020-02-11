@@ -331,12 +331,12 @@ class TagsCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'changelog-time-in-future',
                                          time.strftime('%Y-%m-%d', time.gmtime(clt)))
 
-        def split_license(license):
+        def split_license(text):
             return (x.strip() for x in
-                    (l for l in license_regex.split(license) if l))
+                    (l for l in license_regex.split(text) if l))
 
-        def split_license_exception(license):
-            x, y = license_exception_regex.split(license)[1:3] or (license, '')
+        def split_license_exception(text):
+            x, y = license_exception_regex.split(text)[1:3] or (text, '')
             return x.strip(), y.strip()
 
         rpm_license = pkg[rpm.RPMTAG_LICENSE]

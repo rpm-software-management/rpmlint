@@ -44,7 +44,7 @@ class DuplicatesCheck(AbstractCheck):
             if len(duplicates) == 1:
                 continue
 
-            duplicates = sorted(list(duplicates))
+            duplicates = sorted(duplicates)
             first = duplicates.pop()
             first_is_config = False
             if first in pkg.configFiles():

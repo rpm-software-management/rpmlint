@@ -6,7 +6,7 @@ from Testing import testpath
 def test_distribution_tags():
     oldpkg = testpath() / 'binary/mc-4.8.15-10.3.1.x86_64.rpm'
     newpkg = testpath() / 'binary/mc-4.8.21-2.1.x86_64.rpm'
-    ignore = list()
+    ignore = []
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
     print(textdiff)

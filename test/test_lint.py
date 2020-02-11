@@ -49,7 +49,7 @@ def _remove_except_zip(dictionary):
     In order to not lie in coverage redux the test run on the
     tests to just ZipCheck which has full coverage
     """
-    redux = dict()
+    redux = {}
     redux['ZipCheck'] = dictionary['ZipCheck']
     return redux
 

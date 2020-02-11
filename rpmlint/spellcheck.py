@@ -59,7 +59,7 @@ class Spellcheck(object):
         ignored_words: words to be ignored by the spellchecker
         """
         warned = set()
-        suggestions = dict()
+        suggestions = {}
 
         # Initialize spelling dictionary if not already done
         if lang not in self._enchant_checkers:
