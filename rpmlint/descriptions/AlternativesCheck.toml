@@ -1,0 +1,30 @@
+alternative-generic-name-not-symlink="""
+The update-alternative generic-name is not a symlink pointing to
+%{_sysconfdir}/alternatives/$(basename generic-name).
+"""
+alternative-link-not-ghost="""
+The %{_sysconfdir}/alternatives/$(basename generic-name) link exists but is
+not marked as ghost. Mark it as %ghost.
+"""
+alternative-link-missing="""
+The file %{_sysconfdir}/alternatives/$(basename generic-name) is missing
+in the file list. Mark it as %ghost and add it to the file list.
+"""
+alternative-generic-name-missing="""
+The update-alternatives generic name is not in the filelist. Create it as
+a symlink to %{_sysconfdir}/alternatives/$(basename generic-name) and add it
+to the file list.
+"""
+update-altenratives-requirement-missing="""
+The package does not have update-alternatives in Requires(post) or
+Requires(postun). This is needed for the proper scriptlet execution.
+"""
+update-altenratives-post-call-missing="""
+The package does not call update-alternatives --install in post phase to
+install all the configuration.
+"""
+update-altenratives-postun-call-missing="""
+The package does not call update-alternatives --remove in postun phase to
+remove all the configuration for each individual --install binary that
+was done in postun.
+"""
