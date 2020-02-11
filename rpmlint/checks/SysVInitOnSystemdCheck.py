@@ -1,4 +1,5 @@
 from pathlib import Path
+import stat
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -9,6 +10,7 @@ class SysVInitOnSystemdCheck(AbstractCheck):
         self.initscripts = set()
         self.bootscripts = set()
         self.systemdscripts = set()
+        self.rclinks = set()
 
     def check(self, pkg):
         if pkg.is_source:
@@ -27,12 +29,21 @@ class SysVInitOnSystemdCheck(AbstractCheck):
         for filename in self.initscripts:
             if filename in self.systemdscripts:
                 self.output.add_info('E', pkg, 'systemd-shadowed-initscript', filename)
+        for filename in self.systemdscripts:
+            if filename not in self.rclinks:
+                self.output.add_info('E', pkg, 'missing-rc-link', filename)
 
     def _find_services_and_scripts(self, pkg):
         # Find all regular systemd services and initscripts
-        for filename, _pkgfile in pkg.files.items():
+        for filename, pkgfile in pkg.files.items():
             if filename in pkg.ghost_files:
                 continue
+
+            # Search _sbindir for all the rc* symlinks
+            # In two conditions in order to not run stat on all files
+            if filename.startswith('/usr/sbin/rc'):
+                if (stat.S_ISLNK(pkgfile.mode)):
+                    self.rclinks.add(filename.partition('/rc')[2])
 
             if filename.startswith('/usr/lib/systemd/system/'):
                 basename = Path(filename).name
