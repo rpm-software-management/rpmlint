@@ -21,7 +21,10 @@ class BashismsCheck(AbstractFilesCheck):
             r = subprocess.run(['dash', '-n', fullpath])
             if r.returncode == 2:
                 self.output.add_info('W', pkg, 'bin-sh-syntax-error', filename)
+        except (FileNotFoundError, UnicodeDecodeError):
+            pass
 
+        try:
             r = subprocess.run(['checkbashisms', fullpath])
             if r.returncode == 1:
                 self.output.add_info('W', pkg, 'potential-bashisms', filename)
