@@ -30,6 +30,35 @@ RECOMMENDED_LSB_KEYWORDS = ('Provides', 'Required-Start', 'Required-Stop',
                             'Default-Stop', 'Short-Description')
 
 
+var_regex = re.compile(r'^(.*)\${?(\w+)}?(.*)$')
+
+
+def shell_var_value(var, script):
+    assign_regex = re.compile(r'\b' + re.escape(var) +
+                              r'\s*=\s*(.+)\s*(#.*)*$', re.MULTILINE)
+    res = assign_regex.search(script)
+    if res:
+        res2 = var_regex.search(res.group(1))
+        if res2:
+            if res2.group(2) == var:  # infinite loop
+                return None
+        return substitute_shell_vars(res.group(1), script)
+    else:
+        return None
+
+
+def substitute_shell_vars(val, script):
+    res = var_regex.search(val)
+    if res:
+        value = shell_var_value(res.group(2), script)
+        if not value:
+            value = ''
+        return res.group(1) + value + \
+            substitute_shell_vars(res.group(3), script)
+    else:
+        return val
+
+
 class InitScriptCheck(AbstractCheck):
 
     def __init__(self, config, output):
@@ -150,8 +179,7 @@ class InitScriptCheck(AbstractCheck):
                     if self.use_subsys and name != basename:
                         error = True
                         if name[0] == '$':
-                            value = Pkg.substitute_shell_vars(name,
-                                                              content_str)
+                            value = substitute_shell_vars(name, content_str)
                             if value == basename:
                                 error = False
                         else:
