@@ -1,0 +1,9 @@
+beam-compiled-without-debuginfo="""
+Your beam file indicates that it doesn't contain debug_info.
+Please, make sure that you compile with +debug_info.
+"""
+beam-was-not-recompiled="""
+It seems that your beam file was not compiled by you, but was
+just copied in binary form to destination. Please, make sure
+that you really compile it from the sources.
+"""

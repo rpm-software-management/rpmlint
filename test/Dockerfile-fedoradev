@@ -25,6 +25,7 @@ RUN dnf --nogpgcheck -y install \
         python3-enchant \
         python3-magic \
         python3-rpm \
+        python3-pybeam \
         python3-pytest \
         python3-pytest-cov \
         python3-pytest-runner \

@@ -11,6 +11,7 @@ RUN zypper -n install \
         python3-rpm \
         python3-base \
         python3-setuptools \
+        python3-pybeam \
         python3-pytest \
         python3-pytest-runner \
         python3-pytest-cov \
