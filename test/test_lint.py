@@ -25,6 +25,7 @@ basic_tests = [
     'DBusPolicyCheck',
     'DuplicatesCheck',
     'DocCheck',
+    'ErlangCheck',
     'FHSCheck',
     'FilesCheck',
     'IconSizesCheck',
