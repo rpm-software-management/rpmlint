@@ -47,7 +47,7 @@ I.e. if you want to test on the latest openSUSE you can test using the following
 
 `podman build -t opensusetw -f test/Dockerfile-opensusetw .`
 
-`podman run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 setup.py test`
+`podman run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 -m pytest`
 
 ### Directly
 
@@ -57,7 +57,7 @@ You will also need `pytest` and `pytest-cov` and `pytest-flake8`.
 
 If all the dependencies are present you can just execute tests using:
 
-`python3 setup.py test`
+`python3 -m pytest`
 
 Or even pick one of the tests using `pytest`:
 
@@ -95,6 +95,12 @@ def test_zip2(tmpdir, package, zipcheck):
 As you can see it is not so hard and with each added test we get better
 coverage on what is really expected from rpmlint and avoid naughty regressions
 in the long run.
+
+Preferable approach for binary pacakges is to create artifical testcase (to keep binaries small and trivial).
+We are currently using OBS to produce binaries:
+  https://build.opensuse.org/project/show/devel:openSUSE:Factory:rpmlint:tests
+For a sample package see:
+  https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/non-position-independent-exec
 
 ## Configuration
 
