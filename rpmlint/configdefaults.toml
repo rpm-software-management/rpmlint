@@ -8,6 +8,7 @@ Checks = [
     "DBusPolicyCheck",
     'DuplicatesCheck',
     "DocCheck",
+    "ErlangCheck",
     "FHSCheck",
     "FilesCheck",
     "IconSizesCheck",
