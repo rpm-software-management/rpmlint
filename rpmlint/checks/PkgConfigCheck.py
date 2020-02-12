@@ -27,11 +27,11 @@ class PkgConfigCheck(AbstractFilesCheck):
             return
 
         try:
-            pc_file = open(pkg.dirName() + '/' + filename, 'r', encoding='utf-8')
-            for line in pc_file:
-                self._check_invalid_pkgconfig_file(pkg, filename, line)
-                self._check_invalid_libs_dir(pkg, filename, line)
-                self._check_double_slash(pkg, filename, line)
+            with open(pkg.dirName() + '/' + filename, 'r', encoding='utf-8') as pc_file:
+                for line in pc_file:
+                    self._check_invalid_pkgconfig_file(pkg, filename, line)
+                    self._check_invalid_libs_dir(pkg, filename, line)
+                    self._check_double_slash(pkg, filename, line)
         except Exception as e:
             self.output.add_info('E', pkg, 'pkgconfig-exception', filename, str(e))
 
