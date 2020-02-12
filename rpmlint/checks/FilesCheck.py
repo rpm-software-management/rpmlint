@@ -176,7 +176,7 @@ perl_temp_file_regex = re.compile(r'.*perl.*/(\.packlist|perllocal\.pod)$')
 scm_regex = re.compile(
     r'/(?:RCS|CVS)/[^/]+$|/\.(?:bzr|cvs|git|hg|svn)ignore$|'
     r',v$|/\.hgtags$|/\.(?:bzr|git|hg|svn)/|/(?:\.arch-ids|{arch})/')
-makefile_regex = re.compile(r'Makefile(\.am|\.in|)$')
+makefile_regex = re.compile(r'(Makefile(\.am|\.in|)|CMakeLists.txt)$')
 games_path_regex = re.compile(r'^/usr(/lib(64)?)?/games/')
 logrotate_regex = re.compile(r'^/etc/logrotate\.d/(.*)')
 kernel_modules_regex = re.compile(r'^(?:/usr)/lib/modules/([0-9]+\.[0-9]+\.[0-9]+[^/]*?)/')
