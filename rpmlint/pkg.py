@@ -116,7 +116,8 @@ def compression_algorithm(fname):
 def is_utf8(fname):
     compression = compression_algorithm(fname)
     if compression is None:
-        return True
+        with open(fname, 'rb') as f:
+            return is_utf8_bytestr(f.read())
 
     with compression.open(fname, 'rb') as f:
         try:
