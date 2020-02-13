@@ -1,5 +1,6 @@
 # Enabled checks for the rpmlint to be run
 Checks = [
+    "AlternativesCheck",
     "AppDataCheck",
     "BinariesCheck",
     "BuildDateCheck",
