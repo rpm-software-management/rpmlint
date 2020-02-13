@@ -116,7 +116,7 @@ class PostCheck(AbstractCheck):
         self.output.error_details.update(post_details_dict)
 
     def check_binary(self, pkg):
-        prereq = [x[0] for x in pkg.prereq()]
+        prereq = [x[0] for x in pkg.prereq]
 
         for tag in Pkg.SCRIPT_TAGS:
             script = pkg[tag[0]]

@@ -378,7 +378,7 @@ class Pkg(AbstractPkg):
         self.extracted = extracted
         self.dirname = self.dir_name(dirname)
         self.current_linenum = None
-        self._requires = None
+
         self._req_names = -1
 
         if header:
@@ -397,6 +397,11 @@ class Pkg(AbstractPkg):
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
         self.name = self[rpm.RPMTAG_NAME]
+
+        (self.requires, self.prereq, self.provides, self.conflicts,
+         self.obsoletes, self.recommends, self.suggests, self.enhances,
+         self.supplements) = self._gatherDepInfo()
+
         self.files = self._gatherFilesInfo()
         self.config_files = [x.name for x in self.files.values() if x.is_config]
         self.doc_files = [x.name for x in self.files.values() if x.is_doc]
@@ -592,94 +597,21 @@ class Pkg(AbstractPkg):
             result = self.files.get(linkpath)
         return result
 
-    # API to access dependency information
-    def obsoletes(self):
-        """
-        Get package Obsoletes as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._obsoletes
-
-    def requires(self):
-        """
-        Get package Requires as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._requires
-
-    def prereq(self):
-        """
-        Get package PreReqs as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._prereq
-
     def req_names(self):
         if self._req_names == -1:
-            self._req_names = [x[0] for x in self.requires() + self.prereq()]
+            self._req_names = [x[0] for x in self.requires + self.prereq]
         return self._req_names
 
     def check_versioned_dep(self, name, version):
         # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
         name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
-        for d in self.requires() + self.prereq():
+        for d in self.requires + self.prereq:
             if name_re.match(d[0]):
                 if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
                         or d[2][1] != version:
                     return False
                 return True
         return False
-
-    def conflicts(self):
-        """
-        Get package Conflicts as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._conflicts
-
-    def provides(self):
-        """
-        Get package Provides as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._provides
-
-    def recommends(self):
-        """
-        Get package Recommends as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._recommends
-
-    def suggests(self):
-        """
-        Get package Suggests as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._suggests
-
-    def enhances(self):
-        """
-        Get package Enhances as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._enhances
-
-    def supplements(self):
-        """
-        Get package Supplements as list of
-        (name, flags, (epoch, version, release)) tuples.
-        """
-        self._gatherDepInfo()
-        return self._supplements
 
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
@@ -696,56 +628,55 @@ class Pkg(AbstractPkg):
                     prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:
                     xs.append((name, flags[loop], evr))
+        return xs, prereq
 
     def _gatherDepInfo(self):
-        if self._requires is None:
-            self._requires = []
-            self._prereq = []
-            self._provides = []
-            self._conflicts = []
-            self._obsoletes = []
-            self._recommends = []
-            self._suggests = []
-            self._enhances = []
-            self._supplements = []
+        _requires = []
+        _prereq = []
+        _provides = []
+        _conflicts = []
+        _obsoletes = []
+        _recommends = []
+        _suggests = []
+        _enhances = []
+        _supplements = []
 
-            self._gather_aux(self.header, self._requires,
-                             rpm.RPMTAG_REQUIRENAME,
-                             rpm.RPMTAG_REQUIREFLAGS,
-                             rpm.RPMTAG_REQUIREVERSION,
-                             self._prereq)
-            self._gather_aux(self.header, self._conflicts,
-                             rpm.RPMTAG_CONFLICTNAME,
-                             rpm.RPMTAG_CONFLICTFLAGS,
-                             rpm.RPMTAG_CONFLICTVERSION)
-            self._gather_aux(self.header, self._provides,
-                             rpm.RPMTAG_PROVIDENAME,
-                             rpm.RPMTAG_PROVIDEFLAGS,
-                             rpm.RPMTAG_PROVIDEVERSION)
-            self._gather_aux(self.header, self._obsoletes,
-                             rpm.RPMTAG_OBSOLETENAME,
-                             rpm.RPMTAG_OBSOLETEFLAGS,
-                             rpm.RPMTAG_OBSOLETEVERSION)
-            if hasattr(rpm, 'RPMTAG_RECOMMENDNAME'):  # rpm >= 4.12
-                self._gather_aux(self.header, self._recommends,
-                                 rpm.RPMTAG_RECOMMENDNAME,
-                                 rpm.RPMTAG_RECOMMENDFLAGS,
-                                 rpm.RPMTAG_RECOMMENDVERSION)
-            if hasattr(rpm, 'RPMTAG_SUGGESTNAME'):  # rpm >= 4.12
-                self._gather_aux(self.header, self._suggests,
-                                 rpm.RPMTAG_SUGGESTNAME,
-                                 rpm.RPMTAG_SUGGESTFLAGS,
-                                 rpm.RPMTAG_SUGGESTVERSION)
-            if hasattr(rpm, 'RPMTAG_ENHANCENAME'):  # rpm >= 4.12
-                self._gather_aux(self.header, self._enhances,
-                                 rpm.RPMTAG_ENHANCENAME,
-                                 rpm.RPMTAG_ENHANCEFLAGS,
-                                 rpm.RPMTAG_ENHANCEVERSION)
-            if hasattr(rpm, 'RPMTAG_SUPPLEMENTNAME'):  # rpm >= 4.12
-                self._gather_aux(self.header, self._supplements,
-                                 rpm.RPMTAG_SUPPLEMENTNAME,
-                                 rpm.RPMTAG_SUPPLEMENTFLAGS,
-                                 rpm.RPMTAG_SUPPLEMENTVERSION)
+        _requires, _prereq = self._gather_aux(self.header, _requires,
+                                              rpm.RPMTAG_REQUIRENAME,
+                                              rpm.RPMTAG_REQUIREFLAGS,
+                                              rpm.RPMTAG_REQUIREVERSION,
+                                              _prereq)
+        _conflits, _ = self._gather_aux(self.header, _conflicts,
+                                        rpm.RPMTAG_CONFLICTNAME,
+                                        rpm.RPMTAG_CONFLICTFLAGS,
+                                        rpm.RPMTAG_CONFLICTVERSION)
+        _provides, _ = self._gather_aux(self.header, _provides,
+                                        rpm.RPMTAG_PROVIDENAME,
+                                        rpm.RPMTAG_PROVIDEFLAGS,
+                                        rpm.RPMTAG_PROVIDEVERSION)
+        _obsoletes, _ = self._gather_aux(self.header, _obsoletes,
+                                         rpm.RPMTAG_OBSOLETENAME,
+                                         rpm.RPMTAG_OBSOLETEFLAGS,
+                                         rpm.RPMTAG_OBSOLETEVERSION)
+        _recommends, _ = self._gather_aux(self.header, _recommends,
+                                          rpm.RPMTAG_RECOMMENDNAME,
+                                          rpm.RPMTAG_RECOMMENDFLAGS,
+                                          rpm.RPMTAG_RECOMMENDVERSION)
+        _suggests, _ = self._gather_aux(self.header, _suggests,
+                                        rpm.RPMTAG_SUGGESTNAME,
+                                        rpm.RPMTAG_SUGGESTFLAGS,
+                                        rpm.RPMTAG_SUGGESTVERSION)
+        _enhances, _ = self._gather_aux(self.header, _enhances,
+                                        rpm.RPMTAG_ENHANCENAME,
+                                        rpm.RPMTAG_ENHANCEFLAGS,
+                                        rpm.RPMTAG_ENHANCEVERSION)
+        _supplements, _ = self._gather_aux(self.header, _supplements,
+                                           rpm.RPMTAG_SUPPLEMENTNAME,
+                                           rpm.RPMTAG_SUPPLEMENTFLAGS,
+                                           rpm.RPMTAG_SUPPLEMENTVERSION)
+
+        return (_requires, _prereq, _provides, _conflicts, _obsoletes, _recommends,
+                _suggests, _enhances, _supplements)
 
     def scriptprog(self, which):
         """
