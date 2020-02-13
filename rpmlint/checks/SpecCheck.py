@@ -14,6 +14,7 @@ from urllib.parse import urlparse
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import readlines
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -148,7 +149,7 @@ class SpecCheck(AbstractCheck):
     def check_spec(self, pkg):
         self._spec_file = pkg.name
         spec_only = isinstance(pkg, Pkg.FakePkg)
-        spec_lines = Pkg.readlines(self._spec_file)
+        spec_lines = readlines(self._spec_file)
         patches = {}
         applied_patches = []
         applied_patches_ifarch = []
