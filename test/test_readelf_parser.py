@@ -146,7 +146,7 @@ def test_executable_stack(binariescheck):
 
 def test_readelf_failure():
     readelf = readelfparser('not-existing-file')
-    assert 'not-existing-file\': No such file' in readelf.parsing_failed_reason()
+    assert "not-existing-file': No such file" in readelf.parsing_failed_reason()
 
 
 def test_readelf_failure_in_package(binariescheck):
