@@ -402,6 +402,8 @@ class Pkg(AbstractPkg):
          self.obsoletes, self.recommends, self.suggests, self.enhances,
          self.supplements) = self._gatherDepInfo()
 
+        self.req_names = [x[0] for x in self.requires + self.prereq]
+
         self.files = self._gatherFilesInfo()
         self.config_files = [x.name for x in self.files.values() if x.is_config]
         self.doc_files = [x.name for x in self.files.values() if x.is_doc]
@@ -596,11 +598,6 @@ class Pkg(AbstractPkg):
             linkpath = os.path.normpath(linkpath)
             result = self.files.get(linkpath)
         return result
-
-    def req_names(self):
-        if self._req_names == -1:
-            self._req_names = [x[0] for x in self.requires + self.prereq]
-        return self._req_names
 
     def check_versioned_dep(self, name, version):
         # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')

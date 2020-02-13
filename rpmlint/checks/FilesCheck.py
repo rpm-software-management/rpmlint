@@ -448,7 +448,7 @@ class FilesCheck(AbstractCheck):
 
         config_files = pkg.config_files
         ghost_files = pkg.ghost_files
-        req_names = pkg.req_names()
+        req_names = pkg.req_names
         lib_package = lib_package_regex.search(pkg.name)
         is_kernel_package = kernel_package_regex.search(pkg.name)
         debuginfo_package = debuginfo_package_regex.search(pkg.name)
