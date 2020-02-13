@@ -179,7 +179,7 @@ class TagsCheck(AbstractCheck):
                 dep = None
                 has_so = False
                 has_pc = False
-                for fname in pkg.files():
+                for fname in pkg.files:
                     if fname.endswith('.so'):
                         has_so = True
                     if pkg_config_regex.match(fname) and fname.endswith('.pc'):
@@ -231,7 +231,7 @@ class TagsCheck(AbstractCheck):
 
         # List of words to ignore in spell check
         ignored_words = set()
-        for pf in pkg.files():
+        for pf in pkg.files:
             ignored_words.update(pf.split('/'))
         ignored_words.update((x[0] for x in pkg.provides()))
         ignored_words.update((x[0] for x in pkg.requires()))

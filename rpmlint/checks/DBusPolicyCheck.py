@@ -8,9 +8,7 @@ class DBusPolicyCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        files = pkg.files()
-
-        for f in files:
+        for f in pkg.files:
             if f in pkg.ghostFiles():
                 continue
 

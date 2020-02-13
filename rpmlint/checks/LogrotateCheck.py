@@ -8,7 +8,7 @@ class LogrotateCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        files = pkg.files()
+        files = pkg.files
         dirs = {}
 
         for f in files:

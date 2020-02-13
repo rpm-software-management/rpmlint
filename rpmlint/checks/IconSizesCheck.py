@@ -11,7 +11,7 @@ class IconSizesCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
             if '/animations/' in fname:
                 continue
 

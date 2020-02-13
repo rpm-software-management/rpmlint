@@ -127,7 +127,7 @@ class SpecCheck(AbstractCheck):
         wrong_spec = False
 
         # lookup spec file
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
                 self._spec_name = pkgfile.name

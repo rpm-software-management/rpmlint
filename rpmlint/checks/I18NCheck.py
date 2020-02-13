@@ -70,7 +70,7 @@ def is_valid_lang(lang):
 
 class I18NCheck(AbstractCheck):
     def check_binary(self, pkg):
-        files = list(pkg.files().keys())
+        files = list(pkg.files.keys())
         files.sort()
         locales = []                      # list of locales for this packages
         webapp = False
@@ -126,12 +126,12 @@ class I18NCheck(AbstractCheck):
                         self.output.add_info('E', pkg, 'invalid-locale-man-dir', f)
 
             if f.endswith('.mo') or subdir:
-                if pkg.files()[f].lang == '' and not webapp:
+                if pkg.files[f].lang == '' and not webapp:
                     self.output.add_info('W', pkg, 'file-not-in-%lang', f)
 
         main_dir, main_lang = ('', '')
         for f in files:
-            lang = pkg.files()[f].lang
+            lang = pkg.files[f].lang
             if main_lang and lang == '' and is_prefix(main_dir + '/', f):
                 self.output.add_info('E', pkg, 'subfile-not-in-%lang', f)
             if main_lang != lang:

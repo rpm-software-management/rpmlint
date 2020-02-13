@@ -18,7 +18,7 @@ class TmpFilesCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
             if not fname.startswith('/usr/lib/tmpfiles.d/'):
                 continue
             if not stat.S_ISREG(pkgfile.mode):
@@ -89,6 +89,6 @@ class TmpFilesCheck(AbstractCheck):
                 if tmpfiles_type not in self.interesting_types:
                     continue
 
-                if tmpfiles_path not in pkg.files():
+                if tmpfiles_path not in pkg.files:
                     self.output.add_info('W', pkg, 'tmpfile-not-in-filelist',
                                          tmpfiles_path)

@@ -373,17 +373,16 @@ class Pkg(AbstractPkg):
 
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
 
-    def __init__(self, filename, dirname, header=None, is_source=False):
+    def __init__(self, filename, dirname, header=None, is_source=False, extracted=False):
         self.filename = filename
-        self.extracted = False
-        self.dirname = dirname
+        self.extracted = extracted
+        self.dirname = self.dir_name(dirname)
         self.current_linenum = None
         self._config_files = None
         self._doc_files = None
         self._noreplace_files = None
         self._ghost_files = None
         self._missingok_files = None
-        self._files = None
         self._requires = None
         self._req_names = -1
 
@@ -403,6 +402,8 @@ class Pkg(AbstractPkg):
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
         self.name = self[rpm.RPMTAG_NAME]
+        self.files = self._gatherFilesInfo()
+
         if self.is_no_source:
             self.arch = 'nosrc'
         elif self.is_source:
@@ -439,26 +440,29 @@ class Pkg(AbstractPkg):
 
     # return the name of the directory where the package is extracted
     def dirName(self):
-        if not self.extracted:
-            self._extract()
         return self.dirname
 
+    def dir_name(self, dirname):
+        return self._extract(dirname)
+
     # extract rpm contents
-    def _extract(self):
-        if not Path(self.dirname).is_dir():
-            print_warning('Unable to access dir %s' % self.dirname)
+    def _extract(self, dirname):
+        if not Path(dirname).is_dir():
+            print_warning('Unable to access dir %s' % dirname)
         else:
+            dirname = dirname if dirname != '/' else None
             self.__tmpdir = tempfile.TemporaryDirectory(
-                prefix='rpmlint.%s.' % Path(self.filename).name, dir=self.dirname
+                prefix='rpmlint.%s.' % Path(self.filename).name, dir=dirname
             )
-            self.dirname = self.__tmpdir.name
+            dirname = self.__tmpdir.name
             # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
             command_str = \
                 'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
-                {'f': quote(str(self.filename)), 'd': quote(str(self.dirname))}
+                {'f': quote(str(self.filename)), 'd': quote(dirname)}
             subprocess.run(command_str, shell=True)
             self.extracted = True
+        return dirname
 
     def checkSignature(self):
         ret = subprocess.run(('rpm', '-K', self.filename), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -497,21 +501,12 @@ class Pkg(AbstractPkg):
             os.environ['LANGUAGE'] = orig
         return ret
 
-    # return the associative array indexed on file names with
-    # the values as: (file perm, file owner, file group, file link to)
-    def files(self):
-        if self._files is not None:
-            return self._files
-
-        self._gatherFilesInfo()
-        return self._files
-
     # return the list of config files
     def configFiles(self):
         if self._config_files is not None:
             return self._config_files
 
-        self._config_files = [x.name for x in self.files().values()
+        self._config_files = [x.name for x in self.files.values()
                               if x.is_config]
         return self._config_files
 
@@ -520,7 +515,7 @@ class Pkg(AbstractPkg):
         if self._noreplace_files is not None:
             return self._noreplace_files
 
-        self._noreplace_files = [x.name for x in self.files().values()
+        self._noreplace_files = [x.name for x in self.files.values()
                                  if x.is_noreplace]
         return self._noreplace_files
 
@@ -529,7 +524,7 @@ class Pkg(AbstractPkg):
         if self._doc_files is not None:
             return self._doc_files
 
-        self._doc_files = [x.name for x in self.files().values() if x.is_doc]
+        self._doc_files = [x.name for x in self.files.values() if x.is_doc]
         return self._doc_files
 
     # return the list of ghost files
@@ -537,7 +532,7 @@ class Pkg(AbstractPkg):
         if self._ghost_files is not None:
             return self._ghost_files
 
-        self._ghost_files = [x.name for x in self.files().values()
+        self._ghost_files = [x.name for x in self.files.values()
                              if x.is_ghost]
         return self._ghost_files
 
@@ -545,14 +540,14 @@ class Pkg(AbstractPkg):
         if self._missingok_files is not None:
             return self._missingok_files
 
-        self._missingok_files = [x.name for x in self.files().values()
+        self._missingok_files = [x.name for x in self.files.values()
                                  if x.is_missingok]
         return self._missingok_files
 
     # extract information about the files
     def _gatherFilesInfo(self):
 
-        self._files = {}
+        ret = {}
         flags = self.header[rpm.RPMTAG_FILEFLAGS]
         modes = self.header[rpm.RPMTAG_FILEMODES]
         users = self.header[rpm.RPMTAG_FILEUSERNAME]
@@ -625,7 +620,8 @@ class Pkg(AbstractPkg):
                     pkgfile.magic = ''
                 if filecaps:
                     pkgfile.filecaps = filecaps[idx]
-                self._files[pkgfile.name] = pkgfile
+                ret[pkgfile.name] = pkgfile
+        return ret
 
     def readlink(self, pkgfile):
         """
@@ -636,7 +632,7 @@ class Pkg(AbstractPkg):
         while result and result.linkto:
             linkpath = urljoin(result.name, result.linkto)
             linkpath = os.path.normpath(linkpath)
-            result = self.files().get(linkpath)
+            result = self.files.get(linkpath)
         return result
 
     # API to access dependency information
@@ -841,9 +837,7 @@ class InstalledPkg(Pkg):
             except StopIteration:
                 raise KeyError(name)
 
-        super().__init__(name, '/', hdr)
-
-        self.extracted = True
+        super().__init__(name, '/', hdr, extracted=True)
         # create a fake filename to satisfy some checks on the filename
         self.filename = '%s-%s-%s.%s.rpm' % \
             (self.name, self[rpm.RPMTAG_VERSION], self[rpm.RPMTAG_RELEASE],
@@ -865,7 +859,7 @@ class FakePkg(AbstractPkg):
         self.dirname = None
 
         # files are dictionary where key is name of a file
-        self._files = {f.name: f for f in files} if files else {}
+        self.files = {f.name: f for f in files} if files else {}
 
     def dirName(self):
         if not self.dirname:
@@ -876,6 +870,3 @@ class FakePkg(AbstractPkg):
     def cleanup(self):
         if self.dirname:
             self.__tmpdir.cleanup()
-
-    def files(self):
-        return self._files

@@ -117,7 +117,6 @@ class PostCheck(AbstractCheck):
 
     def check_binary(self, pkg):
         prereq = [x[0] for x in pkg.prereq()]
-        files = pkg.files()
 
         for tag in Pkg.SCRIPT_TAGS:
             script = pkg[tag[0]]
@@ -126,13 +125,13 @@ class PostCheck(AbstractCheck):
                 prog = pkg.scriptprog(tag[1])
                 if prog:
                     prog = prog.split()[0]
-                self.check_aux(pkg, files, prog, pkg.header[tag[0]],
+                self.check_aux(pkg, prog, pkg.header[tag[0]],
                                tag[2], prereq)
             else:
                 prog = pkg[tag[1]]
                 for idx in range(0, len(prog)):
                     self.check_aux(
-                        pkg, files, prog[idx],
+                        pkg, prog[idx],
                         pkg.header[tag[0]][idx], tag[2], prereq)
 
         ghost_files = pkg.ghostFiles()
@@ -149,7 +148,8 @@ class PostCheck(AbstractCheck):
                     self.output.add_info('W', pkg,
                                          'postin-without-ghost-file-creation', f)
 
-    def check_aux(self, pkg, files, prog, script, tag, prereq):
+    def check_aux(self, pkg, prog, script, tag, prereq):
+        files = pkg.files
         if script:
             script_str = byte_to_string(script)
             if prog:

@@ -43,7 +43,7 @@ class MenuCheck(AbstractCheck):
             value['regexp'] = re.compile(value['regexp'])
 
     def check_binary(self, pkg):
-        files = pkg.files()
+        files = pkg.files
         menus = []
 
         for fname, pkgfile in files.items():
