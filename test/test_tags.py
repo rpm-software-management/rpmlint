@@ -95,3 +95,11 @@ def test_forbidden_controlchar_found(tmpdir, package, tagscheck):
     assert 'E: forbidden-controlchar-found Obsoletes:' in out
     assert 'E: forbidden-controlchar-found Conflicts:' in out
     assert 'E: forbidden-controlchar-found %changelog :' in out
+
+
+@pytest.mark.parametrize('package', ['binary/shlib2-devel'])
+def test_shlib2_devel(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: no-dependency-on' in out

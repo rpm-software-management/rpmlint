@@ -185,3 +185,23 @@ def test_provides_devel(tmpdir, package, filescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: non-devel-file-in-devel-package /usr/x.typelib' in out
+
+
+@pytest.mark.parametrize('package', ['binary/shlib1'])
+def test_shlib1(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'library-without-ldconfig-postin' in out
+    assert 'library-without-ldconfig-postun' in out
+    assert 'devel-file-in-non-devel-package' in out
+
+
+@pytest.mark.parametrize('package', ['binary/shlib2-devel'])
+def test_shlib2_devel(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'library-without-ldconfig-postin' in out
+    assert 'library-without-ldconfig-postun' in out
+    assert 'non-devel-file-in-devel-package' in out
