@@ -9,7 +9,7 @@ class AbstractCheck(object):
         self.output = output
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return self.check_source(pkg)
         return self.check_binary(pkg)
 

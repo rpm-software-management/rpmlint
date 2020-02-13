@@ -23,7 +23,7 @@ class PkgConfigCheck(AbstractFilesCheck):
         AbstractFilesCheck.check(self, pkg)
 
     def check_file(self, pkg, filename):
-        if pkg.isSource() or not stat.S_ISREG(pkg.files()[filename].mode):
+        if pkg.is_source or not stat.S_ISREG(pkg.files()[filename].mode):
             return
 
         try:

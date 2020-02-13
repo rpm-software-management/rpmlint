@@ -17,7 +17,7 @@ class BuildDateCheck(AbstractFilesCheck):
         self.istoday = re.compile(time.strftime('%b %e %Y'))
 
     def check_file(self, pkg, filename):
-        if filename.startswith('/usr/lib/debug') or pkg.isSource() or \
+        if filename.startswith('/usr/lib/debug') or pkg.is_source or \
                 not stat.S_ISREG(pkg.files()[filename].mode):
             return
 

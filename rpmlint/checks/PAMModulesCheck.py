@@ -11,7 +11,7 @@ class PAMModulesCheck(AbstractCheck):
         self.pam_whitelist = config.configuration['PAMModulesWhiteList']
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         files = pkg.files()

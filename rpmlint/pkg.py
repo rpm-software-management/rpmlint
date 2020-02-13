@@ -403,20 +403,17 @@ class Pkg(AbstractPkg):
             self.is_source = not self.header[rpm.RPMTAG_SOURCERPM]
 
         self.name = self[rpm.RPMTAG_NAME]
-        if self.isNoSource():
+        if self.is_no_source:
             self.arch = 'nosrc'
-        elif self.isSource():
+        elif self.is_source:
             self.arch = 'src'
         else:
             self.arch = self.header.format('%{ARCH}')
 
-    # Return true if the package is a source package
-    def isSource(self):
-        return self.is_source
-
     # Return true if the package is a nosource package.
     # NoSource files are ghosts in source packages.
-    def isNoSource(self):
+    @property
+    def is_no_source(self):
         return self.is_source and self.ghostFiles()
 
     # access the tags like an array

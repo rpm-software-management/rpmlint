@@ -11,7 +11,7 @@ class SysVInitOnSystemdCheck(AbstractCheck):
         self.systemdscripts = set()
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         self._find_services_and_scripts(pkg)

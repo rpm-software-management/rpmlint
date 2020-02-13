@@ -3,7 +3,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 class CheckForXinetd(AbstractCheck):
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         for req in pkg.requires() + pkg.prereq():

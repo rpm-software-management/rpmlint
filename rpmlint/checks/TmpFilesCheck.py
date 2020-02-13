@@ -15,7 +15,7 @@ class TmpFilesCheck(AbstractCheck):
     interesting_types = ('f', 'F', 'w', 'd', 'D', 'p', 'L', 'c', 'b')
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         for fname, pkgfile in pkg.files().items():

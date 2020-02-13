@@ -432,7 +432,7 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'filename-not-utf8', byte_to_string(filename))
 
         # Rest of the checks are for binary packages only
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         files = pkg.files()

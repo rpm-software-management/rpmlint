@@ -8,7 +8,7 @@ class IconSizesCheck(AbstractCheck):
     info_size_regex = re.compile(r'(?P<x>\d+) x (?P<y>\d+)')
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         for fname, pkgfile in pkg.files().items():
