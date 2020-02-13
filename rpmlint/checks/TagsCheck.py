@@ -141,7 +141,7 @@ class TagsCheck(AbstractCheck):
         deps = pkg.requires() + pkg.prereq()
         devel_depend = False
         is_devel = FilesCheck.devel_regex.search(name)
-        is_source = pkg.isSource()
+        is_source = pkg.is_source
         for d in deps:
             value = Pkg.formatRequire(*d)
             if self.use_epoch and d[1] and d[2][0] is None and \
@@ -437,7 +437,7 @@ class TagsCheck(AbstractCheck):
                                               Pkg.formatRequire(*prov)))
 
         expfmt = rpm.expandMacro('%{_build_name_fmt}')
-        if pkg.isSource():
+        if pkg.is_source:
             # _build_name_fmt often (always?) ends up not outputting src/nosrc
             # as arch for source packages, do it ourselves
             expfmt = re.sub(r'(?i)%\{?ARCH\b\}?', pkg.arch, expfmt)

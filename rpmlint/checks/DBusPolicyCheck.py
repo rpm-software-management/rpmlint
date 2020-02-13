@@ -5,7 +5,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 class DBusPolicyCheck(AbstractCheck):
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         files = pkg.files()

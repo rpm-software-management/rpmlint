@@ -20,7 +20,7 @@ class DuplicatesCheck(AbstractCheck):
     """
 
     def check(self, pkg):
-        if pkg.isSource():
+        if pkg.is_source:
             return
 
         md5s = {}
