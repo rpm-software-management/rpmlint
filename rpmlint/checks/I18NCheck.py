@@ -142,7 +142,7 @@ class I18NCheck(AbstractCheck):
         if res:
             locales = 'locales-' + res.group(1)
             if locales != name:
-                if locales not in (x[0] for x in pkg.requires()):
+                if locales not in (x[0] for x in pkg.requires):
                     self.output.add_info('E', pkg, 'no-dependency-on', locales)
 
 

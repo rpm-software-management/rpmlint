@@ -441,7 +441,7 @@ class FilesCheck(AbstractCheck):
         devel_pkg = devel_regex.search(pkg.name)
 
         if not devel_pkg:
-            for p in pkg.provides():
+            for p in pkg.provides:
                 if devel_regex.search(p[0]):
                     devel_pkg = True
                     break
@@ -559,7 +559,7 @@ class FilesCheck(AbstractCheck):
                 if res.group(1) != pkg.name:
                     self.output.add_info('E', pkg, 'incoherent-logrotate-file', f)
 
-            deps = [x[0] for x in pkg.requires() + pkg.recommends() + pkg.suggests()]
+            deps = [x[0] for x in pkg.requires + pkg.recommends + pkg.suggests]
             if res and not ('logrotate' in deps) and pkg.name != 'logrotate':
                 self.output.add_info('E', pkg, 'missing-dependency-to-logrotate', 'for logrotate script', f)
             if f.startswith('/etc/cron.') \

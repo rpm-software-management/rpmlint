@@ -138,7 +138,7 @@ class TagsCheck(AbstractCheck):
                                          Pkg.formatRequire(*x))
 
         name = pkg.name
-        deps = pkg.requires() + pkg.prereq()
+        deps = pkg.requires + pkg.prereq
         devel_depend = False
         is_devel = FilesCheck.devel_regex.search(name)
         is_source = pkg.is_source
@@ -217,12 +217,12 @@ class TagsCheck(AbstractCheck):
                         else:
                             prov = res.group(1) + '-devel'
 
-                        if prov not in (x[0] for x in pkg.provides()):
+                        if prov not in (x[0] for x in pkg.provides):
                             self.output.add_info('W', pkg, 'no-provides', prov)
 
                 if has_pc:
                     found_pkg_config_dep = False
-                    for p in (x[0] for x in pkg.provides()):
+                    for p in (x[0] for x in pkg.provides):
                         if p.startswith('pkgconfig('):
                             found_pkg_config_dep = True
                             break
@@ -233,10 +233,10 @@ class TagsCheck(AbstractCheck):
         ignored_words = set()
         for pf in pkg.files:
             ignored_words.update(pf.split('/'))
-        ignored_words.update((x[0] for x in pkg.provides()))
-        ignored_words.update((x[0] for x in pkg.requires()))
-        ignored_words.update((x[0] for x in pkg.conflicts()))
-        ignored_words.update((x[0] for x in pkg.obsoletes()))
+        ignored_words.update((x[0] for x in pkg.provides))
+        ignored_words.update((x[0] for x in pkg.requires))
+        ignored_words.update((x[0] for x in pkg.conflicts))
+        ignored_words.update((x[0] for x in pkg.obsoletes))
 
         langs = pkg[rpm.RPMTAG_HEADERI18NTABLE]
 
@@ -379,12 +379,12 @@ class TagsCheck(AbstractCheck):
                 elif tag == 'URL':
                     self.output.add_info('W', pkg, 'no-url-tag')
 
-        obs_names = [x[0] for x in pkg.obsoletes()]
-        prov_names = [x[0] for x in pkg.provides()]
+        obs_names = [x[0] for x in pkg.obsoletes]
+        prov_names = [x[0] for x in pkg.provides]
 
         for o in (x for x in obs_names if x not in prov_names):
             self.output.add_info('W', pkg, 'obsolete-not-provided', o)
-        for o in pkg.obsoletes():
+        for o in pkg.obsoletes:
             value = Pkg.formatRequire(*o)
             self._unexpanded_macros(pkg, 'Obsoletes %s' % (value,), value)
 
@@ -400,13 +400,13 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'useless-provides', p)
 
         for tagname, items in (
-                ('Provides', pkg.provides()),
-                ('Conflicts', pkg.conflicts()),
-                ('Obsoletes', pkg.obsoletes()),
-                ('Supplements', pkg.supplements()),
-                ('Suggests', pkg.suggests()),
-                ('Enhances', pkg.enhances()),
-                ('Recommends', pkg.recommends())):
+                ('Provides', pkg.provides),
+                ('Conflicts', pkg.conflicts),
+                ('Obsoletes', pkg.obsoletes),
+                ('Supplements', pkg.supplements),
+                ('Suggests', pkg.suggests),
+                ('Enhances', pkg.enhances),
+                ('Recommends', pkg.recommends)):
             for p in items:
                 e = Pkg.has_forbidden_controlchars(p)
                 if e:
@@ -417,7 +417,7 @@ class TagsCheck(AbstractCheck):
                 value = Pkg.formatRequire(*p)
                 self._unexpanded_macros(pkg, '%s %s' % (tagname, value), value)
 
-        for p in (pkg.requires()):
+        for p in (pkg.requires):
             e = Pkg.has_forbidden_controlchars(p)
             if e:
                 self.output.add_info('E',
@@ -425,9 +425,9 @@ class TagsCheck(AbstractCheck):
                                      'forbidden-controlchar-found',
                                      'Requires: %s' % e)
 
-        obss = pkg.obsoletes()
+        obss = pkg.obsoletes
         if obss:
-            provs = pkg.provides()
+            provs = pkg.provides
             for prov in provs:
                 for obs in obss:
                     if Pkg.rangeCompare(obs, prov):

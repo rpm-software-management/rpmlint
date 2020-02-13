@@ -16,7 +16,7 @@ class SysVInitOnSystemdCheck(AbstractCheck):
 
         self._find_services_and_scripts(pkg)
 
-        for req in pkg.requires() + pkg.prereq():
+        for req in pkg.requires + pkg.prereq:
             if req[0] == 'insserv':
                 self.output.add_info('E', pkg, 'obsolete-insserv-requirement')
 
