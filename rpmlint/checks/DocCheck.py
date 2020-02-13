@@ -12,7 +12,7 @@ class DocCheck(AbstractCheck):
     """
 
     def check_binary(self, pkg):
-        if not pkg.docFiles():
+        if not pkg.doc_files:
             return
 
         self._check_executable_docs(pkg)
@@ -33,7 +33,7 @@ class DocCheck(AbstractCheck):
         Check if the documentation in the package is executable and print an
         error if it is.
         """
-        for f in pkg.docFiles():
+        for f in pkg.doc_files:
             mode = pkg.files[f].mode
             if not stat.S_ISREG(mode) or not mode & 0o111:
                 continue
@@ -75,7 +75,7 @@ class DocCheck(AbstractCheck):
         for i in files:
             if not reqs[i]:
                 continue  # skip empty dependencies
-            if i in pkg.docFiles():
+            if i in pkg.doc_files:
                 target = doc_reqs
             else:
                 target = core_reqs
@@ -98,7 +98,7 @@ class DocCheck(AbstractCheck):
         Now it checks the presence of the INSTALL file that is often not
         relevant for the built package.
         """
-        for docfile in pkg.docFiles():
+        for docfile in pkg.doc_files:
             if docfile.endswith('/INSTALL'):
                 self.output.add_info('W', pkg, 'install-file-in-docs', docfile)
 
@@ -114,7 +114,7 @@ class DocCheck(AbstractCheck):
                 complete_size += pkgfile.size
 
         doc_size = 0
-        for f in pkg.docFiles():
+        for f in pkg.doc_files:
             if stat.S_ISREG(files[f].mode):
                 doc_size += files[f].size
 

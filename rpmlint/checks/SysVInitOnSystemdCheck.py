@@ -31,7 +31,7 @@ class SysVInitOnSystemdCheck(AbstractCheck):
     def _find_services_and_scripts(self, pkg):
         # Find all regular systemd services and initscripts
         for filename, _pkgfile in pkg.files.items():
-            if filename in pkg.ghostFiles():
+            if filename in pkg.ghost_files:
                 continue
 
             if filename.startswith('/usr/lib/systemd/system/'):

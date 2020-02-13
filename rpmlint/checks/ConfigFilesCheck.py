@@ -7,7 +7,7 @@ class ConfigFilesCheck(AbstractCheck):
     'noreplace'.
     """
     def check_binary(self, pkg):
-        for filename in pkg.configFiles():
+        for filename in pkg.config_files:
             self._check_non_confdir_files(pkg, filename)
             self._check_noreplace_files(pkg, filename)
 
@@ -27,6 +27,6 @@ class ConfigFilesCheck(AbstractCheck):
 
         Print a warning if there is no 'noreplace' tag.
         """
-        if fn not in pkg.noreplaceFiles():
+        if fn not in pkg.noreplace_files:
             self.output.add_info('W', pkg,
                                  'conffile-without-noreplace-flag', fn)

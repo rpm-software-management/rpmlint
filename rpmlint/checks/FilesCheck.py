@@ -446,9 +446,8 @@ class FilesCheck(AbstractCheck):
                     devel_pkg = True
                     break
 
-        config_files = pkg.configFiles()
-        ghost_files = pkg.ghostFiles()
-        doc_files = pkg.docFiles()
+        config_files = pkg.config_files
+        ghost_files = pkg.ghost_files
         req_names = pkg.req_names()
         lib_package = lib_package_regex.search(pkg.name)
         is_kernel_package = kernel_package_regex.search(pkg.name)
@@ -465,7 +464,7 @@ class FilesCheck(AbstractCheck):
         debuginfo_srcs = False
         debuginfo_debugs = False
 
-        if not lib_package and not doc_files:
+        if not lib_package and not pkg.doc_files:
             self.output.add_info('W', pkg, 'no-documentation')
 
         if files:
@@ -503,7 +502,7 @@ class FilesCheck(AbstractCheck):
             size = pkgfile.size
             rdev = pkgfile.rdev
             inode = pkgfile.inode
-            is_doc = f in doc_files
+            is_doc = f in pkg.doc_files
             nonexec_file = False
 
             self._check_manpage_compressed(pkg, f)

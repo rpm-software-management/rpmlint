@@ -28,7 +28,7 @@ class DuplicatesCheck(AbstractCheck):
         total_dup_size = 0
 
         for fname, pkgfile in pkg.files.items():
-            if fname in pkg.ghostFiles() or not stat.S_ISREG(pkgfile.mode):
+            if fname in pkg.ghost_files or not stat.S_ISREG(pkgfile.mode):
                 continue
 
             # fillup md5s and sizes dicts
@@ -47,7 +47,7 @@ class DuplicatesCheck(AbstractCheck):
             duplicates = sorted(duplicates)
             first = duplicates.pop()
             first_is_config = False
-            if first in pkg.configFiles():
+            if first in pkg.config_files:
                 first_is_config = True
 
             prefix = self._get_prefix(first)
@@ -65,7 +65,7 @@ class DuplicatesCheck(AbstractCheck):
                         self.output.add_info('E', pkg,
                                              'hardlink-across-partition',
                                              first, duplicate)
-                    if first_is_config and duplicate in pkg.configFiles():
+                    if first_is_config and duplicate in pkg.config_files:
                         self.output.add_info('E', pkg,
                                              'hardlink-across-config-files',
                                              first, duplicate)
