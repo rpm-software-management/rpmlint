@@ -11,8 +11,8 @@ from pathlib import Path
 import re
 
 import rpm
-from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import readlines
 
 
 chkconfig_content_regex = re.compile(r'^\s*#\s*chkconfig:\s*([-0-9]+)\s+[-0-9]+\s+[-0-9]+')
@@ -108,7 +108,7 @@ class InitScriptCheck(AbstractCheck):
             # check common error in file content
             content = None
             try:
-                content = list(Pkg.readlines(pkgfile.path))
+                content = list(readlines(pkgfile.path))
             except Exception as e:
                 self.output.add_info('W', pkg, 'read-error', e)
                 continue

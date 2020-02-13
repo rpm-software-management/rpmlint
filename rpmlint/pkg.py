@@ -19,7 +19,6 @@ try:
 except ImportError:
     _magic = None
 import rpm
-
 from rpmlint.helpers import byte_to_string, print_warning
 from rpmlint.pkgfile import PkgFile
 
@@ -130,12 +129,6 @@ def has_forbidden_controlchars(val):
         for item in val:
             return has_forbidden_controlchars(item)
     return False
-
-
-def readlines(path):
-    with open(path, 'rb') as fobj:
-        for line in fobj:
-            yield byte_to_string(line)
 
 
 # from yum 3.2.27, rpmUtils.miscutils, with rpmlint modifications
