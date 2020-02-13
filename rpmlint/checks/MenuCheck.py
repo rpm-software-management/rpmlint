@@ -128,7 +128,7 @@ class MenuCheck(AbstractCheck):
                                     in files
                                 if not found:
                                     for l in launcher['binaries']:
-                                        if l in pkg.req_names():
+                                        if l in pkg.req_names:
                                             found = True
                                             break
                                 if not found:
