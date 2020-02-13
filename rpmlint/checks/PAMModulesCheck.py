@@ -15,7 +15,7 @@ class PAMModulesCheck(AbstractCheck):
             return
 
         for f in pkg.files:
-            if f in pkg.ghostFiles():
+            if f in pkg.ghost_files:
                 continue
 
             m = self.pam_module_re.match(f)

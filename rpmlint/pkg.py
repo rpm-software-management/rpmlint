@@ -378,11 +378,6 @@ class Pkg(AbstractPkg):
         self.extracted = extracted
         self.dirname = self.dir_name(dirname)
         self.current_linenum = None
-        self._config_files = None
-        self._doc_files = None
-        self._noreplace_files = None
-        self._ghost_files = None
-        self._missingok_files = None
         self._requires = None
         self._req_names = -1
 
@@ -403,6 +398,11 @@ class Pkg(AbstractPkg):
 
         self.name = self[rpm.RPMTAG_NAME]
         self.files = self._gatherFilesInfo()
+        self.config_files = [x.name for x in self.files.values() if x.is_config]
+        self.doc_files = [x.name for x in self.files.values() if x.is_doc]
+        self.ghost_files = [x.name for x in self.files.values() if x.is_ghost]
+        self.noreplace_files = [x.name for x in self.files.values() if x.is_noreplace]
+        self.missingok_files = [x.name for x in self.files.values() if x.is_missingok]
 
         if self.is_no_source:
             self.arch = 'nosrc'
@@ -415,7 +415,7 @@ class Pkg(AbstractPkg):
     # NoSource files are ghosts in source packages.
     @property
     def is_no_source(self):
-        return self.is_source and self.ghostFiles()
+        return self.is_source and self.ghost_files
 
     # access the tags like an array
     def __getitem__(self, key):
@@ -500,49 +500,6 @@ class Pkg(AbstractPkg):
         if orig is not None:
             os.environ['LANGUAGE'] = orig
         return ret
-
-    # return the list of config files
-    def configFiles(self):
-        if self._config_files is not None:
-            return self._config_files
-
-        self._config_files = [x.name for x in self.files.values()
-                              if x.is_config]
-        return self._config_files
-
-    # return the list of noreplace files
-    def noreplaceFiles(self):
-        if self._noreplace_files is not None:
-            return self._noreplace_files
-
-        self._noreplace_files = [x.name for x in self.files.values()
-                                 if x.is_noreplace]
-        return self._noreplace_files
-
-    # return the list of documentation files
-    def docFiles(self):
-        if self._doc_files is not None:
-            return self._doc_files
-
-        self._doc_files = [x.name for x in self.files.values() if x.is_doc]
-        return self._doc_files
-
-    # return the list of ghost files
-    def ghostFiles(self):
-        if self._ghost_files is not None:
-            return self._ghost_files
-
-        self._ghost_files = [x.name for x in self.files.values()
-                             if x.is_ghost]
-        return self._ghost_files
-
-    def missingOkFiles(self):
-        if self._missingok_files is not None:
-            return self._missingok_files
-
-        self._missingok_files = [x.name for x in self.files.values()
-                                 if x.is_missingok]
-        return self._missingok_files
 
     # extract information about the files
     def _gatherFilesInfo(self):

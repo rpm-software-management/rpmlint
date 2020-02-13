@@ -134,12 +134,12 @@ class PostCheck(AbstractCheck):
                         pkg, prog[idx],
                         pkg.header[tag[0]][idx], tag[2], prereq)
 
-        ghost_files = pkg.ghostFiles()
+        ghost_files = pkg.ghost_files
         if ghost_files:
             postin = pkg[rpm.RPMTAG_POSTIN]
             prein = pkg[rpm.RPMTAG_PREIN]
             for f in ghost_files:
-                if f in pkg.missingOkFiles():
+                if f in pkg.missingok_files:
                     continue
                 if not postin and not prein:
                     self.output.add_info('W', pkg, 'ghost-files-without-postin')

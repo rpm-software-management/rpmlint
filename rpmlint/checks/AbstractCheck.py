@@ -29,8 +29,7 @@ class AbstractFilesCheck(AbstractCheck):
         super().__init__(config, output)
 
     def check_binary(self, pkg):
-        ghosts = pkg.ghostFiles()
-        for filename in (x for x in pkg.files if x not in ghosts):
+        for filename in (x for x in pkg.files if x not in pkg.ghost_files):
             if self.__files_re.match(filename):
                 self.check_file(pkg, filename)
 

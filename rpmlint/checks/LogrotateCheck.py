@@ -12,7 +12,7 @@ class LogrotateCheck(AbstractCheck):
         dirs = {}
 
         for f in files:
-            if f in pkg.ghostFiles():
+            if f in pkg.ghost_files:
                 continue
 
             if f.startswith('/etc/logrotate.d/'):

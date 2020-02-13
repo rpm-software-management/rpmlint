@@ -9,7 +9,7 @@ class DBusPolicyCheck(AbstractCheck):
             return
 
         for f in pkg.files:
-            if f in pkg.ghostFiles():
+            if f in pkg.ghost_files:
                 continue
 
             # catch xml exceptions
