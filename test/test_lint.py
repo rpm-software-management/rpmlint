@@ -17,6 +17,7 @@ options_preset = {
 }
 
 basic_tests = [
+    'AlternativesCheck',
     'AppDataCheck',
     'BinariesCheck',
     'BuildDateCheck',
