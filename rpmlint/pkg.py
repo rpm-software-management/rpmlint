@@ -19,8 +19,9 @@ try:
 except ImportError:
     _magic = None
 import rpm
-from rpmlint.helpers import byte_to_string, print_warning
 
+from rpmlint.helpers import byte_to_string, print_warning
+from rpmlint.pkgfile import PkgFile
 
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
 # to do the right thing with those versions and packages built with other
@@ -888,35 +889,3 @@ class FakePkg(AbstractPkg):
 
     def files(self):
         return self._files
-
-
-# Class for files in packages
-class PkgFile(object):
-
-    def __init__(self, name):
-        self.name = name
-        # Real path to the file (taking extract dir into account)
-        self.path = name
-        self.flags = 0
-        self.mode = 0
-        self.user = None
-        self.group = None
-        self.linkto = ''
-        self.size = None
-        self.md5 = None
-        self.mtime = 0
-        self.rdev = ''
-        self.inode = 0
-        self.requires = []
-        self.provides = []
-        self.lang = ''
-        self.magic = ''
-        self.filecaps = None
-
-    # TODO: decompression support
-
-    is_config = property(lambda self: self.flags & rpm.RPMFILE_CONFIG)
-    is_doc = property(lambda self: self.flags & rpm.RPMFILE_DOC)
-    is_noreplace = property(lambda self: self.flags & rpm.RPMFILE_NOREPLACE)
-    is_ghost = property(lambda self: self.flags & rpm.RPMFILE_GHOST)
-    is_missingok = property(lambda self: self.flags & rpm.RPMFILE_MISSINGOK)
