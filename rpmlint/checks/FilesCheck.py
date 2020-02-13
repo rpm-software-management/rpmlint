@@ -435,7 +435,7 @@ class FilesCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        files = pkg.files()
+        files = pkg.files
 
         # Check if the package is a development package
         devel_pkg = devel_regex.search(pkg.name)

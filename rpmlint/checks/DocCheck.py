@@ -33,9 +33,8 @@ class DocCheck(AbstractCheck):
         Check if the documentation in the package is executable and print an
         error if it is.
         """
-        files = pkg.files()
         for f in pkg.docFiles():
-            mode = files[f].mode
+            mode = pkg.files[f].mode
             if not stat.S_ISREG(mode) or not mode & 0o111:
                 continue
             path = Path(f)
@@ -52,7 +51,7 @@ class DocCheck(AbstractCheck):
         Check if docfiles create additional dependencies in the package and
         print a warning if so.
         """
-        files = pkg.files()
+        files = pkg.files
 
         reqs = {}
         for fname, pkgfile in files.items():
@@ -108,7 +107,7 @@ class DocCheck(AbstractCheck):
         Check the size of the documentation in the package and print a warning
         if it's more than half of the size of the package.
         """
-        files = pkg.files()
+        files = pkg.files
         complete_size = 0
         for _, pkgfile in files.items():
             if stat.S_ISREG(pkgfile.mode):

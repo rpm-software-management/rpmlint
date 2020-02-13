@@ -168,7 +168,7 @@ class BinariesCheck(AbstractCheck):
             for f in exec_files:
                 self.output.add_info('E', pkg, 'executable-in-library-package', f)
 
-    def _check_non_versioned(self, pkg, has_lib, files, exec_files):
+    def _check_non_versioned(self, pkg, has_lib, exec_files):
         """
         Check if the library package contains library files in non-versioned
         directories.
@@ -176,7 +176,7 @@ class BinariesCheck(AbstractCheck):
         Print an error for every such file.
         """
         if has_lib:
-            for f in files:
+            for f in pkg.files:
                 res = self.numeric_dir_regex.search(f)
                 fn = res and res.group(1) or f
                 if f not in exec_files and not self.so_regex.search(f) and \
@@ -286,7 +286,7 @@ class BinariesCheck(AbstractCheck):
         symlink = path.parent / soname
         try:
 
-            link = pkg.files()[str(symlink)].linkto
+            link = pkg.files[str(symlink)].linkto
             if link not in (shlib, path.parent, ''):
                 self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', shlib, link)
         except KeyError:
@@ -473,7 +473,6 @@ class BinariesCheck(AbstractCheck):
             concurrent.futures.wait(futures)
 
     def check_binary(self, pkg):
-        files = pkg.files()
         exec_files = []
         multi_pkg = False
         pkg_has_lib = False
@@ -484,7 +483,7 @@ class BinariesCheck(AbstractCheck):
 
         #  go through the all files, run files checks and collect data that are
         #  needed later
-        for fname, pkgfile in files.items():
+        for fname, pkgfile in pkg.files.items():
 
             # Common tests first
             self._check_libtool_wrapper(pkg, fname, pkgfile)
@@ -583,7 +582,7 @@ class BinariesCheck(AbstractCheck):
         # run checks for the whole package
         # it uses data collected in the previous for-cycle
         self._check_exec_in_library(pkg, pkg_has_lib, exec_files)
-        self._check_non_versioned(pkg, pkg_has_lib, files, exec_files)
+        self._check_non_versioned(pkg, pkg_has_lib, exec_files)
         self._check_no_binary(pkg, pkg_has_binary, multi_pkg,
                               pkg_has_file_in_lib64)
         self._check_noarch_with_lib64(pkg, pkg_has_file_in_lib64)

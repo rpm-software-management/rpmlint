@@ -27,7 +27,7 @@ class DuplicatesCheck(AbstractCheck):
         sizes = {}
         total_dup_size = 0
 
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
             if fname in pkg.ghostFiles() or not stat.S_ISREG(pkgfile.mode):
                 continue
 

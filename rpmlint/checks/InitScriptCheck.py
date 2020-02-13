@@ -68,7 +68,7 @@ class InitScriptCheck(AbstractCheck):
 
     def check_binary(self, pkg):
         initscript_list = []
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
 
             if not fname.startswith('/etc/init.d/') and \
                     not fname.startswith('/etc/rc.d/init.d/'):

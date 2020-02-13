@@ -23,7 +23,7 @@ class FHSCheck(AbstractCheck):
         var_list = []
         usr_list = []
 
-        for fname in pkg.files():
+        for fname in pkg.files:
             s = FHSCheck.usr_regex.search(fname)
             if s:
                 d = s.group(1)

@@ -10,7 +10,7 @@ class BashismsCheck(AbstractFilesCheck):
 
     def check_file(self, pkg, filename):
         root = pkg.dirName()
-        pkgfile = pkg.files()[filename]
+        pkgfile = pkg.files[filename]
         fullpath = root + filename
 
         if not (stat.S_ISREG(pkgfile.mode) and

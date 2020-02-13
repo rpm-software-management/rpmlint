@@ -49,13 +49,12 @@ class NamingPolicyCheck(AbstractCheck):
                                          packages.\n%s.""" % (pkg_name, details)})
 
     def check_binary(self, pkg):
-        files = pkg.files()
-        if not files:
+        if not pkg.files:
             return
         try:
             # check for files then
             for c in self.checks_:
-                for f in files:
+                for f in pkg.files:
                     if c['file_re'].search(f) and \
                             not c['name_re'].search(pkg.name):
                         raise NamingPolicyNotAppliedException

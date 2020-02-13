@@ -13,7 +13,7 @@ class ZipCheck(AbstractCheck):
     jar_regex = re.compile(r'\.[ewj]ar$')
 
     def check(self, pkg):
-        for fname, pkgfile in pkg.files().items():
+        for fname, pkgfile in pkg.files.items():
             path = pkgfile.path
             if self.zip_regex.search(fname) and Path(path).exists() and \
                Path(path).is_file() and is_zipfile(path):
