@@ -13,7 +13,6 @@ Checks = [
     "FHSCheck",
     "FilesCheck",
     "IconSizesCheck",
-    "InitScriptCheck",
     "I18NCheck",
     "LogrotateCheck",
     "MenuCheck",

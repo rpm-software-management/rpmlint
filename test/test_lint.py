@@ -31,7 +31,6 @@ basic_tests = [
     'FHSCheck',
     'FilesCheck',
     'IconSizesCheck',
-    'InitScriptCheck',
     'I18NCheck',
     'LogrotateCheck',
     'MenuCheck',
