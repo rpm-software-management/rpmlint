@@ -10,16 +10,18 @@ class FHSCheck(AbstractCheck):
     We follow FHS 3.0 specification that can be found at
     http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf
 
-    usr_subdir lists allowed directories in /usr (FHS chapter 4.2 and 4.3)
-    var_subdir lists allowed directories in /var (FHS chapter 5.2 and 5.3)
+    FHS_usr_subdirs lists allowed directories in /usr (FHS chapter 4.2 and 4.3)
+    FHS_var_subdirs lists allowed directories in /var (FHS chapter 5.2 and 5.3)
     """
     usr_regex = re.compile('^/usr/([^/]+)')
-    usr_subdir = ('X11R6', 'bin', 'games', 'include', 'lib', 'lib64',
-                  'local', 'sbin', 'share', 'src', 'tmp')
+    FHS_usr_subdirs = ('bin', 'lib', 'local', 'sbin', 'share', 'games', 'include',
+                       'libexec', 'lib64', 'src', 'spool', 'tmp')
+
     var_regex = re.compile('^/var/([^/]+)')
     var_fsstnd = ('adm', 'catman', 'local', 'named', 'nis', 'preserve')
-    var_subdir = ('account', 'cache', 'crash', 'games', 'lib', 'lock', 'log',
-                  'mail', 'opt', 'run', 'spool', 'tmp', 'yp', 'www', 'ftp')
+    FHS_var_subdirs = ('cache', 'lib', 'local', 'lock', 'log', 'opt', 'run',
+                       'spool', 'tmp', 'account', 'crash', 'games', 'mail',
+                       'yp')
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -55,16 +57,16 @@ class FHSCheck(AbstractCheck):
         Refer to http://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04.html for
         details.
         """
-        if usr_file not in FHSCheck.usr_subdir and usr_file not in usr_list:
+        if usr_file not in self.FHS_usr_subdirs and usr_file not in usr_list:
             usr_list.append(usr_file)
             self.output.add_info('W', pkg, 'non-standard-dir-in-usr', usr_file)
 
     def _check_var_FSSTND_dir(self, var_file, pkg, var_list):
         """
-        Check if the file is not packaged in an obsolete (illegal)
+        Check if the file is not packaged in an obsolete (illegal).
         subdirectory of /var.
         """
-        if var_file in FHSCheck.var_fsstnd and var_file not in var_list:
+        if var_file in self.var_fsstnd and var_file not in var_list:
             var_list.append(var_file)
             self.output.add_info('W', pkg, 'FSSTND-dir-in-var', var_file)
 
@@ -80,7 +82,7 @@ class FHSCheck(AbstractCheck):
         Refer to http://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch05.htm
         for details.
         """
-        if var_file not in FHSCheck.var_subdir and var_file not in var_list:
+        if var_file not in self.FHS_var_subdirs and var_file not in var_list:
             var_list.append(var_file)
             self.output.add_info('W', pkg, 'non-standard-dir-in-var', var_file)
 
@@ -89,7 +91,7 @@ fhs_details_dict = {
 'non-standard-dir-in-usr':
 """Your package is creating a non-standard subdirectory in /usr. The standard
 directories are:
-%s.""" % ', '.join(FHSCheck.usr_subdir),
+%s.""" % ', '.join(FHSCheck.FHS_usr_subdirs),
 
 'FSSTND-dir-in-var':
 """Your package is creating an illegal directory in /var. The FSSTND (illegal)
@@ -99,5 +101,5 @@ ones are:
 'non-standard-dir-in-var':
 """Your package is creating a non-standard subdirectory in /var. The standard
 directories are:
-%s.""" % ', '.join(FHSCheck.var_subdir),
+%s.""" % ', '.join(FHSCheck.FHS_var_subdirs),
 }
