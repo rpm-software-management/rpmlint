@@ -17,7 +17,6 @@ Checks = [
     "LogrotateCheck",
     "MenuCheck",
     "MenuXDGCheck",
-    "NamingPolicyCheck",
     "PkgConfigCheck",
     "PostCheck",
     "SignatureCheck",
