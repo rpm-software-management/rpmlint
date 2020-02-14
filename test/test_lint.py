@@ -9,6 +9,7 @@ options_preset = {
     'config': TEST_CONFIG,
     'verbose': False,
     'strict': False,
+    'permissive': False,
     'print_config': False,
     'explain': '',
     'rpmfile': '',
