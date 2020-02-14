@@ -568,42 +568,28 @@ class SpecCheck(AbstractCheck):
         if text.endswith('\n'):
             text = text[:-1]
 
-        parse_error = False
-        for line in text.splitlines():
-            # No such file or dir hack: https://bugzilla.redhat.com/487855
-            if 'No such file or directory' not in line:
-                parse_error = True
-                self.output.add_info('E', pkg, 'specfile-error', line)
+        # grab sources and patches from parsed spec object to get
+        # them with macros expanded for URL checking
 
-        if not parse_error:
-            # grab sources and patches from parsed spec object to get
-            # them with macros expanded for URL checking
-
-            spec_obj = None
-            rpm.addMacro('_sourcedir', pkg.dirName())
-            try:
-                ts = rpm.TransactionSet()
-                spec_obj = ts.parseSpec(str(self._spec_file))
-            except (ValueError, rpm.error):
-                # errors logged above already
-                pass
-            rpm.delMacro('_sourcedir')
-            if spec_obj:
-                try:
-                    # rpm < 4.8.0
-                    sources = spec_obj.sources()
-                except TypeError:
-                    # rpm >= 4.8.0
-                    sources = spec_obj.sources
-                for src in sources:
-                    (url, num, flags) = src
-                    (scheme, netloc) = urlparse(url)[0:2]
-                    if flags & 1:  # rpmspec.h, rpm.org ticket #123
-                        srctype = 'Source'
-                    else:
-                        srctype = 'Patch'
-                    tag = '%s%s' % (srctype, num)
-                    if scheme and netloc:
-                        continue
-                    elif srctype == 'Source' and tarball_regex.search(url):
-                        self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url)
+        spec_obj = None
+        rpm.addMacro('_sourcedir', pkg.dirName())
+        try:
+            ts = rpm.TransactionSet()
+            spec_obj = ts.parseSpec(str(self._spec_file))
+        except (ValueError, rpm.error):
+            # errors logged above already
+            pass
+        rpm.delMacro('_sourcedir')
+        if spec_obj:
+            for src in spec_obj.sources:
+                (url, num, flags) = src
+                (scheme, netloc) = urlparse(url)[0:2]
+                if flags & 1:  # rpmspec.h, rpm.org ticket #123
+                    srctype = 'Source'
+                else:
+                    srctype = 'Patch'
+                tag = '%s%s' % (srctype, num)
+                if scheme and netloc:
+                    continue
+                elif srctype == 'Source' and tarball_regex.search(url):
+                    self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url)
