@@ -18,7 +18,6 @@ class FHSCheck(AbstractCheck):
                        'libexec', 'lib64', 'src', 'spool', 'tmp')
 
     var_regex = re.compile('^/var/([^/]+)')
-    var_fsstnd = ('adm', 'catman', 'local', 'named', 'nis', 'preserve')
     FHS_var_subdirs = ('cache', 'lib', 'local', 'lock', 'log', 'opt', 'run',
                        'spool', 'tmp', 'account', 'crash', 'games', 'mail',
                        'yp')
@@ -43,7 +42,6 @@ class FHSCheck(AbstractCheck):
             if var_path:
                 # Run tests for /var directory
                 var_file = var_path.group(1)
-                self._check_var_FSSTND_dir(var_file, pkg, var_list)
                 self._check_var_standard_dir(var_file, pkg, var_list)
 
     def _check_usr_standard_dir(self, usr_file, pkg, usr_list):
@@ -52,7 +50,7 @@ class FHSCheck(AbstractCheck):
 
         FHS 3.0 says: "Large software packages must not use a direct
         subdirectory under the /usr hierarchy." Check if this package contains
-        a directory in /usr that is not mentioned in FHS (usr_list).
+        a directory in /usr that is not mentioned in FHS (FHS_usr_subdirs).
 
         Refer to http://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04.html for
         details.
@@ -60,15 +58,6 @@ class FHSCheck(AbstractCheck):
         if usr_file not in self.FHS_usr_subdirs and usr_file not in usr_list:
             usr_list.append(usr_file)
             self.output.add_info('W', pkg, 'non-standard-dir-in-usr', usr_file)
-
-    def _check_var_FSSTND_dir(self, var_file, pkg, var_list):
-        """
-        Check if the file is not packaged in an obsolete (illegal).
-        subdirectory of /var.
-        """
-        if var_file in self.var_fsstnd and var_file not in var_list:
-            var_list.append(var_file)
-            self.output.add_info('W', pkg, 'FSSTND-dir-in-var', var_file)
 
     def _check_var_standard_dir(self, var_file, pkg, var_list):
         """
@@ -92,11 +81,6 @@ fhs_details_dict = {
 """Your package is creating a non-standard subdirectory in /usr. The standard
 directories are:
 %s.""" % ', '.join(FHSCheck.FHS_usr_subdirs),
-
-'FSSTND-dir-in-var':
-"""Your package is creating an illegal directory in /var. The FSSTND (illegal)
-ones are:
-%s.""" % ', '.join(FHSCheck.var_fsstnd),
 
 'non-standard-dir-in-var':
 """Your package is creating a non-standard subdirectory in /var. The standard
