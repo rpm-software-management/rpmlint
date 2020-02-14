@@ -102,7 +102,7 @@ def process_lint_args(argv):
             exit(2)
     # make sure rpmlintrc exists
     if options.rpmlintrc:
-        if options.rpmlintrc.exists():
+        if not options.rpmlintrc.exists():
             print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
             exit(2)
     # validate all the rpmlfile options to be either file or folder
