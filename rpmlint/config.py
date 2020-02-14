@@ -29,6 +29,8 @@ class Config(object):
         self.info = False
         # wether to treat all messages as errors or not
         self.strict = False
+        # whether to treat individual errors as non-fatal
+        self.permissive = False
         self.find_configs(config)
         self.load_config()
         # loading of the configuration failed fall back only to defaults
