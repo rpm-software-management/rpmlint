@@ -5,7 +5,7 @@ sudo: required
 env:
   - DIST=fedora31
   - DIST=fedoradev
-  - DIST=opensuselp15
+#  - DIST=opensuselp15
   - DIST=opensusetw
 
 # podman is currently not in Ubuntu
