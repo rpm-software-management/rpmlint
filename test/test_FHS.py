@@ -26,10 +26,6 @@ def test_FHS_compliance(tmpdir, package, fhscheck):
     assert 'non-standard-dir-in-usr' in out
     assert 'sbin' in out
 
-    # Check illegal FSSTND subdirectory
-    assert 'FSSTND-dir-in-var' in out
-    assert 'catman' in out
-
     # Check invalid /var subdirectory
     assert 'non-standard-dir-in-var' in out
     assert 'lib' in out
