@@ -40,6 +40,7 @@ setup(
 
     install_requires=[
         'pyxdg',
+        'rpm',
         'toml',
     ],
     tests_require=[
