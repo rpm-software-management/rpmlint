@@ -568,9 +568,15 @@ class SpecCheck(AbstractCheck):
         if text.endswith('\n'):
             text = text[:-1]
 
+        parse_error = False
+        for line in text.splitlines():
+            parse_error = True
+            self.output.add_info('E', pkg, 'specfile-error', line)
+        if parse_error:
+            return
+
         # grab sources and patches from parsed spec object to get
         # them with macros expanded for URL checking
-
         spec_obj = None
         rpm.addMacro('_sourcedir', pkg.dirName())
         try:
