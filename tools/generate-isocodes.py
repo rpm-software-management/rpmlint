@@ -33,6 +33,7 @@ with urlopen(iso_639_3_url) as f:
 # Python 3 it results in curly brace set initializers that are not
 # compatible with Python 2.6, do it with set([...]) instead.
 
+print('# flake8: noqa')
 print('# Generated with {}'.format(sys.argv[0]))
 print('')
 print('LANGUAGES = set(')
