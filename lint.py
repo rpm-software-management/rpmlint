@@ -1,5 +1,5 @@
 #!/usr/bin/python3
 
-from rpmlint import lint
+from rpmlint.cli import lint
 
 lint()
