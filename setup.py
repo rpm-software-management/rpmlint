@@ -61,8 +61,8 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'rpmdiff = rpmlint:diff',
-            'rpmlint = rpmlint:lint',
+            'rpmdiff = rpmlint.cli:diff',
+            'rpmlint = rpmlint.cli:lint',
         ],
     },
 )
