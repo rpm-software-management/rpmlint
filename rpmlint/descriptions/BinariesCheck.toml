@@ -94,6 +94,9 @@ Executing ldd on this file failed, all checks could not be run.
 strings-failed="""
 Executing strings on this file failed, all checks could not be run.
 """
+objdump-failed="""
+Executing objdump on this file failed, all checks could not be run.
+"""
 executable-stack="""
 The binary declares the stack as executable. Executable stack is usually an
 error as it is only needed if the code contains GCC trampolines or similar
@@ -167,4 +170,10 @@ The binary is not dynamically linked against libc.
 shared-library-without-dependency-information="""
 The listed shared library doesn't include information about which other
 libraries the library was linked against.
+"""
+missing-mandatory-optflags="""
+This executable was not compiled with expected flags.
+"""
+forbidden-optflags="""
+This executable was compiled with an unexpected flag.
 """

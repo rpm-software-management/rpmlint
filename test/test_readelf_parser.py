@@ -140,7 +140,6 @@ def test_archive_with_debuginfo(binariescheck):
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
-    assert len(output.results) == 1
     assert 'E: executable-stack' in output.results[0]
 
 
