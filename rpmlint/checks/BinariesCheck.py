@@ -6,6 +6,7 @@ import stat
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.lddparser import LddParser
+from rpmlint.objdumpparser import ObjdumpParser
 from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
@@ -56,7 +57,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_rpath,
                                 self._check_library_dependency,
                                 self._check_forbidden_functions,
-                                self._check_executable_shlib]
+                                self._check_executable_shlib,
+                                self._check_optflags]
 
     @staticmethod
     def create_nonlibc_regexp_call(call):
@@ -452,6 +454,24 @@ class BinariesCheck(AbstractCheck):
             if interp:
                 self.output.add_info('E', pkg, 'shared-library-not-executable', path)
 
+    def _check_optflags(self, pkg, pkgfile_path, path):
+        if self.readelf_parser.is_archive:
+            return
+
+        mandatory_optflags = self.config.configuration['MandatoryOptflags']
+        forbidden_optflags = self.config.configuration['ForbiddenOptflags']
+        if not mandatory_optflags and not forbidden_optflags:
+            return
+
+        for dwarf_unit in self.objdump_parser.compile_units:
+            tokens = dwarf_unit['producer'].split(' ')
+            missing = [mo for mo in mandatory_optflags if mo not in tokens]
+            forbidden = [f for f in forbidden_optflags if f in tokens]
+            if missing:
+                self.output.add_info('W', pkg, 'missing-mandatory-optflags', path, ' '.join(missing))
+            if forbidden:
+                self.output.add_info('E', pkg, 'forbidden-optflags', path, ' '.join(forbidden))
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         failed_reason = self.readelf_parser.parsing_failed_reason()
@@ -464,6 +484,12 @@ class BinariesCheck(AbstractCheck):
             failed_reason = self.ldd_parser.parsing_failed_reason
             if failed_reason:
                 self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
+                return
+
+            self.objdump_parser = ObjdumpParser(pkgfile_path, path)
+            failed_reason = self.objdump_parser.parsing_failed_reason
+            if failed_reason:
+                self.output.add_info('E', pkg, 'objdump-failed', path, failed_reason)
                 return
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
