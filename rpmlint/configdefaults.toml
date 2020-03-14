@@ -63,7 +63,7 @@ SkipDocsRegexp = '\.(?:rtf|x?html?|svg|ml[ily]?)$'
 UseEnchant = true
 # Whether debug sources are expected to be in separate packages from
 # -debuginfo, typically -debugsource.
-UseDebugSource = false
+UseDebugSource = true
 # Whether an explicit Epoch should always be specified in preamble
 UseEpoch = false
 # Whether to want default start/stop runlevels specified in init scripts
