@@ -1,7 +1,7 @@
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
-class CheckForXinetd(AbstractCheck):
+class XinetdDepCheck(AbstractCheck):
     def check(self, pkg):
         if pkg.is_source:
             return
