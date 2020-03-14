@@ -244,8 +244,8 @@ def test_multiple_errors(tmpdir, package, binariescheck):
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
 
 
-@pytest.mark.parametrize('package', ['binary/ruby-libs'])
-def test_fedora_ruby_package(tmpdir, package, binariescheck):
+@pytest.mark.parametrize('package', ['binary/dependency-info'])
+def test_dependency_information(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
