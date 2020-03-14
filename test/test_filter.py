@@ -9,7 +9,7 @@ from Testing import get_tested_package, testpath
 TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 TEST_PACKAGE = Path('binary', 'ngircd')
-TEST_PACKAGE2 = Path('binary', 'dovecot')
+TEST_PACKAGE2 = Path('binary', 'tempfiled')
 
 
 def test_filters_regexp():
@@ -83,7 +83,7 @@ def test_output(tmpdir):
     """
     expected_output = """ngircd.x86_64: I: suse-other-error /usr/bin/1
 ngircd.x86_64: I: suse-other-error /usr/bin/2
-dovecot.x86_64: E: suse-other-error /usr/bin/3
+tempfiled.x86_64: E: suse-other-error /usr/bin/3
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
