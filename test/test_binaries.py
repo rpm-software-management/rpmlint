@@ -13,12 +13,13 @@ def binariescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/cyrus-imapd', 'binary/dovecot'])
+@pytest.mark.parametrize('package', ['binary/crypto-policy'])
 def test_forbidden_c_calls(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'crypto-policy-non-compliance' in out
+    assert 'crypto-policy-non-compliance-openssl /usr/lib/cyrus-imapd/arbitron SSL_CTX_set_cipher_list' in out
+    assert 'crypto-policy-non-compliance-openssl /usr/lib64/dovecot/libssl_iostream_openssl.so SSL_CTX_set_cipher_list' in out
 
 
 @pytest.mark.parametrize('package', ['binary/ngircd'])
