@@ -297,11 +297,11 @@ consequences), or other compiler flags which result in rpmbuild's debuginfo
 extraction not working as expected. Verify that the binaries are not
 unexpectedly stripped and that the intended compiler flags are used.
 """
-missing-dependency-to-cron="""
+missing-dependency-to-crontabs="""
 This package installs a file in /etc/cron.*/ but
-doesn't require cron to be installed. as cron is not part of the essential packages,
-your package should explicitely require cron to make sure that your cron job is
-executed. If it is an optional feature of your package, recommend or suggest cron.
+doesn't require crontabs to be installed. As crontabs is not part of the essential packages,
+your package should explicitely require crontabs to make sure that your cron job is
+executed. If it is an optional feature of your package, recommend or suggest crontabs.
 """
 missing-dependency-to-logrotate="""
 This package installs a file in /etc/logrotate.d/ but

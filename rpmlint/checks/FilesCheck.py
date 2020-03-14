@@ -563,8 +563,8 @@ class FilesCheck(AbstractCheck):
             if res and not ('logrotate' in deps) and pkg.name != 'logrotate':
                 self.output.add_info('E', pkg, 'missing-dependency-to-logrotate', 'for logrotate script', f)
             if f.startswith('/etc/cron.') \
-               and not ('cron' in deps) and pkg.name != 'cron':
-                self.output.add_info('E', pkg, 'missing-dependency-to-cron', 'for cron script', f)
+               and not ('crontabs' in deps) and pkg.name != 'crontabs':
+                self.output.add_info('E', pkg, 'missing-dependency-to-crontabs', 'for cron script', f)
             if f.startswith('/etc/xinet.d/') \
                and not ('xinetd' in deps) and pkg.name != 'xinetd':
                 self.output.add_info('E', pkg, 'missing-dependency-to-xinetd', 'for xinet.d script', f)
