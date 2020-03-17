@@ -1,0 +1,20 @@
+kmp-missing-requires="""
+Make sure you have extended '%kernel_module_package' by
+'-p %_sourcedir/preamble', a file named 'preamble' as source and there
+specified 'Requires: kernel-%1'.
+"""
+kmp-excessive-enhances="""
+There is more than one flavor of kernel specified in Enhances field.
+"""
+kmp-missing-enhances="""
+Make sure you have extended '%kernel_module_package' by
+'-p %_sourcedir/preamble', a file named 'preamble' as source and there
+specified 'Enhances: kernel-%1'.
+"""
+kmp-excessive-supplements="""
+There is more than one flavor of kernel specified in Suplements field.
+"""
+kmp-missing-supplements="""
+Make sure your 'BuildRequires:' include 'kernel-syms' and 'modutils'
+for proper dependencies to be inserted in the resulting binary RPM.
+"""
