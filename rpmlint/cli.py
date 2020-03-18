@@ -39,7 +39,7 @@ def process_diff_args(argv):
                                      description='Shows basic differences between two rpm packages')
     parser.add_argument('old_package', metavar='RPM_ORIG', type=Path, help='the old package')
     parser.add_argument('new_package', metavar='RPM_NEW', type=Path, help='the new package')
-    parser.add_argument('-v', '--version', action='version', version=__version__, help='show package version and exit')
+    parser.add_argument('-V', '--version', action='version', version=__version__, help='show package version and exit')
     parser.add_argument('-i', '--ignore', nargs='+', default=None, choices=['S', 'M', '5', 'D', 'N', 'L', 'V', 'U', 'G', 'F', 'T'],
                         help="""file property to ignore when calculating differences.
                                 Valid values are: S (size), M (mode), 5 (checksum), D (device),
@@ -80,11 +80,11 @@ def process_lint_args(argv):
     parser = argparse.ArgumentParser(prog='rpmlint',
                                      description='Check for common problems in rpm packages')
     parser.add_argument('rpmfile', nargs='*', type=Path, help='files to be validated by rpmlint')
-    parser.add_argument('-v', '--version', action='version', version=__version__, help='show package version and exit')
+    parser.add_argument('-V', '--version', action='version', version=__version__, help='show package version and exit')
     parser.add_argument('-c', '--config', type=Path, help='load up additional configuration data from specified path')
     parser.add_argument('-e', '--explain', nargs='+', default='', help='provide detailed explanation for one specific message id')
     parser.add_argument('-r', '--rpmlintrc', type=Path, help='load up specified rpmlintrc file')
-    parser.add_argument('-V', '--verbose', action='store_true', help='provide detailed explanations where available')
+    parser.add_argument('-v', '--verbose', action='store_true', help='provide detailed explanations where available')
     parser.add_argument('-p', '--print-config', action='store_true', help='print the settings that are in effect when using the rpmlint')
     parser.add_argument('-i', '--installed', nargs='+', default='', help='installed packages to be validated by rpmlint')
     lint_modes_parser = parser.add_mutually_exclusive_group()
