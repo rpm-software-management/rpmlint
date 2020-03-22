@@ -26,6 +26,9 @@ class TmpFilesCheck(AbstractCheck):
                                      fname)
                 continue
 
+            if pkgfile.is_ghost:
+                continue
+
             self._check_pre_tmpfile(fname, pkg)
             self._check_post_tmpfile(fname, pkg)
             self._check_tmpfile_in_filelist(pkgfile, pkg)
