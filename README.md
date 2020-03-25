@@ -96,7 +96,7 @@ As you can see it is not so hard and with each added test we get better
 coverage on what is really expected from rpmlint and avoid naughty regressions
 in the long run.
 
-Preferable approach for binary pacakges is to create artifical testcase (to keep binaries small and trivial).
+Preferable approach for binary packages is to create artificial testcase (to keep binaries small and trivial).
 We are currently using OBS to produce binaries:
   https://build.opensuse.org/project/show/devel:openSUSE:Factory:rpmlint:tests
 For a sample package see:
