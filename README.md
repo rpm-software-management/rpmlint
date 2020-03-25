@@ -53,7 +53,7 @@ I.e. if you want to test on the latest openSUSE you can test using the following
 
 Another option is to run the tests on your system directly. If you
 have all the required modules as listed on the Install section above.
-You will also need `pytest` and `pytest-cov` and `pytest-flake8`.
+You will also need `pytest`,`pytest-cov`, `pytest-xdist`, and `pytest-flake8`.
 
 If all the dependencies are present you can just execute tests using:
 
