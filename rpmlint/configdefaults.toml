@@ -24,6 +24,7 @@ Checks = [
     "SpecCheck",
     "TagsCheck",
     "ZipCheck",
+    "ZyppSyntaxCheck",
 ]
 # Various output filters, list of regexp strings eg. "E: .* no-signature"
 Filters = []

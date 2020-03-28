@@ -42,6 +42,7 @@ basic_tests = [
     'SpecCheck',
     'TagsCheck',
     'ZipCheck',
+    'ZyppSyntaxCheck',
 ]
 
 
