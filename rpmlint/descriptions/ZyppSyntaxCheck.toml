@@ -1,0 +1,11 @@
+suse-zypp-packageand="""
+The 'packageand(package1:package2)' syntax is obsolete, please use boolean
+dependencies like:
+'Supplements: (package1 and package2)'
+"""
+suse-zypp-otherproviders="""
+The 'otherproviders(symbol)' syntax is obsolete, it is not needed and you
+can use the 'symbol' directly:
+'Conflicts: symbol'
+"""
+
