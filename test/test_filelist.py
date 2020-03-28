@@ -21,7 +21,7 @@ def test_filelist(tmpdir, package, filelistcheck):
     assert 'E: filelist-forbidden-sysconfig /etc/rc.config.d/foo.config' in out
     assert 'E: filelist-forbidden /var/adm/setup' in out
     assert 'E: filelist-forbidden-perl-dir /usr/lib/perl5/site_perl/x.pl' in out
-    assert 'E: filelist-forbidden-python-test-dir /usr/lib/python/site-packages/tests' in out
+    assert 'E: filelist-forbidden-python /usr/lib/python/site-packages/tests' in out
     assert 'E: filelist-forbidden-backup-file /foo~' in out
     assert 'E: filelist-forbidden-devel-in-lib /lib64/x.a' in out
     assert 'E: filelist-forbidden-devel-in-lib /lib64/y.so' in out

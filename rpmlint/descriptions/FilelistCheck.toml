@@ -5,8 +5,8 @@ Please use %{_fillupdir}/sysconfig.<pkgname>
 and call %fillup_and_insserv for new sysconfig files."""
 filelist-forbidden-perl-dir="""
 Perl files installed a non-vendor installed path."""
-filelist-forbidden-python-test-dir="""
-Python package installs testsuite to the sitelib,
+filelist-forbidden-python="""
+Python package installs content directly to the sitelib,
 which can cause file list conflict."""
 filelist-forbidden-backup-file="""
 Backup files (~, .swp or .bak) are not allowed."""

@@ -83,10 +83,14 @@ GoodPrefixes = [
         "/usr/lib/perl5/site_perl/*",
     ]
 [[Check]]
-    Message = "filelist-forbidden-python-test-dir"
+    Message = "filelist-forbidden-python"
     Bad = [
         "/usr/lib*/python*/site-packages/test",
         "/usr/lib*/python*/site-packages/tests",
+	"/usr/lib*/python*/site-packages/doc",
+	"/usr/lib*/python*/site-packages/docs",
+	"/usr/lib*/python*/site-packages/src",
+	"/usr/lib*/python*/site-packages/__init__.py",
     ]
 [[Check]]
     Message = "filelist-forbidden-backup-file"
