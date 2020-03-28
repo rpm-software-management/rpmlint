@@ -17,6 +17,7 @@ GoodPrefixes = [
     "/usr/include/",
     "/usr/lib/",
     "/usr/lib64/",
+    "/usr/libexec/",
     "/usr/sbin/",
     "/usr/share/",
     # actually only linux is allowed by fhs
