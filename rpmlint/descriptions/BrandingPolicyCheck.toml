@@ -1,0 +1,36 @@
+branding-conflicts-missing="""
+Branding packages should conflict with other flavors of the branding package by using:
+'Conflicts: pkg-branding = brandingversion'
+and not directly by listing all the alternative brandings in it.
+"""
+branding-requires-specific-flavor="""
+Packages must not require a specific branding or theme package to allow for different themes.
+"""
+branding-provides-missing="""
+Please add a provides entry similar to:
+'Provides: %name-branding = %version'
+"""
+branding-provides-unversioned="""
+Please make sure that your provides entry reads like:
+'Provides: %name-branding = %version'
+"""
+branding-supplements-missing="""
+Branding packages should provide a supplement in the form:
+'Supplements: (basepackage and branding-<flavor>)'
+"""
+branding-requires-unversioned="""
+Please make sure that your requires entry is similar to:
+'Requires: %name-branding = <versionnumber>'
+"""
+branding-excessive-recommends="""
+Branding package should not have additional Recommends,
+please verify if they really make sense.
+"""
+branding-excessive-suggests="""
+Branding package should not have additional Suggests,
+please verify if they really make sense.
+"""
+branding-excessive-enhances="""
+Branding package should not have additional Enhances,
+please verify if they really make sense.
+"""
