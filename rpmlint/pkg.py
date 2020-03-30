@@ -1,4 +1,5 @@
 import bz2
+from collections import namedtuple
 import gzip
 import lzma
 import os
@@ -21,6 +22,9 @@ except ImportError:
 import rpm
 from rpmlint.helpers import byte_to_string, print_warning
 from rpmlint.pkgfile import PkgFile
+
+
+DepInfo = namedtuple('DepInfo', ('name', 'flags', 'version'))
 
 # 64: RPMSENSE_PREREQ is 0 with rpm 4.4..4.7, we want 64 here in order
 # to do the right thing with those versions and packages built with other
@@ -624,7 +628,7 @@ class Pkg(AbstractPkg):
                 if prereq is not None and flags[loop] & PREREQ_FLAG:
                     prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
                 else:
-                    xs.append((name, flags[loop], evr))
+                    xs.append(DepInfo(name, flags[loop], evr))
         return xs, prereq
 
     def _gatherDepInfo(self):
