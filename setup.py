@@ -1,6 +1,16 @@
-from rpmlint.version import __version__
+from pathlib import Path
+from sys import exit
+
 from setuptools import setup
 
+
+init_path = Path(__file__).parent / 'rpmlint' / '__init__.py'
+version = {}
+
+if init_path.exists() and init_path.is_file():
+    exec(init_path.read_bytes(), version)
+else:
+    exit("Can't read package version")
 
 setup(
     name='rpmlint',
@@ -10,7 +20,7 @@ setup(
     url='https://github.com/rpm-software-management/rpmlint',
     download_url='https://github.com/rpm-software-management/rpmlint',
 
-    version=__version__,
+    version=version['__version__'],
 
     author='Frédéric Lepied',
     author_email='flepied@mandriva.com',
@@ -31,6 +41,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Utilities',
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: System :: Archiving :: Packaging',

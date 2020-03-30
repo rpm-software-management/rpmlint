@@ -2,10 +2,10 @@ import argparse
 from pathlib import Path
 import sys
 
+from rpmlint import __version__
 from rpmlint.helpers import print_warning
 from rpmlint.lint import Lint
 from rpmlint.rpmdiff import Rpmdiff
-from rpmlint.version import __version__
 
 
 __copyright__ = """
