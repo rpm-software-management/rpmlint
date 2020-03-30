@@ -1,6 +1,9 @@
 try:
-    from importlib.metadata import version as implib_metadata_version
+    from importlib.metadata import version, PackageNotFoundError
 except ImportError:
-    from importlib_metadata import version as implib_metadata_version
+    from importlib_metadata import version, PackageNotFoundError
 
-__version__ = implib_metadata_version('rpmlint')
+try:
+    __version__ = version('rpmlint')
+except PackageNotFoundError:
+    __version__ = '0.0.0'
