@@ -30,6 +30,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Utilities',
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: System :: Archiving :: Packaging',
