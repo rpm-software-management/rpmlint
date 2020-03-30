@@ -10,6 +10,7 @@ RUN zypper -n install \
         python3-pyenchant \
         python3-rpm \
         python3-base \
+        python3-importlib-metadata \
         python3-setuptools \
         python3-pybeam \
         python3-pytest \

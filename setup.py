@@ -1,4 +1,3 @@
-from rpmlint.version import __version__
 from setuptools import setup
 
 
@@ -10,7 +9,7 @@ setup(
     url='https://github.com/rpm-software-management/rpmlint',
     download_url='https://github.com/rpm-software-management/rpmlint',
 
-    version=__version__,
+    version='2.0.0',
 
     author='Frédéric Lepied',
     author_email='flepied@mandriva.com',
@@ -42,6 +41,7 @@ setup(
         'pyxdg',
         'rpm',
         'toml',
+        'importlib-metadata;python_version<"3.8"',
     ],
     tests_require=[
         'pytest',
