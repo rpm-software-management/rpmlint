@@ -21,6 +21,7 @@ RUN dnf --nogpgcheck -y install \
         glibc \
         hunspell-en \
         hunspell-cs \
+        python3-importlib-metadata \
         python3-setuptools \
         python3-enchant \
         python3-magic \
