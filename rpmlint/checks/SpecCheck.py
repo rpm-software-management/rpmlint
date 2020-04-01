@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import readlines
+from rpmlint.helpers import ENGLISH_ENVIROMENT, readlines
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -563,7 +563,7 @@ class SpecCheck(AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
 
         outcmd = subprocess.run(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file), stdout=subprocess.PIPE)
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file), stdout=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         text = outcmd.stdout.decode()
         if text.endswith('\n'):
             text = text[:-1]

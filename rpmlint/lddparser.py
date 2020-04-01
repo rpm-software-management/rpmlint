@@ -1,6 +1,8 @@
 import re
 import subprocess
 
+from rpmlint.helpers import ENGLISH_ENVIROMENT
+
 
 class LddParser:
     """
@@ -47,7 +49,7 @@ class LddParser:
 
     def parse_dependencies(self):
         r = subprocess.run(['ldd', '-u', self.pkgfile_path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         if r.returncode == 0:
             return
 
@@ -65,7 +67,7 @@ class LddParser:
 
     def parse_undefined_symbols(self):
         r = subprocess.run(['ldd', '-r', self.pkgfile_path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         # here ldd should always return 0
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
@@ -82,7 +84,7 @@ class LddParser:
         # run c++filt demangler for all collected symbols
         if self.undefined_symbols:
             r = subprocess.run(['c++filt'] + self.undefined_symbols, encoding='utf8',
-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
             if r.returncode != 0:
                 self.parsing_failed_reason = r.stderr
             else:
