@@ -1,0 +1,5 @@
+file-parent-ownership-mismatch="""
+A file or directory is stored in a directory owned by another unprivileged user.
+This is a security issue since the owner of the parent directory can replace this
+file/directory with a different one.
+"""
