@@ -2,6 +2,7 @@ import stat
 import subprocess
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
+from rpmlint.helpers import ENGLISH_ENVIROMENT
 
 
 class BashismsCheck(AbstractFilesCheck):
@@ -28,14 +29,14 @@ class BashismsCheck(AbstractFilesCheck):
         potential bash issues.
         """
         try:
-            r = subprocess.run(['dash', '-n', filepath])
+            r = subprocess.run(['dash', '-n', filepath], env=ENGLISH_ENVIROMENT)
             if r.returncode == 2:
                 self.output.add_info('W', pkg, 'bin-sh-syntax-error', filename)
         except (FileNotFoundError, UnicodeDecodeError):
             pass
 
         try:
-            r = subprocess.run(['checkbashisms', filepath])
+            r = subprocess.run(['checkbashisms', filepath], env=ENGLISH_ENVIROMENT)
             if r.returncode == 1:
                 self.output.add_info('W', pkg, 'potential-bashisms', filename)
         except (FileNotFoundError, UnicodeDecodeError):

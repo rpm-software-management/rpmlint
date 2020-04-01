@@ -20,7 +20,7 @@ try:
 except ImportError:
     _magic = None
 import rpm
-from rpmlint.helpers import byte_to_string, print_warning
+from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
 from rpmlint.pkgfile import PkgFile
 
 
@@ -471,12 +471,12 @@ class Pkg(AbstractPkg):
             command_str = \
                 'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
                 {'f': quote(str(self.filename)), 'd': quote(dirname)}
-            subprocess.run(command_str, shell=True)
+            subprocess.run(command_str, shell=True, env=ENGLISH_ENVIROMENT)
             self.extracted = True
         return dirname
 
     def checkSignature(self):
-        ret = subprocess.run(('rpm', '-K', self.filename), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        ret = subprocess.run(('rpm', '-K', self.filename), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)
         text = ret.stdout.decode()
         if text.endswith('\n'):
             text = text[:-1]

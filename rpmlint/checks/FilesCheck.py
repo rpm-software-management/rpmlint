@@ -17,7 +17,7 @@ import subprocess
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string
+from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT
 from rpmlint.pkg import catcmd, is_utf8, is_utf8_bytestr
 
 # must be kept in sync with the filesystem package
@@ -850,7 +850,7 @@ class FilesCheck(AbstractCheck):
                             (catcmd(f), quote(pkgfile.path),
                              quote(self.man_warn_category), os.devnull),
                             shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            env=dict(os.environ, LC_ALL='en_US.UTF-8'))
+                            env=ENGLISH_ENVIROMENT)
 
                         for line in command.stdout.decode().split('\n'):
                             res = man_warn_regex.search(line)

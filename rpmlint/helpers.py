@@ -1,9 +1,13 @@
 # File containing various helper functions used across rpmlint
 
+import os
 from shutil import get_terminal_size
 import sys
 
 from rpmlint.color import Color
+
+
+ENGLISH_ENVIROMENT = dict(os.environ, LC_ALL='en_US')
 
 
 def string_center(message, filler=' '):

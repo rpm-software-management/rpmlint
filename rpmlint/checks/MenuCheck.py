@@ -12,6 +12,7 @@ import subprocess
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import ENGLISH_ENVIROMENT
 
 
 menu_file_regex = re.compile(r'^/usr/lib/menu/([^/]+)$')
@@ -95,7 +96,7 @@ class MenuCheck(AbstractCheck):
             directory = pkg.dirName()
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout.decode()
+                text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT).stdout.decode()
                 if text.endswith('\n'):
                     text = text[:-1]
 
