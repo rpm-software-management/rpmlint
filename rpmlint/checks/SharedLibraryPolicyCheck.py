@@ -23,129 +23,6 @@ from Filter import printWarning
 import Pkg
 
 
-_policy_legacy_exceptions = (
-    "libacl1",
-    "libaio1",
-    "libalut0",
-    "libapr-1-0",
-    "libaprutil-1-0",
-    "libartskde1",
-    "libattr1",
-    "libcdaudio1",
-    "libcdk4",
-    "libcheck0",
-    "libchewing3",
-    "libchm0",
-    "libclucene0",
-    "libdar4",
-    "libdbh-4_5-4",
-    "libdbus-qt-1-1",
-    "libdm0",
-    "libdns_sd1",
-    "libefence0",
-    "libEMF1",
-    "libevolutionglue",
-    "libf2c0",
-    "libffi4",
-    "libflaim5_2",
-    "libfontenc1",
-    "libfreeradius-client2",
-    "libgcc_s1",
-    "libgcc_s4",  # only for hppa
-    "libgconfmm-2_6-1",
-    "libgfortran3",
-    "libgif4",
-    "libgimpprint1",
-    "libgladesharpglue-2",
-    "libglibsharpglue-2",
-    "libgltt0",
-    "libglut3",
-    "libGLw1",
-    "libgmcop1",
-    "libgnet-2_0-0",
-    "libgnomecanvasmm-2_6-1",
-    "libgnomecups-1_0-1",
-    "libgnomemm-2_6-1",
-    "libgnomeprintui-2-2-0",
-    "libgnomesharpglue-2",
-    "libgnomeuimm-2_6-1",
-    "libgomp1",
-    "libgsfglue",
-    "libgsf-gnome-1-114",
-    "libgtksourceview-1_0-0",
-    "libgtkspell0",
-    "libhangul0",
-    "libICE6",
-    "libid3-3_8-3",
-    "libid3tag0",
-    "libidn11",
-    "libiec61883-0",
-    "libieee1284-3",
-    "libilbc0",
-    "libind_helper0",
-    "libiterm1",
-    "libjackasyn0",
-    "libkakasi2",
-    "libkeyutils1",
-    "libksba8",
-    "liblo0",
-    "libmal0",
-    "libmcrypt4",
-    "libmdbodbc0",
-    "libmeanwhile1",
-    "libmhash2",
-    "libmikmod2",
-    "libmng1",
-    "libnet6-1_3-0",
-    "libnl1",
-    "libnscd1",
-    "libobjc3",
-    "libodbcinstQ1",
-    "liboil-0_3-0",
-    "liboop4",
-    "libopenal0",
-    "libopenal1",
-    "libpgeasy3",
-    "libportaudio2",
-    "libqnotify0",
-    "libQt3Support4",
-    "libqtc1",
-    "libqtsharp0",
-    "libQtSql4",
-    "libquadmath0",
-    "librdf0",
-    "librsync1",
-    "libsamplerate0",
-    "libsecprog0",
-    "libsexy2",
-    "libsigc-1_2-5",
-    "libSM6",
-    "libsndfile1",
-    "libstdc++6",
-    "libstroke0",
-    "libthai0",
-    "libutempter0",
-    "libvisual-0_4-0",
-    "libXau6",
-    "libxclass0_9_2",
-    "libXdmcp6",
-    "libXext6",
-    "libxfce4util4",
-    "libxfcegui4-4",
-    "libXfixes3",
-    "libxflaim3_2",
-    "libXiterm1",
-    "libxkbfile1",
-    "libxml2-2",
-    "libXp6",
-    "libXprintUtil1",
-    "libXrender1",
-    "libXt6",
-    "libXv1",
-    "libz1",
-    "libzio0"
-)
-
 _essential_dependencies = (
     "ld-linux.so.2",
     "libacl.so.1",
@@ -307,8 +184,6 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
         self.strongly_versioned_re = re.compile(r'-[\d\.]+\.so$')
 
     def check(self, pkg):
-        global _policy_legacy_exceptions
-
         if pkg.isSource():
             return
 
@@ -388,10 +263,7 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
                 libname = libname_from_soname(soname)
                 if libname.startswith('lib') and pkg.name != libname and \
                         pkg.name != libname + "-mini":
-                    if libname in _policy_legacy_exceptions:
-                        printWarning(pkg, 'shlib-legacy-policy-name-error', libname)
-                    else:
-                        printError(pkg, 'shlib-policy-name-error', libname)
+                    printError(pkg, 'shlib-policy-name-error', libname)
 
             elif not pkg.name[-1:].isdigit():
                 printError(pkg, 'shlib-policy-missing-suffix')
@@ -400,10 +272,7 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
             return
 
         if not libs:
-            if pkg.name in _policy_legacy_exceptions:
-                printWarning(pkg, 'shlib-legacy-policy-missing-lib', pkg.name)
-            else:
-                printError(pkg, 'shlib-policy-missing-lib')
+            printError(pkg, 'shlib-policy-missing-lib')
 
         # Verify no non-lib stuff is in the package
         dirs = set()
