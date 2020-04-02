@@ -1,0 +1,22 @@
+shlib-policy-excessive-dependency="""
+Your package starts with 'lib' as part of its name, but also contains binaries
+that have more dependencies than those that already required by the libraries.
+Those binaries should probably not be part of the library package, but split into
+a seperate one to reduce the additional dependencies for other users of this library.
+"""
+shlib-policy-missing-lib="""
+Your package name looks its based on soname, but does not provide any libraries.
+"""
+shlib-fixed-dependency="""
+Your shared library package requires a fixed version of another package. The
+intention of the Shared Library Policy is to allow parallel installation of
+multiple versions of the same shared library, hard dependencies likely make that
+impossible. Please remove this dependency and instead move it to the runtime uses
+of your library.
+"""
+shlib-unversioned-lib="""
+Your package matches the Shared Library Policy Naming Scheme but contains an
+unversioned library. Therefore it is very unlikely that your package can be installed
+in parallel to another version of this library package. Consider moving unversioned
+parts into another package.
+"""

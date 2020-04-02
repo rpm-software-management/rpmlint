@@ -302,7 +302,7 @@ class BinariesCheck(AbstractCheck):
 
         1) Print 'no-soname' warning it the library has no soname present.
         2) Print 'invalid-soname' error if the soname is not valid.
-        3) Print 'incoherent-version-in-name' error when the library major
+        3) Print 'shlib-policy-name-error' error when the library major
            version is not present in the package name.
         4) Print 'shlib-with-non-pic-code' error if the library contains
            object code that was compiled without -fPIC.
@@ -325,7 +325,7 @@ class BinariesCheck(AbstractCheck):
                 if res:
                     soversion = res.group(1) or res.group(2)
                     if soversion and soversion not in pkg.name:
-                        self.output.add_info('E', pkg, 'incoherent-version-in-name', soversion)
+                        self.output.add_info('E', pkg, 'shlib-policy-name-error', soversion)
 
         # check if the object code in the library is compiled with PIC
         if self.readelf_parser.dynamic_section_info['TEXTREL']:
