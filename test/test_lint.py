@@ -35,6 +35,7 @@ basic_tests = [
     'LogrotateCheck',
     'MenuCheck',
     'MenuXDGCheck',
+    'MixedOwnershipCheck',
     'PkgConfigCheck',
     'PostCheck',
     'SignatureCheck',
