@@ -31,9 +31,9 @@ def test_tmpfiles2(tmpdir, package, tmpfilescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
 
-    assert 'W: pre-with-tmpfile-creation ' in out
-    assert 'W: post-without-tmpfile-creation ' not in out
-    assert 'W: tmpfile-not-in-filelist' not in out
+    assert 'W: pre-with-tmpfile-creation /usr/lib/tmpfiles.d/systemd-tmpfiles.conf' in out
+    assert 'W: post-without-tmpfile-creation' in out
+    assert 'W: tmpfile-not-in-filelist /run/my_new_directory' in out
     assert 'W: tmpfile-not-regular-file' not in out
 
 
@@ -43,7 +43,7 @@ def test_tmpfiles_correct(tmpdir, package, tmpfilescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
 
-    assert 'W: pre-with-tmpfile-creation ' not in out
-    assert 'W: post-without-tmpfile-creation ' not in out
+    assert 'W: pre-with-tmpfile-creation' not in out
+    assert 'W: post-without-tmpfile-creation' not in out
     assert 'W: tmpfile-not-regular-file' not in out
     assert 'W: tmpfile-not-in-filelist' not in out
