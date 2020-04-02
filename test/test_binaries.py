@@ -214,14 +214,14 @@ def test_shared_library1(tmpdir, package, binariescheck):
     assert 'W: no-soname' not in out
 
 
-# incoherent-version-in-name test package
+# shlib-policy-name-error test package
 @pytest.mark.parametrize('package', ['binary/libtest2'])
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_shared_library2(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: incoherent-version-in-name' in out
+    assert 'E: shlib-policy-name-error' in out
     # it doesn't call /sbin/ldconfig
     assert 'E: no-ldconfig-symlink' in out
     # no ldconfig is not invalid
