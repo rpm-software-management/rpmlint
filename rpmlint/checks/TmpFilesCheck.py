@@ -67,9 +67,14 @@ class TmpFilesCheck(AbstractCheck):
 
     def _check_tmpfile_in_filelist(self, pkgfile, pkg):
         """
-        Check if the tmpfile is listed in the filelist.
+        Check if the tmpfile is listed in the filelist and marked as %ghost.
 
-        Print a warning if it's not there.
+        Please note that a tmpfile that doesn't exist during the build can't
+        be in the filelist without %ghost directive otherwise rpm wouldn't
+        build it.
+
+        Print a 'tmpfile-not-in-filelist' warning while it's not in the
+        filelist (and therefore not marked as %ghost).
         """
         with open(pkgfile.path) as inputf:
             for line in inputf:
