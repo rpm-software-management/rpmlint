@@ -14,7 +14,6 @@ RUN zypper -n install \
         python3-setuptools \
         python3-pybeam \
         python3-pytest \
-        python3-pytest-runner \
         python3-pytest-cov \
         python3-pytest-flake8 \
         python3-pytest-xdist \
