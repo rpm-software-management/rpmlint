@@ -1,17 +1,35 @@
+# Distribution / packaging
+.eggs
+*.egg-info
+build/
+dist/
+
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Unit test / coverage reports
 .pytest_cache
+.tox/
+.coverage
+.coverage.*
+.cache
+
+# IDEs
+.idea
+
+# Patches and files
 *.orig
 *.rej
 .*.swp
-build/
-dist/
-.tox/
-.eggs
-*.egg-info
-.coverage
-.coverage.*
-*.pyo
-*.pyc
+
+# Others
 *.flog
 *.xz
 /__version__.py
-.cache
