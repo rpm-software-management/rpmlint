@@ -64,7 +64,7 @@ Another solution can be to include a version number in the file names
 themselves.
 """
 incoherent-version-in-name="""
-The package name should contain the major version of the library.
+The package contains shared library but is not named after its SONAME.
 """
 invalid-la-file="""
 This .la file contains a reference to /tmp or /home.
