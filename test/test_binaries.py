@@ -106,7 +106,7 @@ def test_only_non_binary_in_usr_lib(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'W: only-non-binary-in-usr-lib' in out
+    assert 'E: only-non-binary-in-usr-lib' in out
     # there is a file in /usr/lib64, so no error
     assert 'E: no-binary' not in out
     # we have no 'noarch' or wrapper here
@@ -114,9 +114,9 @@ def test_only_non_binary_in_usr_lib(tmpdir, package, binariescheck):
     assert 'E: arch-independent-package-contains-binary-or-object' not in out
     assert 'E: libtool-wrapper-in-package' not in out
 
-# In general we want to throw a warning if we have only non-binary files in
+# In general we want to throw an error if we have only non-binary files in
 # the /usr/lib. But we can allow non-binaries via UsrLibBinaryException config
-# option. These files will be considered binaries and no warning should be
+# option. These files will be considered binaries and no error should be
 # thrown.
 @pytest.mark.parametrize('package',
                          ['binary/only-non-binary-in-usr-lib_exception'])
@@ -126,7 +126,7 @@ def test_only_non_binary_in_usr_lib_exception(tmpdir, package, binariescheck):
     test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'W: only-non-binary-in-usr-lib' not in out
+    assert 'E: only-non-binary-in-usr-lib' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/no-binary'])

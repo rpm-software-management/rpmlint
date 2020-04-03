@@ -205,14 +205,14 @@ class BinariesCheck(AbstractCheck):
 
     def _check_only_non_binary_in_usrlib(self, pkg, has_usr_lib_file, has_binary_in_usr_lib):
         """
-        Check and print a warning if we have _only_ non-binary files in the
+        Check and print an error if we have _only_ non-binary files in the
         '/usr/lib'.
 
         Note: non-binaries allowed via UsrLibBinaryException config option
         are considered binaries.
         """
         if has_usr_lib_file and not has_binary_in_usr_lib:
-            self.output.add_info('W', pkg, 'only-non-binary-in-usr-lib')
+            self.output.add_info('E', pkg, 'only-non-binary-in-usr-lib')
 
     def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
         """
