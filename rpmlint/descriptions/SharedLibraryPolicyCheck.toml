@@ -6,9 +6,6 @@ shlib-policy-devel-file="""
 Your shared library package contains development files. Split them into
 a -devel subpackage.
 """
-shlib-policy-name-error="""
-Your package contains a single shared library but is not named after its SONAME.
-"""
 shlib-policy-nonversioned-dir="""
 Your shared library package contains non-versioned directories. Those will not
 allow to install multiple versions of the package in parallel.
