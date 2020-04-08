@@ -476,7 +476,9 @@ class Pkg(AbstractPkg):
         return dirname
 
     def checkSignature(self):
-        ret = subprocess.run(('rpm', '-K', self.filename), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)
+        ret = subprocess.run(('rpm', '-Kv', self.filename),
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                             env=ENGLISH_ENVIROMENT)
         text = ret.stdout.decode()
         if text.endswith('\n'):
             text = text[:-1]
