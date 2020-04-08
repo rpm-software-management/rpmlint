@@ -5,3 +5,6 @@ unknown-key="""
 The package was signed, but with an unknown key. See the rpm --import option
 for more information.
 """
+invalid-signature="""
+The package was signed, but the signature is corrupted.
+"""
