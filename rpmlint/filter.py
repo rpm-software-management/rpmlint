@@ -9,12 +9,19 @@ import toml
 
 class Filter(object):
     """
-    Class containing all printing/formatting/filtering of the rpmlint output.
+    Handle all printing/formatting/filtering of the rpmlint output.
+
     Nothing gets printed out until the end of all runs and all errors are
     sorted and formatted based on the rules specified by the user/config
     """
 
     def __init__(self, config):
+        """
+        Initialize options from configuration and load rpmlint descriptions.
+
+        Args:
+            config: Config object with parsed rpmlint configuration.
+        """
         # badness stuff
         self.badness_threshold = config.configuration['BadnessThreshold']
         self.badness = config.configuration['Scoring']
@@ -39,6 +46,16 @@ class Filter(object):
 
     @staticmethod
     def _load_descriptions():
+        """
+        Load rpmlint error/warning description texts from toml files.
+
+        Detailed description for every rpmlint error/warning is stored in
+        descriptions/<check_name>.toml file.
+
+        Returns:
+            A dictionary mapping error/warning/info names to their
+            descriptions.
+         """
         descriptions = {}
         descr_folder = Path(__file__).parent / 'descriptions'
         try:
@@ -48,12 +65,23 @@ class Filter(object):
             print_warning(f'(none): W: unable to parse description files: {terr}')
         return descriptions
 
-    def add_info(self, level, package, reason, *details):
+    def add_info(self, level, package, rpmlint_issue, *details):
         """
-        Add the issue to the store for later usage
+        Format rpmlint issue output and add it to self.results.
+
+        It creates formatted and colored output consisting of all information
+        about rpmlint issue given by the arguments.
+
+        Args:
+            level: A string with level of the rpmlint issue ('E' - Error,
+                   'W' - Warning, 'I' - Info
+            package: Pkg object representing processed package
+            rpmlint_issue: A string representing the name of the rpmlint
+                           issue
+            *details: Details of the rpmlint issue
         """
-        # we can be completely filtered for the reason
-        if self.filters_re and self.filters_re.search(reason):
+        # we can be completely filtered for the rpmlint_issue
+        if self.filters_re and self.filters_re.search(rpmlint_issue):
             return
 
         # filename in some cases can contain tmp paths and we don't need it
@@ -61,8 +89,8 @@ class Filter(object):
         filename = Path(package.name).name
         # we can get badness treshold
         badness = 0
-        if reason in self.badness:
-            badness = int(self.badness[reason])
+        if rpmlint_issue in self.badness:
+            badness = int(self.badness[rpmlint_issue])
             # If we have any badness configured then we 'stricten' and call the
             # result Error. Otherwise we downgrade the error to Warn.
             if badness > 0:
@@ -91,51 +119,65 @@ class Filter(object):
         for detail in details:
             if detail:
                 detail_output += f' {detail}'
-        result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {reason}{Color.Reset}'
+        result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {rpmlint_issue}{Color.Reset}'
         result += bad_output
         result += detail_output
         self.results.append(result)
 
     def print_results(self, results):
         """
-        Printout function to provide all the information about the specified
-        package as a return content.
+        Provide all the information about the specified package.
+
         If there is description to be provided it needs to be provided only
-        once per reason.
+        once per rpmlint_issue.
+
+        Args:
+            results: A list with rpmlint messages.
+
+        Returns:
+            A string with final rpmlint output.
         """
         output = ''
         results.sort(key=self.__diag_sortkey, reverse=True)
-        last_reason = ''
+        last_issue = ''
         for diag in results:
             if self.info:
-                reason = diag.split()[2]
-                # print out details for each reason we had
-                if reason != last_reason:
-                    if last_reason:
-                        output += self.get_description(last_reason)
-                    last_reason = reason
+                rpmlint_issue = diag.split()[2]
+                # print out details for each rpmlint_issue we had
+                if rpmlint_issue != last_issue:
+                    if last_issue:
+                        output += self.get_description(last_issue)
+                    last_issue = rpmlint_issue
             output += diag + '\n'
-        if self.info and last_reason:
-            output += self.get_description(last_reason)
+        if self.info and last_issue:
+            output += self.get_description(last_issue)
         # normalize the output as rpm 4.15 uses surrogates
         output = output.encode('utf-8', errors='surrogateescape').decode('utf-8', errors='replace')
         return output
 
-    def get_description(self, reason):
+    def get_description(self, rpmlint_issue):
         """
-        Return description for specified result.
-        Empty content does not cause an issue and we just return empty content
+        Get description for specified rpmlint issue (error, warning or info).
+
+        Args:
+            rpmlint_issue: A string with the rpmlint error/warning/info name
+
+        Returns:
+            A string with description for specified rpmlint issue. Empty
+            content does not cause an issue and we just return empty content
         """
         description = ''
-        if reason in self.error_details:
+        if rpmlint_issue in self.error_details:
             # we need 2 enters at the end for whitespace purposes
-            description = textwrap.fill(self.error_details[reason], 78) + '\n\n'
+            description = textwrap.fill(self.error_details[rpmlint_issue], 78) + '\n\n'
         return description
 
     def _populate_filter_regexp(self, filters):
         """
-        From configuration Filters generate regexp we will use later for results
-        filtering/ignoring.
+        Generate regexp representing all rpmlint filters.
+
+        From configuration "Filters" generate regexp that we will use later for
+        results filtering/ignoring.
         """
         if not filters:
             return
