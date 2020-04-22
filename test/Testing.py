@@ -9,7 +9,7 @@ def testpath():
     return Path(os.environ.get('TESTPATH', Path(__file__).parent))
 
 
-TEST_CONFIG = testpath() / 'configs/test.config'
+TEST_CONFIG = [testpath() / 'configs/test.config']
 CONFIG = Config(TEST_CONFIG)
 
 
