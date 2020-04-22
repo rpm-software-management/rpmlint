@@ -6,7 +6,7 @@ from rpmlint.filter import Filter
 
 from Testing import get_tested_package, testpath
 
-TEST_CONFIG_FILTERS = testpath() / 'configs/testfilters.config'
+TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 TEST_PACKAGE = Path('binary', 'ngircd')
 TEST_PACKAGE2 = Path('binary', 'tempfiled')

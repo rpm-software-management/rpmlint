@@ -24,7 +24,13 @@ class Config(object):
     config_defaults = Path(__file__).parent / 'configdefaults.toml'
 
     def __init__(self, config=None):
-        """Initialize basic options and load rpmlint configuration."""
+        """
+        Initialize basic options and load rpmlint configuration.
+
+        Args:
+            config: A list of paths of configuration file(s) passed by user in
+            command line.
+        """
         # ordered list of configuration files we loaded
         # useful when debugging where from we got all the config options
         self.conf_files = []
@@ -71,11 +77,12 @@ class Config(object):
 
         # As a last item load up the user configuration
         if config:
-            if config.exists():
-                # load this only if it really exist
-                self.conf_files.append(config)
-            else:
-                print_warning('(none): W: error locating user requested configuration: {}'.format(config))
+            for path in config:
+                if path.exists():
+                    # load this only if it really exist
+                    self.conf_files.append(path)
+                else:
+                    print_warning(f'(none): W: error locating user requested configuration: {path}')
 
     def load_config(self, config=None):
         """
@@ -84,11 +91,13 @@ class Config(object):
         It's stored in self.configuration with the content of already loaded
         options.
         """
-        if config and config not in self.conf_files:
+        if config:
             # just add the new config at the end of the list, someone injected
             # config file to us
-            if config.exists():
-                self.conf_files.append(config)
+            for path in config:
+                if path not in self.conf_files and path.exists():
+                    self.conf_files.append(path)
+
         try:
             cfg = toml.load(self.conf_files)
         except toml.decoder.TomlDecodeError as terr:

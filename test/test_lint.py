@@ -208,12 +208,14 @@ def test_header_information(capsys):
 
 
 @pytest.mark.parametrize('packages', [list(Path('test').glob('*/*.rpm'))])
+@pytest.mark.parametrize('configs', [list(Path('configs').glob('*/*.toml'))])
 @pytest.mark.no_cover
-def test_run_full_rpm(capsys, packages):
+def test_run_full_rpm(capsys, packages, configs):
     number_of_pkgs = len(packages)
     additional_options = {
         'rpmfile': packages,
     }
+    options_preset['config'] = configs
     options = {**options_preset, **additional_options}
     linter = Lint(options)
     linter.run()
@@ -229,12 +231,14 @@ def test_run_full_rpm(capsys, packages):
 
 
 @pytest.mark.parametrize('packages', [list(Path('test/spec').glob('*.spec'))])
+@pytest.mark.parametrize('configs', [list(Path('configs').glob('*/*.toml'))])
 @pytest.mark.no_cover
-def test_run_full_specs(capsys, packages):
+def test_run_full_specs(capsys, packages, configs):
     number_of_pkgs = len(packages)
     additional_options = {
         'rpmfile': packages,
     }
+    options_preset['config'] = configs
     options = {**options_preset, **additional_options}
     linter = Lint(options)
     linter.run()

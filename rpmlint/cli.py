@@ -81,7 +81,7 @@ def process_lint_args(argv):
                                      description='Check for common problems in rpm packages')
     parser.add_argument('rpmfile', nargs='*', type=Path, help='files to be validated by rpmlint')
     parser.add_argument('-V', '--version', action='version', version=__version__, help='show package version and exit')
-    parser.add_argument('-c', '--config', type=Path, help='load up additional configuration data from specified path')
+    parser.add_argument('-c', '--config', type=_validate_conf_location, help='load up additional configuration data from specified path (file or directory with *.toml files')
     parser.add_argument('-e', '--explain', nargs='+', default='', help='provide detailed explanation for one specific message id')
     parser.add_argument('-r', '--rpmlintrc', type=Path, help='load up specified rpmlintrc file')
     parser.add_argument('-v', '--verbose', '--info', action='store_true', help='provide detailed explanations where available')
@@ -97,11 +97,7 @@ def process_lint_args(argv):
         sys.exit(0)
 
     options = parser.parse_args(args=argv)
-    # make sure config exist
-    if options.config:
-        if not options.config.exists():
-            print_warning(f"User specified configuration '{options.config}' does not exist")
-            exit(2)
+
     # make sure rpmlintrc exists
     if options.rpmlintrc:
         if not options.rpmlintrc.exists():
@@ -135,11 +131,43 @@ def process_lint_args(argv):
     return options_dict
 
 
+def _validate_conf_location(string):
+    """
+    Help validate configuration location during argument parsing.
+
+    We accept either one configuration file or a directory (then it processes
+    all *.toml files in this directory). It exits the program if location
+    doesn't exist.
+
+    Args:
+        string: A string representing configuration path (file or directory).
+
+    Returns:
+        A list with individual paths for each configuration file found.
+    """
+    config_paths = []
+    path = Path(string)
+
+    # Exit if file or dir doesn't exist
+    if not path.exists():
+        print_warning(
+            f"File or dir with user specified configuration '{string}' does not exist")
+        exit(2)
+
+    if path.is_dir():
+        config_paths.extend(path.glob('*.toml'))
+    elif path.is_file():
+        config_paths.append(path)
+
+    return config_paths
+
+
 def lint():
     """
     Main wrapper for lint command processing
     """
     options = process_lint_args(sys.argv[1:])
+
     lint = Lint(options)
     sys.exit(lint.run())
 
