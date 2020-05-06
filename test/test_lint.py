@@ -38,6 +38,7 @@ basic_tests = [
     'MixedOwnershipCheck',
     'PkgConfigCheck',
     'PostCheck',
+    'PythonCheck',
     'SignatureCheck',
     'SourceCheck',
     'SpecCheck',

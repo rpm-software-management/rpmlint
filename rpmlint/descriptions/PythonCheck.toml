@@ -1,0 +1,23 @@
+python-tests-in-package="""
+test/ or tests/ directory in package directory. Tests should not be included in %{python_sitelib}/<pkgname>."""
+python-doc-in-package="""
+doc/ or docs/ directory in package directory. Documentation should go into %{docdir}, not %{python_sitelib}/<pkgname>"""
+python-src-in-package="""
+src/ directory included in %{python_sitelib}/<pkgname>. This should be in a separate -src package.
+"""
+python-egg-info-distutils-style="""
+The package's egg-info is a distutils style file, rather than a setuptools
+style directory. Please convert to setuptools style.
+"""
+python-tests-in-site-packages="""
+test/ or tests/ directory in %{python_sitelib}. This should never happen since
+this is a global name space not owned by any particular package.
+"""
+python-doc-in-site-packages="""
+doc/ or docs directory installed to %{python_sitelib}. This should never happen
+since this is a global name space not owned by any particular package.
+"""
+python-src-in-site-packages="""
+src/ directory installed to %{python_sitelib}. This should never happen
+since this is a global name space not owned by any particular package.
+"""
