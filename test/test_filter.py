@@ -10,6 +10,7 @@ TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 TEST_PACKAGE = Path('binary', 'ngircd')
 TEST_PACKAGE2 = Path('binary', 'tempfiled')
+TEST_DESCRIPTIONS = [testpath() / 'configs/descriptions.config']
 
 
 def test_filters_regexp():
@@ -75,6 +76,38 @@ def test_description_from_toml(tmpdir):
     result = Filter(cfg)
     assert result.get_description('uncompressed-zip')
     assert result.get_description('uncompressed-zip') == 'The zip file is not compressed.\n\n'
+
+
+def test_description_from_conf(tmpdir):
+    """
+    Test that descriptions strings are updated from configuration file.
+
+    Load [Descriptions] from TEST_DESCRIPTIONS config file and test that the
+    rpmlint error details are updated to the new values.
+    """
+    cfg = Config(TEST_DESCRIPTIONS)
+    result = Filter(cfg)
+
+    assert result.get_description('no-binary', cfg)
+    assert result.get_description('no-binary', cfg) == \
+        'A new text for no-binary error.\n\n'
+
+    assert result.get_description('no-soname', cfg)
+    assert result.get_description('no-soname', cfg) == \
+        'A new text for no-soname error.\n\n'
+
+    # At this point, only basic descriptions from "descriptions" directory are
+    # loaded. "Dynamic" descriptions that are defined directly in the check
+    # file (e.g. see FHSCheck.py and its fhs_details_dict) are loaded later so
+    # we can't test it now. It's tested in test_lint.py.
+
+    assert not result.get_description('non-standard-dir-in-usr', cfg)
+    assert not result.get_description('non-standard-dir-in-usr', cfg) == \
+        'A new text for non-standard-dir-in-usr error.\n\n'
+
+    assert not result.get_description('non-standard-dir-in-var', cfg)
+    assert not result.get_description('non-standard-dir-in-var', cfg) == \
+        'A new text for non-standard-dir-in-var error.\n\n'
 
 
 def test_output(tmpdir):

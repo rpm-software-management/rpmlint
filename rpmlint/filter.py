@@ -124,7 +124,7 @@ class Filter(object):
         result += detail_output
         self.results.append(result)
 
-    def print_results(self, results):
+    def print_results(self, results, config=None):
         """
         Provide all the information about the specified package.
 
@@ -133,6 +133,8 @@ class Filter(object):
 
         Args:
             results: A list with rpmlint messages.
+            config: parsed configuration file that is used as a source for
+                    new description strings
 
         Returns:
             A string with final rpmlint output.
@@ -146,21 +148,25 @@ class Filter(object):
                 # print out details for each rpmlint_issue we had
                 if rpmlint_issue != last_issue:
                     if last_issue:
-                        output += self.get_description(last_issue)
+                        output += self.get_description(last_issue, config)
                     last_issue = rpmlint_issue
             output += diag + '\n'
         if self.info and last_issue:
-            output += self.get_description(last_issue)
+            output += self.get_description(last_issue, config)
         # normalize the output as rpm 4.15 uses surrogates
         output = output.encode('utf-8', errors='surrogateescape').decode('utf-8', errors='replace')
+
         return output
 
-    def get_description(self, rpmlint_issue):
+    def get_description(self, rpmlint_issue, config=None):
         """
         Get description for specified rpmlint issue (error, warning or info).
 
         Args:
             rpmlint_issue: A string with the rpmlint error/warning/info name
+            config: parsed configuration file that is used as a source for
+                    custom description strings ([Descriptions] table in toml
+                    syntax)
 
         Returns:
             A string with description for specified rpmlint issue. Empty
@@ -168,6 +174,11 @@ class Filter(object):
         """
         description = ''
         if rpmlint_issue in self.error_details:
+
+            # Update rpmlint error descriptions from configuration file
+            if config and config.configuration.get('Descriptions').get(rpmlint_issue):
+                self.error_details[rpmlint_issue] = config.configuration['Descriptions'][rpmlint_issue]
+
             # we need 2 enters at the end for whitespace purposes
             description = textwrap.fill(self.error_details[rpmlint_issue], 78) + '\n\n'
         return description
