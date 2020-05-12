@@ -46,7 +46,7 @@ class Lint(object):
             return retcode
         # just explain the error and abort too
         if self.options['explain']:
-            self.print_explanation(self.options['explain'])
+            self.print_explanation(self.options['explain'], self.config)
             return retcode
         # if there are installed arguments just load them up as extra
         # items to the rpmfile option
@@ -56,7 +56,7 @@ class Lint(object):
         # arguments that are supposed to be either rpm or spec files
         self.validate_files(self.options['rpmfile'])
         self._print_header()
-        print(self.output.print_results(self.output.results))
+        print(self.output.print_results(self.output.results, self.config))
         quit_color = Color.Bold
         if self.output.printed_messages['W'] > 0:
             quit_color = Color.Yellow
@@ -189,12 +189,12 @@ class Lint(object):
         """
         self.config.print_config()
 
-    def print_explanation(self, messages):
+    def print_explanation(self, messages, config):
         """
         Print out detailed explanation for the specified messages
         """
         for message in messages:
-            explanation = self.output.get_description(message)
+            explanation = self.output.get_description(message, config)
             if not explanation:
                 explanation = 'Unknown message, please report a bug if the description should be present.\n\n'
             print(f'{message}:\n{explanation}')

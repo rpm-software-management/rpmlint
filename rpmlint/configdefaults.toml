@@ -330,3 +330,8 @@ binaries = false
 # dangling symlink is shipped
 [DanglingSymlinkExceptions]
 
+# A table with key/value pairs representing new descriptions for rpmlint errors
+[Descriptions]
+# rpmlint-error-name = """
+# A new description for this rpmlint error
+# """"

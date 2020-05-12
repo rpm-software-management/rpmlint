@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from rpmlint.lint import Lint
 
-from Testing import TEST_CONFIG
+from Testing import TEST_CONFIG, testpath
 
 options_preset = {
     'config': TEST_CONFIG,
@@ -113,6 +113,81 @@ def test_explain_with_unknown(capsys):
     out, err = capsys.readouterr()
     assert 'This info page is not compressed' in out
     assert 'Unknown message' in out
+    assert not err
+
+
+def test_explain_no_binary_from_cfg(capsys):
+    """
+    Test that 'explain' option can read updated description from configuration.
+
+    Test 'no-binary' error that is defined in CheckBinaries.toml file by
+    default and then it's overridden to the custom values defined in
+    'descriptions.config' file.
+    """
+    additional_options = {
+        'config': [testpath() / 'configs/descriptions.config'],
+        'explain': ['no-binary']
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+
+    # the new string is present and the old one is not
+    assert 'A new text for no-binary error.' in out
+    assert 'The package should be of the noarch architecture' not in out
+    assert not err
+
+
+def test_explain_non_standard_dir_from_cfg(capsys):
+    """
+    Test that 'explain' option can read updated description from configuration.
+
+    Test 'non-standard-dir-in-usr' error that is special because the original
+    description is not defined in FHSCheck.toml but in FHSCheck.py. Then it's
+    supposed to be overridden to the custom values defined in
+    'descriptions.config' file.
+    """
+    additional_options = {
+        'config': [testpath() / 'configs/descriptions.config'],
+        'explain': ['non-standard-dir-in-usr']
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+
+    assert 'A new text for non-standard-dir-in-usr error.' in out
+    assert 'Your package is creating a non-standard subdirectory in /usr' not in out
+    assert not err
+
+
+@pytest.mark.parametrize('packages', [Path('test/binary/non-fhs-0-0.x86_64.rpm')])
+def test_descriptions_from_config(capsys, packages):
+    """
+    Test that rpmlint updates 'parametrized' descriptions from configuration.
+
+    We test that "parametrized" errors (non-standard-dir-in-usr
+    and non-standard-dir-in-var) were overridden by values from
+    'descriptions.config' file.
+    """
+    additional_options = {
+        'config': [testpath() / 'configs/descriptions.config'],
+        'rpmfile': [packages]
+    }
+    options_preset['verbose'] = True
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+
+    assert 'A new text for non-standard-dir-in-usr error.' in out
+    assert 'A new text for non-standard-dir-in-var error.' in out
+
+    assert 'Your package is creating a non-standard subdirectory in /usr' \
+           not in out
+    assert 'Your package is creating a non-standard subdirectory in /var' \
+           not in out
     assert not err
 
 
