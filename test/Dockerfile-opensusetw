@@ -16,7 +16,6 @@ RUN zypper -n install \
         python3-pytest-cov \
         python3-pytest-flake8 \
         python3-pytest-xdist \
-        python3-pytest \
         python3-flake8 \
         python3-flake8-builtins \
         python3-flake8-bugbear \
