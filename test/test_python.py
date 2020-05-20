@@ -35,15 +35,6 @@ def test_python_tests_in_package(tmpdir, package, pythoncheck):
     assert 'W: python-tests-in-package /usr/lib/python3.8/site-packages/python-mypackage/tests' in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-src-in-package'])
-def test_python_src_in_package(tmpdir, package, pythoncheck):
-    output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert 'W: python-src-in-package /usr/lib/python2.7/site-packages/python-mypackage/src' in out
-    assert 'W: python-src-in-package /usr/lib/python3.8/site-packages/python-mypackage/src' in out
-
-
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-egg-info-distutils-style'])
 def test_python_distutils_egg_info(tmpdir, package, pythoncheck):
     output, test = pythoncheck

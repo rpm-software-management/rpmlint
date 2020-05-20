@@ -5,8 +5,7 @@ from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 
 # Warning messages
 WARNS = {'tests': 'python-tests-in-package',
-         'doc': 'python-doc-in-package',
-         'src': 'python-src-in-package'}
+         'doc': 'python-doc-in-package'}
 
 # Error messages
 ERRS = {'egg-distutils': 'python-egg-info-distutils-style',
@@ -23,8 +22,7 @@ ERR_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/tests?$': ERRS['tests'],
 # Paths that shouldn't be in any packages, but might need to be under
 # sufficiently special circumstances.
 WARN_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/tests?$': WARNS['tests'],
-              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/docs?$': WARNS['doc'],
-              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/src$': WARNS['src']}
+              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/docs?$': WARNS['doc']}
 
 
 class PythonCheck(AbstractFilesCheck):
