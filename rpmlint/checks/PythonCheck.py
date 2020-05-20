@@ -15,14 +15,14 @@ ERRS = {'egg-distutils': 'python-egg-info-distutils-style',
 
 # Paths that shouldn't be in any packages, ever, because they clobber global
 # name space.
-ERR_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/tests?$': ERRS['tests'],
-             '/usr/lib[^/]*/python[^/]*/site-packages/docs?$': ERRS['doc'],
-             '/usr/lib[^/]*/python[^/]*/site-packages/src$': ERRS['src']}
+ERR_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/tests?$': 'tests',
+             '/usr/lib[^/]*/python[^/]*/site-packages/docs?$': 'doc',
+             '/usr/lib[^/]*/python[^/]*/site-packages/src$': 'src'}
 
 # Paths that shouldn't be in any packages, but might need to be under
 # sufficiently special circumstances.
-WARN_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/tests?$': WARNS['tests'],
-              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/docs?$': WARNS['doc']}
+WARN_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/tests?$': 'tests',
+              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/docs?$': 'doc'}
 
 
 class PythonCheck(AbstractFilesCheck):
@@ -37,15 +37,22 @@ class PythonCheck(AbstractFilesCheck):
 
         for path in WARN_PATHS:
             path_re = re.compile(path)
+            key = WARN_PATHS[path]
 
             if path_re.match(filename):
-                self.output.add_info('W', pkg, WARN_PATHS[path], filename)
+                if key == 'tests':
+                    # Ignore "-test" and "-tests" packages since these are
+                    # supposed to contain tests.
+                    if pkg.name.endswith('test') or pkg.name.endswith('tests'):
+                        continue
+                self.output.add_info('W', pkg, WARNS[key], filename)
 
         for path in ERR_PATHS:
             path_re = re.compile(path)
+            key = ERR_PATHS[path]
 
             if path_re.match(filename):
-                self.output.add_info('E', pkg, ERR_PATHS[path], filename)
+                self.output.add_info('E', pkg, ERRS[key], filename)
 
     def check_egginfo(self, pkg, filename):
         """
