@@ -124,9 +124,8 @@ class SpecCheck(AbstractCheck):
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
 
     def check_source(self, pkg):
+        """Find specfile in SRPM and run spec file related checks."""
         wrong_spec = False
-
-        # lookup spec file
         for fname, pkgfile in pkg.files.items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
@@ -136,15 +135,32 @@ class SpecCheck(AbstractCheck):
                     break
                 else:
                     wrong_spec = True
-        if not self._spec_file:
-            self.output.add_info('E', pkg, 'no-spec-file')
-        else:
-            if wrong_spec:
-                self.output.add_info('E', pkg, 'invalid-spec-name')
 
+        # method call
+        self._check_no_spec_file(pkg)
+        self._check_invalid_spec_name(pkg, wrong_spec)
+
+        if self._spec_file:
             # check content of spec file
             with Pkg.FakePkg(self._spec_file) as package:
                 self.check_spec(package)
+
+    def _check_no_spec_file(self, pkg):
+        """Check if no spec file is found in RPM meta data."""
+        if not self._spec_file:
+            self.output.add_info('E', pkg, 'no-spec-file')
+
+    def _check_invalid_spec_name(self, pkg, wrong_spec):
+        """Check if spec file has same name as the 'Name: ' tag."""
+        if wrong_spec and self._spec_file:
+            self.output.add_info('E', pkg, 'invalid-spec-name')
+
+    def _check_non_utf8_spec_file(self, pkg):
+        """Check if spec file has UTF-8 character encoding."""
+        if self._spec_file:
+            if not Pkg.is_utf8(self._spec_file):
+                self.output.add_info('E', pkg, 'non-utf8-spec-file',
+                                     self._spec_name or self._spec_file)
 
     def check_spec(self, pkg):
         self._spec_file = pkg.name
@@ -174,10 +190,8 @@ class SpecCheck(AbstractCheck):
         current_package = None
         package_noarch = {}
 
-        if self._spec_file:
-            if not Pkg.is_utf8(self._spec_file):
-                self.output.add_info('E', pkg, 'non-utf8-spec-file',
-                                     self._spec_name or self._spec_file)
+        # method call
+        self._check_non_utf8_spec_file(pkg)
 
         # gather info from spec lines
 
