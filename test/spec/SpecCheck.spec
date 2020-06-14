@@ -33,7 +33,6 @@ BuildArch:      noarch
 %description    noarch-sub
 Noarch subpackage test.
 
-
 %prep
 %setup
 %patch1
@@ -43,19 +42,15 @@ sed -e s/foo/bar/ %{PATCH5} | %{__patch} -p1
 %{__patch} -p2 < %{PATCH6}
 patch -i %{PATCH7}
 
-
 %build
 # %configure
 # %%%
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %files
 %defattr(-,root,root,-)
@@ -63,6 +58,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files noarch-sub
 %defattr(-,root,root,-)
-
 
 %changelog
