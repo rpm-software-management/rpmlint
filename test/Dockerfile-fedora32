@@ -1,4 +1,4 @@
-FROM fedora:31
+FROM fedora:32
 
 # --nogpgcheck: Ignore transient(?) package signature failures
 RUN dnf --nogpgcheck -y install \
@@ -21,7 +21,6 @@ RUN dnf --nogpgcheck -y install \
         glibc \
         hunspell-en \
         hunspell-cs \
-        python3-importlib-metadata \
         python3-setuptools \
         python3-enchant \
         python3-magic \
