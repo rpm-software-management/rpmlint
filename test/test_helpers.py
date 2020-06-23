@@ -39,5 +39,5 @@ def test_centering(capsys):
     message = 'Hello there'
     helpers.print_centered(message, '*')
     out, err = capsys.readouterr()
-    assert f'** Hello there **' in out
+    assert '** Hello there **' in out
     assert not err

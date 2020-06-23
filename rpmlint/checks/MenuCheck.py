@@ -128,8 +128,8 @@ class MenuCheck(AbstractCheck):
                                     '/usr/X11R6/bin/' + command_line[0] \
                                     in files
                                 if not found:
-                                    for l in launcher['binaries']:
-                                        if l in pkg.req_names:
+                                    for i in launcher['binaries']:
+                                        if i in pkg.req_names:
                                             found = True
                                             break
                                 if not found:

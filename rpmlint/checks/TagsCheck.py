@@ -333,7 +333,7 @@ class TagsCheck(AbstractCheck):
 
         def split_license(text):
             return (x.strip() for x in
-                    (l for l in license_regex.split(text) if l))
+                    (i for i in license_regex.split(text) if i))
 
         def split_license_exception(text):
             x, y = license_exception_regex.split(text)[1:3] or (text, '')
@@ -463,14 +463,14 @@ class TagsCheck(AbstractCheck):
             typos = self.spellchecker.spell_check(description, '%description -l {}', lang, pkgname, ignored_words)
             for typo in typos.items():
                 self.output.add_info('E', pkg, 'spelling-error', typo)
-        for l in description.splitlines():
-            if len(l) > self.max_line_len:
-                self.output.add_info('E', pkg, 'description-line-too-long', lang, l)
-            res = self.forbidden_words_regex.search(l)
+        for i in description.splitlines():
+            if len(i) > self.max_line_len:
+                self.output.add_info('E', pkg, 'description-line-too-long', lang, i)
+            res = self.forbidden_words_regex.search(i)
             if res and self.config.configuration['ForbiddenWords']:
                 self.output.add_info('W', pkg, 'description-use-invalid-word', lang,
                                      res.group(1))
-            res = tag_regex.search(l)
+            res = tag_regex.search(i)
             if res:
                 self.output.add_info('W', pkg, 'tag-in-description', lang, res.group(1))
 

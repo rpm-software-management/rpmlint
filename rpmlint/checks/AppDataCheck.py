@@ -11,7 +11,7 @@ class AppDataCheck(AbstractFilesCheck):
     https://www.freedesktop.org/software/appstream/docs/
     """
     # default command, split here so we can mock it later
-    cmd = f'appstream-util validate-relax --nonet '
+    cmd = 'appstream-util validate-relax --nonet '
 
     def __init__(self, config, output):
         super().__init__(config, output, r'/usr/share/appdata/.*\.(appdata|metainfo).xml$')
