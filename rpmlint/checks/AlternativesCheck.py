@@ -160,7 +160,7 @@ class AlternativesCheck(AbstractCheck):
         script.replace('"', '')
         script.replace("'", '')
         script.strip()
-        return [l for l in script.splitlines() if self.command in l]
+        return [i for i in script.splitlines() if self.command in i]
 
     def _check_requirements(self, pkg):
         """

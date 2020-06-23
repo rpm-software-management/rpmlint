@@ -115,7 +115,7 @@ class Lint(object):
         intro = string_center('rpmlint session starts', '=')
         print(f'{Color.Bold}{intro}{Color.Reset}')
         print(f'rpmlint: {__version__}')
-        print(f'configuration:')
+        print('configuration:')
         for config in self.config.conf_files:
             print(f'    {config}')
         if self.options['rpmlintrc']:

@@ -114,6 +114,7 @@ def test_only_non_binary_in_usr_lib(tmpdir, package, binariescheck):
     assert 'E: arch-independent-package-contains-binary-or-object' not in out
     assert 'E: libtool-wrapper-in-package' not in out
 
+
 # In general we want to throw a warning if we have only non-binary files in
 # the /usr/lib. But we can allow non-binaries via UsrLibBinaryException config
 # option. These files will be considered binaries and no warning should be
@@ -185,6 +186,7 @@ def test_non_position_independent(tmpdir, package, binariescheck):
     # It should throw just the error, not warning
     assert 'W: position-independent-executable-suggested' not in out
 
+
 # libtest package
 @pytest.mark.parametrize('package', ['binary/libtest'])
 def test_library(tmpdir, package, binariescheck):
@@ -196,6 +198,7 @@ def test_library(tmpdir, package, binariescheck):
     # there is no soname here so it can't be invalid
     assert 'E: invalid-soname' not in out
 
+
 # invalid-soname test package
 @pytest.mark.parametrize('package', ['binary/libtest1'])
 def test_shared_library1(tmpdir, package, binariescheck):
@@ -205,6 +208,7 @@ def test_shared_library1(tmpdir, package, binariescheck):
     assert 'E: invalid-soname' in out
     # there is an invalid soname here, so no "no-soname" error
     assert 'W: no-soname' not in out
+
 
 # incoherent-version-in-name test package
 @pytest.mark.parametrize('package', ['binary/libtest2'])
@@ -219,6 +223,7 @@ def test_shared_library2(tmpdir, package, binariescheck):
     assert 'E: invalid-ldconfig-symlink' not in out
     # the soname is set
     assert 'W: no-soname' not in out
+
 
 # invalid-ldconfig-symlink test package
 @pytest.mark.parametrize('package', ['binary/libtest3'])
