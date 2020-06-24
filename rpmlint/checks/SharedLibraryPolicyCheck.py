@@ -17,6 +17,8 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
      https://www.debian.org/doc/debian-policy/ch-sharedlibs.html
     """
     re_soname_strongly_versioned = re.compile(r'-[\d\.]+\.so$')
+    # the pkgname is based on soname if ending with number; special option is flavor build
+    re_soname_pkg = re.compile(r'^lib\S+(\d+(-(32|64)bit)?)$')
     re_so_files = re.compile(r'\S+.so((.(\d+))+)?$')
 
     def check(self, pkg):
@@ -37,6 +39,9 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
         # if we didn't find any library files then we
         # don't need to check anything
         if not libfiles:
+            # verify if name does not match the slpp and if we still don't have any lib then error out
+            if self.re_soname_pkg.match(pkg.name):
+                self.output.add_info('E', pkg, 'shlib-policy-missing-lib')
             return
 
         # the soname validation matching the name is done
@@ -85,8 +90,6 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
         if std_lib_package:
             for lib in libs.copy():
                 lib_dir = libs_to_dir[lib]
-                if lib_dir.startswith('/opt/kde3'):
-                    continue
                 for lib_part in lib_dir.split('/'):
                     if len(lib_part) == 0:
                         continue
@@ -100,12 +103,6 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
                 if (not (lib[-1].isdigit() or
                          self.strongly_versioned_re.search(lib))):
                     self.output.add_info('W', pkg, 'shlib-unversioned-lib', lib)
-
-        if (not pkg.name.startswith('lib')) or pkg.name.endswith('-lang'):
-            return
-
-        if not libs:
-            self.output.add_info('E', pkg, 'shlib-policy-missing-lib')
 
         # Verify no non-lib stuff is in the package
         dirs = set()
