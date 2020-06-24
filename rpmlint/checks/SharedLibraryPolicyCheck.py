@@ -74,9 +74,6 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
                         # to this lib
                         reqlibs.add(bi.soname)
 
-        std_dirs = dirs.intersection((
-            '/lib', '/lib64', '/usr/lib', '/usr/lib64'))
-
         # If this is a program package (all libs it provides are
         # required by itself), bail out
         if not pkg.name.startswith('lib') and len(libs.difference(reqlibs)) == 0:
