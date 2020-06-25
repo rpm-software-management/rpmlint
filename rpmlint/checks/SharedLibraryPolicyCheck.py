@@ -121,6 +121,16 @@ class LibraryPolicyCheck(AbstractCheck.AbstractCheck):
                 if '.so.' in dep and dep not in libs and dep not in libs_needed:
                     self.output.add_info('E', pkg, 'shlib-policy-excessive-dependency', dep)
 
+        # Check if the files/folders are unversioned in the library package.
+        # In general you can't co-install the soname packages if they all provide some datafiles
+        # or configuration files.
+        # When testing one of examples is libsemanage1:
+        #   /etc/selinux
+        #   /etc/selinux/semanage.conf
+        #   /usr/lib64/libsemanage.so.1
+        # The above would be fine if the semanage.conf would be update-alternatived, or suffixed
+        # but if someone introduces libsemanage2 they can't be installed both at once.
+
         # Check for non-versioned directories beyond sysdirs in package
         sysdirs = ('/lib', '/lib64', '/usr/lib', '/usr/lib64',
                    '/usr/share', '/usr/share/licenses',
