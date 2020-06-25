@@ -31,7 +31,7 @@ def polkit_actions_check(tmpdir):
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/polkit'])
+@pytest.mark.parametrize('package', ['binary/polkit-0'])
 def test_polkit_actions(tmpdir, package, polkit_actions_check):
     output, test = polkit_actions_check
     test.check(get_tested_package(package, tmpdir))

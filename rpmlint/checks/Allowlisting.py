@@ -166,7 +166,7 @@ class AuditEntry(object):
             dig_res = DigestVerificationResult(path, alg, digest, encountered)
             results.append(dig_res)
 
-        return (all([res.matches() for res in results]), results)
+        return all(res.matches() for res in results), results
 
     def _verifyBugNr(self):
         """Perform some sanity checks on the bug nr associated with this audit
@@ -343,7 +343,7 @@ class AbstractAllowlistCheck(AbstractCheck, metaclass=abc.ABCMeta):
 
         def is_restricted(f):
             return any(f.startswith(restricted) for restricted in self.restricted_paths)
-        return set(f for f in pkg.files.keys() if is_restricted(f))
+        return {f for f in pkg.files.keys() if is_restricted(f)}
 
     def check_binary(self, pkg):
         restricted_files = self.collect_restricted_files(pkg)
