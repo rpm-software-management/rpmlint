@@ -11,8 +11,9 @@ import stat
 import sys
 
 import rpm
-from ..pkg import FakePkg
+
 from .AbstractCheck import AbstractCheck
+from ..pkg import FakePkg
 
 _permissions_d_allowed = (
     'lprng',
@@ -77,7 +78,10 @@ class SUIDCheck(AbstractCheck):
                     # don't need special handling
                     if fname in self._paths_to('permissions'):
                         self.perms[fn]['static'] = True
+
+                    lastfn = fn
                 else:
+                    lastfn = None
                     print(f'{fname}: Malformatted line {lnr}: {" ".join(line)}...', file=sys.stderr)
 
     def check_binary(self, pkg):
@@ -124,8 +128,6 @@ class SUIDCheck(AbstractCheck):
 
                 need_verifyscript = True
 
-                m = 0
-                o = 'invalid'
                 if stat.S_ISDIR(mode):
                     if f in self.perms:
                         self.output.add_info('W', pkg, 'permissions-dir-without-slash', f)
