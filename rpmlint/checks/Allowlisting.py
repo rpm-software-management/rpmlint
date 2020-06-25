@@ -1,10 +1,10 @@
-# vim: sw=4 ts=4 sts=4 et :
 #############################################################################
 # Author        : Matthias Gerstner
 # Purpose       : reusable code for dealing with security allow lists
 #############################################################################
 
 import abc
+from dataclasses import make_dataclass
 import hashlib
 import json
 import os
@@ -15,36 +15,17 @@ import traceback
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
-class DigestVerificationResult(object):
+class DigestVerificationResult(make_dataclass('', ['path', 'algorithm', 'expected', 'encountered'])):
     """This type represents the result of a digest verification as returned
-    from AuditEntry.compareDigests()."""
-
-    def __init__(self, path, alg, expected, encountered):
-
-        self.m_path = path
-        self.m_alg = alg
-        self.m_expected = expected
-        self.m_encountered = encountered
-
-    def path(self):
-        return self.m_path
-
-    def algorithm(self):
-        return self.m_alg
+    from AuditEntry.compare_digests()."""
 
     def matches(self):
         """Returns a boolean whether the encountered digest matches the
         expected digest."""
-        return self.m_expected == self.m_encountered
-
-    def expected(self):
-        return self.m_expected
-
-    def encountered(self):
-        return self.m_encountered
+        return self.expected == self.encountered
 
 
-class AuditEntry(object):
+class AuditEntry:
     """This object represents a single audit entry as found in an allow entry like:
 
     "bsc#1234": {
@@ -58,48 +39,30 @@ class AuditEntry(object):
     """
 
     def __init__(self, bug):
+        self.bug = bug
+        self._verify_bug_nr()
+        self.comment = ''
+        self.digests = {}
 
-        self.m_bug = bug
-        self._verifyBugNr()
-        self.m_comment = ''
-        self.m_digests = {}
-
-    def bug(self):
-        return self.m_bug
-
-    def setComment(self, comment):
-        self.m_comment = comment
-
-    def comment(self):
-        return self.m_comment
-
-    def setDigests(self, digests):
+    def _set_digests(self, digests):
         for path, digest in digests.items():
-            self._verifyPath(path)
-            self._verifyDigestSyntax(digest)
+            self._verify_path(path)
+            self._verify_digest_syntax(digest)
 
-        self.m_digests = digests
+        self.digests = digests
 
-    def digests(self):
-        """Returns a dictionary specifying file paths and their allow listed
-        digests. The digests are suitable for the
-        Python hashlib module. They're of the form '<alg>:<hexdigest>'. As a
-        special case the digest entry can be 'skip:<none>' which indicates
-        that no digest verification should be performed and the file is
-        acceptable regardless of its contents."""
-        return self.m_digests
-
-    def isSkipDigest(self, digest):
+    @staticmethod
+    def is_skip_digest(digest):
         """Returns whether the given digest entry denotes the special 'skip
         digest' case which means not to check the file digest at all."""
         return digest == 'skip:<none>'
 
-    def coversAllFiles(self, file_paths):
+    def covers_all_files(self, file_paths):
         """Returns a boolean indicating whether all files from the set
         'file_paths' are covered by this audit."""
-        return file_paths.issubset(self.digests().keys())
+        return file_paths.issubset(self.digests.keys())
 
-    def compareDigests(self, pkg):
+    def compare_digests(self, pkg):
         """Compares the digests recorded in this AuditEntry against the actual
         files coming from the given rpmlint @pkg. Returns a tuple of
         (boolean, [DigestVerificationResult, ...]). The boolean indicates the
@@ -111,15 +74,15 @@ class AuditEntry(object):
         results = []
 
         # NOTE: syntax and algorithm validity of stored digests was already
-        # checked in setDigests() so we can skip the respective error handling
+        # checked in _set_digests() so we can skip the respective error handling
         # here.
 
         fileinfos = pkg.files
 
-        for path, digest in self.digests().items():
+        for path, digest in self.digests.items():
             alg, digest = digest.split(':', 1)
 
-            if self.isSkipDigest(f'{alg}:{digest}'):
+            if self.is_skip_digest(f'{alg}:{digest}'):
                 results.append(DigestVerificationResult(path, alg, digest, digest))
                 continue
 
@@ -129,7 +92,7 @@ class AuditEntry(object):
                 src_info = fileinfos.get(path, None)
 
                 if not src_info:
-                    raise Exception('expected file {} is not part of the RPM'.format(path))
+                    raise Exception(f'expected file {path} is not part of the RPM')
 
                 # resolve potential symbolic links
                 #
@@ -143,7 +106,7 @@ class AuditEntry(object):
                 dst_info = pkg.readlink(src_info)
 
                 if not dst_info:
-                    raise Exception('symlink {} -> {} is broken or pointing outside this RPM'.format(src_info.path, src_info.linkto))
+                    raise Exception(f'symlink {src_info.path} -> {src_info.linkto} is broken or pointing outside this RPM')
 
                 # NOTE: this path is dynamic, rpmlint unpacks the RPM
                 # contents into a temporary directory even when outside the
@@ -168,19 +131,19 @@ class AuditEntry(object):
 
         return all(res.matches() for res in results), results
 
-    def _verifyBugNr(self):
+    def _verify_bug_nr(self):
         """Perform some sanity checks on the bug nr associated with this audit
         entry."""
 
-        parts = self.m_bug.split('#')
+        parts = self.bug.split('#')
 
         if len(parts) != 2 or \
                 parts[0] not in ('bsc', 'boo', 'bnc') or \
                 not parts[1].isdigit():
-            raise Exception('Bad bug nr# "{}"'.format(self.m_bug))
+            raise Exception(f'Bad bug nr# "{self.bug}"')
 
-    def _verifyDigestSyntax(self, digest):
-        if self.isSkipDigest(digest):
+    def _verify_digest_syntax(self, digest):
+        if self.is_skip_digest(digest):
             return
 
         parts = digest.split(':')
@@ -194,13 +157,13 @@ class AuditEntry(object):
         except ValueError:
             raise Exception('Bad digest algorithm in ' + digest)
 
-    def _verifyPath(self, path):
+    def _verify_path(self, path):
         if not path.startswith(os.path.sep):
             raise Exception('Bad allow listing path ' + path)
 
 
 def allowlist_for_package(allowlist_path, pkg_name):
-    class AllowlistParser(object):
+    class AllowlistParser:
         """This type knows how to parse the JSON allow listing format. The format
         is documented in [1].
 
@@ -211,13 +174,13 @@ def allowlist_for_package(allowlist_path, pkg_name):
             """Creates a new instance of AllowlistParser that operates on
             @wl_path."""
 
-            self.m_path = wl_path
+            self.path = wl_path
 
         def parse(self, package):
             """Parses the allow list file for the current package and returns a list of AuditEntry objects."""
 
             try:
-                with open(self.m_path, 'r') as fd:
+                with open(self.path, 'r') as fd:
                     data = json.load(fd)
 
                     try:
@@ -225,15 +188,13 @@ def allowlist_for_package(allowlist_path, pkg_name):
                     except KeyError:
                         return []
 
-                    return self._parseAllowlistEntry(package, config)
+                    return self._parse_allowlist_entry(package, config)
             except Exception as e:
                 _, _, tb = sys.exc_info()
                 fn, ln, _, _ = traceback.extract_tb(tb)[-1]
-                raise Exception(self._getErrorPrefix() + 'Failed to parse JSON file: {}:{}: {}'.format(
-                    fn, ln, str(e)
-                ))
+                raise Exception(self._get_error_prefix() + f'Failed to parse JSON file: {fn}:{ln}: {e}')
 
-        def _parseAllowlistEntry(self, package, config):
+        def _parse_allowlist_entry(self, package, config):
             """Parses a single JSON allow entry and returns a AuditEntry()
             object for it. On non-critical error conditions None is returned,
             otherwise an exception is raised."""
@@ -243,13 +204,13 @@ def allowlist_for_package(allowlist_path, pkg_name):
             audits = config.get('audits')
 
             if not audits:
-                raise Exception(self._getErrorPrefix() + f"no 'audits' entries for package {package}")
+                raise Exception(self._get_error_prefix() + f"no 'audits' entries for package {package}")
 
             for bug, data in audits.items():
                 try:
-                    audit = self._parseAuditEntry(bug, data)
+                    audit = self._parse_audit_entry(bug, data)
                 except Exception as e:
-                    raise Exception(self._getErrorPrefix() + 'Failed to parse audit entries: ' + str(e))
+                    raise Exception(self._get_error_prefix() + 'Failed to parse audit entries: ' + str(e))
 
                 # missing audit is soft error, continue parsing
                 if audit:
@@ -257,7 +218,7 @@ def allowlist_for_package(allowlist_path, pkg_name):
 
             return ret
 
-        def _parseAuditEntry(self, bug, data):
+        def _parse_audit_entry(self, bug, data):
             """Parses a single JSON audit sub-entry returns an AuditEntry() object
             for it. On non-critical error conditions None is returned, otherwise
             an exception is raised"""
@@ -266,22 +227,19 @@ def allowlist_for_package(allowlist_path, pkg_name):
 
             comment = data.get('comment')
             if comment:
-                ret.setComment(comment)
+                ret.comment = comment
 
             digests = data.get('digests')
 
             if not digests:
-                raise Exception(self._getErrorPrefix() + f"no 'digests' entry for '{bug}'")
+                raise Exception(self._get_error_prefix() + f"no 'digests' entry for '{bug}'")
 
-            ret.setDigests(digests)
+            ret._set_digests(digests)
 
             return ret
 
-        def _getErrorPrefix(self):
-            return self.m_path + ': ERROR: '
-
-        def _getWarnPrefix(self):
-            return self.m_path + ': WARN: '
+        def _get_error_prefix(self):
+            return self.path + ': ERROR: '
 
     parser = AllowlistParser(allowlist_path)
     return parser.parse(pkg_name)
@@ -289,6 +247,11 @@ def allowlist_for_package(allowlist_path, pkg_name):
 
 class AbstractAllowlistCheck(AbstractCheck, metaclass=abc.ABCMeta):
     """An abstract base class for comparing files found in an RPM against an allow list with hashed file contents."""
+
+    def __init__(self, config, output):
+        for req_key in ('unauthorized', 'changed', 'ghost'):
+            assert req_key in self.error_map, f'Missing error mapping in class {type(self)}'
+        super().__init__(config, output)
 
     @property
     @abc.abstractmethod
@@ -311,11 +274,6 @@ class AbstractAllowlistCheck(AbstractCheck, metaclass=abc.ABCMeta):
         """ A dictionary with keys 'unauthorized', 'changed', 'ghost' that maps these to the
         desired rpmlint error identifiers for this check. """
         pass
-
-    def __init__(self, config, output):
-        for req_key in ('unauthorized', 'changed', 'ghost'):
-            assert req_key in self.error_map, f'Missing error mapping in class {type(self)}'
-        super().__init__(config, output)
 
     def read_allowlist(self, pkg):
         """ Retrieves the allow list for a package.
@@ -364,20 +322,20 @@ class AbstractAllowlistCheck(AbstractCheck, metaclass=abc.ABCMeta):
             return
 
         for audit in allow_list:
-            digest_matches, results = audit.compareDigests(pkg)
+            digest_matches, results = audit.compare_digests(pkg)
 
-            if digest_matches and audit.coversAllFiles(restricted_files):
+            if digest_matches and audit.covers_all_files(restricted_files):
                 break
         else:
             # print the encountered and expected digests and paths for diagnostic purposes
             for result in results:
-                restricted_files -= {result.path()}
+                restricted_files -= {result.path}
 
                 if result.matches():
                     continue
 
-                print(f'{result.path()}: expected {result.algorithm()} digest {result.expected()} but encountered {result.encountered()}', file=sys.stderr)
-                self.output.add_info('E', pkg, self.error_map['changed'], result.path())
+                print(f'{result.path}: expected {result.algorithm} digest {result.expected} but encountered {result.encountered}', file=sys.stderr)
+                self.output.add_info('E', pkg, self.error_map['changed'], result.path)
 
             for f in restricted_files:
                 self.output.add_info('E', pkg, self.error_map['unauthorized'], f)

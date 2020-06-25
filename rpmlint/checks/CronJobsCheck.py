@@ -1,4 +1,3 @@
-# vim: sw=4 ts=4 sts=4 et :
 #############################################################################
 # Author        : Matthias Gerstner
 # Purpose       : Enforce cron jobs in /etc/cron.* directories to be on a allow list
