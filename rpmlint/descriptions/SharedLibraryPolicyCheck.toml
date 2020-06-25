@@ -1,11 +1,3 @@
-shlib-policy-missing-suffix="""
-Your package containing shared libraries does not end in a digit and
-should probably be split.
-"""
-shlib-policy-devel-file="""
-Your shared library package contains development files. Split them into
-a -devel subpackage.
-"""
 shlib-policy-nonversioned-dir="""
 Your shared library package contains non-versioned directories. Those will not
 allow to install multiple versions of the package in parallel.
@@ -17,8 +9,7 @@ Those binaries should probably not be part of the library package, but split int
 a seperate one to reduce the additional dependencies for other users of this library.
 """
 shlib-policy-missing-lib="""
-Your package starts with 'lib' as part of its name, but does not provide
-any libraries.
+Your package name looks its based on soname, but does not provide any libraries.
 """
 shlib-fixed-dependency="""
 Your shared library package requires a fixed version of another package. The
