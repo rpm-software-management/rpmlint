@@ -126,6 +126,9 @@ class SpecCheck(AbstractCheck):
     def check_source(self, pkg):
         """Find specfile in SRPM and run spec file related checks."""
         wrong_spec = False
+        self._spec_file = None
+        self._spec_name = None
+
         for fname, pkgfile in pkg.files.items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
