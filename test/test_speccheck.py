@@ -496,7 +496,37 @@ def test_check_hardcoded_prefix_tag_not_applied(package, speccheck):
     assert 'W: hardcoded-prefix-tag' not in out
 
 
-# TODO: Add test for PreReq check.
+@pytest.mark.parametrize('package', ['spec/prereq_use'])
+def test_check_prereq_use(package, speccheck):
+    """Test if specfile has tags such as PreReq(pre)
+    or PreReq(post).
+    """
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: prereq-use none' in out
+    assert 'E: prereq-use none_other' in out
+
+
+@pytest.mark.parametrize('package', ['spec/patch-not-applied'])
+def test_check_prereq_use_not_found(package, speccheck):
+    """Test if specfile has no PreReq tag value."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: prereq-use' not in out
+
+
+@pytest.mark.parametrize('package', ['spec/mixed-use-of-spaces-and-tabs'])
+def test_check_prereq_use_not_applied(package, speccheck):
+    """Test if specfile has no PreReq tag value."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: prereq-use' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/buildprereq-use'])
@@ -945,7 +975,34 @@ def test_check_dwdd_not_applied(package, speccheck):
     assert 'W: depscript-without-disabling-depgen' not in out
 
 
-# TODO: Add test for patch-fuzz-is-changed
+@pytest.mark.parametrize('package', ['spec/patch-fuzz-is-changed'])
+def test_check_patch_fuzz_is_changed(package, speccheck):
+    """Test if specfile has internal/default patch fuzz value changed as
+    %define _default_patch_fuzz >= 0.
+    """
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: patch-fuzz-is-changed' in out
+
+
+@pytest.mark.parametrize('package', ['spec/SpecCheckTemp'])
+def test_check_patch_fuzz_is_changed_not_found(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: patch-fuzz-is-changed' not in out
+
+
+@pytest.mark.parametrize('package', ['spec/macro-in-comment'])
+def test_check_patch_fuzz_is_changed_not_applied(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: patch-fuzz-is-changed' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/mixed-use-of-spaces-and-tabs'])
@@ -1021,7 +1078,7 @@ def test_check_patch_not_applied_not_enforced(package, speccheck):
 # TODO: Add specfile-error test.
 
 
-@pytest.mark.parametrize('package', ['spec/SpecCheck2'])
+@pytest.mark.parametrize('package', ['spec/invalid-url'])
 def test_check_invalid_url(package, speccheck):
     """Test if specfile has invalid url."""
     output, test = speccheck

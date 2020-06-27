@@ -1,18 +1,19 @@
-Name:			mixed-use-of-spaces-and-tabs
+Name:			prereq_use
 Version:        0
 Release:        0
-Summary:		mixed-use-of-spaces-and-tabs warning
+Summary:		prereq_use warning
 License:        GPL-2.0-only
 Group:          Undefined
 URL:            http://rpmlint.zarb.org/#%{name}
 Source0:        Source0.tar.gz
 Patch0:         Patch0.patch
-PreReq(post):    
-Requires:       php
+PreReq(pre):    none
+PreReq(post):   none_other
 
 %description
-The specfile mixes use of spaces and tabs for indentation, which is a
-cosmetic annoyance.
+The use of PreReq is deprecated. In the majority of cases, a plain Requires
+is enough and the right thing to do. Sometimes Requires(pre), Requires(post),
+Requires(preun) and/or Requires(postun) can also be used instead of PreReq.
 
 %prep
 cd lib

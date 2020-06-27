@@ -1,11 +1,3 @@
-#############################################################################
-# File          : SpecCheck.py
-# Package       : rpmlint
-# Author        : Frederic Lepied
-# Created on    : Thu Oct  7 17:06:14 1999
-# Purpose       : check the spec file of a source rpm.
-#############################################################################
-
 from pathlib import Path
 import re
 import subprocess
@@ -21,8 +13,8 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 
 def re_tag_compile(tag):
-    r = r'^%s\s*:\s*(\S.*?)\s*$' % tag
-    return re.compile(r, re.IGNORECASE)
+    rpm_tag = r'^%s\s*:\s*(\S.*?)\s*$' % tag
+    return re.compile(rpm_tag, re.IGNORECASE)
 
 
 patch_regex = re_tag_compile(r'Patch(\d*)')
@@ -112,6 +104,7 @@ def contains_buildroot(line):
 
 
 class SpecCheck(AbstractCheck):
+    """Contain check methods that catch errors and warnings in a specfile."""
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -126,6 +119,10 @@ class SpecCheck(AbstractCheck):
     def check_source(self, pkg):
         """Find specfile in SRPM and run spec file related checks."""
         wrong_spec = False
+        self._spec_file = None
+        self._spec_name = None
+
+        # Check if a specfile exist in a specified path
         for fname, pkgfile in pkg.files.items():
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
@@ -145,24 +142,8 @@ class SpecCheck(AbstractCheck):
             with Pkg.FakePkg(self._spec_file) as package:
                 self.check_spec(package)
 
-    def _check_no_spec_file(self, pkg):
-        """Check if no spec file is found in RPM meta data."""
-        if not self._spec_file:
-            self.output.add_info('E', pkg, 'no-spec-file')
-
-    def _check_invalid_spec_name(self, pkg, wrong_spec):
-        """Check if spec file has same name as the 'Name: ' tag."""
-        if wrong_spec and self._spec_file:
-            self.output.add_info('E', pkg, 'invalid-spec-name')
-
-    def _check_non_utf8_spec_file(self, pkg):
-        """Check if spec file has UTF-8 character encoding."""
-        if self._spec_file:
-            if not Pkg.is_utf8(self._spec_file):
-                self.output.add_info('E', pkg, 'non-utf8-spec-file',
-                                     self._spec_name or self._spec_file)
-
     def check_spec(self, pkg):
+        """Find specfile in specified path and run spec file related checks."""
         self._spec_file = pkg.name
         spec_only = isinstance(pkg, Pkg.FakePkg)
         spec_lines = readlines(self._spec_file)
@@ -199,6 +180,7 @@ class SpecCheck(AbstractCheck):
 
         nbsp = UNICODE_NBSP
 
+        # Analyse specfile line by line to check for (E)rrors or (W)arnings
         for line in spec_lines:
 
             pkg.current_linenum += 1
@@ -327,11 +309,11 @@ class SpecCheck(AbstractCheck):
                                                  res.group(1), 'in configure options')
                     configure_linenum = None
 
-            hashPos = line.find('#')
+            hash_pos = line.find('#')
 
             if current_section != 'changelog':
-                cfgPos = line.find('./configure')
-                if cfgPos != -1 and (hashPos == -1 or hashPos > cfgPos):
+                cfg_pos = line.find('./configure')
+                if cfg_pos != -1 and (hash_pos == -1 or hash_pos > cfg_pos):
                     # store line where it started
                     configure_linenum = pkg.current_linenum
                     configure_cmdline = line.strip()
@@ -403,11 +385,11 @@ class SpecCheck(AbstractCheck):
                 res = requires_regex.search(line)
                 if res:
                     reqs = Pkg.parse_deps(res.group(1))
-                    e = Pkg.has_forbidden_controlchars(reqs)
-                    if e:
+                    deptoken = Pkg.has_forbidden_controlchars(reqs)
+                    if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Requires: %s' % e)
+                                             'Requires: %s' % deptoken)
                     for req in unversioned(reqs):
                         if compop_regex.search(req):
                             self.output.add_info('W', pkg,
@@ -417,11 +399,11 @@ class SpecCheck(AbstractCheck):
                 res = provides_regex.search(line)
                 if res:
                     provs = Pkg.parse_deps(res.group(1))
-                    e = Pkg.has_forbidden_controlchars(provs)
-                    if e:
+                    deptoken = Pkg.has_forbidden_controlchars(provs)
+                    if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Provides: %s' % e)
+                                             'Provides: %s' % deptoken)
                     for prov in unversioned(provs):
                         if not prov.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-provides',
@@ -434,11 +416,11 @@ class SpecCheck(AbstractCheck):
                 res = obsoletes_regex.search(line)
                 if res:
                     obses = Pkg.parse_deps(res.group(1))
-                    e = Pkg.has_forbidden_controlchars(obses)
-                    if e:
+                    deptoken = Pkg.has_forbidden_controlchars(obses)
+                    if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Obsoletes: %s' % e)
+                                             'Obsoletes: %s' % deptoken)
                     for obs in unversioned(obses):
                         if not obs.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-obsoletes',
@@ -451,11 +433,11 @@ class SpecCheck(AbstractCheck):
                 res = conflicts_regex.search(line)
                 if res:
                     confs = Pkg.parse_deps(res.group(1))
-                    e = Pkg.has_forbidden_controlchars(confs)
-                    if e:
+                    deptoken = Pkg.has_forbidden_controlchars(confs)
+                    if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Conflicts: %s' % e)
+                                             'Conflicts: %s' % deptoken)
                     for conf in unversioned(confs):
                         if compop_regex.search(conf):
                             self.output.add_info('W', pkg,
@@ -463,11 +445,11 @@ class SpecCheck(AbstractCheck):
                                                  conf)
 
             if current_section == 'changelog':
-                e = Pkg.has_forbidden_controlchars(line)
-                if e:
+                deptoken = Pkg.has_forbidden_controlchars(line)
+                if deptoken:
                     self.output.add_info('E', pkg,
                                          'forbidden-controlchar-found',
-                                         '%%changelog: %s' % e)
+                                         '%%changelog: %s' % deptoken)
                 for match in self.macro_regex.findall(line):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
@@ -517,10 +499,10 @@ class SpecCheck(AbstractCheck):
                     self.output.add_info('W', pkg, 'non-standard-group', group)
 
             # Test if there are macros in comments
-            if hashPos != -1 and \
-                    (hashPos == 0 or line[hashPos - 1] in (' ', '\t')):
+            if hash_pos != -1 and \
+                    (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
                 for match in self.macro_regex.findall(
-                        line[hashPos + 1:]):
+                        line[hash_pos + 1:]):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         self.output.add_info('W', pkg, 'macro-in-comment', match)
@@ -528,29 +510,89 @@ class SpecCheck(AbstractCheck):
         # Last line read is not useful after this point
         pkg.current_linenum = None
 
+        # Run checks for whole package
+        self._check_no_cleaning_of_buildroot(pkg, buildroot_clean)
+        self._check_no_buildroot_tag(pkg, buildroot)
+        self._check_no_s_section(pkg, section)
+        self._check_more_than_one_changelog_section(pkg, section)
+        self._check_lib_package_without_mklibname(pkg, is_lib_pkg, mklibname)
+        self._check_descript_without_disabling_depgen(pkg, depscript_override, depgen_disabled)
+        self._check_patch_fuzz_is_changed(pkg, patch_fuzz_override)
+        self._check_mixed_use_of_space_and_tabs(pkg, indent_spaces, indent_tabs)
+        self.check_ifarch_and_not_applied_patches(pkg, patches_auto_applied, patches,
+                                                  applied_patches_ifarch, applied_patches)
+        # Checks below require a real spec file
+        if not self._spec_file:
+            return
+        self._check_specfile_error(pkg, subprocess)
+        self._check_invalid_url(pkg, rpm)
+
+    def _check_no_spec_file(self, pkg):
+        """Check if no spec file is found in RPM meta data."""
+        if not self._spec_file:
+            self.output.add_info('E', pkg, 'no-spec-file')
+
+    def _check_invalid_spec_name(self, pkg, wrong_spec):
+        """Check if spec file has same name as the 'Name: ' tag."""
+        if wrong_spec and self._spec_file:
+            self.output.add_info('E', pkg, 'invalid-spec-name')
+
+    def _check_non_utf8_spec_file(self, pkg):
+        """Check if spec file has UTF-8 character encoding."""
+        if self._spec_file:
+            if not Pkg.is_utf8(self._spec_file):
+                self.output.add_info('E', pkg, 'non-utf8-spec-file',
+                                     self._spec_name or self._spec_file)
+
+    def _check_no_cleaning_of_buildroot(self, pkg, buildroot_clean):
+        """Check if specfile has $RPM_BUILD_ROOT in the %clean section
+        in the beginning of the %install section.
+        """
         for sect in (x for x in buildroot_clean if not buildroot_clean[x]):
             self.output.add_info('W', pkg, 'no-cleaning-of-buildroot', '%' + sect)
 
+    def _check_no_buildroot_tag(self, pkg, buildroot):
+        """Check if BuildRoot tag is used in the specfile."""
         if not buildroot:
             self.output.add_info('W', pkg, 'no-buildroot-tag')
 
+    def _check_no_s_section(self, pkg, section):
+        """Check if there is no (%prep, %build, %install, %clean)
+        in the specfile.
+        """
         for sec in ('prep', 'build', 'install', 'clean'):
             if not section.get(sec):
                 self.output.add_info('W', pkg, 'no-%%%s-section' % sec)
-        for sec in ('changelog',):
-            # prep, build, install, clean, check prevented by rpmbuild 4.4
-            if section.get(sec, 0) > 1:
-                self.output.add_info('W', pkg, 'more-than-one-%%%s-section' % sec)
 
+    def _check_more_than_one_changelog_section(self, pkg, section):
+        """Check if specfile has more than one %changelog.
+        prep, build, install, clean, check prevented by rpmbuild 4.4
+        """
+        if section.get('changelog', 0) > 1:
+            self.output.add_info('W', pkg, 'more-than-one-%changelog-section')
+
+    def _check_lib_package_without_mklibname(self, pkg, is_lib_pkg, mklibname):
+        """Check if package name is built using %mklibname to allow lib64 and lib32
+        coexistence. This check is specific to Mandriva and it's derivatives,
+        check issue #9 in rpm-software-management/rpmlint/issues
+        """
         if is_lib_pkg and not mklibname:
             self.output.add_info('E', pkg, 'lib-package-without-%mklibname')
 
+    def _check_descript_without_disabling_depgen(self, pkg, depscript_override, depgen_disabled):
+        """Check if specfile has %define _use_internal_dependency_generator set to 0
+        to disable it, or does not have define __find_provides/requires.
+        """
         if depscript_override and not depgen_disabled:
             self.output.add_info('W', pkg, 'depscript-without-disabling-depgen')
 
+    def _check_patch_fuzz_is_changed(self, pkg, patch_fuzz_override):
+        """Check if specfile has internal patch fuzz was changed."""
         if patch_fuzz_override:
             self.output.add_info('W', pkg, 'patch-fuzz-is-changed')
 
+    def _check_mixed_use_of_space_and_tabs(self, pkg, indent_spaces, indent_tabs):
+        """Check if specfile has mixed uses of spaces and tabs."""
         if indent_spaces and indent_tabs:
             pkg.current_linenum = max(indent_spaces, indent_tabs)
             self.output.add_info('W', pkg, 'mixed-use-of-spaces-and-tabs',
@@ -558,26 +600,30 @@ class SpecCheck(AbstractCheck):
                                  (indent_spaces, indent_tabs))
             pkg.current_linenum = None
 
-        # process gathered info
+    def check_ifarch_and_not_applied_patches(self, pkg, patches_auto_applied,
+                                             patches, applied_patches_ifarch, applied_patches):
+        """Check if specfile has a patch applied inside an %ifarch block.
+        and check if a patch was included but not applied."""
         if not patches_auto_applied:
             for pnum, pfile in patches.items():
                 if pnum in applied_patches_ifarch:
                     self.output.add_info('W', pkg, '%ifarch-applied-patch',
                                          'Patch%d:' % pnum, pfile)
+
+                # Check if a patch is included in specfile but was not applied.
                 if pnum not in applied_patches:
                     self.output.add_info('W', pkg, 'patch-not-applied',
                                          'Patch%d:' % pnum, pfile)
 
-        # Rest of the checks require a real spec file
-        if not self._spec_file:
-            return
+    def _check_specfile_error(self, pkg, subprocess):
+        """It parse the specfile with rpm and forward errors to rpmlint output."""
 
         # We'd like to parse the specfile only once using python bindings,
         # but it seems errors from rpmlib get logged to stderr and we can't
         # capture and print them nicely, so we do it once each way :P
-
         outcmd = subprocess.run(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent, '--specfile', self._spec_file), stdout=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent,
+             '--specfile', self._spec_file), stdout=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         text = outcmd.stdout.decode()
         if text.endswith('\n'):
             text = text[:-1]
@@ -589,13 +635,15 @@ class SpecCheck(AbstractCheck):
         if parse_error:
             return
 
+    def _check_invalid_url(self, pkg, rpm):
+        """Check if specfile has an invalid url."""
         # grab sources and patches from parsed spec object to get
         # them with macros expanded for URL checking
         spec_obj = None
         rpm.addMacro('_sourcedir', pkg.dirName())
         try:
-            ts = rpm.TransactionSet()
-            spec_obj = ts.parseSpec(str(self._spec_file))
+            transaction_set = rpm.TransactionSet()
+            spec_obj = transaction_set.parseSpec(str(self._spec_file))
         except (ValueError, rpm.error):
             # errors logged above already
             pass

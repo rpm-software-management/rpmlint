@@ -43,6 +43,7 @@
 #     respective check since it does not contains spaces around the operators.
 %define __find_provides
 %define _use_internal_dependency_generator 0
+%define _default_patch_fuzz  
 
 Name:           SpecCheckTemp
 Version:        0

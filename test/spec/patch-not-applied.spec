@@ -6,6 +6,8 @@ License:        GPL-2.0-only
 Group:          Undefined
 Patch0:         Patch.patch
 Patch1:         Patch1.patch
+PreReq(pre):    
+PreReq(post):   
 
 %description
 A patch is included in your package but was not applied.
