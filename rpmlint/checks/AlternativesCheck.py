@@ -4,6 +4,7 @@ import stat
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.helpers import byte_to_string
 
 
 class AlternativesCheck(AbstractCheck):
@@ -156,6 +157,8 @@ class AlternativesCheck(AbstractCheck):
         Keep only the line that contains the update-alternatives call.
         Return the list of lines that contain update-alternatives calls
         """
+        # with old rpm we get wrong type
+        script = byte_to_string(script)
         script.replace('\\\n', '')
         script.replace('"', '')
         script.replace("'", '')
