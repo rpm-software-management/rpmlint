@@ -5,7 +5,6 @@ import stat
 import sys
 
 import rpm
-
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.pkg import FakePkg
 
@@ -202,6 +201,14 @@ class SUIDCheck(AbstractCheck):
                                          f'missing %verify_permissions -e {f}')
 
         if need_set_permissions:
-            if 'permissions' not in (x[0] for x in pkg.prereq):
+            # we used to require the legacy statement 'Prereq: permissions'
+            # allow this for now, to give packagers some time to update to 'Requires: /usr/bin/chkstat' and 'Requires(post): /usr/bin/chkstat'
+            legacy = 'permissions' in (x[0] for x in pkg.prereq)
+            req = '/usr/bin/chkstat' in (x[0] for x in pkg.requires)
+            req_post = '/usr/bin/chkstat' in (x[0] for x in pkg.prereq)
+            if not legacy and not req:
                 self.output.add_info('E', pkg, 'permissions-missing-requires',
-                                     "missing 'permissions' in PreReq")
+                                     "missing '/usr/bin/chkstat' in Requires")
+            if not legacy and not req_post:
+                self.output.add_info('E', pkg, 'permissions-missing-requires',
+                                     "missing '/usr/bin/chkstat' in Requires(post)")
