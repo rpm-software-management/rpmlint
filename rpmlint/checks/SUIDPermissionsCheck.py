@@ -6,8 +6,8 @@ import sys
 
 import rpm
 
-from .AbstractCheck import AbstractCheck
-from ..pkg import FakePkg
+from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.pkg import FakePkg
 
 _permissions_d_allowed = (
     'lprng',

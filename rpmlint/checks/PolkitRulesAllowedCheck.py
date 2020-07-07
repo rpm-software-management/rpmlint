@@ -1,4 +1,4 @@
-from .Allowlisting import AbstractAllowlistCheck
+from rpmlint.checks.Allowlisting import AbstractAllowlistCheck
 
 
 class PolkitRulesAllowedCheck(AbstractAllowlistCheck):
