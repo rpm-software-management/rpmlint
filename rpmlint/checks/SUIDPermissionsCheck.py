@@ -1,9 +1,4 @@
-#############################################################################
-# File          : CheckSUIDPermissions.py
-# Package       : rpmlint
-# Author        : Ludwig Nussel
-# Purpose       : Check for /usr/share/permissions violations
-#############################################################################
+""" Check for /usr/share/permissions violations """
 
 import os
 import stat

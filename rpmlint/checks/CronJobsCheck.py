@@ -1,7 +1,4 @@
-#############################################################################
-# Author        : Matthias Gerstner
-# Purpose       : Enforce cron jobs in /etc/cron.* directories to be on a allow list
-#############################################################################
+""" Enforce cron jobs in /etc/cron.* directories to be on a allow list """
 
 from .Allowlisting import AbstractAllowlistCheck
 
