@@ -104,7 +104,6 @@ class SUIDCheck(AbstractCheck):
                     break
 
         need_set_permissions = False
-        found_suseconfig = False
         # second pass, find permissions violations
         for f, pkgfile in pkg.files.items():
 
@@ -112,7 +111,7 @@ class SUIDCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'permissions-fscaps', f'{f} has fscaps "{pkgfile.filecaps}"')
 
             mode = pkgfile.mode
-            owner = pkgfile.user + ':' + pkgfile.group
+            owner = f'{pkgfile.user}:{pkgfile.group}'
 
             need_verifyscript = False
             if f in self.perms or (stat.S_ISDIR(mode) and f + '/' in self.perms):
@@ -151,7 +150,7 @@ class SUIDCheck(AbstractCheck):
             elif not stat.S_ISLNK(mode):
                 if f + '/' in self.perms:
                     self.output.add_info('W', pkg, 'permissions-file-as-dir',
-                                         f + ' is a file but listed as directory')
+                                         f'{f} is a file but listed as directory')
 
                 if mode & (stat.S_ISUID | stat.S_ISGID):
 
@@ -181,12 +180,6 @@ class SUIDCheck(AbstractCheck):
                         found = True
                         break
 
-                    if 'SuSEconfig --module permissions' in line \
-                            or 'run_permissions is obsolete' in line:
-                        found = True
-                        found_suseconfig = True
-                        break
-
             if need_verifyscript and \
                     (f not in self.perms or 'static' not in self.perms[f]):
 
@@ -212,8 +205,3 @@ class SUIDCheck(AbstractCheck):
             if 'permissions' not in (x[0] for x in pkg.prereq):
                 self.output.add_info('E', pkg, 'permissions-missing-requires',
                                      "missing 'permissions' in PreReq")
-
-        if found_suseconfig:
-            # TODO: nothing in tumbleweed uses this anymore. can probable be dropped.
-            self.output.add_info('I', pkg, 'permissions-suseconfig-obsolete',
-                                 '%run_permissions is obsolete')
