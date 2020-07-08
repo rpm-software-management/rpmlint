@@ -1,69 +1,54 @@
 permissions-unauthorized-file="""
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+An unknown file is packaged with sensitive permissions. Please contact the
+security team to request review of the package by the security team.
 """
 
 
 
 permissions-symlink="""
-permissions handling for symlinks is useless. Please contact security@suse.de
-to remove the entry. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+A symlink is packaged at a path where a file with sensitive permissions is
+expected. Please contact the security team to remove the entry.
 """
 
 
 permissions-dir-without-slash="""
-the entry in the permissions file refers to a directory. Please contact
-security@suse.de to append a slash to the entry in order to avoid security
-problems. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The entry in the permissions file refers to a directory. Please contact the
+security team to append a slash to the entry in order to avoid security
+problems.
 """
 
 
 permissions-file-as-dir="""
-the entry in the permissions file refers to a directory but the package
-actually contains a file. Please contact security@suse.de to remove the slash.
-Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The entry in the permissions file refers to a directory but the package
+actually contains a file. Please contact the security team to remove the slash.
 """
 
 
 permissions-incorrect="""
-please use the %attr macro to set the correct permissions.
+Please use the %attr macro to set the correct permissions.
 """
 
 
 permissions-incorrect-owner="""
-please use the %attr macro to set the correct ownership.
+Please use the %attr macro to set the correct ownership.
 """
 
 
 permissions-file-setuid-bit="""
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the program by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The file has a setuid or setgid bit set. Please contact the security team to
+have it allowed.
 """
 
 
 permissions-directory-setuid-bit="""
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The directory has a setuid or setgid bit set. Please contact the security team
+to have it allowed.
 """
 
 
 permissions-world-writable="""
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The file or directory is world-writable. Please contact the security team to
+have that allowed.
 """
 
 
@@ -75,7 +60,7 @@ sets capabilities in /usr/share/permissions/permissions instead.
 
 
 permissions-missing-postin="""
-Please add an appropriate %post section
+Please call the %set_permissions macro for this file in the %post section.
 """
 
 
@@ -85,13 +70,12 @@ Please add 'Requires: /usr/bin/chkstat' and 'Requires(post): /usr/bin/chkstat'
 
 
 permissions-missing-verifyscript="""
-Please add a %verifyscript section
+Please add call the %verify_permissions macro for this file in the
+%verifyscript section.
 """
 
 
 permissions-ghostfile="""
 This package installs a permissions file as a %ghost file. This is not allowed
-as it is impossible to review. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+as it is impossible to review.
 """

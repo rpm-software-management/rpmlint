@@ -1,31 +1,21 @@
 polkit-unauthorized-file="""
-A custom polkit rule file is installed by this package. If the package is
-intended for inclusion in any SUSE product please open a bug report to request
-review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+A custom polkit rule file is installed by this package. Please contact the
+security team.
 """
 
 
 polkit-unauthorized-privilege="""
 The package allows unprivileged users to carry out privileged operations
 without authentication. This could cause security problems if not done
-carefully. If the package is intended for inclusion in any SUSE product please
-open a bug report to request review of the package by the security team. Please
-refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+carefully. Please contact the security team to have this reviewed.
 """
 
 
 polkit-untracked-privilege="""
 The privilege is not listed in /etc/polkit-default-privs.* which makes it
-harder for admins to find.  Furthermore polkit authorization checks can easily
-introduce security issues.  If the package is intended for inclusion in any
-SUSE product please open a bug report to request review of the package by the
-security team.  Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+harder for admins to find. Furthermore polkit authorization checks can easily
+introduce security issues. Please contact the security team to have this
+reviewed.
 """
 
 

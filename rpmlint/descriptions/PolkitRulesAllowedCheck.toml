@@ -1,25 +1,16 @@
 polkit-unauthorized-rules="""
-A polkit rules file installed by this package is not whitelisted in the
-polkit-whitelisting package. If the package is intended for inclusion in any
-SUSE product please open a bug report to request review of the package by the
-security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+A polkit rules file installed by this package is not allowed in the
+polkit-whitelisting package. Please contact the security team.
 """
 
 
 polkit-changed-rules="""
-A polkit rules file installed by this package changed in content. Please open a
-bug report to request follow-up review of the introduced changes by the
-security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+A polkit rules file installed by this package changed in content. Please
+contact the security team.
 """
 
 
 polkit-ghost-file="""
-This package installs a polkit rule or policy as %ghost file.  This is not
-allowed as it is impossible to review. For more information please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+This package installs a polkit rule or policy as %ghost file. This is not
+allowed as it is impossible to review.
 """
