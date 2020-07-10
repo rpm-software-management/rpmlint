@@ -13,7 +13,7 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 
 def re_tag_compile(tag):
-    rpm_tag = r"^{}\s*:\s*(\S.*?)\s*$".format(tag)
+    rpm_tag = r'^{}\s*:\s*(\S.*?)\s*$'.format(tag)
     return re.compile(rpm_tag, re.IGNORECASE)
 
 
