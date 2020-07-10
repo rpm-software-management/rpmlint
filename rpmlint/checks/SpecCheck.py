@@ -13,7 +13,7 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 
 def re_tag_compile(tag):
-    rpm_tag = r'^%s\s*:\s*(\S.*?)\s*$' % tag
+    rpm_tag = r"^{}\s*:\s*(\S.*?)\s*$".format(tag)
     return re.compile(rpm_tag, re.IGNORECASE)
 
 
@@ -389,7 +389,7 @@ class SpecCheck(AbstractCheck):
                     if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Requires: %s' % deptoken)
+                                             f'Requires: {deptoken}')
                     for req in unversioned(reqs):
                         if compop_regex.search(req):
                             self.output.add_info('W', pkg,
@@ -403,7 +403,7 @@ class SpecCheck(AbstractCheck):
                     if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Provides: %s' % deptoken)
+                                             f'Provides: {deptoken}')
                     for prov in unversioned(provs):
                         if not prov.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-provides',
@@ -420,7 +420,7 @@ class SpecCheck(AbstractCheck):
                     if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Obsoletes: %s' % deptoken)
+                                             f'Obsoletes: {deptoken}')
                     for obs in unversioned(obses):
                         if not obs.startswith('/'):
                             self.output.add_info('W', pkg, 'unversioned-explicit-obsoletes',
@@ -437,7 +437,7 @@ class SpecCheck(AbstractCheck):
                     if deptoken:
                         self.output.add_info('E', pkg,
                                              'forbidden-controlchar-found',
-                                             'Conflicts: %s' % deptoken)
+                                             f'Conflicts: {deptoken}')
                     for conf in unversioned(confs):
                         if compop_regex.search(conf):
                             self.output.add_info('W', pkg,
