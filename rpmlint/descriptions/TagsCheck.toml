@@ -180,3 +180,9 @@ This package contains tags which contain forbidden control characters.
 These are all ASCII characters with a decimal value below 32, except TAB(9),
 LF(10) and CR(13)
 """
+summary-too-long="""
+This package has a summary line greater than 79 characters. Keep the summary below the character limit.
+"""
+description-line-too-long="""
+This package has a description line of length greater than 79 characters. Break the line into multiple lines to remove the warning.
+"""
