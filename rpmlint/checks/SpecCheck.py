@@ -52,10 +52,6 @@ deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 hardcoded_library_paths = '(/lib|/usr/lib|/usr/X11R6/lib/(?!([^/]+/)+)[^/]*\\.([oa]|la|so[0-9.]*))'
 hardcoded_library_path_regex = re.compile(r'^[^#]*((^|\s+|\.\./\.\.|\${?RPM_BUILD_ROOT}?|%{?buildroot}?|%{?_prefix}?)' + hardcoded_library_paths + r'(?=[\s;/])([^\s,;]*))')
 
-# Requires(pre,post) is broken in some rpm versions, see
-# https://bugzilla.redhat.com/118780 and bugs linked to that one.
-scriptlet_requires_regex = re.compile(r'^(PreReq|Requires)\([^\)]*,', re.IGNORECASE)
-
 DEFINE_RE = r'(^|\s)%(define|global)\s+'
 depscript_override_regex = re.compile(DEFINE_RE + r'__find_(requires|provides)\s')
 depgen_disable_regex = re.compile(DEFINE_RE + r'_use_internal_dependency_generator\s+0')
@@ -377,10 +373,6 @@ class SpecCheck(AbstractCheck):
                 res = buildprereq_regex.search(line)
                 if res:
                     self.output.add_info('E', pkg, 'buildprereq-use', res.group(1))
-
-                if scriptlet_requires_regex.search(line):
-                    self.output.add_info('E', pkg, 'broken-syntax-in-scriptlet-requires',
-                                         line.strip())
 
                 res = requires_regex.search(line)
                 if res:
