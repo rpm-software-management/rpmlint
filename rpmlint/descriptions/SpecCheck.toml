@@ -101,12 +101,6 @@ buildprereq-use="""
 The use of BuildPreReq is deprecated, build dependencies are always required
 before a package can be built.  Use plain BuildRequires instead.
 """
-broken-syntax-in-scriptlet-requires="""
-Comma separated context marked dependencies are silently broken in some
-versions of rpm.  One way to work around it is to split them into several ones,
-eg. replace 'Requires(post,preun): foo' with 'Requires(post): foo' and
-'Requires(preun): foo'.
-"""
 setup-not-in-prep="""
 The %setup macro should only be used within the %prep section because it may
 not expand to anything outside of it and can break the build in unpredictable

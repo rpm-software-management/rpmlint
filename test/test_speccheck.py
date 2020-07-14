@@ -549,30 +549,6 @@ def test_check_buildprereq_use_not_applied(package, speccheck):
     assert 'E: buildprereq-use' not in out
 
 
-@pytest.mark.parametrize('package', ['spec/broken-syntax-in-scriptlet-requires'])
-def test_check_bsisr(package, speccheck):
-    """bsisr: broken-syntax-in-scriplet-requires
-    Test if specfile has comma seperated marked dependencies.
-    """
-    output, test = speccheck
-    pkg = get_tested_spec_package(package)
-    test.check_spec(pkg)
-    out = output.print_results(output.results)
-    assert 'E: broken-syntax-in-scriptlet-requires Requires(post,preun): foo' in out
-
-
-@pytest.mark.parametrize('package', ['spec/%ifarch-applied-patch'])
-def test_check_bsisr_not_applied(package, speccheck):
-    """bsisr: broken-syntax-in-scriplet-requires
-    Test if specfile does not have comma seperated marked dependencies.
-    """
-    output, test = speccheck
-    pkg = get_tested_spec_package(package)
-    test.check_spec(pkg)
-    out = output.print_results(output.results)
-    assert 'E: broken-syntax-in-scriptlet-requires' not in out
-
-
 @pytest.mark.parametrize('package', ['spec/forbidden-controlchar-found'])
 def test_check_forbidden_controlchar_found(package, speccheck):
     """Test if specfile has forbidden controlchar
