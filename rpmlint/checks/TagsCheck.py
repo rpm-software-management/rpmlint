@@ -442,7 +442,7 @@ class TagsCheck(AbstractCheck):
             # as arch for source packages, do it ourselves
             expfmt = re.sub(r'(?i)%\{?ARCH\b\}?', pkg.arch, expfmt)
         expected = pkg.header.sprintf(expfmt).split('/')[-1]
-        basename = Path(pkg.filename).parent
+        basename = Path(pkg.filename).name
         if basename != expected:
             self.output.add_info('W', pkg, 'non-coherent-filename', basename, expected)
 
