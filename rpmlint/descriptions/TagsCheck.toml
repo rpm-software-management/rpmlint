@@ -71,7 +71,8 @@ There is no Group tag in your package. You have to specify a valid group
 in your spec file using the Group tag.
 """
 no-changelogname-tag="""
- There is no %changelog tag in your spec file(or it's empty). To fix it, please insert a '%changelog' section in your spec file and add a entry change below it.
+There is no %changelog tag in your spec file(or it's empty). To fix it, 
+please insert a '%changelog' section in your spec file and add a entry change below it.
 """
 no-version-in-last-changelog="""
 The latest changelog entry doesn't contain a version. Please insert the
