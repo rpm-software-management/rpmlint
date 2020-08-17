@@ -280,7 +280,6 @@ class TagsCheck(AbstractCheck):
             # Check if a package has an Epoch: value of greater than 99
             if epoch > 99:
                 self.output.add_info('W', pkg, 'unreasonable-epoch', epoch)
-            epoch = str(epoch)
 
     def _check_no_epoch_in_tags(self, pkg):
         """Trigger check no-epoch-in-{} multiple tags
