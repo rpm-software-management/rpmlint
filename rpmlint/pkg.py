@@ -63,7 +63,7 @@ RPM_SCRIPTLETS = ('pre', 'post', 'preun', 'postun', 'pretrans', 'posttrans',
 gzip_regex = re.compile(r'\.t?gz?$')
 bz2_regex = re.compile(r'\.t?bz2?$')
 xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
-
+zst_regex = re.compile(r'\.zst$')
 
 def catcmd(fname):
     """Get a 'cat' command that handles possibly compressed files."""
@@ -73,6 +73,8 @@ def catcmd(fname):
         cat = 'bzip2 -dcf'
     elif xz_regex.search(fname):
         cat = 'xz -dc'
+    elif zst_regex.search(fname):
+        cat = 'zstd -dc'
     return cat
 
 
@@ -85,6 +87,8 @@ def compression_algorithm(fname):
         return bz2
     elif xz_regex.search(fname):
         return lzma
+    elif zst_regex.search(fname):
+        return zstd
     else:
         return None
 
