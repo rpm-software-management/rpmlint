@@ -13,6 +13,7 @@ class SourceCheck(AbstractCheck):
         'gz': 'gzip compressed',
         'tgz': 'gzip compressed',
         'bz2': 'bzip2 compressed',
+        'zst': 'ZSTD compressed',
     }
 
     def __init__(self, config, output):
@@ -59,7 +60,7 @@ class SourceCheck(AbstractCheck):
 
     def _check_compressed_source(self, fname, pkg):
         """
-        Check if the Source is compressed if CompressExtension configuration options is used (xz, gz, tgz or bz2).
+        Check if the Source is compressed if CompressExtension configuration options is used (gz, tgz, bz2, xz or zst).
         """
         if (self.source_regex.search(fname) and self.compress_ext and
                 not fname.endswith(self.compress_ext)):
