@@ -22,6 +22,7 @@ except ImportError:
 import rpm
 from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
 from rpmlint.pkgfile import PkgFile
+import zstd
 
 
 DepInfo = namedtuple('DepInfo', ('name', 'flags', 'version'))
@@ -64,6 +65,7 @@ gzip_regex = re.compile(r'\.t?gz?$')
 bz2_regex = re.compile(r'\.t?bz2?$')
 xz_regex = re.compile(r'\.(t[xl]z|xz|lzma)$')
 zst_regex = re.compile(r'\.zst$')
+
 
 def catcmd(fname):
     """Get a 'cat' command that handles possibly compressed files."""
