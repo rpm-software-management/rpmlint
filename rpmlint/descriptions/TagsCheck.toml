@@ -186,3 +186,6 @@ This package has a summary line greater than 79 characters. Keep the summary bel
 description-line-too-long="""
 This package has a description line of length greater than 79 characters. Break the line into multiple lines to remove the warning.
 """
+non-standard-group="""
+This package contains a Group: tag value different from the one defined in ValidGroups inside configdefaults.toml. Make sure both the values match to remove the warning.
+"""

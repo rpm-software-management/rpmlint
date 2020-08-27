@@ -284,7 +284,8 @@ def test_package_random_exp(tmpdir, package, tagscheck):
         self-obsoletion,
     - not in out,
         obsolete-not-provided,
-        description-line-too-long."""
+        description-line-too-long,
+        devel-dependency."""
     output, test = tagscheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
@@ -295,3 +296,93 @@ def test_package_random_exp(tmpdir, package, tagscheck):
     assert 'W: obsolete-not-provided' not in out
     # Test if a package has a description line not greater 79 characters
     assert 'E: description-line-too-long' not in out
+    # Test if a package is a *-devel package and requires a devel dependency
+    assert 'W: devel-dependency' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/requires-on-release'])
+def test_check_requires_on_release(tmpdir, package, tagscheck):
+    """Test if a package check,
+    - in out,
+        requires-on-release."""
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    # Test if a package requires specific release of another package
+    assert 'W: requires-on-release baz = 2.1-1' in out
+
+
+@pytest.mark.parametrize('package', ['binary/invalid-license'])
+def test_check_invalid_license(tmpdir, package, tagscheck):
+    """Test if a package check,
+    - in out,
+        invalid-license,
+    - not in out,
+        requires-on-release."""
+    CONFIG.configuration['ValidLicenses'] = ['MIT']
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    # Test if a package has a License: tag value different from
+    # ValidLicense = [] list in configuration
+    assert 'W: invalid-license Apache License' in out
+    # Test if a package does not Requires: a specific version of a package
+    assert 'W: requires-on-release' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/not-standard-release-extension'])
+def test_package_not_std_release_extension(tmpdir, package, tagscheck):
+    """Test if package has check,
+    - in out,
+        not-standard-release-extension
+    - not in out,
+        invalid-license."""
+    CONFIG.configuration['ReleaseExtension'] = 'hello$'
+    CONFIG.configuration['ValidLicenses'] = ['Apache-2.0 License']
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    # Test if a package has a ReleaseExtension regex does not match with the Release: tag value expression
+    # i.e. Release tag value must not match regex expression 'hello$'
+    assert 'W: not-standard-release-extension 1.1' in out
+    # Test if a package does have the same License value as defined in the ValidLicense in configdefaults
+    assert 'W: invalid-license Apache-2.0 License' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/non-standard-group'])
+def test_check_non_standard_group(tmpdir, package, tagscheck):
+    """Test if a package has check,
+    - in out,
+        non-standard-group
+    - not in out,
+        not-standard-release-extension."""
+    CONFIG.configuration['ValidGroups'] = ['Devel/Something']
+    CONFIG.configuration['ReleaseExtension'] = '0'
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    # Test if a package has a different Group: tag value than ValidGroups = []
+    assert 'W: non-standard-group non/standard/group' in out
+    # Test if a package matches the Release tag regex
+    assert 'not-standard-release-extension 0' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/dev-dependency'])
+def test_package_dev_dependency(tmpdir, package, tagscheck):
+    """Test if a package check,
+    - in out,
+        devel-dependency,
+    - not in out,
+        non-standard-group."""
+    CONFIG.configuration['ValidGroups'] = ['Devel/Something']
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    # Test if a package is not a devel package itself but requires a devel dependency
+    assert 'E: devel-dependency glibc-devel' in out
+    # Test if a package does not have a Group tag
+    assert 'W: non-standard-group Devel/Something' not in out
