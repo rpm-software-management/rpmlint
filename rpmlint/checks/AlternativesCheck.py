@@ -39,8 +39,8 @@ class AlternativesCheck(AbstractCheck):
             return
 
         # populate scriptlets
-        self.post = pkg.header[rpm.RPMTAG_POSTIN]
-        self.postun = pkg.header[rpm.RPMTAG_POSTUN]
+        self.post = byte_to_string(pkg.header[rpm.RPMTAG_POSTIN])
+        self.postun = byte_to_string(pkg.header[rpm.RPMTAG_POSTUN])
 
         if not self._check_ua_presence(pkg):
             return
