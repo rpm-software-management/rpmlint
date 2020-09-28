@@ -47,4 +47,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/foo
 
 %changelog
-Fake macros such as %%buildroot %!buildroot %.buildroot does not cause a warning.
