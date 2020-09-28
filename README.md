@@ -28,7 +28,7 @@ Mandatory:
 - Python 3.6 or newer
 - python3-setuptools, python3-toml, python3-pyxdg
 - rpm and its python bindings
-- readelf, cpio, gzip, bzip and xz
+- readelf, cpio, gzip, bzip, xz and zstd
 
 Optional:
 - libmagic and its python bindings
