@@ -147,8 +147,6 @@ class TagsCheck(AbstractCheck):
 
     def check_description(self, pkg, lang, ignored_words):
         description = pkg.langtag(rpm.RPMTAG_DESCRIPTION, lang)
-        if not Pkg.is_utf8_bytestr(description):
-            self.output.add_info('E', pkg, 'tag-not-utf8', '%description', lang)
         description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         if self.spellcheck:
@@ -169,8 +167,6 @@ class TagsCheck(AbstractCheck):
 
     def check_summary(self, pkg, lang, ignored_words):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
-        if not Pkg.is_utf8_bytestr(summary):
-            self.output.add_info('E', pkg, 'tag-not-utf8', 'Summary', lang)
         summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         if self.spellcheck:
@@ -523,7 +519,7 @@ class TagsCheck(AbstractCheck):
 
     def _check_changelog_tag(self, pkg, changelog, version, release, name, epoch):
         """Trigger multiple check of type *-changelog, *-changelogname-*, changelog-*
-        forbidden-controlchar and tag-not-utf8
+        and forbidden-controlchar
 
         Contains all the checks that cause an issue during build of the rpm
         in the %changelog of the specfile
@@ -570,9 +566,6 @@ class TagsCheck(AbstractCheck):
             if clt:
                 changelog = changelog + clt
             for deptoken in changelog:
-                if not Pkg.is_utf8_bytestr(deptoken):
-                    self.output.add_info('E', pkg, 'tag-not-utf8', '%changelog')
-                    break
                 dep = Pkg.has_forbidden_controlchars(deptoken)
                 # Check if a package contains a forbidden character in %changelog
                 if dep:
