@@ -35,7 +35,8 @@ RUN dnf --nogpgcheck -y install \
         python3-pyxdg \
         python3-toml \
         python3-zstd \
-        rpm-build
+        rpm-build \
+        sqlite
 
 WORKDIR /usr/src/rpmlint
 VOLUME /usr/src/rpmlint
