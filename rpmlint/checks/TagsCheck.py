@@ -178,7 +178,7 @@ class TagsCheck(AbstractCheck):
             typos = self.spellchecker.spell_check(summary, 'Summary({})', lang, pkgname, ignored_words)
             for typo in typos.items():
                 self.output.add_info('E', pkg, 'spelling-error', typo)
-        if '\n' in summary:
+        if any(nl in summary for nl in ('\n', '\r')):
             self.output.add_info('E', pkg, 'summary-on-multiple-lines', lang)
         if (summary[0] != summary[0].upper() and
                 summary.partition(' ')[0] not in CAPITALIZED_IGNORE_LIST):
