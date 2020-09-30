@@ -39,7 +39,5 @@ script:
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 test/dump_stats.py profile.stats
 
 after_success:
-  - coverage combine
-  # above does not really work as promised
-  - sed -i -e "s#/usr/src/rpmlint#$(pwd)#g" .coverage
+  - echo "UPDATE file SET path = REPLACE(path, '/usr/src/rpmlint', '$(pwd)');" | sqlite3 .coverage
   - coveralls
