@@ -1,9 +1,9 @@
-#############################################################################
-# Author        : Matthias Gerstner
-# Purpose       : Enforce cron jobs in /etc/cron.* directories to be on a allow list
-#############################################################################
+"""
+Author        : Matthias Gerstner
+Purpose       : Enforce cron jobs in /etc/cron.* directories to be on a allow list
+"""
 
-from .Allowlisting import AbstractAllowlistCheck
+from rpmlint.checks.Allowlisting import AbstractAllowlistCheck
 
 
 class CronCheck(AbstractAllowlistCheck):

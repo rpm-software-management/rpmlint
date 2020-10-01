@@ -3,8 +3,8 @@
 
 from xml.dom.minidom import parse
 
-from .AbstractCheck import AbstractFilesCheck
-from .Allowlisting import AbstractSimpleAllowlistCheck
+from rpmlint.checks.AbstractCheck import AbstractFilesCheck
+from rpmlint.checks.Allowlisting import AbstractSimpleAllowlistCheck
 
 
 POLKIT_DEFAULT_PRIVS_D = '/etc/polkit-default-privs.d/'

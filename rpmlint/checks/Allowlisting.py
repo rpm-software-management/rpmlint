@@ -1,7 +1,7 @@
-#############################################################################
-# Author        : Matthias Gerstner
-# Purpose       : reusable code for dealing with security allow lists
-#############################################################################
+"""
+Author        : Matthias Gerstner
+Purpose       : reusable code for dealing with security allow lists
+"""
 
 import abc
 from dataclasses import make_dataclass

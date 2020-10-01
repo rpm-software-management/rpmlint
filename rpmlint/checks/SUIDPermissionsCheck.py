@@ -1,18 +1,17 @@
-#############################################################################
-# File          : CheckSUIDPermissions.py
-# Package       : rpmlint
-# Author        : Ludwig Nussel
-# Purpose       : Check for /usr/share/permissions violations
-#############################################################################
+"""
+File          : CheckSUIDPermissions.py
+Package       : rpmlint
+Author        : Ludwig Nussel
+Purpose       : Check for /usr/share/permissions violations
+"""
 
 import os
 import stat
 import sys
 
 import rpm
-
-from .AbstractCheck import AbstractCheck
-from ..pkg import FakePkg
+from rpmlint.checks.AbstractCheck import AbstractCheck
+from rpmlint.pkg import FakePkg
 
 _permissions_d_allowed = (
     'lprng',
@@ -109,7 +108,6 @@ class SUIDCheck(AbstractCheck):
                     break
 
         need_set_permissions = False
-        found_suseconfig = False
         # second pass, find permissions violations
         for f, pkgfile in pkg.files.items():
 
@@ -186,12 +184,6 @@ class SUIDCheck(AbstractCheck):
                         found = True
                         break
 
-                    if 'SuSEconfig --module permissions' in line \
-                            or 'run_permissions is obsolete' in line:
-                        found = True
-                        found_suseconfig = True
-                        break
-
             if need_verifyscript and \
                     (f not in self.perms or 'static' not in self.perms[f]):
 
@@ -217,8 +209,3 @@ class SUIDCheck(AbstractCheck):
             if 'permissions' not in (x[0] for x in pkg.prereq):
                 self.output.add_info('E', pkg, 'permissions-missing-requires',
                                      "missing 'permissions' in PreReq")
-
-        if found_suseconfig:
-            # TODO: nothing in tumbleweed uses this anymore. can probable be dropped.
-            self.output.add_info('I', pkg, 'permissions-suseconfig-obsolete',
-                                 '%run_permissions is obsolete')

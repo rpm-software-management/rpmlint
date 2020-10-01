@@ -1,4 +1,4 @@
-from .Allowlisting import AbstractSimpleAllowlistCheck
+from rpmlint.checks.Allowlisting import AbstractSimpleAllowlistCheck
 
 
 class DBUSServiceCheck(AbstractSimpleAllowlistCheck):
