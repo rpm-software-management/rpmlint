@@ -1,36 +1,22 @@
 permissions-unauthorized-file="""
 Unauthorized file in permissions.
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
 """
 
 
 
 permissions-symlink="""
-Permissions handling for symlinks is useless. Please contact security@suse.de
-to remove the entry. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+Permissions handling for symlinks is useless.
 """
 
 
 permissions-dir-without-slash="""
-The entry in the permissions file refers to a directory. Please contact
-security@suse.de to append a slash to the entry in order to avoid security
-problems. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+The entry in the permissions file refers to a directory.
 """
 
 
 permissions-file-as-dir="""
 The entry in the permissions file refers to a directory but the package
-actually contains a file. Please contact security@suse.de to remove the slash.
-Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+actually contains a file.
 """
 
 
@@ -46,35 +32,22 @@ Please use the %attr macro to set the correct ownership.
 
 permissions-file-setuid-bit="""
 File is packaged with setuid bit.
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the program by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
 """
 
 
 permissions-directory-setuid-bit="""
 Directory is packaged with setuid bit.
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
 """
 
 
 permissions-world-writable="""
 File is packages with world writable permissions.
-If the package is intended for inclusion in any SUSE product please open a bug
-report to request review of the package by the security team. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
 """
 
 
 permissions-fscaps="""
 Packaging file capabilities is currently not supported. Please use normal
-permissions instead. You may contact the security team to request an entry that
-sets capabilities in /usr/share/permissions/permissions instead.
+permissions instead.
 """
 
 
@@ -94,8 +67,5 @@ Please add a %verifyscript section.
 
 
 permissions-ghostfile="""
-This package installs a permissions file as a %ghost file. This is not allowed
-as it is impossible to review. Please refer to
-https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
-more information.
+This package installs a permissions file as a %ghost file.
 """
