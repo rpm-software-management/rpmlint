@@ -13,26 +13,12 @@ import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.pkg import FakePkg
 
-_permissions_d_allowed = (
-    'lprng',
-    'lprng.paranoid',
-    'mail-server',
-    'mail-server.paranoid',
-    'postfix',
-    'postfix.paranoid',
-    'sendmail',
-    'sendmail.paranoid',
-    'squid',
-    'texlive',
-    'texlive.texlive',
-    'otrs',  # bsc#1118049
-)
-
 
 class SUIDCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
 
+        self.permissions_d_allowed = config.configuration['SUIDAllowedPermissions']
         self.perms = {}
 
         for fname in self._paths_to('permissions', 'permissions.secure'):
@@ -93,7 +79,7 @@ class SUIDCheck(AbstractCheck):
                         continue
 
                     bn = f[len(prefix):]
-                    if bn not in _permissions_d_allowed:
+                    if bn not in self.permissions_d_allowed:
                         self.output.add_info('E', pkg, 'permissions-unauthorized-file', f)
 
                     bn = 'permissions.d/' + bn.split('.')[0]
