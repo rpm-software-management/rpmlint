@@ -80,7 +80,7 @@ Please add an appropriate %post section
 
 
 permissions-missing-requires="""
-Please add 'PreReq: permissions'
+Please add 'Requires(phase): permissions'
 """
 
 

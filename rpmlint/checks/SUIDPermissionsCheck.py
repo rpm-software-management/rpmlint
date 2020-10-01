@@ -208,4 +208,4 @@ class SUIDCheck(AbstractCheck):
         if need_set_permissions:
             if 'permissions' not in (x[0] for x in pkg.prereq):
                 self.output.add_info('E', pkg, 'permissions-missing-requires',
-                                     "missing 'permissions' in PreReq")
+                                     "missing 'permissions' in Requires(phase)")

@@ -9,7 +9,7 @@ class DBUSServiceCheck(AbstractSimpleAllowlistCheck):
         '/etc/dbus-1/system.d/'
     )
     error_map = {
-        'ghost': 'suse-dbus-ghost-service',
-        'unauthorized': 'suse-dbus-unauthorized-service',
+        'ghost': 'dbus-ghost-service',
+        'unauthorized': 'dbus-unauthorized-service',
     }
     allowlist_config_key = 'DBUSServices.WhiteList'

@@ -23,10 +23,10 @@ def test_dbus_services(tmpdir, package, dbusservicescheck):
     out = output.print_results(output.results)
     assert 'noproblem' not in out
     # these are allowed and should NOT produce errors
-    assert 'suse-dbus-unauthorized-service /usr/share/dbus-1/system-services/1' not in out
-    assert 'suse-dbus-unauthorized-service /usr/share/dbus-1/system.d/2' not in out
-    assert 'suse-dbus-unauthorized-service /etc/dbus-1/system.d/3' not in out
+    assert 'dbus-unauthorized-service /usr/share/dbus-1/system-services/1' not in out
+    assert 'dbus-unauthorized-service /usr/share/dbus-1/system.d/2' not in out
+    assert 'dbus-unauthorized-service /etc/dbus-1/system.d/3' not in out
     # these are not allowed and should produce errors
-    assert 'suse-dbus-unauthorized-service /usr/share/dbus-1/system-services/a' in out
-    assert 'suse-dbus-unauthorized-service /usr/share/dbus-1/system.d/b' in out
-    assert 'suse-dbus-unauthorized-service /etc/dbus-1/system.d/c' in out
+    assert 'dbus-unauthorized-service /usr/share/dbus-1/system-services/a' in out
+    assert 'dbus-unauthorized-service /usr/share/dbus-1/system.d/b' in out
+    assert 'dbus-unauthorized-service /etc/dbus-1/system.d/c' in out
