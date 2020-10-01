@@ -1,7 +1,6 @@
 """reusable code for dealing with security allow lists"""
 
 import abc
-from dataclasses import make_dataclass
 import hashlib
 import json
 import os
@@ -12,9 +11,15 @@ import traceback
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
-class DigestVerificationResult(make_dataclass('', ['path', 'algorithm', 'expected', 'encountered'])):
+class DigestVerificationResult:
     """This type represents the result of a digest verification as returned
     from AuditEntry.compare_digests()."""
+
+    def __init__(self, path, algorithm, expected, encountered):
+        self.path = path
+        self.algorithm = algorithm
+        self.expected = expected
+        self.encountered = encountered
 
     def matches(self):
         """Returns a boolean whether the encountered digest matches the
