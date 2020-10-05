@@ -19,11 +19,13 @@ def get_tested_path(path):
 
 def get_tested_package(name, testdir):
     filename = Path(name).name + '-*.rpm'
-    pkg_path = list(get_tested_path(name).parent.glob(filename))[0]
-    return Pkg(pkg_path, testdir)
+    candidates = list(get_tested_path(name).parent.glob(filename))
+    assert len(candidates) == 1
+    return Pkg(candidates[0], testdir)
 
 
 def get_tested_spec_package(name):
     filename = Path(name).name + '.spec'
-    pkg_path = list(get_tested_path(name).parent.glob(filename))[0]
-    return FakePkg(pkg_path)
+    candidates = list(get_tested_path(name).parent.glob(filename))
+    assert len(candidates) == 1
+    return FakePkg(candidates[0])
