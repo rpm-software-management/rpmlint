@@ -217,7 +217,7 @@ def test_check_misc_warning(tmpdir, package, tagscheck):
     assert 'W: invalid-url URL so;mething.' in out
 
 
-@pytest.mark.parametrize('package', ['binary/misc'])
+@pytest.mark.parametrize('package', ['binary/misc-no-warnings'])
 def test_check_misc_warning_not_found(tmpdir, package, tagscheck):
     """Test package for check not in out
     tag-in-description, name-repeated-in-summary, invalid-url."""
