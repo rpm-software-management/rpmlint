@@ -2,9 +2,9 @@ FROM opensuse/leap:15
 
 RUN zypper -n install \
         checkbashisms cpio dash gzip \
-        bzip2 groff make elfutils xz \
-        perl binutils glibc desktop-file-utils \
-        man appstream-glib \
+        bzip2 groff make xz \
+        binutils glibc glibc-locale desktop-file-utils \
+        appstream-glib \
         myspell-en_US myspell-cs_CZ \
         python3-magic \
         python3-pyenchant \
