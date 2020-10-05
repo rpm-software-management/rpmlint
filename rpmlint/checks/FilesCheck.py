@@ -11,14 +11,12 @@ from datetime import datetime
 import os
 from pathlib import Path
 import re
-from shlex import quote
 import stat
-import subprocess
 
 import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT
-from rpmlint.pkg import catcmd, is_utf8, is_utf8_bytestr
+from rpmlint.helpers import byte_to_string
+from rpmlint.pkg import is_utf8, is_utf8_bytestr
 
 # must be kept in sync with the filesystem package
 STANDARD_DIRS = (
@@ -203,14 +201,6 @@ non_readable_regexs = (re.compile(r'^/var/log/'),
                        re.compile(r'^/etc/(g?shadow-?|securetty)$'))
 
 man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man[^/]+/(.+)\.[1-9n]')
-man_warn_regex = re.compile(r'^([^:]+:)\d+:\s*')
-man_nowarn_regex = re.compile(
-    # From Lintian: ignore common undefined macros from pod2man << Perl 5.10
-    r'\`(Tr|IX)\' not defined|'
-    # .so entries won't resolve as we're dealing with stdin
-    r'No such file or directory|'
-    # TODO, better handling for these (see e.g. Lintian)
-    r'(can\'t break|cannot adjust) line')
 
 fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
 fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
@@ -350,7 +340,6 @@ class FilesCheck(AbstractCheck):
         self.use_relative_symlinks = self.config.configuration['UseRelativeSymlinks']
         self.standard_groups = self.config.configuration['StandardGroups']
         self.standard_users = self.config.configuration['StandardUsers']
-        self.man_warn_category = self.config.configuration['ManWarningCategory']
         self.disallowed_dirs = self.config.configuration['DisallowedDirs']
         self.compress_ext = self.config.configuration['CompressExtension']
         self.output.error_details.update({
@@ -838,26 +827,6 @@ class FilesCheck(AbstractCheck):
                         debuginfo_debugs = True
                     else:
                         debuginfo_srcs = True
-
-                res = man_base_regex.search(f)
-                if res:
-                    man_basenames.add(res.group(1))
-                    if chunk:
-                        # TODO: sequence based invocation
-                        command = subprocess.run(
-                            '%s %s | gtbl | groff -mtty-char -Tutf8 '
-                            '-P-c -mandoc -w%s >%s' %
-                            (catcmd(f), quote(pkgfile.path),
-                             quote(self.man_warn_category), os.devnull),
-                            shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            env=ENGLISH_ENVIROMENT)
-
-                        for line in command.stdout.decode().split('\n'):
-                            res = man_warn_regex.search(line)
-                            if not res or man_nowarn_regex.search(line):
-                                continue
-                            self.output.add_info('W', pkg, 'manual-page-warning', f,
-                                                 line[res.end(1):])
 
                 if f.endswith('.svgz') and f[0:-1] not in files \
                         and scalable_icon_regex.search(f):

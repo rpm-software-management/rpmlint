@@ -363,10 +363,6 @@ It can cause problems when dirs in $PATH are reordered.
 no-manual-page-for-binary="""
 Each executable in standard binary directories should have a man page.
 """
-manual-page-warning="""
-This man page may contain problems that can cause it not to be formatted
-as intended.
-"""
 incorrect-fsf-address="""
 The Free Software Foundation address in this file seems to be outdated or
 misspelled. Ask upstream to update the address, or if this is a license file,

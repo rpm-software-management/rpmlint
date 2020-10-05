@@ -6,8 +6,6 @@ RUN dnf --nogpgcheck -y install \
         /usr/bin/cpio \
         /usr/bin/bzip2 \
         /usr/bin/desktop-file-validate \
-        /usr/bin/groff \
-        /usr/bin/gtbl \
         /usr/bin/make \
         /usr/bin/python3 \
         /usr/bin/readelf \
