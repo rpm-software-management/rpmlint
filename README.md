@@ -32,7 +32,6 @@ Mandatory:
 
 Optional:
 - libmagic and its python bindings
-- groff and gtbl
 - enchant and its python bindings
 - appstream-util, part of appstream-glib
 
