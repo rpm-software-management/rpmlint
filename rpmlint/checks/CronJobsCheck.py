@@ -4,7 +4,7 @@ from rpmlint.checks.Allowlisting import AbstractAllowlistCheck
 
 
 class CronCheck(AbstractAllowlistCheck):
-    allowlist_filenames = ('cron-whitelist.json',)
+    allowlist_filenames = ('cron-whitelist.toml',)
     restricted_paths = (
         '/etc/cron.d/', '/etc/cron.hourly/', '/etc/cron.daily/',
         '/etc/cron.weekly/', '/etc/cron.monthly/'

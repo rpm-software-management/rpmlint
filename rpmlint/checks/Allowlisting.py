@@ -2,13 +2,13 @@
 
 import abc
 import hashlib
-import json
 import os
 import os.path
 import sys
 import traceback
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
+import toml
 
 
 class DigestVerificationResult:
@@ -30,20 +30,13 @@ class DigestVerificationResult:
 class AuditEntry:
     """This object represents a single audit entry as found in an allow entry like:
 
-    "bsc#1234": {
-        "comment": "some comment",
-        "digests": {
-            "/some/file": "<alg>:<digest>",
-            ...
-        }
-    }
-
+    [<packagename>."bsc#1234".digests]
+    "/some/file" = "<alg>:<digest>"
     """
 
     def __init__(self, bug):
         self.bug = bug
         self._verify_bug_nr()
-        self.comment = ''
         self.digests = {}
 
     def _set_digests(self, digests):
@@ -166,7 +159,7 @@ class AuditEntry:
 
 def allowlist_for_package(allowlist_path, pkg_name):
     class AllowlistParser:
-        """This type knows how to parse the JSON allow listing format. The format
+        """This type knows how to parse the TOML allow listing format. The format
         is documented in [1].
 
         [1]: https://github.com/openSUSE/rpmlint-security-whitelistings/blob/master/README.md
@@ -183,7 +176,7 @@ def allowlist_for_package(allowlist_path, pkg_name):
 
             try:
                 with open(self.path, 'r') as fd:
-                    data = json.load(fd)
+                    data = toml.load(fd)
 
                     try:
                         config = data[package]
@@ -194,21 +187,16 @@ def allowlist_for_package(allowlist_path, pkg_name):
             except Exception as e:
                 _, _, tb = sys.exc_info()
                 fn, ln, _, _ = traceback.extract_tb(tb)[-1]
-                raise Exception(self._get_error_prefix() + f'Failed to parse JSON file: {fn}:{ln}: {e}')
+                raise Exception(self._get_error_prefix() + f'Failed to parse TOML file: {fn}:{ln}: {e}')
 
         def _parse_allowlist_entry(self, package, config):
-            """Parses a single JSON allow entry and returns a AuditEntry()
+            """Parses a single TOML allow entry and returns a AuditEntry()
             object for it. On non-critical error conditions None is returned,
             otherwise an exception is raised."""
 
             ret = []
 
-            audits = config.get('audits')
-
-            if not audits:
-                raise Exception(self._get_error_prefix() + f"no 'audits' entries for package {package}")
-
-            for bug, data in audits.items():
+            for bug, data in config.items():
                 try:
                     audit = self._parse_audit_entry(bug, data)
                 except Exception as e:
@@ -221,15 +209,11 @@ def allowlist_for_package(allowlist_path, pkg_name):
             return ret
 
         def _parse_audit_entry(self, bug, data):
-            """Parses a single JSON audit sub-entry returns an AuditEntry() object
+            """Parses a single TOML audit sub-entry returns an AuditEntry() object
             for it. On non-critical error conditions None is returned, otherwise
             an exception is raised"""
 
             ret = AuditEntry(bug)
-
-            comment = data.get('comment')
-            if comment:
-                ret.comment = comment
 
             digests = data.get('digests')
 

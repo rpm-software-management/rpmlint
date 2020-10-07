@@ -1,10 +1,10 @@
-import json
 import os
 import os.path
 
 import pytest
 from rpmlint.checks.CronJobsCheck import CronCheck
 from rpmlint.filter import Filter
+import toml
 
 from Testing import CONFIG, get_tested_package
 
@@ -21,7 +21,7 @@ def cronjobscheck(tmpdir):
 
     # make an empty allow list
     with open(os.path.join(tmpdir, test.allowlist_filenames[0]), 'w') as fd:
-        json.dump({}, fd)
+        toml.dump({}, fd)
 
     return output, test
 
