@@ -31,6 +31,15 @@ def polkit_actions_check(tmpdir):
     return output, test
 
 
+@pytest.mark.parametrize('package', ['binary/polkit-def-privs-test'])
+def test_polkit_actions_parse(tmpdir, package, polkit_actions_check):
+    # the RPM contains a file with allowed actions that should parse successfully
+    output, test = polkit_actions_check
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert out == ''
+
+
 @pytest.mark.parametrize('package', ['binary/polkit-0'])
 def test_polkit_actions(tmpdir, package, polkit_actions_check):
     output, test = polkit_actions_check
