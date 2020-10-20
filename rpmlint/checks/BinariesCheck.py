@@ -34,8 +34,9 @@ class BinariesCheck(AbstractCheck):
         self.is_exec = False
         self.is_shobj = False
         self.system_lib_paths = config.configuration['SystemLibPaths']
-        pie_exec_re = config.configuration['PieExecutables']
-        self.pie_exec_re = re.compile(pie_exec_re) if pie_exec_re else None
+        self.pie_exec_regex_list = []
+        for regex in config.configuration['PieExecutables']:
+            self.pie_exec_regex_list.append(re.compile(regex))
         self.usr_lib_exception_regex = re.compile(config.configuration['UsrLibBinaryException'])
 
         self.setgid_call_regex = self.create_regexp_call(r'set(?:res|e)?gid')
@@ -151,7 +152,7 @@ class BinariesCheck(AbstractCheck):
         executable.
         """
         if not self.is_shobj and not is_pie_exec:
-            if self.pie_exec_re and self.pie_exec_re.search(bin_name):
+            if any(regex.search(bin_name) for regex in self.pie_exec_regex_list):
                 self.output.add_info('E', pkg,
                                      'non-position-independent-executable',
                                      bin_name)

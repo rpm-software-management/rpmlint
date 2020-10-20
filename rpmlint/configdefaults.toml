@@ -250,8 +250,8 @@ SystemLibPaths = [
     "/usr/lib64",
     "/usr/X11R6/lib64",
 ]
-# Regexp string with executables that must be compiled as position independent
-PieExecutables = ''
+# List of regexp strings with executables that must be compiled as position independent
+PieExecutables = []
 # Architecture dependent paths in which packages are allowed to install files
 # even if they are all non-binary
 UsrLibBinaryException = '^/usr/lib(64)?/(perl|python|ruby|menu|pkgconfig|ocaml|lib[^/]+\.(so|l?a)$|bonobo/servers/|\.build-id|firmware)'
