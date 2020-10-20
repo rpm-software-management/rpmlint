@@ -325,8 +325,8 @@ binaries = ['/usr/bin/launch_x11_clanapp', 'clanlib', 'libclanlib0']
 regexp = '(?:/usr/bin/)?soundwrapper'
 binaries = false
 
-# Exception list for dangling symlink checks.  The first in each pair
-# is a regexp, and the second the package in which the target of the
+# Exception list for dangling symlink checks.  The first in each pair ("path")
+# is a regexp, and the second ("name") the package in which the target of the
 # dangling symlink is shipped
 [DanglingSymlinkExceptions]
 

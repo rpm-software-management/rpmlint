@@ -342,6 +342,8 @@ class FilesCheck(AbstractCheck):
         self.use_debugsource = self.config.configuration['UseDebugSource']
         self.games_group_regex = re.compile(self.config.configuration['RpmGamesGroup'])
         self.dangling_exceptions = self.config.configuration['DanglingSymlinkExceptions']
+        for item in self.dangling_exceptions.values():
+            item['path'] = re.compile(item['path'])
         self.module_rpms_ok = self.config.configuration['KernelModuleRPMsOK']
         self.python_default_version = self.config.configuration['PythonDefaultVersion']
         self.perl_version_trick = self.config.configuration['PerlVersionTrick']
