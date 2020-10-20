@@ -93,7 +93,7 @@ def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
 
 @pytest.mark.parametrize('package', ['binary/bcc-lua'])
 def test_position_independent_executable(tmpdir, package, binariescheck):
-    CONFIG.configuration['PieExecutables'] = '.*'
+    CONFIG.configuration['PieExecutables'] = ['.*']
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
@@ -164,7 +164,7 @@ def test_binary_in_etc(tmpdir, package, binariescheck):
 @pytest.mark.parametrize('package', ['binary/non-position-independent-exec'])
 def test_non_position_independent_sugg(tmpdir, package, binariescheck):
     # reset PieExecutable option
-    CONFIG.configuration['PieExecutables'] = ''
+    CONFIG.configuration['PieExecutables'] = []
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
@@ -177,7 +177,7 @@ def test_non_position_independent_sugg(tmpdir, package, binariescheck):
 # Force an error by setting PieExecutables option to the no-pie binary
 @pytest.mark.parametrize('package', ['binary/non-position-independent-exec'])
 def test_non_position_independent(tmpdir, package, binariescheck):
-    CONFIG.configuration['PieExecutables'] = 'hello'
+    CONFIG.configuration['PieExecutables'] = ['sparta', 'hello']
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
