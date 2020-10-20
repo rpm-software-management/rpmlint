@@ -23,5 +23,6 @@ def test_parsing_config_file(test_arguments):
 def test_parsing_opensuse_conf(test_arguments):
     parsed = process_lint_args(test_arguments)
 
-    assert len(parsed['config']) == 1
-    assert parsed['config'][0] == PosixPath('configs/openSUSE/opensuse.toml')
+    assert len(parsed['config']) == 2
+    assert PosixPath('configs/openSUSE/opensuse.toml') in parsed['config']
+    assert PosixPath('configs/openSUSE/licenses.toml') in parsed['config']
