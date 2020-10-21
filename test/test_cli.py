@@ -2,6 +2,8 @@ from pathlib import PosixPath
 
 import pytest
 from rpmlint.cli import process_lint_args
+from rpmlint.config import Config
+from rpmlint.lint import Lint
 
 
 @pytest.mark.parametrize('test_arguments', [['-c', 'rpmlint/configs/thisdoesntexist.toml']])
@@ -27,3 +29,12 @@ def test_parsing_opensuse_conf(test_arguments):
     assert PosixPath('configs/openSUSE/opensuse.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/licenses.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/pie-executables.toml') in parsed['config']
+
+    defaultcfg = Config()
+    lint = Lint(parsed)
+    default_checks = defaultcfg.configuration['Checks']
+    checks = lint.config.configuration['Checks']
+    # Verify that all original Checks are enabled and some new are added
+    for check in default_checks:
+        assert check in checks
+    assert len(checks) > len(default_checks)
