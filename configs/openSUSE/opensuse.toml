@@ -230,12 +230,6 @@ Filters = [
     'perl\.\S+: \w: filelist-forbidden-perl-dir ',
     'info\.\S+: \w: info-dir-file .*/usr/share/info/dir',
 
-# Fillup is known to break SuSEfirewall's sysconfig file on many
-# systems as people tend to break up long lines into several ones.
-# This bug remains unfixed since years (bnc#340926).
-# So we have to avoid fillup and therefore break the SUSE policy
-    'SuSEfirewall2\.\S+: \w: filelist-forbidden-sysconfig.*/etc/sysconfig/SuSEfirewall2',
-
 # These packages are used for CD creation and are not supposed to be
 # installed. It's still a dirty hack to make an exception. The
 # packages should either be built in a separate project with
