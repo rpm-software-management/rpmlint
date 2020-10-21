@@ -7,26 +7,6 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 1000
 
-[DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
-path = "/usr/share/doc/licenses/"
-name = "licenses"
-[DanglingSymlinkExceptions."consolehelper$"]
-path = "consolehelper$"
-name = "usermode-consoleonly"
-
-[Details]
-non-standard-uid = '''A file in this package is owned by an unregistered user id.
-To register the user, please branch the devel:openSUSE:Factory:rpmlint rpmlint package,
-add the user to the "config" file and send a submitrequest.
-'''
-non-standard-gid = '''A file in this package is owned by an unregistered group id.
-To register the group, please branch the devel:openSUSE:Factory:rpmlint rpmlint package,
-add the group to the "config" file and send a submitrequest.
-'''
-no-changelogname-tag = '''There is no changelog. Please insert a '%changelog' section heading in your
-spec file and prepare your changes file using e.g. the 'osc vc' command.'''
-
-
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
 # TODO Uncomment security checks when they are ported
@@ -37,10 +17,13 @@ Checks = [
     #"CheckPolkitPrivs",
     #"CheckWorldWritable",
     #"CheckDeviceFiles",
-    "BrandingPolicyCheck",
-    "FilelistCheck",
-    "KMPPolicyCheck",
-    "SystemdInstallCheck",
+
+# TODO: Uncomment in opensuse branch only
+    #"BrandingPolicyCheck",
+    #"FilelistCheck",
+    #"KMPPolicyCheck",
+    #"SystemdInstallCheck",
+
     "BashismsCheck",
     "PAMModulesCheck",
     "TmpFilesCheck",
@@ -258,3 +241,23 @@ Filters = [
     ' info-files-without-install-info-postun ',
     ' postin-without-install-info ',
 ]
+
+[DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
+path = "/usr/share/doc/licenses/"
+name = "licenses"
+[DanglingSymlinkExceptions."consolehelper$"]
+path = "consolehelper$"
+name = "usermode-consoleonly"
+
+# TODO: this is not working, fix it
+[Details]
+non-standard-uid = '''A file in this package is owned by an unregistered user id.
+To register the user, please branch the devel:openSUSE:Factory:rpmlint rpmlint package,
+add the user to the "config" file and send a submitrequest.
+'''
+non-standard-gid = '''A file in this package is owned by an unregistered group id.
+To register the group, please branch the devel:openSUSE:Factory:rpmlint rpmlint package,
+add the group to the "config" file and send a submitrequest.
+'''
+no-changelogname-tag = '''There is no changelog. Please insert a '%changelog' section heading in your
+spec file and prepare your changes file using e.g. the 'osc vc' command.'''
