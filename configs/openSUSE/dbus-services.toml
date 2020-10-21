@@ -1,0 +1,270 @@
+DBUSServices.WhiteList = [
+    "cups.conf", # bnc#515977
+    #
+    # the following are not audited. We accept them as legacy for now
+    #
+    # upower
+    "org.freedesktop.UPower.service",
+    "org.freedesktop.UPower.conf",
+    # PackageKit
+    "org.freedesktop.PackageKit.conf",
+    # PackageKit
+    "org.freedesktop.PackageKit.service",
+    # NetworkManager-pptp
+    "nm-pptp-service.conf",
+    # gdm
+    "gdm.conf",
+    # udisks2 (bnc#742751)
+    "org.freedesktop.UDisks2.service",
+    "org.freedesktop.UDisks2.conf",
+    # scmon
+    "com.novell.Pkcs11Monitor.conf",
+    # systemd (bnc#641924)
+    "org.freedesktop.systemd1.service",
+    "org.freedesktop.systemd1.conf",
+    "org.freedesktop.hostname1.service",
+    "org.freedesktop.hostname1.conf",
+    "org.freedesktop.login1.conf",
+    "org.freedesktop.login1.service",
+    "org.freedesktop.timedate1.conf",
+    "org.freedesktop.timedate1.service",
+    "org.freedesktop.locale1.conf",
+    "org.freedesktop.locale1.service",
+    # gconf2
+    "org.gnome.GConf.Defaults.service",
+    "org.gnome.GConf.Defaults.conf",
+    # system-config-printer (bnc#694640)
+    "com.redhat.NewPrinterNotification.conf",
+    "com.redhat.PrinterDriversInstaller.conf",
+    # rtkit
+    "org.freedesktop.RealtimeKit1.conf",
+    "org.freedesktop.RealtimeKit1.service",
+    # wpa_supplicant
+    "fi.epitest.hostap.WPASupplicant.service",
+    # bnc#681116
+    "fi.w1.wpa_supplicant1.service",
+    "wpa_supplicant.conf",
+    # kdebase4-workspace
+    "org.kde.fontinst.service",
+    "org.kde.fontinst.conf",
+    "org.kde.ksysguard.processlisthelper.service",
+    "org.kde.kcontrol.kcmclock.service",
+    "org.kde.kcontrol.kcmclock.conf",
+    "org.kde.ksysguard.processlisthelper.conf",
+    # pulseaudio
+    "pulseaudio-system.conf",
+    # avahi
+    "avahi-dbus.conf",
+    "org.freedesktop.Avahi.service",
+    # hp-drive-guard
+    "hp-drive-guard-dbus.conf",
+    # NetworkManager
+    "nm-dispatcher.conf",
+    "org.freedesktop.nm_dispatcher.service",
+    # bnc#747780
+    "org.freedesktop.NetworkManager.conf",
+    # bluez (bnc#768062)
+    "bluetooth.conf",
+    "org.bluez.service",
+    # dnsmasq
+    "dnsmasq.conf",
+    # gypsy
+    "Gypsy.conf",
+    "org.freedesktop.Gypsy.service",
+    # pommed
+    "pommed.conf",
+    # NetworkManager-openvpn
+    "nm-openvpn-service.conf",
+    # polkit
+    "org.freedesktop.PolicyKit1.conf",
+    "org.freedesktop.PolicyKit1.service",
+    # cups-pk-helper
+    "org.opensuse.CupsPkHelper.Mechanism.service",
+    "org.opensuse.CupsPkHelper.Mechanism.conf",
+    # NetworkManager-vpnc
+    "nm-vpnc-service.conf",
+    # NetworkManager-strongswan, bnc#656222
+    "nm-strongswan-service.conf",
+    # mumble, bnc#660784
+    "mumble-server.conf",
+    # kdebase4-runtime, bnc#672145
+    "org.kde.powerdevil.backlighthelper.service",
+    "org.kde.powerdevil.backlighthelper.conf",
+    # urfkill (bnc#688328)
+    "org.freedesktop.URfkill.service",
+    "org.freedesktop.URfkill.conf",
+    # account services (bnc#676638)
+    "org.freedesktop.Accounts.service",
+    "org.freedesktop.Accounts.conf",
+    # colord (bnc#698250)
+    "org.freedesktop.ColorManager.service",
+    "org.freedesktop.ColorManager.conf",
+    # lightdm (bnc#708205)
+    "org.freedesktop.DisplayManager.conf",
+    # sddm (boo#897788)
+    "sddm_org.freedesktop.DisplayManager.conf",
+    # NetworkManager-openvpn (bnc#732915)
+    "nm-openconnect-service.conf",
+    # snapper (bnc#759391)
+    "org.opensuse.Snapper.conf",
+    "org.opensuse.Snapper.service",
+    # autofs-udisk interaction (bnc#782691)
+    "org.freedesktop.AutoMount.conf",
+    # NetworkManager-iodine (bnc#781071)
+    "nm-iodine-service.conf",
+    # new ModemManager (bnc#798273)
+    "org.freedesktop.ModemManager1.conf",
+    "org.freedesktop.ModemManager1.service",
+    # fprintd 0.4.1 (finger print dbus service) (bnc#792095)
+    "net.reactivated.Fprint.service",
+    "net.reactivated.Fprint.conf",
+    # wicked network management (bnc#783932)
+    "org.opensuse.Network.conf",
+    "org.opensuse.Network.AUTO4.conf",
+    "org.opensuse.Network.DHCP6.conf",
+    "org.opensuse.Network.DHCP4.conf",
+    "org.opensuse.Network.Nanny.conf",
+    # systemd machined service (bnc#828207)
+    "org.freedesktop.machine1.service",
+    "org.freedesktop.machine1.conf",
+    # systemd importd service (bnc#964935)
+    "org.freedesktop.import1.service",
+    "org.freedesktop.import1.conf",
+    # GeoClue2 DBUS Service (bnc#838360)
+    "org.freedesktop.GeoClue2.service",
+    "org.freedesktop.GeoClue2.conf",
+    # GeoClue2 DBUS Service more (bnc#862216)
+    "org.freedesktop.GeoClue2.Agent.conf",
+    # mate dbus serice (bnc#831404)
+    "org.mate.SettingsDaemon.DateTimeMechanism.service",
+    "org.mate.SettingsDaemon.DateTimeMechanism.conf",
+    # tuned DBUS service (bnc#787379, bnc#1007279)
+    "com.redhat.tuned.conf",
+    # bluez (bnc#768062)
+    "bluetooth.conf",
+    "org.bluez.service",
+    # kwallet (bnc#1033296)
+    "org.kde.kcontrol.kcmkwallet5.conf",
+    "org.kde.kcontrol.kcmkwallet5.service",
+    # neard (bnc#837978)
+    "org.neard.conf",
+    # oFono (bnc#862354)
+    "ofono.conf",
+    # libKF5Auth4 (bnc#864716)
+    "org.kde.kf5auth.conf",
+    # firewalld (bnc#907625)
+    "FirewallD.conf",
+    # systemd networkd (bnc#918799)
+    "org.freedesktop.network1.conf",
+    "org.freedesktop.network1.service",
+    # realmd (bnc#916766)
+    "org.freedesktop.realmd.service",
+    "org.freedesktop.realmd.conf",
+    # teamd (bnc#941993)
+    "org.libteam.teamd.conf",
+    # cinnamon settings daemon (bsc#951830)
+    "org.cinnamon.SettingsDaemon.DateTimeMechanism.conf",
+    "org.cinnamon.SettingsDaemon.DateTimeMechanism.service",
+    # thermald (bsc#954771)
+    "org.freedesktop.thermald.conf",
+    "org.freedesktop.thermald.service",
+    # iio-sensor-proxy (bsc#939191)
+    "net.hadess.SensorProxy.conf",
+    # TEMPORARY APPROVAL ONLY (meissner 20160519) tcmu-runner (bsc#978903)
+    "tcmu-runner.conf",
+    "org.kernel.TCMUService1.service",
+    # sysprof (bsc#996111)
+    "org.gnome.Sysprof2.service",
+    "org.gnome.Sysprof2.conf",
+    # sysprof (bsc#1151418)
+    "org.gnome.Sysprof3.service",
+    "org.gnome.Sysprof3.conf",
+    # flatpak (bsc#984817)
+    "org.freedesktop.Flatpak.SystemHelper.service",
+    "org.freedesktop.Flatpak.SystemHelper.conf",
+    # systemd resolver, but dont add automatically to nsswitch.conf! (bsc#917781)
+    "org.freedesktop.resolve1.conf",
+    "org.freedesktop.resolve1.service",
+    # powerdevil discretegpuhelper (bsc#1019748)
+    "org.kde.powerdevil.discretegpuhelper.conf",
+    "org.kde.powerdevil.discretegpuhelper.service",
+    # rebootmgr (bsc#1019644)
+    "org.opensuse.RebootMgr.conf",
+    # blueman (bsc#987141)
+    "org.blueman.Mechanism.conf",
+    "org.blueman.Mechanism.service",
+    # os-autoinst (bsc#1032649)
+    "org.opensuse.os_autoinst.switch.conf",
+    # backintime (bsc#1007723, bsc#1032717)
+    "net.launchpad.backintime.serviceHelper.conf",
+    "net.launchpad.backintime.serviceHelper.service",
+    # switchroo-control (bsc#1034309)
+    "net.hadess.SwitcherooControl.conf",
+    # pam_dbus (bsc#1039709). Take care to
+    # never enable/integrate this by default (see bsc comments)
+    "pam_dbus.conf",
+    # tpm2-abrmd (bnc#1049694)
+    "tpm2-abrmd.conf",
+    "com.intel.tss2.Tabrmd.service",
+    # nfs-ganesha (bsc#997880)
+    "org.ganesha.nfsd.conf",
+    # NetworkManager-l2tp (bsc#846337)
+    "nm-l2tp-service.conf",
+    # fwupd (bsc#932807)
+    "org.freedesktop.fwupd.conf",
+    "org.freedesktop.fwupd.service",
+    # connman (bsc#1057697)
+    "connman-nmcompat.conf",
+    "connman.conf",
+    "connman-vpn-dbus.conf",
+    "net.connman.vpn.service",
+    # kcmsddm (bsc#1065563)
+    "org.kde.kcontrol.kcmsddm.conf",
+    "org.kde.kcontrol.kcmsddm.service",
+    # usbauth (bsc#1066877)
+    "org.opensuse.usbauth.conf",
+    # kalarm (bnc#1087714, renamed from kalarmrtcwake)
+    "org.kde.kalarm.rtcwake.conf",
+    "org.kde.kalarm.rtcwake.service",
+    # NetworkManager-libreswan (bnc#1089340)
+    "nm-libreswan-service.conf",
+    # libratbag (bnc#1076467)
+    "org.freedesktop.ratbag1.service",
+    "org.freedesktop.ratbag1.conf",
+    # xpra (bsc#1102836)
+    "xpra.conf",
+    # iwd (bsc#1108037)
+    "net.connman.iwd.service",
+    "iwd-dbus.conf",
+    # NetworkManager-fortisslvpn (bsc#1109938)
+    "nm-fortisslvpn-service.conf",
+    # systemd-timesyncd (bsc#1111254)
+    "org.freedesktop.timesync1.service",
+    "org.freedesktop.timesync1.conf",
+    # keepalived (bsc#1015141)
+    "org.keepalived.Vrrp1.conf",
+    # boltd (bsc#1119975)
+    "org.freedesktop.bolt.conf",
+    "org.freedesktop.bolt.service",
+    # certmonger (bsc#1129452)
+    "org.fedorahosted.certmonger.service",
+    "certmonger.conf",
+    # systemd-portabled (boo#1145639)
+    "org.freedesktop.portable1.service",
+    "org.freedesktop.portable1.conf",
+    # sssd (bsc#1157663, bsc#1106600)
+    "org.freedesktop.sssd.infopipe.service",
+    "org.freedesktop.sssd.infopipe.conf",
+    # oddjob (bsc#1169494)
+    "oddjob.conf",
+    "oddjob-mkhomedir.conf",
+    # libvirt-dbus (bsc#1173093)
+    "org.libvirt.service",
+    "org.libvirt.conf",
+    # powerdevil chargethreshold helper (bsc#1176474)
+    "org.kde.powerdevil.chargethresholdhelper.service",
+    "org.kde.powerdevil.chargethresholdhelper.conf",
+    # plasma5-disks smartmon helper
+    "org.kde.kded.smart.service",
+    "org.kde.kded.smart.conf"
+]
