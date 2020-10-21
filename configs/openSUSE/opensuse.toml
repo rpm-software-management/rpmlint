@@ -1,5 +1,4 @@
 # Configuration for the rpmlint utility.
-# Loaded before ~/.rpmlintrc
 
 # Configuration options used by the checks
 CompressExtension = ""
@@ -103,12 +102,9 @@ Filters = [
     'devel-file-in-non-devel-package.*/boot/vmlinuz-.*autoconf.h',
     'devel-file-in-non-devel-package.*/usr/src/linux-',
     'devel-file-in-non-devel-package.*/usr/share/systemtap',
-    'kde4-kapptemplate\.\S+:.*devel-file-in-non-devel-package',
-    'kdesdk3\.\S+:.*devel-file-in-non-devel-package',
     '-(?:examples|doc)\.\S+: \w: devel-file-in-non-devel-package',
     'java\S+-demo\.\S+: \w: devel-file-in-non-devel-package',
     'avr-libc\.\S+: \w: devel-file-in-non-devel-package',
-    'dietlibc\.\S+ \w: devel-file-in-non-devel-package',
     'cross-.*devel-file-in-non-devel-package',
     'cmake.*devel-file-in-non-devel-package',
     'gcc\d\d.*devel-file-in-non-devel-package',
@@ -222,9 +218,6 @@ Filters = [
     ' no-manual-page-for-binary ',
     ' static-library-without-debuginfo /usr/lib(?:64)?/ghc-[\d\.]+/',
 
-# The libre mess
-    'libre(?:ssl|office|cad)[^\:]+: \w: shlib-policy-',
-
 # Many places have shorter paths
     ' non-coherent-filename ',
 
@@ -249,8 +242,7 @@ name = "licenses"
 path = "consolehelper$"
 name = "usermode-consoleonly"
 
-# TODO: this is not working, fix it
-[Details]
+[Descriptions]
 non-standard-uid = '''A file in this package is owned by an unregistered user id.
 To register the user, please branch the devel:openSUSE:Factory:rpmlint rpmlint package,
 add the user to the "config" file and send a submitrequest.
