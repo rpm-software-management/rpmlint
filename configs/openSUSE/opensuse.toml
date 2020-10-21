@@ -7,8 +7,6 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 1000
 
-# TODO fix, it's failing now
-[DanglingSymlinkExceptions]
 [DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
 path = "/usr/share/doc/licenses/"
 name = "licenses"
