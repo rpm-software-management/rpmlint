@@ -84,6 +84,39 @@ class Config(object):
                 else:
                     print_warning(f'(none): W: error locating user requested configuration: {path}')
 
+    def _merge_dictionaries(self, dest, source, override):
+        """
+        Merge in place dest dictionary for values in source in recursive way.
+        If override is set to True, override instead of merging.
+        """
+        for k, v in source.items():
+            vdest = dest.get(k)
+            if isinstance(vdest, dict) and isinstance(v, dict):
+                self._merge_dictionaries(vdest, v, override)
+            else:
+                print(override)
+                if isinstance(vdest, list) and not override:
+                    for item in v:
+                        if item not in vdest:
+                            vdest.append(item)
+                else:
+                    dest[k] = v
+
+    def _is_override_config(self, config_file):
+        return '.override.' in config_file.name
+
+    def _sort_config_files(self, config_file):
+        """
+        Sort config files in the following order:
+        configdefaults.toml, normal configs, *.override.* configs
+        """
+        if config_file == self.config_defaults:
+            return 0
+        elif not self._is_override_config(config_file):
+            return 1
+        else:
+            return 2
+
     def load_config(self, config=None):
         """
         Load the configuration files and append it to local dictionary.
@@ -99,7 +132,10 @@ class Config(object):
                     self.conf_files.append(path)
 
         try:
-            cfg = toml.load(self.conf_files)
+            cfg = {}
+            for cf in sorted(self.conf_files, key=self._sort_config_files):
+                toml_config = toml.load(cf)
+                self._merge_dictionaries(cfg, toml_config, self._is_override_config(cf))
         except toml.decoder.TomlDecodeError as terr:
             print_warning(f'(none): W: error parsing configuration files: {terr}')
             cfg = None

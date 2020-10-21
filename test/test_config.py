@@ -9,6 +9,7 @@ TEST_CONFIG_2 = [testpath() / 'configs/test2.config']
 TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
 TEST_LIST1 = [testpath() / 'configs/testlists1.config']
 TEST_LIST2 = [testpath() / 'configs/testlists2.config']
+TEST_OVERRIDE = [testpath() / 'configs/test.override.config']
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
 TEST_BROKEN = [testpath() / 'configs/broken.config']
 
@@ -83,7 +84,7 @@ def test_double_config():
     # shovel in another config
     cfg.load_config(TEST_CONFIG_2)
     assert len(cfg.conf_files) == 3
-    assert cfg.configuration['ExtraMenuNeeds'][0] == 'windows'
+    assert cfg.configuration['ExtraMenuNeeds'][-1] == 'windows'
     assert cfg.configuration['WarnOnFunction']['crypto-policy-non-compliance-openssl']['f_name'] == 'REPLACED'
     assert cfg.configuration['WarnOnFunction']['crypto-policy-3']['f_name'] == 'new_blobie'
 
@@ -107,9 +108,11 @@ def test_list_merging():
     assert cfg.configuration['ValidGroups'][0] == 'bullshitgroup'
     cfg.load_config(TEST_LIST2)
     assert len(cfg.conf_files) == 3
-    assert len(cfg.configuration['Filters']) == 1
+    assert len(cfg.configuration['Filters']) == 2
+    assert len(cfg.configuration['ValidGroups']) == 3
+    assert cfg.configuration['ValidGroups'][2] == 'System/Libraries'
+    cfg.load_config(TEST_OVERRIDE)
     assert len(cfg.configuration['ValidGroups']) == 1
-    assert cfg.configuration['ValidGroups'][0] == 'System/Libraries'
 
 
 def test_badness_functions():
