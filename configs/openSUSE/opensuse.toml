@@ -16,13 +16,6 @@ Checks = [
     #"CheckPolkitPrivs",
     #"CheckWorldWritable",
     #"CheckDeviceFiles",
-
-# TODO: Uncomment in opensuse branch only
-    #"BrandingPolicyCheck",
-    #"FilelistCheck",
-    #"KMPPolicyCheck",
-    #"SystemdInstallCheck",
-
     "BashismsCheck",
     "PAMModulesCheck",
     "TmpFilesCheck",
