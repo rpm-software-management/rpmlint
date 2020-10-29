@@ -166,7 +166,8 @@ def lint():
     """
     Main wrapper for lint command processing
     """
-    options = process_lint_args(sys.argv[1:])
+    config_folder = str(Path(__file__).parent / 'configs/openSUSE')
+    options = process_lint_args(['--config', config_folder] + sys.argv[1:])
 
     lint = Lint(options)
     sys.exit(lint.run())
