@@ -8,14 +8,6 @@ BadnessThreshold = 1000
 
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
-# TODO Uncomment security checks when they are ported
-# Note: polkit-default-privs would need to be installed always
-    #"CheckSUIDPermissions",
-    #"CheckDBUSServices",
-    #"CheckCronJobs",
-    #"CheckPolkitPrivs",
-    #"CheckWorldWritable",
-    #"CheckDeviceFiles",
     "BashismsCheck",
     "PAMModulesCheck",
     "TmpFilesCheck",
