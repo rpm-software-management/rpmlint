@@ -80,9 +80,6 @@ class Filter(object):
                            issue
             *details: Details of the rpmlint issue
         """
-        # we can be completely filtered for the rpmlint_issue
-        if self.filters_re and self.filters_re.search(rpmlint_issue):
-            return
 
         # filename in some cases can contain tmp paths and we don't need it
         # for the printout
@@ -108,9 +105,6 @@ class Filter(object):
             lvl_color = Color.Yellow
         else:
             lvl_color = Color.Bold
-        # raise the counters
-        self.score += badness
-        self.printed_messages[level] += 1
         # compile the message
         line = f'{package.current_linenum}:' if package.current_linenum else ''
         arch = f'.{package.arch}' if package.arch else ''
@@ -119,9 +113,17 @@ class Filter(object):
         for detail in details:
             if detail:
                 detail_output += f' {detail}'
-        result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {rpmlint_issue}{Color.Reset}'
-        result += bad_output
-        result += detail_output
+        result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {rpmlint_issue}{Color.Reset}{bad_output}{detail_output}'
+
+        # filter by the result message
+        result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{bad_output}{detail_output}'
+        if self.filters_re and self.filters_re.search(result_no_color):
+            return
+
+        # raise the counters
+        self.score += badness
+        self.printed_messages[level] += 1
+
         self.results.append(result)
 
     def print_results(self, results, config=None):
