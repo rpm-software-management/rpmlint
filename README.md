@@ -106,12 +106,17 @@ For a sample package see:
 If you want to change configuration options or the list of checks you can
 use the following locations:
 
-`/etc/xdg/rpmlint/*config`
+`/etc/xdg/rpmlint/*toml`
 
-`$XDG_CONFIG_HOME/rpmlint/*config`
+`$XDG_CONFIG_HOME/rpmlint/*toml`
 
 The configuration itself is a `toml` file where for some basic inspiration
 you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
+
+One can also include additional configuration files (or directories) by using the `--config` option.
+Note that all TOML configuration values are merged and not overridden.
+So e.g. values in a list are concatenated. If you need an override,
+use `*.override.*toml` configuration file, where all defined values are selected as default.
 
 Additional option to control `rpmlint` behaviour is the addition of `rpmlintrc` file
 which uses old syntax for compatibility with old `rpmlint` releases, yet

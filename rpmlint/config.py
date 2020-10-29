@@ -72,7 +72,7 @@ class Config(object):
             confdir = Path(directory) / 'rpmlint'
             if confdir.is_dir():
                 # load all configs in the folders
-                confopts = sorted(confdir.glob('*config'))
+                confopts = sorted(confdir.glob('*toml'))
                 self.conf_files += confopts
 
         # As a last item load up the user configuration
