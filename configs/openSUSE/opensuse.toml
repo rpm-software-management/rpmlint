@@ -13,6 +13,12 @@ Checks = [
     "TmpFilesCheck",
     "SysVInitOnSystemdCheck",
     "SharedLibraryPolicyCheck",
+
+    # Checks present at opensuse branch only
+    "BrandingPolicyCheck",
+    "FilelistCheck",
+    "KMPPolicyCheck",
+    "SystemdInstallCheck",
 ]
 
 
