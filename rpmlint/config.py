@@ -94,7 +94,6 @@ class Config(object):
             if isinstance(vdest, dict) and isinstance(v, dict):
                 self._merge_dictionaries(vdest, v, override)
             else:
-                print(override)
                 if isinstance(vdest, list) and not override:
                     for item in v:
                         if item not in vdest:
