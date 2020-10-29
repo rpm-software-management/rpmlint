@@ -19,7 +19,7 @@ def test_filters_regexp():
     """
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    assert len(cfg.configuration['Filters']) == 7
+    assert len(cfg.configuration['Filters']) == 11
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
     assert isinstance(result.filters_re, Pattern)
 
@@ -140,3 +140,15 @@ ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
     result.info = True
     assert len(result.print_results(result.results).splitlines()) == 11
     assert result.print_results(result.results) == expected_output
+
+
+def test_filtered_output(tmpdir):
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    assert len(result.results) == 0
+    result.add_info('E', pkg, 'no-regex', '')
+    result.add_info('E', pkg, 'no-regex-with-leading-space', '')
+    result.add_info('E', pkg, 'bad-error', 'details of the error')
+    result.add_info('E', pkg, 'test-color-error', 'details of the error')
+    assert len(result.results) == 0
