@@ -217,7 +217,7 @@ class BinariesCheck(AbstractCheck):
 
     def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
         """
-        For an archive, test if any .text sections is empty.
+        For an archive, test if any .text sections is non-empty.
         """
         if self.readelf_parser.is_archive:
             for comment in self.readelf_parser.comment_section_info.comments:
@@ -225,17 +225,14 @@ class BinariesCheck(AbstractCheck):
                     return
 
             for elf_file in self.readelf_parser.section_info.elf_files:
-                code_in_text = False
                 for section in elf_file:
                     sn = section.name
                     if ((sn == '.preinit_array' or sn == '.init_array' or
                          sn == '.fini_array' or sn.startswith('.text')) and
                             section.size > 0):
-                        code_in_text = True
-                        break
-                if not code_in_text:
-                    self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
-                    return
+                        return
+            self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
+            return
 
     def _check_missing_symtab_in_archive(self, pkg, pkgfile_path, path):
         """
