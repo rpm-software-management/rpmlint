@@ -72,14 +72,14 @@ class AlternativesCheck(AbstractCheck):
         script = self._normalize_script(script)
         # If there is no u-a call then give up right away
         if not script:
-            self.output.add_info('E', pkg, 'update-altenratives-post-call-missing')
+            self.output.add_info('E', pkg, 'update-alternatives-post-call-missing')
             return
         # collect all the known binaries
         for line in script:
             self._find_u_a_binarires(line)
         # if there is u-a call, but no --install command it is still an issue
         if not self.install_binaries:
-            self.output.add_info('E', pkg, 'update-altenratives-post-call-missing')
+            self.output.add_info('E', pkg, 'update-alternatives-post-call-missing')
 
     def _check_postun_phase(self, pkg, script):
         """
@@ -90,7 +90,7 @@ class AlternativesCheck(AbstractCheck):
         script = self._normalize_script(script)
         # If there is no u-a call then give up right away
         if not script:
-            self.output.add_info('E', pkg, 'update-altenratives-postun-call-missing')
+            self.output.add_info('E', pkg, 'update-alternatives-postun-call-missing')
             return
         # validate each binary actually is properly removed
         binaries = list(self.install_binaries.values())
@@ -100,7 +100,7 @@ class AlternativesCheck(AbstractCheck):
                 if re_remove.search(line):
                     binaries.remove(binary)
         for binary in binaries:
-            self.output.add_info('E', pkg, 'update-altenratives-postun-call-missing', binary)
+            self.output.add_info('E', pkg, 'update-alternatives-postun-call-missing', binary)
 
     def _check_filelist(self, pkg):
         """
@@ -172,4 +172,4 @@ class AlternativesCheck(AbstractCheck):
         for require in pkg.prereq:
             if self.re_requirement.match(require[0]):
                 return
-        self.output.add_info('E', pkg, 'update-altenratives-requirement-missing')
+        self.output.add_info('E', pkg, 'update-alternatives-requirement-missing')

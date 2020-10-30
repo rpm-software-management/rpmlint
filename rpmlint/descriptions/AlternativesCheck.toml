@@ -15,15 +15,15 @@ The update-alternatives generic name is not in the filelist. Create it as
 a symlink to %{_sysconfdir}/alternatives/$(basename generic-name) and add it
 to the file list.
 """
-update-altenratives-requirement-missing="""
+update-alternatives-requirement-missing="""
 The package does not have update-alternatives in Requires(post) or
 Requires(postun). This is needed for the proper scriptlet execution.
 """
-update-altenratives-post-call-missing="""
+update-alternatives-post-call-missing="""
 The package does not call update-alternatives --install in post phase to
 install all the configuration.
 """
-update-altenratives-postun-call-missing="""
+update-alternatives-postun-call-missing="""
 The package does not call update-alternatives --remove in postun phase to
 remove all the configuration for each individual --install binary that
 was done in postun.
