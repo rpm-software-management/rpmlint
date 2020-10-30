@@ -15,6 +15,7 @@ RUN dnf --nogpgcheck -y install \
         dash \
         devscripts-checkbashisms \
         glibc \
+        glibc.i386 \
         hunspell-en \
         hunspell-cs \
         python3-setuptools \

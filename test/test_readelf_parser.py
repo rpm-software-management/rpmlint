@@ -167,7 +167,14 @@ def test_invalid_soname(binariescheck):
     test.run_elf_checks(FakePkg('fake'), get_full_path('invalid-soname.so'), '/lib64/invalid-soname.so')
     out = output.print_results(output.results)
     assert 'invalid-soname /lib64/invalid-soname.so' in out
-    assert 'E: shlib-with-non-pic-code /lib64/invalid-soname.so' in out
+    assert 'E: shlib-with-non-pic-code /lib64/invalid-soname.so' not in out
+
+
+def test_non_pic_code_library(binariescheck):
+    output, test = binariescheck
+    test.run_elf_checks(FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
+    out = output.print_results(output.results)
+    assert 'E: shlib-with-non-pic-code' in out
 
 
 def test_no_ldconfig_symlink(binariescheck):

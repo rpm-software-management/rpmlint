@@ -329,7 +329,7 @@ class BinariesCheck(AbstractCheck):
                         self.output.add_info('E', pkg, 'incoherent-version-in-name', soversion)
 
         # check if the object code in the library is compiled with PIC
-        if not self.readelf_parser.section_info.pic:
+        if self.readelf_parser.dynamic_section_info['TEXTREL']:
             self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
 
     def _check_dependency(self, pkg, pkgfile_path, path):
