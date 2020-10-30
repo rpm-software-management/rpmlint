@@ -56,7 +56,8 @@ class Lint(object):
         # arguments that are supposed to be either rpm or spec files
         self.validate_files(self.options['rpmfile'])
         self._print_header()
-        print(self.output.print_results(self.output.results, self.config))
+        print(self.output.print_results(self.output.results, self.config),
+              end='')
         quit_color = Color.Bold
         if self.output.printed_messages['W'] > 0:
             quit_color = Color.Yellow
@@ -125,7 +126,6 @@ class Lint(object):
         no_pkgs = len(self.options['installed']) + len(self.options['rpmfile'])
         print(f'{Color.Bold}checks: {no_checks}, packages: {no_pkgs}{Color.Reset}')
         print('')
-        print('')
 
     def validate_installed_packages(self, packages):
         for pkg in packages:
@@ -165,7 +165,8 @@ class Lint(object):
     def validate_file(self, pname):
         try:
             if pname.suffix == '.rpm' or pname.suffix == '.spm':
-                with Pkg(pname, self.config.configuration['ExtractDir']) as pkg:
+                with Pkg(pname, self.config.configuration['ExtractDir'],
+                         verbose=self.config.info) as pkg:
                     self.run_checks(pkg)
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:

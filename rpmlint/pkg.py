@@ -383,10 +383,10 @@ class Pkg(AbstractPkg):
 
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
 
-    def __init__(self, filename, dirname, header=None, is_source=False, extracted=False):
+    def __init__(self, filename, dirname, header=None, is_source=False, extracted=False, verbose=False):
         self.filename = filename
         self.extracted = extracted
-        self.dirname = self.dir_name(dirname)
+        self.dirname = self.dir_name(dirname, verbose)
         self.current_linenum = None
 
         self._req_names = -1
@@ -459,11 +459,11 @@ class Pkg(AbstractPkg):
     def dirName(self):
         return self.dirname
 
-    def dir_name(self, dirname):
-        return self._extract(dirname)
+    def dir_name(self, dirname, verbose):
+        return self._extract(dirname, verbose)
 
     # extract rpm contents
-    def _extract(self, dirname):
+    def _extract(self, dirname, verbose):
         if not Path(dirname).is_dir():
             print_warning('Unable to access dir %s' % dirname)
         else:
@@ -477,7 +477,9 @@ class Pkg(AbstractPkg):
             command_str = \
                 'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
                 {'f': quote(str(self.filename)), 'd': quote(dirname)}
-            subprocess.run(command_str, shell=True, env=ENGLISH_ENVIROMENT)
+            stderr = None if verbose else subprocess.DEVNULL
+            subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
+                                    stderr=stderr)
             self.extracted = True
         return dirname
 
