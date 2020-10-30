@@ -27,10 +27,10 @@ def test_alternative_borked(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'E: update-altenratives-requirement-missing' in out
+    assert 'E: update-alternatives-requirement-missing' in out
     assert 'E: alternative-generic-name-not-symlink' in out
     assert 'E: alternative-link-not-ghost' in out
-    assert 'E: update-altenratives-postun-call-missing' in out
+    assert 'E: update-alternatives-postun-call-missing' in out
 
 
 @pytest.mark.parametrize('package', ['binary/self'])
