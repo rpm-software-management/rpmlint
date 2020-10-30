@@ -19,8 +19,8 @@ class Config(object):
     existing one.
     """
 
-    re_filter = re.compile(r'\s*addFilter\([\"\'](.*)[\"\']\)')
-    re_badness = re.compile(r'\s*setBadness\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
+    re_filter = re.compile(r'\s*addFilter\s*\([\"\'](.*)[\"\']\)')
+    re_badness = re.compile(r'\s*setBadness\s*\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
     config_defaults = Path(__file__).parent / 'configdefaults.toml'
 
     def __init__(self, config=None):

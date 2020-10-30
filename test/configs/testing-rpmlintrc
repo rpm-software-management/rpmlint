@@ -2,6 +2,7 @@
 from Config import *
 setBadness('suse-dbus-unauthorized-service', 0)
     setBadness('suse-other-error','20')
+setBadness      ('suse-other-error-123','200')
 # # Output filters
 addFilter("arch-independent-package-contains-binary-or-object ")
 addFilter('.*arch-independent-package-contains-binary-or-object.*/boot/vc/.*.elf')
