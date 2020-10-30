@@ -1,6 +1,6 @@
 import sys
 
-if hasattr(sys.stderr, 'isatty') and sys.stderr.isatty():
+if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
     class Color(object):
         """
         Colors used when doing printouts with rpmlint
