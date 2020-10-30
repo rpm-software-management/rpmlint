@@ -382,6 +382,9 @@ class BinariesCheck(AbstractCheck):
                 return
 
     def _check_library_dependency(self, pkg, pkgfile_path, path):
+        if self.readelf_parser.is_archive:
+            return
+
         dyn_section = self.readelf_parser.dynamic_section_info
         if not len(dyn_section.needed) and not (dyn_section.soname and
                                                 self.ldso_soname_regex.search(dyn_section.soname)):
