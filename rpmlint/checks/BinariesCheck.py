@@ -249,10 +249,10 @@ class BinariesCheck(AbstractCheck):
     def _check_missing_debug_info_in_archive(self, pkg, pkgfile_path, path):
         if self.readelf_parser.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
-                has_debug_info = any('.debug_' in section.name for section in elf_file)
-                if not has_debug_info:
-                    self.output.add_info('E', pkg, 'static-library-without-debuginfo', path)
-                    return
+                for section in elf_file:
+                    if section.name.startswith('.debug_'):
+                        return
+            self.output.add_info('E', pkg, 'static-library-without-debuginfo', path)
 
     # Check for LTO sections
     def _check_lto_section(self, pkg, pkgfile_path, path):
