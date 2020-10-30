@@ -159,6 +159,8 @@ class AlternativesCheck(AbstractCheck):
         """
         # with old rpm we get wrong type
         script = byte_to_string(script)
+        if script is None:
+            return None
         script = script.replace('\\\n', '')
         script = script.replace('"', '')
         script = script.replace("'", '')
