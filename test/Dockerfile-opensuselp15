@@ -3,7 +3,7 @@ FROM opensuse/leap:15
 RUN zypper -n install \
         checkbashisms cpio dash gzip \
         bzip2 make xz \
-        binutils glibc glibc-locale desktop-file-utils \
+        binutils glibc glibc-32bit glibc-locale desktop-file-utils \
         appstream-glib \
         myspell-en_US myspell-cs_CZ \
         python3-magic \
