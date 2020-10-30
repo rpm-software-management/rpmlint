@@ -159,10 +159,10 @@ class AlternativesCheck(AbstractCheck):
         """
         # with old rpm we get wrong type
         script = byte_to_string(script)
-        script.replace('\\\n', '')
-        script.replace('"', '')
-        script.replace("'", '')
-        script.strip()
+        script = script.replace('\\\n', '')
+        script = script.replace('"', '')
+        script = script.replace("'", '')
+        script = script.strip()
         return [i for i in script.splitlines() if self.command in i]
 
     def _check_requirements(self, pkg):
