@@ -4,6 +4,7 @@ import re
 import stat
 
 import rpm
+from rpmlint.arparser import ArParser
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.lddparser import LddParser
 from rpmlint.objdumpparser import ObjdumpParser
@@ -31,8 +32,6 @@ class BinariesCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.is_exec = False
-        self.is_shobj = False
         self.system_lib_paths = config.configuration['SystemLibPaths']
         self.pie_exec_regex_list = []
         for regex in config.configuration['PieExecutables']:
@@ -142,7 +141,7 @@ class BinariesCheck(AbstractCheck):
             self.output.add_info('W', pkg, 'unstripped-binary-or-object',
                                  bin_name)
 
-    def _check_non_pie(self, pkg, bin_name, is_pie_exec):
+    def _check_non_pie(self, pkg, bin_name):
         """
         Check if the bin_name binary is built with PIE.
 
@@ -151,7 +150,7 @@ class BinariesCheck(AbstractCheck):
         We suppose that the package is arch dependent and bin_name is binary
         executable.
         """
-        if not self.is_shobj and not is_pie_exec:
+        if not self.is_shobj and not self.is_pie_exec:
             if any(regex.search(bin_name) for regex in self.pie_exec_regex_list):
                 self.output.add_info('E', pkg,
                                      'non-position-independent-executable',
@@ -219,7 +218,7 @@ class BinariesCheck(AbstractCheck):
         """
         For an archive, test if any .text sections is non-empty.
         """
-        if self.readelf_parser.is_archive:
+        if self.is_archive:
             for comment in self.readelf_parser.comment_section_info.comments:
                 if comment.startswith('GHC '):
                     return
@@ -238,7 +237,7 @@ class BinariesCheck(AbstractCheck):
         """
         FIXME Add test coverage.
         """
-        if self.readelf_parser.is_archive:
+        if self.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
                     if section.name == '.symtab':
@@ -247,7 +246,7 @@ class BinariesCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'static-library-without-symtab', path)
 
     def _check_missing_debug_info_in_archive(self, pkg, pkgfile_path, path):
-        if self.readelf_parser.is_archive:
+        if self.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
                     if section.name.startswith('.debug_'):
@@ -268,7 +267,7 @@ class BinariesCheck(AbstractCheck):
 
         FIXME Add test coverage.
         """
-        if not self.readelf_parser.is_archive:
+        if not self.is_archive:
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
@@ -334,7 +333,7 @@ class BinariesCheck(AbstractCheck):
         FIXME Add test coverage.
         """
         # following issues are errors for shared libs and warnings for executables
-        if not self.readelf_parser.is_archive and not self.readelf_parser.is_debug:
+        if not self.is_archive and not self.readelf_parser.is_debug:
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
                 self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', path, symbol)
@@ -346,7 +345,7 @@ class BinariesCheck(AbstractCheck):
         """
         FIXME Add test coverage.
         """
-        if not self.readelf_parser.is_archive:
+        if not self.is_archive:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
                     self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
@@ -382,7 +381,7 @@ class BinariesCheck(AbstractCheck):
                 return
 
     def _check_library_dependency(self, pkg, pkgfile_path, path):
-        if self.readelf_parser.is_archive:
+        if self.is_archive:
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
@@ -456,7 +455,7 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'shared-library-not-executable', path)
 
     def _check_optflags(self, pkg, pkgfile_path, path):
-        if self.readelf_parser.is_archive:
+        if self.is_archive:
             return
 
         mandatory_optflags = self.config.configuration['MandatoryOptflags']
@@ -473,19 +472,42 @@ class BinariesCheck(AbstractCheck):
             if forbidden:
                 self.output.add_info('E', pkg, 'forbidden-optflags', path, ' '.join(forbidden))
 
+    def _is_standard_archive(self, pkg, pkgfile_path, path):
+        # return false for e.g. Rust or Go packages that are archives
+        # but files in the archive are not an ELF container
+        ar_parser = ArParser(pkgfile_path)
+        failed_reason = ar_parser.parsing_failed_reason
+        if failed_reason:
+            self.output.add_info('E', pkg, 'ar-failed', path, failed_reason)
+            return False
+
+        needles = ('__.PKGDEF', '_go_.o', 'lib.rmeta')
+        return not any(needle for needle in needles if needle in ar_parser.objects)
+
+    def _detect_attributes(self, magic):
+        self.is_exec = 'executable' in magic
+        self.is_shobj = 'shared object' in magic
+        self.is_archive = 'current ar archive' in magic
+        self.is_dynamically_linked = 'dynamically linked' in magic
+        self.is_pie_exec = 'pie executable' in magic
+
     def run_elf_checks(self, pkg, pkgfile_path, path):
+        if self.is_archive and not self._is_standard_archive(pkg, pkgfile_path, path):
+            return
+
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
         failed_reason = self.readelf_parser.parsing_failed_reason()
         if failed_reason:
             self.output.add_info('E', pkg, 'readelf-failed', path, failed_reason)
             return
 
-        if not self.readelf_parser.is_archive:
-            self.ldd_parser = LddParser(pkgfile_path, path)
-            failed_reason = self.ldd_parser.parsing_failed_reason
-            if failed_reason:
-                self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
-                return
+        if not self.is_archive:
+            if self.is_dynamically_linked:
+                self.ldd_parser = LddParser(pkgfile_path, path)
+                failed_reason = self.ldd_parser.parsing_failed_reason
+                if failed_reason:
+                    self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
+                    return
 
             self.objdump_parser = ObjdumpParser(pkgfile_path, path)
             failed_reason = self.objdump_parser.parsing_failed_reason
@@ -569,9 +591,8 @@ class BinariesCheck(AbstractCheck):
 
             self._check_unstripped_binary(fname, pkg, pkgfile)
 
-            self.is_exec = 'executable' in pkgfile.magic
-            self.is_shobj = 'shared object' in pkgfile.magic
-            is_pie_exec = 'pie executable' in pkgfile.magic
+            # Detect attributes of an ELF file
+            self._detect_attributes(pkgfile.magic)
 
             # run ELF checks
             self.run_elf_checks(pkg, pkgfile.path, fname)
@@ -597,7 +618,7 @@ class BinariesCheck(AbstractCheck):
                 if self.bin_regex.search(fname):
                     exec_files.append(fname)
 
-                self._check_non_pie(pkg, fname, is_pie_exec)
+                self._check_non_pie(pkg, fname)
 
         # find out if we have a multi-package
         srpm = pkg[rpm.RPMTAG_SOURCERPM]

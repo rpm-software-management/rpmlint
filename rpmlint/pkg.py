@@ -365,6 +365,18 @@ def parse_deps(line):
     return prcos
 
 
+def get_magic(path):
+    # file() method evaluates every file twice with python2,
+    # use descriptor() method instead
+    try:
+        fd = os.open(path, os.O_RDONLY)
+        magic = byte_to_string(_magic.descriptor(fd))
+        os.close(fd)
+        return magic
+    except OSError:
+        return ''
+
+
 # classes representing package
 
 class AbstractPkg(object):
@@ -579,14 +591,7 @@ class Pkg(AbstractPkg):
                         pkgfile.magic = 'empty'
                 if (not pkgfile.magic and
                         not pkgfile.is_ghost and _magic):
-                    # file() method evaluates every file twice with python2,
-                    # use descriptor() method instead
-                    try:
-                        fd = os.open(pkgfile.path, os.O_RDONLY)
-                        pkgfile.magic = byte_to_string(_magic.descriptor(fd))
-                        os.close(fd)
-                    except OSError:
-                        pass
+                    pkgfile.magic = get_magic(pkgfile.path)
                 if pkgfile.magic is None:
                     pkgfile.magic = ''
                 elif Pkg._magic_from_compressed_re.search(pkgfile.magic):

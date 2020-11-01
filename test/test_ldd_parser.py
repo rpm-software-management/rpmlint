@@ -4,7 +4,7 @@ import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 from rpmlint.lddparser import LddParser
-from rpmlint.pkg import FakePkg
+from rpmlint.pkg import FakePkg, get_magic
 
 from Testing import CONFIG, get_tested_path
 
@@ -25,6 +25,11 @@ def lddparser(path, system_path=None):
     if system_path is None:
         system_path = path
     return LddParser(get_full_path(path), system_path)
+
+
+def run_elf_checks(test, pkg, fullpath, path):
+    test._detect_attributes(get_magic(fullpath))
+    test.run_elf_checks(FakePkg('fake'), fullpath, path)
 
 
 def test_unused_dependency():
@@ -55,7 +60,7 @@ def test_dependencies():
 
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
     assert not test.readelf_parser.parsing_failed_reason()
     assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
@@ -64,7 +69,7 @@ def test_unused_dependency_in_package(binariescheck):
 
 def test_unused_dependency_in_package_for_executable(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
     assert not test.readelf_parser.parsing_failed_reason()
     assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
@@ -73,7 +78,7 @@ def test_unused_dependency_in_package_for_executable(binariescheck):
 
 def test_opt_dependency(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
     assert not test.readelf_parser.parsing_failed_reason()
     assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
@@ -82,7 +87,7 @@ def test_opt_dependency(binariescheck):
 
 def test_usr_dependency(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')
     assert not test.readelf_parser.parsing_failed_reason()
     assert not test.ldd_parser.parsing_failed_reason
     out = output.print_results(output.results)
