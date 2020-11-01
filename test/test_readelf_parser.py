@@ -4,7 +4,7 @@ import re
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
-from rpmlint.pkg import FakePkg, PkgFile
+from rpmlint.pkg import FakePkg, get_magic
 from rpmlint.readelfparser import ReadelfParser
 
 from Testing import CONFIG, get_tested_path
@@ -26,6 +26,11 @@ def readelfparser(path, system_path=None):
     if system_path is None:
         system_path = path
     return ReadelfParser(get_full_path(path), system_path)
+
+
+def run_elf_checks(test, pkg, fullpath, path):
+    test._detect_attributes(get_magic(fullpath))
+    test.run_elf_checks(FakePkg('fake'), fullpath, path)
 
 
 def test_empty_archive():
@@ -92,7 +97,7 @@ def test_rpath():
 
 def test_lto_bytecode(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('lto-object.o'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('lto-object.o'), 'x.a')
     assert not test.readelf_parser.parsing_failed_reason()
     out = output.print_results(output.results)
     assert 'lto-bytecode' in out
@@ -100,7 +105,7 @@ def test_lto_bytecode(binariescheck):
 
 def test_lto_archive_text(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-lto.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('stripped-lto.a'), 'x.a')
     out = output.print_results(output.results)
     assert 'E: lto-no-text-in-archive' in out
     assert 'E: static-library-without-debuginfo' in out
@@ -108,38 +113,38 @@ def test_lto_archive_text(binariescheck):
 
 def test_stripped_archive(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('stripped-archive.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('stripped-archive.a'), 'x.a')
     out = output.print_results(output.results)
     assert 'E: static-library-without-symtab' in out
 
 
 def test_lto_archive_text_function_sections(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('function-sections.a'), 'x.a')
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
 def test_lto_archive_init_array(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('libbsd-ctor.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('libbsd-ctor.a'), 'x.a')
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
 def test_lto_archive_preinit_array(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('libclang_rt.asan-preinit-x86_64.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('libclang_rt.asan-preinit-x86_64.a'), 'x.a')
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
 def test_archive_with_debuginfo(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('archive-with-debuginfo.a'), 'x.a')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('archive-with-debuginfo.a'), 'x.a')
     assert 'E: static-library-without-debuginfo' not in output.print_results(output.results)
 
 
 def test_executable_stack(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
     assert 'E: executable-stack' in output.results[0]
 
 
@@ -150,21 +155,21 @@ def test_readelf_failure():
 
 def test_readelf_failure_in_package(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('not-existing.so'), '/lib64/not-existing.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('not-existing.so'), '/lib64/not-existing.so')
     out = output.print_results(output.results)
     assert 'readelf-failed /lib64/not-existing.so' in out
 
 
 def test_no_soname(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('no-soname.so'), '/lib64/no-soname.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('no-soname.so'), '/lib64/no-soname.so')
     out = output.print_results(output.results)
     assert 'no-soname /lib64/no-soname.so' in out
 
 
 def test_invalid_soname(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('invalid-soname.so'), '/lib64/invalid-soname.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('invalid-soname.so'), '/lib64/invalid-soname.so')
     out = output.print_results(output.results)
     assert 'invalid-soname /lib64/invalid-soname.so' in out
     assert 'E: shlib-with-non-pic-code /lib64/invalid-soname.so' not in out
@@ -172,7 +177,7 @@ def test_invalid_soname(binariescheck):
 
 def test_non_pic_code_library(binariescheck):
     output, test = binariescheck
-    test.run_elf_checks(FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
     out = output.print_results(output.results)
     assert 'E: shlib-with-non-pic-code' in out
 
@@ -180,28 +185,16 @@ def test_non_pic_code_library(binariescheck):
 def test_no_ldconfig_symlink(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('libutil-2.29.so'), '/lib64/libutil-2.29.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('libutil-2.29.so'), '/lib64/libutil-2.29.so')
     out = output.print_results(output.results)
     assert 'no-ldconfig-symlink /lib64/libutil-2.29.so' in out
     assert 'E: incoherent-version-in-name 1' in out
 
 
-def test_invalid_ldconfig_symlink(binariescheck):
-    output, test = binariescheck
-
-    fakefile = PkgFile('/lib64/libutil.so.1')
-    fakefile.linkto = '/lib64/libutil-bad.so'
-    fakepkg = FakePkg('fake', [fakefile])
-
-    test.run_elf_checks(fakepkg, get_full_path('libutil-2.29.so'), '/lib64/libutil-2.29.so')
-    out = output.print_results(output.results)
-    assert 'invalid-ldconfig-symlink /lib64/libutil-2.29.so' in out
-
-
 def test_call_mktemp(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('call-mktemp'), '/bin/call-mktemp')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('call-mktemp'), '/bin/call-mktemp')
     out = output.print_results(output.results)
     assert 'E: call-to-mktemp /bin/call-mktemp' in out
 
@@ -209,7 +202,7 @@ def test_call_mktemp(binariescheck):
 def test_call_setgroups(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
     out = output.print_results(output.results)
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
 
@@ -217,7 +210,7 @@ def test_call_setgroups(binariescheck):
 def test_call_gethostbyname(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('hostname'), '/usr/bin/hostname')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('hostname'), '/usr/bin/hostname')
     out = output.print_results(output.results)
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
 
@@ -225,11 +218,6 @@ def test_call_gethostbyname(binariescheck):
 def test_missing_dependency(binariescheck):
     output, test = binariescheck
 
-    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
-    out = output.print_results(output.results)
-    assert 'E: statically-linked-binary' in out
-
-    test.is_shobj = True
-    test.run_elf_checks(FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
+    run_elf_checks(test, FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
     out = output.print_results(output.results)
     assert 'E: shared-library-without-dependency-information' in out
