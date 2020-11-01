@@ -8,6 +8,7 @@ from rpmlint.arparser import ArParser
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.lddparser import LddParser
 from rpmlint.objdumpparser import ObjdumpParser
+from rpmlint.pkg import FakePkg, InstalledPkg
 from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
@@ -332,8 +333,13 @@ class BinariesCheck(AbstractCheck):
         """
         FIXME Add test coverage.
         """
+        # Undefined symbol and unused direct dependency checks make sense only
+        # for installed packages.
+        # skip debuginfo: https://bugzilla.redhat.com/190599
+        #
         # following issues are errors for shared libs and warnings for executables
-        if not self.is_archive and not self.readelf_parser.is_debug:
+        if (isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg) and
+                not self.is_archive and not self.readelf_parser.is_debug):
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
                 self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', path, symbol)
