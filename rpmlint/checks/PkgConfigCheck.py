@@ -55,11 +55,11 @@ class PkgConfigCheck(AbstractFilesCheck):
          -L/usr/lib64 or -L/lib64 for 64-bit
         """
         if line.startswith('Libs:') and self.wronglib_dir.search(line):
-            self.output.add_info('E', pkg, 'pkgconfig-invalid-libs-dir', filename, line)
+            self.output.add_info('E', pkg, 'pkgconfig-invalid-libs-dir', filename, line.rstrip())
 
     def _check_double_slash(self, pkg, filename, line):
         """
         Check that .pc file doesn't contain a path with a double slash ('//')
         """
         if '//' in line and '://' not in line:
-            self.output.add_info('E', pkg, 'double-slash-in-pkgconfig-path', filename, line)
+            self.output.add_info('E', pkg, 'double-slash-in-pkgconfig-path', filename, line.rstrip())
