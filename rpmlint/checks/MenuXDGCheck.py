@@ -44,19 +44,22 @@ class MenuXDGCheck(AbstractFilesCheck):
     def check_file(self, pkg, filename):
         root = pkg.dirName()
         f = root + filename
-        command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)
-        text = command.stdout.decode()
-        if command.returncode:
-            error_printed = False
-            for line in text.splitlines():
-                if 'error: ' in line:
-                    self.output.add_info('E', pkg, 'invalid-desktopfile', filename,
-                                         line.split('error: ')[1])
-                    error_printed = True
-            if not error_printed:
-                self.output.add_info('E', pkg, 'invalid-desktopfile', filename)
+        try:
+            command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)
+            text = command.stdout.decode()
+            if command.returncode:
+                error_printed = False
+                for line in text.splitlines():
+                    if 'error: ' in line:
+                        self.output.add_info('E', pkg, 'invalid-desktopfile', filename,
+                                             line.split('error: ')[1])
+                        error_printed = True
+                if not error_printed:
+                    self.output.add_info('E', pkg, 'invalid-desktopfile', filename)
 
-        self.parse_desktop_file(pkg, root, f, filename)
+            self.parse_desktop_file(pkg, root, f, filename)
+        except UnicodeDecodeError as e:
+            self.output.add_info('E', pkg, 'non-utf8-desktopfile', filename, f'Unicode error: {e}')
 
     def _handle_parser_error(self, pkg, filename, e):
         """
@@ -77,7 +80,7 @@ class MenuXDGCheck(AbstractFilesCheck):
 
     def _has_binary(self, pkg, root, cfp, filename):
         """
-        Check whether there is a binarry assigned to the desktop file.
+        Check whether there is a binary assigned to the desktop file.
 
         Needs configparser instance, it is assumed to be called in parse_desktop_file.
         """

@@ -55,7 +55,6 @@ def test_bad_unicode(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'invalid-desktopfile' in out
     assert 'non-utf8-desktopfile' in out
 
 
