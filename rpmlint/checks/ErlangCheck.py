@@ -14,11 +14,14 @@ class ErlangCheck(AbstractFilesCheck):
 
     def check_file(self, pkg, filename):
         beam = BeamFile(pkg.files[filename].path)
-        compile_state = byte_to_string(beam.compileinfo['source'].value)
-        if 'debug_info' not in beam.compileinfo['options']:
-            self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
-        # This can't be an error as builddir can be user specific and vary between users
-        # it could be error in OBS where all the builds are done by user abuild, not in
-        # general.
-        if not self.source_re.match(compile_state):
-            self.output.add_info('W', pkg, 'beam-was-not-recompiled', filename, compile_state)
+        try:
+            compile_state = byte_to_string(beam.compileinfo['source'].value)
+            if 'debug_info' not in beam.compileinfo['options']:
+                self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
+            # This can't be an error as builddir can be user specific and vary between users
+            # it could be error in OBS where all the builds are done by user abuild, not in
+            # general.
+            if not self.source_re.match(compile_state):
+                self.output.add_info('W', pkg, 'beam-was-not-recompiled', filename, compile_state)
+        except Exception:
+            self.output.add_info('E', pkg, 'pybeam-failed', filename)
