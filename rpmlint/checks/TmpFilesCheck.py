@@ -93,7 +93,7 @@ class TmpFilesCheck(AbstractCheck):
                 tmpfiles_type = line[0]
                 tmpfiles_path = line[1]
                 if tmpfiles_type.endswith('!'):
-                    tmpfiles_type = type[:-1]
+                    tmpfiles_type = tmpfiles_type[:-1]
                 if tmpfiles_type not in self.interesting_types:
                     continue
 
