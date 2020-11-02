@@ -97,7 +97,7 @@ class AlternativesCheck(AbstractCheck):
         for binary in binaries:
             re_remove = re.compile(r'--remove\s+{}\b'.format(binary))
             for line in script:
-                if re_remove.search(line):
+                if re_remove.search(line) and binary in binaries:
                     binaries.remove(binary)
         for binary in binaries:
             self.output.add_info('E', pkg, 'update-alternatives-postun-call-missing', binary)
