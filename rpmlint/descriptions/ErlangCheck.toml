@@ -7,3 +7,6 @@ It seems that your beam file was not compiled by you, but was
 just copied in binary form to destination. Please, make sure
 that you really compile it from the sources.
 """
+pybeam-failed="""
+Invocation of the Python pybeam library failed.
+"""
