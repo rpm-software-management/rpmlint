@@ -69,7 +69,7 @@ class Lint(object):
         elif self.output.printed_messages['E'] > 0 and not self.config.permissive:
             quit_color = Color.Red
             retcode = 64
-        msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W']), '=')
+        msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings, {} badness'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W'], self.output.score), '=')
         print(f'{quit_color}{msg}{Color.Reset}')
         return retcode
 

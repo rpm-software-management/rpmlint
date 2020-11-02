@@ -94,6 +94,8 @@ class Filter(object):
                 level = 'E'
             elif level == 'E':
                 level = 'W'
+        else:
+            badness = 1
         # allow strict reporting where we override levels and treat everything
         # as an error
         if self.strict:
@@ -108,7 +110,7 @@ class Filter(object):
         # compile the message
         line = f'{package.current_linenum}:' if package.current_linenum else ''
         arch = f'.{package.arch}' if package.arch else ''
-        bad_output = f' (Badness: {badness})' if badness else ''
+        bad_output = f' (Badness: {badness})' if badness > 1 else ''
         detail_output = ''
         for detail in details:
             if detail:
