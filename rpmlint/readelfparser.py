@@ -196,9 +196,14 @@ class ElfDynamicSectionInfo:
     0x000000006ffffff0 (VERSYM)             0x1b254
     0x000000006ffffff9 (RELACOUNT)          1232
     0x0000000000000000 (NULL)               0x0
+
+    handle also:
+
+    0x60009990 (Operating System specific: 60009990)        0x24e20
+    0x60009991 (Operating System specific: 60009991)        0x8
     """
 
-    section_regex = re.compile('\\s+\\w*\\s+\\((?P<key>\\w+)\\)\\s+(?P<value>.*)')
+    section_regex = re.compile('\\s+\\w*\\s+\\((?P<key>[^\\)]+)\\)\\s+(?P<value>.*)')
     soname_regex = re.compile('Library soname: \\[(?P<soname>[^\\]]+)\\]')
     needed_regex = re.compile('Shared library: \\[(?P<library>[^\\]]+)\\]')
     rpath_regex = re.compile('Library runpath: \\[(?P<path>[^\\]]+)\\]')
