@@ -590,9 +590,10 @@ class BinariesCheck(AbstractCheck):
             self._check_binary_in_etc(pkg, fname)
 
             # skip the rest of the tests for ocaml native, Lua bytecode,
-            # Go .gox, .o and .static
+            # Go .go and .gox, .o and .static
             if is_ocaml_native or is_lua_bytecode or fname.endswith('.o') or \
-                    fname.endswith('.static') or fname.endswith('.gox'):
+                    fname.endswith('.static') or fname.endswith('.gox') or \
+                    fname.endswith('.go'):
                 continue
 
             self._check_unstripped_binary(fname, pkg, pkgfile)
