@@ -95,7 +95,7 @@ class AlternativesCheck(AbstractCheck):
         # validate each binary actually is properly removed
         binaries = list(self.install_binaries.values())
         for binary in binaries:
-            re_remove = re.compile(r'--remove\s+{}'.format(binary))
+            re_remove = re.compile(r'--remove\s+{}\b'.format(binary))
             for line in script:
                 if re_remove.search(line):
                     binaries.remove(binary)
