@@ -34,6 +34,9 @@ install:
 
 script:
   - podman build -t $DIST -f test/Dockerfile-$DIST .
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST ldd /usr/src/rpmlint/test/readelf/non-pic-shared-m32.so
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST bash -x /usr/bin/ldd /usr/src/rpmlint/test/readelf/non-pic-shared-m32.so
+  - podman run -v $(pwd):/usr/src/rpmlint/ $DIST echo 'void hello() { puts("hello"); }' > hello.c && gcc -o libhello.so -shared hello.c -m32 -Wl,-soname,libhello.so && ldd libhello.so
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 -m pytest
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
   - podman run -v $(pwd):/usr/src/rpmlint/ $DIST python3 test/dump_stats.py profile.stats

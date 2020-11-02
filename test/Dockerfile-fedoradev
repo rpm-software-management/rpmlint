@@ -15,7 +15,6 @@ RUN dnf --nogpgcheck -y install \
         dash \
         devscripts-checkbashisms \
         glibc \
-        glibc.i686 \
         hunspell-en \
         hunspell-cs \
         python3-setuptools \
@@ -34,6 +33,10 @@ RUN dnf --nogpgcheck -y install \
         python3-zstd \
         rpm-build \
         sqlite
+
+RUN dnf --nogpgcheck -y install         glibc-devel.i686 \
+        gcc \
+        glibc.i686
 
 WORKDIR /usr/src/rpmlint
 VOLUME /usr/src/rpmlint
