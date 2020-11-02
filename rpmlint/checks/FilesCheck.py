@@ -542,7 +542,7 @@ class FilesCheck(AbstractCheck):
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 self.output.add_info('E', pkg, 'info-dir-file', f)
             elif makefile_regex.search(f) and not f.startswith('/usr/share/selinux'):
-                self.output.add_info('E', pkg, 'makefile-junk', f)
+                self.output.add_info('W', pkg, 'makefile-junk', f)
 
             res = logrotate_regex.search(f)
             if res:
