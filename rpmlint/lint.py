@@ -1,6 +1,8 @@
 import cProfile
 import importlib
 import operator
+import os
+from pathlib import Path
 from pstats import Stats
 import sys
 from tempfile import gettempdir
@@ -156,31 +158,36 @@ class Lint(object):
                 print_warning(f'(none): E: there is no installed rpm "{name}".')
         return existing_packages
 
+    def _find_rpmlintrc_files(self, path):
+        rpmlintrcs = []
+        rpmlintrcs += sorted(path.glob('*.rpmlintrc'))
+        rpmlintrcs += sorted(path.glob('*-rpmlintrc'))
+        return rpmlintrcs
+
     def _load_rpmlintrc(self):
         """
         Load rpmlintrc from argument or load up from folder
         """
-        if self.options['rpmlintrc']:
-            for rcfile in self.options['rpmlintrc']:
-                self.config.load_rpmlintrc(rcfile)
-        else:
-            # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
-            # do this only in a case where there is one folder parameter or one file
-            # to avoid multiple folders handling
-            rpmlintrc = []
-            if not len(self.options['rpmfile']) == 1:
-                return
-            pkg = self.options['rpmfile'][0]
-            if pkg.is_file():
-                pkg = pkg.parent
-            rpmlintrc += sorted(pkg.glob('*.rpmlintrc'))
-            rpmlintrc += sorted(pkg.glob('*-rpmlintrc'))
-            if len(rpmlintrc) > 1:
-                # multiple rpmlintrcs are highly undesirable
-                print_warning('There are multiple items to be loaded for rpmlintrc, ignoring them: {}.'.format(' '.join(map(str, rpmlintrc))))
-            elif len(rpmlintrc) == 1:
-                self.options['rpmlintrc'] = rpmlintrc[0]
-                self.config.load_rpmlintrc(rpmlintrc[0])
+        if not self.options['rpmlintrc']:
+            # Skip auto-loading when running under PYTEST
+            if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
+                # first load SUSE-specific locations
+                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/home/abuild/rpmbuild/SOURCES'))
+                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/usr/src/packages/SOURCES/'))
+            if not self.options['rpmlintrc'] and len(self.options['rpmfile']) == 1:
+                # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
+                # do this only in a case where there is one folder parameter or one file
+                # to avoid multiple folders handling
+                pkg = self.options['rpmfile'][0]
+                if pkg.is_file():
+                    pkg = pkg.parent
+                self.options['rpmlintrc'] += self._find_rpmlintrc_files(pkg)
+
+        if len(self.options['rpmlintrc']) > 1:
+            # multiple rpmlintrcs are highly undesirable
+            print_warning('There are multiple items to be loaded: {}.'.format(' '.join(map(str, self.options['rpmlintrc']))))
+        for rcfile in self.options['rpmlintrc']:
+            self.config.load_rpmlintrc(rcfile)
 
     def _print_header(self):
         """
@@ -194,8 +201,9 @@ class Lint(object):
         for config in self.config.conf_files:
             print(f'    {config}')
         if self.options['rpmlintrc']:
-            rpmlintrc = self.options['rpmlintrc']
-            print(f'rpmlintrc: {rpmlintrc}')
+            print('rpmlintrc:')
+            for rcfile in self.options['rpmlintrc']:
+                print(f'    {rcfile}')
         no_checks = len(self.config.configuration['Checks'])
         no_pkgs = len(self.options['installed']) + len(self.options['rpmfile'])
         print(f'{Color.Bold}checks: {no_checks}, packages: {no_pkgs}{Color.Reset}')
