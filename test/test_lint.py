@@ -1,3 +1,4 @@
+import copy
 from pathlib import Path
 
 import pytest
@@ -13,7 +14,7 @@ options_preset = {
     'print_config': False,
     'explain': '',
     'rpmfile': '',
-    'rpmlintrc': False,
+    'rpmlintrc': [],
     'installed': '',
     'time_report': False
 }
@@ -49,6 +50,11 @@ basic_tests = [
 ]
 
 
+def get_options(additional_options):
+    options = copy.deepcopy(options_preset)
+    return {**options, **additional_options}
+
+
 def _remove_except_zip(dictionary):
     """
     In order to not lie in coverage redux the test run on the
@@ -68,7 +74,7 @@ def test_configoutput(capsys):
     additional_options = {
         'print_config': True,
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -82,7 +88,7 @@ def test_explain_unknown(capsys):
     additional_options = {
         'explain': message,
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -95,7 +101,7 @@ def test_explain_known(capsys):
     additional_options = {
         'explain': message,
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -109,7 +115,7 @@ def test_explain_with_unknown(capsys):
     additional_options = {
         'explain': message,
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -130,7 +136,7 @@ def test_explain_no_binary_from_cfg(capsys):
         'config': [testpath() / 'configs/descriptions.config'],
         'explain': ['no-binary']
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -154,7 +160,7 @@ def test_explain_non_standard_dir_from_cfg(capsys):
         'config': [testpath() / 'configs/descriptions.config'],
         'explain': ['non-standard-dir-in-usr']
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -178,7 +184,7 @@ def test_descriptions_from_config(capsys, packages):
         'rpmfile': [packages]
     }
     options_preset['verbose'] = True
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -198,7 +204,7 @@ def test_run_single(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -214,7 +220,7 @@ def test_run_installed(capsys, packages):
         'rpmfile': [packages],
         'installed': ['python3-rpm', 'rpm'],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -232,7 +238,7 @@ def test_run_strict(capsys, packages):
         'rpmfile': [packages],
         'strict': True,
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -247,7 +253,7 @@ def test_run_installed_not_present(capsys):
         'rpmfile': [],
         'installed': ['non-existing-package'],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -262,7 +268,7 @@ def test_run_installed_and_no_files(capsys):
         'rpmfile': [],
         'installed': ['python3-rpm'],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -276,7 +282,7 @@ def test_header_information(capsys):
         'rpmfile': [],
         'installed': ['python3-rpm'],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.checks = _remove_except_zip(linter.checks)
     linter.run()
@@ -293,7 +299,7 @@ def test_run_full_rpm(capsys, packages, configs):
         'rpmfile': packages,
     }
     options_preset['config'] = configs
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -316,7 +322,7 @@ def test_run_full_specs(capsys, packages, configs):
         'rpmfile': packages,
     }
     options_preset['config'] = configs
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -336,7 +342,7 @@ def test_run_full_directory(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -357,7 +363,7 @@ def test_run_rpmlintrc_single_dir(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
@@ -370,12 +376,12 @@ def test_run_rpmlintrc_multiple(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
-    assert 'rpmlintrc:' not in out
-    assert 'There are multiple items to be loaded for rpmlintrc' in err
+    assert 'rpmlintrc:' in out
+    assert 'There are multiple items to be loaded' in err
     assert '0 badness' in out
 
 
@@ -384,7 +390,7 @@ def test_run_rpmlintrc_single_file(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
     }
-    options = {**options_preset, **additional_options}
+    options = get_options(additional_options)
     linter = Lint(options)
     linter.run()
     out, err = capsys.readouterr()
