@@ -136,6 +136,12 @@ def test_lto_archive_preinit_array(binariescheck):
     assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
 
 
+def test_lto_archive_with_only_data(binariescheck):
+    output, test = binariescheck
+    run_elf_checks(test, FakePkg('fake'), get_full_path('only-data.a'), 'x.a')
+    assert 'E: lto-no-text-in-archive' not in output.print_results(output.results)
+
+
 def test_archive_with_debuginfo(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('archive-with-debuginfo.a'), 'x.a')

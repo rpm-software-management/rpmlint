@@ -228,7 +228,8 @@ class BinariesCheck(AbstractCheck):
                 for section in elf_file:
                     sn = section.name
                     if ((sn == '.preinit_array' or sn == '.init_array' or
-                         sn == '.fini_array' or sn.startswith('.text')) and
+                         sn == '.fini_array' or sn.startswith('.text') or
+                         sn.startswith('.data')) and
                             section.size > 0):
                         return
             self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
