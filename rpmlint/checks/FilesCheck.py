@@ -202,9 +202,6 @@ non_readable_regexs = (re.compile(r'^/var/log/'),
 
 man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man[^/]+/(.+)\.[1-9n]')
 
-fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
-fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
-
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 tcl_regex = re.compile(r'^/usr/lib(64)?/([^/]+/)?pkgIndex\.tcl')
 
@@ -890,9 +887,6 @@ class FilesCheck(AbstractCheck):
                         # lots of unwanted noise.
                         if not is_utf8(pkgfile.path):
                             self.output.add_info('W', pkg, 'file-not-utf8', f)
-                    if fsf_license_regex.search(chunk) and \
-                            fsf_wrong_address_regex.search(chunk):
-                        self.output.add_info('E', pkg, 'incorrect-fsf-address', f)
 
                 elif is_doc and chunk and compr_regex.search(f):
                     ff = compr_regex.sub('', f)

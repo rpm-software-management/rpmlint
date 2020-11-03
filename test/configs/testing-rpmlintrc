@@ -48,7 +48,6 @@ addFilter("hidden-file-or-dir /usr/lib/python.*/site-packages/tldextract/.tld_se
 addFilter("incoherent-init-script-name quasselcore")
 addFilter("incoherent-init-script-name raw")
 addFilter("incoherent-logrotate-file /etc/logrotate.d/quasselcore")
-addFilter("incorrect-fsf-address")
 addFilter("init-script-without-%restart_on_update-postun /etc/init.d/raw")
 addFilter("init-script-without-%stop_on_removal-preun /etc/init.d/raw")
 addFilter("libguilereadline.* devel-file-in-non-devel-package")addFilter("libguilereadline.* devel-file-in-non-devel-package")addFilter("incoherent-init-script-name quasselcore")

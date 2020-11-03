@@ -74,10 +74,9 @@ def test_pyc_mtime_from_chunk(version, mtime):
 def test_devel_files(tmpdir, package, filescheck):
     output, test = filescheck
     test.check(get_tested_package(package, tmpdir))
-    assert len(output.results) == 5
+    assert len(output.results) == 1
     out = output.print_results(output.results)
     assert 'devel-file-in-non-devel-package' not in out
-    assert 'incorrect-fsf-address' in out
     assert 'no-documentation' in out
 
 

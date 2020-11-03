@@ -363,11 +363,6 @@ It can cause problems when dirs in $PATH are reordered.
 no-manual-page-for-binary="""
 Each executable in standard binary directories should have a man page.
 """
-incorrect-fsf-address="""
-The Free Software Foundation address in this file seems to be outdated or
-misspelled. Ask upstream to update the address, or if this is a license file,
-possibly the entire file with a new copy available from the FSF.
-"""
 gzipped-svg-icon="""
 Not all desktop environments that support SVG icons support them gzipped
 (.svgz). Install the icon as plain uncompressed SVG.
