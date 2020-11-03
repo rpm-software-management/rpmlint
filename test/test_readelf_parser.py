@@ -227,3 +227,11 @@ def test_missing_dependency(binariescheck):
     run_elf_checks(test, FakePkg('fake'), get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
     out = output.print_results(output.results)
     assert 'E: shared-library-without-dependency-information' in out
+
+
+def test_bca_files(binariescheck):
+    output, test = binariescheck
+
+    run_elf_checks(test, FakePkg('fake'), get_full_path('libkleeRuntimeFreeStanding.bca'), '/usr/lib64/klee/runtime/libkleeRuntimeFreeStanding.bca')
+    out = output.print_results(output.results)
+    assert 'E: ' not in out

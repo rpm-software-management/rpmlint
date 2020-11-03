@@ -480,6 +480,10 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'forbidden-optflags', path, ' '.join(forbidden))
 
     def _is_standard_archive(self, pkg, pkgfile_path, path):
+        # skip Klee bytecode archives
+        if pkgfile_path.endswith('.bca'):
+            return False
+
         # return false for e.g. Rust or Go packages that are archives
         # but files in the archive are not an ELF container
         ar_parser = ArParser(pkgfile_path)
