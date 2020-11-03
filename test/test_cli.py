@@ -25,7 +25,7 @@ def test_parsing_config_file(test_arguments):
 def test_parsing_opensuse_conf(test_arguments):
     parsed = process_lint_args(test_arguments)
 
-    assert len(parsed['config']) == 6
+    assert len(parsed['config']) == 7
     assert PosixPath('configs/openSUSE/opensuse.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/licenses.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/pie-executables.toml') in parsed['config']
@@ -38,3 +38,13 @@ def test_parsing_opensuse_conf(test_arguments):
     for check in default_checks:
         assert check in checks
     assert len(checks) > len(default_checks)
+
+    # Verify that all scoring keys are a known checks
+    checks = set(lint.output.error_details.keys())
+    checks |= set(defaultcfg.configuration['Descriptions'].keys())
+
+    score_keys = lint.config.configuration['Scoring'].keys()
+    for score_key in score_keys:
+        if score_key.startswith('percent-in-'):
+            continue
+        assert score_key in checks
