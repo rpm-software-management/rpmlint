@@ -4,7 +4,7 @@
 CompressExtension = ""
 UseVarLockSubsys = false
 UseVersionInChangelog = false
-BadnessThreshold = 1000
+BadnessThreshold = 999
 
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
