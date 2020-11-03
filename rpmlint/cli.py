@@ -172,7 +172,9 @@ def lint():
     """
     Main wrapper for lint command processing
     """
-    options = process_lint_args(sys.argv[1:])
+
+    # TODO: remove once OBS integration is done
+    options = process_lint_args(sys.argv[1:] + ['--permissive'])
 
     lint = Lint(options)
     sys.exit(lint.run())
