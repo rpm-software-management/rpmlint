@@ -374,6 +374,7 @@ def test_run_rpmlintrc_multiple(capsys, packages):
     out, err = capsys.readouterr()
     assert 'rpmlintrc:' not in out
     assert 'There are multiple items to be loaded for rpmlintrc' in err
+    assert '0 badness' in out
 
 
 @pytest.mark.parametrize('packages', [Path('test/rpmlintrc/single/sample.spec')])

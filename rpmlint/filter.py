@@ -85,7 +85,7 @@ class Filter(object):
         # for the printout
         filename = Path(package.name).name
         # we can get badness treshold
-        badness = 0
+        badness = None
         if rpmlint_issue in self.badness:
             badness = int(self.badness[rpmlint_issue])
             # If we have any badness configured then we 'stricten' and call the
@@ -94,12 +94,13 @@ class Filter(object):
                 level = 'E'
             elif level == 'E':
                 level = 'W'
-        else:
-            badness = 1
         # allow strict reporting where we override levels and treat everything
         # as an error
         if self.strict:
             level = 'E'
+
+        if badness is None:
+            badness = 1 if level == 'E' else 0
         # set coloring
         if level == 'E':
             lvl_color = Color.Red
