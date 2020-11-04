@@ -30,7 +30,7 @@ def objdumpparser(path, system_path=None):
 
 def run_elf_checks(test, pkg, fullpath, path):
     test._detect_attributes(get_magic(fullpath))
-    test.run_elf_checks(FakePkg('fake'), fullpath, path)
+    test.run_elf_checks(pkg, fullpath, path)
 
 
 def test_basic():
