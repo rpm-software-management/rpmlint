@@ -80,14 +80,23 @@ class Lint(object):
         print(f'{quit_color}{msg}{Color.Reset}')
         return retcode
 
+    def _get_color_time_report_value(self, fraction):
+        if fraction > 25:
+            color = Color.Red
+        elif fraction > 5:
+            color = Color.Yellow
+        else:
+            color = ''
+        return f'{color}{fraction:17.2f}{Color.Reset}'
+
     def _print_time_report(self):
         total = sum(self.check_duration.values())
-        print('\nCheck time report (>0.01%):')
-        print(f'    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}')
+        print(f'\n{Color.Bold}Check time report{Color.Reset} (>0.01%):')
+        print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}{Color.Reset}')
         check_times = [x for x in self.check_duration.items() if x[1] / total > 0.01]
         for check, duration in sorted(check_times, key=operator.itemgetter(1), reverse=True):
             fraction = 100.0 * duration / total
-            print(f'    {check:32s} {duration:15.2f} {fraction:17.2f}')
+            print(f'    {check:32s} {duration:15.2f} {self._get_color_time_report_value(fraction)}')
         print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f}')
 
     def _load_installed_rpms(self, packages):
