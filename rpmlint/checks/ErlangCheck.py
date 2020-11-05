@@ -13,8 +13,8 @@ class ErlangCheck(AbstractFilesCheck):
         self.source_re = re.compile(build_dir)
 
     def check_file(self, pkg, filename):
-        beam = BeamFile(pkg.files[filename].path)
         try:
+            beam = BeamFile(pkg.files[filename].path)
             compile_state = byte_to_string(str(beam.compileinfo['source']))
             if 'debug_info' not in beam.compileinfo['options']:
                 self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
