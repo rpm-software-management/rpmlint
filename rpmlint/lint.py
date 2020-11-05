@@ -1,5 +1,7 @@
 import importlib
+import operator
 from tempfile import gettempdir
+import time
 
 from rpmlint.color import Color
 from rpmlint.config import Config
@@ -20,6 +22,7 @@ class Lint(object):
         self.options = options
         self.packages_checked = 0
         self.specfiles_checked = 0
+        self.check_duration = {}
         if options['config']:
             self.config = Config(options['config'])
         else:
@@ -69,9 +72,23 @@ class Lint(object):
         elif self.output.printed_messages['E'] > 0 and not self.config.permissive:
             quit_color = Color.Red
             retcode = 64
+
+        if self.options['time_report']:
+            self._print_time_report()
+
         msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings, {} badness'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W'], self.output.score), '=')
         print(f'{quit_color}{msg}{Color.Reset}')
         return retcode
+
+    def _print_time_report(self):
+        total = sum(self.check_duration.values())
+        print('\nCheck time report (>0.01%):')
+        print(f'    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}')
+        check_times = [x for x in self.check_duration.items() if x[1] / total > 0.01]
+        for check, duration in sorted(check_times, key=operator.itemgetter(1), reverse=True):
+            fraction = 100.0 * duration / total
+            print(f'    {check:32s} {duration:15.2f} {fraction:17.2f}')
+        print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f}')
 
     def _load_installed_rpms(self, packages):
         existing_packages = []
@@ -170,19 +187,24 @@ class Lint(object):
                     self.run_checks(pkg)
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:
-                    self.run_spec_checks(pkg)
+                    self.run_checks(pkg)
         except Exception as e:
             print_warning(f'(none): E: while reading {pname}: {e}')
 
     def run_checks(self, pkg):
+        spec_checks = isinstance(pkg, FakePkg)
         for checker in self.checks:
-            self.checks[checker].check(pkg)
-        self.packages_checked += 1
+            if checker not in self.check_duration:
+                self.check_duration[checker] = 0
+            start = time.monotonic()
+            fn = self.checks[checker].check_spec if spec_checks else self.checks[checker].check
+            fn(pkg)
+            self.check_duration[checker] += time.monotonic() - start
 
-    def run_spec_checks(self, pkg):
-        for checker in self.checks:
-            self.checks[checker].check_spec(pkg)
-        self.specfiles_checked += 1
+        if spec_checks:
+            self.specfiles_checked += 1
+        else:
+            self.packages_checked += 1
 
     def print_config(self):
         """
