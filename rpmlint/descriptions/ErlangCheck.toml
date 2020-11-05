@@ -1,3 +1,6 @@
+beam-compile-info-missed="""
+Your beam file has missed compile info chunk.
+"""
 beam-compiled-without-debuginfo="""
 Your beam file indicates that it doesn't contain debug_info.
 Please, make sure that you compile with +debug_info.
