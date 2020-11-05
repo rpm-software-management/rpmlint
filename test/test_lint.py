@@ -15,6 +15,7 @@ options_preset = {
     'rpmfile': '',
     'rpmlintrc': False,
     'installed': '',
+    'time_report': False
 }
 
 basic_tests = [
