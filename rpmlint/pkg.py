@@ -491,7 +491,8 @@ class Pkg(AbstractPkg):
             command_str = \
                 'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
                 {'f': quote(str(self.filename)), 'd': quote(dirname)}
-            stderr = None if verbose else subprocess.DEVNULL
+            # SUSE-specific: never print stderr
+            stderr = subprocess.DEVNULL
             subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
                                     stderr=stderr)
             self.extracted = True
