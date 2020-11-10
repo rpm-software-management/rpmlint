@@ -1,5 +1,7 @@
+import cProfile
 import importlib
 import operator
+import pstats
 from tempfile import gettempdir
 import time
 
@@ -27,6 +29,11 @@ class Lint(object):
             self.config = Config(options['config'])
         else:
             self.config = Config()
+        if options['profile']:
+            self.profile = cProfile.Profile()
+            self.profile.enable()
+        else:
+            self.profile = None
         self._load_rpmlintrc()
         if options['verbose']:
             self.config.info = options['verbose']
@@ -75,9 +82,12 @@ class Lint(object):
 
         if self.options['time_report']:
             self._print_time_report()
+        if self.profile:
+            self._print_cprofile()
 
         msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings, {} badness'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W'], self.output.score), '=')
         print(f'{quit_color}{msg}{Color.Reset}')
+
         return retcode
 
     def _get_color_time_report_value(self, fraction):
@@ -98,6 +108,17 @@ class Lint(object):
             fraction = 100.0 * duration / total
             print(f'    {check:32s} {duration:15.2f} {self._get_color_time_report_value(fraction)}')
         print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f}')
+
+    def _print_cprofile(self):
+        N = 30
+        print(f'\n{Color.Bold}cProfile report:{Color.Reset}')
+        self.profile.disable()
+        stats = pstats.Stats(self.profile)
+        stats.sort_stats('cumulative').print_stats(N)
+        print('========================================================')
+        stats.sort_stats('ncalls').print_stats(N)
+        print('========================================================')
+        stats.sort_stats('tottime').print_stats(N)
 
     def _load_installed_rpms(self, packages):
         existing_packages = []
