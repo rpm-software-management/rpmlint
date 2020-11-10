@@ -149,7 +149,7 @@ class Filter(object):
         last_issue = ''
         for diag in results:
             if self.info:
-                rpmlint_issue = diag.split()[2]
+                rpmlint_issue = diag.split()[2].rstrip(Color.Reset)
                 # print out details for each rpmlint_issue we had
                 if rpmlint_issue != last_issue:
                     if last_issue:
