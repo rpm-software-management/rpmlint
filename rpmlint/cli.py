@@ -174,7 +174,7 @@ def lint():
     """
 
     # TODO: remove once OBS integration is done
-    options = process_lint_args(sys.argv[1:] + ['--permissive'])
+    options = process_lint_args(sys.argv[1:] + ['--permissive', '--time-report'])
 
     lint = Lint(options)
     sys.exit(lint.run())
