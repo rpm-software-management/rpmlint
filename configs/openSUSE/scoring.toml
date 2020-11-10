@@ -17,7 +17,6 @@ invalid-pkgconfig-file = 10000
 libtool-wrapper-in-package = 10000
 lto-bytecode = 10000
 lto-no-text-in-archive = 10000
-makefile-junk = 109
 no-pkg-config-provides = 300
 non-ghost-in-run = 10000
 non-position-independent-executable = 10000
