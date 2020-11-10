@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, IS_X86_64
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -14,6 +14,7 @@ def binariescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/crypto-policy'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_forbidden_c_calls(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -84,6 +85,7 @@ def test_shlib_with_no_exec(tmpdir, package, binariescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/glibc'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -189,6 +191,7 @@ def test_non_position_independent(tmpdir, package, binariescheck):
 
 # libtest package
 @pytest.mark.parametrize('package', ['binary/libtest'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_library(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -201,6 +204,7 @@ def test_library(tmpdir, package, binariescheck):
 
 # invalid-soname test package
 @pytest.mark.parametrize('package', ['binary/libtest1'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_shared_library1(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -212,6 +216,7 @@ def test_shared_library1(tmpdir, package, binariescheck):
 
 # incoherent-version-in-name test package
 @pytest.mark.parametrize('package', ['binary/libtest2'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_shared_library2(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -227,6 +232,7 @@ def test_shared_library2(tmpdir, package, binariescheck):
 
 # invalid-ldconfig-symlink test package
 @pytest.mark.parametrize('package', ['binary/libtest3'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_invalid_ldconfig_symlink(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
@@ -241,6 +247,7 @@ def test_invalid_ldconfig_symlink(tmpdir, package, binariescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/multiple_errors'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_multiple_errors(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))

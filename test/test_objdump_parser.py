@@ -6,7 +6,7 @@ from rpmlint.filter import Filter
 from rpmlint.objdumpparser import ObjdumpParser
 from rpmlint.pkg import FakePkg, get_magic
 
-from Testing import CONFIG, get_tested_path
+from Testing import CONFIG, get_tested_path, IS_X86_64
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -44,9 +44,11 @@ def test_basic():
     assert first['language'] == '32769\t(MIPS assembler)'
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_executable_stack_package(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
     out = output.print_results(output.results)
+
     assert 'W: missing-mandatory-optflags a.out -fno-PIE -g -Ofast' in out
     assert 'E: forbidden-optflags a.out -frounding-math' in out

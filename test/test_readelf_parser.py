@@ -7,7 +7,7 @@ from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg, get_magic
 from rpmlint.readelfparser import ReadelfParser
 
-from Testing import CONFIG, get_tested_path
+from Testing import CONFIG, get_tested_path, HAS_32BIT_GLIBC, IS_I686, IS_X86_64
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -148,6 +148,7 @@ def test_archive_with_debuginfo(binariescheck):
     assert 'E: static-library-without-debuginfo' not in output.print_results(output.results)
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
@@ -166,6 +167,7 @@ def test_readelf_failure_in_package(binariescheck):
     assert 'readelf-failed /lib64/not-existing.so' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_no_soname(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('no-soname.so'), '/lib64/no-soname.so')
@@ -173,6 +175,7 @@ def test_no_soname(binariescheck):
     assert 'no-soname /lib64/no-soname.so' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_invalid_soname(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('invalid-soname.so'), '/lib64/invalid-soname.so')
@@ -181,6 +184,7 @@ def test_invalid_soname(binariescheck):
     assert 'E: shlib-with-non-pic-code /lib64/invalid-soname.so' not in out
 
 
+@pytest.mark.skipif(not IS_I686 and (not IS_X86_64 or not HAS_32BIT_GLIBC), reason='i686 glibc only')
 def test_non_pic_code_library(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
@@ -188,6 +192,7 @@ def test_non_pic_code_library(binariescheck):
     assert 'E: shlib-with-non-pic-code' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_no_ldconfig_symlink(binariescheck):
     output, test = binariescheck
 
@@ -197,6 +202,7 @@ def test_no_ldconfig_symlink(binariescheck):
     assert 'E: incoherent-version-in-name 1' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_call_mktemp(binariescheck):
     output, test = binariescheck
 
@@ -205,6 +211,7 @@ def test_call_mktemp(binariescheck):
     assert 'E: call-to-mktemp /bin/call-mktemp' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_call_setgroups(binariescheck):
     output, test = binariescheck
 
@@ -213,6 +220,7 @@ def test_call_setgroups(binariescheck):
     assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_call_gethostbyname(binariescheck):
     output, test = binariescheck
 
@@ -221,6 +229,7 @@ def test_call_gethostbyname(binariescheck):
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_missing_dependency(binariescheck):
     output, test = binariescheck
 
