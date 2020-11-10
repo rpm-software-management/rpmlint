@@ -33,6 +33,7 @@ class BinariesCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
+        self.checked_files = 0
         self.system_lib_paths = config.configuration['SystemLibPaths']
         self.pie_exec_regex_list = []
         for regex in config.configuration['PieExecutables']:
@@ -574,6 +575,8 @@ class BinariesCheck(AbstractCheck):
             if not (pkgfile.magic.startswith('ELF ') or 'current ar archive'
                     in pkgfile.magic or is_ocaml_native or is_lua_bytecode):
                 continue
+
+            self.checked_files += 1
 
             # mark this package as a one that has binary file
             pkg_has_binary = True

@@ -91,13 +91,17 @@ class Lint(object):
 
     def _print_time_report(self):
         total = sum(self.check_duration.values())
+        total_checked_files = sum((check.checked_files for check in self.checks.values() if check.checked_files))
         print(f'\n{Color.Bold}Check time report{Color.Reset} (>0.01%):')
-        print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}{Color.Reset}')
+        print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}  Checked files{Color.Reset}')
         check_times = [x for x in self.check_duration.items() if x[1] / total > 0.01]
         for check, duration in sorted(check_times, key=operator.itemgetter(1), reverse=True):
             fraction = 100.0 * duration / total
-            print(f'    {check:32s} {duration:15.2f} {self._get_color_time_report_value(fraction)}')
-        print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f}')
+            checked_files = self.checks[check].checked_files
+            if not checked_files:
+                checked_files = ''
+            print(f'    {check:32s} {duration:15.2f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
+        print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f} {total_checked_files:>14}')
 
     def _load_installed_rpms(self, packages):
         existing_packages = []
