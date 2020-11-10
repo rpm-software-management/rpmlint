@@ -7,6 +7,8 @@ class AbstractCheck(object):
         self.macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')
         self.config = config
         self.output = output
+        # by default do not track checked files
+        self.checked_files = None
 
     def check(self, pkg):
         if pkg.is_source:
@@ -29,9 +31,12 @@ class AbstractFilesCheck(AbstractCheck):
         super().__init__(config, output)
 
     def check_binary(self, pkg):
+        if self.checked_files is None:
+            self.checked_files = 0
         for filename in (x for x in pkg.files if x not in pkg.ghost_files):
             if self.__files_re.match(filename):
                 self.check_file(pkg, filename)
+                self.checked_files += 1
 
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed
