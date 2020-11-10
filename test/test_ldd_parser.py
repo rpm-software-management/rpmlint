@@ -6,7 +6,7 @@ from rpmlint.filter import Filter
 from rpmlint.lddparser import LddParser
 from rpmlint.pkg import FakePkg, get_magic
 
-from Testing import CONFIG, get_tested_path
+from Testing import CONFIG, get_tested_path, IS_X86_64
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -32,6 +32,7 @@ def run_elf_checks(test, pkg, fullpath, path):
     test.run_elf_checks(pkg, fullpath, path)
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_unused_dependency():
     ldd = lddparser('libtirpc.so.3.0.0')
     assert not ldd.parsing_failed_reason
@@ -39,6 +40,7 @@ def test_unused_dependency():
     assert 'liXXXsapi_krb5.so.2' in ldd.unused_dependencies
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_undefined_symbol():
     ldd = lddparser('libtirpc.so.3.0.0')
     assert not ldd.parsing_failed_reason
@@ -51,6 +53,7 @@ def test_ldd_parser_failure():
     assert 'not-existing-file: No such file or directory' in ldd.parsing_failed_reason
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_dependencies():
     ldd = lddparser('libtirpc.so.3.0.0')
     assert not ldd.parsing_failed_reason
@@ -58,6 +61,7 @@ def test_dependencies():
     assert any(d for d in ldd.dependencies if d.startswith('linux-vdso.so.1'))
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
@@ -67,6 +71,7 @@ def test_unused_dependency_in_package(binariescheck):
     assert 'E: unused-direct-shlib-dependency ' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_unused_dependency_in_package_for_executable(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
@@ -76,6 +81,7 @@ def test_unused_dependency_in_package_for_executable(binariescheck):
     assert 'W: unused-direct-shlib-dependency ' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_opt_dependency(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
@@ -85,6 +91,7 @@ def test_opt_dependency(binariescheck):
     assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out
 
 
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_usr_dependency(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')

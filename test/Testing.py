@@ -1,5 +1,8 @@
+import glob
 import os
 from pathlib import Path
+import platform
+import re
 
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
@@ -11,6 +14,11 @@ def testpath():
 
 TEST_CONFIG = [testpath() / 'configs/test.config']
 CONFIG = Config(TEST_CONFIG)
+
+# predicates used for pytest.mark.skipif decorators
+IS_X86_64 = platform.machine() == 'x86_64'
+IS_I686 = re.match(platform.machine(), 'i[3456]86') is not None
+HAS_32BIT_GLIBC = glob.glob('/lib/ld-linux.so.*') is not None
 
 
 def get_tested_path(path):
