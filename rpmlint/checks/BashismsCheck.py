@@ -8,6 +8,7 @@ from rpmlint.helpers import ENGLISH_ENVIROMENT
 class BashismsCheck(AbstractFilesCheck):
     def __init__(self, config, output):
         super().__init__(config, output, r'.*')
+        self.use_threads = True
 
     def check_file(self, pkg, filename):
         root = pkg.dirName()

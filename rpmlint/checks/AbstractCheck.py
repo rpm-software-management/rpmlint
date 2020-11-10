@@ -1,3 +1,4 @@
+import concurrent.futures
 import re
 
 
@@ -28,15 +29,24 @@ class AbstractCheck(object):
 class AbstractFilesCheck(AbstractCheck):
     def __init__(self, config, output, file_regexp):
         self.__files_re = re.compile(file_regexp)
+        self.use_threads = False
         super().__init__(config, output)
 
     def check_binary(self, pkg):
         if self.checked_files is None:
             self.checked_files = 0
-        for filename in (x for x in pkg.files if x not in pkg.ghost_files):
-            if self.__files_re.match(filename):
+
+        filenames = [x for x in pkg.files if x not in pkg.ghost_files and self.__files_re.match(x)]
+        if self.use_threads:
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = []
+                for filename in filenames:
+                    futures.append(executor.submit(self.check_file, pkg, filename))
+                concurrent.futures.wait(futures)
+        else:
+            for filename in filenames:
                 self.check_file(pkg, filename)
-                self.checked_files += 1
+        self.checked_files += len(filenames)
 
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed
