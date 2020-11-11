@@ -19,13 +19,13 @@ def test_extension_and_permissions(tmpdir, package, sourcescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
 
-    assert len(output.results) == 3
+    assert len(output.results) == 1
 
     assert 'inconsistent-file-extension' in out
     assert 'name extension indicates a different compression format' in out
 
-    assert 'strange-permission' in out
-    assert 'a file should have' in out
+    assert 'strange-permission' not in out
+    assert 'a file should have' not in out
 
 
 @pytest.mark.parametrize('package', ['source/not-compressed-multi-spec'])
