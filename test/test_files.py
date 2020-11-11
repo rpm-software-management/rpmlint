@@ -89,6 +89,7 @@ def test_makefile_junk(tmpdir, package, filescheck):
     assert 'W: makefile-junk /usr/share/CMakeLists.txt' in out
     assert 'W: makefile-junk /usr/share/Makefile.am' in out
     assert 'W: makefile-junk /usr/share/selinux' not in out
+    assert 'W: makefile-junk /usr/src/foo/Makefile' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/python3-greenlet'])
