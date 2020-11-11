@@ -19,7 +19,7 @@ class SourceCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.compress_ext = config.configuration['CompressExtension']
-        self.valid_src_perms = config.configuration['ValidSrcPerms']
+        self.valid_src_perms = [int(value, 8) for value in config.configuration['ValidSrcPerms']]
         self.spec_file = None
 
         source_details_dict = {
