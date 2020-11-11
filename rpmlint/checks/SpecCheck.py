@@ -211,7 +211,7 @@ class SpecCheck(AbstractCheck):
 
             if (current_section in Pkg.RPM_SCRIPTLETS + ('prep', 'build') and
                     contains_buildroot(line)):
-                self.output.add_info('W', pkg, 'rpm-buildroot-usage', '%' + current_section,
+                self.output.add_info('E', pkg, 'rpm-buildroot-usage', '%' + current_section,
                                      line[:-1].strip())
 
             if make_check_regex.search(line) and current_section not in \

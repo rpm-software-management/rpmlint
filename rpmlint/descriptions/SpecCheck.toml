@@ -118,8 +118,9 @@ configurations, you can ignore this warning for the section(s) where your rpm
 takes care of it.
 """
 rpm-buildroot-usage="""
-$RPM_BUILD_ROOT should not be touched during %build or %prep stage, as it
-may break short circuit builds.
+$RPM_BUILD_ROOT or %{buildroot} must not be touched during %build or %prep
+stage, as it will break short circuit builds and will not persist to %install
+stage in a normal build, leading to unexpected package build behavior.
 """
 make-check-outside-check-section="""
 Make check or other automated regression test should be run in %check, as

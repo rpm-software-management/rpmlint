@@ -149,7 +149,7 @@ def test_check_rpm_buildroot_usage_under_prep(package, speccheck):
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg)
     out = output.print_results(output.results)
-    assert 'W: rpm-buildroot-usage' in out
+    assert 'E: rpm-buildroot-usage' in out
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheckTemp'])
@@ -159,7 +159,7 @@ def test_check_rpm_buildroot_usage_under_build(package, speccheck):
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg)
     out = output.print_results(output.results)
-    assert 'W: rpm-buildroot-usage' in out
+    assert 'E: rpm-buildroot-usage' in out
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
@@ -169,7 +169,7 @@ def test_check_rpm_buildroot_usage_not_applied(package, speccheck):
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg)
     out = output.print_results(output.results)
-    assert 'W: rpm-buildroot-usage' not in out
+    assert 'E: rpm-buildroot-usage' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/make-check-outside-check-section'])
