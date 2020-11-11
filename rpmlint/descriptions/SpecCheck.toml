@@ -76,12 +76,12 @@ don't directly need it, section markers may be overridden in rpm's
 configuration to provide additional 'under the hood' functionality.  Add the
 section, even if empty.
 """
-"no-%clean-section"="""
-The spec file doesn't contain a %clean section to remove the files installed
-by the %install section.
-"""
 "more-than-one-%changelog-section"="""
 The spec file unnecessarily contains more than one %changelog section.
+"""
+"superfluous-%clean-section"="""
+The spec section %clean should not be used any longer.
+RPM provides its own clean logic.
 """
 "lib-package-without-%mklibname"="""
 The package name must be built using %mklibname to allow lib64 and lib32

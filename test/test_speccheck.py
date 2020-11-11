@@ -856,7 +856,6 @@ def test_check_no_essential_section(package, speccheck):
     out = output.print_results(output.results)
     assert 'W: no-%prep-section' in out
     assert 'W: no-%install-section' in out
-    assert 'W: no-%clean-section' in out
     assert 'W: no-%build-section' in out
 
 
@@ -871,7 +870,7 @@ def test_check_no_essential_section_not_applied(package, speccheck):
     out = output.print_results(output.results)
     assert 'W: no-%prep-section' not in out
     assert 'W: no-%install-section' not in out
-    assert 'W: no-%clean-section' not in out
+    assert 'E: superfluous-%clean-section' in out
     assert 'W: no-%build-section' not in out
 
 
