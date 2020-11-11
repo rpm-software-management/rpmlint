@@ -541,7 +541,7 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'manifest-in-perl-module', f)
             elif f == '/usr/info/dir' or f == '/usr/share/info/dir':
                 self.output.add_info('E', pkg, 'info-dir-file', f)
-            elif makefile_regex.search(f) and not f.startswith('/usr/share/selinux'):
+            elif makefile_regex.search(f) and not f.startswith('/usr/share/selinux') and not f.startswith('/usr/src'):
                 self.output.add_info('W', pkg, 'makefile-junk', f)
 
             res = logrotate_regex.search(f)
