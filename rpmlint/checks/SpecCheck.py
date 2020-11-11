@@ -506,6 +506,7 @@ class SpecCheck(AbstractCheck):
         self._check_no_cleaning_of_buildroot(pkg, buildroot_clean)
         self._check_no_buildroot_tag(pkg, buildroot)
         self._check_no_s_section(pkg, section)
+        self._check_superfluous_clean_section(pkg, section)
         self._check_more_than_one_changelog_section(pkg, section)
         self._check_lib_package_without_mklibname(pkg, is_lib_pkg, mklibname)
         self._check_descript_without_disabling_depgen(pkg, depscript_override, depgen_disabled)
@@ -549,16 +550,22 @@ class SpecCheck(AbstractCheck):
             self.output.add_info('W', pkg, 'no-buildroot-tag')
 
     def _check_no_s_section(self, pkg, section):
-        """Check if there is no (%prep, %build, %install, %clean)
+        """Check if there is no (%prep, %build, %install)
         in the specfile.
         """
-        for sec in ('prep', 'build', 'install', 'clean'):
+        for sec in ('prep', 'build', 'install'):
             if not section.get(sec):
                 self.output.add_info('W', pkg, 'no-%%%s-section' % sec)
 
+    def _check_superfluous_clean_section(self, pkg, section):
+        """Check for a superfluous %clean section in the specfile.
+        """
+        if section.get('clean'):
+            self.output.add_info('E', pkg, 'superfluous-%clean-section')
+
     def _check_more_than_one_changelog_section(self, pkg, section):
         """Check if specfile has more than one %changelog.
-        prep, build, install, clean, check prevented by rpmbuild 4.4
+        prep, build, install, check prevented by rpmbuild 4.4
         """
         if section.get('changelog', 0) > 1:
             self.output.add_info('W', pkg, 'more-than-one-%changelog-section')
