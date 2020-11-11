@@ -1,5 +1,6 @@
 import importlib
 import operator
+import os
 from pathlib import Path
 from tempfile import gettempdir
 import time
@@ -121,9 +122,11 @@ class Lint(object):
         Load rpmlintrc from argument or load up from folder
         """
         if not self.options['rpmlintrc']:
-            # first load SUSE-specific locations
-            self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/home/abuild/rpmbuild/SOURCES'))
-            self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/usr/src/packages/SOURCES/'))
+            # Skip auto-loading when running under PYTEST
+            if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
+                # first load SUSE-specific locations
+                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/home/abuild/rpmbuild/SOURCES'))
+                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/usr/src/packages/SOURCES/'))
             if not self.options['rpmlintrc'] and len(self.options['rpmfile']) == 1:
                 # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
                 # do this only in a case where there is one folder parameter or one file
