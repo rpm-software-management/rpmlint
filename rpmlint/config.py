@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import re
 
@@ -67,13 +68,15 @@ class Config(object):
         # first load up the file that contains defaults
         self.conf_files.append(self.config_defaults)
 
-        # Then load up config directories on system
-        for directory in reversed(xdg_config_dirs):
-            confdir = Path(directory) / 'rpmlint'
-            if confdir.is_dir():
-                # load all configs in the folders
-                confopts = sorted(confdir.glob('*toml'))
-                self.conf_files += confopts
+        # Skip auto-loading when running under PYTEST
+        if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
+            # Then load up config directories on system
+            for directory in reversed(xdg_config_dirs):
+                confdir = Path(directory) / 'rpmlint'
+                if confdir.is_dir():
+                    # load all configs in the folders
+                    confopts = sorted(confdir.glob('*toml'))
+                    self.conf_files += confopts
 
         # As a last item load up the user configuration
         if config:
