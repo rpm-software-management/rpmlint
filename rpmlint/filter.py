@@ -185,7 +185,7 @@ class Filter(object):
                 self.error_details[rpmlint_issue] = config.configuration['Descriptions'][rpmlint_issue]
 
             # we need 2 enters at the end for whitespace purposes
-            description = textwrap.fill(self.error_details[rpmlint_issue], 78) + '\n\n'
+            description = textwrap.fill(self.error_details[rpmlint_issue], 78, break_on_hyphens=False) + '\n\n'
         return description
 
     def _populate_filter_regexp(self, filters):
