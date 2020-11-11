@@ -156,14 +156,17 @@ class TagsCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'spelling-error', typo)
         for i in description.splitlines():
             if len(i) > self.max_line_len:
-                self.output.add_info('E', pkg, 'description-line-too-long', lang, i)
+                self.output.add_info('E', pkg, 'description-line-too-long', self._lang_for_error(lang), i)
             res = self.forbidden_words_regex.search(i)
             if res and self.config.configuration['ForbiddenWords']:
-                self.output.add_info('W', pkg, 'description-use-invalid-word', lang,
+                self.output.add_info('W', pkg, 'description-use-invalid-word', self._lang_for_error(lang),
                                      res.group(1))
             res = tag_regex.search(i)
             if res:
-                self.output.add_info('W', pkg, 'tag-in-description', lang, res.group(1))
+                self.output.add_info('W', pkg, 'tag-in-description', self._lang_for_error(lang), res.group(1))
+
+    def _lang_for_error(self, lang):
+        return lang if lang != 'C' and lang != 'C.UTF-8' else None
 
     def check_summary(self, pkg, lang, ignored_words):
         summary = pkg.langtag(rpm.RPMTAG_SUMMARY, lang)
@@ -175,26 +178,26 @@ class TagsCheck(AbstractCheck):
             for typo in typos.items():
                 self.output.add_info('E', pkg, 'spelling-error', typo)
         if any(nl in summary for nl in ('\n', '\r')):
-            self.output.add_info('E', pkg, 'summary-on-multiple-lines', lang)
+            self.output.add_info('E', pkg, 'summary-on-multiple-lines', self._lang_for_error(lang))
         if (summary[0] != summary[0].upper() and
                 summary.partition(' ')[0] not in CAPITALIZED_IGNORE_LIST):
-            self.output.add_info('W', pkg, 'summary-not-capitalized', lang, summary)
+            self.output.add_info('W', pkg, 'summary-not-capitalized', self._lang_for_error(lang), summary)
         if summary[-1] == '.':
-            self.output.add_info('W', pkg, 'summary-ended-with-dot', lang, summary)
+            self.output.add_info('W', pkg, 'summary-ended-with-dot', self._lang_for_error(lang), summary)
         if len(summary) > self.max_line_len:
-            self.output.add_info('E', pkg, 'summary-too-long', lang, summary)
+            self.output.add_info('E', pkg, 'summary-too-long', self._lang_for_error(lang), summary)
         if leading_space_regex.search(summary):
-            self.output.add_info('E', pkg, 'summary-has-leading-spaces', lang, summary)
+            self.output.add_info('E', pkg, 'summary-has-leading-spaces', self._lang_for_error(lang), summary)
         res = self.forbidden_words_regex.search(summary)
         if res and self.config.configuration['ForbiddenWords']:
-            self.output.add_info('W', pkg, 'summary-use-invalid-word', lang, res.group(1))
+            self.output.add_info('W', pkg, 'summary-use-invalid-word', self._lang_for_error(lang), res.group(1))
         if pkg.name:
             sepchars = r'[\s%s]' % punct
             res = re.search(r'(?:^|\s)(%s)(?:%s|$)' %
                             (re.escape(pkg.name), sepchars),
                             summary, re.IGNORECASE | re.UNICODE)
             if res:
-                self.output.add_info('W', pkg, 'name-repeated-in-summary', lang,
+                self.output.add_info('W', pkg, 'name-repeated-in-summary', self._lang_for_error(lang),
                                      res.group(1))
 
     def _check_invalid_packager(self, pkg):

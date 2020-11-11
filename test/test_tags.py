@@ -149,9 +149,9 @@ def test_check_summary_warning(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     # Test if package has a summary longer than 80 characters
-    assert 'E: summary-too-long C   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
+    assert 'E: summary-too-long   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
     # Test if package has leading space at the beginning of the summary
-    assert 'E: summary-has-leading-spaces C   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
+    assert 'E: summary-has-leading-spaces   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
     # Test if package has a shorter description than Summary
     assert 'W: description-shorter-than-summary' in out
     # Test if a package has a Version: tag
@@ -171,9 +171,9 @@ def test_check_warning(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     # Test if package Summary does not start with a capital letter
-    assert 'W: summary-not-capitalized C no-url-tag warning.' in out
+    assert 'W: summary-not-capitalized no-url-tag warning.' in out
     # Test if a package Summary ends with a period
-    assert 'W: summary-ended-with-dot C no-url-tag warning.' in out
+    assert 'W: summary-ended-with-dot no-url-tag warning.' in out
     # Test if a package does not contain a Url: tag
     assert 'W: no-url-tag' in out
 
@@ -210,9 +210,9 @@ def test_check_misc_warning(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     # Test if a package has a tag such as Name: in the description
-    assert 'W: tag-in-description C Name:' in out
+    assert 'W: tag-in-description Name:' in out
     # Test if a package has it's name repeated in the summary tag
-    assert 'W: name-repeated-in-summary C misc-warnings' in out
+    assert 'W: name-repeated-in-summary misc-warnings' in out
     # Test if a package has a invalid url value in the URL: tag
     assert 'W: invalid-url URL so;mething.' in out
 
@@ -265,7 +265,7 @@ def test_package_random_warnings(tmpdir, package, tagscheck):
     # in newer package to avoid unnecessary dependency breakage
     assert 'W: obsolete-not-provided' in out
     # Test if a package has a description longer than 79 characters
-    assert 'E: description-line-too-long C This is ridiculously long description that has no meaning but is used to test the check description-line-too-long.' in out
+    assert 'E: description-line-too-long This is ridiculously long description that has no meaning but is used to test the check description-line-too-long.' in out
     # Test if a package has a Requires tag value start with
     # string other than /usr/local/
     assert 'E: invalid-dependency' not in out
