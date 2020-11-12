@@ -274,18 +274,21 @@ class ElfSymbolTableInfo:
         self.parse()
 
     def parse(self):
-        r = subprocess.run(['readelf', '-W', '-s', self.path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
-        if r.returncode != 0:
-            self.parsing_failed_reason = r.stderr
-            return
+        try:
+            r = subprocess.run(['readelf', '-W', '-s', self.path], encoding='utf8',
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+            if r.returncode != 0:
+                self.parsing_failed_reason = r.stderr
+                return
 
-        lines = r.stdout.splitlines()
-        for line in lines:
-            r = self.section_regex.search(line)
-            if r:
-                self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
-                                              r.group('visibility'), r.group('name')))
+            lines = r.stdout.splitlines()
+            for line in lines:
+                r = self.section_regex.search(line)
+                if r:
+                    self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
+                                                  r.group('visibility'), r.group('name')))
+        except UnicodeDecodeError as e:
+            self.parsing_failed_reason = str(e)
 
     def get_functions_for_regex(self, regex):
         for sym in self.symbols:
