@@ -94,14 +94,24 @@ class ElfSectionInfo:
         needle = 'Section Headers:'
 
         # archive files can contain multiple files
-        while len(lines) > 0:
+        i = 0
+        length = len(lines)
+
+        while i < length:
             parsed_sections = []
-            lines = list(dropwhile(lambda x: needle not in x, lines))
+            while needle not in lines[i]:
+                i += 1
+                if i == length:
+                    return
 
             # skip header and empty section
-            lines = lines[3:]
+            i += 3
 
-            sections = list(takewhile(lambda x: 'Key to Flags:' not in x, lines))
+            sections = []
+            while 'Key to Flags:' not in lines[i]:
+                sections.append(lines[i])
+                i += 1
+
             for s in sections:
                 r = self.section_regex.search(s)
                 section = ElfSection(r.group('section'), r.group('size'))
@@ -111,7 +121,6 @@ class ElfSectionInfo:
                 if self.pic_regex.search(section.name) is not None:
                     self.pic = True
 
-            lines = lines[len(sections):]
             if len(parsed_sections) > 0:
                 self.elf_files.append(parsed_sections)
 
