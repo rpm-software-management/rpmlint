@@ -391,6 +391,8 @@ class BinariesCheck(AbstractCheck):
     def _check_library_dependency(self, pkg, pkgfile_path, path):
         if self.is_archive:
             return
+        if path.startswith('/lib/modules/'):
+            return
 
         dyn_section = self.readelf_parser.dynamic_section_info
         if not len(dyn_section.needed) and not (dyn_section.soname and
