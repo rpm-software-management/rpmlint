@@ -645,7 +645,7 @@ class TagsCheck(AbstractCheck):
                     # Check if a package contains a unreasonable URL
                     # [This check is also triggered with Source: tag value]
                     if not scheme or not netloc or '.' not in netloc or \
-                            scheme not in ('http', 'https', 'ftp') or \
+                            scheme not in ('http', 'https', 'ftp', 'obs') or \
                             (self.config.configuration['InvalidURL'] and
                              self.invalid_url_regex.search(url)):
                         self.output.add_info('W', pkg, 'invalid-url', tag, url)
