@@ -620,19 +620,16 @@ class SpecCheck(AbstractCheck):
         # We'd like to parse the specfile only once using python bindings,
         # but it seems errors from rpmlib get logged to stderr and we can't
         # capture and print them nicely, so we do it once each way :P
-        outcmd = subprocess.run(
-            ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent,
-             '--specfile', self._spec_file), stdout=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
-        text = outcmd.stdout.decode()
-        if text.endswith('\n'):
-            text = text[:-1]
+        try:
+            outcmd = subprocess.run(
+                ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent,
+                 '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIROMENT)
 
-        parse_error = False
-        for line in text.splitlines():
-            parse_error = True
-            self.output.add_info('E', pkg, 'specfile-error', line)
-        if parse_error:
-            return
+            for line in outcmd.stderr.splitlines():
+                if 'warning:' not in line:
+                    self.output.add_info('E', pkg, 'specfile-error', line)
+        except UnicodeDecodeError as e:
+            self.output.add_info('E', pkg, 'specfile-error', str(e))
 
     def _check_invalid_url(self, pkg, rpm):
         """Check if specfile has an invalid url."""
@@ -643,9 +640,9 @@ class SpecCheck(AbstractCheck):
         try:
             transaction_set = rpm.TransactionSet()
             spec_obj = transaction_set.parseSpec(str(self._spec_file))
-        except (ValueError, rpm.error):
-            # errors logged above already
-            pass
+        except (ValueError, rpm.error) as e:
+            self.output.add_info('E', pkg, 'specfile-error', str(e).strip(),
+                                 str(self._spec_file))
         rpm.delMacro('_sourcedir')
         if spec_obj:
             for src in spec_obj.sources:
