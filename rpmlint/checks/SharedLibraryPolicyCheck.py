@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 import re
 import stat
@@ -45,8 +44,10 @@ class SharedLibraryPolicyCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        # we don't care about develpkgs
-        if not pkg.name.startswith('lib') or pkg.name.endswith('-devel'):
+        # Consider only non-development, non-language library packages
+        if (not pkg.name.startswith('lib') or
+                pkg.name.endswith('-devel') or
+                pkg.name.endswith('-lang')):
             return
 
         self._check_missing_policy_lib(pkg)
@@ -57,7 +58,6 @@ class SharedLibraryPolicyCheck(AbstractCheck):
         libs = set()
         libs_needed = set()
         libs_to_dir = {}
-        dirs = set()
         reqlibs = set()
         pkg_requires = {x.name.split('(')[0] for x in pkg.requires}
 
@@ -76,7 +76,6 @@ class SharedLibraryPolicyCheck(AbstractCheck):
                         lib_dir = str(path.parent)
                         libs.add(dyn_section.soname)
                         libs_to_dir[dyn_section.soname] = lib_dir
-                        dirs.add(lib_dir)
                     if dyn_section.soname in pkg_requires:
                         # But not if the library is used by the pkg itself
                         # This avoids program packages with their own
@@ -88,13 +87,8 @@ class SharedLibraryPolicyCheck(AbstractCheck):
         if not libs.difference(reqlibs):
             return
 
-        std_lib_package = False
-        pkg_ends_with_digit = pkg.name[-1].isdigit()
-        if pkg.name.startswith('lib') and pkg_ends_with_digit:
-            std_lib_package = True
-
-        # ignore libs in a versioned non_std_dir
-        if std_lib_package:
+        if pkg.name[-1].isdigit():
+            # ignore libs in a versioned non_std_dir
             for lib in libs.copy():
                 lib_dir = libs_to_dir[lib]
                 for lib_part in lib_dir.split('/'):
@@ -104,24 +98,13 @@ class SharedLibraryPolicyCheck(AbstractCheck):
                         libs.remove(lib)
                         break
 
-        # Check for non-versioned libs in a std lib package
-        if std_lib_package:
+            # Check for non-versioned libs in a std lib package
             for lib in libs.copy():
                 if (not (lib[-1].isdigit() or
                          self.re_soname_strongly_versioned.search(lib))):
                     self.output.add_info('W', pkg, 'shlib-unversioned-lib', lib)
 
-        if not pkg.name.startswith('lib') or pkg.name.endswith('-lang'):
-            return
-
-        # Verify no non-lib stuff is in the package
-        dirs = set()
-        for f in pkg.files:
-            if os.path.isdir(pkg.dirName() + f):
-                dirs.add(f)
-
-        # Verify shared lib policy package doesn't have hard dependency on non-lib packages
-        if std_lib_package:
+            # Verify shared lib policy package doesn't have hard dependency on non-lib packages
             for dep in pkg.requires:
                 if dep[0].startswith('rpmlib(') or dep[0].startswith('config('):
                     continue
