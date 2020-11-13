@@ -111,7 +111,8 @@ class Lint(object):
 
     def _print_time_report(self):
         total = sum(self.check_duration.values())
-        total_checked_files = sum((check.checked_files for check in self.checks.values() if check.checked_files))
+        checked_files = [check.checked_files for check in self.checks.values() if check.checked_files]
+        total_checked_files = max(checked_files) if checked_files else ''
         print(f'\n{Color.Bold}Check time report{Color.Reset} (>0.01%):')
         print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}  Checked files{Color.Reset}')
         check_times = [x for x in self.check_duration.items() if x[1] / total > 0.01]
