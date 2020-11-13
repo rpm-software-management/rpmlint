@@ -340,6 +340,8 @@ class BinariesCheck(AbstractCheck):
         # skip debuginfo: https://bugzilla.redhat.com/190599
         #
         # following issues are errors for shared libs and warnings for executables
+        if not self.is_dynamically_linked:
+            return
         if (isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg) and
                 not self.is_archive and not self.readelf_parser.is_debug):
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
@@ -353,7 +355,7 @@ class BinariesCheck(AbstractCheck):
         """
         FIXME Add test coverage.
         """
-        if not self.is_archive:
+        if not self.is_archive and self.is_dynamically_linked:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
                     self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
@@ -534,6 +536,10 @@ class BinariesCheck(AbstractCheck):
             for fn in self.check_functions:
                 futures.append(executor.submit(fn, pkg, pkgfile_path, path))
             concurrent.futures.wait(futures)
+            for future in futures:
+                err = future.exception()
+                if err:
+                    raise err
 
     def check_binary(self, pkg):
         exec_files = []

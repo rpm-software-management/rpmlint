@@ -35,7 +35,9 @@ class BashismsCheck(AbstractFilesCheck):
                                env=ENGLISH_ENVIROMENT)
             if r.returncode == 2:
                 self.output.add_info('W', pkg, 'bin-sh-syntax-error', filename)
-        except (FileNotFoundError, UnicodeDecodeError):
+            elif r.returncode == 127:
+                raise FileNotFoundError(filename)
+        except UnicodeDecodeError:
             pass
 
         try:
@@ -44,5 +46,7 @@ class BashismsCheck(AbstractFilesCheck):
                                env=ENGLISH_ENVIROMENT)
             if r.returncode == 1:
                 self.output.add_info('W', pkg, 'potential-bashisms', filename)
-        except (FileNotFoundError, UnicodeDecodeError):
+            elif r.returncode == 2:
+                raise FileNotFoundError(filename)
+        except UnicodeDecodeError:
             pass

@@ -43,6 +43,10 @@ class AbstractFilesCheck(AbstractCheck):
                 for filename in filenames:
                     futures.append(executor.submit(self.check_file, pkg, filename))
                 concurrent.futures.wait(futures)
+                for future in futures:
+                    err = future.exception()
+                    if err:
+                        raise err
         else:
             for filename in filenames:
                 self.check_file(pkg, filename)
