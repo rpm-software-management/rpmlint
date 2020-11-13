@@ -3,7 +3,7 @@ if __name__ == '__main__':
     import pstats
 
     p = pstats.Stats(sys.argv[1])
-#    stats.strip_dirs()
-    p.sort_stats('cumulative').print_stats(60)
+    N = 60
+    p.sort_stats(pstats.SortKey.CUMULATIVE).print_stats(N)
     print('========================================================')
-    p.sort_stats('ncalls').print_stats(60)
+    p.sort_stats(pstats.SortKey.PCALLS).print_stats(N)
