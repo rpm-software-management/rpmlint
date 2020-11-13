@@ -2,6 +2,7 @@ import cProfile
 import importlib
 import operator
 from pstats import SortKey, Stats
+import sys
 from tempfile import gettempdir
 import time
 
@@ -234,7 +235,8 @@ class Lint(object):
                 with FakePkg(pname) as pkg:
                     self.run_checks(pkg)
         except Exception as e:
-            print_warning(f'(none): E: while reading {pname}: {e}')
+            print_warning(f'(none): E: fatal error while reading {pname}: {e}')
+            sys.exit(3)
 
     def run_checks(self, pkg):
         spec_checks = isinstance(pkg, FakePkg)
