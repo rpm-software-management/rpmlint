@@ -49,6 +49,7 @@ class Lint(object):
         self.load_checks()
 
     def _run(self):
+        start = time.monotonic()
         retcode = 0
         # if we just want to print config, do so and leave
         if self.options['print_config']:
@@ -82,7 +83,10 @@ class Lint(object):
 
         self._maybe_print_reports()
 
-        msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings, {} badness'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W'], self.output.score), '=')
+        duration = time.monotonic() - start
+        msg = string_center(f'{self.packages_checked} packages and {self.specfiles_checked} specfiles checked; '
+                            f'{self.output.printed_messages["E"]} errors, {self.output.printed_messages["W"]} warnings, '
+                            f'{self.output.score} badness; has taken {duration:.1f} s', '=')
         print(f'{quit_color}{msg}{Color.Reset}')
 
         return retcode
