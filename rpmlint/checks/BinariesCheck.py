@@ -342,8 +342,7 @@ class BinariesCheck(AbstractCheck):
         # following issues are errors for shared libs and warnings for executables
         if not self.is_dynamically_linked:
             return
-        if (isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg) and
-                not self.is_archive and not self.readelf_parser.is_debug):
+        if not self.is_archive and not self.readelf_parser.is_debug:
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
                 self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', path, symbol)
@@ -519,7 +518,8 @@ class BinariesCheck(AbstractCheck):
 
         if not self.is_archive:
             if self.is_dynamically_linked:
-                self.ldd_parser = LddParser(pkgfile_path, path)
+                is_installed_pkg = isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg)
+                self.ldd_parser = LddParser(pkgfile_path, path, is_installed_pkg)
                 failed_reason = self.ldd_parser.parsing_failed_reason
                 if failed_reason:
                     self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)

@@ -24,7 +24,7 @@ def get_full_path(path):
 def lddparser(path, system_path=None):
     if system_path is None:
         system_path = path
-    return LddParser(get_full_path(path), system_path)
+    return LddParser(get_full_path(path), system_path, True)
 
 
 def run_elf_checks(test, pkg, fullpath, path):
