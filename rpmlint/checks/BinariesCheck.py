@@ -354,7 +354,10 @@ class BinariesCheck(AbstractCheck):
         """
         FIXME Add test coverage.
         """
-        if not self.is_archive and self.is_dynamically_linked:
+        if not self.is_dynamically_linked:
+            return
+
+        if not self.is_archive:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
                     self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
