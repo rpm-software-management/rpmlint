@@ -38,14 +38,15 @@ class LddParser:
     unused_regex = re.compile(r'^\s+(?P<lib>\S+)')
     undef_regex = re.compile(r'^undefined symbol:\s+(?P<symbol>[^, ]+)')
 
-    def __init__(self, pkgfile_path, path):
+    def __init__(self, pkgfile_path, path, is_installed_pkg):
         self.pkgfile_path = pkgfile_path
         self.dependencies = []
         self.unused_dependencies = []
         self.undefined_symbols = []
         self.parsing_failed_reason = None
-        self.parse_dependencies()
-        self.parse_undefined_symbols()
+        if is_installed_pkg:
+            self.parse_dependencies()
+            self.parse_undefined_symbols()
 
     def parse_dependencies(self):
         r = subprocess.run(['ldd', '-u', self.pkgfile_path], encoding='utf8',
