@@ -4,6 +4,6 @@ if __name__ == '__main__':
 
     p = pstats.Stats(sys.argv[1])
     N = 60
-    p.sort_stats(pstats.SortKey.CUMULATIVE).print_stats(N)
+    p.sort_stats('cumulative').print_stats(N)
     print('========================================================')
-    p.sort_stats(pstats.SortKey.PCALLS).print_stats(N)
+    p.sort_stats('ncalls').print_stats(N)
