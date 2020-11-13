@@ -48,7 +48,7 @@ class Lint(object):
         # preload the check list
         self.load_checks()
 
-    def run(self):
+    def _run(self):
         retcode = 0
         # if we just want to print config, do so and leave
         if self.options['print_config']:
@@ -80,15 +80,25 @@ class Lint(object):
             quit_color = Color.Red
             retcode = 64
 
-        if self.options['time_report']:
-            self._print_time_report()
-        if self.profile:
-            self._print_cprofile()
+        self._maybe_print_reports()
 
         msg = string_center('{} packages and {} specfiles checked; {} errors, {} warnings, {} badness'.format(self.packages_checked, self.specfiles_checked, self.output.printed_messages['E'], self.output.printed_messages['W'], self.output.score), '=')
         print(f'{quit_color}{msg}{Color.Reset}')
 
         return retcode
+
+    def run(self):
+        try:
+            self._run()
+        except KeyboardInterrupt as e:
+            self._maybe_print_reports()
+            raise e
+
+    def _maybe_print_reports(self):
+        if self.options['time_report']:
+            self._print_time_report()
+        if self.profile:
+            self._print_cprofile()
 
     def _get_color_time_report_value(self, fraction):
         if fraction > 25:
