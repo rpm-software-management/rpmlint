@@ -339,6 +339,7 @@ class ReadelfParser:
     in a structured format.
     """
 
+    NOT_ELF_ERROR = 'Error: Not an ELF file - it has the wrong magic bytes at the start'
     so_regex = re.compile(r'/lib(64)?/[^/]+\.so(\.[0-9]+)*$')
 
     def __init__(self, pkgfile_path, path):
@@ -359,4 +360,7 @@ class ReadelfParser:
                    self.symbol_table_info.parsing_failed_reason,
                    self.comment_section_info.parsing_failed_reason]
         reasons = [r for r in reasons if r]
+        for reason in reasons:
+            if self.NOT_ELF_ERROR in reason:
+                return self.NOT_ELF_ERROR
         return '\n'.join(reasons) if reasons else None

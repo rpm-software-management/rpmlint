@@ -167,6 +167,14 @@ def test_readelf_failure_in_package(binariescheck):
     assert 'readelf-failed /lib64/not-existing.so' in out
 
 
+def test_readelf_single_error_message(binariescheck):
+    output, test = binariescheck
+    run_elf_checks(test, FakePkg('fake'), get_full_path('small_archive.a'), '/lib64/small_archive.a')
+    out = output.print_results(output.results)
+    filtered = [line for line in out.splitlines() if 'Not an ELF file' in line]
+    assert len(filtered) == 1
+
+
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_no_soname(binariescheck):
     output, test = binariescheck
