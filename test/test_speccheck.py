@@ -19,7 +19,8 @@ def test_check_include(tmpdir, speccheck):
     output, test = speccheck
     test.check_source(get_tested_package('source/CheckInclude', tmpdir))
     out = output.print_results(output.results)
-    assert '/tmp/' not in out
+    assert out.count('/tmp/') == 1
+    assert "specfile-error can't parse specfile" in out
     assert 'no-buildroot-tag' in out
     assert 'E: specfile-error error: query of specfile' not in out
 
