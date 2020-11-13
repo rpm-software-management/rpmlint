@@ -1,7 +1,7 @@
 import cProfile
 import importlib
 import operator
-from pstats import SortKey, Stats
+from pstats import Stats
 from tempfile import gettempdir
 import time
 
@@ -128,12 +128,12 @@ class Lint(object):
         N = 30
         print(f'\n{Color.Bold}cProfile report:{Color.Reset}')
         self.profile.disable()
-        stats = Stats(self.profile).strip_dirs()
-        stats.sort_stats(SortKey.CUMULATIVE).print_stats(N)
+        stats = Stats(self.profile)
+        stats.sort_stats('cumulative').print_stats(N)
         print('========================================================')
-        stats.sort_stats(SortKey.PCALLS).print_stats(N)
+        stats.sort_stats('ncalls').print_stats(N)
         print('========================================================')
-        stats.sort_stats(SortKey.TIME).print_stats(N)
+        stats.sort_stats('tottime').print_stats(N)
 
     def _load_installed_rpms(self, packages):
         existing_packages = []
