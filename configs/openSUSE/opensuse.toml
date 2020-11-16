@@ -12,6 +12,7 @@ Checks = [
     "PAMModulesCheck",
     "TmpFilesCheck",
     "SysVInitOnSystemdCheck",
+    "SharedLibraryPolicyCheck",
 ]
 
 
