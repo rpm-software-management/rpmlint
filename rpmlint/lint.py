@@ -94,7 +94,7 @@ class Lint(object):
 
     def run(self):
         try:
-            self._run()
+            return self._run()
         except KeyboardInterrupt as e:
             self._maybe_print_reports()
             raise e
