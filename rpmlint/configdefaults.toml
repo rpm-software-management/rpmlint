@@ -13,6 +13,7 @@ Checks = [
     "FHSCheck",
     "FilelistCheck",
     "FilesCheck",
+    "FileDigestCheck",
     "IconSizesCheck",
     "I18NCheck",
     "LogrotateCheck",
@@ -329,6 +330,10 @@ binaries = false
 # is a regexp, and the second ("name") the package in which the target of the
 # dangling symlink is shipped
 [DanglingSymlinkExceptions]
+
+[FileDigestLocation]
+
+[FileDigestGroup]
 
 # A table with key/value pairs representing new descriptions for rpmlint errors
 [Descriptions]
