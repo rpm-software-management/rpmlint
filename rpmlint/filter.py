@@ -41,6 +41,8 @@ class Filter(object):
         self.error_details = {}
         # Load it up with the toml descriptions
         self.error_details.update(self._load_descriptions())
+        self._replace_description_variables()
+
         # Counter of how many issues we encountered
         self.printed_messages = {'I': 0, 'W': 0, 'E': 0}
         # Messages
@@ -66,6 +68,18 @@ class Filter(object):
         except toml.decoder.TomlDecodeError as terr:
             print_warning(f'(none): W: unable to parse description files: {terr}')
         return descriptions
+
+    def _replace_description_variables(self):
+        """
+        Replace all variables in error_details. Example variable:
+        "Please follow this #URL#
+        """
+        for k, v in self.error_details.items():
+            variables = list(re.finditer(r'#(?P<var>\w+)#', v))
+            if variables:
+                for match in reversed(variables):
+                    v = v[:match.start()] + self.error_details[match.group('var')] + v[match.end():]
+                self.error_details[k] = v
 
     def add_info(self, level, package, rpmlint_issue, *details):
         """
