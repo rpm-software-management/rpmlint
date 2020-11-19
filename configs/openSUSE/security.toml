@@ -1,0 +1,27 @@
+# Configuration for security checks
+
+[FileDigestLocation.cron]
+FollowSymlinks = true
+Locations = [
+    "/etc/cron.d/",
+    "/etc/cron.hourly/",
+    "/etc/cron.daily/",
+    "/etc/cron.weekly/",
+    "/etc/cron.monthly/"
+]
+
+[FileDigestLocation.dbus]
+FollowSymlinks = true
+Locations = [
+    "/usr/share/dbus-1/system-services/",
+    "/usr/share/dbus-1/system.d/",
+    "/etc/dbus-1/system.d/"
+]
+
+[FileDigestLocation.polkit]
+FollowSymlinks = true
+Locations = [
+    "/etc/polkit-default-privs.d/",
+    "/etc/polkit-1/rules.d/",
+    "/usr/share/polkit-1/rules.d/"
+]
