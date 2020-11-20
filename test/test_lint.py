@@ -74,6 +74,7 @@ def test_configoutput(capsys):
     out, err = capsys.readouterr()
     assert out
     assert 'Vendor = "Fedora Project"' in out
+    assert 're.compile' not in out
     assert not err
 
 

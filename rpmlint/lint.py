@@ -46,8 +46,11 @@ class Lint(object):
             self.config.configuration['ExtractDir'] = gettempdir()
         # initialize output buffer
         self.output = Filter(self.config)
-        # preload the check list
-        self.load_checks()
+        # preload the check list if we not print config
+        # some of the config values are transformed e.g. to regular
+        # expressions
+        if not self.options['print_config']:
+            self.load_checks()
 
     def _run(self):
         start = time.monotonic()
