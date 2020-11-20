@@ -15,7 +15,7 @@ class ErlangCheck(AbstractFilesCheck):
     def check_file(self, pkg, filename):
         beam = BeamFile(pkg.files[filename].path)
         try:
-            compile_state = byte_to_string(beam.compileinfo['source'].value)
+            compile_state = byte_to_string(str(beam.compileinfo['source']))
             if 'debug_info' not in beam.compileinfo['options']:
                 self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
             # This can't be an error as builddir can be user specific and vary between users
