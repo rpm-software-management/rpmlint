@@ -135,5 +135,9 @@ PAMModulesWhiteList = [
     # pam (bsc#1171563)
     "pam_setquota.so",
     # kanidm (bsc#1173387)
-    "pam_kanidm.so"
+    "pam_kanidm.so",
+    # GNOME malcontent parental control (bsc#1177974)
+    "pam_malcontent.so",
+    # pam (bsc#1171562)
+    "pam_faillock.so"
 ]
