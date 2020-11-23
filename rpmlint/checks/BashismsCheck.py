@@ -9,6 +9,14 @@ class BashismsCheck(AbstractFilesCheck):
     def __init__(self, config, output):
         super().__init__(config, output, r'.*')
         self.use_threads = True
+        self._detect_early_fail_option()
+
+    def _detect_early_fail_option(self):
+        self.has_early_fail_option = False
+        output = subprocess.check_output(['checkbashisms', '--help'],
+                                         shell=True, encoding='utf8')
+        # FIXME: remove in the future
+        self.use_early_fail = '[-e]' in output
 
     def check_file(self, pkg, filename):
         root = pkg.dirName()
@@ -41,7 +49,11 @@ class BashismsCheck(AbstractFilesCheck):
             pass
 
         try:
-            r = subprocess.run(['checkbashisms', filepath],
+            cmd = ['checkbashisms', filepath]
+            # --early-fail option can rapidly speed up the check
+            if self.use_early_fail:
+                cmd.append('-e')
+            r = subprocess.run(cmd,
                                stderr=subprocess.DEVNULL,
                                env=ENGLISH_ENVIROMENT)
             if r.returncode == 1:
