@@ -119,7 +119,7 @@ class Filter(object):
         result = f'{Color.Bold}{filename}{arch}:{line}{Color.Reset} {lvl_color}{level}: {rpmlint_issue}{Color.Reset}{bad_output}{detail_output}'
 
         # filter by the result message
-        result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{bad_output}{detail_output}'
+        result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{detail_output}'
         if self.filters_re and self.filters_re.search(result_no_color):
             return
 
