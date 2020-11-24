@@ -77,7 +77,7 @@ class Lint(object):
         if self.output.printed_messages['W'] > 0:
             quit_color = Color.Yellow
         if self.output.badness_threshold > 0 and self.output.score > self.output.badness_threshold:
-            msg = string_center(f'Badness {self.output.score} exceeeds threshold {self.output.badness_threshold}, aborting.', '-')
+            msg = string_center(f'Badness {self.output.score} exceeds threshold {self.output.badness_threshold}, aborting.', '-')
             print(f'{Color.Red}{msg}{Color.Reset}')
             quit_color = Color.Red
             retcode = 66
