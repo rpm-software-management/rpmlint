@@ -270,7 +270,9 @@ class BinariesCheck(AbstractCheck):
 
         FIXME Add test coverage.
         """
-        if not self.is_archive:
+
+        # Do not check kernel modules and archives
+        if not self.is_archive and not path.startswith('/lib/modules/'):
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
