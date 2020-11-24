@@ -189,7 +189,7 @@ Filters = [
     ' postin-without-ghost-file-creation ',
 
 # Exceptions for filelist checks
-    'nfs-client\.\S+: \w: filelist-forbidden-backup-file /var/lib/nfs/sm.bak ',
+    'nfs-client\.\S+: \w: filelist-forbidden-backup-file /var/lib/nfs/sm.bak',
     'perl\.\S+: \w: filelist-forbidden-perl-dir ',
     'info\.\S+: \w: info-dir-file .*/usr/share/info/dir',
 
