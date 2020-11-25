@@ -2,7 +2,7 @@ FROM opensuse/tumbleweed
 
 RUN zypper -n install \
         checkbashisms cpio dash gzip \
-        bzip2 make xz \
+        bzip2 xz \
         binutils glibc glibc-32bit glibc-locale desktop-file-utils \
         appstream-glib \
         myspell-en_US myspell-cs_CZ \
