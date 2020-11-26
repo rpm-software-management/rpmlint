@@ -132,5 +132,6 @@ def test_rpmlint_loading():
     """
     cfg = Config(TEST_CONFIG)
     cfg.load_rpmlintrc(TEST_RPMLINTRC)
+    assert 'arch-independent-package-contains-binary-or-object ' in cfg.configuration['Filters']
     assert len(cfg.configuration['Filters']) == 110
     assert len(cfg.configuration['Scoring']) == 3
