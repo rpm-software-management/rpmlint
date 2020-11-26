@@ -159,7 +159,7 @@ class Lint(object):
         return existing_packages
 
     def _find_rpmlintrc_files(self, path):
-        rpmlintrcs = []
+        rpmlintrcs = list(path.glob('rpmlintrc'))
         rpmlintrcs += sorted(path.glob('*.rpmlintrc'))
         rpmlintrcs += sorted(path.glob('*-rpmlintrc'))
         return rpmlintrcs
