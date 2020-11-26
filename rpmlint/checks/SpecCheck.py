@@ -626,7 +626,8 @@ class SpecCheck(AbstractCheck):
                  '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIROMENT)
 
             for line in outcmd.stderr.splitlines():
-                if 'warning:' not in line:
+                line = line.strip()
+                if line and 'warning:' not in line:
                     self.output.add_info('E', pkg, 'specfile-error', line)
         except UnicodeDecodeError as e:
             self.output.add_info('E', pkg, 'specfile-error', str(e))
