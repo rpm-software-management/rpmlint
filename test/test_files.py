@@ -204,3 +204,18 @@ def test_shlib2_devel(tmpdir, package, filescheck):
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
     assert 'non-devel-file-in-devel-package' in out
+
+
+@pytest.mark.parametrize('package', ['binary/file-zero-length'])
+def test_zero_length(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    print(out)
+    assert 'zero-length /usr/lib/emptyfile' in out
+    assert 'zero-length /usr/lib/nonemptyfile' not in out
+    assert 'zero-length /etc/security/console.apps' not in out
+    assert 'zero-length /usr/lib/.nosearch' not in out
+    assert 'zero-length /usr/lib/python/__init__.py' not in out
+    assert 'zero-length /usr/lib/python/py.typed' not in out
+    assert 'zero-length /usr/lib/ruby/gem.build_complete' not in out
