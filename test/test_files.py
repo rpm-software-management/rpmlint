@@ -211,7 +211,6 @@ def test_zero_length(tmpdir, package, filescheck):
     output, test = filescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    print(out)
     assert 'zero-length /usr/lib/emptyfile' in out
     assert 'zero-length /usr/lib/nonemptyfile' not in out
     assert 'zero-length /etc/security/console.apps' not in out
