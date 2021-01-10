@@ -1,0 +1,86 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        docker: [opensuse/tumbleweed, opensuse/leap, 'fedora:33']
+
+    container: ${{ matrix.docker }}
+
+    steps:
+      - run: zypper -n install
+              checkbashisms cpio dash gzip
+              bzip2 xz
+              binutils glibc glibc-32bit glibc-locale desktop-file-utils
+              appstream-glib
+              myspell-en_US myspell-cs_CZ
+              python3-magic
+              python3-pyenchant
+              python3-rpm
+              python3-base
+              python3-setuptools
+              python3-pybeam
+              python3-pytest
+              python3-pytest-cov
+              python3-pytest-flake8
+              python3-pytest-xdist
+              python3-flake8
+              python3-flake8-builtins
+              python3-flake8-bugbear
+              python3-flake8-import-order
+              python3-flake8-quotes
+              python3-pyxdg
+              python3-zstd
+              python3-toml
+              rpm-build
+        if: ${{ startsWith(matrix.docker,  'opensuse') }}
+      - run: zypper -n install python3-flake8-comprehensions
+        if: ${{ matrix.docker == 'opensuse/tumbleweed' }}
+      - run: dnf --nogpgcheck -y install
+              /usr/bin/appstream-util
+              /usr/bin/cpio
+              /usr/bin/bzip2
+              /usr/bin/desktop-file-validate
+              /usr/bin/python3
+              /usr/bin/readelf
+              /usr/bin/ldd
+              /usr/bin/c++filt
+              /usr/bin/xz
+              dash
+              devscripts-checkbashisms
+              glibc
+              glibc.i686
+              hunspell-en
+              hunspell-cs
+              python3-setuptools
+              python3-enchant
+              python3-magic
+              python3-rpm
+              python3-pybeam
+              python3-pytest
+              python3-pytest-cov
+              python3-pytest-flake8
+              python3-pytest-xdist
+              python3-flake8
+              python3-flake8-import-order
+              python3-pyxdg
+              python3-toml
+              python3-zstd
+              rpm-build
+        if: ${{ matrix.docker == 'fedora:33' }}
+
+      - uses: actions/checkout@v2
+      - run: pytest
+      - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
+      - run: python3 test/dump_stats.py profile.stats
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
