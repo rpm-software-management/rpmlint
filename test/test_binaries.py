@@ -264,3 +264,11 @@ def test_dependency_information(tmpdir, package, binariescheck):
     out = output.print_results(output.results)
     assert 'E: shared-library-without-dependency-information /usr/lib64/ruby/enc/gb2312.so' in out
     assert 'W: library-not-linked-against-libc /usr/lib64/ruby/continuation.so' in out
+
+
+@pytest.mark.parametrize('package', ['binary/go-package'])
+def test_go_package(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert not out

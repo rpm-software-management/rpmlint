@@ -152,6 +152,9 @@ class BinariesCheck(AbstractCheck):
         We suppose that the package is arch dependent and bin_name is binary
         executable.
         """
+        if self.is_go_elf:
+            return
+
         if not self.is_shobj and not self.is_pie_exec:
             if any(regex.search(bin_name) for regex in self.pie_exec_regex_list):
                 self.output.add_info('E', pkg,
@@ -397,7 +400,9 @@ class BinariesCheck(AbstractCheck):
     def _check_library_dependency(self, pkg, pkgfile_path, path):
         if self.is_archive:
             return
-        if path.startswith('/lib/modules/'):
+        elif path.startswith('/lib/modules/'):
+            return
+        elif self.is_go_elf:
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
@@ -511,6 +516,7 @@ class BinariesCheck(AbstractCheck):
         self.is_dynamically_linked = 'dynamically linked' in magic
         self.is_pie_exec = 'pie executable' in magic
         self.is_nonstandard_archive = False
+        self.is_go_elf = False
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         if self.is_archive and not self._is_standard_archive(pkg, pkgfile_path, path):
@@ -522,6 +528,13 @@ class BinariesCheck(AbstractCheck):
         if failed_reason:
             self.output.add_info('E', pkg, 'readelf-failed', path, failed_reason)
             return
+
+        # Detect go binary
+        for elf_file in self.readelf_parser.section_info.elf_files:
+            for section in elf_file:
+                if section.name == '.note.go.buildid':
+                    self.is_go_elf = True
+                    break
 
         if not self.is_archive:
             if self.is_dynamically_linked:
