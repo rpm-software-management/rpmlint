@@ -33,6 +33,7 @@ basic_tests = [
     'BuildDateCheck',
     'BuildRootCheck',
     'ConfigFilesCheck',
+    'DeviceFilesCheck',
     'DBusPolicyCheck',
     'DuplicatesCheck',
     'DocCheck',
@@ -53,6 +54,7 @@ basic_tests = [
     'SourceCheck',
     'SpecCheck',
     'TagsCheck',
+    'WorldWritableCheck',
     'ZipCheck',
     'ZyppSyntaxCheck',
 ]
