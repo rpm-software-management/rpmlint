@@ -84,3 +84,5 @@ jobs:
       - run: python3 test/dump_stats.py profile.stats
       - name: Coveralls
         uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
