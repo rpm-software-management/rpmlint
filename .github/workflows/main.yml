@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         docker: [opensuse/tumbleweed, opensuse/leap, 'fedora:33']
+      fail-fast: false
 
     container: ${{ matrix.docker }}
 
