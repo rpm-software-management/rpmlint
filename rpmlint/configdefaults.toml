@@ -6,6 +6,7 @@ Checks = [
     "BuildDateCheck",
     'BuildRootCheck',
     "ConfigFilesCheck",
+    "DeviceFilesCheck",
     "DBusPolicyCheck",
     'DuplicatesCheck',
     "DocCheck",
@@ -26,6 +27,7 @@ Checks = [
     "SourceCheck",
     "SpecCheck",
     "TagsCheck",
+    "WorldWritableCheck",
     "ZipCheck",
     "ZyppSyntaxCheck",
 ]
@@ -334,6 +336,10 @@ binaries = false
 [FileDigestLocation]
 
 [FileDigestGroup]
+
+[DeviceFilesWhitelist]
+
+[WorldWritableWhitelist]
 
 # A table with key/value pairs representing new descriptions for rpmlint errors
 [Descriptions]
