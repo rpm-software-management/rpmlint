@@ -16,7 +16,10 @@ class FileDigestCheck(AbstractCheck):
 
         self.digest_groups = self.config.configuration['FileDigestGroup']
         for digest_group in self.digest_groups:
-            assert digest_group['type'] in self.digest_configurations
+            dg_type = digest_group['type']
+            if dg_type not in self.digest_configurations:
+                raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
+                               f'supported, known values: {list(self.digest_configurations)}')
             # verify digest algorithm
             for digest in digest_group['digests']:
                 algorithm = digest['algorithm']
