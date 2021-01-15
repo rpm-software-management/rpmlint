@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import re
+import sys
 
 from rpmlint.helpers import print_warning
 import toml
@@ -133,14 +134,14 @@ class Config(object):
                 if path not in self.conf_files and path.exists():
                     self.conf_files.append(path)
 
-        try:
-            cfg = {}
-            for cf in sorted(self.conf_files, key=self._sort_config_files):
+        cfg = {}
+        for cf in sorted(self.conf_files, key=self._sort_config_files):
+            try:
                 toml_config = toml.load(cf)
                 self._merge_dictionaries(cfg, toml_config, self._is_override_config(cf))
-        except toml.decoder.TomlDecodeError as terr:
-            print_warning(f'(none): W: error parsing configuration files: {terr}')
-            cfg = None
+            except toml.decoder.TomlDecodeError as terr:
+                print_warning(f'(none): E: fatal error while parsing configuration file {cf}: {terr}')
+                sys.exit(4)
         self.configuration = cfg
 
     def load_rpmlintrc(self, rpmlintrc_file):
