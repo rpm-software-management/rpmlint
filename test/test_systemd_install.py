@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.SystemdInstallCheck import SystemdInstallCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, IS_FEDORA_RELEASE
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -14,6 +14,7 @@ def systemdinstallcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/dnf-automatic'])
+@pytest.mark.skipif(IS_FEDORA_RELEASE, reason='Fedora does not define %{_unitdir} rpm macro')
 def test_bashisms(tmpdir, package, systemdinstallcheck):
     output, test = systemdinstallcheck
     test.check(get_tested_package(package, tmpdir))
