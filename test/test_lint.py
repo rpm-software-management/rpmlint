@@ -213,7 +213,7 @@ def test_run_installed(capsys, packages):
     # load up 1 normal path file and 2 installed packages
     additional_options = {
         'rpmfile': [packages],
-        'installed': ['git', 'rpm'],
+        'installed': ['binutils', 'rpm'],
     }
     options = {**options_preset, **additional_options}
     linter = Lint(options)
