@@ -564,8 +564,8 @@ class Pkg(AbstractPkg):
             inodes = [inodes]
 
         if files:
-            for idx in range(0, len(files)):
-                pkgfile = PkgFile(files[idx])
+            for idx, file in enumerate(files):
+                pkgfile = PkgFile(file)
                 pkgfile.path = os.path.normpath(os.path.join(
                     self.dirName() or '/', pkgfile.name.lstrip('/')))
                 pkgfile.flags = flags[idx]
@@ -756,14 +756,37 @@ class InstalledPkg(Pkg):
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
-    def __init__(self, name, files=None):
+    def __init__(self, name, is_source=False):
         self.name = str(name)
         self.arch = None
         self.current_linenum = None
         self.dirname = None
+        self.is_source = False
 
         # files are dictionary where key is name of a file
-        self.files = {f.name: f for f in files} if files else {}
+        self.files = {}
+        self.ghost_files = {}
+
+    def add_file_with_content(self, name, content):
+        """
+        Add file to the FakePkg and fill the file with provided
+        string content.
+        """
+        with tempfile.NamedTemporaryFile(mode='w', dir=self.dirName(), delete=False) as out:
+            out.write(content)
+            self.files[name] = PkgFile(name)
+            self.path = out.name
+
+    def add_symlink_to(self, name, target):
+        """
+        Add symlink to name file which path is related to name.
+        Eg. name == '/etc/foo' and target == '../bar' creates a symlink file
+        /etc/bar that points to /etc/foo.
+        """
+        pkg_file = PkgFile(name)
+        pkg_file.mode = stat.S_IFLNK
+        pkg_file.linkto = target
+        self.files[name] = pkg_file
 
     def dirName(self):
         if not self.dirname:
