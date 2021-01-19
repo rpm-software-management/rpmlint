@@ -213,7 +213,7 @@ def test_run_installed(capsys, packages):
     # load up 1 normal path file and 2 installed packages
     additional_options = {
         'rpmfile': [packages],
-        'installed': ['python3-rpm', 'rpm'],
+        'installed': ['git', 'rpm'],
     }
     options = {**options_preset, **additional_options}
     linter = Lint(options)
@@ -261,7 +261,7 @@ def test_run_installed_not_present(capsys):
 def test_run_installed_and_no_files(capsys):
     additional_options = {
         'rpmfile': [],
-        'installed': ['python3-rpm'],
+        'installed': ['rpm'],
     }
     options = {**options_preset, **additional_options}
     linter = Lint(options)
