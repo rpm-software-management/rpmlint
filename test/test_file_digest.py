@@ -1,6 +1,7 @@
 import pytest
 from rpmlint.checks.FileDigestCheck import FileDigestCheck
 from rpmlint.filter import Filter
+from rpmlint.pkg import FakePkg
 
 from Testing import CONFIG, get_tested_package
 
@@ -43,3 +44,16 @@ def test_signatures_bad(tmpdir, package, digestcheck):
 def test_description_message(tmpdir, digestcheck):
     output, test = digestcheck
     assert output.get_description('cron-file-digest-unauthorized') == 'Please refer to\nhttps://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for\nmore information.\n\n'
+
+
+def test_from_simple_dummy_pkg(digestcheck):
+    output, test = digestcheck
+    with FakePkg('dummy') as pkg:
+        pkg.add_file_with_content('/etc/polkit-1/rules.d/r.txt', 'Hello world')
+        pkg.add_file_with_content('/root/sample.txt', 'Hello world')
+        pkg.add_symlink_to('/etc/polkit-1/rules.d/r2.txt', '../../root/sample.txt')
+        test.check(pkg)
+        out = output.print_results(output.results)
+        assert len(output.results) == 2
+        assert 'dummy: E: polkit-file-digest-unauthorized /etc/polkit-1/rules.d/r.txt' in out
+        assert 'dummy: E: polkit-file-digest-unauthorized /etc/polkit-1/rules.d/r2.txt' in out
