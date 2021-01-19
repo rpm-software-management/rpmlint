@@ -18,6 +18,7 @@ CONFIG = Config(TEST_CONFIG)
 # predicates used for pytest.mark.skipif decorators
 IS_X86_64 = platform.machine() == 'x86_64'
 IS_I686 = re.match(platform.machine(), 'i[3456]86') is not None
+IS_FEDORA_RELEASE = os.path.exists('/etc/fedora-release')
 HAS_32BIT_GLIBC = glob.glob('/lib/ld-linux.so.*') is not None
 
 
