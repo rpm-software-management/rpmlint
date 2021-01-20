@@ -43,6 +43,7 @@ jobs:
               python3-zstd
               python3-toml
               python3-pip
+              git
         if: ${{ startsWith(matrix.docker,  'opensuse') }}
       - run: zypper -n install python3-flake8-comprehensions
         if: ${{ matrix.docker == 'opensuse/tumbleweed' }}
