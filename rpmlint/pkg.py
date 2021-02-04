@@ -791,6 +791,10 @@ class FakePkg(AbstractPkg):
         pkg_file.linkto = target
         self.files[name] = pkg_file
 
+    def readlink(self, pkgfile):
+        # HACK: reuse the real Pkg's logic
+        return Pkg.readlink(self, pkgfile)
+
     def dirName(self):
         if not self.dirname:
             self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
