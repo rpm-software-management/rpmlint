@@ -772,10 +772,13 @@ class FakePkg(AbstractPkg):
         Add file to the FakePkg and fill the file with provided
         string content.
         """
-        with tempfile.NamedTemporaryFile(mode='w', dir=self.dirName(), delete=False) as out:
+        basename = name.replace(os.path.sep, '_')
+        path = os.path.join(self.dirName(), basename)
+        with open(path, 'w') as out:
             out.write(content)
-            self.files[name] = PkgFile(name)
-            self.path = out.name
+            pkg_file = PkgFile(name)
+            pkg_file.path = path
+            self.files[name] = pkg_file
 
     def add_symlink_to(self, name, target):
         """
@@ -787,6 +790,10 @@ class FakePkg(AbstractPkg):
         pkg_file.mode = stat.S_IFLNK
         pkg_file.linkto = target
         self.files[name] = pkg_file
+
+    def readlink(self, pkgfile):
+        # HACK: reuse the real Pkg's logic
+        return Pkg.readlink(self, pkgfile)
 
     def dirName(self):
         if not self.dirname:
