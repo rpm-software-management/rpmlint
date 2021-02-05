@@ -1,17 +1,28 @@
+import os
+
 import pytest
 from rpmlint.checks.FileDigestCheck import FileDigestCheck
 from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg
 
-from Testing import CONFIG, get_tested_package
+import Testing
+from Testing import get_tested_package
+
+
+def get_digestcheck(config_path):
+    from rpmlint.config import Config
+    if not os.path.isabs(config_path):
+        config_path = Testing.testpath() / 'configs' / config_path
+    config = Config([config_path])
+    config.info = True
+    output = Filter(config)
+    test = FileDigestCheck(config, output)
+    return output, test
 
 
 @pytest.fixture(scope='function', autouse=True)
 def digestcheck():
-    CONFIG.info = True
-    output = Filter(CONFIG)
-    test = FileDigestCheck(CONFIG, output)
-    return output, test
+    return get_digestcheck(Testing.TEST_CONFIG[0])
 
 
 @pytest.mark.parametrize('package', ['binary/file-signature-good'])
@@ -46,14 +57,82 @@ def test_description_message(tmpdir, digestcheck):
     assert output.get_description('cron-file-digest-unauthorized') == 'Please refer to\nhttps://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for\nmore information.\n\n'
 
 
-def test_from_simple_dummy_pkg(digestcheck):
-    output, test = digestcheck
-    with FakePkg('dummy') as pkg:
-        pkg.add_file_with_content('/etc/polkit-1/rules.d/r.txt', 'Hello world')
-        pkg.add_file_with_content('/root/sample.txt', 'Hello world')
-        pkg.add_symlink_to('/etc/polkit-1/rules.d/r2.txt', '../../root/sample.txt')
+def test_matching_digests():
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'really dangerous stuff')
+        # also test following of symlinks with this entry
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         test.check(pkg)
-        out = output.print_results(output.results)
+        assert len(output.results) == 0
+
+
+def test_simple_mismatch():
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'really dangerous stuff')
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'really good stuff')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error.startswith('testpkg: E: somerestriction-file-digest-mismatch /alsorestricted/2/suspicious expected sha256:')
+
+
+def test_related_mismatch():
+    # this tests that a related file digest mismatch triggers correctly
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'really dangerous stuff')
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related fine stuff')
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error.startswith('testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:')
+
+
+def test_missing_entry():
+    # this tests that an extra file not present in the whitelist is recognized
+    # as missing
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'really dangerous stuff')
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
+        pkg.add_file_with_content('/restricted/1/evil', 'evil stuff')
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil'
+
+
+def test_wrong_pkg_name():
+    # this tests that a package with matching entries but mismatching package
+    # name does not pass the check
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('otherpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'really dangerous stuff')
+        # also test following of symlinks with this entry
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
+        test.check(pkg)
         assert len(output.results) == 2
-        assert 'dummy: E: polkit-file-digest-unauthorized /etc/polkit-1/rules.d/r.txt' in out
-        assert 'dummy: E: polkit-file-digest-unauthorized /etc/polkit-1/rules.d/r2.txt' in out
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous' in output.results
+
+
+def test_unaffected_pkg():
+    # this tests that a package that doesn't contain any files in restricted
+    # locations doesn't trigger any errors.
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('cleanpkg') as pkg:
+        pkg.add_file_with_content('/arbitrary/file', 'arbitrary content')
+        test.check(pkg)
+        assert len(output.results) == 0
