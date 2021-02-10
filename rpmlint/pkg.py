@@ -767,7 +767,7 @@ class FakePkg(AbstractPkg):
         self.files = {}
         self.ghost_files = {}
 
-    def add_file_with_content(self, name, content):
+    def add_file_with_content(self, name, content, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
@@ -778,6 +778,8 @@ class FakePkg(AbstractPkg):
             out.write(content)
             pkg_file = PkgFile(name)
             pkg_file.path = path
+            for key, value in flags.items():
+                setattr(pkg_file, key, value)
             self.files[name] = pkg_file
 
     def add_symlink_to(self, name, target):
