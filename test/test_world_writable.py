@@ -17,8 +17,8 @@ def check():
 def test_device_files_simple(check):
     output, test = check
     with FakePkg('dummy') as pkg:
-        pkg.add_file_with_content('/tmp', 'temp folder', rdev=0, mode=17389)
-        pkg.add_file_with_content('/tempus', 'tempus', rdev=0, mode=17389)
+        pkg.add_file_with_content('/tmp', 'temp folder', rdev=0, mode=0o41777)
+        pkg.add_file_with_content('/tempus', 'tempus', rdev=0, mode=0o41777)
         test.check(pkg)
     out = output.print_results(output.results)
     assert len(output.results) == 2
