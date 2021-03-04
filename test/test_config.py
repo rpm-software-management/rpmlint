@@ -51,7 +51,7 @@ def test_parsing():
         for SSL/TLS. That may cause the application not to use the system-wide set
         cryptographic policy and should be modified in accordance to:
         https://fedoraproject.org/wiki/Packaging:CryptoPolicies"""
-    call_blacklist = {
+    forbidden_functions = {
         'crypto-policy-non-compliance-openssl': {
             'f_name': 'SSL_CTX_set_cipher_list',
             'description': bad_crypto_warning,
@@ -69,7 +69,7 @@ def test_parsing():
     cfg = Config(TEST_CONFIG)
     assert cfg.configuration
     assert cfg.configuration['Distribution'] == 'Fedora Project'
-    assert cfg.configuration['WarnOnFunction'] == call_blacklist
+    assert cfg.configuration['WarnOnFunction'] == forbidden_functions
     # default value check
     assert cfg.configuration['UseDefaultRunlevels'] is True
 

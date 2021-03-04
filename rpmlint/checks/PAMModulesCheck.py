@@ -11,7 +11,7 @@ class PAMModulesCheck(AbstractCheck):
         self.pam_authorized_modules = config.configuration['PAMAuthorizedModules']
         if not self.pam_authorized_modules:
             # compatibility: read the values from the original configuration option
-            self.pam_authorized_modules = config.configuration['PAMModulesWhiteList']
+            self.pam_authorized_modules = config.configuration.get('PAMModulesWhiteList', [])
 
     def check(self, pkg):
         if pkg.is_source:
