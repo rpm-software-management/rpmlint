@@ -160,6 +160,7 @@ def test_check_summary_warning(tmpdir, package, tagscheck):
     # Test if a package does not have an unexpanded
     # macro in it's specfile.
     assert 'W: unexpanded-macro' not in out
+    assert 'E: no-group-tag' in out
 
 
 @pytest.mark.parametrize('package', ['binary/no-url-tag'])

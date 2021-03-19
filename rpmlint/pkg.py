@@ -465,6 +465,8 @@ class Pkg(AbstractPkg):
             or key in (x[0] for x in SCRIPT_TAGS) \
             or key in (x[1] for x in SCRIPT_TAGS):
                 val = byte_to_string(val)
+                if key == rpm.RPMTAG_GROUP and val == 'Unspecified':
+                    val = None
             return val
 
     # return the name of the directory where the package is extracted
