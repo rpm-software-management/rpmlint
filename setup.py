@@ -39,6 +39,7 @@ setup(
     keywords=['RPM', '.spec', 'validator'],
 
     install_requires=[
+        'pybeam',
         'pyxdg',
         'rpm',
         'toml',

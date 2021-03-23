@@ -26,7 +26,7 @@ For installation on your machine you will need the following packages:
 
 Mandatory:
 - Python 3.6 or newer
-- python3-setuptools, python3-toml, python3-pyxdg
+- python3-setuptools, python3-toml, python3-pyxdg, python3-beam
 - rpm and its python bindings
 - binutils, cpio, gzip, bzip, xz and zstd
 
@@ -34,6 +34,10 @@ Optional:
 - libmagic and its python bindings
 - enchant and its python bindings
 - appstream-util, part of appstream-glib
+
+`rpmlint` is part of most distributions and as an user you can simply
+
+    dnf install rpmlint
 
 ## Testing
 
@@ -111,7 +115,7 @@ use the following locations:
 `$XDG_CONFIG_HOME/rpmlint/*toml`
 
 The configuration itself is a `toml` file where for some basic inspiration
-you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
+you can check up [`rpmlint/configdefaults.toml`](rpmlint/configdefaults.toml) which specifies format/defaults.
 
 One can also include additional configuration files (or directories) by using the `--config` option.
 Note that all TOML configuration values are merged and not overridden.
@@ -127,3 +131,6 @@ it can be normal `toml` file if you wish:
     
 The location of `rpmlintrc` can be set using `--rpmlintrc` option. Or you can have any `*.rpmlintrc` or 
 `*-rpmlintrc` file in the current working directory.  The best practice is to store the name in `$PACKAGE_NAME.rpmlintrc`.
+
+`setBadness` overrides a default badness for a given check and `addFilter` ignores all errors
+that match the given regular expression.
