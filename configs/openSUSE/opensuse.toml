@@ -218,7 +218,6 @@ Filters = [
     ' info-files-without-install-info-postin' ,
     ' postin-without-install-info ',
     ' info-files-without-install-info-postun ',
-    ' postin-without-install-info ',
 ]
 
 [DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
