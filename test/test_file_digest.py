@@ -54,7 +54,7 @@ def test_signatures_bad(tmpdir, package, digestcheck):
 
 def test_description_message(tmpdir, digestcheck):
     output, test = digestcheck
-    assert output.get_description('cron-file-digest-unauthorized') == 'Please refer to\nhttps://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for\nmore information.\n\n'
+    assert 'https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs' in output.get_description('cron-file-digest-unauthorized')
 
 
 def test_matching_digests():
