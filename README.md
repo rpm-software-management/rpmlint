@@ -115,7 +115,7 @@ use the following locations:
 `$XDG_CONFIG_HOME/rpmlint/*toml`
 
 The configuration itself is a `toml` file where for some basic inspiration
-you can check up `rpmlint/configdefaults.toml` which specifies format/defaults.
+you can check up [`rpmlint/configdefaults.toml`](rpmlint/configdefaults.toml) which specifies format/defaults.
 
 One can also include additional configuration files (or directories) by using the `--config` option.
 Note that all TOML configuration values are merged and not overridden.
