@@ -35,6 +35,10 @@ Optional:
 - enchant and its python bindings
 - appstream-util, part of appstream-glib
 
+`rpmlint` is part of most distributions and as an user you can simply
+
+    dnf install rpmlint
+
 ## Testing
 
 ### Containers
