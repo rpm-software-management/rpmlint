@@ -126,8 +126,11 @@ Additional option to control `rpmlint` behaviour is the addition of `rpmlintrc` 
 which uses old syntax for compatibility with old `rpmlint` releases, yet
 it can be normal `toml` file if you wish:
 
-`setBadness('check', 0)`
-`addFilter('test-i-ignore')`
+    setBadness('check', 0)
+    addFilter('test-i-ignore')
+    
+The location of `rpmlintrc` can be set using `--rpmlintrc` option. Or you can have any `*.rpmlintrc` or 
+`*-rpmlintrc` file in the current working directory.  The best practice is to store the name in `$PACKAGE_NAME.rpmlintrc`.
 
 `setBadness` overrides a default badness for a given check and `addFilter` ignores all errors
 that match the given regular expression.
