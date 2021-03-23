@@ -127,5 +127,7 @@ which uses old syntax for compatibility with old `rpmlint` releases, yet
 it can be normal `toml` file if you wish:
 
 `setBadness('check', 0)`
-
 `addFilter('test-i-ignore')`
+
+`setBadness` overrides a default badness for a given check and `addFilter` ignores all errors
+that match the given regular expression.
