@@ -8,7 +8,10 @@ class PAMModulesCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.pam_whitelist = config.configuration['PAMModulesWhiteList']
+        self.pam_authorized_modules = config.configuration['PAMAuthorizedModules']
+        if not self.pam_authorized_modules:
+            # compatibility: read the values from the original configuration option
+            self.pam_authorized_modules = config.configuration.get('PAMModulesWhiteList', [])
 
     def check(self, pkg):
         if pkg.is_source:
@@ -21,5 +24,5 @@ class PAMModulesCheck(AbstractCheck):
             m = self.pam_module_re.match(f)
             if m:
                 bn = m.groups()[0]
-                if bn not in self.pam_whitelist:
+                if bn not in self.pam_authorized_modules:
                     self.output.add_info('E', pkg, 'pam-unauthorized-module', bn)

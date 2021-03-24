@@ -1,4 +1,4 @@
-PAMModulesWhiteList = [
+PAMAuthorizedModules = [
     # pam_krb5
     "pam_krb5.so",
     "pam_krb5afs.so",
