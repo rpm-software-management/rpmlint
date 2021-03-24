@@ -1,28 +1,4 @@
-# generated using vvvv on 2021-03-23
-#import re
-#import os
-#users = set()
-#groups = set()
-#uidgid_regex = re.compile(r'^\s*(\S+)\s+(-|\d+)\s+(-|\d+|\(\d+\))\s')
-#for uidgid_file in ['/usr/share/doc/setup/uidgid']:
-#    if os.path.exists(uidgid_file):
-#        fobj = open(uidgid_file)
-#        try:
-#            for line in fobj.read().strip().splitlines():
-#                res = uidgid_regex.search(line)
-#                if res:
-#                    name = res.group(1)
-#                    if res.group(2) != '-':
-#                        users.add(name)
-#                    if res.group(3) != '-' and not '(' in res.group(3):
-#                        groups.add(name)
-#                del res
-#            del line
-#        finally:
-#            fobj.close()
-#        del fobj
-#print(users)
-#print(groups)
+# generated using tools/generate-fedora-users-groups.py on 2021-03-23
 
 StandardUsers = ['pkiuser', 'sshd', 'cyrus', 'keystone', 'squid', 'lp', 'root', 'dovecot', 'oprofile', 'ldap', 'arpwatch', 'retrace', 'vdsm', 'nut', 'hacluster', 'polkituser', 'mailman', 'saned', 'adm', 'mailnull', 'rtkit', 'postfix', 'cimsrvr', 'postgres', 'vhostmd', 'smmsp', 'dbus', 'rpcuser', 'nslcd', 'named', 'radvd', 'ntp', 'systemd-resolve', 'nova', 'tss', 'wildfly', 'ricci', 'mysql', 'apache', 'usbmuxd', 'systemd-network', 'vcsa', 'sabayon', 'quantum', 'katello', 'xfs', 'halt', 'tomcat', 'beagleindex', 'jbosson-agent', 'fax', 'haldaemon', 'pulse', 'hsqldb', 'cassandra', 'pegasus', 'clamav', 'piranha', 'mongodb', 'netdump', 'activemq', 'ovirtagent', 'bin', 'aeolus', 'sync', 'radiusd', 'rpm', 'webalizer', 'nocpulse', 'elasticsearch', 'games', 'pvm', 'wnn', 'snortd', 'privoxy', 'nscd', 'gdm', 'prelude-manager', 'cinder', 'shutdown', 'rpc', 'condor', '#systemd-journal-gateway', 'heat', 'qemu', 'myproxy', 'avahi', 'operator', 'majordomo', 'puppet', 'exim', 'sanlock', 'rhevm', 'swift', 'wallaby', 'ftp', 'ident', 'frontpage', 'ats', 'mail', 'ceilometer', 'news', 'distcache', 'ovirt', 'ceph', 'desktop', 'uucp', 'glance', 'jonas', 'haproxy', 'abrt', 'quagga', 'stap-server', 'dhcpd', 'nobody', 'luci', 'bacula', 'avahi-autoipd', 'gopher', 'tcpdump', 'daemon', 'amandabackup', 'jetty']
 
