@@ -1,0 +1,232 @@
+[[FileDigestGroup]]
+package = "atop-daemon"
+type = "cron"
+note = "Performs maintenance and (re)starting of the atop daemon"
+bug = "bsc#1150533"
+digests = [
+    {
+        path = "/usr/share/atop/atop.daily",
+        algorithm = "sha256",
+        hash = "298a6e86b0862a1f2492b11b3af327850ba8c58232ef99753e8c6606548aa5cd"
+    },
+    {
+        path = "/etc/cron.d/atop",
+        algorithm = "sha256",
+        hash = "1d8b23c4f9bda803bc8627c23361635a876bc49fc0ace0d98fcd92c7fb33ac430"
+    },
+]
+
+[[FileDigestGroup]]
+package = "cronie-anacron"
+type = "cron"
+note = "Executes daily, weekly, monthly cron jobs"
+bug = "bsc#1150541"
+digests = [
+    {
+        path = "/etc/cron.hourly/0anacron",
+        algorithm = "sha256",
+        hash = "aa129d2165f669770b20d20fe5d826f242a069a8f9fc2323333b91d0c9ca40c9"
+    },
+]
+
+[[FileDigestGroup]]
+package = "logdigest"
+type = "cron"
+note = "scours through log files to find 'interesting' information and mails it to root"
+bug = "bsc#1150546"
+digests = [
+    {
+        path = "/etc/cron.daily/logdigest",
+        algorithm = "sha256",
+        hash = "1dcd29ceaa35914c126bf76b0b00b955de332744636573dc2b907c1c542f81c4"
+    },
+    {
+        path = "/etc/cron.d/logdigest-all-ignores-autogeneration",
+        algorithm = "sha256",
+        hash = "052d8f93980ade99937c2a4b972d5cf5a77367c9af6c7b02f0e05e8ca5b06797"
+    },
+]
+
+[[FileDigestGroup]]
+package = "patch2mail"
+type = "cron"
+note = "looks up pending zypper patches and sens them out by mail"
+bug = "bsc#1150552"
+digests = [
+    {
+        path = "/etc/cron.daily/patch2mail",
+        algorithm = "sha256",
+        hash = "2db3aaa7addba83e60e24fdb868dd6f353bfb76b005fd2a2fdaf079fb54fe597"
+    },
+]
+
+[[FileDigestGroup]]
+package = "tmpwatch"
+type = "cron"
+note = "removes outdated file in /tmp and some other directories"
+bug = "bsc#1150557"
+digests = [
+    {
+        path = "/etc/cron.daily/tmpwatch",
+        algorithm = "sha256",
+        hash = "b2e7cb31833f7737215b2bb44d9e8ab42f5b0787ca613b176a490248ad035adb"
+    },
+]
+
+[[FileDigestGroup]]
+package = "cacti"
+type = "cron"
+note = "collects system data and stores it in a local database, complex PHP"
+bug = "bsc#1150534"
+digests = [
+    {
+        path = "/etc/cron.d/cacti",
+        algorithm = "sha256",
+        hash = "d7537bab09182f50b7437a267c0743a1f7fb680555c977f7811d70214083aafd"
+    },
+]
+
+[[FileDigestGroup]]
+package = "storeBackup"
+type = "cron"
+note = "and old school backup solution written in Perl"
+bug = "bsc#1150555"
+digests = [
+    {
+        path = "/etc/cron.daily/storebackup",
+        algorithm = "sha256",
+        hash = "2d4f43fb71c5f4a7e5a0f24f8b20332bff0fe0f8b57c304ab66420cd88a7bb4c"
+    },
+]
+
+[[FileDigestGroup]]
+package = "nextcloud"
+type = "cron"
+note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
+bug = "bsc#1162254"
+digests = [
+    {
+        path = "/etc/cron.d/nextcloud",
+        algorithm = "sha256",
+        hash = "176aed8f9adc79cc3d0a75a223730d621cf9435d7baee03823afc558c110b76d"
+    },
+]
+
+[[FileDigestGroup]]
+package = "nextcloud"
+type = "cron"
+note = "follow-up whitelisting for no-op change in comments"
+bug = "bsc#1168964"
+digests = [
+    {
+        path = "/etc/cron.d/nextcloud",
+        algorithm = "sha256",
+        hash = "5f883ad50e790de95f4ffbafd9515dc0bc88f9e49fcb404d16ed0d781fbd4c77"
+    },
+]
+
+[[FileDigestGroup]]
+package = "texlive-filesystem"
+type = "cron"
+note = "more or less broken security concept, disagreement with package maintainer. due to importance of TeX a wildcard whitelisting until the matter is settled"
+bug = "bsc#1150556"
+digests = [
+    {
+        path = "/etc/cron.daily/suse-texlive",
+        algorithm = "skip",
+        hash = ""
+    },
+]
+
+[[FileDigestGroup]]
+package = "matomo"
+type = "cron"
+note = "a complex PHP script is called as wwwrun user"
+bug = "bsc#1150548"
+digests = [
+    {
+        path = "/etc/cron.d/matomo-archive",
+        algorithm = "sha256",
+        hash = "b55bb543d9e890522aaabd016e8e8c80e3d0b6529f10da3ea264348e375eaf82"
+    },
+]
+
+[[FileDigestGroup]]
+package = "opa-fastfabric"
+type = "cron"
+note = "fibre channel management software, this cron job monitors cable health using a complex bash script and C programs"
+bug = "bsc#1162255"
+digests = [
+    {
+        path = "/etc/cron.daily/opa-cablehealth",
+        algorithm = "sha256",
+        hash = "7e837d9ba6f1361d63bdb5e716e1f5ce9ac774f22fa79ef32d51a9e0c925c11b"
+    },
+]
+
+[[FileDigestGroup]]
+package = "opa-fastfabric"
+type = "cron"
+note = "just a version string changed in the script"
+bug = "bsc#1172859"
+digests = [
+    {
+        path = "/etc/cron.daily/opa-cablehealth",
+        algorithm = "sha256",
+        hash = "56fda31f1bfbda32d628250ed17a72ef04823b120ad1449045b380b9983d86e8"
+    },
+]
+
+[[FileDigestGroup]]
+package = "opa-fastfabric"
+type = "cron"
+note = "finally a wildcard whitelisting since there's a version string encoded in the script"
+bug = "bsc#1174464"
+digests = [
+    {
+        path = "/etc/cron.daily/opa-cablehealth",
+        algorithm = "skip",
+        hash = ""
+    },
+]
+
+[[FileDigestGroup]]
+package = "sarg"
+type = "cron"
+note = "builds statistics based on Squid logfile metadata. include sarg-reports which is SUSE specific and important for privilege dropping."
+bug = "bsc#1150554"
+digests = [
+    {
+        path = "/etc/cron.daily/suse.de-sarg",
+        algorithm = "sha256",
+        hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
+    },
+    {
+        path = "/etc/cron.monthly/suse.de-sarg",
+        algorithm = "sha256",
+        hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
+    },
+    {
+        path = "/etc/cron.weekly/suse.de-sarg",
+        algorithm = "sha256",
+        hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
+    },
+    {
+        path = "/usr/sbin/sarg-reports",
+        algorithm = "sha256",
+        hash = "00ad25400bdc2031cd09f9b8f9e56c448c93b6b89a702d36dce6a385d79e637c"
+    },
+]
+
+[[FileDigestGroup]]
+package = "ppc64-diag"
+type = "cron"
+note = "ppc specific hardware health diagnosis and error reporting"
+bug = "bsc#1172859"
+digests = [
+    {
+        path = "/etc/cron.daily/run_diag_encl",
+        algorithm = "sha256",
+        hash = "5519586bca9edc47be4c76faa7353eb8a0ecd68b9f04c0b20e7acfdb9d9eb261"
+    },
+]
