@@ -178,7 +178,12 @@ games_path_regex = re.compile(r'^/usr(/lib(64)?)?/games/')
 logrotate_regex = re.compile(r'^/etc/logrotate\.d/(.*)')
 kernel_modules_regex = re.compile(r'^(?:/usr)/lib/modules/([0-9]+\.[0-9]+\.[0-9]+[^/]*?)/')
 kernel_package_regex = re.compile(r'^kernel(22)?(-)?(smp|enterprise|bigmem|secure|BOOT|i686-up-4GB|p3-smp-64GB)?')
-normal_zero_length_regex = re.compile(r'^/etc/security/console\.apps/|/\.nosearch$|/__init__\.py$|/py\.typed$|/gem\.build_complete$')
+normal_zero_length_regex = re.compile(r'^/etc/security/console\.apps/'
+                                      r'|/\.nosearch$'
+                                      r'|/__init__\.py$'
+                                      r'|/py\.typed$'  # https://www.python.org/dev/peps/pep-0561/#packaging-type-information
+                                      r'|\.dist-info/REQUESTED$'  # https://www.python.org/dev/peps/pep-0376/#requested
+                                      r'|/gem\.build_complete$')
 perl_regex = re.compile(r'^/usr/lib/perl5/(?:vendor_perl/)?([0-9]+\.[0-9]+)\.([0-9]+)/')
 python_regex = re.compile(r'^/usr/lib(?:64)?/python([.0-9]+)/')
 python_bytecode_regex_pep3147 = re.compile(r'^(.*)/__pycache__/(.*?)\.([^.]+)(\.opt-[12])?\.py[oc]$')
