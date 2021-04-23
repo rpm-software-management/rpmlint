@@ -207,14 +207,20 @@ def test_shlib2_devel(tmpdir, package, filescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/file-zero-length'])
-def test_zero_length(tmpdir, package, filescheck):
+@pytest.mark.parametrize(
+    'filename, show',
+    [('/usr/lib/emptyfile', True),
+     ('/usr/lib/nonemptyfile', False),
+     ('/etc/security/console.apps', False),
+     ('/usr/lib/.nosearch', False),
+     ('/usr/lib/python/__init__.py', False),
+     ('/usr/lib/python/py.typed', False),
+     ('/usr/lib/python/pypackagefromwheel-0.0.0.dist-info/REQUESTED', False),
+     ('/usr/lib/ruby/gem.build_complete', False)])
+def test_zero_length_ignore(tmpdir, package, filescheck, filename, show):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    pkg = get_tested_package(package, tmpdir)
+    test.check(pkg)
     out = output.print_results(output.results)
-    assert 'zero-length /usr/lib/emptyfile' in out
-    assert 'zero-length /usr/lib/nonemptyfile' not in out
-    assert 'zero-length /etc/security/console.apps' not in out
-    assert 'zero-length /usr/lib/.nosearch' not in out
-    assert 'zero-length /usr/lib/python/__init__.py' not in out
-    assert 'zero-length /usr/lib/python/py.typed' not in out
-    assert 'zero-length /usr/lib/ruby/gem.build_complete' not in out
+    assert filename in pkg.files
+    assert (f'zero-length {filename}' in out) == show
