@@ -16,6 +16,7 @@ Checks = [
 
     # Checks present at opensuse branch only
     "BrandingPolicyCheck",
+    "DBusServicesCheck",
     "FilelistCheck",
     "KMPPolicyCheck",
     "SystemdInstallCheck",
