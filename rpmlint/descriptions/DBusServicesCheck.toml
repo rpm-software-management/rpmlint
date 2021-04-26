@@ -1,8 +1,8 @@
 AUDIT_BUG_URL = "https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs"
 
-dbus-ghost-service="""
+suse-dbus-ghost-service="""
 This package installs a DBUS system service marked as %ghost. This is not allowed, since it is impossible to review. Please refer to #AUDIT_BUG_URL# for more information.
 """
-dbus-unauthorized-service="""
+suse-dbus-unauthorized-service="""
 The package installs a DBUS system service file. If the package is intended for inclusion in any SUSE product please open a bug report to request review of the package by the security team. Please refer to #AUDIT_BUG_URL# for more information.
 """
