@@ -15,11 +15,12 @@ class PAMModulesCheck(AbstractCheck):
             return
 
         for f in pkg.files:
-            if f in pkg.ghost_files:
-                continue
-
             m = self.pam_module_re.match(f)
             if m:
+                if f in pkg.ghost_files:
+                    self.output.add_info('E', pkg, 'pam-ghost-module', f)
+                    continue
+
                 bn = m.groups()[0]
                 if bn not in self.pam_authorized_modules:
                     self.output.add_info('E', pkg, 'pam-unauthorized-module', bn)
