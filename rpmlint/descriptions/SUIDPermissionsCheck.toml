@@ -1,0 +1,40 @@
+AUDIT_BUG_URL = "https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs"
+REVIEW_NEEDED_TEXT = "If the package is intended for inclusion in any SUSE product please open a bug report to request review of the package by the security team. Please refer to #AUDIT_BUG_URL# for more information."
+GHOST_ENCOUNTERED_TEXT = "This is not allowed, since it is impossible to review. Please refer to #AUDIT_BUG_URL# for more information."
+
+permissions-unauthorized-file="""#REVIEW_NEEDED_TEXT#"""
+permissions-symlink="""
+permissions handling for symlinks is useless. Please contact security@suse.de to remove the entry. Please refer to #AUDIT_BUG_URL# for more information.
+"""
+permissions-dir-without-slash="""
+the entry in the permissions file refers to a directory. Please contact security@suse.de to append a slash to the entry in order to avoid security problems. Please refer to #AUDIT_BUG_URL# for more information.
+"""
+permissions-file-as-dir="""
+the entry in the permissions file refers to a directory but the package actually contains a file. Please contact security@suse.de to remove the slash. Please refer to #AUDIT_BUG_URL# for more information.
+"""
+permissions-incorrect="""
+please use the %attr macro to set the correct permissions.
+"""
+permissions-incorrect-owner="""
+please use the %attr macro to set the correct ownership.
+"""
+permissions-file-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
+permissions-directory-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
+permissions-fscaps="""
+Packaging file capabilities is currently not supported. Please use normal permissions instead. You may contact the security team to request an entry that sets capabilities in /usr/share/permissions/permissions instead.
+"""
+permissions-missing-postin="""
+Please add an appropriate %post section
+"""
+permissions-missing-requires="""
+Please add 'PreReq: permissions'
+"""
+permissions-missing-verifyscript="""
+Please add a %verifyscript section
+"""
+permissions-suseconfig-obsolete="""
+The %run_permissions macro calls SuSEconfig which sets permissions for all files in the system. Please use %set_permissions <filename> instead to only set permissions for files contained in this package
+"""
+permissions-ghostfile="""
+This package installs a permissions file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#
+"""
