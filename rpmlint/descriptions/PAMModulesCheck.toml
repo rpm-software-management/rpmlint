@@ -1,5 +1,8 @@
+AUDIT_BUG_URL = "https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs"
+
 pam-unauthorized-module="""
-The package installs a PAM module. If the package
-is intended for inclusion the PAM module name must
-be included in the white list.
+The package installs a PAM module. If the package is intended for inclusion in any SUSE product please open a bug report to request review of the package by the security team. Please refer to #AUDIT_BUG_URL# for more information.
+"""
+pam-ghost-module="""
+The package installs a PAM module as %ghost file. This is not allowed, since it is impossible to review. Please refer to #AUDIT_BUG_URL# for more information.
 """
