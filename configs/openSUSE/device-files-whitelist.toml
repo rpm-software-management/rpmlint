@@ -1,0 +1,30 @@
+[[DeviceFilesWhitelist]]
+package = "bind-chrootenv"
+bug = "bsc#1174642"
+note = "Chroot duplicates of some uncritical character devices. urandom was historically packaged non-world-writable, probably to avoid the rpmlint error triggering."
+files = [
+  {
+    path = '/var/lib/named/dev/null',
+    mode = "crw-rw-rw-",
+    owner = "root",
+    group = "root",
+    device_minor = 3,
+    device_major = 1
+  },
+  {
+    path = '/var/lib/named/dev/random',
+    mode = "crw-rw-rw-",
+    owner = "root",
+    group = "root",
+    device_minor = 8,
+    device_major = 1
+  },
+  {
+    path = '/var/lib/named/dev/urandom',
+    mode = "crw-rw-r--",
+    owner = "root",
+    group = "root",
+    device_minor = 9,
+    device_major = 1
+  }
+]
