@@ -21,9 +21,9 @@ class DBusServicesCheck(AbstractCheck):
                 if f.startswith(p):
 
                     if f in pkg.ghost_files:
-                        self.output.add_info('E', pkg, 'dbus-ghost-service', f)
+                        self.output.add_info('E', pkg, 'suse-dbus-ghost-service', f)
                         continue
 
                     bn = f[len(p):]
                     if bn not in self.services_whitelist:
-                        self.output.add_info('E', pkg, 'dbus-unauthorized-service', f)
+                        self.output.add_info('E', pkg, 'suse-dbus-unauthorized-service', f)
