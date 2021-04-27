@@ -1,0 +1,53 @@
+[[FileDigestGroup]]
+package = "postfix"
+type = "permissions"
+note = ""
+bug = ""
+digests = [
+    {
+        path = "/etc/permissions.d/postfix",
+        algorithm = "sha256",
+        hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
+    },
+    {
+        path = "/etc/permissions.d/postfix.paranoid",
+        algorithm = "sha256",
+        hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
+    },
+]
+
+[[FileDigestGroup]]
+package = "sendmail"
+type = "permissions"
+note = ""
+bug = ""
+digests = [
+    {
+        path = "/etc/permissions.d/sendmail",
+        algorithm = "sha256",
+        hash = "8dded55101e7040cf912936d62198202aa4354a2da457352f64f513f10ed6b92"
+    },
+    {
+        path = "/etc/permissions.d/sendmail.paranoid",
+        algorithm = "sha256",
+        hash = "bf4067f280e6d85b1b081ccfb7492d61505225f8ecfa3c3cc02ecf4ec0b298c1"
+    },
+]
+
+[[FileDigestGroup]]
+package = "texlive-filesystem"
+type = "permissions"
+note = ""
+bug = ""
+digests = [
+    {
+        path = "/etc/permissions.d/texlive",
+        algorithm = "sha256",
+        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+    },
+    {
+        path = "/etc/permissions.d/texlive.texlive",
+        algorithm = "sha256",
+        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+    },
+]
