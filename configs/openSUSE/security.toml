@@ -25,3 +25,10 @@ Locations = [
     "/etc/polkit-1/rules.d/",
     "/usr/share/polkit-1/rules.d/"
 ]
+
+[FileDigestLocation.permissions]
+FollowSymlinks = true
+Locations = [
+    "/etc/permissions.d/",
+    "/usr/share/permissions/permissions.d/"
+]
