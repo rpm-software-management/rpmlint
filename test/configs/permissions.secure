@@ -1,0 +1,5 @@
+/var/lib/testsuidpermissionscheck/test_permissions_symlink/ root:root   600
+/var/lib/testsuidpermissionscheck/test_permissions_incorrect root:root   600
+/var/lib/testsuidpermissionscheck/test_permissions_incorrect_owner abc:root   600
+/var/lib/testsuidpermissionscheck/test_permissions_file_as_dir/  root:root   755
+/var/lib/testsuidpermissionscheck/test_permissions_dir_without_slash  root:root   755
