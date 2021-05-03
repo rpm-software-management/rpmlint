@@ -4,8 +4,8 @@
 # Purpose       : reusable code for parsing permissions/chkstat profiles
 #############################################################################
 
-import os
 import copy
+import os
 
 
 class PermissionsEntry:
@@ -31,7 +31,7 @@ class PermissionsEntry:
 
     def __str__(self):
 
-        ret = "{}:{}: {path} {owner}:{group} {mode}".format(
+        ret = '{}:{}: {path} {owner}:{group} {mode}'.format(
             self.profile,
             self.linenr,
             path=self.path,
@@ -41,10 +41,10 @@ class PermissionsEntry:
         )
 
         for cap in self.caps:
-            ret += "\n+capability " + cap
+            ret += '\n+capability ' + cap
 
         for related in self.related_paths:
-            ret += "\nrelated to " + related
+            ret += '\nrelated to ' + related
 
         return ret
 
@@ -75,7 +75,7 @@ class VariablesHandler:
             parts = line.split('=', 1)
 
             if len(parts) != 2:
-                raise Exception("{}:{}: parse error".format(label, nr))
+                raise Exception('{}:{}: parse error'.format(label, nr))
 
             varname = parts[0].strip()
             values = parts[1].split()
@@ -94,7 +94,7 @@ class VariablesHandler:
         necessary. Will return a list of expanded paths, will be only a single
         path if no variables are used."""
 
-        ret = [""]
+        ret = ['']
 
         for part in path.split(os.path.sep):
             if part.startswith('%{') and part.endswith('}'):
@@ -183,18 +183,18 @@ class PermissionsParser:
             _type, rest = line.split()
             _type = _type.lstrip('+')
 
-            if _type != "capabilities":
-                raise Exception("Unexpected +[line] encountered in {}:{}".format(context.label, context.line_nr))
+            if _type != 'capabilities':
+                raise Exception('Unexpected +[line] encountered in {}:{}'.format(context.label, context.line_nr))
 
             caps = rest.split(',')
 
             if not context.active_entries:
-                raise Exception("+capabilities line without active entries in {}:{}".format(context.label, context.line_nr))
+                raise Exception('+capabilities line without active entries in {}:{}'.format(context.label, context.line_nr))
 
             for entry in context.active_entries:
                 entry.caps = caps
         else:
-            raise Exception("Unexpected line encountered in {}:{}".format(context.label, context.line_nr))
+            raise Exception('Unexpected line encountered in {}:{}'.format(context.label, context.line_nr))
 
     def getEntries(self):
         """Returns a dictionary mapping the target file paths to instances of
