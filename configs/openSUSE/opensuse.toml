@@ -20,6 +20,7 @@ Checks = [
     "FilelistCheck",
     "KMPPolicyCheck",
     "SystemdInstallCheck",
+    "SUIDPermissionsCheck",
 ]
 
 
