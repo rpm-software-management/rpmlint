@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        docker: [opensuse/tumbleweed, opensuse/leap, 'fedora:33']
+        docker: [opensuse/tumbleweed, opensuse/leap, 'fedora:latest', 'fedora:rawhide']
       fail-fast: false
 
     container: ${{ matrix.docker }}
@@ -81,7 +81,7 @@ jobs:
               python3-pip
               rpm-build
               git
-        if: ${{ matrix.docker == 'fedora:33' }}
+        if: ${{ contains(matrix.docker, 'fedora') }}
       - run: pip install coveralls
       - uses: actions/checkout@v2
       - run: pytest
