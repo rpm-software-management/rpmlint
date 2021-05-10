@@ -2,7 +2,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class DBusServicesCheck(AbstractCheck):
-    _dbus_system_paths = [
+    dbus_system_paths = [
         '/usr/share/dbus-1/system-services/',
         '/usr/share/dbus-1/system.d/',
         '/etc/dbus-1/system.d/'
@@ -17,9 +17,8 @@ class DBusServicesCheck(AbstractCheck):
             return
 
         for f in pkg.files:
-            for p in self._dbus_system_paths:
+            for p in self.dbus_system_paths:
                 if f.startswith(p):
-
                     if f in pkg.ghost_files:
                         self.output.add_info('E', pkg, 'suse-dbus-ghost-service', f)
                         continue
