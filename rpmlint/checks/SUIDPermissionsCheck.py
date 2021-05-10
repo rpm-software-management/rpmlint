@@ -39,8 +39,6 @@ class SUIDPermissionsCheck(AbstractCheck):
             )
 
     def _verify_entry(self, pkg, path, mode, owner):
-        m = 0
-        o = 'invalid'
         if stat.S_ISDIR(mode):
             if path in self.perms:
                 self.output.add_info(
