@@ -1,4 +1,3 @@
-AUDIT_BUG_URL = "https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs"
 SUFFIX = "requires a review and whitelisting by the SUSE security team. Before submitting for any product or openSUSE:Factory please open an AUDIT bug according to the guidelines in #AUDIT_BUG_URL#."
 
 cron-file-digest-unauthorized="Packaging cron jobs #SUFFIX#"
