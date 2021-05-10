@@ -30,9 +30,13 @@ Mandatory:
 - rpm and its python bindings
 - binutils, cpio, gzip, bzip, xz and zstd
 
-Optional:
+Optional, for running the test suite:
+- devscripts
+- dash
+- a 32-bit glibc if on a 64-bit architecture
+- desktop-file-utils
 - libmagic and its python bindings
-- enchant and its python bindings
+- enchant and its python bindings, along with en_US and cs_CZ dictionaries
 - appstream-util, part of appstream-glib
 
 `rpmlint` is part of most distributions and as an user you can simply
