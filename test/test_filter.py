@@ -121,7 +121,12 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.
 
-ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
+ngircd.x86_64: E: suse-dbus-unauthorized-service
+The package installs a DBUS system service file. If the package is intended
+for inclusion in any SUSE product please open a bug report to request review
+of the package by the security team. Please refer to
+https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
+more information.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
     pkg = get_tested_package(TEST_PACKAGE, tmpdir)
@@ -135,7 +140,7 @@ ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
     result.error_details.update({'suse-other-error': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'})
     assert len(result.print_results(result.results).splitlines()) == 4
     result.info = True
-    assert len(result.print_results(result.results).splitlines()) == 11
+    assert len(result.print_results(result.results).splitlines()) == 17
     assert result.print_results(result.results) == expected_output
 
 
