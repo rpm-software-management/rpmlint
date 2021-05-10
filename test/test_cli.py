@@ -29,7 +29,7 @@ def test_parsing_config_file(test_arguments):
 def test_parsing_opensuse_conf(test_arguments):
     parsed = process_lint_args(test_arguments)
 
-    assert len(parsed['config']) == 11
+    assert len(parsed['config']) == 12
     assert PosixPath('configs/openSUSE/opensuse.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/licenses.toml') in parsed['config']
     assert PosixPath('configs/openSUSE/pie-executables.toml') in parsed['config']
