@@ -119,17 +119,6 @@ def test_permissions_directory_setuid_bit(tmpdir, package, permissions_check):
     )
 
 
-@pytest.mark.parametrize('package', ['binary/testsuidpermissionscheck'])
-def test_non_position_independent_executable(tmpdir, package, permissions_check):
-    output, test = permissions_check
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert (
-        'testsuidpermissionscheck.x86_64: E: non-position-independent-executable /var/lib/testsuidpermissionscheck/test_non_position_independent_executable_and_suid'
-        in out
-    )
-
-
 @pytest.mark.parametrize('package', ['binary/permissions-no-postin'])
 def test_permissions_missing_postin(tmpdir, package, permissions_check):
     output, test = permissions_check
@@ -179,17 +168,6 @@ def test_permissions_missing_requires(tmpdir, package, permissions_check):
     out = output.print_results(output.results)
     assert (
         "testsuidpermissionscheck.x86_64: E: permissions-missing-requires missing 'permissions' in PreReq"
-        in out
-    )
-
-
-@pytest.mark.parametrize('package', ['binary/testsuidpermissionscheck'])
-def test_permissions_suseconfig_obsolete(tmpdir, package, permissions_check):
-    output, test = permissions_check
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert (
-        'testsuidpermissionscheck.x86_64: I: permissions-suseconfig-obsolete %run_permissions is obsolete'
         in out
     )
 
