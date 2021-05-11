@@ -21,7 +21,7 @@ class SUIDPermissionsCheck(AbstractCheck):
 
     def _parse_profile(self, path):
         parser = PermissionsParser(self.var_handler, path)
-        self.perms.update(parser.getEntries())
+        self.perms.update(parser.entries)
 
     def _check_restricted_mode(self, pkg, path, mode):
         msg = f'{path} is packaged with setuid/setgid bits (0{stat.S_IMODE(mode):o})'
