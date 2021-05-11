@@ -141,6 +141,7 @@ class SpecCheck(AbstractCheck):
     def check_spec(self, pkg):
         """Find specfile in specified path and run spec file related checks."""
         self._spec_file = pkg.name
+        self._spec_file_dir = str(Path(self._spec_file).parent)
         spec_only = isinstance(pkg, Pkg.FakePkg)
         spec_lines = readlines(self._spec_file)
         patches = {}
@@ -622,7 +623,7 @@ class SpecCheck(AbstractCheck):
         # capture and print them nicely, so we do it once each way :P
         try:
             outcmd = subprocess.run(
-                ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % Path(self._spec_file).parent,
+                ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % self._spec_file_dir,
                  '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIROMENT)
 
             for line in outcmd.stderr.splitlines():
@@ -637,7 +638,7 @@ class SpecCheck(AbstractCheck):
         # grab sources and patches from parsed spec object to get
         # them with macros expanded for URL checking
         spec_obj = None
-        rpm.addMacro('_sourcedir', pkg.dirName())
+        rpm.addMacro('_sourcedir', self._spec_file_dir)
         try:
             transaction_set = rpm.TransactionSet()
             spec_obj = transaction_set.parseSpec(str(self._spec_file))
