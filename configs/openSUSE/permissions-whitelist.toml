@@ -1,8 +1,6 @@
 [[FileDigestGroup]]
 package = "postfix"
 type = "permissions"
-note = ""
-bug = ""
 digests = [
     {
         path = "/etc/permissions.d/postfix",
@@ -19,8 +17,6 @@ digests = [
 [[FileDigestGroup]]
 package = "sendmail"
 type = "permissions"
-note = ""
-bug = ""
 digests = [
     {
         path = "/etc/permissions.d/sendmail",
@@ -37,8 +33,6 @@ digests = [
 [[FileDigestGroup]]
 package = "texlive-filesystem"
 type = "permissions"
-note = ""
-bug = ""
 digests = [
     {
         path = "/etc/permissions.d/texlive",
