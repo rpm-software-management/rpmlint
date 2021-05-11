@@ -107,8 +107,8 @@ class PermissionsParser:
         with open(profile_path) as fd:
             self._parse_file(profile_path, fd)
 
-    def _parse_file(self, _label, fd):
-        context = ParseContext(_label)
+    def _parse_file(self, label, fd):
+        context = ParseContext(label)
         for nr, line in enumerate(fd.readlines(), 1):
             line = line.strip()
             if not line or line.startswith('#'):
