@@ -1,4 +1,3 @@
-AUDIT_BUG_URL = "https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs"
 REVIEW_NEEDED_TEXT = "If the package is intended for inclusion in any SUSE product please open a bug report to request review of the package by the security team. Please refer to #AUDIT_BUG_URL# for more information."
 GHOST_ENCOUNTERED_TEXT = "This is not allowed, since it is impossible to review. Please refer to #AUDIT_BUG_URL# for more information."
 
