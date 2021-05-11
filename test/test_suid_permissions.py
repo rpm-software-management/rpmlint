@@ -32,9 +32,6 @@ def permissions_check():
     return get_suid_permissions_check(Testing.TEST_CONFIG[0])
 
 
-# Tests that depend on the permissions profile and the package:
-
-
 @pytest.mark.parametrize('package', ['binary/testsuidpermissionscheck'])
 def test_permissions_symlink(tmpdir, package, permissions_check_profile):
     output, test = permissions_check_profile
@@ -65,9 +62,6 @@ def test_permissions_incorrect_owner(tmpdir, package, permissions_check_profile)
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'testsuidpermissionscheck.x86_64: E: permissions-incorrect-owner /var/lib/testsuidpermissionscheck/test_permissions_incorrect_owner belongs to root:root but should be abc:root' in out
-
-
-# Tests that only depend on the package:
 
 
 @pytest.mark.parametrize('package', ['binary/testsuidpermissionscheck'])
@@ -122,9 +116,6 @@ def test_permissions_missing_requires(tmpdir, package, permissions_check):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert "testsuidpermissionscheck.x86_64: E: permissions-missing-requires missing 'permissions' in PreReq" in out
-
-
-# other
 
 
 @pytest.mark.parametrize('package', ['source/CheckInclude'])
