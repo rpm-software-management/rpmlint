@@ -3,31 +3,21 @@ import os
 
 
 class ParseContext:
-
-    active_entries = []
-
     def __init__(self, label):
         self.label = label
+        self.active_entries = []
 
 
 class PermissionsEntry:
-    # source profile path
-    profile = None
-    # source profile line nr
-    linenr = None
-    # target path
-    path = None
-    owner = None
-    group = None
-    # mode as integer
-    mode = None
-    caps = []
-    # related paths from variable expansions
-    related_paths = []
-
-    def __init__(self, _profile, _line_nr):
-        self.profile = _profile
-        self.linenr = _line_nr
+    def __init__(self, profile, line_nr):
+        # source profile path
+        self.profile = profile
+        # source profile line nr
+        self.linenr = line_nr
+        # mode as integer
+        self.caps = []
+        # related paths from variable expansions
+        self.related_paths = []
 
     def __str__(self):
         ret = f'{self.profile}:{self.linenr}: {self.path} {self.owner}:{self.group} {oct(self.mode)}'
@@ -71,7 +61,7 @@ class VariablesHandler:
 
             self.variables[varname] = values
 
-    def expandPaths(self, path):
+    def expand_paths(self, path):
         """Checks for %{...} variables in the given path and expands them, as
         necessary. Will return a list of expanded paths, will be only a single
         path if no variables are used."""
@@ -115,9 +105,9 @@ class PermissionsParser:
         self.entries = {}
 
         with open(profile_path) as fd:
-            self._parseFile(profile_path, fd)
+            self._parse_file(profile_path, fd)
 
-    def _parseFile(self, _label, fd):
+    def _parse_file(self, _label, fd):
         context = ParseContext(_label)
         for nr, line in enumerate(fd.readlines(), 1):
             line = line.strip()
@@ -125,9 +115,9 @@ class PermissionsParser:
                 continue
 
             context.line_nr = nr
-            self._parseLine(context, line)
+            self._parse_line(context, line)
 
-    def _parseLine(self, context, line):
+    def _parse_line(self, context, line):
         if line.startswith('/') or line.startswith('%'):
             context.active_entries = []
 
@@ -137,7 +127,7 @@ class PermissionsParser:
             # "user:group"
             entry.owner, entry.group = ownership.replace('.', ':').split(':')
             entry.mode = int(mode, 8)
-            expanded = self.var_handler.expandPaths(path)
+            expanded = self.var_handler.expand_paths(path)
 
             for p in expanded:
                 entry.path = p
@@ -164,8 +154,3 @@ class PermissionsParser:
                 entry.caps = caps
         else:
             raise Exception(f'Unexpected line encountered in {context.label}:{context.line_nr}')
-
-    def getEntries(self):
-        """Returns a dictionary mapping the target file paths to instances of
-        PermissionsEntry."""
-        return self.entries
