@@ -604,7 +604,7 @@ class Pkg(AbstractPkg):
                     # patched so it generates them.
                     pkgfile.magic = ''
                 if filecaps:
-                    pkgfile.filecaps = filecaps[idx]
+                    pkgfile.filecaps = byte_to_string(filecaps[idx])
                 ret[pkgfile.name] = pkgfile
         return ret
 
