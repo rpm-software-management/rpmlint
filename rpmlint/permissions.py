@@ -9,12 +9,17 @@ class ParseContext:
 
 
 class PermissionsEntry:
-    def __init__(self, profile, line_nr):
+    def __init__(self, profile, line_nr, path, owner, group, mode):
         # source profile path
         self.profile = profile
         # source profile line nr
         self.linenr = line_nr
+        # target path
+        self.path = path
+        self.owner = owner
+        self.group = group
         # mode as integer
+        self.mode = mode
         self.caps = []
         # related paths from variable expansions
         self.related_paths = []
@@ -31,7 +36,6 @@ class PermissionsEntry:
 
 
 class VariablesHandler:
-
     def __init__(self, variables_conf_path):
         self.variables = {}
         try:
@@ -99,7 +103,6 @@ class VariablesHandler:
 
 
 class PermissionsParser:
-
     def __init__(self, var_handler, profile_path):
         self.var_handler = var_handler
         self.entries = {}
@@ -121,12 +124,12 @@ class PermissionsParser:
         if line.startswith('/') or line.startswith('%'):
             context.active_entries = []
 
-            entry = PermissionsEntry(context.label, context.line_nr)
             path, ownership, mode = line.split()
             # the format supports both "user.group" and
             # "user:group"
-            entry.owner, entry.group = ownership.replace('.', ':').split(':')
-            entry.mode = int(mode, 8)
+            owner, group = ownership.replace('.', ':').split(':')
+            mode = int(mode, 8)
+            entry = PermissionsEntry(context.label, context.line_nr, path, owner, group, mode)
             expanded = self.var_handler.expand_paths(path)
 
             for p in expanded:
