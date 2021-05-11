@@ -7,7 +7,6 @@ from rpmlint.permissions import PermissionsParser, VariablesHandler
 
 
 class SUIDPermissionsCheck(AbstractCheck):
-
     def __init__(self, config, output):
         super().__init__(config, output)
         self.perms = {}
@@ -25,11 +24,7 @@ class SUIDPermissionsCheck(AbstractCheck):
         self.perms.update(parser.getEntries())
 
     def _check_restricted_mode(self, pkg, path, mode):
-        msg = (
-            '%(file)s is packaged with '
-            'setuid/setgid bits (0%(mode)o)'
-            % {'file': path, 'mode': stat.S_IMODE(mode)}
-        )
+        msg = f'{path} is packaged with setuid/setgid bits (0{stat.S_IMODE(mode):o})'
         if not stat.S_ISDIR(mode):
             self.output.add_info('E', pkg, 'permissions-file-setuid-bit', msg)
         else:
@@ -48,12 +43,10 @@ class SUIDPermissionsCheck(AbstractCheck):
         o = ':'.join((entry.owner, entry.group))
 
         if stat.S_IMODE(mode) != m:
-            self.output.add_info('E', pkg, 'permissions-incorrect',
-                                 '%(file)s has mode 0%(mode)o but should be 0%(m)o' % {'file': path, 'mode': stat.S_IMODE(mode), 'm': m})
+            self.output.add_info('E', pkg, 'permissions-incorrect', f'{path} has mode 0{stat.S_IMODE(mode):o} but should be 0{m:o}')
 
         if owner != o:
-            self.output.add_info('E', pkg, 'permissions-incorrect-owner',
-                                 '%(file)s belongs to %(owner)s but should be %(o)s' % {'file': path, 'owner': owner, 'o': o})
+            self.output.add_info('E', pkg, 'permissions-incorrect-owner', f'{path} belongs to {owner} but should be {o}')
 
     def _check_post_scriptlets(self, pkg, path, need_verifyscript):
         script = pkg[rpm.RPMTAG_POSTIN] or pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
@@ -66,12 +59,9 @@ class SUIDPermissionsCheck(AbstractCheck):
                     found = True
                     break
 
-        if need_verifyscript and (
-            path not in self.perms or not self._is_static_entry(self.perms[path])
-        ):
+        if need_verifyscript and (path not in self.perms or not self._is_static_entry(self.perms[path])):
             if not script or not found:
-                self.output.add_info('E', pkg, 'permissions-missing-postin',
-                                     'missing %%set_permissions %s in %%post' % path)
+                self.output.add_info('E', pkg, 'permissions-missing-postin', f'missing %set_permissions {path} in %post')
 
             need_set_permissions = True
             script = (pkg[rpm.RPMTAG_VERIFYSCRIPT] or pkg[rpm.RPMTAG_VERIFYSCRIPTPROG])
@@ -84,8 +74,7 @@ class SUIDPermissionsCheck(AbstractCheck):
                         break
 
             if not script or not found:
-                self.output.add_info('W', pkg, 'permissions-missing-verifyscript',
-                                     'missing %%verify_permissions -e %s' % path)
+                self.output.add_info('W', pkg, 'permissions-missing-verifyscript', f'missing %verify_permissions -e {path}')
 
         return need_set_permissions
 
@@ -117,8 +106,7 @@ class SUIDPermissionsCheck(AbstractCheck):
 
         for f, pkgfile in pkg.files.items():
             if pkgfile.filecaps:
-                self.output.add_info('E', pkg, 'permissions-fscaps',
-                                     "%(fname)s has fscaps '%(caps)s'" % {'fname': f, 'caps': pkgfile.filecaps})
+                self.output.add_info('E', pkg, 'permissions-fscaps', f"{f} has fscaps '{pkgfile.filecaps}'")
 
             mode = pkgfile.mode
             owner = pkgfile.user + ':' + pkgfile.group
@@ -134,7 +122,7 @@ class SUIDPermissionsCheck(AbstractCheck):
 
             elif not stat.S_ISLNK(mode):
                 if f + '/' in self.perms:
-                    self.output.add_info('W', pkg, 'permissions-file-as-dir', f + ' is a file but listed as directory')
+                    self.output.add_info('W', pkg, 'permissions-file-as-dir', f'{f} is a file but listed as directory')
 
                 if mode & (stat.S_ISUID | stat.S_ISGID):
                     need_verifyscript = True
