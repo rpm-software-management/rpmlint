@@ -517,7 +517,7 @@ class SpecCheck(AbstractCheck):
         # Checks below require a real spec file
         if not self._spec_file:
             return
-        self._check_specfile_error(pkg, subprocess)
+        self._check_specfile_error(pkg)
         self._check_invalid_url(pkg, rpm)
 
     def _check_no_spec_file(self, pkg):
@@ -614,7 +614,7 @@ class SpecCheck(AbstractCheck):
                     self.output.add_info('W', pkg, 'patch-not-applied',
                                          'Patch%d:' % pnum, pfile)
 
-    def _check_specfile_error(self, pkg, subprocess):
+    def _check_specfile_error(self, pkg):
         """It parse the specfile with rpm and forward errors to rpmlint output."""
 
         # We'd like to parse the specfile only once using python bindings,
