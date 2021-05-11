@@ -13,11 +13,17 @@ class ErlangCheck(AbstractFilesCheck):
         self.source_re = re.compile(build_dir)
 
     def check_file(self, pkg, filename):
-        beam = BeamFile(pkg.files[filename].path)
         try:
+            beam = BeamFile(pkg.files[filename].path)
+
+            if beam.compileinfo is None:
+                self.output.add_info('W', pkg, 'beam-compile-info-missed', filename)
+                return
+
             compile_state = byte_to_string(str(beam.compileinfo['source']))
             if 'debug_info' not in beam.compileinfo['options']:
                 self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
+
             # This can't be an error as builddir can be user specific and vary between users
             # it could be error in OBS where all the builds are done by user abuild, not in
             # general.
