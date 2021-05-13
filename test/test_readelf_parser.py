@@ -194,6 +194,9 @@ def test_invalid_soname(binariescheck):
 
 @pytest.mark.skipif(not IS_I686 and (not IS_X86_64 or not HAS_32BIT_GLIBC), reason='i686 glibc only')
 def test_non_pic_code_library(binariescheck):
+    print('IS_I686', IS_I686)
+    print('IS_X86_64', IS_X86_64)
+    print('HAS_32BIT_GLIBC', HAS_32BIT_GLIBC)
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
     out = output.print_results(output.results)
