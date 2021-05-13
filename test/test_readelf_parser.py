@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import glob
 
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
