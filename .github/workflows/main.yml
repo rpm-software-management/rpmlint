@@ -61,7 +61,6 @@ jobs:
               dash
               devscripts-checkbashisms
               glibc
-              glibc.i686
               hunspell-en
               hunspell-cs
               python3-setuptools
