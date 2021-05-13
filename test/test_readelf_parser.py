@@ -197,6 +197,7 @@ def test_non_pic_code_library(binariescheck):
     print('IS_I686', IS_I686)
     print('IS_X86_64', IS_X86_64)
     print('HAS_32BIT_GLIBC', HAS_32BIT_GLIBC)
+    print(glob.glob('/lib/ld-linux.so.*'))
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('non-pic-shared-m32.so'), '/usr/lib/non-pic-shared-m32.so')
     out = output.print_results(output.results)
