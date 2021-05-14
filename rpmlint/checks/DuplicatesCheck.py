@@ -69,7 +69,6 @@ class DuplicatesCheck(AbstractCheck):
                         self.output.add_info('E', pkg,
                                              'hardlink-across-partition',
                                              first.name, duplicate.name)
-                    print(first_is_config, pkg.config_files)
                     if first_is_config and duplicate.name in pkg.config_files:
                         self.output.add_info('E', pkg,
                                              'hardlink-across-config-files',
