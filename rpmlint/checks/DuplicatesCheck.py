@@ -1,4 +1,3 @@
-import os
 import stat
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
@@ -25,6 +24,7 @@ class DuplicatesCheck(AbstractCheck):
 
         md5s = {}
         sizes = {}
+        hardlinks = {}
         total_dup_size = 0
 
         for fname, pkgfile in pkg.files.items():
@@ -32,8 +32,12 @@ class DuplicatesCheck(AbstractCheck):
                 continue
 
             # fillup md5s and sizes dicts
-            md5s.setdefault(pkgfile.md5, set()).add(fname)
+            md5s.setdefault(pkgfile.md5, set()).add(pkgfile)
             sizes[pkgfile.md5] = pkgfile.size
+            key = (pkgfile.rdev, pkgfile.inode)
+            if key not in hardlinks:
+                hardlinks[key] = 0
+            hardlinks[key] += 1
 
         # process duplicates
         for md5_hash in md5s:
@@ -44,19 +48,19 @@ class DuplicatesCheck(AbstractCheck):
             if len(duplicates) == 1:
                 continue
 
-            duplicates = sorted(duplicates)
+            duplicates = sorted(duplicates, key=lambda x: x.name)
             first = duplicates.pop()
             first_is_config = False
-            if first in pkg.config_files:
+            if first.name in pkg.config_files:
                 first_is_config = True
 
             prefix = self._get_prefix(first)
 
-            st = os.stat(pkg.dirName() + '/' + first)
             # 1 (first) + number of others - number of hard links
             # (keeps track of how many directories have entries for this file)
             # diff is a number of files that are duplicates but not hard-links
-            diff = 1 + len(duplicates) - st[stat.ST_NLINK]
+            key = (first.rdev, first.inode)
+            diff = 1 + len(duplicates) - hardlinks[key]
 
             if diff <= 0:
                 # now we have just hard-links in duplicates
@@ -64,11 +68,12 @@ class DuplicatesCheck(AbstractCheck):
                     if prefix != self._get_prefix(duplicate):
                         self.output.add_info('E', pkg,
                                              'hardlink-across-partition',
-                                             first, duplicate)
-                    if first_is_config and duplicate in pkg.config_files:
+                                             first.name, duplicate.name)
+                    print(first_is_config, pkg.config_files)
+                    if first_is_config and duplicate.name in pkg.config_files:
                         self.output.add_info('E', pkg,
                                              'hardlink-across-config-files',
-                                             first, duplicate)
+                                             first.name, duplicate.name)
                 continue
 
             # now we know that there are some duplicates that are not links
@@ -82,8 +87,8 @@ class DuplicatesCheck(AbstractCheck):
             # is not a link and wasn't ignored by the previous step),
             # report a warning
             if sizes[md5_hash] and diff > 0:
-                self.output.add_info('W', pkg, 'files-duplicate', first,
-                                     ':'.join(duplicates))
+                self.output.add_info('W', pkg, 'files-duplicate', first.name,
+                                     ':'.join([x.name for x in duplicates]))
             total_dup_size += sizes[md5_hash] * diff
 
         # check the overall size of the duplicates and print an error if it's
@@ -93,9 +98,9 @@ class DuplicatesCheck(AbstractCheck):
                                  total_dup_size)
 
     @staticmethod
-    def _get_prefix(filename):
+    def _get_prefix(pkgfile):
         """Return first two directories in the given path."""
-        pathlist = str.split(filename, '/')
+        pathlist = str.split(pkgfile.name, '/')
         if len(pathlist) == 3:
             return '/'.join(pathlist[0:2])
         return '/'.join(pathlist[0:3])
