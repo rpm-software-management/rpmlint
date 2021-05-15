@@ -33,3 +33,4 @@ venv/
 *.flog
 *.xz
 /__version__.py
+/.packit/*.tar.gz
