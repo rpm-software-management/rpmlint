@@ -1,0 +1,16 @@
+---
+# docs: https://packit.dev/docs/configuration/
+upstream_package_name: rpmlint
+specfile_path: .packit/rpmlint.spec
+
+actions:
+  get-current-version: "rpmspec -q --srpm --qf '%{VERSION}' .packit/rpmlint.spec"
+
+jobs:
+- job: copr_build
+  metadata:
+    targets:
+    - fedora-rawhide-x86_64
+    - mageia-cauldron-x86_64
+    - opensuse-tumbleweed-x86_64
+  trigger: pull_request
