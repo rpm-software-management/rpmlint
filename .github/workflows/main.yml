@@ -15,14 +15,14 @@ jobs:
         docker:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
-          - 'registry.opensuse.org/opensuse/leap:latest'
-          - 'registry.opensuse.org/opensuse/tumbleweed:latest'
+          - 'registry.opensuse.org/opensuse/leap-dnf:15.3'
+          - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
       fail-fast: false
 
     container: ${{ matrix.docker }}
 
     steps:
-      - run: zypper -n install
+      - run: dnf --assumeyes install
               checkbashisms cpio dash gzip
               bzip2 xz
               binutils glibc glibc-32bit glibc-locale desktop-file-utils
@@ -50,9 +50,9 @@ jobs:
               rpm-build
               git
         if: ${{ contains(matrix.docker, 'opensuse') }}
-      - run: zypper -n install python3-flake8-comprehensions
+      - run: dnf --assumeyes install python3-flake8-comprehensions
         if: ${{ contains(matrix.docker, 'opensuse/tumbleweed') }}
-      - run: dnf --nogpgcheck -y install
+      - run: dnf --nogpgcheck --assumeyes install
               /usr/bin/appstream-util
               /usr/bin/cpio
               /usr/bin/bzip2
