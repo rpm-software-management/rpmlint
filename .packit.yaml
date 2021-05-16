@@ -31,3 +31,13 @@ jobs:
     project: rpm-software-management-rpmlint-mainline
     list_on_homepage: True
     preserve_project: True
+- job: copr_build
+  trigger: commit
+  metadata:
+    targets:
+    - opensuse-tumbleweed-x86_64
+    - opensuse-tumbleweed-aarch64
+    branch: opensuse
+    project: rpm-software-management-rpmlint-opensuse
+    list_on_homepage: True
+    preserve_project: True
