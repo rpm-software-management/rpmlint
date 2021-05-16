@@ -12,7 +12,11 @@ jobs:
 
     strategy:
       matrix:
-        docker: [opensuse/tumbleweed, opensuse/leap, 'fedora:latest', 'fedora:rawhide']
+        docker:
+          - 'registry.fedoraproject.org/fedora:latest'
+          - 'registry.fedoraproject.org/fedora:rawhide'
+          - 'registry.opensuse.org/opensuse/leap:latest'
+          - 'registry.opensuse.org/opensuse/tumbleweed:latest'
       fail-fast: false
 
     container: ${{ matrix.docker }}
@@ -45,9 +49,9 @@ jobs:
               python3-pip
               rpm-build
               git
-        if: ${{ startsWith(matrix.docker,  'opensuse') }}
+        if: ${{ contains(matrix.docker, 'opensuse') }}
       - run: zypper -n install python3-flake8-comprehensions
-        if: ${{ matrix.docker == 'opensuse/tumbleweed' }}
+        if: ${{ contains(matrix.docker, 'opensuse/tumbleweed') }}
       - run: dnf --nogpgcheck -y install
               /usr/bin/appstream-util
               /usr/bin/cpio
