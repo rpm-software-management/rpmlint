@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   push:
-    branches: [ master, opensuse ]
+    branches: [ main, opensuse ]
   pull_request:
-    branches: [ master, opensuse ]
+    branches: [ main, opensuse ]
 
 jobs:
   build_and_test:
