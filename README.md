@@ -45,21 +45,7 @@ Optional, for running the test suite:
 
 ## Testing
 
-### Containers
-If you want to test the `rpmlint` when developing best is to use podman
-to provide the environment for you. There are various distribution
-dockerfiles in `test/` folder.
-
-I.e. if you want to test on the latest openSUSE you can test using the following commands:
-
-`podman build -t opensusetw -f test/Dockerfile-opensusetw .`
-
-`podman run -v $(pwd):/usr/src/rpmlint/ opensusetw python3 -m pytest`
-
-### Directly
-
-Another option is to run the tests on your system directly. If you
-have all the required modules as listed on the Install section above.
+You will need to have all the required modules as listed on the Install section above.
 You will also need `pytest`,`pytest-cov`, `pytest-xdist`, and `pytest-flake8`.
 
 If all the dependencies are present you can just execute tests using:
