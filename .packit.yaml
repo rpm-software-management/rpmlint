@@ -17,3 +17,17 @@ jobs:
     - opensuse-tumbleweed-x86_64
     - opensuse-tumbleweed-aarch64
   trigger: pull_request
+- job: copr_build
+  trigger: commit
+  metadata:
+    targets:
+    - fedora-rawhide-x86_64
+    - fedora-rawhide-aarch64
+    - mageia-cauldron-x86_64
+    - mageia-cauldron-aarch64
+    - opensuse-tumbleweed-x86_64
+    - opensuse-tumbleweed-aarch64
+    branch: main
+    project: rpm-software-management-rpmlint-mainline
+    list_on_homepage: True
+    preserve_project: True
