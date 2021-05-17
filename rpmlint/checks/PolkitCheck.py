@@ -76,7 +76,7 @@ class PolkitCheck(AbstractCheck):
                     for a in xml.getElementsByTagName('action'):
                         self.check_action(pkg, a)
             except Exception as x:
-                self.output.add_info('E', pkg, 'rpmlint-exception', f'{file:s} raised an exception: {x:s}')
+                self.output.add_info('E', pkg, 'rpmlint-exception', f'{f:s} raised an exception: {x:s}')
                 continue
 
     def check_action(self, pkg, action):
