@@ -36,7 +36,7 @@ class PolkitCheck(AbstractCheck):
         # first pass, find additional files
         for f in pkg.files:
             if f.startswith(prefix):
-                if f in pkg.ghostFiles():
+                if f in pkg.ghost_files:
                     self.output.add_info('E', pkg, 'polkit-ghost-file', f)
                     continue
 
@@ -68,7 +68,7 @@ class PolkitCheck(AbstractCheck):
             # catch xml exceptions
             try:
                 if f.startswith(prefix):
-                    if f in pkg.ghostFiles():
+                    if f in pkg.ghost_files:
                         self.output.add_info('E', pkg, 'polkit-ghost-file', f)
                         continue
 
@@ -76,7 +76,7 @@ class PolkitCheck(AbstractCheck):
                     for a in xml.getElementsByTagName('action'):
                         self.check_action(pkg, a)
             except Exception as x:
-                self.output.add_info('E', pkg, 'rpmlint-exception', f'{f:s} raised an exception: {x:s}')
+                self.output.add_info('E', pkg, 'rpmlint-exception', f'{f:s} raised an exception: {x}')
                 continue
 
     def check_action(self, pkg, action):
@@ -112,7 +112,7 @@ class PolkitCheck(AbstractCheck):
                 else:
                     foundunauthorized = True
 
-        action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[1]]})'
+        action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[2]]})'
         if foundunauthorized:
             self.output.add_info('E', pkg, 'polkit-unauthorized-privilege', action_settings)
         else:
