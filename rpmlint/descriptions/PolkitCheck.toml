@@ -1,6 +1,3 @@
-polkit-unauthorized-file="""
-A custom polkit rule file is installed by this package. #REVIEW_NEEDED_TEXT#
-"""
 polkit-unauthorized-privilege="""
 The package allows unprivileged users to carry out privileged
 operations without authentication. This could cause security

@@ -10,7 +10,6 @@ class PolkitCheck(AbstractCheck):
     """Note: This expects the package polkit-default-privs to be installed to work."""
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.polkit_privs_whitelist = config.configuration.get('PolkitPrivsWhitelist', ())
         self.polkit_privs_files = config.configuration.get('PolkitPrivsFiles', ['/etc/polkit-default-privs.standard'])
         self.privs = {}
         self._collect_privs()
@@ -29,39 +28,6 @@ class PolkitCheck(AbstractCheck):
                     priv = line[0]
                     value = line[1]
                     self.privs[priv] = value
-
-    def check_perm_files(self, pkg):
-        """Checks files in polkit-default-privs.d."""
-        prefix = '/etc/polkit-default-privs.d/'
-        profiles = ('restrictive', 'standard', 'relaxed')
-        permfiles = []
-        # first pass, find additional files
-        for f in pkg.files:
-            if f.startswith(prefix):
-                if f in pkg.ghost_files:
-                    self.output.add_info('E', pkg, 'polkit-ghost-file', f)
-                    continue
-
-                bn = f[len(prefix):]
-                if bn not in self.polkit_privs_whitelist:
-                    self.output.add_info('E', pkg, 'polkit-unauthorized-file', f)
-
-                parts = bn.rsplit('.', 1)
-                if len(parts) == 2 and parts[-1] in profiles:
-                    bn = parts[0]
-
-                if bn not in permfiles:
-                    permfiles.append(bn)
-
-        for f in sorted(permfiles):
-            f = pkg.dirName() + prefix + f
-            for profile in profiles:
-                path = '.'.join((f, profile))
-                if os.path.exists(path):
-                    self._parse_privs_file(path)
-                    break
-            else:
-                self._parse_privs_file(f)
 
     def check_actions(self, pkg):
         """Checks files in the actions directory."""
@@ -126,5 +92,4 @@ class PolkitCheck(AbstractCheck):
         if pkg.is_source:
             return
 
-        self.check_perm_files(pkg)
         self.check_actions(pkg)
