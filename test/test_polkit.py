@@ -46,7 +46,7 @@ def test_check_actions_malformatted(tmpdir, package, polkit_check):
     output, test = polkit_check
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'testpolkitcheck.x86_64: E: rpmlint-exception /usr/share/polkit-1/actions/malformatted.xml.policy raised an exception: mismatched tag: line 23, column 51' in out
+    assert 'testpolkitcheck.x86_64: E: polkit-xml-exception /usr/share/polkit-1/actions/malformatted.xml.policy raised an exception: mismatched tag: line 23, column 51' in out
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
