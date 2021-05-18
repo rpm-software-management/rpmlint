@@ -1,7 +1,7 @@
 import os
 from re import split
 from xml.dom.minidom import parse
-from xml.parsers.expat import ExpatError as polkit_xml_exception
+from xml.parsers.expat import ExpatError
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -76,8 +76,8 @@ class PolkitCheck(AbstractCheck):
                     xml = parse(pkg.dirName() + f)
                     for a in xml.getElementsByTagName('action'):
                         self.check_action(pkg, a)
-            except polkit_xml_exception as x:
-                self.output.add_info('E', pkg, 'rpmlint-exception', f'{f:s} raised an exception: {x}')
+            except ExpatError as x:
+                self.output.add_info('E', pkg, 'polkit-xml-exception', f'{f:s} raised an exception: {x}')
                 continue
 
     def check_action(self, pkg, action):
