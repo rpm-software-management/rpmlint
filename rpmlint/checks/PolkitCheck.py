@@ -7,6 +7,7 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class PolkitCheck(AbstractCheck):
+    """Note: This expects the package polkit-default-privs to be installed to work."""
     def __init__(self, config, output):
         super().__init__(config, output)
         self.polkit_privs_whitelist = config.configuration.get('PolkitPrivsWhitelist', ())
@@ -106,7 +107,7 @@ class PolkitCheck(AbstractCheck):
         for i in allow_types:
             if i not in settings:
                 foundundef = True
-                settings[i] = '??'
+                settings[i] = 'no'
             elif settings[i].find('auth_admin') != 0:
                 if settings[i] == 'no':
                     foundno = True
