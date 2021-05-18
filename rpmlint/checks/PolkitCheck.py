@@ -1,6 +1,7 @@
 import os
 from re import split
 from xml.dom.minidom import parse
+from xml.parsers.expat import ExpatError as polkit_xml_exception
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -21,8 +22,8 @@ class PolkitCheck(AbstractCheck):
     def _parse_privs_file(self, filename):
         with open(filename) as inputfile:
             for line in inputfile:
-                line = line.split('#')[0].split('\n')[0]
-                if len(line):
+                line = line.split('#')[0].rstrip()
+                if line:
                     line = split(r'\s+', line)
                     priv = line[0]
                     value = line[1]
@@ -75,7 +76,7 @@ class PolkitCheck(AbstractCheck):
                     xml = parse(pkg.dirName() + f)
                     for a in xml.getElementsByTagName('action'):
                         self.check_action(pkg, a)
-            except Exception as x:
+            except polkit_xml_exception as x:
                 self.output.add_info('E', pkg, 'rpmlint-exception', f'{f:s} raised an exception: {x}')
                 continue
 
