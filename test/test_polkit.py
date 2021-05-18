@@ -26,22 +26,6 @@ def polkit_check():
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_perm_files_ghost(tmpdir, package, polkit_check):
-    output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert 'testpolkitcheck.x86_64: E: polkit-ghost-file /etc/polkit-default-privs.d/ghost-file.standard' in out
-
-
-@pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_perm_files_unauthorized(tmpdir, package, polkit_check):
-    output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert 'testpolkitcheck.x86_64: E: polkit-unauthorized-file /etc/polkit-default-privs.d/unauthorized.standard' in out
-
-
-@pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
 def test_check_actions_malformatted(tmpdir, package, polkit_check):
     output, test = polkit_check
     test.check(get_tested_package(package, tmpdir))
