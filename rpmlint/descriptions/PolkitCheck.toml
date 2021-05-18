@@ -1,23 +1,15 @@
 polkit-unauthorized-file="""
-A custom polkit rule file is installed by this package. If the package is
-intended for inclusion in any SUSE product please open a bug report to request
-review of the package by the security team. Please refer to {url} for more
-information"""
+A custom polkit rule file is installed by this package. #REVIEW_NEEDED_TEXT#
+"""
 polkit-unauthorized-privilege="""
 The package allows unprivileged users to carry out privileged
 operations without authentication. This could cause security
-problems if not done carefully. If the package is intended for
-inclusion in any SUSE product please open a bug report to request
-review of the package by the security team. Please refer to {url}
-for more information.
+problems if not done carefully. #REVIEW_NEEDED_TEXT#
 """
 polkit-untracked-privilege="""
 The privilege is not listed in /etc/polkit-default-privs.*
 which makes it harder for admins to find. Furthermore polkit
-authorization checks can easily introduce security issues. If the
-package is intended for inclusion in any SUSE product please open
-a bug report to request review of the package by the security team.
-Please refer to {url} for more information.
+authorization checks can easily introduce security issues. #REVIEW_NEEDED_TEXT#
 """
 polkit-cant-acquire-privilege="""
 Usability can be improved by allowing users to acquire privileges
@@ -27,6 +19,5 @@ is not listed in /etc/polkit-default-privs.
 """
 polkit-ghost-file="""
 This package installs a polkit rule or policy as %ghost file.
-This is not allowed as it is impossible to review. For more
-information please refer to {url} for more information.
+#GHOST_ENCOUNTERED_TEXT#
 """
