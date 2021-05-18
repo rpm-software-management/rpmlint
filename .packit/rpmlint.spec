@@ -7,7 +7,7 @@ Summary:        Tool for checking common errors in RPM packages
 
 License:        GPLv2+
 URL:            https://github.com/rpm-software-management/rpmlint
-Source0:        %{url}/archive/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
 BuildArch:      noarch
 
