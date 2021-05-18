@@ -19,6 +19,7 @@ Checks = [
     "DBusServicesCheck",
     "FilelistCheck",
     "KMPPolicyCheck",
+    "PolkitCheck",
     "SystemdInstallCheck",
     "SUIDPermissionsCheck",
 ]
