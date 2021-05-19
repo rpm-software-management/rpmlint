@@ -55,9 +55,9 @@ class PolkitCheck(AbstractCheck):
             return
 
         allow_types = ('allow_any', 'allow_inactive', 'allow_active')
-        foundunauthorized = False
-        foundno = False
-        foundundef = False
+        found_unauthorized = False
+        found_no = False
+        found_undef = False
         settings = {}
         try:
             defaults = action.getElementsByTagName('defaults')[0]
@@ -68,24 +68,24 @@ class PolkitCheck(AbstractCheck):
                 if i.nodeName in allow_types:
                     settings[i.nodeName] = i.firstChild.data
         except KeyError:
-            foundunauthorized = True
+            found_unauthorized = True
 
         for i in allow_types:
             if i not in settings:
-                foundundef = True
+                found_undef = True
                 settings[i] = 'no'
             elif settings[i].find('auth_admin') != 0:
                 if settings[i] == 'no':
-                    foundno = True
+                    found_no = True
                 else:
-                    foundunauthorized = True
+                    found_unauthorized = True
 
         action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[2]]})'
-        if foundunauthorized:
+        if found_unauthorized:
             self.output.add_info('E', pkg, 'polkit-unauthorized-privilege', action_settings)
         else:
             self.output.add_info('E', pkg, 'polkit-untracked-privilege', action_settings)
-        if foundno or foundundef:
+        if found_no or found_undef:
             self.output.add_info('I', pkg, 'polkit-cant-acquire-privilege', action_settings)
 
     def check(self, pkg):
