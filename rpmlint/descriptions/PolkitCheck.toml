@@ -9,10 +9,6 @@ which makes it harder for admins to find. Furthermore improper polkit
 authorization checks can easily introduce security issues. #REVIEW_NEEDED_TEXT#
 """
 polkit-cant-acquire-privilege="""
-Usability can be improved by allowing users to acquire privileges
-via authentication. Use e.g. 'auth_admin' instead of 'no' and make
-sure to define 'allow_any'. This is an issue only if the privilege
-is not listed in /etc/polkit-default-privs.
 """
 polkit-ghost-file="""
 This package installs a polkit rule or policy as %ghost file.
