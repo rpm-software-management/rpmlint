@@ -100,7 +100,9 @@ class PolkitCheck(AbstractCheck):
         else:
             self.output.add_info('E', pkg, 'polkit-untracked-privilege', action_settings)
         if found_no:
-            self.output.add_info('I', pkg, 'polkit-cant-acquire-privilege', action_settings)
+            # in the past this triggered 'polkit-cant-acquire-privilege', but this is not considered very helpful for
+            # packagers since there are legitimate use cases for this.
+            pass
 
     def check(self, pkg):
         if pkg.is_source:

@@ -8,8 +8,6 @@ The privilege is not listed in /etc/polkit-default-privs.*
 which makes it harder for admins to find. Furthermore improper polkit
 authorization checks can easily introduce security issues. #REVIEW_NEEDED_TEXT#
 """
-polkit-cant-acquire-privilege="""
-"""
 polkit-ghost-file="""
 This package installs a polkit rule or policy as %ghost file.
 #GHOST_ENCOUNTERED_TEXT#
