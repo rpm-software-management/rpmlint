@@ -46,7 +46,6 @@ def test_check_actions_missing_allow_type(tmpdir, package, polkit_check):
     output, test = polkit_check
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'testpolkitcheck.x86_64: I: polkit-cant-acquire-privilege missing.allow.type (no:auth_admin_keep:auth_admin_keep)' in out
     assert 'testpolkitcheck.x86_64: E: polkit-untracked-privilege missing.allow.type (no:auth_admin_keep:auth_admin_keep)' in out
 
 
@@ -55,5 +54,4 @@ def test_check_actions_auth_admin(tmpdir, package, polkit_check):
     output, test = polkit_check
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'testpolkitcheck.x86_64: I: polkit-cant-acquire-privilege auth.admin.policy (auth_admin:no:auth_admin_keep)' in out
     assert 'testpolkitcheck.x86_64: E: polkit-untracked-privilege auth.admin.policy (auth_admin:no:auth_admin_keep)' in out
