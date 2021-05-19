@@ -5,7 +5,7 @@ problems if not done carefully. #REVIEW_NEEDED_TEXT#
 """
 polkit-untracked-privilege="""
 The privilege is not listed in /etc/polkit-default-privs.*
-which makes it harder for admins to find. Furthermore polkit
+which makes it harder for admins to find. Furthermore improper polkit
 authorization checks can easily introduce security issues. #REVIEW_NEEDED_TEXT#
 """
 polkit-cant-acquire-privilege="""
