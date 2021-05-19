@@ -96,7 +96,7 @@ class PolkitCheck(AbstractCheck):
 
         action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[2]]})'
         if found_unauthorized:
-            self.output.add_info('E', pkg, 'polkit-unauthorized-privilege', action_settings)
+            self.output.add_info('W', pkg, 'polkit-user-privilege', action_settings)
         else:
             self.output.add_info('E', pkg, 'polkit-untracked-privilege', action_settings)
         if found_no:
