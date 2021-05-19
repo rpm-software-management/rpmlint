@@ -7,7 +7,17 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class PolkitCheck(AbstractCheck):
-    """Note: This expects the package polkit-default-privs to be installed to work."""
+    """ Enforces whitelistings for polkit policies.
+
+    Note: This expects the package `polkit-default-privs` to be installed to work.
+
+    This check enforces a whitelisting for polkit policies installed by packages. openSUSE uses the package
+    `polkit-default-privs` to apply one of a selection of default system profiles for polkit actions. A package's polkit
+    action is considered whitelisted if an entry for it is existing in polkit-default-priv's standard profile.
+
+    Apart from this this check also performs minor consistency checks and gives suggestions to packages regarding
+    installed polkit policies.
+    """
     def __init__(self, config, output):
         super().__init__(config, output)
         self.polkit_privs_files = config.configuration.get('PolkitPrivsFiles', ['/etc/polkit-default-privs.standard'])
@@ -72,6 +82,11 @@ class PolkitCheck(AbstractCheck):
 
         for i in allow_types:
             if i not in settings:
+                # If the authorization setting is left out for a certain category in the XML
+                # policy then the default applied by polkit is `no` This is not really
+                # documented in the polkit man page but can be learned from the polkit source
+                # code where the `ParserData` is zero initialized and a zero implicit corresponds
+                # to `no`.
                 found_undef = True
                 settings[i] = 'no'
             elif settings[i].find('auth_admin') != 0:
