@@ -67,7 +67,6 @@ class PolkitCheck(AbstractCheck):
         allow_types = ('allow_any', 'allow_inactive', 'allow_active')
         found_unauthorized = False
         found_no = False
-        found_undef = False
         settings = {}
         try:
             defaults = action.getElementsByTagName('defaults')[0]
@@ -87,7 +86,7 @@ class PolkitCheck(AbstractCheck):
                 # documented in the polkit man page but can be learned from the polkit source
                 # code where the `ParserData` is zero initialized and a zero implicit corresponds
                 # to `no`.
-                found_undef = True
+                found_no = True
                 settings[i] = 'no'
             elif settings[i].find('auth_admin') != 0:
                 if settings[i] == 'no':
@@ -100,7 +99,7 @@ class PolkitCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'polkit-unauthorized-privilege', action_settings)
         else:
             self.output.add_info('E', pkg, 'polkit-untracked-privilege', action_settings)
-        if found_no or found_undef:
+        if found_no:
             self.output.add_info('I', pkg, 'polkit-cant-acquire-privilege', action_settings)
 
     def check(self, pkg):
