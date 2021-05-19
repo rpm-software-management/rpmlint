@@ -1,6 +1,6 @@
-polkit-unauthorized-privilege="""
+polkit-user-privilege="""
 The package allows unprivileged users to carry out privileged
-operations without authentication. This could cause security
+operations. This could cause security
 problems if not done carefully. #REVIEW_NEEDED_TEXT#
 """
 polkit-untracked-privilege="""
