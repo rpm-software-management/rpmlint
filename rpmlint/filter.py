@@ -28,6 +28,9 @@ class Filter(object):
         self.strict = config.strict
         # list of filter regexes
         self.filters_regexes = [re.compile(f) for f in config.configuration['Filters']]
+        # set of filters that are actually used in add_info
+        self.used_filters = set()
+        self.rpmlintrc_filters = config.rpmlintrc_filters
         # informative or quiet
         self.info = config.info
         # How many bad hits we already collected while collecting issues
@@ -117,9 +120,12 @@ class Filter(object):
 
         # filter by the result message
         result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{detail_output}'
-        for f in self.filters_regexes:
-            if f.search(result_no_color):
-                return
+        # unused-rpmlintrc-filter warnings should be skipped
+        if rpmlint_issue != 'unused-rpmlintrc-filter':
+            for f in self.filters_regexes:
+                if f.search(result_no_color):
+                    self.used_filters.add(f.pattern)
+                    return
 
         # raise the counters
         self.score += badness
@@ -193,3 +199,8 @@ class Filter(object):
         """
         xs = x.split()
         return (xs[2], xs[1])
+
+    def validate_filters(self, pkg):
+        for f in self.rpmlintrc_filters:
+            if f not in self.used_filters:
+                self.add_info('E', pkg, 'unused-rpmlintrc-filter', f'"{f}"')

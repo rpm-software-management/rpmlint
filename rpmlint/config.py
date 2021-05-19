@@ -38,6 +38,8 @@ class Config(object):
         self.conf_files = []
         # Configuration content parsed from the toml configuration file
         self.configuration = None
+        # List of rpmlintrc filters
+        self.rpmlintrc_filters = []
         # whether to print more information or not
         self.info = False
         # whether to treat all messages as errors or not
@@ -153,6 +155,7 @@ class Config(object):
         rpmlintrc_content = rpmlintrc_file.read_text()
         filters = self.re_filter.findall(rpmlintrc_content)
         self.configuration['Filters'] += filters
+        self.rpmlintrc_filters = filters
         badness = self.re_badness.findall(rpmlintrc_content)
         for entry in badness:
             self.configuration['Scoring'].update({entry[0]: entry[1]})

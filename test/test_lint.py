@@ -5,6 +5,8 @@ from rpmlint.lint import Lint
 
 from Testing import TEST_CONFIG, testpath
 
+TEST_RPMLINTRC = testpath() / 'configs/testing2-rpmlintrc'
+
 options_preset = {
     'config': TEST_CONFIG,
     'verbose': False,
@@ -384,6 +386,7 @@ def test_run_rpmlintrc_multiple(capsys, packages):
 def test_run_rpmlintrc_single_file(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
+        'rpmlintrc': TEST_RPMLINTRC
     }
     options = {**options_preset, **additional_options}
     linter = Lint(options)
@@ -391,3 +394,5 @@ def test_run_rpmlintrc_single_file(capsys, packages):
     out, err = capsys.readouterr()
     assert not err
     assert 'rpmlintrc:' in out
+    assert 'E: unused-rpmlintrc-filter "I am not used"' in out
+    assert 'no-%build-section' not in out
