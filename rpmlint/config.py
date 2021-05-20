@@ -21,7 +21,7 @@ class Config(object):
     existing one.
     """
 
-    re_filter = re.compile(r'\s*addFilter\s*\(r?[\"\'](.*)[\"\']\)')
+    re_filter = re.compile(r'^\s*addFilter\s*\(r?[\"\'](.*)[\"\']\)')
     re_badness = re.compile(r'\s*setBadness\s*\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
     config_defaults = Path(__file__).parent / 'configdefaults.toml'
 
@@ -38,6 +38,8 @@ class Config(object):
         self.conf_files = []
         # Configuration content parsed from the toml configuration file
         self.configuration = None
+        # List of rpmlintrc filters
+        self.rpmlintrc_filters = []
         # whether to print more information or not
         self.info = False
         # whether to treat all messages as errors or not
@@ -150,12 +152,19 @@ class Config(object):
 
         Only setBadness and addFilter are processed.
         """
-        rpmlintrc_content = rpmlintrc_file.read_text()
-        filters = self.re_filter.findall(rpmlintrc_content)
+
+        rpmlintrc_lines = rpmlintrc_file.read_text().splitlines()
+        filters = []
+        for line in rpmlintrc_lines:
+            m = self.re_filter.match(line)
+            if m:
+                filters.append(m.group(1))
+            m = self.re_badness.match(line)
+            if m:
+                self.configuration['Scoring'].update({m.group(1): m.group(2)})
+
         self.configuration['Filters'] += filters
-        badness = self.re_badness.findall(rpmlintrc_content)
-        for entry in badness:
-            self.configuration['Scoring'].update({entry[0]: entry[1]})
+        self.rpmlintrc_filters = filters
 
     def print_config(self):
         """Print the current state of the configuration."""

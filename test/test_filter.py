@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing.re import Pattern
 
 from rpmlint.config import Config
 from rpmlint.filter import Filter
@@ -18,10 +17,8 @@ def test_filters_regexp():
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
-    result = Filter(cfg)
     assert len(cfg.configuration['Filters']) == 11
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
-    assert isinstance(result.filters_re, Pattern)
 
 
 def test_data_storing(tmpdir):

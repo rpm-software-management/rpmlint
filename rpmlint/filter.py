@@ -26,11 +26,11 @@ class Filter(object):
         self.badness_threshold = config.configuration['BadnessThreshold']
         self.badness = config.configuration['Scoring']
         self.strict = config.strict
-        # filters regular expression string, compiled from configuration[filter]
-        self.filters_re = None
-        self.non_named_group_re = re.compile(r'[^\\](\()[^:]')
-        # compile filters regexp
-        self._populate_filter_regexp(config.configuration['Filters'])
+        # list of filter regexes
+        self.filters_regexes = [re.compile(f) for f in config.configuration['Filters']]
+        # set of filters that are actually used in add_info
+        self.used_filters = set()
+        self.rpmlintrc_filters = config.rpmlintrc_filters
         # informative or quiet
         self.info = config.info
         # How many bad hits we already collected while collecting issues
@@ -120,8 +120,12 @@ class Filter(object):
 
         # filter by the result message
         result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{detail_output}'
-        if self.filters_re and self.filters_re.search(result_no_color):
-            return
+        # unused-rpmlintrc-filter warnings should be skipped
+        if rpmlint_issue != 'unused-rpmlintrc-filter':
+            for f in self.filters_regexes:
+                if f.search(result_no_color):
+                    self.used_filters.add(f.pattern)
+                    return
 
         # raise the counters
         self.score += badness
@@ -188,25 +192,6 @@ class Filter(object):
             description = textwrap.fill(self.error_details[rpmlint_issue], 78, break_on_hyphens=False) + '\n\n'
         return description
 
-    def _populate_filter_regexp(self, filters):
-        """
-        Generate regexp representing all rpmlint filters.
-
-        From configuration "Filters" generate regexp that we will use later for
-        results filtering/ignoring.
-        """
-        if not filters:
-            return
-        filters_re = '(?:' + filters[0] + ')'
-        for idx in range(1, len(filters)):
-            # to prevent named group overflow that happen when there is too
-            # many () in a single regexp: AssertionError: sorry, but this
-            # version only supports 100 named groups
-            if '(' in filters[idx]:
-                self.non_named_group_re.subn('(:?', filters[idx])
-            filters_re = filters_re + '|(?:' + filters[idx] + ')'
-        self.filters_re = re.compile(filters_re)
-
     def __diag_sortkey(self, x):
         """
         Sorting helper, xs[1] is packagename line architecture
@@ -214,3 +199,8 @@ class Filter(object):
         """
         xs = x.split()
         return (xs[2], xs[1])
+
+    def validate_filters(self, pkg):
+        for f in self.rpmlintrc_filters:
+            if f not in self.used_filters:
+                self.add_info('E', pkg, 'unused-rpmlintrc-filter', f'"{f}"')

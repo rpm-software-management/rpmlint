@@ -202,7 +202,7 @@ class Lint(object):
 
     def validate_installed_packages(self, packages):
         for pkg in packages:
-            self.run_checks(pkg)
+            self.run_checks(pkg, pkg == packages[-1])
 
     def validate_files(self, files):
         """
@@ -218,7 +218,7 @@ class Lint(object):
         # and expand everything
         packages = self._expand_filelist(files)
         for pkg in packages:
-            self.validate_file(pkg)
+            self.validate_file(pkg, pkg == packages[-1])
 
     def _expand_filelist(self, files):
         packages = []
@@ -235,20 +235,20 @@ class Lint(object):
             return True
         return False
 
-    def validate_file(self, pname):
+    def validate_file(self, pname, is_last):
         try:
             if pname.suffix == '.rpm' or pname.suffix == '.spm':
                 with Pkg(pname, self.config.configuration['ExtractDir'],
                          verbose=self.config.info) as pkg:
-                    self.run_checks(pkg)
+                    self.run_checks(pkg, is_last)
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:
-                    self.run_checks(pkg)
+                    self.run_checks(pkg, is_last)
         except Exception as e:
             print_warning(f'(none): E: fatal error while reading {pname}: {e}')
             sys.exit(3)
 
-    def run_checks(self, pkg):
+    def run_checks(self, pkg, is_last):
         spec_checks = isinstance(pkg, FakePkg)
         for checker in self.checks:
             if checker not in self.check_duration:
@@ -257,6 +257,10 @@ class Lint(object):
             fn = self.checks[checker].check_spec if spec_checks else self.checks[checker].check
             fn(pkg)
             self.check_duration[checker] += time.monotonic() - start
+
+        # validate used filters in rpmlintrc
+        if is_last:
+            self.output.validate_filters(pkg)
 
         if spec_checks:
             self.specfiles_checked += 1
