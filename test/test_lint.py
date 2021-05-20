@@ -395,4 +395,5 @@ def test_run_rpmlintrc_single_file(capsys, packages):
     assert not err
     assert 'rpmlintrc:' in out
     assert 'E: unused-rpmlintrc-filter "I am not used"' in out
+    assert 'E: unused-rpmlintrc-filter "She is not used"' not in out
     assert 'no-%build-section' not in out
