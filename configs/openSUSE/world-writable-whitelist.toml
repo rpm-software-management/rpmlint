@@ -1,17 +1,4 @@
 [[WorldWritableWhitelist]]
-package = "bind-chrootenv"
-bug = "bsc#1174642"
-note = "Chroot duplicate of the log socket. Packaged as %ghost, therefore 'appears' as a regular file."
-files = [
-  {
-    path = '/var/lib/named/dev/log',
-    mode = "-rw-rw-rw-",
-    owner = "root",
-    group = "root"
-  }
-]
-
-[[WorldWritableWhitelist]]
 package = "filesystem"
 bug = "bsc#1174642"
 note = "Public standard sticky-bit directories"
