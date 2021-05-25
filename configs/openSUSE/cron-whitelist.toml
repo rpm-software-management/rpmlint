@@ -1,22 +1,4 @@
 [[FileDigestGroup]]
-package = "atop-daemon"
-type = "cron"
-note = "Performs maintenance and (re)starting of the atop daemon"
-bug = "bsc#1150533"
-digests = [
-    {
-        path = "/usr/share/atop/atop.daily",
-        algorithm = "sha256",
-        hash = "298a6e86b0862a1f2492b11b3af327850ba8c58232ef99753e8c6606548aa5cd"
-    },
-    {
-        path = "/etc/cron.d/atop",
-        algorithm = "sha256",
-        hash = "1d8b23c4f9bda803bc8627c23361635a876bc49fc0ace0d98fcd92c7fb33ac430"
-    },
-]
-
-[[FileDigestGroup]]
 package = "cronie-anacron"
 type = "cron"
 note = "Executes daily, weekly, monthly cron jobs"
@@ -70,19 +52,6 @@ digests = [
         path = "/etc/cron.daily/tmpwatch",
         algorithm = "sha256",
         hash = "b2e7cb31833f7737215b2bb44d9e8ab42f5b0787ca613b176a490248ad035adb"
-    },
-]
-
-[[FileDigestGroup]]
-package = "cacti"
-type = "cron"
-note = "collects system data and stores it in a local database, complex PHP"
-bug = "bsc#1150534"
-digests = [
-    {
-        path = "/etc/cron.d/cacti",
-        algorithm = "sha256",
-        hash = "d7537bab09182f50b7437a267c0743a1f7fb680555c977f7811d70214083aafd"
     },
 ]
 
