@@ -6,15 +6,12 @@ Checks = [
     "BuildDateCheck",
     'BuildRootCheck',
     "ConfigFilesCheck",
-    "DeviceFilesCheck",
     "DBusPolicyCheck",
     'DuplicatesCheck',
     "DocCheck",
     "ErlangCheck",
     "FHSCheck",
-    "FilelistCheck",
     "FilesCheck",
-    "FileDigestCheck",
     "IconSizesCheck",
     "I18NCheck",
     "LogrotateCheck",
@@ -27,7 +24,6 @@ Checks = [
     "SourceCheck",
     "SpecCheck",
     "TagsCheck",
-    "WorldWritableCheck",
     "ZipCheck",
     "ZyppSyntaxCheck",
 ]
@@ -332,14 +328,6 @@ binaries = false
 # is a regexp, and the second ("name") the package in which the target of the
 # dangling symlink is shipped
 [DanglingSymlinkExceptions]
-
-[FileDigestLocation]
-
-[FileDigestGroup]
-
-[DeviceFilesWhitelist]
-
-[WorldWritableWhitelist]
 
 # A table with key/value pairs representing new descriptions for rpmlint errors
 [Descriptions]
