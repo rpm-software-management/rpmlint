@@ -239,6 +239,14 @@ name = "licenses"
 path = "consolehelper$"
 name = "usermode-consoleonly"
 
+[FileDigestLocation]
+
+[FileDigestGroup]
+
+[DeviceFilesWhitelist]
+
+[WorldWritableWhitelist]
+
 [Descriptions]
 non-standard-uid = '''A file in this package is owned by an unregistered user id.
 To register the user, please make a pull request to the rpmlint config file
