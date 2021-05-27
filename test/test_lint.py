@@ -407,7 +407,6 @@ def test_run_rpmlintrc_multiple(capsys, packages):
     out, err = capsys.readouterr()
     assert 'rpmlintrc:' in out
     assert 'There are multiple items to be loaded' in err
-    assert '0 badness' in out
 
 
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
