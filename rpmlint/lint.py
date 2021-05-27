@@ -161,7 +161,8 @@ class Lint(object):
         Load rpmlintrc from argument or load up from folder
         """
         if self.options['rpmlintrc']:
-            self.config.load_rpmlintrc(self.options['rpmlintrc'])
+            for rcfile in self.options['rpmlintrc']:
+                self.config.load_rpmlintrc(rcfile)
         else:
             # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
             # do this only in a case where there is one folder parameter or one file
