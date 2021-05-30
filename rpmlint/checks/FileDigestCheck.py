@@ -90,47 +90,60 @@ class FileDigestCheck(AbstractCheck):
         file_digest = self.digest_cache[pair]
         return (file_digest == digest_hash, file_digest)
 
-    def _calculate_errors_for_digest_group(self, pkg, digest_group, secured_paths):
-        errors = []
-        covered_files = {dg['path'] for dg in digest_group['digests']}
-        pkg_files = set(pkg.files.keys())
-        is_matching_group = pkg.name == digest_group['package']
-        group_type = digest_group['type']
-
-        # report errors for secured files not covered by the digest group
-        unauthorized = secured_paths - covered_files if is_matching_group else secured_paths
-        for filename in unauthorized:
-            errors.append((f'{group_type}-file-digest-unauthorized', filename, None))
-
-        if not is_matching_group:
-            return errors
-
-        # report errors for invalid digests
-        for digest in digest_group['digests']:
-            filename = digest['path']
-            if filename in pkg_files:
-                valid_digest, file_digest = self._is_valid_digest(pkg.files[filename], digest, pkg)
-                if not valid_digest:
-                    error_detail = None
-                    if file_digest:
-                        error_detail = f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}'
-                    errors.append((f'{group_type}-file-digest-mismatch', filename, error_detail))
-
-        return errors
-
     def _check_group_type(self, pkg, group_type, secured_paths):
-        # Iterate all digest groups and find one that covers all secured files
-        # and in which all digests match
-        best_errors = None
+        """ Check all secured files of a group type
 
+        Ensures that all files in secured paths have to be whitelisted in an
+        digest whitelisting belonging to group_type.
+
+        Params:
+        - group_type: type of digest group type e.g. "cron", "dbus", ...
+        - secured_paths: all secured paths found in this package e.g. ['/usr/share/dbus-1/system-services/org.freedesktop.PolicyKit1.service', '/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf']
+        """
+        # Find all digest whitelisted paths that belong to group_type and focus on current package
+        digests = []
         for digest_group in self.digest_groups:
-            if digest_group['type'] == group_type:
-                errors = self._calculate_errors_for_digest_group(pkg, digest_group, secured_paths)
-                if not errors:
-                    return []
-                if not best_errors or len(errors) < len(best_errors):
-                    best_errors = errors
-        return best_errors
+            if digest_group['type'] == group_type and digest_group['package'] == pkg.name:
+                digests.extend(digest_group['digests'])
+
+        # For all files in this package that fall into the secured paths: check if they are whitelisted
+        # If not whitelisted print error: file-digest-unauthorized
+        whitelisted_paths = {dg['path'] for dg in digests}
+        unauthorized = secured_paths - whitelisted_paths
+        for filename in unauthorized:
+            self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', filename, None)
+
+        # For all digest whitelisted files check if the digests in the package are correct
+        # If not correct print error: file-digest-mismatch
+        for path in whitelisted_paths:
+            # Find all digests with same path
+            # This is needed because there could be an older and a newer
+            # version of this package with same whitelisted paths and different digests
+            digests_of_path = []
+            for digest in digests:
+                if digest['path'] == path:
+                    digests_of_path.append(digest)
+            # If *any* digest with the same path matches the package's file
+            # digest of that path, then we assume the file is correctly whitelisted
+            error = True
+            error_digests = []
+            for digest in digests_of_path:
+                filename = digest['path']
+                # Check if digest whitelist path has a matching file in our package
+                if not pkg.files.get(filename):
+                    # This digest entry is not needed anymore and could be dropped
+                    continue
+                valid_digest, file_digest = self._is_valid_digest(pkg.files[filename], digest, pkg)
+                if valid_digest:
+                    # Valid digest found, no mismatch error will be printed
+                    error = False
+                    break
+                # Gather all digest mismatches for error message
+                if file_digest:
+                    error_digests.append(digest)
+            if error:
+                for digest in error_digests:
+                    self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', filename, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
 
     def check_binary(self, pkg):
         """
@@ -141,7 +154,7 @@ class FileDigestCheck(AbstractCheck):
         if not self._check_filetypes(pkg):
             return
 
-        # First collect all files that are in a digest configuration group
+        # Find all files in this package that fall in a digest secured path
         secured_paths = {}
         for pkgfile in pkg.files.values():
             group_type = self._get_digest_configuration_group(pkgfile)
@@ -149,15 +162,6 @@ class FileDigestCheck(AbstractCheck):
                 secured_paths.setdefault(group_type, [])
                 secured_paths[group_type].append(pkgfile.name)
 
-        errors = []
+        # Check all found secured files for every group type
         for group_type, files in secured_paths.items():
-            group_errors = self._check_group_type(pkg, group_type, set(files))
-            if group_errors is not None:
-                errors += group_errors
-            else:
-                for f in files:
-                    errors.append((f'{group_type}-file-digest-unauthorized', f, None))
-
-        # Report errors
-        for message, filename, error_detail in sorted(errors):
-            self.output.add_info('E', pkg, message, filename, error_detail)
+            self._check_group_type(pkg, group_type, set(files))
