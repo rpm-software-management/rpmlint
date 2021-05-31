@@ -20,6 +20,17 @@ class FileDigestCheck(AbstractCheck):
             if dg_type not in self.digest_configurations:
                 raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
                                f'supported, known values: {list(self.digest_configurations)}')
+            # expand skip digests
+            for skip_digest in digest_group.get('nodigests', []):
+                if not digest_group.get('digests'):
+                    digest_group['digests'] = []
+                digest_group['digests'].append(
+                    {
+                        'path': skip_digest,
+                        'algorithm': 'skip',
+                        'hash': '',
+                    }
+                )
             # verify digest algorithm
             for digest in digest_group['digests']:
                 algorithm = digest['algorithm']
