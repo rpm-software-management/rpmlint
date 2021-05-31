@@ -102,6 +102,41 @@ class SUIDPermissionsCheck(AbstractCheck):
         if pkg.is_source:
             return
 
+        permfiles = set()
+        # first pass, find and parse permissions.d files
+        for f in pkg.files.keys():
+            for prefix in self._paths_to('permissions.d/'):
+                if f.startswith(prefix):
+                    if f in pkg.ghost_files:
+                        continue
+
+                    # Attention: We require the FileDigestLocation config to
+                    # mark all permissions.d paths as "blacklisted" paths.
+                    # e.g. [FileDigestLocation.permissions] with Locations
+                    # /etc/permissions.d/ and /usr/share/permissions/permissions.d/
+                    # This ensures that an file-digest-unauthorized error is thrown when a permissions.d
+                    # package is not whitelisted.
+                    #
+                    # To whitelist a permissions.d file after a successful review,
+                    # the path and its digest need to be added as FileDigestCheck config
+                    # having respective FileDigestLocation type (e.g.
+                    # "permissions").
+                    #
+                    # Here we add *all* files in a package's permissions.d directory to our
+                    # valid permissions files *without* checking if they belong
+                    # to a whitelist as we assume it will be checked by
+                    # FileDigestCheck and FileDigestLocation.
+                    bn = 'permissions.d/' + f[len(prefix):].split('.')[0]
+                    if bn not in permfiles:
+                        permfiles.add(bn)
+
+        for f in permfiles:
+            # check for a .secure file first, falling back to the plain file
+            for path in self._paths_to(f + '.secure', f):
+                if path in pkg.files.keys():
+                    self._parse_profile(pkg.dirName() + path)
+                    break
+
         need_set_permissions = False
 
         for f, pkgfile in pkg.files.items():
