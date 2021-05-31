@@ -17,7 +17,6 @@ Checks = [
     # Checks present at opensuse branch only
     "BrandingPolicyCheck",
     "DeviceFilesCheck",
-    "DBusServicesCheck",
     "FileDigestCheck",
     "FilelistCheck",
     "KMPPolicyCheck",
