@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 from rpmlint.lint import Lint
+from rpmlint.spellcheck import ENCHANT
 
 from Testing import HAS_CHECKBASHISMS, HAS_DASH, TEST_CONFIG, testpath
 
@@ -167,6 +168,7 @@ def test_explain_non_standard_dir_from_cfg(capsys):
     assert not err
 
 
+@pytest.mark.skipif(not ENCHANT, reason='Optional dependency pyenchant not install')
 @pytest.mark.parametrize('packages', [Path('test/binary/non-fhs-0-0.x86_64.rpm')])
 def test_descriptions_from_config(capsys, packages):
     """
