@@ -4,7 +4,9 @@ import pytest
 from rpmlint.lint import Lint
 from rpmlint.spellcheck import ENCHANT
 
-from Testing import HAS_CHECKBASHISMS, HAS_DASH, TEST_CONFIG, testpath
+from Testing import (
+    HAS_CHECKBASHISMS, HAS_DASH, HAS_RPMDB, TEST_CONFIG, testpath
+)
 
 TEST_RPMLINTRC = testpath() / 'configs/testing2-rpmlintrc'
 
@@ -212,6 +214,7 @@ def test_run_single(capsys, packages):
     assert not err
 
 
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
 @pytest.mark.parametrize('packages', [Path('test/source/wrongsrc-0-0.src.rpm')])
 def test_run_installed(capsys, packages):
     # load up 1 normal path file and 2 installed packages
@@ -247,6 +250,7 @@ def test_run_strict(capsys, packages):
     assert not err
 
 
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
 def test_run_installed_not_present(capsys):
     additional_options = {
         'rpmfile': [],
@@ -262,6 +266,7 @@ def test_run_installed_not_present(capsys):
     assert 'There are no files to process' in err
 
 
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
 def test_run_installed_and_no_files(capsys):
     additional_options = {
         'rpmfile': [],
@@ -276,6 +281,7 @@ def test_run_installed_and_no_files(capsys):
     assert not err
 
 
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
 def test_header_information(capsys):
     additional_options = {
         'rpmfile': [],

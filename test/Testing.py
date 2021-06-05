@@ -4,6 +4,7 @@ from pathlib import Path
 import platform
 import re
 import shutil
+import subprocess
 
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
@@ -24,6 +25,9 @@ HAS_CHECKBASHISMS = shutil.which('checkbashisms')
 HAS_DASH = shutil.which('dash')
 HAS_DESKTOP_FILE_UTILS = shutil.which('desktop-file-validate')
 HAS_APPSTREAM_GLIB = shutil.which('appstream-util')
+
+RPMDB_PATH = subprocess.run(['rpm', '--eval', '"%_dbpath"'], encoding='utf8').stdout
+HAS_RPMDB = RPMDB_PATH and Path(RPMDB_PATH).exists()
 
 
 def get_tested_path(path):
