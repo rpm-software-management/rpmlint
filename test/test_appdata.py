@@ -4,7 +4,7 @@ import pytest
 from rpmlint.checks.AppDataCheck import AppDataCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, HAS_APPSTREAM_GLIB
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -15,6 +15,7 @@ def appdatacheck():
     return output, test
 
 
+@pytest.mark.skipif(not HAS_APPSTREAM_GLIB, reason='Optional dependency appstream-glib not installed')
 @pytest.mark.parametrize('package', ['binary/appdata'])
 def test_appdata_fail(tmpdir, package, appdatacheck):
     output, test = appdatacheck
