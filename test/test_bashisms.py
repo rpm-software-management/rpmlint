@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.BashismsCheck import BashismsCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, HAS_CHECKBASHISMS, HAS_DASH
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,6 +13,8 @@ def bashismscheck():
     return output, test
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('package', ['binary/bashisms'])
 def test_bashisms(tmpdir, package, bashismscheck):
     output, test = bashismscheck
@@ -22,6 +24,8 @@ def test_bashisms(tmpdir, package, bashismscheck):
     assert 'W: bin-sh-syntax-error /bin/script2' in out
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('package', ['binary/bashisms'])
 def test_bashisms_error(tmpdir, package, bashismscheck):
     output, test = bashismscheck

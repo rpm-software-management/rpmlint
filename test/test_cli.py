@@ -5,6 +5,8 @@ from rpmlint.cli import process_lint_args
 from rpmlint.config import Config
 from rpmlint.lint import Lint
 
+from Testing import HAS_CHECKBASHISMS, HAS_DASH
+
 
 @pytest.mark.parametrize('test_arguments', [['-c', 'rpmlint/configs/thisdoesntexist.toml']])
 def test_parsing_non_existing_config_file(test_arguments):
@@ -21,6 +23,8 @@ def test_parsing_config_file(test_arguments):
     assert parsed['config'][0] == PosixPath('rpmlint/configdefaults.toml')
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('test_arguments', [['-c', 'configs/openSUSE']])
 def test_parsing_opensuse_conf(test_arguments):
     parsed = process_lint_args(test_arguments)
@@ -50,6 +54,8 @@ def test_parsing_opensuse_conf(test_arguments):
         assert score_key in checks
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('test_arguments', [['-c', 'configs/Fedora']])
 def test_parsing_fedora_conf(test_arguments):
     parsed = process_lint_args(test_arguments)

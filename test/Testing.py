@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shutil
 
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
@@ -19,6 +20,8 @@ CONFIG = Config(TEST_CONFIG)
 IS_X86_64 = platform.machine() == 'x86_64'
 IS_I686 = re.match(platform.machine(), 'i[3456]86')
 HAS_32BIT_GLIBC = glob.glob('/lib/ld-linux.so.*')
+HAS_CHECKBASHISMS = shutil.which('checkbashisms')
+HAS_DASH = shutil.which('dash')
 
 
 def get_tested_path(path):

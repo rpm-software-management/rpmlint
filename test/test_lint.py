@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from rpmlint.lint import Lint
 
-from Testing import TEST_CONFIG, testpath
+from Testing import HAS_CHECKBASHISMS, HAS_DASH, TEST_CONFIG, testpath
 
 TEST_RPMLINTRC = testpath() / 'configs/testing2-rpmlintrc'
 
@@ -287,6 +287,8 @@ def test_header_information(capsys):
     assert 'packages: 1' in out
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [list(Path('test').glob('*/*.rpm'))])
 @pytest.mark.parametrize('configs', [list(Path('configs').glob('*/*.toml'))])
 @pytest.mark.no_cover
@@ -310,6 +312,8 @@ def test_run_full_rpm(capsys, packages, configs):
     assert not err_reduced
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [list(Path('test/spec').glob('*.spec'))])
 @pytest.mark.parametrize('configs', [list(Path('configs').glob('*/*.toml'))])
 @pytest.mark.no_cover
@@ -327,6 +331,8 @@ def test_run_full_specs(capsys, packages, configs):
     assert not err
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [Path('test/spec')])
 @pytest.mark.no_cover
 def test_run_full_directory(capsys, packages):
@@ -347,6 +353,8 @@ def test_run_full_directory(capsys, packages):
     assert not err
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 def test_run_empty(capsys):
     linter = Lint(options_preset)
     linter.run()
@@ -355,6 +363,8 @@ def test_run_empty(capsys):
     assert '0 packages and 0 specfiles checked; 0 errors, 0 warnings' in out
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [Path('test/rpmlintrc/single')])
 def test_run_rpmlintrc_single_dir(capsys, packages):
     additional_options = {
@@ -368,6 +378,8 @@ def test_run_rpmlintrc_single_dir(capsys, packages):
     assert 'rpmlintrc:' in out
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [Path('test/rpmlintrc/multiple')])
 def test_run_rpmlintrc_multiple(capsys, packages):
     additional_options = {
@@ -382,6 +394,8 @@ def test_run_rpmlintrc_multiple(capsys, packages):
     assert '0 badness' in out
 
 
+@pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
+@pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('packages', [Path('test/rpmlintrc/single/sample.spec')])
 def test_run_rpmlintrc_single_file(capsys, packages):
     additional_options = {
