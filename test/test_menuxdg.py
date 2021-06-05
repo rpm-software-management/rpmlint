@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.MenuXDGCheck import MenuXDGCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, HAS_DESKTOP_FILE_UTILS
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,6 +13,7 @@ def menuxdgcheck():
     return output, test
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/menuxdg1'])
 def test_raises_parse_error(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
@@ -24,6 +25,7 @@ def test_raises_parse_error(tmpdir, package, menuxdgcheck):
     assert 'check with desktop-file-validate' in out
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/desktopfile-bad-binary'])
 def test_without_binary(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
@@ -32,6 +34,7 @@ def test_without_binary(tmpdir, package, menuxdgcheck):
     assert 'desktopfile-without-binary' in out
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/desktopfile-bad-duplicate'])
 def test_duplicate(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
@@ -41,6 +44,7 @@ def test_duplicate(tmpdir, package, menuxdgcheck):
     assert 'invalid-desktopfile' in out
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/desktopfile-bad-section'])
 def test_missing_header(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
@@ -50,6 +54,7 @@ def test_missing_header(tmpdir, package, menuxdgcheck):
     assert 'invalid-desktopfile' in out
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/desktopfile-bad-unicode'])
 def test_bad_unicode(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck
@@ -58,6 +63,7 @@ def test_bad_unicode(tmpdir, package, menuxdgcheck):
     assert 'non-utf8-desktopfile' in out
 
 
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
 @pytest.mark.parametrize('package', ['binary/desktopfile-good'])
 def test_good(tmpdir, package, menuxdgcheck):
     output, test = menuxdgcheck

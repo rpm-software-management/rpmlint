@@ -22,6 +22,7 @@ IS_I686 = re.match(platform.machine(), 'i[3456]86')
 HAS_32BIT_GLIBC = glob.glob('/lib/ld-linux.so.*')
 HAS_CHECKBASHISMS = shutil.which('checkbashisms')
 HAS_DASH = shutil.which('dash')
+HAS_DESKTOP_FILE_UTILS = shutil.which('desktop-file-validate')
 
 
 def get_tested_path(path):
