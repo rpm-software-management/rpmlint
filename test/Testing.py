@@ -23,6 +23,7 @@ HAS_32BIT_GLIBC = glob.glob('/lib/ld-linux.so.*')
 HAS_CHECKBASHISMS = shutil.which('checkbashisms')
 HAS_DASH = shutil.which('dash')
 HAS_DESKTOP_FILE_UTILS = shutil.which('desktop-file-validate')
+HAS_APPSTREAM_GLIB = shutil.which('appstream-util')
 
 
 def get_tested_path(path):
