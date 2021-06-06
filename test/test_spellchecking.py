@@ -1,8 +1,11 @@
 import pytest
 import rpmlint.spellcheck
 
+from Testing import HAS_CZECH_DICTIONARY, HAS_ENGLISH_DICTIONARY
+
 
 @pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
+@pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
 def test_spelldict(capsys):
     """
     Check we can init dictionary spellchecker
@@ -25,6 +28,8 @@ def test_spelldict(capsys):
 
 
 @pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
+@pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
+@pytest.mark.skipif(not HAS_CZECH_DICTIONARY, reason='Missing Czech dictionary')
 def test_spellchecking():
     """
     Check if we can test the spelling
@@ -55,6 +60,7 @@ def test_spellchecking():
 
 
 @pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
+@pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
 def test_pkgname_spellchecking():
     spell = rpmlint.spellcheck.Spellcheck()
 
