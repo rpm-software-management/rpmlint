@@ -8,6 +8,7 @@ import subprocess
 
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
+import rpmlint.spellcheck
 
 
 def testpath():
@@ -28,6 +29,21 @@ HAS_APPSTREAM_GLIB = shutil.which('appstream-util')
 
 RPMDB_PATH = subprocess.run(['rpm', '--eval', '"%_dbpath"'], encoding='utf8').stdout
 HAS_RPMDB = RPMDB_PATH and Path(RPMDB_PATH).exists()
+
+
+def _has_dictionary(language):
+    if not rpmlint.spellcheck.ENCHANT:
+        return False
+    spell = rpmlint.spellcheck.Spellcheck()
+    spell._init_checker(language)
+    return (
+        language in spell._enchant_checkers and
+        spell._enchant_checkers[language] is not None
+    )
+
+
+HAS_ENGLISH_DICTIONARY = _has_dictionary('en_US')
+HAS_CZECH_DICTIONARY = _has_dictionary('cs_CZ')
 
 
 def get_tested_path(path):

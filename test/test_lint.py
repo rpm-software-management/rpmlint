@@ -5,7 +5,8 @@ from rpmlint.lint import Lint
 from rpmlint.spellcheck import ENCHANT
 
 from Testing import (
-    HAS_CHECKBASHISMS, HAS_DASH, HAS_RPMDB, TEST_CONFIG, testpath
+    HAS_CHECKBASHISMS, HAS_DASH, HAS_ENGLISH_DICTIONARY, HAS_RPMDB,
+    TEST_CONFIG, testpath
 )
 
 TEST_RPMLINTRC = testpath() / 'configs/testing2-rpmlintrc'
@@ -171,6 +172,7 @@ def test_explain_non_standard_dir_from_cfg(capsys):
 
 
 @pytest.mark.skipif(not ENCHANT, reason='Optional dependency pyenchant not install')
+@pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
 @pytest.mark.parametrize('packages', [Path('test/binary/non-fhs-0-0.x86_64.rpm')])
 def test_descriptions_from_config(capsys, packages):
     """
