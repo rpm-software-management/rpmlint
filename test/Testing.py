@@ -36,10 +36,7 @@ def _has_dictionary(language):
         return False
     spell = rpmlint.spellcheck.Spellcheck()
     spell._init_checker(language)
-    return (
-        language in spell._enchant_checkers and
-        spell._enchant_checkers[language] is not None
-    )
+    return spell._enchant_checkers.get(language)
 
 
 HAS_ENGLISH_DICTIONARY = _has_dictionary('en_US')
