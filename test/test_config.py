@@ -94,7 +94,7 @@ def test_filters():
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
-    assert len(cfg.configuration['Filters']) == 11
+    assert len(cfg.configuration['Filters']) == 12
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
 
 

@@ -124,4 +124,5 @@ The location of `rpmlintrc` can be set using `--rpmlintrc` option. Or you can ha
 `*-rpmlintrc` file in the current working directory.  The best practice is to store the name in `$PACKAGE_NAME.rpmlintrc`.
 
 `setBadness` overrides a default badness for a given check and `addFilter` ignores all errors
-that match the given regular expression.
+that match the given regular expression (one cannot filter out errors that are listed in `BlockedFilters`
+in a configuration file).

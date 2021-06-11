@@ -29,6 +29,8 @@ Checks = [
 ]
 # Various output filters, list of regexp strings eg. "E: .* no-signature"
 Filters = []
+# List of errors that can't be filtered
+BlockedFilters = []
 # Treshold where we should error out, by default single error is enough
 BadnessThreshold = -1
 # When checking that various files that should be compressed are

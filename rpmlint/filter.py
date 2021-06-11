@@ -28,6 +28,8 @@ class Filter(object):
         self.strict = config.strict
         # list of filter regexes
         self.filters_regexes = [re.compile(f) for f in config.configuration['Filters']]
+        # list of blocked filters
+        self.blocked_filters = set(config.configuration['BlockedFilters'])
         # set of filters that are actually used in add_info
         self.used_filters = set()
         self.rpmlintrc_filters = config.rpmlintrc_filters
@@ -121,7 +123,7 @@ class Filter(object):
         # filter by the result message
         result_no_color = f'{filename}{arch}:{line} {level}: {rpmlint_issue}{detail_output}'
         # unused-rpmlintrc-filter warnings should be skipped
-        if rpmlint_issue != 'unused-rpmlintrc-filter':
+        if rpmlint_issue != 'unused-rpmlintrc-filter' and rpmlint_issue not in self.blocked_filters:
             for f in self.filters_regexes:
                 if f.search(result_no_color):
                     self.used_filters.add(f.pattern)
