@@ -232,6 +232,29 @@ Filters = [
     ' info-files-without-install-info-postun ',
 ]
 
+BlockedFilters = [
+    "suse-dbus-ghost-service",
+    "suse-dbus-unauthorized-service",
+    "polkit-user-privilege",
+    "polkit-untracked-privilege",
+    "polkit-ghost-file",
+    "permissions-unauthorized-file",
+    "permissions-symlink",
+    "permissions-dir-without-slash",
+    "permissions-file-as-dir",
+    "permissions-incorrect",
+    "permissions-incorrect-owner",
+    "permissions-file-setuid-bit",
+    "permissions-directory-setuid-bit",
+    "permissions-fscaps",
+    "permissions-missing-postin",
+    "permissions-missing-requires",
+    "permissions-missing-verifyscript",
+    "permissions-suseconfig-obsolete",
+    "permissions-ghostfile",
+    "non-position-independent-executable",
+]
+
 [DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
 path = "/usr/share/doc/licenses/"
 name = "licenses"
