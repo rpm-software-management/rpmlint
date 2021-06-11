@@ -17,7 +17,7 @@ def test_filters_regexp():
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
-    assert len(cfg.configuration['Filters']) == 11
+    assert len(cfg.configuration['Filters']) == 12
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
 
 
@@ -149,3 +149,14 @@ def test_filtered_output(tmpdir):
     result.add_info('E', pkg, 'bad-error', 'details of the error')
     result.add_info('E', pkg, 'test-color-error', 'details of the error')
     assert len(result.results) == 0
+
+
+def test_blocked_filters(tmpdir):
+    key = 'fatal-error'
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    assert len(result.results) == 0
+    assert key in cfg.configuration['Filters']
+    result.add_info('E', pkg, key, '')
+    assert len(result.results) == 1
