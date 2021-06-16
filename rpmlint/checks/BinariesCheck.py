@@ -626,10 +626,13 @@ class BinariesCheck(AbstractCheck):
             self.run_elf_checks(pkg, pkgfile.path, fname)
 
             # inspect binary file
-            is_shlib = self.readelf_parser.is_shlib
+            try:
+                is_shlib = self.readelf_parser.is_shlib
 
-            if is_shlib:
-                pkg_has_lib = True
+                if is_shlib:
+                    pkg_has_lib = True
+            except AttributeError:
+                pass
 
             # skip non-exec and non-SO
             # executables and shared objects only from here on
