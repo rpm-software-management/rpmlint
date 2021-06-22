@@ -124,3 +124,11 @@ def test_permissions_srcpackage(tmpdir, package, permissions_check):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'CheckInclude' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/sendmail'])
+def test_permissions_d(tmpdir, package, permissions_check):
+    output, test = permissions_check
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'sendmail.x86_64: E: permissions-file-setuid-bit /usr/sbin/sendmail is packaged with setuid/setgid bits (02555)' not in out
