@@ -125,7 +125,6 @@ class FileDigestCheck(AbstractCheck):
                     digests_of_path.append(digest)
             # If *any* digest with the same path matches the package's file
             # digest of that path, then we assume the file is correctly whitelisted
-            error = True
             error_digests = []
             for digest in digests_of_path:
                 filename = digest['path']
@@ -136,12 +135,12 @@ class FileDigestCheck(AbstractCheck):
                 valid_digest, file_digest = self._is_valid_digest(pkg.files[filename], digest, pkg)
                 if valid_digest:
                     # Valid digest found, no mismatch error will be printed
-                    error = False
+                    error_digests = []
                     break
                 # Gather all digest mismatches for error message
                 if file_digest:
                     error_digests.append(digest)
-            if error:
+            if error_digests:
                 for digest in error_digests:
                     self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', filename, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
 
