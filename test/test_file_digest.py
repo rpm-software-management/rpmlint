@@ -112,6 +112,15 @@ def test_missing_entry():
         assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil'
 
 
+@pytest.mark.parametrize('package', ['binary/tmpwatch'])
+def test_file_digest_mismatch(tmpdir, package):
+    output, test = get_digestcheck('digests2.config')
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'tmpwatch.x86_64: E: cron-file-digest-unauthorized /etc/cron.daily/tmpwatch' not in out
+    assert 'tmpwatch.x86_64: E: cron-file-digest-mismatch /etc/cron.daily/tmpwatch' in out
+
+
 def test_wrong_pkg_name():
     # this tests that a package with matching entries but mismatching package
     # name does not pass the check
