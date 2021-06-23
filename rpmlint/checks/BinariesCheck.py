@@ -510,9 +510,11 @@ class BinariesCheck(AbstractCheck):
         self.is_archive = 'current ar archive' in magic
         self.is_dynamically_linked = 'dynamically linked' in magic
         self.is_pie_exec = 'pie executable' in magic
+        self.is_nonstandard_archive = False
 
     def run_elf_checks(self, pkg, pkgfile_path, path):
         if self.is_archive and not self._is_standard_archive(pkg, pkgfile_path, path):
+            self.is_nonstandard_archive = True
             return
 
         self.readelf_parser = ReadelfParser(pkgfile_path, path)
@@ -624,6 +626,9 @@ class BinariesCheck(AbstractCheck):
 
             # run ELF checks
             self.run_elf_checks(pkg, pkgfile.path, fname)
+
+            if self.is_nonstandard_archive:
+                continue
 
             # inspect binary file
             is_shlib = self.readelf_parser.is_shlib
