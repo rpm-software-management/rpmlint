@@ -145,3 +145,62 @@ def test_unaffected_pkg():
         pkg.add_file_with_content('/arbitrary/file', 'arbitrary content')
         test.check(pkg)
         assert len(output.results) == 0
+
+
+def test_matching_nodigests():
+    output, test = get_digestcheck('nodigests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'whatever')
+        # also test following of symlinks with this entry
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
+        test.check(pkg)
+        assert len(output.results) == 0
+
+
+def test_missing_nodigests_entry():
+    # this tests that an extra file not present in the nodigest whitelist is recognized
+    # as missing
+    output, test = get_digestcheck('nodigests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'whatever')
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
+        pkg.add_file_with_content('/restricted/1/evil', 'evil stuff')
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil'
+
+
+def test_wrong_pkg_name_for_nodigests():
+    # this tests that a package with matching entries but mismatching package
+    # name does not pass the check
+    output, test = get_digestcheck('nodigests.config')
+    with FakePkg('otherpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'whatever')
+        # also test following of symlinks with this entry
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'whatever')
+        test.check(pkg)
+        assert len(output.results) == 2
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous' in output.results
+
+
+def test_combination_nodigests_and_digests():
+    # this tests that an extra file not present in the nodigest whitelist is recognized
+    # as missing
+    output, test = get_digestcheck('nodigests.config')
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/restricted/1/dangerous', 'whatever')
+        pkg.add_symlink_to('/alsorestricted/2/suspicious', '/other/place/suspicious.txt')
+        pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
+        pkg.add_file_with_content('/related/and/also/sensitive', 'wrong content')
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error == 'testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:ab5ec199027247773d2d617895f49179d7b3186e, has:a6abec9ea1e13ca93d1c704758bd52f62ef16433'
