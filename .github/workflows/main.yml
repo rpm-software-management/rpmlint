@@ -14,7 +14,8 @@ jobs:
       matrix:
         docker:
           - 'registry.fedoraproject.org/fedora:latest'
-          - 'registry.fedoraproject.org/fedora:rawhide'
+          # Temporarily disabled as Fedora is moving to Python 3.10 and it is broken now
+          # - 'registry.fedoraproject.org/fedora:rawhide'
           - 'registry.opensuse.org/opensuse/leap-dnf:15.3'
           - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
       fail-fast: false
