@@ -1,0 +1,11 @@
+invalid-license = 100000
+polkit-untracked-privilege = 10000
+permissions-unauthorized-file = 10000
+permissions-file-setuid-bit = 10000
+suse-dbus-unauthorized-service = 10000
+pam-unauthorized-module = 10000
+world-writable-unauthorized-file = 10000
+world-writable-mismatched-attrs = 10000
+device-unauthorized-file = 10000
+device-mismatched-attrs = 10000
+

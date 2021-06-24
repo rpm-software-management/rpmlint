@@ -12,7 +12,6 @@ files-duplicated-waste = 100
 hardlink-across-config-files = 10000
 hardlink-across-partition = 10000
 info-dir-file = 10000
-invalid-license = 100000
 invalid-pkgconfig-file = 10000
 libtool-wrapper-in-package = 10000
 lto-bytecode = 10000
