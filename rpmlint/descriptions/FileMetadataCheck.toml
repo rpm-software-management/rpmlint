@@ -1,4 +1,6 @@
 SUFFIX = "requires a review and whitelisting by the SUSE security team. Before submitting this for any product or openSUSE:Factory please open an AUDIT bug according to the guidelines in #AUDIT_BUG_URL#."
 
 device-unauthorized-file="Packaging device files #SUFFIX#"
+device-mismatched-attrs="Attribute mismatch for device files #SUFFIX#"
 world-writable-unauthorized-file="Packaging world writable files #SUFFIX#"
+world-writable-mismatched-attrs="Attribute mismatch for world writable files #SUFFIX#"
