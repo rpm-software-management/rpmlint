@@ -137,7 +137,9 @@ class Config(object):
                     self.conf_files.append(path)
 
         cfg = {}
-        for cf in sorted(self.conf_files, key=self._sort_config_files):
+        # sort self.conf_files as we print list of loaded configuration files
+        self.conf_files = sorted(self.conf_files, key=self._sort_config_files)
+        for cf in self.conf_files:
             try:
                 toml_config = toml.load(cf)
                 self._merge_dictionaries(cfg, toml_config, self._is_override_config(cf))
