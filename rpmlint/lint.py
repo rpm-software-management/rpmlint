@@ -255,7 +255,10 @@ class Lint(object):
                     self.run_checks(pkg, is_last)
         except Exception as e:
             print_warning(f'(none): E: fatal error while reading {pname}: {e}')
-            sys.exit(3)
+            if self.config.info:
+                raise e
+            else:
+                sys.exit(3)
 
     def run_checks(self, pkg, is_last):
         spec_checks = isinstance(pkg, FakePkg)
