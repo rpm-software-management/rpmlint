@@ -421,3 +421,16 @@ def test_run_rpmlintrc_single_file(capsys, packages):
     assert 'E: unused-rpmlintrc-filter "I am not used"' in out
     assert 'E: unused-rpmlintrc-filter "She is not used"' not in out
     assert 'no-%build-section' not in out
+
+
+def test_installed_package(capsys):
+    additional_options = {
+        'installed': ['bzip2'],
+        'permissive': True
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    retcode = linter.run()
+    out, err = capsys.readouterr()
+    assert '1 packages and 0 specfiles checked' in out
+    assert retcode == 0
