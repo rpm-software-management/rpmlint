@@ -480,8 +480,10 @@ class Pkg(AbstractPkg):
     def _extract(self, dirname, verbose):
         if not Path(dirname).is_dir():
             print_warning('Unable to access dir %s' % dirname)
+        elif dirname == '/':
+            # it is an InstalledPkg
+            pass
         else:
-            dirname = dirname if dirname != '/' else None
             self.__tmpdir = tempfile.TemporaryDirectory(
                 prefix='rpmlint.%s.' % Path(self.filename).name, dir=dirname
             )
