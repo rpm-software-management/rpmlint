@@ -1,143 +1,458 @@
-PAMAuthorizedModules = [
-    # pam_krb5
-    "pam_krb5.so",
-    "pam_krb5afs.so",
-    # ecryptfs-utils
-    "pam_ecryptfs.so",
-    # gnome-keyring-pam
-    "pam_gnome_keyring.so",
-    # samba-winbind
-    "pam_winbind.so",
-    # pam_ssh
-    "pam_ssh.so",
-    # pam_mount
-    "pam_mount.so",
-    # pam_ccreds
-    "pam_ccreds.so",
-    # pam_radius
-    "pam_radius_auth.so",
-    # pam_pkcs11
-    "pam_pkcs11.so",
-    # nss-pam-ldapd
-    "pam_ldap.so",
-    # pam_passwdqc
-    "pam_passwdqc.so",
-    # pam_userpass
-    "pam_userpass.so",
-    # pam_apparmor
-    "pam_apparmor.so",
-    # pam_ldap
-    "pam_ldap.so",
-    # opie
-    "pam_opie.so",
-    # pam
-    "pam_access.so",
-    "pam_cracklib.so",
-    "pam_debug.so",
-    "pam_deny.so",
-    "pam_echo.so",
-    "pam_env.so",
-    "pam_exec.so",
-    "pam_faildelay.so",
-    "pam_filter.so",
-    "pam_ftp.so",
-    "pam_group.so",
-    "pam_issue.so",
-    "pam_keyinit.so",
-    "pam_lastlog.so",
-    "pam_limits.so",
-    "pam_listfile.so",
-    "pam_localuser.so",
-    "pam_loginuid.so",
-    "pam_mail.so",
-    "pam_mkhomedir.so",
-    "pam_motd.so",
-    "pam_namespace.so",
-    "pam_nologin.so",
-    "pam_permit.so",
-    "pam_pwhistory.so",
-    "pam_rhosts.so",
-    "pam_rootok.so",
-    "pam_securetty.so",
-    "pam_selinux.so",
-    "pam_sepermit.so",
-    "pam_shells.so",
-    "pam_stress.so",
-    "pam_succeed_if.so",
-    "pam_tally2.so",
-    "pam_time.so",
-    "pam_timestamp.so",
-    "pam_tty_audit.so",
-    "pam_umask.so",
-    "pam_unix.so",
-    "pam_unix_acct.so",
-    "pam_unix_auth.so",
-    "pam_unix_passwd.so",
-    "pam_unix_session.so",
-    "pam_userdb.so",
-    "pam_warn.so",
-    "pam_wheel.so",
-    "pam_xauth.so",
-    # systemd
-    "pam_systemd.so",
-    # sssd
-    "pam_sss.so",
-    # pam_mktemp
-    "pam_mktemp.so",
-    # pam_csync
-    "pam_csync.so",
-    # pam_chroot
-    "pam_chroot.so",
-    # pam_snapper (bnc#815383)
-    "pam_snapper.so",
-    # pam_gdm (bsc#1004346)
-    "pam_gdm.so",
-    # pam_slurm (bsc#1007053)
-    "pam_slurm.so",
-    # pam_slurm_adopt (bsc#1116758)
-    "pam_slurm_adopt.so",
-    # pam_script (bsc#1039848)
-    "pam_script.so",
-    # pam_yubico (bsc#1087060)
-    "pam_yubico.so",
-    # pam_oath (bsc#1089114)
-    "pam_oath.so",
-    # pam_p11 (bsc#1123916)
-    "pam_p11.so",
-    # pam_cifscreds (bsc#1150527)
-    "pam_cifscreds.so",
-    # libpwquality (bsc#1150520)
-    "pam_pwquality.so",
-    # lxc (bsc#1150519)
-    "pam_cgfs.so",
-    # google-authenticator-libpam (bsc#1150524) - potential future removal candidate
-    "pam_google_authenticator.so",
-    # pam_u2f (bsc#1087061)
-    "pam_u2f.so",
-    # pam_kwallet (bsc#993806)
-    "pam_kwallet5.so",
-    # pam_dbus (bsc#1039709)
-    "pam_dbus.so",
-    # google-compute-engine (bsc#1146353)
-    "pam_oslogin_admin.so",
-    "pam_oslogin_login.so",
-    # fprintd (bsc#792095)
-    "pam_fprintd.so",
-    # mariadb (bsc#1163362)
-    "pam_user_map.so",
-    # oddjob (bsc#1169494)
-    "pam_oddjob_mkhomedir.so",
-    # cockpit (bsc#1169614)
-    "pam_cockpit_cert.so",
-    "pam_ssh_add.so",
-    # pam (bsc#1171564)
-    "pam_usertype.so",
-    # pam (bsc#1171563)
-    "pam_setquota.so",
-    # kanidm (bsc#1173387)
-    "pam_kanidm.so",
-    # GNOME malcontent parental control (bsc#1177974)
-    "pam_malcontent.so",
-    # pam (bsc#1171562)
-    "pam_faillock.so"
+[[FileDigestGroup]]
+package = "pam_krb5"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_krb5.so",
+    "/lib*/security/pam_krb5afs.so",
+]
+
+[[FileDigestGroup]]
+package = "ecryptfs-utils"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_ecryptfs.so",
+]
+
+[[FileDigestGroup]]
+package = "gnome-keyring-pam"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_gnome_keyring.so",
+]
+
+[[FileDigestGroup]]
+package = "samba-winbind"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_winbind.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_ssh"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_ssh.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_mount"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_mount.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_ccreds"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_ccreds.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_radius"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_radius_auth.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_pkcs11"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_pkcs11.so",
+]
+
+[[FileDigestGroup]]
+package = "nss-pam-ldapd"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_ldap.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_passwdqc"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_passwdqc.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_userpass"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_userpass.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_apparmor"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_apparmor.so",
+]
+
+[[FileDigestGroup]]
+package = "opie"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_opie.so",
+]
+
+[[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1171564, bsc#1171563, bsc#1171562"
+nodigests = [
+    "/usr/lib*/security/pam_access.so",
+    "/usr/lib*/security/pam_debug.so",
+    "/usr/lib*/security/pam_deny.so",
+    "/usr/lib*/security/pam_echo.so",
+    "/usr/lib*/security/pam_env.so",
+    "/usr/lib*/security/pam_exec.so",
+    "/usr/lib*/security/pam_faildelay.so",
+    "/usr/lib*/security/pam_filter.so",
+    "/usr/lib*/security/pam_ftp.so",
+    "/usr/lib*/security/pam_group.so",
+    "/usr/lib*/security/pam_issue.so",
+    "/usr/lib*/security/pam_keyinit.so",
+    "/usr/lib*/security/pam_lastlog.so",
+    "/usr/lib*/security/pam_limits.so",
+    "/usr/lib*/security/pam_listfile.so",
+    "/usr/lib*/security/pam_localuser.so",
+    "/usr/lib*/security/pam_loginuid.so",
+    "/usr/lib*/security/pam_mail.so",
+    "/usr/lib*/security/pam_mkhomedir.so",
+    "/usr/lib*/security/pam_motd.so",
+    "/usr/lib*/security/pam_namespace.so",
+    "/usr/lib*/security/pam_nologin.so",
+    "/usr/lib*/security/pam_permit.so",
+    "/usr/lib*/security/pam_pwhistory.so",
+    "/usr/lib*/security/pam_rhosts.so",
+    "/usr/lib*/security/pam_rootok.so",
+    "/usr/lib*/security/pam_securetty.so",
+    "/usr/lib*/security/pam_selinux.so",
+    "/usr/lib*/security/pam_sepermit.so",
+    "/usr/lib*/security/pam_shells.so",
+    "/usr/lib*/security/pam_stress.so",
+    "/usr/lib*/security/pam_succeed_if.so",
+    "/usr/lib*/security/pam_time.so",
+    "/usr/lib*/security/pam_timestamp.so",
+    "/usr/lib*/security/pam_tty_audit.so",
+    "/usr/lib*/security/pam_umask.so",
+    "/usr/lib*/security/pam_warn.so",
+    "/usr/lib*/security/pam_wheel.so",
+    "/usr/lib*/security/pam_xauth.so",
+    "/usr/lib*/security/pam_usertype.so",
+    "/usr/lib*/security/pam_setquota.so",
+    "/usr/lib*/security/pam_faillock.so",
+]
+
+[[FileDigestGroup]]
+package = "pam-deprecated"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_cracklib.so",
+    "/usr/lib*/security/pam_tally2.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_unix"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_unix.so",
+    "/usr/lib*/security/pam_unix_acct.so",
+    "/usr/lib*/security/pam_unix_auth.so",
+    "/usr/lib*/security/pam_unix_passwd.so",
+    "/usr/lib*/security/pam_unix_session.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_unix-nis"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_unix.so",
+    "/usr/lib*/security/pam_unix_acct.so",
+    "/usr/lib*/security/pam_unix_auth.so",
+    "/usr/lib*/security/pam_unix_passwd.so",
+    "/usr/lib*/security/pam_unix_session.so",
+]
+
+[[FileDigestGroup]]
+package = "pam-extra"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_userdb.so",
+]
+
+[[FileDigestGroup]]
+package = "systemd"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/usr/lib*/security/pam_systemd.so",
+]
+
+[[FileDigestGroup]]
+package = "sssd"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_sss.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_mktemp"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_mktemp.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_csync"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_csync.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_chroot"
+type = "pam"
+note = "legacy: not audited"
+bug = ""
+nodigests = [
+    "/lib*/security/pam_chroot.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_snapper"
+type = "pam"
+note = "legacy: not audited"
+bug = "bnc#815383"
+nodigests = [
+    "/usr/lib*/security/pam_snapper.so",
+]
+
+[[FileDigestGroup]]
+package = "gdm"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1004346"
+nodigests = [
+    "/lib*/security/pam_gdm.so",
+]
+
+[[FileDigestGroup]]
+package = "slurm-pam_slurm"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1007053, bsc#1116758"
+nodigests = [
+    "/lib*/security/pam_slurm.so",
+    "/lib*/security/pam_slurm_adopt.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_script"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1039848"
+nodigests = [
+    "/lib*/security/pam_script.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_yubico"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1087060"
+nodigests = [
+    "/lib*/security/pam_yubico.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_oath"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1089114"
+nodigests = [
+    "/lib*/security/pam_oath.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_p11"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1123916"
+nodigests = [
+    "/lib*/security/pam_p11.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_cifscreds"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1150527"
+nodigests = [
+    "/usr/lib*/security/pam_cifscreds.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_pwquality"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1150520"
+nodigests = [
+    "/lib*/security/pam_pwquality.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_cgfs"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1150519"
+nodigests = [
+    "/lib*/security/pam_cgfs.so",
+]
+
+[[FileDigestGroup]]
+package = "google-authenticator-libpam"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1150524"
+nodigests = [
+    "/lib*/security/pam_google_authenticator.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_u2f"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1087061"
+nodigests = [
+    "/lib*/security/pam_u2f.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_kwallet"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#993806"
+nodigests = [
+    "/lib*/security/pam_kwallet5.so",
+]
+
+[[FileDigestGroup]]
+package = "pam_dbus"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1039709"
+nodigests = [
+    "/lib*/security/pam_dbus.so",
+]
+
+[[FileDigestGroup]]
+package = "google-guest-oslogin"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1146353"
+nodigests = [
+    "/lib*/security/pam_oslogin_admin.so",
+    "/lib*/security/pam_oslogin_login.so",
+]
+
+[[FileDigestGroup]]
+package = "fprintd-pam"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#792095"
+nodigests = [
+    "/lib*/security/pam_fprintd.so",
+]
+
+[[FileDigestGroup]]
+package = "mariadb"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1163362"
+nodigests = [
+    "/lib*/security/pam_user_map.so",
+]
+
+[[FileDigestGroup]]
+package = "oddjob-mkhomedir"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1169494"
+nodigests = [
+    "/lib*/security/pam_oddjob_mkhomedir.so",
+]
+
+[[FileDigestGroup]]
+package = "cockpit-ws"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1169614"
+nodigests = [
+    "/usr/lib*/security/pam_cockpit_cert.so",
+    "/usr/lib*/security/pam_ssh_add.so",
+]
+
+[[FileDigestGroup]]
+package = "kanidm-unixd-clients"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1173387"
+nodigests = [
+    "/lib*/security/pam_kanidm.so",
+]
+
+[[FileDigestGroup]]
+package = "malcontent"
+type = "pam"
+note = "legacy: not audited"
+bug = "bsc#1177974"
+nodigests = [
+    "/lib*/security/pam_malcontent.so",
 ]

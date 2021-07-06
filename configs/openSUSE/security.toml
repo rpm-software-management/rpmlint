@@ -32,3 +32,15 @@ Locations = [
     "/etc/permissions.d/",
     "/usr/share/permissions/permissions.d/"
 ]
+
+[FileDigestLocation.pam]
+FollowSymlinks = true
+NamePatterns = [
+    "*.so",
+]
+Locations = [
+    "/usr/lib/security/",
+    "/usr/lib64/security/",
+    "/lib/security/",
+    "/lib64/security/"
+]
