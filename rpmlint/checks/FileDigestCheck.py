@@ -1,3 +1,4 @@
+from fnmatch import fnmatch
 import hashlib
 from pathlib import Path
 import stat
@@ -10,11 +11,13 @@ class FileDigestCheck(AbstractCheck):
         super().__init__(config, output)
         self.digest_configurations = {}
         self.follow_symlinks_in_group = {}
+        self.name_patterns_in_group = {}
         for group, values in self.config.configuration['FileDigestLocation'].items():
             self.digest_configurations[group] = [Path(p) for p in values['Locations']]
             self.follow_symlinks_in_group[group] = values['FollowSymlinks']
+            self.name_patterns_in_group[group] = values.get('NamePatterns')
 
-        self.digest_groups = self.config.configuration['FileDigestGroup']
+        self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
         for digest_group in self.digest_groups:
             dg_type = digest_group['type']
             if dg_type not in self.digest_configurations:
@@ -49,7 +52,12 @@ class FileDigestCheck(AbstractCheck):
             for location in locations:
                 try:
                     if path.relative_to(location):
-                        return group
+                        if not self.name_patterns_in_group[group]:
+                            return group
+                        else:
+                            for glob in self.name_patterns_in_group[group]:
+                                if fnmatch(path.name, glob):
+                                    return group
                 except ValueError:
                     pass
         return None
@@ -120,9 +128,15 @@ class FileDigestCheck(AbstractCheck):
         # For all files in this package that fall into the secured paths: check if they are whitelisted
         # If not whitelisted print error: file-digest-unauthorized
         whitelisted_paths = {dg['path'] for dg in digests}
-        unauthorized = secured_paths - whitelisted_paths
-        for filename in unauthorized:
-            self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', filename, None)
+        for spath in secured_paths:
+            unauthorized = True
+            for wpath in whitelisted_paths:
+                if fnmatch(spath, wpath):
+                    # filepath is whitelisted
+                    unauthorized = False
+                    break
+            if unauthorized:
+                self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', spath, None)
 
         # For all digest whitelisted files check if the digests in the package are correct
         # If not correct print error: file-digest-mismatch
@@ -132,18 +146,17 @@ class FileDigestCheck(AbstractCheck):
             # version of this package with same whitelisted paths and different digests
             digests_of_path = []
             for digest in digests:
-                if digest['path'] == path:
+                if fnmatch(path, digest['path']):
                     digests_of_path.append(digest)
             # If *any* digest with the same path matches the package's file
             # digest of that path, then we assume the file is correctly whitelisted
             error_digests = []
             for digest in digests_of_path:
-                filename = digest['path']
                 # Check if digest whitelist path has a matching file in our package
-                if not pkg.files.get(filename):
+                if not pkg.files.get(path):
                     # This digest entry is not needed anymore and could be dropped
                     continue
-                valid_digest, file_digest = self._is_valid_digest(pkg.files[filename], digest, pkg)
+                valid_digest, file_digest = self._is_valid_digest(pkg.files[path], digest, pkg)
                 if valid_digest:
                     # Valid digest found, no mismatch error will be printed
                     error_digests = []
@@ -153,7 +166,7 @@ class FileDigestCheck(AbstractCheck):
                     error_digests.append(digest)
             if error_digests:
                 for digest in error_digests:
-                    self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', filename, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
+                    self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', path, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
 
     def check_binary(self, pkg):
         """
