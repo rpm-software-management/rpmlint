@@ -4,8 +4,8 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_krb5.so",
-    "/lib*/security/pam_krb5afs.so",
+    "*/security/pam_krb5.so",
+    "*/security/pam_krb5afs.so",
 ]
 
 [[FileDigestGroup]]
@@ -14,7 +14,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_ecryptfs.so",
+    "*/security/pam_ecryptfs.so",
 ]
 
 [[FileDigestGroup]]
@@ -23,7 +23,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_gnome_keyring.so",
+    "*/security/pam_gnome_keyring.so",
 ]
 
 [[FileDigestGroup]]
@@ -32,7 +32,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_winbind.so",
+    "*/security/pam_winbind.so",
 ]
 
 [[FileDigestGroup]]
@@ -41,7 +41,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_ssh.so",
+    "*/security/pam_ssh.so",
 ]
 
 [[FileDigestGroup]]
@@ -50,7 +50,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_mount.so",
+    "*/security/pam_mount.so",
 ]
 
 [[FileDigestGroup]]
@@ -59,7 +59,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_ccreds.so",
+    "*/security/pam_ccreds.so",
 ]
 
 [[FileDigestGroup]]
@@ -68,7 +68,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_radius_auth.so",
+    "*/security/pam_radius_auth.so",
 ]
 
 [[FileDigestGroup]]
@@ -77,7 +77,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_pkcs11.so",
+    "*/security/pam_pkcs11.so",
 ]
 
 [[FileDigestGroup]]
@@ -86,7 +86,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_ldap.so",
+    "*/security/pam_ldap.so",
 ]
 
 [[FileDigestGroup]]
@@ -95,7 +95,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_passwdqc.so",
+    "*/security/pam_passwdqc.so",
 ]
 
 [[FileDigestGroup]]
@@ -104,7 +104,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_userpass.so",
+    "*/security/pam_userpass.so",
 ]
 
 [[FileDigestGroup]]
@@ -113,7 +113,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_apparmor.so",
+    "*/security/pam_apparmor.so",
 ]
 
 [[FileDigestGroup]]
@@ -122,7 +122,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_opie.so",
+    "*/security/pam_opie.so",
 ]
 
 [[FileDigestGroup]]
@@ -131,48 +131,48 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1171564, bsc#1171563, bsc#1171562"
 nodigests = [
-    "/usr/lib*/security/pam_access.so",
-    "/usr/lib*/security/pam_debug.so",
-    "/usr/lib*/security/pam_deny.so",
-    "/usr/lib*/security/pam_echo.so",
-    "/usr/lib*/security/pam_env.so",
-    "/usr/lib*/security/pam_exec.so",
-    "/usr/lib*/security/pam_faildelay.so",
-    "/usr/lib*/security/pam_filter.so",
-    "/usr/lib*/security/pam_ftp.so",
-    "/usr/lib*/security/pam_group.so",
-    "/usr/lib*/security/pam_issue.so",
-    "/usr/lib*/security/pam_keyinit.so",
-    "/usr/lib*/security/pam_lastlog.so",
-    "/usr/lib*/security/pam_limits.so",
-    "/usr/lib*/security/pam_listfile.so",
-    "/usr/lib*/security/pam_localuser.so",
-    "/usr/lib*/security/pam_loginuid.so",
-    "/usr/lib*/security/pam_mail.so",
-    "/usr/lib*/security/pam_mkhomedir.so",
-    "/usr/lib*/security/pam_motd.so",
-    "/usr/lib*/security/pam_namespace.so",
-    "/usr/lib*/security/pam_nologin.so",
-    "/usr/lib*/security/pam_permit.so",
-    "/usr/lib*/security/pam_pwhistory.so",
-    "/usr/lib*/security/pam_rhosts.so",
-    "/usr/lib*/security/pam_rootok.so",
-    "/usr/lib*/security/pam_securetty.so",
-    "/usr/lib*/security/pam_selinux.so",
-    "/usr/lib*/security/pam_sepermit.so",
-    "/usr/lib*/security/pam_shells.so",
-    "/usr/lib*/security/pam_stress.so",
-    "/usr/lib*/security/pam_succeed_if.so",
-    "/usr/lib*/security/pam_time.so",
-    "/usr/lib*/security/pam_timestamp.so",
-    "/usr/lib*/security/pam_tty_audit.so",
-    "/usr/lib*/security/pam_umask.so",
-    "/usr/lib*/security/pam_warn.so",
-    "/usr/lib*/security/pam_wheel.so",
-    "/usr/lib*/security/pam_xauth.so",
-    "/usr/lib*/security/pam_usertype.so",
-    "/usr/lib*/security/pam_setquota.so",
-    "/usr/lib*/security/pam_faillock.so",
+    "*/security/pam_access.so",
+    "*/security/pam_debug.so",
+    "*/security/pam_deny.so",
+    "*/security/pam_echo.so",
+    "*/security/pam_env.so",
+    "*/security/pam_exec.so",
+    "*/security/pam_faildelay.so",
+    "*/security/pam_filter.so",
+    "*/security/pam_ftp.so",
+    "*/security/pam_group.so",
+    "*/security/pam_issue.so",
+    "*/security/pam_keyinit.so",
+    "*/security/pam_lastlog.so",
+    "*/security/pam_limits.so",
+    "*/security/pam_listfile.so",
+    "*/security/pam_localuser.so",
+    "*/security/pam_loginuid.so",
+    "*/security/pam_mail.so",
+    "*/security/pam_mkhomedir.so",
+    "*/security/pam_motd.so",
+    "*/security/pam_namespace.so",
+    "*/security/pam_nologin.so",
+    "*/security/pam_permit.so",
+    "*/security/pam_pwhistory.so",
+    "*/security/pam_rhosts.so",
+    "*/security/pam_rootok.so",
+    "*/security/pam_securetty.so",
+    "*/security/pam_selinux.so",
+    "*/security/pam_sepermit.so",
+    "*/security/pam_shells.so",
+    "*/security/pam_stress.so",
+    "*/security/pam_succeed_if.so",
+    "*/security/pam_time.so",
+    "*/security/pam_timestamp.so",
+    "*/security/pam_tty_audit.so",
+    "*/security/pam_umask.so",
+    "*/security/pam_warn.so",
+    "*/security/pam_wheel.so",
+    "*/security/pam_xauth.so",
+    "*/security/pam_usertype.so",
+    "*/security/pam_setquota.so",
+    "*/security/pam_faillock.so",
 ]
 
 [[FileDigestGroup]]
@@ -181,8 +181,8 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_cracklib.so",
-    "/usr/lib*/security/pam_tally2.so",
+    "*/security/pam_cracklib.so",
+    "*/security/pam_tally2.so",
 ]
 
 [[FileDigestGroup]]
@@ -191,11 +191,11 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_unix.so",
-    "/usr/lib*/security/pam_unix_acct.so",
-    "/usr/lib*/security/pam_unix_auth.so",
-    "/usr/lib*/security/pam_unix_passwd.so",
-    "/usr/lib*/security/pam_unix_session.so",
+    "*/security/pam_unix.so",
+    "*/security/pam_unix_acct.so",
+    "*/security/pam_unix_auth.so",
+    "*/security/pam_unix_passwd.so",
+    "*/security/pam_unix_session.so",
 ]
 
 [[FileDigestGroup]]
@@ -204,11 +204,11 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_unix.so",
-    "/usr/lib*/security/pam_unix_acct.so",
-    "/usr/lib*/security/pam_unix_auth.so",
-    "/usr/lib*/security/pam_unix_passwd.so",
-    "/usr/lib*/security/pam_unix_session.so",
+    "*/security/pam_unix.so",
+    "*/security/pam_unix_acct.so",
+    "*/security/pam_unix_auth.so",
+    "*/security/pam_unix_passwd.so",
+    "*/security/pam_unix_session.so",
 ]
 
 [[FileDigestGroup]]
@@ -217,7 +217,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_userdb.so",
+    "*/security/pam_userdb.so",
 ]
 
 [[FileDigestGroup]]
@@ -226,7 +226,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/usr/lib*/security/pam_systemd.so",
+    "*/security/pam_systemd.so",
 ]
 
 [[FileDigestGroup]]
@@ -235,7 +235,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_sss.so",
+    "*/security/pam_sss.so",
 ]
 
 [[FileDigestGroup]]
@@ -244,7 +244,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_mktemp.so",
+    "*/security/pam_mktemp.so",
 ]
 
 [[FileDigestGroup]]
@@ -253,7 +253,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_csync.so",
+    "*/security/pam_csync.so",
 ]
 
 [[FileDigestGroup]]
@@ -262,7 +262,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = ""
 nodigests = [
-    "/lib*/security/pam_chroot.so",
+    "*/security/pam_chroot.so",
 ]
 
 [[FileDigestGroup]]
@@ -271,7 +271,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bnc#815383"
 nodigests = [
-    "/usr/lib*/security/pam_snapper.so",
+    "*/security/pam_snapper.so",
 ]
 
 [[FileDigestGroup]]
@@ -280,7 +280,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1004346"
 nodigests = [
-    "/lib*/security/pam_gdm.so",
+    "*/security/pam_gdm.so",
 ]
 
 [[FileDigestGroup]]
@@ -289,8 +289,8 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1007053, bsc#1116758"
 nodigests = [
-    "/lib*/security/pam_slurm.so",
-    "/lib*/security/pam_slurm_adopt.so",
+    "*/security/pam_slurm.so",
+    "*/security/pam_slurm_adopt.so",
 ]
 
 [[FileDigestGroup]]
@@ -299,7 +299,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1039848"
 nodigests = [
-    "/lib*/security/pam_script.so",
+    "*/security/pam_script.so",
 ]
 
 [[FileDigestGroup]]
@@ -308,7 +308,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1087060"
 nodigests = [
-    "/lib*/security/pam_yubico.so",
+    "*/security/pam_yubico.so",
 ]
 
 [[FileDigestGroup]]
@@ -317,7 +317,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1089114"
 nodigests = [
-    "/lib*/security/pam_oath.so",
+    "*/security/pam_oath.so",
 ]
 
 [[FileDigestGroup]]
@@ -326,7 +326,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1123916"
 nodigests = [
-    "/lib*/security/pam_p11.so",
+    "*/security/pam_p11.so",
 ]
 
 [[FileDigestGroup]]
@@ -335,7 +335,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1150527"
 nodigests = [
-    "/usr/lib*/security/pam_cifscreds.so",
+    "*/security/pam_cifscreds.so",
 ]
 
 [[FileDigestGroup]]
@@ -344,7 +344,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1150520"
 nodigests = [
-    "/lib*/security/pam_pwquality.so",
+    "*/security/pam_pwquality.so",
 ]
 
 [[FileDigestGroup]]
@@ -353,7 +353,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1150519"
 nodigests = [
-    "/lib*/security/pam_cgfs.so",
+    "*/security/pam_cgfs.so",
 ]
 
 [[FileDigestGroup]]
@@ -362,7 +362,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1150524"
 nodigests = [
-    "/lib*/security/pam_google_authenticator.so",
+    "*/security/pam_google_authenticator.so",
 ]
 
 [[FileDigestGroup]]
@@ -371,7 +371,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1087061"
 nodigests = [
-    "/lib*/security/pam_u2f.so",
+    "*/security/pam_u2f.so",
 ]
 
 [[FileDigestGroup]]
@@ -380,7 +380,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#993806"
 nodigests = [
-    "/lib*/security/pam_kwallet5.so",
+    "*/security/pam_kwallet5.so",
 ]
 
 [[FileDigestGroup]]
@@ -389,7 +389,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1039709"
 nodigests = [
-    "/lib*/security/pam_dbus.so",
+    "*/security/pam_dbus.so",
 ]
 
 [[FileDigestGroup]]
@@ -398,8 +398,8 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1146353"
 nodigests = [
-    "/lib*/security/pam_oslogin_admin.so",
-    "/lib*/security/pam_oslogin_login.so",
+    "*/security/pam_oslogin_admin.so",
+    "*/security/pam_oslogin_login.so",
 ]
 
 [[FileDigestGroup]]
@@ -408,7 +408,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#792095"
 nodigests = [
-    "/lib*/security/pam_fprintd.so",
+    "*/security/pam_fprintd.so",
 ]
 
 [[FileDigestGroup]]
@@ -417,7 +417,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1163362"
 nodigests = [
-    "/lib*/security/pam_user_map.so",
+    "*/security/pam_user_map.so",
 ]
 
 [[FileDigestGroup]]
@@ -426,7 +426,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1169494"
 nodigests = [
-    "/lib*/security/pam_oddjob_mkhomedir.so",
+    "*/security/pam_oddjob_mkhomedir.so",
 ]
 
 [[FileDigestGroup]]
@@ -435,8 +435,8 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1169614"
 nodigests = [
-    "/usr/lib*/security/pam_cockpit_cert.so",
-    "/usr/lib*/security/pam_ssh_add.so",
+    "*/security/pam_cockpit_cert.so",
+    "*/security/pam_ssh_add.so",
 ]
 
 [[FileDigestGroup]]
@@ -445,7 +445,7 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1173387"
 nodigests = [
-    "/lib*/security/pam_kanidm.so",
+    "*/security/pam_kanidm.so",
 ]
 
 [[FileDigestGroup]]
@@ -454,5 +454,5 @@ type = "pam"
 note = "legacy: not audited"
 bug = "bsc#1177974"
 nodigests = [
-    "/lib*/security/pam_malcontent.so",
+    "*/security/pam_malcontent.so",
 ]
