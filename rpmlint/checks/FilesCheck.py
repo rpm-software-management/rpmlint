@@ -706,6 +706,11 @@ class FilesCheck(AbstractCheck):
                     if ln:
                         self.output.add_info('E', pkg, 'rpath-in-buildconfig', f, 'lines', ln)
 
+                # look for man pages
+                res = man_base_regex.search(f)
+                if res:
+                    man_basenames.add(res.group(1))
+
                 res = bin_regex.search(f)
                 if res:
                     if not mode_is_exec:
