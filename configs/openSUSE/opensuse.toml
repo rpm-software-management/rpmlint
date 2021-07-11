@@ -9,7 +9,6 @@ BadnessThreshold = 999
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
     "BashismsCheck",
-    "PAMModulesCheck",
     "TmpFilesCheck",
     "SysVInitOnSystemdCheck",
     "SharedLibraryPolicyCheck",

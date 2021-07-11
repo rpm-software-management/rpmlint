@@ -204,3 +204,35 @@ def test_combination_nodigests_and_digests():
         assert len(output.results) == 1
         error = output.results[0]
         assert error == 'testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:ab5ec199027247773d2d617895f49179d7b3186e, has:a6abec9ea1e13ca93d1c704758bd52f62ef16433'
+
+
+@pytest.mark.parametrize('package', ['binary/pam-module'])
+def test_pam_modules(tmpdir, package, digestcheck):
+    output, test = get_digestcheck('digests_pam.config')
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'pam-module.x86_64: E: pamempty-file-digest-unauthorized /usr/lib64/security/pam-module.so' in out
+
+
+@pytest.mark.parametrize('package', ['binary/pam-module'])
+def test_pam_includeonly_nonexistent(tmpdir, package, digestcheck):
+    output, test = get_digestcheck('digests_pam1.config')
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'pamincludetxt' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/pam-module'])
+def test_pam_includeonly_existent(tmpdir, package, digestcheck):
+    output, test = get_digestcheck('digests_pam2.config')
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'pam-module.x86_64: E: pamincludeso-file-digest-unauthorized /usr/lib64/security/pam-module.so' in out
+
+
+@pytest.mark.parametrize('package', ['binary/pam-module'])
+def test_pam(tmpdir, package, digestcheck):
+    output, test = get_digestcheck('digests_pam3.config')
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert not out
