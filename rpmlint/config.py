@@ -46,6 +46,8 @@ class Config(object):
         self.strict = False
         # whether to treat individual errors as non-fatal
         self.permissive = False
+        # whether we are called from rpmlint-mini package
+        self.mini_mode = False
 
         # find configuration files and load them
         self.find_configs(config)

@@ -23,7 +23,8 @@ options_preset = {
     'rpmlintrc': [],
     'installed': '',
     'time_report': False,
-    'profile': False
+    'profile': False,
+    'mini_mode': False
 }
 
 basic_tests = [

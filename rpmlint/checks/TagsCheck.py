@@ -47,7 +47,7 @@ class TagsCheck(AbstractCheck):
         self.valid_buildhost_regex = re.compile(config.configuration['ValidBuildHost'])
         self.use_epoch = config.configuration['UseEpoch']
         self.max_line_len = config.configuration['MaxLineLength']
-        self.spellcheck = config.configuration['UseEnchant']
+        self.spellcheck = config.configuration['UseEnchant'] and not self.config.mini_mode
         self.valid_license_exceptions = config.configuration['ValidLicenseExceptions']
         if self.spellcheck:
             self.spellchecker = Spellcheck()
