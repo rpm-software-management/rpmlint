@@ -42,6 +42,9 @@ class Lint(object):
             self.config.strict = options['strict']
         if options['permissive']:
             self.config.permissive = options['permissive']
+        if options['mini_mode']:
+            self.config.mini_mode = options['mini_mode']
+
         if not self.config.configuration['ExtractDir']:
             self.config.configuration['ExtractDir'] = gettempdir()
         # initialize output buffer

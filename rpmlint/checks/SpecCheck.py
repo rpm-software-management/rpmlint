@@ -107,6 +107,7 @@ class SpecCheck(AbstractCheck):
         self._spec_file = None
         self._spec_name = None
         self.valid_groups = config.configuration['ValidGroups']
+        self.mini_mode = config.mini_mode
         self.output.error_details.update({'non-standard-group':
                                          """The value of the Group tag in the package is not valid.  Valid groups are:
                                          '%s'.""" % ', '.join(self.valid_groups)})
@@ -518,8 +519,10 @@ class SpecCheck(AbstractCheck):
         # Checks below require a real spec file
         if not self._spec_file:
             return
-        self._check_specfile_error(pkg)
-        self._check_invalid_url(pkg, rpm)
+
+        if not self.mini_mode:
+            self._check_specfile_error(pkg)
+            self._check_invalid_url(pkg, rpm)
 
     def _check_no_spec_file(self, pkg):
         """Check if no spec file is found in RPM meta data."""
