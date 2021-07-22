@@ -81,7 +81,7 @@ def process_lint_args(argv):
                                      description='Check for common problems in rpm packages')
     parser.add_argument('rpmfile', nargs='*', type=Path, help='files to be validated by rpmlint')
     parser.add_argument('-V', '--version', action='version', version=__version__, help='show package version and exit')
-    parser.add_argument('-c', '--config', type=_validate_conf_location, help='load up additional configuration data from specified path (file or directory with *.toml files')
+    parser.add_argument('-c', '--config', type=_validate_conf_location, help='load up additional configuration data from specified path (file or directory with *.toml files)')
     parser.add_argument('-e', '--explain', nargs='+', default='', help='provide detailed explanation for one specific message id')
     parser.add_argument('-r', '--rpmlintrc', type=Path, help='load up specified rpmlintrc file')
     parser.add_argument('-v', '--verbose', '--info', action='store_true', help='provide detailed explanations where available')
