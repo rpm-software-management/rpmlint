@@ -490,12 +490,17 @@ class Pkg(AbstractPkg):
             dirname = self.__tmpdir.name
             # TODO: sequence based command invocation
             # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
-            command_str = \
-                'rpm2cpio %(f)s | cpio -id -D %(d)s ; chmod -R +rX %(d)s' % \
-                {'f': quote(str(self.filename)), 'd': quote(dirname)}
+
+            # BusyBox' cpio does not support '-D' argument and the only safe
+            # usage is doing chdir before invocation.
+            filename = Path(self.filename).resolve()
+            cwd = os.getcwd()
+            os.chdir(dirname)
+            command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
             stderr = None if verbose else subprocess.DEVNULL
             subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
                                     stderr=stderr)
+            os.chdir(cwd)
             self.extracted = True
         return dirname
 
