@@ -1,3 +1,4 @@
+[Scoring]
 invalid-license = 100000
 polkit-untracked-privilege = 10000
 permissions-unauthorized-file = 10000
