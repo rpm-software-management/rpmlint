@@ -292,6 +292,7 @@ class ElfSymbolTableInfo:
 
             lines = r.stdout.splitlines()
             for line in lines:
+                print(line)
                 r = self.section_regex.search(line)
                 if r:
                     self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
