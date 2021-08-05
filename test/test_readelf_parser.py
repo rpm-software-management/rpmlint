@@ -47,7 +47,7 @@ def test_simple_archive():
     assert len(elf_file) == 11
     assert elf_file[0].name == '.text'
     assert elf_file[0].size == 21
-    print(readelf.symbol_table_info.symbols)
+    print([x.name for x in readelf.symbol_table_info.symbols])
     assert len(readelf.symbol_table_info.symbols) == 3
     sym0 = readelf.symbol_table_info.symbols[0]
     assert sym0.name == 'main.c'
