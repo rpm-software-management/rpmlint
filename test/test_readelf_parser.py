@@ -47,6 +47,7 @@ def test_simple_archive():
     assert len(elf_file) == 11
     assert elf_file[0].name == '.text'
     assert elf_file[0].size == 21
+    print(readelf.symbol_table_info.symbols)
     assert len(readelf.symbol_table_info.symbols) == 3
     sym0 = readelf.symbol_table_info.symbols[0]
     assert sym0.name == 'main.c'
@@ -164,6 +165,7 @@ def test_readelf_failure_in_package(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('not-existing.so'), '/lib64/not-existing.so')
     out = output.print_results(output.results)
+    print(out)
     assert 'readelf-failed /lib64/not-existing.so' in out
 
 
@@ -171,6 +173,7 @@ def test_readelf_single_error_message(binariescheck):
     output, test = binariescheck
     run_elf_checks(test, FakePkg('fake'), get_full_path('small_archive.a'), '/lib64/small_archive.a')
     out = output.print_results(output.results)
+    print(out)
     filtered = [line for line in out.splitlines() if 'Not an ELF file' in line]
     assert len(filtered) == 1
 
