@@ -87,6 +87,8 @@ class ElfSectionInfo:
         r = subprocess.run(['readelf', '-W', '-S', self.path], encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         print('running readelf', r.returncode)
+        print(r.stderr)
+        print(r.stdout)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return
