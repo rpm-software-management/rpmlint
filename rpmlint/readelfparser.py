@@ -272,6 +272,9 @@ class ElfSymbolTableInfo:
      9: 0000000000000000     0 SECTION LOCAL  DEFAULT    6
     10: 0000000000000000    18 FUNC    GLOBAL DEFAULT    4 main
     11: 0000000000000000    11 FUNC    GLOBAL DEFAULT    5 foo
+    ...
+     7: 0000000000000000     0 SECTION LOCAL  DEFAULT    5 .comment
+     8: 0000000000000000    21 FUNC    GLOBAL DEFAULT    1 main
     """
 
     section_regex = re.compile('\\s+[0-9]+:\\s\\w+\\s+(\\w+)\\s+(?P<type>\\w+)\\s+(?P<bind>\\w+)\\s+(?P<visibility>\\w+)\\s+\\w+\\s+(?P<name>\\S+)')
@@ -293,7 +296,7 @@ class ElfSymbolTableInfo:
             lines = r.stdout.splitlines()
             for line in lines:
                 r = self.section_regex.search(line)
-                if r:
+                if r and r.group('type') != 'SECTION':
                     self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
                                                   r.group('visibility'), r.group('name')))
         except UnicodeDecodeError as e:
