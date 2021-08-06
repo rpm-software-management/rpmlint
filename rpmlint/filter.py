@@ -75,11 +75,17 @@ class Filter(object):
         "Please follow this #URL#
         """
         for k, v in self.error_details.items():
-            variables = list(re.finditer(r'#(?P<var>\w+)#', v))
-            if variables:
+            # replace all variables recursively
+            while True:
+                before_replacement = v
+                variables = list(re.finditer(r'#(?P<var>\w+)#', v))
+                if not variables:
+                    break
                 for match in reversed(variables):
-                    v = v[:match.start()] + self.error_details[match.group('var')] + v[match.end():]
-                self.error_details[k] = v
+                    replacement = self.error_details[match.group('var')]
+                    v = v[:match.start()] + replacement + v[match.end():]
+                assert v != before_replacement
+            self.error_details[k] = v
 
     def add_info(self, level, package, rpmlint_issue, *details):
         """
