@@ -15,6 +15,7 @@ jobs:
         docker:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
+          - 'registry.fedoraproject.org/fedora:35'
           - 'registry.opensuse.org/opensuse/leap-dnf:15.3'
           - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
       fail-fast: false
