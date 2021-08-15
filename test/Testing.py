@@ -27,8 +27,8 @@ HAS_DASH = shutil.which('dash')
 HAS_DESKTOP_FILE_UTILS = shutil.which('desktop-file-validate')
 HAS_APPSTREAM_GLIB = shutil.which('appstream-util')
 
-RPMDB_PATH = subprocess.run(['rpm', '--eval', '"%_dbpath"'], encoding='utf8').stdout
-HAS_RPMDB = RPMDB_PATH and Path(RPMDB_PATH).exists()
+RPMDB_PATH = subprocess.run(['rpm', '--eval', '%_dbpath'], encoding='utf8', stdout=subprocess.PIPE).stdout
+HAS_RPMDB = RPMDB_PATH and Path(RPMDB_PATH.strip()).exists()
 
 
 def _has_dictionary(language):
