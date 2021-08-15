@@ -1,4 +1,4 @@
-name: Build and Test
+name: CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, opensuse ]
 
 jobs:
-  build_and_test:
+  CI:
     runs-on: ubuntu-latest
 
     strategy:
