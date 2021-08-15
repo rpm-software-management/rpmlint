@@ -1,6 +1,7 @@
 include Makefile
 include COPYING
 include README.md
+include conftest.py
 recursive-include configs *.toml
 recursive-include rpmlint *.toml
 recursive-include test *
