@@ -12,11 +12,17 @@ jobs:
 
     strategy:
       matrix:
+        build-type: ['normal']
         docker:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
           - 'registry.opensuse.org/opensuse/leap-dnf:15.3'
           - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
+        include:
+          - docker: 'registry.fedoraproject.org/fedora:latest'
+            build-type: 'no-optional-deps'
+          - docker: 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
+            build-type: 'no-optional-deps'
       fail-fast: false
 
     container:
@@ -25,13 +31,10 @@ jobs:
 
     steps:
       - run: dnf --assumeyes install
-              checkbashisms cpio dash gzip
+              cpio gzip
               bzip2 xz
-              binutils glibc glibc-32bit glibc-locale desktop-file-utils
-              appstream-glib
-              myspell-en_US myspell-cs_CZ
+              binutils glibc glibc-32bit glibc-locale
               python3-magic
-              python3-pyenchant
               python3-rpm
               python3-base
               python3-setuptools
@@ -52,26 +55,26 @@ jobs:
               rpm-build
               git
         if: ${{ contains(matrix.docker, 'opensuse') }}
+      - run: dnf --assumeyes install
+              checkbashisms dash
+              desktop-file-utils
+              appstream-glib
+              myspell-en_US myspell-cs_CZ
+              python3-pyenchant
+        if: ${{ contains(matrix.docker, 'opensuse') && matrix.build-type == 'normal' }}
       - run: dnf --assumeyes install python3-flake8-comprehensions
         if: ${{ contains(matrix.docker, 'opensuse/tumbleweed') }}
       - run: dnf --nogpgcheck --assumeyes install
-              /usr/bin/appstream-util
               /usr/bin/cpio
               /usr/bin/bzip2
-              /usr/bin/desktop-file-validate
               /usr/bin/python3
               /usr/bin/readelf
               /usr/bin/ldd
               /usr/bin/c++filt
               /usr/bin/xz
-              dash
-              devscripts-checkbashisms
               glibc
               glibc.i686
-              hunspell-en
-              hunspell-cs
               python3-setuptools
-              python3-enchant
               python3-magic
               python3-rpm
               python3-pybeam
@@ -88,6 +91,17 @@ jobs:
               rpm-build
               git
         if: ${{ contains(matrix.docker, 'fedora') }}
+      - run: dnf --nogpgcheck --assumeyes install
+              /usr/bin/appstream-util
+              /usr/bin/desktop-file-validate
+              dash
+              devscripts-checkbashisms
+              hunspell-en
+              hunspell-cs
+              python3-enchant
+        if: ${{ contains(matrix.docker, 'fedora') && matrix.build-type == 'normal' }}
+      - run: rm -rf $(rpm --eval '%_dbpath')
+        if: matrix.build-type == 'no-optional-deps'
       - run: pip install coveralls
       - uses: actions/checkout@v2
       - run: pytest
