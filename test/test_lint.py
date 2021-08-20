@@ -429,6 +429,7 @@ def test_run_rpmlintrc_single_file(capsys, packages):
     assert 'no-%build-section' not in out
 
 
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
 def test_installed_package(capsys):
     additional_options = {
         'installed': ['bzip2'],

@@ -92,9 +92,10 @@ in the long run.
 
 Preferable approach for binary packages is to create artificial testcase (to keep binaries small and trivial).
 We are currently using OBS to produce binaries:
-  https://build.opensuse.org/project/show/devel:openSUSE:Factory:rpmlint:tests
+https://build.opensuse.org/project/show/devel:openSUSE:Factory:rpmlint:tests
+
 For a sample package see:
-  https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/non-position-independent-exec
+https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/non-position-independent-exec
 
 ## Configuration
 

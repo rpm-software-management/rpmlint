@@ -11,8 +11,9 @@ import sys
 from urllib.request import urlopen
 
 
-iso_3166_1_url = os.environ.get('ISO_3166_1_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/master/data/iso_3166-1.json')
-iso_639_3_url = os.environ.get('ISO_639_3_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/master/data/iso_639-3.json')
+iso_3166_1_url = os.environ.get('ISO_3166_1_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_3166-1.json')
+iso_639_3_url = os.environ.get('ISO_639_3_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_639-3.json')
+iso_639_2_url = os.environ.get('ISO_639_2_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_639-2.json')
 
 langs = set()
 countries = set()
@@ -28,6 +29,13 @@ with urlopen(iso_639_3_url) as f:
     data = json.load(codecs.getreader('utf-8')(f))
     for entry in data['639-3']:
         langs.add(entry.get('alpha_2') or entry['alpha_3'])
+# Need to check iso-639-2 for collective language codes not in iso-639-3
+with urlopen(iso_639_2_url) as f:
+    data = json.load(codecs.getreader('utf-8')(f))
+    for entry in data['639-2']:
+        entry_code = entry.get('alpha_2') or entry['alpha_3']
+        if entry_code not in langs:
+            langs.add(entry_code)
 
 # Note that we are not pprint()ing the set directly because with
 # Python 3 it results in curly brace set initializers that are not

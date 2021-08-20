@@ -9,7 +9,7 @@ setup(
     url='https://github.com/rpm-software-management/rpmlint',
     download_url='https://github.com/rpm-software-management/rpmlint',
 
-    version='2.0.0',
+    version='2.1.0',
 
     author='Frédéric Lepied',
     author_email='flepied@mandriva.com',
@@ -32,6 +32,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Utilities',
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: System :: Archiving :: Packaging',
