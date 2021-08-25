@@ -12,6 +12,8 @@ from rpmlint.pkg import FakePkg, InstalledPkg
 from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
+KERNEL_MODULES_PATHS = ('/lib/modules/', '/usr/lib/modules/')
+
 
 class BinariesCheck(AbstractCheck):
     """
@@ -272,7 +274,7 @@ class BinariesCheck(AbstractCheck):
         """
 
         # Do not check kernel modules and archives
-        if not self.is_archive and not path.startswith('/lib/modules/'):
+        if not self.is_archive and not any(path.startswith(p) for p in KERNEL_MODULES_PATHS):
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
                 self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
@@ -397,7 +399,7 @@ class BinariesCheck(AbstractCheck):
     def _check_library_dependency(self, pkg, pkgfile_path, path):
         if self.is_archive:
             return
-        if path.startswith('/lib/modules/'):
+        if any(path.startswith(p) for p in KERNEL_MODULES_PATHS):
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
