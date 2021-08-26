@@ -2,6 +2,8 @@ from xml.dom.minidom import parse
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
+DBUS_DIRECTORIES = ('/etc/dbus-1/system.d/', '/usr/share/dbus-1/system.d/')
+
 
 class DBusPolicyCheck(AbstractCheck):
     def check(self, pkg):
@@ -14,7 +16,7 @@ class DBusPolicyCheck(AbstractCheck):
 
             # catch xml exceptions
             try:
-                if f.startswith('/etc/dbus-1/system.d/'):
+                if any(f.startswith(d) for d in DBUS_DIRECTORIES):
                     send_policy_seen = False
                     lf = pkg.dirName() + f
                     xml = parse(lf)
