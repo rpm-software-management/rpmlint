@@ -13,6 +13,7 @@ from rpmlint.readelfparser import ReadelfParser
 from rpmlint.stringsparser import StringsParser
 
 KERNEL_MODULES_PATHS = ('/lib/modules/', '/usr/lib/modules/')
+GLIBC_EMPTY_ARCHIVES = ('libanl', 'libdl', 'libpthread', 'librt', 'libutil')
 
 
 class BinariesCheck(AbstractCheck):
@@ -226,6 +227,13 @@ class BinariesCheck(AbstractCheck):
             for comment in self.readelf_parser.comment_section_info.comments:
                 if comment.startswith('GHC '):
                     return
+
+            # Starting with glibc 2.34, some static libraries were moved to libc
+            # and there are empty archives for backward compatibility. Skip these
+            # libraries.
+            stem = Path(path).stem
+            if stem in GLIBC_EMPTY_ARCHIVES or (stem.endswith('_p') and stem[:-2] in GLIBC_EMPTY_ARCHIVES):
+                return
 
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
