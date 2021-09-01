@@ -44,7 +44,8 @@ def test_lto_archive_text(tmpdir, package, binariescheck):
     output, test = binariescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'lto-no-text-in-archive' in out
+    assert 'lto-no-text-in-archive /usr/lib64/libiberty.a' in out
+    assert 'lto-no-text-in-archive /usr/lib64/libdl_p.a' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/ghc'])
