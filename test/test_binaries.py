@@ -180,7 +180,7 @@ def test_non_position_independent_sugg(tmpdir, package, binariescheck):
 # Force an error by setting PieExecutables option to the no-pie binary
 @pytest.mark.parametrize('package', ['binary/non-position-independent-exec'])
 def test_non_position_independent(tmpdir, package, binariescheck):
-    CONFIG.configuration['PieExecutables'] = ['sparta', 'hello']
+    CONFIG.configuration['PieExecutables'] = ['sparta', '.*hello']
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
     test.check(get_tested_package(package, tmpdir))
