@@ -156,7 +156,7 @@ class BinariesCheck(AbstractCheck):
         executable.
         """
         if not self.is_shobj and not self.is_pie_exec:
-            if any(regex.search(bin_name) for regex in self.pie_exec_regex_list):
+            if any(regex.fullmatch(bin_name) for regex in self.pie_exec_regex_list):
                 self.output.add_info('E', pkg,
                                      'non-position-independent-executable',
                                      bin_name)
