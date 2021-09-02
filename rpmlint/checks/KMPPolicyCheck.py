@@ -16,7 +16,7 @@ class KMPPolicyCheck(AbstractCheck):
 
     def _check_enhances(self, pkg, kernel_flavor):
         """
-        Check if kernel has enhnances on the kernel and on one kernel only
+        Check if kernel has enhances on the kernel and on one kernel only
         """
         kernel_enhances = []
         for enhance in pkg.enhances:
@@ -31,7 +31,7 @@ class KMPPolicyCheck(AbstractCheck):
         """
         Check supplements for the kernel_flavor
 
-        We need modalias(value) and also suplement the kernel itself.
+        We need modalias(value) and also supplement the kernel itself.
         """
         have_modalias = False
         have_proper_suppl = False
@@ -39,10 +39,10 @@ class KMPPolicyCheck(AbstractCheck):
             if s.name.startswith('modalias('):
                 have_modalias = True
                 continue
-            if s.name.startswith(f'({kernel_flavor} and'):
+            if s.name.startswith(f'packageand({kernel_flavor}') or s.name.startswith(f'({kernel_flavor} and'):
                 have_proper_suppl = True
                 continue
-            # if there is sumplement other than the kernel and modalias it is probably wrong
+            # if there is supplement other than the kernel and modalias it is probably wrong
             self.output.add_info('W', pkg, 'kmp-excessive-supplements', s[0])
 
         if not have_modalias and not have_proper_suppl:
