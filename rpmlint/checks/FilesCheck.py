@@ -540,7 +540,8 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'version-control-internal-file', f)
             elif f.endswith('/.htaccess'):
                 self.output.add_info('E', pkg, 'htaccess-file', f)
-            elif hidden_file_regex.search(f) and not f.startswith('/etc/skel/') and not f.endswith('/.build-id'):
+            elif (hidden_file_regex.search(f) and not f.startswith('/etc/skel/') and
+                  not f.endswith('/.build-id') and not f.endswith('/.cargo-checksum.json')):
                 self.output.add_info('W', pkg, 'hidden-file-or-dir', f)
             elif manifest_perl_regex.search(f):
                 self.output.add_info('W', pkg, 'manifest-in-perl-module', f)
