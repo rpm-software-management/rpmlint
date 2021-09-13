@@ -236,7 +236,6 @@ BlockedFilters = [
     "polkit-user-privilege",
     "polkit-untracked-privilege",
     "polkit-ghost-file",
-    "permissions-unauthorized-file",
     "permissions-symlink",
     "permissions-dir-without-slash",
     "permissions-file-as-dir",

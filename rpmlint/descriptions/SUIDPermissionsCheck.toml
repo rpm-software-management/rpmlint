@@ -1,4 +1,3 @@
-permissions-unauthorized-file="""#REVIEW_NEEDED_TEXT#"""
 permissions-symlink="""
 permissions handling for symlinks is useless. Please contact security@suse.de to remove the entry. Please refer to #AUDIT_BUG_URL# for more information.
 """
