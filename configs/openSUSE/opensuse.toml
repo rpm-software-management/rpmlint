@@ -231,8 +231,6 @@ Filters = [
 ]
 
 BlockedFilters = [
-    "suse-dbus-ghost-service",
-    "suse-dbus-unauthorized-service",
     "polkit-user-privilege",
     "polkit-untracked-privilege",
     "polkit-ghost-file",

@@ -61,7 +61,6 @@ permissions-missing-postin = 10
 permissions-file-digest-ghost = 10
 permissions-file-digest-unauthorized = 10
 permissions-file-symlink = 10
-suse-dbus-unauthorized-service = 10
 pam-unauthorized-module = 10
 world-writable-unauthorized-file = 10
 world-writable-mismatched-attrs = 10

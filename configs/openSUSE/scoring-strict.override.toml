@@ -24,6 +24,5 @@ polkit-ghost-file = 10000
 polkit-untracked-privilege = 10000
 polkit-user-privilege = 10000
 polkit-xml-exception = 10000
-suse-dbus-unauthorized-service = 10000
 world-writable-mismatched-attrs = 10000
 world-writable-unauthorized-file = 10000
