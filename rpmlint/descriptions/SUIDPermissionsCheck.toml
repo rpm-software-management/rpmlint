@@ -14,7 +14,8 @@ please use the %attr macro to set the correct permissions.
 permissions-incorrect-owner="""
 please use the %attr macro to set the correct ownership.
 """
-permissions-file-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
+permissions-file-setuid-bit="""Packaging setuid/setgid binaries requires a
+review and whitelisting by the SUSE security team. #REVIEW_NEEDED_TEXT#"""
 permissions-directory-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
 permissions-fscaps="""
 Packaging file capabilities is currently not supported. Please use normal permissions instead. You may contact the security team to request an entry that sets capabilities in /usr/share/permissions/permissions instead.

@@ -1,14 +1,18 @@
 polkit-user-privilege="""
 The package allows unprivileged users to carry out privileged
-operations. This could cause security
+operations without root authentication. This could cause security
 problems if not done carefully. #REVIEW_NEEDED_TEXT#
 """
 polkit-untracked-privilege="""
-The privilege is not listed in /etc/polkit-default-privs.*
+The polkit action is not listed in the polkit-default-privs profiles
 which makes it harder for admins to find. Furthermore improper polkit
 authorization checks can easily introduce security issues. #REVIEW_NEEDED_TEXT#
 """
 polkit-ghost-file="""
 This package installs a polkit rule or policy as %ghost file.
 #GHOST_ENCOUNTERED_TEXT#
+"""
+polkit-xml-exception="""
+A polkit policy could not be parsed as valid XML. Please fix the file's
+contents.
 """
