@@ -28,7 +28,7 @@ class SUIDPermissionsCheck(AbstractCheck):
         if not stat.S_ISDIR(mode):
             self.output.add_info('E', pkg, 'permissions-file-setuid-bit', msg)
         else:
-            self.output.add_info('W', pkg, 'permissions-directory-setuid-bit', msg)
+            self.output.add_info('E', pkg, 'permissions-directory-setuid-bit', msg)
 
     def _verify_entry(self, pkg, path, mode, owner):
         if stat.S_ISDIR(mode):

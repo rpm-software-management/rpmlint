@@ -86,7 +86,7 @@ def test_permissions_directory_setuid_bit(tmpdir, package, permissions_check):
     output, test = permissions_check
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'testsuidpermissionscheck.x86_64: W: permissions-directory-setuid-bit /var/lib/testsuidpermissionscheck/test_permissions_directory_setuid_bit is packaged with setuid/setgid bits (04755)' in out
+    assert 'testsuidpermissionscheck.x86_64: E: permissions-directory-setuid-bit /var/lib/testsuidpermissionscheck/test_permissions_directory_setuid_bit is packaged with setuid/setgid bits (04755)' in out
 
 
 @pytest.mark.parametrize('package', ['binary/permissions-no-postin'])
@@ -96,7 +96,7 @@ def test_permissions_missing_postin(tmpdir, package, permissions_check):
     out = output.print_results(output.results)
     assert 'permissions-no-postin.x86_64: E: permissions-missing-postin missing %set_permissions /var/lib/permissions-no-postin/test_permissions_directory_setuid_bit in %post' in out
     assert 'permissions-no-postin.x86_64: E: permissions-missing-postin missing %set_permissions /var/lib/permissions-no-postin/test_permissions_file_setuid_bit in %post' in out
-    assert 'permissions-no-postin.x86_64: W: permissions-directory-setuid-bit /var/lib/permissions-no-postin/test_permissions_directory_setuid_bit is packaged with setuid/setgid bits (04755)' in out
+    assert 'permissions-no-postin.x86_64: E: permissions-directory-setuid-bit /var/lib/permissions-no-postin/test_permissions_directory_setuid_bit is packaged with setuid/setgid bits (04755)' in out
     assert 'permissions-no-postin.x86_64: E: permissions-file-setuid-bit /var/lib/permissions-no-postin/test_permissions_file_setuid_bit is packaged with setuid/setgid bits (04755)' in out
 
 
