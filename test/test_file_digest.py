@@ -109,7 +109,7 @@ def test_missing_entry():
         test.check(pkg)
         assert len(output.results) == 1
         error = output.results[0]
-        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil'
+        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil (file digest sha256:f2175fc16d5a482baa71b2e77831b354afa91a5fda5ef0df59d8e87376598d4f)'
 
 
 @pytest.mark.parametrize('package', ['binary/tmpwatch'])
@@ -133,8 +133,8 @@ def test_wrong_pkg_name():
         pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         test.check(pkg)
         assert len(output.results) == 2
-        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious' in output.results
-        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious (file digest of resolved path /other/place/suspicious.txt sha256:a412bca55af87ea264063df10d08a40ff3b8e68106f4a48a3c4a1cacb6394c94)' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous (file digest sha256:537b320f9c3b30276bd54b838b6e6b72e923e70dbdb126926f992d594a30256c)' in output.results
 
 
 def test_unaffected_pkg():
@@ -172,7 +172,7 @@ def test_missing_nodigests_entry():
         test.check(pkg)
         assert len(output.results) == 1
         error = output.results[0]
-        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil'
+        assert error == 'testpkg: E: somerestriction-file-digest-unauthorized /restricted/1/evil (file digest sha256:f2175fc16d5a482baa71b2e77831b354afa91a5fda5ef0df59d8e87376598d4f)'
 
 
 def test_wrong_pkg_name_for_nodigests():
@@ -187,8 +187,8 @@ def test_wrong_pkg_name_for_nodigests():
         pkg.add_file_with_content('/related/and/also/sensitive', 'whatever')
         test.check(pkg)
         assert len(output.results) == 2
-        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious' in output.results
-        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /alsorestricted/2/suspicious (file digest of resolved path /other/place/suspicious.txt sha256:85738f8f9a7f1b04b5329c590ebcb9e425925c6d0984089c43a022de4f19c281)' in output.results
+        assert 'otherpkg: E: somerestriction-file-digest-unauthorized /restricted/1/dangerous (file digest sha256:85738f8f9a7f1b04b5329c590ebcb9e425925c6d0984089c43a022de4f19c281)' in output.results
 
 
 def test_combination_nodigests_and_digests():

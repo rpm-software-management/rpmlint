@@ -6,6 +6,9 @@ import stat
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
+DEFAULT_DIGEST_ALG = 'sha256'
+
+
 class FileDigestCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -144,14 +147,22 @@ class FileDigestCheck(AbstractCheck):
         # If not whitelisted print error: file-digest-unauthorized
         whitelisted_paths = {dg['path'] for dg in digests}
         for spath in secured_paths:
-            unauthorized = True
             for wpath in whitelisted_paths:
                 if fnmatch(spath, wpath):
                     # filepath is whitelisted
-                    unauthorized = False
                     break
-            if unauthorized:
-                self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', spath, None)
+            else:
+                pkgfile = self._resolve_links(pkg, spath)
+                digest_path = ''
+                if pkgfile:
+                    encountered_digest = self._calc_digest(pkgfile, DEFAULT_DIGEST_ALG)
+                    if pkgfile.name != spath:
+                        digest_path = ' of resolved path ' + pkgfile.name
+                else:
+                    encountered_digest = '<failed-to-calculate-digest>'
+
+                digest_hint = f'(file digest{digest_path} {DEFAULT_DIGEST_ALG}:{encountered_digest})'
+                self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', spath, digest_hint)
 
         # For all digest whitelisted files check if the digests in the package are correct
         # If not correct print error: file-digest-mismatch
