@@ -84,30 +84,45 @@ class FileDigestCheck(AbstractCheck):
                 continue
         return result
 
-    def _is_valid_digest(self, pkgfile, digest, pkg):
+    def _is_valid_digest(self, path, digest, pkg):
         algorithm = digest['algorithm']
         if algorithm == 'skip':
             return (True, None)
 
+        pkgfile = self._resolve_links(pkg, path)
+        if pkgfile is None:
+            return (False, None)
+
+        file_digest = self._calc_digest(pkgfile, algorithm)
+        return (file_digest == digest['hash'], file_digest)
+
+    def _resolve_links(self, pkg, path):
+        pkgfile = pkg.files[path]
         while stat.S_ISLNK(pkgfile.mode):
             pkgfile = pkg.readlink(pkgfile)
             if not pkgfile:
-                return (False, None)
+                return None
 
-        digest_hash = digest['hash']
+        return pkgfile
+
+    def _calc_digest(self, pkgfile, algorithm):
         pair = (pkgfile.name, algorithm)
-        if pair not in self.digest_cache:
-            h = hashlib.new(algorithm)
-            with open(pkgfile.path, 'rb') as fd:
-                while True:
-                    chunk = fd.read(4096)
-                    if not chunk:
-                        break
-                    h.update(chunk)
-            self.digest_cache[pair] = h.hexdigest()
 
-        file_digest = self.digest_cache[pair]
-        return (file_digest == digest_hash, file_digest)
+        digest = self.digest_cache.get(pair, None)
+        if digest is not None:
+            return digest
+
+        h = hashlib.new(algorithm)
+        with open(pkgfile.path, 'rb') as fd:
+            while True:
+                chunk = fd.read(4096)
+                if not chunk:
+                    break
+                h.update(chunk)
+
+        digest = h.hexdigest()
+        self.digest_cache[pair] = digest
+        return digest
 
     def _check_group_type(self, pkg, group_type, secured_paths):
         """ Check all secured files of a group type
@@ -156,7 +171,7 @@ class FileDigestCheck(AbstractCheck):
                 if not pkg.files.get(path):
                     # This digest entry is not needed anymore and could be dropped
                     continue
-                valid_digest, file_digest = self._is_valid_digest(pkg.files[path], digest, pkg)
+                valid_digest, file_digest = self._is_valid_digest(path, digest, pkg)
                 if valid_digest:
                     # Valid digest found, no mismatch error will be printed
                     error_digests = []
