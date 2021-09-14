@@ -59,7 +59,13 @@ class SUIDPermissionsCheck(AbstractCheck):
                     found = True
                     break
 
-        if need_verifyscript and (path not in self.perms or not self._is_static_entry(self.perms[path])):
+        # don't care about "static" entries that only serve as a kind of
+        # whitelisting purpose or sanity check that should only be applied
+        # during `chkstat --system`
+        if path in self.perms and self._is_static_entry(self.perms[path]):
+            return False
+
+        if need_verifyscript:
             if not script or not found:
                 self.output.add_info('E', pkg, 'permissions-missing-postin', f'missing %set_permissions {path} in %post')
 
