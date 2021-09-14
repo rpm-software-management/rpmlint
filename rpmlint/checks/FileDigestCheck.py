@@ -122,7 +122,7 @@ class FileDigestCheck(AbstractCheck):
                 digests.extend(digest_group['digests'])
 
         # For all files in this package that fall into the secured paths: check if they are whitelisted
-        # If not whitelisted print error: file-digest-unauthorized
+        # If not whitelisted print error: file-unauthorized
         whitelisted_paths = {dg['path'] for dg in digests}
         for spath in secured_paths:
             for wpath in whitelisted_paths:
@@ -140,7 +140,7 @@ class FileDigestCheck(AbstractCheck):
                     encountered_digest = '<failed-to-calculate-digest>'
 
                 digest_hint = f'(file digest{digest_path} {DEFAULT_DIGEST_ALG}:{encountered_digest})'
-                self.output.add_info('E', pkg, f'{group_type}-file-digest-unauthorized', spath, digest_hint)
+                self.output.add_info('E', pkg, f'{group_type}-file-unauthorized', spath, digest_hint)
 
         # For all digest whitelisted files check if the digests in the package are correct
         # If not correct print error: file-digest-mismatch
@@ -186,7 +186,7 @@ class FileDigestCheck(AbstractCheck):
             if not group:
                 continue
             elif pkgfile.name in pkg.ghost_files:
-                self.output.add_info('E', pkg, f'{group}-file-digest-ghost', pkgfile.name)
+                self.output.add_info('E', pkg, f'{group}-file-ghost', pkgfile.name)
             elif stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
                 self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
             else:

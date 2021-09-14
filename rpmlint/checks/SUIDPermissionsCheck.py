@@ -120,7 +120,7 @@ class SUIDPermissionsCheck(AbstractCheck):
                     # mark all permissions.d paths as "blacklisted" paths.
                     # e.g. [FileDigestLocation.permissions] with Locations
                     # /etc/permissions.d/ and /usr/share/permissions/permissions.d/
-                    # This ensures that an file-digest-unauthorized error is thrown when a permissions.d
+                    # This ensures that an file-unauthorized error is thrown when a permissions.d
                     # package is not whitelisted.
                     #
                     # To whitelist a permissions.d file after a successful review,

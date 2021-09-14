@@ -1,27 +1,27 @@
 SUFFIX="requires a review and whitelisting by the SUSE security team"
 
-cron-file-digest-unauthorized="Packaging cron jobs #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+cron-file-unauthorized="Packaging cron jobs #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 cron-file-digest-mismatch="A whitelisted cron job related file changed in content. Packaging cron jobs #SUFFIX#. #REVIEW_NEEDED_TEXT#"
-cron-file-digest-ghost="Cron jobs #SUFFIX#. #GHOST_ENCOUNTERED_TEXT#"
+cron-file-ghost="Cron jobs #SUFFIX#. #GHOST_ENCOUNTERED_TEXT#"
 # we allow symlinks for cron jobs, we just add this to satisfy unit tests
 cron-file-symlink="this should never happen"
 
 # The binary PAM modules are whitelisted without digests so -mismatch should
 # not occur here
-pam-file-digest-unauthorized="Packaging new PAM modules #SUFFIX#. #REVIEW_NEEDED_TEXT#"
-pam-file-digest-ghost="PAM modules #GHOST_ENCOUNTERED_TEXT#"
+pam-file-unauthorized="Packaging new PAM modules #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+pam-file-ghost="PAM modules #GHOST_ENCOUNTERED_TEXT#"
 pam-file-symlink="this should never happen"
 
-permissions-file-digest-unauthorized="Packaging permissions.d drop-in snippets #SUFFIX#. #REVIEW_NEEDED_TEXT#"
-permissions-file-digest-ghost="Permissions drop-in files #GHOST_ENCOUNTERED_TEXT#"
+permissions-file-unauthorized="Packaging permissions.d drop-in snippets #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+permissions-file-ghost="Permissions drop-in files #GHOST_ENCOUNTERED_TEXT#"
 permissions-file-symlink="Symlinks are not allowed for permissions.d drop-in snippets"
 
-polkit-file-digest-unauthorized="Packaging polkit rules #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+polkit-file-unauthorized="Packaging polkit rules #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 polkit-file-digest-mismatch="A polkit rule file changed in content. Packaging polkit rules #SUFFIX#. #REVIEW_NEEDED_TEXT#"
-polkit-file-digest-ghost="Polkit rules #GHOST_ENCOUNTERED_TEXT#"
+polkit-file-ghost="Polkit rules #GHOST_ENCOUNTERED_TEXT#"
 polkit-file-symlink="Symlinks are not allowed for polkit rule files"
 
-dbus-file-digest-unauthorized="Packaging D-Bus services #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+dbus-file-unauthorized="Packaging D-Bus services #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 dbus-file-digest-mismatch="A D-Bus configuration file changed in content. Packaging D-Bus services #SUFFIX#. #REVIEW_NEEDED_TEXT#"
-dbus-file-digest-ghost="D-Bus configuration file #GHOST_ENCOUNTERED_TEXT#"
+dbus-file-ghost="D-Bus configuration file #GHOST_ENCOUNTERED_TEXT#"
 dbus-file-symlink="Symlinks are not allowed for D-Bus configuration files"

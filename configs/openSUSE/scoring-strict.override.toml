@@ -1,26 +1,26 @@
 [Scoring]
-cron-file-digest-ghost = 10000
-cron-file-digest-unauthorized = 10000
+cron-file-ghost = 10000
+cron-file-unauthorized = 10000
 cron-file-symlink = 10000
-dbus-file-digest-ghost = 10000
-dbus-file-digest-unauthorized = 10000
+dbus-file-ghost = 10000
+dbus-file-unauthorized = 10000
 dbus-file-symlink = 10000
 device-mismatched-attrs = 10000
 device-unauthorized-file = 10000
 invalid-license = 100000
-pam-file-digest-ghost = 10000
-pam-file-digest-unauthorized = 10000
+pam-file-ghost = 10000
+pam-file-unauthorized = 10000
 pam-file-symlink = 10000
 permissions-directory-setuid-bit = 10000
-permissions-file-digest-ghost = 10000
-permissions-file-digest-unauthorized = 10000
+permissions-file-ghost = 10000
+permissions-file-unauthorized = 10000
 permissions-file-setuid-bit = 10000
 permissions-file-symlink = 10000
 # this one is problematic, because e.g. /etc/cron.* is packaged by multiple
 # packages and only one should be responsible for caring about %postin
 permissions-missing-postin = 100
-polkit-file-digest-ghost = 10000
-polkit-file-digest-unauthorized = 10000
+polkit-file-ghost = 10000
+polkit-file-unauthorized = 10000
 polkit-file-symlink = 10000
 polkit-ghost-file = 10000
 polkit-untracked-privilege = 10000

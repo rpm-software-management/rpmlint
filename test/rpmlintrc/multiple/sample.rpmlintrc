@@ -1,1 +1,1 @@
-setBadness('dbus-file-digest-unauthorized', 0)
+setBadness('dbus-file-unauthorized', 0)

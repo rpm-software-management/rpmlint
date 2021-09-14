@@ -121,9 +121,9 @@ def test_badness_functions():
     """
     cfg = Config(TEST_CONFIG_2)
     assert len(cfg.configuration['Scoring']) == 0
-    cfg.set_badness('dbus-file-digest-unauthorized', 15)
+    cfg.set_badness('dbus-file-unauthorized', 15)
     assert len(cfg.configuration['Scoring']) == 1
-    assert cfg.configuration['Scoring']['dbus-file-digest-unauthorized'] == 15
+    assert cfg.configuration['Scoring']['dbus-file-unauthorized'] == 15
 
 
 def test_rpmlint_loading():
