@@ -65,28 +65,6 @@ class FileDigestCheck(AbstractCheck):
                     pass
         return None
 
-    def _check_filetypes(self, pkg):
-        """
-        Check that all symlinks point to a correct location and that
-        symlinks are allowed in a configuration group.
-        """
-        result = True
-        for filename, pkgfile in pkg.files.items():
-            group = self._get_digest_configuration_group(pkgfile)
-            if not group:
-                continue
-
-            if filename in pkg.ghost_files:
-                self.output.add_info('E', pkg, f'{group}-file-digest-ghost', filename)
-                result = False
-                continue
-
-            if stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
-                self.output.add_info('E', pkg, f'{group}-file-symlink', filename)
-                result = False
-                continue
-        return result
-
     def _is_valid_digest(self, path, digest, pkg):
         algorithm = digest['algorithm']
         if algorithm == 'skip':
@@ -200,17 +178,21 @@ class FileDigestCheck(AbstractCheck):
         in which all files have valid digest.
         """
 
-        if not self._check_filetypes(pkg):
-            return
-
         # Find all files in this package that fall in a digest secured path
         secured_paths = {}
         for pkgfile in pkg.files.values():
-            group_type = self._get_digest_configuration_group(pkgfile)
-            if group_type:
-                secured_paths.setdefault(group_type, [])
-                secured_paths[group_type].append(pkgfile.name)
+            group = self._get_digest_configuration_group(pkgfile)
+
+            if not group:
+                continue
+            elif pkgfile.name in pkg.ghost_files:
+                self.output.add_info('E', pkg, f'{group}-file-digest-ghost', pkgfile.name)
+            elif stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
+                self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
+            else:
+                file_list = secured_paths.setdefault(group, [])
+                file_list.append(pkgfile.name)
 
         # Check all found secured files for every group type
-        for group_type, files in secured_paths.items():
-            self._check_group_type(pkg, group_type, set(files))
+        for group, files in secured_paths.items():
+            self._check_group_type(pkg, group, set(files))
