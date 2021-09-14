@@ -28,9 +28,6 @@ Please add 'PreReq: permissions'
 permissions-missing-verifyscript="""
 Please add a %verifyscript section
 """
-permissions-suseconfig-obsolete="""
-The %run_permissions macro calls SuSEconfig which sets permissions for all files in the system. Please use %set_permissions <filename> instead to only set permissions for files contained in this package
-"""
 permissions-ghostfile="""
 This package installs a permissions file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#
 """

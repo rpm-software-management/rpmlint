@@ -256,7 +256,6 @@ BlockedFilters = [
     "permissions-missing-postin",
     "permissions-missing-requires",
     "permissions-missing-verifyscript",
-    "permissions-suseconfig-obsolete",
     "permissions-symlink",
     "polkit-file-digest-ghost",
     "polkit-file-digest-unauthorized",
