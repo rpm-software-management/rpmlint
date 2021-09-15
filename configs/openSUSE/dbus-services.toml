@@ -934,7 +934,61 @@ nodigests = [
 package = "plasma5-disks"
 type = "dbus"
 note = "legacy: not audited"
+bug = "bsc#1176742"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.kded.smart.service",
     "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf",
+]
+
+[[FileDigestGroup]]
+package = "kdenetwork-filesharing"
+type = "dbus"
+note = "Samba configuration helper"
+bug = "bsc#1175633"
+nodigests = [
+    "org.kde.filesharing.samba.service",
+    "org.kde.filesharing.samba.conf",
+]
+
+[[FileDigestGroup]]
+package = "kdiskmark"
+type = "dbus"
+note = "HDD/SSD benchmark GUI"
+bug = "bsc#1182521"
+nodigests = [
+    "org.jonmagon.kdiskmark.service",
+    "org.jonmagon.kdiskmark.conf",
+]
+
+[[FileDigestGroup]]
+package = "systemd-experimental"
+type = "dbus"
+note = "systemd-homed helper service for providing portable home directory containers"
+bug = "bsc#1185285"
+nodigests = [
+    "org.freedesktop.home1.conf",
+    "org.freedesktop.home1.service",
+]
+
+[[FileDigestGroup]]
+package = "oddjob-gpupdate"
+type = "dbus"
+note = "helper that calls samba-gpupdate"
+bug = "bsc#1188680"
+nodigests = [
+    "oddjob-gpupdate.conf",
+]
+
+[[FileDigestGroup]]
+package = "deepin-api"
+type = "dbus"
+note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
+bug = "bsc#1070943"
+nodigests = [
+    "com.deepin.api.Device.service",
+    "com.deepin.api.Device.conf",
+    "com.deepin.api.LocaleHelper.service",
+    "com.deepin.api.LocaleHelper.conf",
+    "com.deepin.api.SoundThemePlayer.service",
+    "com.deepin.api.SoundThemePlayer.conf"
 ]
