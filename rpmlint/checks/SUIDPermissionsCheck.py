@@ -28,7 +28,7 @@ class SUIDPermissionsCheck(AbstractCheck):
         if not stat.S_ISDIR(mode):
             self.output.add_info('E', pkg, 'permissions-file-setuid-bit', msg)
         else:
-            self.output.add_info('W', pkg, 'permissions-directory-setuid-bit', msg)
+            self.output.add_info('E', pkg, 'permissions-directory-setuid-bit', msg)
 
     def _verify_entry(self, pkg, path, mode, owner):
         if stat.S_ISDIR(mode):
@@ -59,7 +59,13 @@ class SUIDPermissionsCheck(AbstractCheck):
                     found = True
                     break
 
-        if need_verifyscript and (path not in self.perms or not self._is_static_entry(self.perms[path])):
+        # don't care about "static" entries that only serve as a kind of
+        # whitelisting purpose or sanity check that should only be applied
+        # during `chkstat --system`
+        if path in self.perms and self._is_static_entry(self.perms[path]):
+            return False
+
+        if need_verifyscript:
             if not script or not found:
                 self.output.add_info('E', pkg, 'permissions-missing-postin', f'missing %set_permissions {path} in %post')
 
@@ -114,7 +120,7 @@ class SUIDPermissionsCheck(AbstractCheck):
                     # mark all permissions.d paths as "blacklisted" paths.
                     # e.g. [FileDigestLocation.permissions] with Locations
                     # /etc/permissions.d/ and /usr/share/permissions/permissions.d/
-                    # This ensures that an file-digest-unauthorized error is thrown when a permissions.d
+                    # This ensures that an file-unauthorized error is thrown when a permissions.d
                     # package is not whitelisted.
                     #
                     # To whitelist a permissions.d file after a successful review,

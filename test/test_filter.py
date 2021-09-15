@@ -35,7 +35,7 @@ def test_data_storing(tmpdir):
     assert result.printed_messages['I'] == 0
     assert result.printed_messages['E'] == 1
     # this should be downgraded
-    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    result.add_info('E', pkg, 'dbus-file-unauthorized', '')
     assert len(result.results) == 2
     assert result.printed_messages['W'] == 1
     assert result.printed_messages['E'] == 1
@@ -55,7 +55,7 @@ in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     result = Filter(cfg)
     pkg = get_tested_package(TEST_PACKAGE, tmpdir)
     assert len(result.results) == 0
-    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    result.add_info('E', pkg, 'dbus-file-unauthorized', '')
     # two options so we check the description is added only once
     result.add_info('I', pkg, 'suse-other-error', '/usr/bin/1')
     # nothing is populated
@@ -121,10 +121,11 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.
 
-ngircd.x86_64: E: suse-dbus-unauthorized-service
-The package installs a DBUS system service file. If the package is intended
-for inclusion in any SUSE product please open a bug report to request review
-of the package by the security team. Please refer to
+ngircd.x86_64: E: dbus-file-unauthorized
+Packaging D-Bus services requires a review and whitelisting by the SUSE
+security team. If the package is intended for inclusion in any SUSE product
+please open a bug report to request review of the package by the security
+team. Please refer to
 https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
 more information.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
@@ -132,7 +133,7 @@ more information.\n\n"""
     pkg = get_tested_package(TEST_PACKAGE, tmpdir)
     pkg2 = get_tested_package(TEST_PACKAGE2, tmpdir)
     # here we check if empty detail will not add whitespace
-    result.add_info('E', pkg, 'suse-dbus-unauthorized-service', '')
+    result.add_info('E', pkg, 'dbus-file-unauthorized', '')
     # two options so we check the description is added only once
     result.add_info('I', pkg, 'suse-other-error', '/usr/bin/1')
     result.add_info('I', pkg, 'suse-other-error', '/usr/bin/2')
@@ -140,7 +141,7 @@ more information.\n\n"""
     result.error_details.update({'suse-other-error': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'})
     assert len(result.print_results(result.results).splitlines()) == 4
     result.info = True
-    assert len(result.print_results(result.results).splitlines()) == 17
+    assert len(result.print_results(result.results).splitlines()) == 18
     assert result.print_results(result.results) == expected_output
 
 

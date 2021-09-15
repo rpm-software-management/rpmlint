@@ -1,6 +1,6 @@
 # This line is mandatory to access the configuration functions
 from Config import *
-setBadness('suse-dbus-unauthorized-service', 0)
+setBadness('dbus-file-unauthorized', 0)
     setBadness('suse-other-error','20')
 setBadness      ('suse-other-error-123','200')
 # # Output filters
@@ -89,7 +89,7 @@ addFilter("perl.* devel-file-in-non-devel-package")
 addFilter("perl-SNMP.* zero-length.*\.bs")
 addFilter("python-naming-policy-not-applied")
 addFilter("pyzmq-devel.*: W: no-dependency-on python\(abi\)")
-addFilter('ratbagd.* suse-dbus-unauthorized-service.*')
+addFilter('ratbagd.* dbus-file-unauthorized.*')
 addFilter("script-without-shebang")
 addFilter("shlib-fixed-dependency")
 addFilter("strict-aliasing-punning")

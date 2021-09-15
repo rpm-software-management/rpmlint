@@ -1,4 +1,3 @@
-permissions-unauthorized-file="""#REVIEW_NEEDED_TEXT#"""
 permissions-symlink="""
 permissions handling for symlinks is useless. Please contact security@suse.de to remove the entry. Please refer to #AUDIT_BUG_URL# for more information.
 """
@@ -14,7 +13,8 @@ please use the %attr macro to set the correct permissions.
 permissions-incorrect-owner="""
 please use the %attr macro to set the correct ownership.
 """
-permissions-file-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
+permissions-file-setuid-bit="""Packaging setuid/setgid binaries requires a
+review and whitelisting by the SUSE security team. #REVIEW_NEEDED_TEXT#"""
 permissions-directory-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
 permissions-fscaps="""
 Packaging file capabilities is currently not supported. Please use normal permissions instead. You may contact the security team to request an entry that sets capabilities in /usr/share/permissions/permissions instead.
@@ -27,9 +27,6 @@ Please add 'PreReq: permissions'
 """
 permissions-missing-verifyscript="""
 Please add a %verifyscript section
-"""
-permissions-suseconfig-obsolete="""
-The %run_permissions macro calls SuSEconfig which sets permissions for all files in the system. Please use %set_permissions <filename> instead to only set permissions for files contained in this package
 """
 permissions-ghostfile="""
 This package installs a permissions file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#

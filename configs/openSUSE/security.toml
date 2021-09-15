@@ -11,7 +11,7 @@ Locations = [
 ]
 
 [FileDigestLocation.dbus]
-FollowSymlinks = true
+FollowSymlinks = false
 Locations = [
     "/usr/share/dbus-1/system-services/",
     "/usr/share/dbus-1/system.d/",
@@ -19,7 +19,7 @@ Locations = [
 ]
 
 [FileDigestLocation.polkit]
-FollowSymlinks = true
+FollowSymlinks = false
 Locations = [
     "/etc/polkit-default-privs.d/",
     "/etc/polkit-1/rules.d/",
@@ -27,13 +27,15 @@ Locations = [
 ]
 
 [FileDigestLocation.permissions]
-FollowSymlinks = true
+FollowSymlinks = false
 Locations = [
     "/etc/permissions.d/",
     "/usr/share/permissions/permissions.d/"
 ]
 
 [FileDigestLocation.pam]
+# a single PAM module uses a symlink: pam_krb5afs.so from pam_krb5
+# so we need to accept symlinks here
 FollowSymlinks = true
 NamePatterns = [
     "*.so",

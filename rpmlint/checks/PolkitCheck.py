@@ -20,7 +20,7 @@ class PolkitCheck(AbstractCheck):
     """
     def __init__(self, config, output):
         super().__init__(config, output)
-        self.polkit_privs_files = config.configuration.get('PolkitPrivsFiles', ['/etc/polkit-default-privs.standard'])
+        self.polkit_privs_files = config.configuration.get('PolkitPrivsFiles', ['/usr/etc/polkit-default-privs/profiles/standard'])
         self.privs = {}
         self._collect_privs()
 
@@ -92,7 +92,7 @@ class PolkitCheck(AbstractCheck):
 
         action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[2]]})'
         if found_unauthorized:
-            self.output.add_info('W', pkg, 'polkit-user-privilege', action_settings)
+            self.output.add_info('E', pkg, 'polkit-user-privilege', action_settings)
         else:
             self.output.add_info('E', pkg, 'polkit-untracked-privilege', action_settings)
 
