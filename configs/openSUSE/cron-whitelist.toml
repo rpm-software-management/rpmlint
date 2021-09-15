@@ -12,6 +12,19 @@ digests = [
 ]
 
 [[FileDigestGroup]]
+package = "cronie-anacron"
+type = "cron"
+note = "Minor change in some logic that checks whether the system runs on battery"
+bug = "bsc#1190521"
+digests = [
+    {
+        path = "/etc/cron.hourly/0anacron",
+        algorithm = "sha256",
+        hash = "6e8a152a16e84ddc10e8ab1c2ed2bad28adbfc3b0b1ced62518c4ab0ada87220"
+    },
+]
+
+[[FileDigestGroup]]
 package = "logdigest"
 type = "cron"
 note = "scours through log files to find 'interesting' information and mails it to root"
