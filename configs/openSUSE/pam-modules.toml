@@ -456,3 +456,21 @@ bug = "bsc#1177974"
 nodigests = [
     "*/security/pam_malcontent.so",
 ]
+
+[[FileDigestGroup]]
+package = "sssd"
+type = "pam"
+note = "sssd gssapi extension"
+bug = "bsc#1182509"
+nodigests = [
+    "*/security/pam_sss_gss.so",
+]
+
+[[FileDigestGroup]]
+package = "oddjob-gpupdate"
+type = "pam"
+note = "samba group-policy update helper"
+bug = "bsc#1188680"
+nodigests = [
+    "*/security/pam_oddjob_gpupdate.so",
+]
