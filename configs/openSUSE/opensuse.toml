@@ -228,6 +228,10 @@ Filters = [
     ' info-files-without-install-info-postin' ,
     ' postin-without-install-info ',
     ' info-files-without-install-info-postun ',
+
+# Skip lto-no-text-in-archive for libgcov.a and libgcc.a in gcc packages
+    '.*gcc.*\.\S+: \w: lto-no-text-in-archive .*/libgcc.a',
+    '.*gcc.*\.\S+: \w: lto-no-text-in-archive .*/libgcov.a',
 ]
 
 BlockedFilters = [
