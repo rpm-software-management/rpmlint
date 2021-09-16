@@ -2,7 +2,6 @@
 package = "pam_krb5"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_krb5.so",
     "*/security/pam_krb5afs.so",
@@ -12,7 +11,6 @@ nodigests = [
 package = "ecryptfs-utils"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ecryptfs.so",
 ]
@@ -21,7 +19,6 @@ nodigests = [
 package = "gnome-keyring-pam"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_gnome_keyring.so",
 ]
@@ -30,7 +27,6 @@ nodigests = [
 package = "samba-winbind"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_winbind.so",
 ]
@@ -39,7 +35,6 @@ nodigests = [
 package = "pam_ssh"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ssh.so",
 ]
@@ -48,7 +43,6 @@ nodigests = [
 package = "pam_mount"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_mount.so",
 ]
@@ -57,7 +51,6 @@ nodigests = [
 package = "pam_ccreds"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ccreds.so",
 ]
@@ -66,7 +59,6 @@ nodigests = [
 package = "pam_radius"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_radius_auth.so",
 ]
@@ -75,7 +67,6 @@ nodigests = [
 package = "pam_pkcs11"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_pkcs11.so",
 ]
@@ -84,7 +75,6 @@ nodigests = [
 package = "nss-pam-ldapd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ldap.so",
 ]
@@ -93,7 +83,6 @@ nodigests = [
 package = "pam_passwdqc"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_passwdqc.so",
 ]
@@ -102,7 +91,6 @@ nodigests = [
 package = "pam_userpass"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_userpass.so",
 ]
@@ -111,7 +99,6 @@ nodigests = [
 package = "pam_apparmor"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_apparmor.so",
 ]
@@ -120,7 +107,6 @@ nodigests = [
 package = "opie"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_opie.so",
 ]
@@ -179,7 +165,6 @@ nodigests = [
 package = "pam-deprecated"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_cracklib.so",
     "*/security/pam_tally2.so",
@@ -189,7 +174,6 @@ nodigests = [
 package = "pam_unix"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_unix.so",
     "*/security/pam_unix_acct.so",
@@ -202,7 +186,6 @@ nodigests = [
 package = "pam_unix-nis"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_unix.so",
     "*/security/pam_unix_acct.so",
@@ -215,7 +198,6 @@ nodigests = [
 package = "pam-extra"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_userdb.so",
 ]
@@ -224,7 +206,6 @@ nodigests = [
 package = "systemd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_systemd.so",
 ]
@@ -233,7 +214,6 @@ nodigests = [
 package = "sssd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_sss.so",
 ]
@@ -242,7 +222,6 @@ nodigests = [
 package = "pam_mktemp"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_mktemp.so",
 ]
@@ -251,7 +230,6 @@ nodigests = [
 package = "pam_csync"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_csync.so",
 ]
@@ -260,7 +238,6 @@ nodigests = [
 package = "pam_chroot"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_chroot.so",
 ]
