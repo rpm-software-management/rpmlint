@@ -246,7 +246,7 @@ nodigests = [
 package = "pam_snapper"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bnc#815383"
+bug = "bsc#815383"
 nodigests = [
     "*/security/pam_snapper.so",
 ]

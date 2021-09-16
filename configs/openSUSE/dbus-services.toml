@@ -2,7 +2,7 @@
 package = "cups"
 type = "dbus"
 note = ""
-bug = "bnc#515977"
+bug = "bsc#515977"
 nodigests = [
     "/etc/dbus-1/system.d/cups.conf",
 ]
@@ -45,7 +45,7 @@ nodigests = [
 package = "udisks2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#742751"
+bug = "bsc#742751"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.UDisks2.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.UDisks2.conf",
@@ -63,7 +63,7 @@ nodigests = [
 package = "systemd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#641924"
+bug = "bsc#641924"
 nodigests = [
     "/usr/share/dbus-1/services/org.freedesktop.systemd1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
@@ -95,7 +95,7 @@ nodigests = [
 package = "system-config-printer-applet"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#694640"
+bug = "bsc#694640"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.NewPrinterNotification.conf",
 ]
@@ -104,7 +104,7 @@ nodigests = [
 package = "python3-cupshelpers"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#694640"
+bug = "bsc#694640"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.PrinterDriversInstaller.conf",
 ]
@@ -131,7 +131,7 @@ nodigests = [
 package = "wpa_supplicant"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#681116"
+bug = "bsc#681116"
 nodigests = [
     "/usr/lib/systemd/system/dbus-fi.w1.wpa_supplicant1.service",
     "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service",
@@ -204,7 +204,7 @@ nodigests = [
 package = "NetworkManager"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#747780"
+bug = "bsc#747780"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
 ]
@@ -213,7 +213,7 @@ nodigests = [
 package = "bluez"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#768062"
+bug = "bsc#768062"
 nodigests = [
     "/etc/dbus-1/system.d/bluetooth.conf",
     "/usr/share/dbus-1/system-services/org.bluez.service",
@@ -282,7 +282,7 @@ nodigests = [
 package = "strongswan-nm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#656222"
+bug = "bsc#656222"
 nodigests = [
     "/usr/share/dbus-1/system.d/nm-strongswan-service.conf",
 ]
@@ -291,7 +291,7 @@ nodigests = [
 package = "mumble-server"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#660784"
+bug = "bsc#660784"
 nodigests = [
     "/etc/dbus-1/system.d/mumble-server.conf",
     "/usr/lib/tmpfiles.d/mumble-server.conf",
@@ -301,7 +301,7 @@ nodigests = [
 package = "mumble-server"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#660784"
+bug = "bsc#660784"
 nodigests = [
     "/etc/dbus-1/system.d/mumble-server.conf",
     "/usr/lib/tmpfiles.d/mumble-server.conf",
@@ -311,7 +311,7 @@ nodigests = [
 package = "powerdevil5"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#672145"
+bug = "bsc#672145"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service",
     "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf",
@@ -321,7 +321,7 @@ nodigests = [
 package = "urfkill"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#688328"
+bug = "bsc#688328"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.URfkill.service",
     "/etc/dbus-1/system.d/org.freedesktop.URfkill.conf",
@@ -331,7 +331,7 @@ nodigests = [
 package = "accountsservice"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#676638"
+bug = "bsc#676638"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
     "/etc/dbus-1/system.d/org.freedesktop.Accounts.conf",
@@ -341,7 +341,7 @@ nodigests = [
 package = "colord"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#698250"
+bug = "bsc#698250"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.ColorManager.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf",
@@ -351,7 +351,7 @@ nodigests = [
 package = "lightdm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#708205"
+bug = "bsc#708205"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.DisplayManager.conf",
 ]
@@ -369,7 +369,7 @@ nodigests = [
 package = "NetworkManager-openconnect"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#732915"
+bug = "bsc#732915"
 nodigests = [
     "/etc/dbus-1/system.d/nm-openconnect-service.conf",
 ]
@@ -378,7 +378,7 @@ nodigests = [
 package = "snapper"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#759391"
+bug = "bsc#759391"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.opensuse.Snapper.conf",
     "/usr/share/dbus-1/system-services/org.opensuse.Snapper.service",
@@ -388,7 +388,7 @@ nodigests = [
 package = "autofs"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#782691"
+bug = "bsc#782691"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.AutoMount.conf",
 ]
@@ -397,7 +397,7 @@ nodigests = [
 package = "NetworkManager-iodine"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#781071"
+bug = "bsc#781071"
 nodigests = [
     "/etc/dbus-1/system.d/nm-iodine-service.conf",
 ]
@@ -406,7 +406,7 @@ nodigests = [
 package = "ModemManager"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#798273"
+bug = "bsc#798273"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service",
@@ -416,7 +416,7 @@ nodigests = [
 package = "fprintd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#792095"
+bug = "bsc#792095"
 nodigests = [
     "/usr/share/dbus-1/system-services/net.reactivated.Fprint.service",
     "/usr/share/dbus-1/system.d/net.reactivated.Fprint.conf",
@@ -426,7 +426,7 @@ nodigests = [
 package = "fprintd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#783932"
+bug = "bsc#783932"
 nodigests = [
     "/etc/dbus-1/system.d/org.opensuse.Network.conf",
     "/etc/dbus-1/system.d/org.opensuse.Network.AUTO4.conf",
@@ -439,7 +439,7 @@ nodigests = [
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#828207"
+bug = "bsc#828207"
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.machine1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service",
@@ -450,7 +450,7 @@ nodigests = [
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#964935"
+bug = "bsc#964935"
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.import1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.import1.service",
@@ -461,7 +461,7 @@ nodigests = [
 package = "geoclue2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#838360"
+bug = "bsc#838360"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.GeoClue2.service",
     "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.conf",
@@ -471,7 +471,7 @@ nodigests = [
 package = "geoclue2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#862216"
+bug = "bsc#862216"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.Agent.conf",
 ]
@@ -480,7 +480,7 @@ nodigests = [
 package = "mate-settings-daemon"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#831404"
+bug = "bsc#831404"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.mate.SettingsDaemon.DateTimeMechanism.service",
     "/usr/share/dbus-1/system.d/org.mate.SettingsDaemon.DateTimeMechanism.conf",
@@ -490,7 +490,7 @@ nodigests = [
 package = "tuned"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#787379, bnc#1007279"
+bug = "bsc#787379, bsc#1007279"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.tuned.conf",
 ]
@@ -499,7 +499,7 @@ nodigests = [
 package = "kwalletmanager5"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#1033296"
+bug = "bsc#1033296"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmkwallet5.conf",
     "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmkwallet5.service",
@@ -509,7 +509,7 @@ nodigests = [
 package = "neard"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#837978"
+bug = "bsc#837978"
 nodigests = [
     "/etc/dbus-1/system.d/org.neard.conf"
 ]
@@ -518,7 +518,7 @@ nodigests = [
 package = "ofono"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#862354"
+bug = "bsc#862354"
 nodigests = [
     "/etc/dbus-1/system.d/ofono.conf",
 ]
@@ -527,7 +527,7 @@ nodigests = [
 package = "libKF5Auth5"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#864716"
+bug = "bsc#864716"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kf5auth.conf",
 ]
@@ -536,7 +536,7 @@ nodigests = [
 package = "firewalld"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#907625"
+bug = "bsc#907625"
 nodigests = [
     "/usr/share/dbus-1/system.d/FirewallD.conf",
 ]
@@ -545,7 +545,7 @@ nodigests = [
 package = "systemd-network"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#918799"
+bug = "bsc#918799"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.network1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.network1.service",
@@ -555,7 +555,7 @@ nodigests = [
 package = "realmd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#916766"
+bug = "bsc#916766"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.realmd.service",
     "/etc/dbus-1/system.d/org.freedesktop.realmd.conf",
@@ -565,7 +565,7 @@ nodigests = [
 package = "libteam-tools"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#941993"
+bug = "bsc#941993"
 nodigests = [
     "/etc/dbus-1/system.d/org.libteam.teamd.conf",
 ]
@@ -719,7 +719,7 @@ nodigests = [
 package = "tpm2.0-abrmd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#1049694"
+bug = "bsc#1049694"
 nodigests = [
     "/etc/dbus-1/system.d/tpm2-abrmd.conf",
     "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service",
@@ -787,7 +787,7 @@ nodigests = [
 package = "kalarm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#1087714"
+bug = "bsc#1087714"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kalarm.rtcwake.conf",
     "/usr/share/dbus-1/system-services/org.kde.kalarm.rtcwake.service",
@@ -797,7 +797,7 @@ nodigests = [
 package = "NetworkManager-libreswan"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#1089340"
+bug = "bsc#1089340"
 nodigests = [
     "/etc/dbus-1/system.d/nm-libreswan-service.conf",
 ]
@@ -806,7 +806,7 @@ nodigests = [
 package = "ratbagd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bnc#1076467"
+bug = "bsc#1076467"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.ratbag1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.ratbag1.conf",
