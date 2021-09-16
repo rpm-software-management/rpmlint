@@ -17,7 +17,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "packagekit"
+package = "PackageKit"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -26,7 +26,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-pptp"
+package = "NetworkManager-pptp"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -192,7 +192,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager"
+package = "NetworkManager"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -201,7 +201,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager"
+package = "NetworkManager"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bnc#747780"
@@ -245,7 +245,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-openvpn"
+package = "NetworkManager-openvpn"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -271,7 +271,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-vpnc"
+package = "NetworkManager-vpnc"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -394,7 +394,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-iodine"
+package = "NetworkManager-iodine"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bnc#781071"
@@ -403,7 +403,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "modemmanager"
+package = "ModemManager"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bnc#798273"
@@ -735,7 +735,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-l2tp"
+package = "NetworkManager-l2tp"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#846337"
