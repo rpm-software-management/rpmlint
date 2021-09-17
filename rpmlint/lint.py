@@ -37,6 +37,9 @@ class Lint(object):
             self.profile.enable()
         else:
             self.profile = None
+
+        if options['rpmlintrc']:
+            options['rpmlintrc'] = [options['rpmlintrc']]
         self._load_rpmlintrc()
         if options['verbose']:
             self.config.info = options['verbose']

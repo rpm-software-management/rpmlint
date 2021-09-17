@@ -74,7 +74,7 @@ class Config(object):
         self.conf_files.append(self.config_defaults)
 
         # Skip auto-loading when running under PYTEST
-        if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
+        if not os.environ.get('PYTEST_XDIST_TESTRUNUID') and not os.environ.get('CONFIG_DISABLE_AUTOLOADING'):
             # Then load up config directories on system
             for directory in reversed(xdg_config_dirs):
                 confdir = Path(directory) / 'rpmlint'
