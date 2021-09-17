@@ -2,7 +2,7 @@
 package = "cups"
 type = "dbus"
 note = ""
-bug = "bnc#515977"
+bug = "bsc#515977"
 nodigests = [
     "/etc/dbus-1/system.d/cups.conf",
 ]
@@ -17,7 +17,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "packagekit"
+package = "PackageKit"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -26,7 +26,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-pptp"
+package = "NetworkManager-pptp"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -44,8 +44,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "udisks2"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#742751"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#742751"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.UDisks2.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.UDisks2.conf",
@@ -62,8 +62,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#641924"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#641924"
 nodigests = [
     "/usr/share/dbus-1/services/org.freedesktop.systemd1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
@@ -94,8 +94,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "system-config-printer-applet"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#694640"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#694640"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.NewPrinterNotification.conf",
 ]
@@ -103,8 +103,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "python3-cupshelpers"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#694640"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#694640"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.PrinterDriversInstaller.conf",
 ]
@@ -130,8 +130,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#681116"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#681116"
 nodigests = [
     "/usr/lib/systemd/system/dbus-fi.w1.wpa_supplicant1.service",
     "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service",
@@ -192,7 +192,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager"
+package = "NetworkManager"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -201,10 +201,10 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager"
+package = "NetworkManager"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#747780"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#747780"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
 ]
@@ -212,8 +212,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "bluez"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#768062"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#768062"
 nodigests = [
     "/etc/dbus-1/system.d/bluetooth.conf",
     "/usr/share/dbus-1/system-services/org.bluez.service",
@@ -245,7 +245,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-openvpn"
+package = "NetworkManager-openvpn"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -271,7 +271,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-vpnc"
+package = "NetworkManager-vpnc"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -281,8 +281,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "strongswan-nm"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#656222"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#656222"
 nodigests = [
     "/usr/share/dbus-1/system.d/nm-strongswan-service.conf",
 ]
@@ -290,8 +290,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "mumble-server"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#660784"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#660784"
 nodigests = [
     "/etc/dbus-1/system.d/mumble-server.conf",
     "/usr/lib/tmpfiles.d/mumble-server.conf",
@@ -300,8 +300,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "mumble-server"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#660784"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#660784"
 nodigests = [
     "/etc/dbus-1/system.d/mumble-server.conf",
     "/usr/lib/tmpfiles.d/mumble-server.conf",
@@ -310,8 +310,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "powerdevil5"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#672145"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#672145"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service",
     "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf",
@@ -320,8 +320,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "urfkill"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#688328"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#688328"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.URfkill.service",
     "/etc/dbus-1/system.d/org.freedesktop.URfkill.conf",
@@ -330,8 +330,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "accountsservice"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#676638"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#676638"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
     "/etc/dbus-1/system.d/org.freedesktop.Accounts.conf",
@@ -340,8 +340,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "colord"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#698250"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#698250"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.ColorManager.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf",
@@ -350,8 +350,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "lightdm"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#708205"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#708205"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.DisplayManager.conf",
 ]
@@ -359,7 +359,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "sddm"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "boo#897788"
 nodigests = [
     "/etc/dbus-1/system.d/sddm_org.freedesktop.DisplayManager.conf",
@@ -368,8 +368,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-openconnect"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#732915"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#732915"
 nodigests = [
     "/etc/dbus-1/system.d/nm-openconnect-service.conf",
 ]
@@ -377,8 +377,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "snapper"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#759391"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#759391"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.opensuse.Snapper.conf",
     "/usr/share/dbus-1/system-services/org.opensuse.Snapper.service",
@@ -387,26 +387,26 @@ nodigests = [
 [[FileDigestGroup]]
 package = "autofs"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#782691"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#782691"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.AutoMount.conf",
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-iodine"
+package = "NetworkManager-iodine"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#781071"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#781071"
 nodigests = [
     "/etc/dbus-1/system.d/nm-iodine-service.conf",
 ]
 
 [[FileDigestGroup]]
-package = "modemmanager"
+package = "ModemManager"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#798273"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#798273"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service",
@@ -415,8 +415,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "fprintd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#792095"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#792095"
 nodigests = [
     "/usr/share/dbus-1/system-services/net.reactivated.Fprint.service",
     "/usr/share/dbus-1/system.d/net.reactivated.Fprint.conf",
@@ -425,8 +425,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "fprintd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#783932"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#783932"
 nodigests = [
     "/etc/dbus-1/system.d/org.opensuse.Network.conf",
     "/etc/dbus-1/system.d/org.opensuse.Network.AUTO4.conf",
@@ -438,8 +438,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd-container"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#828207"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#828207"
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.machine1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service",
@@ -449,8 +449,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd-container"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#964935"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#964935"
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.import1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.import1.service",
@@ -460,8 +460,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "geoclue2"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#838360"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#838360"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.GeoClue2.service",
     "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.conf",
@@ -470,8 +470,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "geoclue2"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#862216"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#862216"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.Agent.conf",
 ]
@@ -479,8 +479,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "mate-settings-daemon"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#831404"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#831404"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.mate.SettingsDaemon.DateTimeMechanism.service",
     "/usr/share/dbus-1/system.d/org.mate.SettingsDaemon.DateTimeMechanism.conf",
@@ -489,8 +489,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "tuned"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#787379, bnc#1007279"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#787379, bsc#1007279"
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.tuned.conf",
 ]
@@ -498,8 +498,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "kwalletmanager5"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#1033296"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1033296"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmkwallet5.conf",
     "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmkwallet5.service",
@@ -508,8 +508,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "neard"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#837978"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#837978"
 nodigests = [
     "/etc/dbus-1/system.d/org.neard.conf"
 ]
@@ -517,8 +517,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "ofono"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#862354"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#862354"
 nodigests = [
     "/etc/dbus-1/system.d/ofono.conf",
 ]
@@ -526,8 +526,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "libKF5Auth5"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#864716"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#864716"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kf5auth.conf",
 ]
@@ -535,8 +535,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "firewalld"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#907625"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#907625"
 nodigests = [
     "/usr/share/dbus-1/system.d/FirewallD.conf",
 ]
@@ -544,8 +544,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd-network"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#918799"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#918799"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.network1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.network1.service",
@@ -554,8 +554,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "realmd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#916766"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#916766"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.realmd.service",
     "/etc/dbus-1/system.d/org.freedesktop.realmd.conf",
@@ -564,8 +564,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "libteam-tools"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#941993"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#941993"
 nodigests = [
     "/etc/dbus-1/system.d/org.libteam.teamd.conf",
 ]
@@ -573,7 +573,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "cinnamon-settings-daemon"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#951830"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.cinnamon.SettingsDaemon.DateTimeMechanism.conf",
@@ -583,7 +583,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "thermald"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#954771"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.thermald.conf",
@@ -593,7 +593,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "iio-sensor-proxy"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#939191"
 nodigests = [
     "/etc/dbus-1/system.d/net.hadess.SensorProxy.conf",
@@ -602,7 +602,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "tcmu-runner"
 type = "dbus"
-note = "legacy: not audited - TEMPORARY APPROVAL ONLY (meissner 20160519)"
+note = "imported from rpmlint1 DBUSServices.WhiteList - TEMPORARY APPROVAL ONLY (meissner 20160519)"
 bug = "bsc#978903"
 nodigests = [
     "/etc/dbus-1/system.d/tcmu-runner.conf",
@@ -612,7 +612,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "sysprof"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#996111"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.gnome.Sysprof2.service",
@@ -622,7 +622,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "sysprof"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1151418"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.gnome.Sysprof3.conf",
@@ -632,7 +632,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "flatpak"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#984817"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.Flatpak.SystemHelper.service",
@@ -642,7 +642,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd-network"
 type = "dbus"
-note = "legacy: not audited; systemd resolver, but dont add automatically to nsswitch.conf!"
+note = "imported from rpmlint1 DBUSServices.WhiteList; systemd resolver, but dont add automatically to nsswitch.conf!"
 bug = "bsc#917781"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf",
@@ -652,7 +652,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "powerdevil5"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1019748"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.powerdevil.discretegpuhelper.conf",
@@ -662,7 +662,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "rebootmgr"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1019644"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.opensuse.RebootMgr.conf",
@@ -671,7 +671,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "blueman"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#987141"
 nodigests = [
     "/etc/dbus-1/system.d/org.blueman.Mechanism.conf",
@@ -681,7 +681,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "os-autoinst-openvswitch"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1032649"
 nodigests = [
     "/etc/dbus-1/system.d/org.opensuse.os_autoinst.switch.conf",
@@ -690,7 +690,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "backintime-qt"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1007723, bsc#1032717"
 nodigests = [
     "/etc/dbus-1/system.d/net.launchpad.backintime.serviceHelper.conf",
@@ -700,7 +700,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "switcheroo-control"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1034309"
 nodigests = [
     "/etc/dbus-1/system.d/net.hadess.SwitcherooControl.conf",
@@ -709,7 +709,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_dbus"
 type = "dbus"
-note = "legacy: not audited - Take care to never enable/integrate this by default (see bsc comments)"
+note = "imported from rpmlint1 DBUSServices.WhiteList - Take care to never enable/integrate this by default (see bsc comments)"
 bug = "bsc#1039709"
 nodigests = [
     "/etc/dbus-1/system.d/pam_dbus.conf"
@@ -718,8 +718,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "tpm2.0-abrmd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#1049694"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1049694"
 nodigests = [
     "/etc/dbus-1/system.d/tpm2-abrmd.conf",
     "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service",
@@ -728,16 +728,16 @@ nodigests = [
 [[FileDigestGroup]]
 package = "nfs-ganesha"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#997880"
 nodigests = [
     "/etc/dbus-1/system.d/org.ganesha.nfsd.conf",
 ]
 
 [[FileDigestGroup]]
-package = "networkmanager-l2tp"
+package = "NetworkManager-l2tp"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#846337"
 nodigests = [
     "/usr/share/dbus-1/system.d/nm-l2tp-service.conf",
@@ -746,7 +746,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "fwupd"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#932807"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.fwupd.conf",
@@ -756,7 +756,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "connman"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1057697"
 nodigests = [
     "/usr/share/dbus-1/system.d/connman.conf",
@@ -767,7 +767,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "kcm_sddm"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1065563"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmsddm.conf",
@@ -777,7 +777,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "usbauth"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1066877"
 nodigests = [
     "/etc/dbus-1/system.d/org.opensuse.usbauth.conf",
@@ -786,8 +786,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "kalarm"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#1087714"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1087714"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kalarm.rtcwake.conf",
     "/usr/share/dbus-1/system-services/org.kde.kalarm.rtcwake.service",
@@ -796,8 +796,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-libreswan"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#1089340"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1089340"
 nodigests = [
     "/etc/dbus-1/system.d/nm-libreswan-service.conf",
 ]
@@ -805,8 +805,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "ratbagd"
 type = "dbus"
-note = "legacy: not audited"
-bug = "bnc#1076467"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1076467"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.ratbag1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.ratbag1.conf",
@@ -815,7 +815,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "xpra"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1102836"
 nodigests = [
     "/etc/dbus-1/system.d/xpra.conf",
@@ -824,7 +824,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "iwd"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1108037"
 nodigests = [
     "/usr/share/dbus-1/system-services/net.connman.iwd.service",
@@ -834,7 +834,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-fortisslvpn"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1109938"
 nodigests = [
     "/etc/dbus-1/system.d/nm-fortisslvpn-service.conf",
@@ -843,7 +843,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1111254"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service",
@@ -853,7 +853,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "keepalived"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1015141"
 nodigests = [
     "/etc/dbus-1/system.d/org.keepalived.Vrrp1.conf",
@@ -862,7 +862,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "bolt"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1119975"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.bolt.conf",
@@ -872,7 +872,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "certmonger"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1129452"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.fedorahosted.certmonger.service",
@@ -882,7 +882,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd-portable"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "boo#1145639"
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.portable1.service",
@@ -893,7 +893,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "sssd-dbus"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1157663, bsc#1106600"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.sssd.infopipe.service",
@@ -903,7 +903,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "oddjob"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1169494"
 nodigests = [
     "/etc/dbus-1/system.d/oddjob.conf",
@@ -912,7 +912,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "libvirt-dbus"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1173093"
 nodigests = [
     "/usr/share/dbus-1/services/org.libvirt.service",
@@ -923,7 +923,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "powerdevil5"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1176474"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.powerdevil.chargethresholdhelper.service",
@@ -933,8 +933,62 @@ nodigests = [
 [[FileDigestGroup]]
 package = "plasma5-disks"
 type = "dbus"
-note = "legacy: not audited"
+note = "imported from rpmlint1 DBUSServices.WhiteList"
+bug = "bsc#1176742"
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.kded.smart.service",
     "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf",
+]
+
+[[FileDigestGroup]]
+package = "kdenetwork-filesharing"
+type = "dbus"
+note = "Samba configuration helper"
+bug = "bsc#1175633"
+nodigests = [
+    "org.kde.filesharing.samba.service",
+    "org.kde.filesharing.samba.conf",
+]
+
+[[FileDigestGroup]]
+package = "kdiskmark"
+type = "dbus"
+note = "HDD/SSD benchmark GUI"
+bug = "bsc#1182521"
+nodigests = [
+    "org.jonmagon.kdiskmark.service",
+    "org.jonmagon.kdiskmark.conf",
+]
+
+[[FileDigestGroup]]
+package = "systemd-experimental"
+type = "dbus"
+note = "systemd-homed helper service for providing portable home directory containers"
+bug = "bsc#1185285"
+nodigests = [
+    "org.freedesktop.home1.conf",
+    "org.freedesktop.home1.service",
+]
+
+[[FileDigestGroup]]
+package = "oddjob-gpupdate"
+type = "dbus"
+note = "helper that calls samba-gpupdate"
+bug = "bsc#1188680"
+nodigests = [
+    "oddjob-gpupdate.conf",
+]
+
+[[FileDigestGroup]]
+package = "deepin-api"
+type = "dbus"
+note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
+bug = "bsc#1070943"
+nodigests = [
+    "com.deepin.api.Device.service",
+    "com.deepin.api.Device.conf",
+    "com.deepin.api.LocaleHelper.service",
+    "com.deepin.api.LocaleHelper.conf",
+    "com.deepin.api.SoundThemePlayer.service",
+    "com.deepin.api.SoundThemePlayer.conf"
 ]

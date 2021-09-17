@@ -18,7 +18,7 @@ note = "default rule shipped by polkit, allows uid 0 to do everything"
 bug = "bsc#1125314"
 digests = [
     {
-        path = "/etc/polkit-1/rules.d/50-default.rules",
+        path = "/usr/share/polkit-1/rules.d/50-default.rules",
         algorithm = "sha256",
         hash = "aea3041de2c15db8683620de8533206e50241c309eb27893605d5ead17e5e75f"
     },

@@ -2,7 +2,6 @@
 package = "pam_krb5"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_krb5.so",
     "*/security/pam_krb5afs.so",
@@ -12,7 +11,6 @@ nodigests = [
 package = "ecryptfs-utils"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ecryptfs.so",
 ]
@@ -21,7 +19,6 @@ nodigests = [
 package = "gnome-keyring-pam"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_gnome_keyring.so",
 ]
@@ -30,7 +27,6 @@ nodigests = [
 package = "samba-winbind"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_winbind.so",
 ]
@@ -39,7 +35,6 @@ nodigests = [
 package = "pam_ssh"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ssh.so",
 ]
@@ -48,7 +43,6 @@ nodigests = [
 package = "pam_mount"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_mount.so",
 ]
@@ -57,7 +51,6 @@ nodigests = [
 package = "pam_ccreds"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ccreds.so",
 ]
@@ -66,7 +59,6 @@ nodigests = [
 package = "pam_radius"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_radius_auth.so",
 ]
@@ -75,7 +67,6 @@ nodigests = [
 package = "pam_pkcs11"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_pkcs11.so",
 ]
@@ -84,7 +75,6 @@ nodigests = [
 package = "nss-pam-ldapd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_ldap.so",
 ]
@@ -93,7 +83,6 @@ nodigests = [
 package = "pam_passwdqc"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_passwdqc.so",
 ]
@@ -102,7 +91,6 @@ nodigests = [
 package = "pam_userpass"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_userpass.so",
 ]
@@ -111,7 +99,6 @@ nodigests = [
 package = "pam_apparmor"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_apparmor.so",
 ]
@@ -120,7 +107,6 @@ nodigests = [
 package = "opie"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_opie.so",
 ]
@@ -128,7 +114,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1171564, bsc#1171563, bsc#1171562"
 nodigests = [
     "*/security/pam_access.so",
@@ -179,7 +165,6 @@ nodigests = [
 package = "pam-deprecated"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_cracklib.so",
     "*/security/pam_tally2.so",
@@ -189,7 +174,6 @@ nodigests = [
 package = "pam_unix"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_unix.so",
     "*/security/pam_unix_acct.so",
@@ -202,7 +186,6 @@ nodigests = [
 package = "pam_unix-nis"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_unix.so",
     "*/security/pam_unix_acct.so",
@@ -215,7 +198,6 @@ nodigests = [
 package = "pam-extra"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_userdb.so",
 ]
@@ -224,7 +206,6 @@ nodigests = [
 package = "systemd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_systemd.so",
 ]
@@ -233,7 +214,6 @@ nodigests = [
 package = "sssd"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_sss.so",
 ]
@@ -242,7 +222,6 @@ nodigests = [
 package = "pam_mktemp"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_mktemp.so",
 ]
@@ -251,7 +230,6 @@ nodigests = [
 package = "pam_csync"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_csync.so",
 ]
@@ -260,7 +238,6 @@ nodigests = [
 package = "pam_chroot"
 type = "pam"
 note = "legacy: not audited"
-bug = ""
 nodigests = [
     "*/security/pam_chroot.so",
 ]
@@ -268,8 +245,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_snapper"
 type = "pam"
-note = "legacy: not audited"
-bug = "bnc#815383"
+note = "imported from rpmlint1 PAMModules.WhiteList"
+bug = "bsc#815383"
 nodigests = [
     "*/security/pam_snapper.so",
 ]
@@ -277,7 +254,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "gdm"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1004346"
 nodigests = [
     "*/security/pam_gdm.so",
@@ -286,7 +263,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "slurm-pam_slurm"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1007053, bsc#1116758"
 nodigests = [
     "*/security/pam_slurm.so",
@@ -296,7 +273,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_script"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1039848"
 nodigests = [
     "*/security/pam_script.so",
@@ -305,7 +282,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_yubico"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1087060"
 nodigests = [
     "*/security/pam_yubico.so",
@@ -314,7 +291,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_oath"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1089114"
 nodigests = [
     "*/security/pam_oath.so",
@@ -323,7 +300,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_p11"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1123916"
 nodigests = [
     "*/security/pam_p11.so",
@@ -332,7 +309,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_cifscreds"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150527"
 nodigests = [
     "*/security/pam_cifscreds.so",
@@ -341,7 +318,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_pwquality"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150520"
 nodigests = [
     "*/security/pam_pwquality.so",
@@ -350,7 +327,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_cgfs"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150519"
 nodigests = [
     "*/security/pam_cgfs.so",
@@ -359,7 +336,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "google-authenticator-libpam"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150524"
 nodigests = [
     "*/security/pam_google_authenticator.so",
@@ -368,7 +345,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_u2f"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1087061"
 nodigests = [
     "*/security/pam_u2f.so",
@@ -377,7 +354,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_kwallet"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#993806"
 nodigests = [
     "*/security/pam_kwallet5.so",
@@ -386,7 +363,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pam_dbus"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1039709"
 nodigests = [
     "*/security/pam_dbus.so",
@@ -395,7 +372,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "google-guest-oslogin"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1146353"
 nodigests = [
     "*/security/pam_oslogin_admin.so",
@@ -405,7 +382,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "fprintd-pam"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#792095"
 nodigests = [
     "*/security/pam_fprintd.so",
@@ -414,7 +391,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "mariadb"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1163362"
 nodigests = [
     "*/security/pam_user_map.so",
@@ -423,7 +400,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "oddjob-mkhomedir"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169494"
 nodigests = [
     "*/security/pam_oddjob_mkhomedir.so",
@@ -432,7 +409,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "cockpit-ws"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169614"
 nodigests = [
     "*/security/pam_cockpit_cert.so",
@@ -442,7 +419,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "kanidm-unixd-clients"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1173387"
 nodigests = [
     "*/security/pam_kanidm.so",
@@ -451,8 +428,26 @@ nodigests = [
 [[FileDigestGroup]]
 package = "malcontent"
 type = "pam"
-note = "legacy: not audited"
+note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1177974"
 nodigests = [
     "*/security/pam_malcontent.so",
+]
+
+[[FileDigestGroup]]
+package = "sssd"
+type = "pam"
+note = "sssd gssapi extension"
+bug = "bsc#1182509"
+nodigests = [
+    "*/security/pam_sss_gss.so",
+]
+
+[[FileDigestGroup]]
+package = "oddjob-gpupdate"
+type = "pam"
+note = "samba group-policy update helper"
+bug = "bsc#1188680"
+nodigests = [
+    "*/security/pam_oddjob_gpupdate.so",
 ]
