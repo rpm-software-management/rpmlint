@@ -35,6 +35,9 @@ class Lint(object):
             self.profile.enable()
         else:
             self.profile = None
+
+        if options['rpmlintrc']:
+            options['rpmlintrc'] = [options['rpmlintrc']]
         self._load_rpmlintrc()
         if options['verbose']:
             self.config.info = options['verbose']
@@ -161,11 +164,11 @@ class Lint(object):
         Load rpmlintrc from argument or load up from folder
         """
         if self.options['rpmlintrc']:
-            rcfile = self.options['rpmlintrc']
-            if rcfile.is_file():
+            # Right now, we allow loading of just a single file, but the 'opensuse'
+            # branch contains auto-loading mechanism that can eventually load
+            # multiple files.
+            for rcfile in self.options['rpmlintrc']:
                 self.config.load_rpmlintrc(rcfile)
-            else:
-                print_warning(f'(none): E: the specified rpmlintrc value "{rcfile}" is not a file and was not loaded.')
         else:
             # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
             # do this only in a case where there is one folder parameter or one file
