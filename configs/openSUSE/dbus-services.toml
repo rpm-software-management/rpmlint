@@ -992,3 +992,12 @@ nodigests = [
     "com.deepin.api.SoundThemePlayer.service",
     "com.deepin.api.SoundThemePlayer.conf"
 ]
+
+[[FileDigestGroup]]
+package = "low-memory-monitor"
+type = "dbus"
+note = "a system wide daemon monitoring low memory situations and sending out signals"
+bug = "bsc#1189899"
+nodigests = [
+    "/usr/share/dbus-1/system.d/org.freedesktop.LowMemoryMonitor.conf"
+]
