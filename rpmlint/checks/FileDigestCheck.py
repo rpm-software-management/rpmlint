@@ -19,7 +19,7 @@ class FileDigestCheck(AbstractCheck):
             self.digest_configurations[group] = [Path(p) for p in values['Locations']]
             self.follow_symlinks_in_group[group] = values['FollowSymlinks']
             self.name_patterns_in_group[group] = values.get('NamePatterns')
-        self.ghost_file_exceptions = self.config.configuration['GhostFilesExceptions']
+        self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
         for digest_group in self.digest_groups:
