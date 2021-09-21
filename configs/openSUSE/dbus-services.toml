@@ -148,6 +148,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "plasma5-desktop"
+type = "dbus"
+note = "legacy: not audited"
+nodigests = [
+    "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service",
+    "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf",
+]
+
+[[FileDigestGroup]]
 package = "plasma5-workspace"
 type = "dbus"
 note = "legacy: not audited"
