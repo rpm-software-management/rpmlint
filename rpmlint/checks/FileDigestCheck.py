@@ -19,6 +19,7 @@ class FileDigestCheck(AbstractCheck):
             self.digest_configurations[group] = [Path(p) for p in values['Locations']]
             self.follow_symlinks_in_group[group] = values['FollowSymlinks']
             self.name_patterns_in_group[group] = values.get('NamePatterns')
+        self.ghost_file_exceptions = self.config.configuration['GhostFilesExceptions']
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
         for digest_group in self.digest_groups:
@@ -172,6 +173,21 @@ class FileDigestCheck(AbstractCheck):
                 for digest in error_digests:
                     self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', path, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
 
+    def _check_ghost_exceptions(self, pkg, name):
+        """ Check if a ghosted file is whilelisted
+
+        In general we don't allow files we want to secure to be included as %ghost. And of course there are exceptions,
+        e.g. polkit-default-privs
+
+        Params:
+        - pkg: name of the package
+        - name: paths of the ghosted file
+        """
+        for ghost_exception in self.ghost_file_exceptions:
+            if pkg.name == ghost_exception['package'] and name in ghost_exception['paths']:
+                return True
+        return False
+
     def check_binary(self, pkg):
         """
         Check that all files in secured locations are covered by a file digest group
@@ -186,7 +202,8 @@ class FileDigestCheck(AbstractCheck):
             if not group:
                 continue
             elif pkgfile.name in pkg.ghost_files:
-                self.output.add_info('E', pkg, f'{group}-file-ghost', pkgfile.name)
+                if not self._check_ghost_exceptions( pkg, pkgfile.name):
+                    self.output.add_info('E', pkg, f'{group}-file-ghost', pkgfile.name)
             elif stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
                 self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
             else:
