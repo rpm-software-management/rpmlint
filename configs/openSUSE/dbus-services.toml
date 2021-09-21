@@ -722,6 +722,7 @@ note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1049694"
 nodigests = [
     "/etc/dbus-1/system.d/tpm2-abrmd.conf",
+    "/usr/share/dbus-1/system.d/tpm2-abrmd.conf",
     "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service",
 ]
 
