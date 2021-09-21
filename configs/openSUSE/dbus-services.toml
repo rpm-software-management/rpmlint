@@ -139,7 +139,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "kdebase4-workspace"
+package = "plasma5-desktop"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
@@ -196,7 +196,7 @@ package = "NetworkManager"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
-    "/etc/dbus-1/system.d/nm-dispatcher.conf",
+    "/usr/share/dbus-1/system.d/nm-dispatcher.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.nm_dispatcher.service",
 ]
 
@@ -206,7 +206,7 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#747780"
 nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
+    "/usr/share/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
 ]
 
 [[FileDigestGroup]]
@@ -674,7 +674,7 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#987141"
 nodigests = [
-    "/etc/dbus-1/system.d/org.blueman.Mechanism.conf",
+    "/usr/share/dbus-1/system.d/org.blueman.Mechanism.conf",
     "/usr/share/dbus-1/system-services/org.blueman.Mechanism.service",
 ]
 
@@ -721,7 +721,7 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1049694"
 nodigests = [
-    "/etc/dbus-1/system.d/tpm2-abrmd.conf",
+    "/usr/share/dbus-1/system.d/tpm2-abrmd.conf",
     "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service",
 ]
 
@@ -946,8 +946,8 @@ type = "dbus"
 note = "Samba configuration helper"
 bug = "bsc#1175633"
 nodigests = [
-    "org.kde.filesharing.samba.service",
-    "org.kde.filesharing.samba.conf",
+    "/usr/share/dbus-1/system-services/org.kde.filesharing.samba.service",
+    "/usr/share/dbus-1/system.d/org.kde.filesharing.samba.conf",
 ]
 
 [[FileDigestGroup]]
@@ -956,8 +956,8 @@ type = "dbus"
 note = "HDD/SSD benchmark GUI"
 bug = "bsc#1182521"
 nodigests = [
-    "org.jonmagon.kdiskmark.service",
-    "org.jonmagon.kdiskmark.conf",
+    "/usr/share/dbus-1/system-services/org.jonmagon.kdiskmark.service",
+    "/usr/share/dbus-1/system.d/org.jonmagon.kdiskmark.conf",
 ]
 
 [[FileDigestGroup]]
@@ -966,8 +966,8 @@ type = "dbus"
 note = "systemd-homed helper service for providing portable home directory containers"
 bug = "bsc#1185285"
 nodigests = [
-    "org.freedesktop.home1.conf",
-    "org.freedesktop.home1.service",
+    "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf",
+    "/usr/share/dbus-1/system-services/org.freedesktop.home1.service",
 ]
 
 [[FileDigestGroup]]
@@ -976,7 +976,7 @@ type = "dbus"
 note = "helper that calls samba-gpupdate"
 bug = "bsc#1188680"
 nodigests = [
-    "oddjob-gpupdate.conf",
+    "/etc/dbus-1/system.d/oddjob-gpupdate.conf",
 ]
 
 [[FileDigestGroup]]
@@ -985,12 +985,12 @@ type = "dbus"
 note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
 bug = "bsc#1070943"
 nodigests = [
-    "com.deepin.api.Device.service",
-    "com.deepin.api.Device.conf",
-    "com.deepin.api.LocaleHelper.service",
-    "com.deepin.api.LocaleHelper.conf",
-    "com.deepin.api.SoundThemePlayer.service",
-    "com.deepin.api.SoundThemePlayer.conf"
+    "/usr/share/dbus-1/system-services/com.deepin.api.Device.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.Device.conf",
+    "/usr/share/dbus-1/system-services/com.deepin.api.LocaleHelper.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.LocaleHelper.conf",
+    "/usr/share/dbus-1/system-services/com.deepin.api.SoundThemePlayer.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.SoundThemePlayer.conf"
 ]
 
 [[FileDigestGroup]]
