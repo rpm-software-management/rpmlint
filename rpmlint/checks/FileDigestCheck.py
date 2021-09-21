@@ -202,7 +202,7 @@ class FileDigestCheck(AbstractCheck):
             if not group:
                 continue
             elif pkgfile.name in pkg.ghost_files:
-                if not self._check_ghost_exceptions( pkg, pkgfile.name):
+                if not self._check_ghost_exceptions(pkg, pkgfile.name):
                     self.output.add_info('E', pkg, f'{group}-file-ghost', pkgfile.name)
             elif stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
                 self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
