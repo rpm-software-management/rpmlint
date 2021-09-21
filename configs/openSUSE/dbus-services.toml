@@ -423,7 +423,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "fprintd"
+package = "wicked"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#783932"
