@@ -69,19 +69,6 @@ digests = [
 ]
 
 [[FileDigestGroup]]
-package = "storeBackup"
-type = "cron"
-note = "and old school backup solution written in Perl"
-bug = "bsc#1150555"
-digests = [
-    {
-        path = "/etc/cron.daily/storebackup",
-        algorithm = "sha256",
-        hash = "2d4f43fb71c5f4a7e5a0f24f8b20332bff0fe0f8b57c304ab66420cd88a7bb4c"
-    },
-]
-
-[[FileDigestGroup]]
 package = "nextcloud"
 type = "cron"
 note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
