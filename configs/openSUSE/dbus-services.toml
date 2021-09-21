@@ -197,6 +197,7 @@ type = "dbus"
 note = "legacy: not audited"
 nodigests = [
     "/etc/dbus-1/system.d/nm-dispatcher.conf",
+    "/usr/share/dbus-1/system.d/nm-dispatcher.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.nm_dispatcher.service",
 ]
 
@@ -207,6 +208,7 @@ note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#747780"
 nodigests = [
     "/etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
+    "/usr/share/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
 ]
 
 [[FileDigestGroup]]
