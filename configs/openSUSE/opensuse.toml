@@ -279,6 +279,12 @@ name = "licenses"
 path = "consolehelper$"
 name = "usermode-consoleonly"
 
+[[GhostFilesExceptions]]
+package = "polkit-default-privs"
+paths = [
+    "/etc/polkit-1/rules.d/90-default-privs.rules",
+]
+
 [FileDigestLocation]
 
 [FileDigestGroup]
