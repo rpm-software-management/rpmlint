@@ -20,18 +20,6 @@ files = [
     mode = "drwxrwxrwt",
     owner = "root",
     group = "root"
-  },
-  {
-    path = '/tmp/.X11-unix',
-    mode = "drwxrwxrwt",
-    owner = "root",
-    group = "root"
-  },
-  {
-    path = '/tmp/.ICE-unix',
-    mode = "drwxrwxrwt",
-    owner = "root",
-    group = "root"
   }
 ]
 

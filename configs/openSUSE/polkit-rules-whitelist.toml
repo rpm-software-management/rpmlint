@@ -129,19 +129,6 @@ digests = [
 ]
 
 [[FileDigestGroup]]
-package = "malcontent"
-type = "polkit"
-note = "Allows wheel members to bypass parental controls. We allow this as an exception (granting implicit authorization to wheel) since this is not security relevant per se."
-bug = "bsc#1177974"
-digests = [
-    {
-        path = "/usr/share/polkit-1/rules.d/com.endlessm.ParentalControls.rules",
-        algorithm = "sha256",
-        hash = "4dca105e78ff95c2317386d4df4f959f0c055eec13e12c34c48084b9bbb385b4"
-    },
-]
-
-[[FileDigestGroup]]
 package = "brltty"
 type = "polkit"
 note = "Allows members of 'brltty' to implicitly get polkit authorization"
