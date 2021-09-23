@@ -211,6 +211,14 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "systemd-mini"
+type = "pam"
+note = "legacy: not audited"
+nodigests = [
+    "*/security/pam_systemd.so",
+]
+
+[[FileDigestGroup]]
 package = "systemd-experimental"
 type = "pam"
 note = "Imported as part of the rpmlint2 migration"
