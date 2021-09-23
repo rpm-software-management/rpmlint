@@ -211,9 +211,9 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd"
+package = "systemd-experimental"
 type = "pam"
-note = "Module in systemd-experimental."
+note = "Imported as part of the rpmlint2 migration"
 bug = "bsc#1185285"
 nodigests = [
     "*/security/pam_systemd_home.so",
