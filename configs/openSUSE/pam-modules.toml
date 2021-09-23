@@ -213,7 +213,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "systemd"
 type = "pam"
-note = "Module in systemd-experimental. This was not audited, if it's moved to a different binary rpm it needs to be audited first"
+note = "Module in systemd-experimental."
+bug = "bsc#1185285"
 nodigests = [
     "*/security/pam_systemd_home.so",
 ]
