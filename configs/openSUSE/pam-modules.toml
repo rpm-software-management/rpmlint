@@ -211,6 +211,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "systemd-experimental"
+type = "pam"
+note = "Imported as part of the rpmlint2 migration"
+bug = "bsc#1185285"
+nodigests = [
+    "*/security/pam_systemd_home.so",
+]
+
+[[FileDigestGroup]]
 package = "sssd"
 type = "pam"
 note = "legacy: not audited"
