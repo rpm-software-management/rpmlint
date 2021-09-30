@@ -146,6 +146,15 @@ class SUIDPermissionsCheck(AbstractCheck):
         need_set_permissions = False
 
         for f, pkgfile in pkg.files.items():
+            if pkgfile.is_ghost:
+                # if a file is ghost we want to skip the files here. It's not
+                # actually shipping the file and we allow e.g. tmpfilesd to
+                # create entries with special permissions. If we would warn for
+                # these entries rpm -v will show errors.
+                # The drawback is that that we don't see warnings for privileges
+                # added by other mechanisms that are described in these %ghost
+                # files
+                continue
             if pkgfile.filecaps:
                 self.output.add_info('E', pkg, 'permissions-fscaps', f"{f} has fscaps '{pkgfile.filecaps}'")
 
