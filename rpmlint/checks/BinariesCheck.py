@@ -548,6 +548,8 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'objdump-failed', path, failed_reason)
                 return
 
+        # NOTE: the speed benefit of the ThreadPoolExecutor is limited due to
+        # Global Interpreter Lock (GIL).
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = []
             for fn in self.check_functions:

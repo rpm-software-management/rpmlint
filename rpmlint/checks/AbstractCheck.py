@@ -38,6 +38,8 @@ class AbstractFilesCheck(AbstractCheck):
 
         filenames = [x for x in pkg.files if x not in pkg.ghost_files and self.__files_re.match(x)]
         if self.use_threads:
+            # NOTE: the speed benefit of the ThreadPoolExecutor is limited due to
+            # Global Interpreter Lock (GIL).
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = []
                 for filename in filenames:
