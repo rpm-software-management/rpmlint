@@ -34,6 +34,10 @@ class BinariesCheck(AbstractCheck):
     invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
     usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
 
+    lto_text_like_sections = {'.preinit_array', '.init_array', '.fini_array'}
+    # The following sections are part of the RX ABI and do correspond to .text, .data and .bss
+    lto_text_like_sections |= {'P', 'D_1', 'B_1'}
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.checked_files = 0
@@ -238,7 +242,7 @@ class BinariesCheck(AbstractCheck):
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
                     sn = section.name
-                    if ((sn == '.preinit_array' or sn == '.init_array' or
+                    if ((sn in self.lto_text_like_sections or
                          sn == '.fini_array' or sn.startswith('.text') or
                          sn.startswith('.data')) and
                             section.size > 0):
