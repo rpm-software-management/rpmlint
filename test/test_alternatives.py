@@ -42,3 +42,11 @@ def test_non_alternative_pkg(tmpdir, package, alternativescheck):
     # non update-alternatived package
     assert 'E' not in out
     assert 'W' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/python39-evtx'])
+def test_update_alternatives_correctness(tmpdir, package, alternativescheck):
+    output, test = alternativescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: update-alternatives-postun-call-missing' not in out
