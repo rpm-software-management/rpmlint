@@ -1,4 +1,5 @@
 from os.path import basename
+from pathlib import Path
 import re
 import stat
 
@@ -25,6 +26,7 @@ class AlternativesCheck(AbstractCheck):
     re_install = re.compile(r'--install\s+(?P<link>\S+)\s+(?P<name>\S+)\s+(\S+)\s+(\S+)')
     re_slave = re.compile(r'--slave\s+(?P<link>\S+)\s+(\S+)\s+(\S+)')
     command = 'update-alternatives'
+    alts_requirement = 'alts'
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -38,12 +40,18 @@ class AlternativesCheck(AbstractCheck):
         if pkg.is_source:
             return
 
+        if self._check_libalternatives_presence(pkg):
+            self.output.add_info('I', pkg, 'package supports libalternatives')
+            self._check_libalternatives_requirements(pkg)
+            self._check_libalternatives_filelist(pkg)
+
         # populate scriptlets
         self.post = byte_to_string(pkg.header[rpm.RPMTAG_POSTIN])
         self.postun = byte_to_string(pkg.header[rpm.RPMTAG_POSTUN])
 
         if not self._check_ua_presence(pkg):
             return
+        self.output.add_info('I', pkg, 'package supports update-alternatives')
 
         self._check_requirements(pkg)
         self._check_post_phase(pkg, self.post)
@@ -143,6 +151,20 @@ class AlternativesCheck(AbstractCheck):
             return True
         return False
 
+    def _check_libalternatives_presence(self, pkg):
+        """
+        Check if there is libalternatives scriptlet present
+        """
+        # first check just if we have anything in /usr/share/libalternatives/
+        for path in pkg.files:
+            if path.startswith('/usr/share/libalternatives/'):
+                return True
+        # then check if package with the name "alts" is required
+        for req in pkg.requires + pkg.prereq:
+            if req[0] == self.alts_requirement:
+                return True
+        return False
+
     def _check_scriptlet_for_alternatives(self, scriptlet):
         """
         Check if scriptlet actually contains the update-alternatives call
@@ -176,3 +198,80 @@ class AlternativesCheck(AbstractCheck):
             if self.re_requirement.match(require[0]):
                 return
         self.output.add_info('E', pkg, 'update-alternatives-requirement-missing')
+
+    def _check_libalternatives_requirements(self, pkg):
+        """
+        Check the requirement of package "alts"
+        """
+        for req in pkg.requires + pkg.prereq:
+            if req[0] == self.alts_requirement:
+                return
+        self.output.add_info('E', pkg, 'alts-requirement-missed')
+
+    def _check_libalternatives_filelist(self, pkg):
+        """
+        Checking if all links to "alts" have corresponding entries in
+        /usr/share/libalternatives.
+        """
+        for f, pkgfile in pkg.files.items():
+            if pkgfile.linkto == Path(self.alts_requirement).name:
+                dir_name = '/usr/share/libalternatives/' + Path(f).name
+                if dir_name not in pkg.files:
+                    self.output.add_info('E', pkg, 'libalternatives-directory-not-exists', dir_name)
+                else:
+                    r = re.compile('^' + dir_name + '/.*.conf$')
+                    if not list(filter(r.match, pkg.files)):
+                        self.output.add_info('E', pkg, 'empty-libalternatives-directory', dir_name)
+        """
+        Checking content of all /usr/share/libalternatives/*/*.conf files
+        """
+        for f, pkgfile in pkg.files.items():
+            if re.search('^/usr/share/libalternatives/.*conf$', f):
+                filename = Path(pkg.dirname + f)
+                if not filename.exists():
+                    if pkgfile.is_ghost:
+                        self.output.add_info('I', pkg, 'libalternatives-conf-not-found', f)
+                    else:
+                        self.output.add_info('E', pkg, 'libalternatives-conf-not-found', f)
+                    continue
+                bin_found = False
+                man_found = False
+                with open(filename) as read_obj:
+                    # Read all lines in the file one by one. E.g:
+                    #
+                    # binary=/usr/bin/jupyter-3.8
+                    # man=jupyter-3.8.1
+                    # group=jupyter, jupyter-migrate, jupyter-troubleshoot
+                    #
+                    for line_nr, line in enumerate(read_obj):
+                        line_array = [x.strip() for x in line.split('=')]
+                        line_nr_str = f'Line: {line_nr}'
+                        if len(line_array) != 2:   # empty values are valid
+                            self.output.add_info('E', pkg, 'wrong-entry-format', f, line_nr_str)
+
+                        key, value = line_array
+                        if key == 'binary':
+                            if bin_found:
+                                self.output.add_info('E', pkg, 'multiple-entries', f, line_nr_str)
+                                continue
+                            for path in pkg.files:
+                                if 'bin/' in path and path.endswith(value):
+                                    bin_found = True
+                            if not bin_found:
+                                self.output.add_info('W', pkg, 'binary-entry-value-not-found', f, line_nr_str)
+                        elif key == 'man':
+                            if man_found:
+                                self.output.add_info('E', pkg, 'double-entries', f, line_nr_str)
+                                continue
+                            mans = value.split(',')
+                            for man in mans:
+                                man_found = False
+                                for path in pkg.files:
+                                    if path.startswith('/usr/share/man/') and man.strip() in path:
+                                        man_found = True
+                                if not man_found:
+                                    self.output.add_info('W', pkg, 'man-entry-value-not-found', f, line_nr_str)
+                        elif not key == 'group' and not key == 'options':
+                            self.output.add_info('W', pkg, 'wrong-tag-found', f, line_nr_str)
+                    if not bin_found:
+                        self.output.add_info('W', pkg, 'wrong-or-missed-binary-entry', f)
