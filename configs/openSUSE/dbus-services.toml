@@ -1014,6 +1014,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "oddjob-mkhomedir"
+type = "dbus"
+note = "oddjob example that creates user's home directories upon first login"
+bug = "bsc#1169494"
+nodigests = [
+    "/etc/dbus-1/system.d/oddjob-mkhomedir.conf",
+]
+
+[[FileDigestGroup]]
 package = "deepin-api"
 type = "dbus"
 note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
