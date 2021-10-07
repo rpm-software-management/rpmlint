@@ -19,6 +19,7 @@ permissions-file-symlink = 10000
 # this one is problematic, because e.g. /etc/cron.* is packaged by multiple
 # packages and only one should be responsible for caring about %postin
 permissions-missing-postin = 100
+permissions-parse-error = 10000
 polkit-file-ghost = 10000
 polkit-file-unauthorized = 10000
 polkit-file-symlink = 10000

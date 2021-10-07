@@ -61,6 +61,7 @@ permissions-missing-postin = 10
 permissions-file-ghost = 10
 permissions-file-unauthorized = 10
 permissions-file-symlink = 10
+permissions-parse-error = 10
 pam-unauthorized-module = 10
 world-writable-unauthorized-file = 10
 world-writable-mismatched-attrs = 10
