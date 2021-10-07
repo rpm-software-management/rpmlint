@@ -28,9 +28,6 @@ Please add 'PreReq: permissions'
 permissions-missing-verifyscript="""
 Please add a %verifyscript section
 """
-permissions-ghostfile="""
-This package installs a permissions file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#
-"""
 permissions-parse-error="""
 Please fix the file's syntax or the file type (e.g. no symlinks allowed)
 """
