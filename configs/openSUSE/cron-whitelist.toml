@@ -1,4 +1,17 @@
 [[FileDigestGroup]]
+package = "rpmlint-integration-test"
+type = "cron"
+note = "test whitelisting entry for the OBS integration test package"
+bug = "bsc#1188704"
+digests = [
+    {
+        path = "/etc/cron.hourly/rpmlint_cron",
+	algorithm = "sha256",
+	hash = "3cf3c05e5c37b0ee7b793f9c5c9b57b74071b02137a7e66a10a52d91e0ddbc51"
+    }
+]
+
+[[FileDigestGroup]]
 package = "cronie-anacron"
 type = "cron"
 note = "Executes daily, weekly, monthly cron jobs"
