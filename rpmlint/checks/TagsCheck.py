@@ -396,7 +396,6 @@ class TagsCheck(AbstractCheck):
                     if not dep:
                         self.output.add_info('W', pkg, 'no-dependency-on', base_or_libs)
                     elif version:
-                        epoch = str(epoch)
                         exp = (epoch, version, None)
                         sexp = Pkg.versionToString(exp)
                         if not dep[1]:
