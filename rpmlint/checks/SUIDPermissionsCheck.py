@@ -140,7 +140,11 @@ class SUIDPermissionsCheck(AbstractCheck):
             # check for a .secure file first, falling back to the plain file
             for path in self._paths_to(f + '.secure', f):
                 if path in pkg.files.keys():
-                    self._parse_profile(pkg.dirName() + path)
+                    fullpath = pkg.dirName() + path
+                    try:
+                        self._parse_profile(fullpath)
+                    except Exception as e:
+                        self.output.add_info('E', pkg, 'permissions-parse-error', f'{fullpath} caused a parsing error: {str(e)}.')
                     break
 
         need_set_permissions = False

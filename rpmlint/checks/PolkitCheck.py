@@ -1,7 +1,6 @@
 import os
 from re import split
 from xml.dom.minidom import parse
-from xml.parsers.expat import ExpatError
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -43,19 +42,19 @@ class PolkitCheck(AbstractCheck):
         """Checks files in the actions directory."""
         prefix = '/usr/share/polkit-1/actions/'
         for f in pkg.files:
-            # catch xml exceptions
-            try:
-                if f.startswith(prefix):
-                    if f in pkg.ghost_files:
-                        self.output.add_info('E', pkg, 'polkit-ghost-file', f)
-                        continue
+            if not f.startswith(prefix):
+                continue
+            elif f in pkg.ghost_files:
+                self.output.add_info('E', pkg, 'polkit-ghost-file', f)
+                continue
 
-                    xml = parse(pkg.dirName() + f)
-                    for a in xml.getElementsByTagName('action'):
-                        self.check_action(pkg, a)
-            except ExpatError as x:
+            try:
+                xml = parse(pkg.dirName() + f)
+            except Exception as x:
                 self.output.add_info('E', pkg, 'polkit-xml-exception', f'{f:s} raised an exception: {x}')
                 continue
+            for a in xml.getElementsByTagName('action'):
+                self.check_action(pkg, a)
 
     def check_action(self, pkg, action):
         """Inspect a single polkit action used by an application."""

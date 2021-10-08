@@ -14,5 +14,5 @@ This package installs a polkit rule or policy as %ghost file.
 """
 polkit-xml-exception="""
 A polkit policy could not be parsed as valid XML. Please fix the file's
-contents.
+contents or type (e.g. no symlinks are allowed).
 """
