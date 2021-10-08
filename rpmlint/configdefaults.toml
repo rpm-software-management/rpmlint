@@ -196,12 +196,12 @@ InvalidRequires = [
     '^libsafe\.so\.',
 ]
 # List of directory prefixes that are not allowed in packages
+# In addition rpmlint will warn about non-ghost files in "/run/"
 DisallowedDirs = [
     "/home",
     "/mnt",
     "/opt",
     "/proc",
-    "/run",
     "/tmp",
     "/usr/local",
     "/usr/tmp",
