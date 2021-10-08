@@ -1057,3 +1057,13 @@ bug = "bsc#1189899"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.LowMemoryMonitor.conf"
 ]
+
+[[FileDigestGroup]]
+package = "power-profiles-daemon"
+type = "dbus"
+note = "a daemon dealing with system power settings"
+bug = "bsc#1189900"
+nodigests = [
+    "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
+    "/etc/dbus-1/system.d/net.hadess.PowerProfiles.conf"
+]
