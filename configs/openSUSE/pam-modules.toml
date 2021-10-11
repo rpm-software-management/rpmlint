@@ -49,6 +49,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "pam_ssh_agent_auth"
+type = "pam"
+note = ""
+bug  = "bsc#1190983"
+nodigests = [
+    "*/security/pam_ssh_agent_auth.so",
+]
+
+[[FileDigestGroup]]
 package = "pam_mount"
 type = "pam"
 note = "legacy: not audited"
