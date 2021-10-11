@@ -716,6 +716,16 @@ def test_check_macro_in_changelog(package, speccheck):
     assert 'W: macro-in-%changelog' in out
 
 
+@pytest.mark.parametrize('package', ['spec/macro-in-changelog-autochangelog'])
+def test_check_autochangelog(package, speccheck):
+    """Test usage of %autochangelog macro."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: macro-in-%changelog' not in out
+
+
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
 def test_check_macro_in_changelog_not_found(package, speccheck):
     """Test if specfile has macro in %changelog
