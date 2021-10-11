@@ -27,5 +27,6 @@ polkit-ghost-file = 10000
 polkit-untracked-privilege = 10000
 polkit-user-privilege = 10000
 polkit-xml-exception = 10000
+shlib-policy-name-error = 10000
 world-writable-mismatched-attrs = 10000
 world-writable-unauthorized-file = 10000
