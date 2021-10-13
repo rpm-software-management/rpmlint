@@ -574,7 +574,10 @@ class TagsCheck(AbstractCheck):
 
             clt = pkg[rpm.RPMTAG_CHANGELOGTIME][0]
             if clt:
-                clt -= clt % (24 * 3600)  # roll back to 00:00:00, see #246
+                # Rollback in order to cover different timezones
+                # The largest difference between the time zones of two countries is
+                # 26 hours between the Howland Islands and the Line Islands.
+                clt -= 26 * 3600
                 # Check if a package contains a changelog entry that is suspiciously too far behind
                 if clt < oldest_changelog_timestamp:
                     self.output.add_info('W', pkg, 'changelog-time-overflow',
