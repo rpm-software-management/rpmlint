@@ -207,7 +207,7 @@ def test_no_ldconfig_symlink(binariescheck):
     run_elf_checks(test, FakePkg('fake'), get_full_path('libutil-2.29.so'), '/lib64/libutil-2.29.so')
     out = output.print_results(output.results)
     assert 'no-ldconfig-symlink /lib64/libutil-2.29.so' in out
-    assert 'E: shlib-policy-name-error 1' in out
+    assert 'E: shlib-policy-name-error SONAME: libutil.so.1, expected package suffix: 1' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
