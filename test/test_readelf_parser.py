@@ -252,3 +252,12 @@ def test_bca_files(binariescheck):
     run_elf_checks(test, FakePkg('fake'), get_full_path('libkleeRuntimeFreeStanding.bca'), '/usr/lib64/klee/runtime/libkleeRuntimeFreeStanding.bca')
     out = output.print_results(output.results)
     assert 'E: ' not in out
+
+
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
+def test_shlib_policy_name_error(binariescheck):
+    output, test = binariescheck
+
+    run_elf_checks(test, FakePkg('libgame'), get_full_path('libgame.so'), '/lib64/libgame.so')
+    out = output.print_results(output.results)
+    assert 'libgame: E: shlib-policy-name-error SONAME: libgame2-1.9.so.10.0.0, expected package suffix: 2-1_9-10_0_0' in out
