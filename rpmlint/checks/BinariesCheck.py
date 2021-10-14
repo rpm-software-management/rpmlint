@@ -336,13 +336,14 @@ class BinariesCheck(AbstractCheck):
                 self._check_soname_symlink(pkg, path, soname)
 
                 # check if the major version of the library is in the package
-                # name
-                res = self.soversion_regex.search(soname)
-                if res:
-                    soversion = res.group(1) or res.group(2)
-                    if soversion and soversion not in pkg.name:
-                        self.output.add_info('E', pkg, 'shlib-policy-name-error',
-                                             f'SONAME: {soname}, expected package suffix: {soversion}')
+                # name (check only for lib* packages)
+                if pkg.name.startswith('lib'):
+                    res = self.soversion_regex.search(soname)
+                    if res:
+                        soversion = res.group(1) or res.group(2)
+                        if soversion and soversion not in pkg.name:
+                            self.output.add_info('E', pkg, 'shlib-policy-name-error',
+                                                 f'SONAME: {soname}, expected package suffix: {soversion}')
 
         # check if the object code in the library is compiled with PIC
         if self.readelf_parser.dynamic_section_info['TEXTREL']:
