@@ -22,7 +22,7 @@ class BinariesCheck(AbstractCheck):
     """
     srcname_regex = re.compile(r'(.*?)-[0-9]')
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
-    soversion_regex = re.compile(r'.*?([0-9][.0-9]*)\.so|.*\.so\.([0-9][.0-9]*).*')
+    soversion_regex = re.compile(r'.*?(?P<pkgname>[0-9]+)?(-(?P<pkgversion>[0-9][.0-9]*))?\.so(\.(?P<soversion>[0-9][.0-9]*))?')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
     ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 
@@ -338,9 +338,14 @@ class BinariesCheck(AbstractCheck):
                 # check if the major version of the library is in the package
                 # name (check only for lib* packages)
                 if pkg.name.startswith('lib'):
+                    # SLPP is defined here: https://en.opensuse.org/openSUSE:Shared_library_packaging_policy#Package_naming
+                    # Example:
+                    # SONAME = libgame2-1.9.so.10.0.0
+                    # expected package name: libgame2-1_9-10_0_0
                     res = self.soversion_regex.search(soname)
                     if res:
-                        soversion = res.group(1) or res.group(2)
+                        parts = [x.replace('.', '_') for x in (res.group('pkgname'), res.group('pkgversion'), res.group('soversion')) if x]
+                        soversion = '-'.join(parts)
                         if soversion and soversion not in pkg.name:
                             self.output.add_info('E', pkg, 'shlib-policy-name-error',
                                                  f'SONAME: {soname}, expected package suffix: {soversion}')
