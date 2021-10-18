@@ -22,7 +22,8 @@ class BinariesCheck(AbstractCheck):
     """
     srcname_regex = re.compile(r'(.*?)-[0-9]')
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
-    soversion_regex = re.compile(r'.*?(?P<pkgname>[0-9]+)?(-(?P<pkgversion>[0-9][.0-9]*))?\.so(\.(?P<soversion>[0-9][.0-9]*))?')
+    soversion_regex = re.compile(r'(?P<libraryname>.*?(?P<pkgname>[0-9]+)?)(-(?P<pkgversion>[0-9][.0-9]*))?\.so(\.(?P<soversion>[0-9][.0-9]*))?')
+    digit_ending_targets = {'ppc64', 's390', 'aarch64', 'x86', 'x86_64'}
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
     ldso_soname_regex = re.compile(r'^ld(-linux(-(ia|x86_)64))?\.so')
 
@@ -312,6 +313,33 @@ class BinariesCheck(AbstractCheck):
             if path.name.startswith('lib') or path.name.startswith('ld-'):
                 self.output.add_info('E', pkg, 'no-ldconfig-symlink', shlib)
 
+    def _ignore_pkgname_in_library(self, library_name):
+        """
+        Return True when first part of SONAME should be skipped.
+        Examples:
+            - libunwind-x86_64.so.8
+            - liblogging-rfc3195.so.0
+            - libboost_math_c99.so.1.77.0
+            - libgdk-x11-2.0.so.0
+        """
+        for target in self.digit_ending_targets:
+            if library_name.endswith(target):
+                return True
+
+        # X11 libraries
+        if library_name.endswith('-x11'):
+            return True
+
+        # Boost libraries
+        if library_name.endswith('_c99') or library_name.endswith('_tr1'):
+            return True
+
+        # RFC-ending names
+        if re.match(r'.*rfc[0-9]+$', library_name):
+            return True
+
+        return False
+
     def _check_shared_library(self, pkg, pkgfile_path, path):
         """
         Various checks for the shared library.
@@ -344,7 +372,10 @@ class BinariesCheck(AbstractCheck):
                     # expected package name: libgame2-1_9-10_0_0
                     res = self.soversion_regex.search(soname)
                     if res:
-                        parts = [x.replace('.', '_') for x in (res.group('pkgname'), res.group('pkgversion'), res.group('soversion')) if x]
+                        pkgname = res.group('pkgname')
+                        if self._ignore_pkgname_in_library(res.group('libraryname')):
+                            pkgname = None
+                        parts = [x.replace('.', '_') for x in (pkgname, res.group('pkgversion'), res.group('soversion')) if x]
                         soversion = '-'.join(parts)
                         if soversion and soversion not in pkg.name:
                             self.output.add_info('E', pkg, 'shlib-policy-name-error',
