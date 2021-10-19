@@ -260,4 +260,4 @@ def test_shlib_policy_name_error(binariescheck):
 
     run_elf_checks(test, FakePkg('libgame'), get_full_path('libgame.so'), '/lib64/libgame.so')
     out = output.print_results(output.results)
-    assert 'libgame: E: shlib-policy-name-error SONAME: libgame2-1.9.so.10.0.0, expected package suffix: 2-1_9-10_0_0' in out
+    assert 'libgame: E: shlib-policy-name-error SONAME: libgame2-1.9.so.10.0.0, expected package suffix: 1_9-10_0_0' in out
