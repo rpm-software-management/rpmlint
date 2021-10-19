@@ -58,6 +58,16 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "pam_u2f"
+type = "pam"
+note = ""
+bug  = "bsc#1190790"
+nodigests = [
+    "*/security/pam_u2f.so",
+]
+
+
+[[FileDigestGroup]]
 package = "pam_mount"
 type = "pam"
 note = "legacy: not audited"
