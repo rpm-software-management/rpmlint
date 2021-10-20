@@ -416,7 +416,7 @@ def test_run_rpmlintrc_multiple(capsys, packages):
 def test_run_rpmlintrc_single_file(capsys, packages):
     additional_options = {
         'rpmfile': [packages],
-        'rpmlintrc': TEST_RPMLINTRC
+        'rpmlintrc': [TEST_RPMLINTRC]
     }
     options = get_options(additional_options)
     linter = Lint(options)
