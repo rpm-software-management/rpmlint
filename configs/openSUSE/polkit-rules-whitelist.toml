@@ -1,5 +1,5 @@
 [[FileDigestGroup]]
-package = "polkit-default-privs"
+package = "rpmlint-integration-test"
 type = "polkit"
 note = "test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"

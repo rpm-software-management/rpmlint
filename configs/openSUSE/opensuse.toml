@@ -253,6 +253,7 @@ BlockedFilters = [
     "permissions-missing-postin",
     "permissions-missing-requires",
     "permissions-missing-verifyscript",
+    "permissions-parse-error",
     "permissions-symlink",
     "polkit-file-ghost",
     "polkit-file-unauthorized",
