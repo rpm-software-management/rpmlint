@@ -7,7 +7,7 @@ digests = [
     {
         path = "/etc/dbus-1/system.d/rpmlint_test.conf",
 	algorithm = "sha256",
-	hash = "fac51ad567667cdba707ac1d9410fea54110b3ee11dcf19a2eba34a1405070ac"
+	hash = "504c5a60b7173794e565755122ab77beaec9bcf208fb97a40237cb57c67b5a17"
     }
 ]
 
