@@ -13,17 +13,23 @@ def alternativescheck():
     return output, test
 
 
+#
+# udpate-alternatives tests
+#
+
+
 @pytest.mark.parametrize('package', ['binary/alternatives-ok'])
-def test_alternative_ok(tmpdir, package, alternativescheck):
+def test_update_alternative_ok(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
+    assert 'I: package supports update-alternatives' in out
     assert 'E' not in out
     assert 'W' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/alternatives-borked'])
-def test_alternative_borked(tmpdir, package, alternativescheck):
+def test_update_alternative_borked(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
@@ -34,7 +40,7 @@ def test_alternative_borked(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/self'])
-def test_non_alternative_pkg(tmpdir, package, alternativescheck):
+def test_non_update_alternative_pkg(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
@@ -50,3 +56,32 @@ def test_update_alternatives_correctness(tmpdir, package, alternativescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: update-alternatives-postun-call-missing' not in out
+
+
+#
+# libalternatives tests
+#
+
+
+@pytest.mark.parametrize('package', ['binary/libalternatives-ok'])
+def test_libalternative_ok(tmpdir, package, alternativescheck):
+    output, test = alternativescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'I: package supports libalternatives' in out
+    assert 'E' not in out
+    assert 'W' not in out
+
+
+@pytest.mark.parametrize('package', ['binary/libalternatives-borked'])
+def test_libalternative_borked(tmpdir, package, alternativescheck):
+    output, test = alternativescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'I: package supports libalternatives' in out
+    assert 'I: libalternatives-conf-not-found' in out
+    assert 'E: alts-requirement-missed' in out
+    assert 'E: libalternatives-directory-not-exist' in out
+    assert 'E: empty-libalternatives-directory' in out
+    assert 'W: man-entry-value-not-found' in out
+    assert 'W: binary-entry-value-not-found' in out
