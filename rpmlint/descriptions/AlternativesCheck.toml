@@ -28,3 +28,33 @@ The package does not call update-alternatives --remove in postun phase to
 remove all the configuration for each individual --install binary that
 was done in postun.
 """
+alts-requirement-missed="""
+The package does not require package alts, needed for libalternatives.
+"""
+empty-libalternatives-directory="""
+The directory /usr/share/libalternatives/<call> has no configuration file.
+"""
+libalternatives-directory-not-exists="""
+The directory /usr/share/libalternatives/<call> has not been defined.
+"""
+libalternatives-conf-not-found="""
+Not found libalternatives configuration file, defined in the file package section. This does not have to be an error if the file has been tagged as a ghost file.
+"""
+multiple-entries="""
+Libalternatives configuration file has multiple entries for that key.
+"""
+wrong-entry-format="""
+The libalternatives configuration file has a wrong entry format (key=value).
+"""
+binary-entry-value-not-found="""
+The libalternatives configuration file has wrong value in binary entry.
+"""
+man-entry-value-not-found="""
+The value of the man entry in libalternatives configuration file has no corresponding package file entry.
+"""
+wrong-or-missed-binary-entry="""
+Binary entry in libalternatives configuration file has no corresponding package file entry.
+"""
+wrong-tag-found="""
+Unknown tag in libalternatives configuration file.
+"""
