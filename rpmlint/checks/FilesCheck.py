@@ -441,6 +441,7 @@ class FilesCheck(AbstractCheck):
                     devel_pkg = True
                     break
 
+        deps = pkg.requires + pkg.prereq
         config_files = pkg.config_files
         ghost_files = pkg.ghost_files
         req_names = pkg.req_names
@@ -749,7 +750,8 @@ class FilesCheck(AbstractCheck):
                         else:
                             vers = res.group(1) + res.group(2)
                         if not (pkg.check_versioned_dep('perl-base', vers) or
-                                pkg.check_versioned_dep('perl', vers)):
+                                pkg.check_versioned_dep('perl', vers) or
+                                f'perl(:MODULE_COMPAT_{vers})' in deps):
                             self.output.add_info('E', pkg, 'no-dependency-on',
                                                  'perl-base', vers)
                             perl_dep_error = True
