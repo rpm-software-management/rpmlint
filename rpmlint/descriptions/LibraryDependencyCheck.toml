@@ -1,0 +1,7 @@
+no-library-dependency-for="""
+The package misses dependency on a library package that provides the shared library.
+"""
+
+no-library-dependency-on="""
+The package misses dependency on a package which file it links to.
+"""

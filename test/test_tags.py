@@ -97,14 +97,6 @@ def test_forbidden_controlchar_found(tmpdir, package, tagscheck):
     assert 'E: forbidden-controlchar-found %changelog :' in out
 
 
-@pytest.mark.parametrize('package', ['binary/shlib2-devel'])
-def test_shlib2_devel(tmpdir, package, tagscheck):
-    output, test = tagscheck
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert 'W: no-dependency-on' in out
-
-
 @pytest.mark.parametrize('package', ['binary/unexpanded-macro-exp'])
 def test_check_unexpanded_macro(tmpdir, package, tagscheck):
     """Test if a package has an unexpanded macro in it's specfile."""
