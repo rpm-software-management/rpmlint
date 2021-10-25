@@ -1,13 +1,26 @@
 [[FileDigestGroup]]
 package = "rpmlint-integration-test"
 type = "dbus"
-note = "test whitelisting entry for the OBS integration test package"
+note = "valid test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
 digests = [
     {
         path = "/etc/dbus-1/system.d/rpmlint_test.conf",
 	algorithm = "sha256",
 	hash = "504c5a60b7173794e565755122ab77beaec9bcf208fb97a40237cb57c67b5a17"
+    }
+]
+
+[[FileDigestGroup]]
+package = "rpmlint-integration-test"
+type = "dbus"
+note = "mismatching valid test whitelisting entry for the OBS integration test package"
+bug = "bsc#1188704"
+digests = [
+    {
+        path = "/etc/dbus-1/system.d/rpmlint_mismatch.conf",
+	algorithm = "sha256",
+	hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
     }
 ]
 

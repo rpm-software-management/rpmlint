@@ -1,13 +1,26 @@
 [[FileDigestGroup]]
 package = "rpmlint-integration-test"
 type = "polkit"
-note = "test whitelisting entry for the OBS integration test package"
+note = "valid test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/00-rpmlint.rules",
         algorithm = "sha256",
         hash = "74a2881794c1762fd07cc7a4c55633fe00aec552a788b2bee4dc362a27b438e8"
+    },
+]
+
+[[FileDigestGroup]]
+package = "rpmlint-integration-test"
+type = "polkit"
+note = "mismatching test whitelisting entry for the OBS integration test package"
+bug = "bsc#1188704"
+digests = [
+    {
+        path = "/usr/share/polkit-1/rules.d/00-mismatch.rules",
+        algorithm = "sha256",
+        hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
     },
 ]
 
