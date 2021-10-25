@@ -1,7 +1,9 @@
 [Scoring]
+cron-file-digest-mismatch = 10000
 cron-file-ghost = 10000
 cron-file-unauthorized = 10000
 cron-file-symlink = 10000
+dbus-file-digest-mismatch = 10000
 dbus-file-ghost = 10000
 dbus-file-unauthorized = 10000
 dbus-file-symlink = 10000
@@ -12,6 +14,7 @@ pam-file-ghost = 10000
 pam-file-unauthorized = 10000
 pam-file-symlink = 10000
 permissions-directory-setuid-bit = 10000
+permissions-file-digest-mismatch = 10000
 permissions-file-ghost = 10000
 permissions-file-unauthorized = 10000
 permissions-file-setuid-bit = 10000
@@ -20,6 +23,7 @@ permissions-file-symlink = 10000
 # packages and only one should be responsible for caring about %postin
 permissions-missing-postin = 100
 permissions-parse-error = 10000
+polkit-file-digest-mismatch = 10000
 polkit-file-ghost = 10000
 polkit-file-unauthorized = 10000
 polkit-file-symlink = 10000

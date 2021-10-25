@@ -13,6 +13,7 @@ pam-file-ghost="This package installs a PAM module as a %ghost file. #GHOST_ENCO
 pam-file-symlink="this should never happen"
 
 permissions-file-unauthorized="Packaging permissions.d drop-in snippets #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+permissions-file-digest-mismatch="A permissions.d drop-in snippet changed in content. Packaging permissions.d drop-in snippets #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 permissions-file-ghost="This package installs a permissions drop-in file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
 permissions-file-symlink="Symlinks are not allowed for permissions.d drop-in snippets"
 
