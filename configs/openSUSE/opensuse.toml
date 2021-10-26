@@ -229,9 +229,11 @@ Filters = [
 ]
 
 BlockedFilters = [
+    "cron-file-digest-mismatch",
     "cron-file-ghost",
     "cron-file-unauthorized",
     "cron-file-symlink",
+    "dbus-file-digest-mismatch",
     "dbus-file-ghost",
     "dbus-file-unauthorized",
     "dbus-file-symlink",
@@ -243,6 +245,7 @@ BlockedFilters = [
     "permissions-directory-setuid-bit",
     "permissions-dir-without-slash",
     "permissions-file-as-dir",
+    "permissions-file-digest-mismatch",
     "permissions-file-ghost",
     "permissions-file-unauthorized",
     "permissions-file-setuid-bit",
@@ -256,6 +259,7 @@ BlockedFilters = [
     "permissions-parse-error",
     "permissions-symlink",
     "polkit-file-ghost",
+    "polkit-file-digest-mismatch",
     "polkit-file-unauthorized",
     "polkit-file-symlink",
     "polkit-ghost-file",
