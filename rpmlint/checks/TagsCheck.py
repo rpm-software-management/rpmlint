@@ -359,7 +359,7 @@ class TagsCheck(AbstractCheck):
 
     def _check_multiple_tags(self, pkg, name, is_devel,
                              is_source, deps, epoch, version):
-        """Trigger checks no-name-tag check, no-dependency-on,
+        """Trigger checks no-name-tag check,
         no-version-dependency-on, missing-dependency-on,
         no-major-in-name, no-provides, no-pkg-config-provides
 
@@ -393,9 +393,7 @@ class TagsCheck(AbstractCheck):
                         if base_or_libs_re.match(d[0]):
                             dep = d
                             break
-                    if not dep:
-                        self.output.add_info('W', pkg, 'no-dependency-on', base_or_libs)
-                    elif version:
+                    if dep and version:
                         exp = (epoch, version, None)
                         sexp = Pkg.versionToString(exp)
                         if not dep[1]:

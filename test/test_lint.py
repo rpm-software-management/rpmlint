@@ -40,6 +40,7 @@ basic_tests = [
     'FilesCheck',
     'IconSizesCheck',
     'I18NCheck',
+    'LibraryDependencyCheck',
     'LogrotateCheck',
     'MenuCheck',
     'MenuXDGCheck',
