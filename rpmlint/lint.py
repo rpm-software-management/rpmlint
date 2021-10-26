@@ -233,6 +233,10 @@ class Lint(object):
         for pkg in packages:
             self.validate_file(pkg, pkg == packages[-1])
 
+        # run post check function
+        for checker in self.checks.values():
+            checker.after_checks()
+
     def _expand_filelist(self, files):
         packages = []
         for pkg in files:

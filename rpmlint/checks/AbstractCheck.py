@@ -25,6 +25,9 @@ class AbstractCheck(object):
     def check_spec(self, pkg):
         return
 
+    def after_checks(self):
+        return
+
 
 class AbstractFilesCheck(AbstractCheck):
     def __init__(self, config, output, file_regexp):
