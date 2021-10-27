@@ -488,18 +488,18 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#783932"
 nodigests = [
-    "/etc/dbus-1/system.d/org.opensuse.Network.conf",
-    "/etc/dbus-1/system.d/org.opensuse.Network.AUTO4.conf",
-    "/etc/dbus-1/system.d/org.opensuse.Network.DHCP6.conf",
-    "/etc/dbus-1/system.d/org.opensuse.Network.DHCP4.conf",
-    "/etc/dbus-1/system.d/org.opensuse.Network.Nanny.conf"
+    "/usr/share/dbus-1/system.d/org.opensuse.Network.conf",
+    "/usr/share/dbus-1/system.d/org.opensuse.Network.AUTO4.conf",
+    "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP6.conf",
+    "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP4.conf",
+    "/usr/share/dbus-1/system.d/org.opensuse.Network.Nanny.conf"
 ]
 
 [[FileDigestGroup]]
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#828207"
+bugs = ["bsc#828207", "bsc#1192033"]
 nodigests = [
     "/usr/lib/systemd/system/dbus-org.freedesktop.machine1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service",
