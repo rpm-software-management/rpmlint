@@ -36,7 +36,7 @@ class LibraryDependencyCheck(AbstractCheck):
 
     def _process_nondevel_package(self, pkg):
         for pkgfile in pkg.files.values():
-            if FilesCheck.lib_regex.match(pkgfile.name):
+            if '.so' in pkgfile.name:
                 self.package_so_files[pkgfile.name] = pkg.name
 
     def after_checks(self):
