@@ -50,5 +50,5 @@ class LibraryDependencyCheck(AbstractCheck):
                     else:
                         definition = self.package_so_files[link]
                         if definition not in self.package_requires[pkgname]:
-                            self.output.add_info('E', pkg, 'no-library-dependency-on', definition)
+                            self.output.add_info('E', pkg, 'no-library-dependency-on', definition, link)
                             break
