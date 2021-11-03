@@ -41,16 +41,19 @@ digests = [
 [[FileDigestGroup]]
 package = "sendmail"
 type = "permissions"
+note = """Be careful about calculating digest sums here, the sendmail package
+      replaces file contents during RPM build time with architecture dependent
+      values"""
 digests = [
     {
         path = "/etc/permissions.d/sendmail",
         algorithm = "sha256",
-        hash = "8dded55101e7040cf912936d62198202aa4354a2da457352f64f513f10ed6b92"
+        hash = "423780cfd9d5935a26981b1cfede12816c1ce4c0982c22dd28d4ceadeed5cce5"
     },
     {
         path = "/etc/permissions.d/sendmail.paranoid",
         algorithm = "sha256",
-        hash = "bf4067f280e6d85b1b081ccfb7492d61505225f8ecfa3c3cc02ecf4ec0b298c1"
+        hash = "afa2a74dfef4ac98dd048a7c962a3528e4b5c932e538f7c3666f167924de2d4e"
     },
 ]
 
@@ -61,11 +64,11 @@ digests = [
     {
         path = "/etc/permissions.d/texlive",
         algorithm = "sha256",
-        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+        hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
     {
         path = "/etc/permissions.d/texlive.texlive",
         algorithm = "sha256",
-        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+        hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
 ]
