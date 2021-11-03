@@ -64,11 +64,11 @@ digests = [
     {
         path = "/etc/permissions.d/texlive",
         algorithm = "sha256",
-        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+        hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
     {
         path = "/etc/permissions.d/texlive.texlive",
         algorithm = "sha256",
-        hash = "9b4b799427c31ec0be73b6b363d2d1aea8d51e22db6f207dd0660f6a1423a5ee"
+        hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
 ]
