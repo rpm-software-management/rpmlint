@@ -1080,3 +1080,16 @@ nodigests = [
     "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
     "/etc/dbus-1/system.d/net.hadess.PowerProfiles.conf"
 ]
+
+[[FileDigestGroup]]
+package = "setroubleshoot"
+type = "dbus"
+bug = "bsc#1186344"
+nodigests = [
+    "/usr/share/dbus-1/system.d/org.fedoraproject.Setroubleshootd.conf",
+    "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootFixit.conf",
+    "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootPrivileged.conf",
+    "/usr/share/dbus-1/system-services/org.fedoraproject.Setroubleshootd.service",
+    "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootFixit.service",
+    "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootPrivileged.service"
+]
