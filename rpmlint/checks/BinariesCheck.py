@@ -305,7 +305,7 @@ class BinariesCheck(AbstractCheck):
         try:
 
             link = pkg.files[str(symlink)].linkto
-            if link not in (shlib, path.parent, ''):
+            if link not in (shlib, path.name, ''):
                 self.output.add_info('E', pkg, 'invalid-ldconfig-symlink', shlib, link)
         except KeyError:
             # if we do not have a symlink, report an issue
