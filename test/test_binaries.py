@@ -247,6 +247,16 @@ def test_invalid_ldconfig_symlink(tmpdir, package, binariescheck):
     assert 'E: statically-linked-binary' not in out
 
 
+# valid symlink should not report invalid-ldconfig-symlink
+@pytest.mark.parametrize('package', ['binary/libtest4'])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
+def test_not_valid_ldconfig_symlink(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: invalid-ldconfig-symlink' not in out
+
+
 @pytest.mark.parametrize('package', ['binary/multiple_errors'])
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_multiple_errors(tmpdir, package, binariescheck):

@@ -1,0 +1,4 @@
+# Backward compatibility should match spaces within paren
+addFilter('no-spaces-in-paren')
+addFilter( 'has-spaces-in-paren' )
+addFilter("doublequotes-instead-of-singlequotes")

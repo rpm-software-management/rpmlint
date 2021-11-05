@@ -7,6 +7,7 @@ from Testing import get_tested_package, testpath
 
 TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
 TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
+TEST3_RPMLINTRC = testpath() / 'configs/testing3-rpmlintrc'
 TEST_PACKAGE = Path('binary', 'ngircd')
 TEST_PACKAGE2 = Path('binary', 'tempfiled')
 TEST_DESCRIPTIONS = [testpath() / 'configs/descriptions.config']
@@ -39,6 +40,19 @@ def test_data_storing(tmpdir):
     assert len(result.results) == 2
     assert result.printed_messages['W'] == 1
     assert result.printed_messages['E'] == 1
+
+
+def test_data_storing_backward_compat(tmpdir):
+    """
+    Make sure we can load some filters from rpmlintrc that
+    worked with rpmlint v1.
+    """
+    cfg = Config(TEST_CONFIG_FILTERS)
+    cfg.load_rpmlintrc(TEST3_RPMLINTRC)
+    parsed_filters = cfg.rpmlintrc_filters
+    assert 'no-spaces-in-paren' in parsed_filters
+    assert 'has-spaces-in-paren' in parsed_filters
+    assert 'doublequotes-instead-of-singlequotes' in parsed_filters
 
 
 def test_description_storing(tmpdir):

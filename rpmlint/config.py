@@ -21,7 +21,7 @@ class Config(object):
     existing one.
     """
 
-    re_filter = re.compile(r'^\s*addFilter\s*\(r?[\"\'](.*)[\"\']\)')
+    re_filter = re.compile(r'^\s*addFilter\s*\(\s?r?[\"\'](.*)[\"\']\s?\)')
     re_badness = re.compile(r'\s*setBadness\s*\([\'\"](.*)[\'\"],\s*[\'\"]?(\d+)[\'\"]?\)')
     config_defaults = Path(__file__).parent / 'configdefaults.toml'
 
