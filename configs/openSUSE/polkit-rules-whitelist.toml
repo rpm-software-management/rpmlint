@@ -142,6 +142,19 @@ digests = [
 ]
 
 [[FileDigestGroup]]
+package = "gnome-initial-setup"
+type = "polkit"
+note = "Follow-up whitelisting, upstream added org.fedoraproject.thirdparty.* to the rules"
+bug = "bsc#1192542"
+digests = [
+    {
+        path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules",
+        algorithm = "sha256",
+        hash = "e8d930c2f4ef56727ab4e64ebe21c98e3ab7aaf3a4079d15ddc6acf324a5a412"
+    },
+]
+
+[[FileDigestGroup]]
 package = "libvirt-dbus"
 type = "polkit"
 note = "Allows the libvirt-dbus daemon to run unprivileged but still control libvirt"
