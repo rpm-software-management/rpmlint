@@ -52,6 +52,7 @@ def test_data_storing_backward_compat(tmpdir):
     parsed_filters = cfg.rpmlintrc_filters
     assert 'no-spaces-in-paren' in parsed_filters
     assert 'has-spaces-in-paren' in parsed_filters
+    assert 'multiple-spaces-in-paren' in parsed_filters
     assert 'doublequotes-instead-of-singlequotes' in parsed_filters
 
 
