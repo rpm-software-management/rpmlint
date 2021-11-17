@@ -39,6 +39,22 @@ digests = [
 ]
 
 [[FileDigestGroup]]
+package = "postfix-bdb"
+type = "permissions"
+digests = [
+    {
+        path = "/etc/permissions.d/postfix",
+        algorithm = "sha256",
+        hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
+    },
+    {
+        path = "/etc/permissions.d/postfix.paranoid",
+        algorithm = "sha256",
+        hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
+    },
+]
+
+[[FileDigestGroup]]
 package = "sendmail"
 type = "permissions"
 note = """Be careful about calculating digest sums here, the sendmail package
