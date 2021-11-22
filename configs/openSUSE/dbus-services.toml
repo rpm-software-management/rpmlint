@@ -1082,7 +1082,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "setroubleshoot"
+package = "setroubleshoot-server"
 type = "dbus"
 bug = "bsc#1186344"
 nodigests = [
