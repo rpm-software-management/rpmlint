@@ -38,6 +38,9 @@ class BinariesCheck(AbstractCheck):
     # The following sections are part of the RX ABI and do correspond to .text, .data and .bss
     lto_text_like_sections |= {'P', 'D_1', 'B_1'}
 
+    # The list is taken from glibc: sysdeps/${arch}/stackinfo.h
+    default_executable_stack_archs = re.compile(r'alpha|arm.*|hppa|i.86|m68k|microblaze|mips|ppc64|ppc64le|s390|s390x|sh|sparc|x86_64')
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.checked_files = 0
@@ -284,6 +287,10 @@ class BinariesCheck(AbstractCheck):
 
         FIXME Add test coverage.
         """
+
+        # Skip architectures that have non-executable stack by default
+        if pkg.arch and not self.default_executable_stack_archs.fullmatch(pkg.arch):
+            return
 
         # Do not check kernel modules and archives
         if not self.is_archive and not any(path.startswith(p) for p in KERNEL_MODULES_PATHS):
