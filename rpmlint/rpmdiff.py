@@ -141,7 +141,7 @@ class Rpmdiff(object):
                 return Pkg(name, tmpdir)
         except TypeError:
             pass
-        inst = getInstalledPkgs(name)
+        inst = getInstalledPkgs(str(name))
         if not inst:
             raise KeyError(f'No installed packages by name {name}')
         if len(inst) > 1:
