@@ -230,6 +230,9 @@ class Lint(object):
         # check all elements if they are a folder or a file with proper suffix
         # and expand everything
         packages = self._expand_filelist(files)
+
+        # Sort the files so that the output is stable
+        packages = sorted(packages)
         for pkg in packages:
             self.validate_file(pkg, pkg == packages[-1])
 
