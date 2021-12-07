@@ -73,7 +73,7 @@ Filters = [
 #    '.*invalid-buildhost.*',
     '.*executable-in-library-package.*',
     '.*non-versioned-file-in-library-package.*',
-#    '.*shlib-policy-name-error.*',
+    '.*shlib-policy-name-error.*',
 #    '.*hardcoded-path-in-buildroot-tag.*',
     '.*no-buildroot-tag.*',
 #    '.*cross-directory-hard-link.*',
@@ -233,7 +233,7 @@ Filters = [
 #    ' executable-marked-as-config-file',
 #    ' log-files-without-logrotate',
 #    ' hardcoded-prefix-tag',
-    '-debug(info|source).* no-documentation',
+    ' -debug(info|source).* no-documentation',
 #    ' multiple-specfiles',
 #    ' no-default-runlevel ',
 #    ' setgid-binary ',
@@ -265,8 +265,8 @@ Filters = [
 # Fedora specific stuff that we don't want
     ' ghost-files-without-postin',
     ' no-provides ',
-    '-debuginfo.* /usr/lib/debug/',
-    '-debugsource.* /usr/src/debug/', 
+    ' -debuginfo.* /usr/lib/debug/',
+    ' -debugsource.* /usr/src/debug/',
     '^gpg-pubkey:',
     ' doc-file-dependency .* /bin/sh$',
     'explicit-lib-dependency (liberation-fonts|libertas-.*-firmware|libvirt$|.*-(java|python|utils)$)',
@@ -352,4 +352,4 @@ To register the group, please make a pull request to the rpmlint config file
 configs/Fedora/fedora.toml in the rpmlint repository.
 '''
 no-changelogname-tag = '''There is no changelog. Please insert a '%changelog' section heading in your
-spec file and prepare your changes file using e.g. the 'osc vc' command.'''
+spec file and prepare your changelog entry using e.g. the 'rpmdev-bumpspec' command.'''
