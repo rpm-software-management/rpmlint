@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" This sciptt is used to generate values for
+""" This script is used to generate values for
     config/Fedora/configs/Fedora/users-groups.toml
 """
 import os

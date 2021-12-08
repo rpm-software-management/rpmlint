@@ -9,7 +9,7 @@ setup(
     url='https://github.com/rpm-software-management/rpmlint',
     download_url='https://github.com/rpm-software-management/rpmlint',
 
-    version='2.1.0',
+    version='2.2.0',
 
     author='Frédéric Lepied',
     author_email='flepied@mandriva.com',
