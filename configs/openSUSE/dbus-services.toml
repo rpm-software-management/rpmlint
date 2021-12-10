@@ -892,6 +892,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "connman"
+type = "dbus"
+bug = "bsc#1192827"
+comment = "thin NetworkManager compatibility interface"
+nodigests = [
+    "/usr/share/dbus-1/system.d/connman-nmcompat.conf"
+]
+
+[[FileDigestGroup]]
 package = "NetworkManager-fortisslvpn"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
