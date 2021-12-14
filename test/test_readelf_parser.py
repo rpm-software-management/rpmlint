@@ -5,6 +5,7 @@ import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg, get_magic
+from rpmlint.pkgfile import PkgFile
 from rpmlint.readelfparser import ReadelfParser
 
 from Testing import CONFIG, get_tested_path, HAS_32BIT_GLIBC, IS_I686, IS_X86_64
@@ -223,9 +224,13 @@ def test_call_mktemp(binariescheck):
 def test_call_setgroups(binariescheck):
     output, test = binariescheck
 
-    run_elf_checks(test, FakePkg('fake'), get_full_path('call-setgroups'), '/bin/call-setgroups')
-    out = output.print_results(output.results)
-    assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = PkgFile('/bin/call-setgroups')
+        pkgfile.path = get_full_path('call-setgroups')
+        pkg.files[pkgfile.name] = pkgfile
+        run_elf_checks(test, pkg, pkgfile.path, pkgfile.name)
+        out = output.print_results(output.results)
+        assert 'E: missing-call-to-setgroups-before-setuid /bin/call-setgroups' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
