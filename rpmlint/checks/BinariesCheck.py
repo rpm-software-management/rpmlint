@@ -411,7 +411,8 @@ class BinariesCheck(AbstractCheck):
         gethostbyname = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.gethostbyname_call_regex))
 
         if setgid and setuid and not setgroups:
-            self.output.add_info('E', pkg, 'missing-call-to-setgroups-before-setuid', path)
+            is_uid = stat.S_ISUID & pkg.files[path].mode
+            self.output.add_info('W' if is_uid else 'E', pkg, 'missing-call-to-setgroups-before-setuid', path)
 
         if mktemp:
             self.output.add_info('E', pkg, 'call-to-mktemp', path)
