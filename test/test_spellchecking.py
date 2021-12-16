@@ -4,6 +4,11 @@ import rpmlint.spellcheck
 from Testing import HAS_CZECH_DICTIONARY, HAS_ENGLISH_DICTIONARY
 
 
+def get_suggestions(suggestion):
+    suggestion = suggestion.split(' -> ')[-1]
+    return sorted(suggestion.split(', '))
+
+
 @pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
 @pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
 def test_spelldict(capsys):
@@ -45,13 +50,15 @@ def test_spellchecking():
     text = "I don't think tihs tetx is correct English"
     result = spell.spell_check(text, 'Description({}):')
     assert len(result) == 2
-    assert result['tihs'] == 'Description(en_US): tihs -> this, hits, ties'
+    assert result['tihs'].startswith('Description(en_US): tihs -> ')
+    assert get_suggestions(result['tihs']) == ['hits', 'this', 'ties']
 
     # different language, one typo
     text = 'Příčerně žluťoučký kůň'
     result = spell.spell_check(text, 'Summary({}):', 'cs_CZ')
     assert len(result) == 1
-    assert result['Příčerně'] == 'Summary(cs_CZ): Příčerně -> Příčetně, Příčeně, Příšerně'
+    assert result['Příčerně'].startswith('Summary(cs_CZ): Příčerně -> ')
+    assert get_suggestions(result['Příčerně']) == ['Příčeně', 'Příčetně', 'Příšerně']
 
     # non-existing language, should return nothing:
     text = 'Weird english text'
