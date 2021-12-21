@@ -892,7 +892,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "connman"
+package = "connman-nmcompat"
 type = "dbus"
 bug = "bsc#1192827"
 comment = "thin NetworkManager compatibility interface"
