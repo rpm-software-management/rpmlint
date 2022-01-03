@@ -39,7 +39,7 @@ class BinariesCheck(AbstractCheck):
     lto_text_like_sections |= {'P', 'D_1', 'B_1'}
 
     # The list is taken from glibc: sysdeps/${arch}/stackinfo.h
-    default_executable_stack_archs = re.compile(r'alpha|arm.*|hppa|i.86|m68k|microblaze|mips|ppc64|ppc64le|s390|s390x|sh|sparc|x86_64')
+    default_executable_stack_archs = re.compile(r'alpha|arm.*|hppa|i.86|m68k|microblaze|mips|ppc|s390|s390x|sh|sparc|x86_64')
 
     def __init__(self, config, output):
         super().__init__(config, output)
