@@ -22,7 +22,7 @@ except ImportError:
 import rpm
 from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
 from rpmlint.pkgfile import PkgFile
-import zstd
+import zstandard as zstd
 
 
 DepInfo = namedtuple('DepInfo', ('name', 'flags', 'version'))

@@ -45,7 +45,7 @@ setup(
         'pyxdg',
         'rpm',
         'toml',
-        'zstd',
+        'zstandard',
         'importlib-metadata;python_version<"3.8"',
     ],
     tests_require=[
