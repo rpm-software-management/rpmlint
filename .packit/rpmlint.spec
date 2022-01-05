@@ -28,7 +28,7 @@ BuildRequires:  python3-pytest-xdist
 BuildRequires:  python3-pyxdg
 BuildRequires:  python3-rpm
 BuildRequires:  python3-toml
-BuildRequires:  python3-zstd
+BuildRequires:  python3-zstandard
 %else
 BuildRequires:  python3dist(setuptools)
 # For tests
@@ -42,7 +42,7 @@ BuildRequires:  python3dist(pytest-xdist)
 BuildRequires:  python3dist(pyxdg)
 BuildRequires:  python3dist(rpm)
 BuildRequires:  python3dist(toml)
-BuildRequires:  python3dist(zstd)
+BuildRequires:  python3dist(zstandard)
 %endif
 
 # Rest of the test dependencies

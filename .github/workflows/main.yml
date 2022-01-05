@@ -49,7 +49,7 @@ jobs:
               python3-flake8-import-order
               python3-flake8-quotes
               python3-pyxdg
-              python3-zstd
+              python3-zstandard
               python3-toml
               python3-pip
               rpm-build
@@ -86,7 +86,7 @@ jobs:
               python3-flake8-import-order
               python3-pyxdg
               python3-toml
-              python3-zstd
+              python3-zstandard
               python3-pip
               rpm-build
               git
