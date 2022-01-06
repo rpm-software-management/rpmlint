@@ -76,15 +76,16 @@ class ElfSectionInfo:
     section_regex = re.compile(r'.*\] (?P<section>\S*)\s*\S+\s*\S*\s*\S*\s*(?P<size>\w*)')
     pic_regex = re.compile(r'\.rela?\.(data|text)')
 
-    def __init__(self, path):
+    def __init__(self, path, extra_flags):
         self.path = path
         self.elf_files = []
         self.parsing_failed_reason = None
         self.pic = False
+        self.extra_flags = extra_flags
         self.parse()
 
     def parse(self):
-        r = subprocess.run(['readelf', '-W', '-S', self.path], encoding='utf8',
+        r = subprocess.run(['readelf', '-W', '-S', self.path] + self.extra_flags, encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
@@ -145,14 +146,15 @@ class ElfProgramHeaderInfo:
 
     header_regex = re.compile('\\s+(?P<header>\\w+)(\\s+\\w+){5}\\s+(?P<flags>[RWE ]{3}).*')
 
-    def __init__(self, path):
+    def __init__(self, path, extra_flags):
         self.path = path
         self.headers = []
         self.parsing_failed_reason = None
+        self.extra_flags = extra_flags
         self.parse()
 
     def parse(self):
-        r = subprocess.run(['readelf', '-W', '-l', self.path], encoding='utf8',
+        r = subprocess.run(['readelf', '-W', '-l', self.path] + self.extra_flags, encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
@@ -217,15 +219,16 @@ class ElfDynamicSectionInfo:
     needed_regex = re.compile('Shared library: \\[(?P<library>[^\\]]+)\\]')
     rpath_regex = re.compile('Library runpath: \\[(?P<path>[^\\]]+)\\]')
 
-    def __init__(self, path):
+    def __init__(self, path, extra_flags):
         self.path = path
         self.sections = []
         self.parsing_failed_reason = None
+        self.extra_flags = extra_flags
         self.parse()
         self.parse_meta()
 
     def parse(self):
-        r = subprocess.run(['readelf', '-W', '-d', self.path], encoding='utf8',
+        r = subprocess.run(['readelf', '-W', '-d', self.path] + self.extra_flags, encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
@@ -279,15 +282,16 @@ class ElfSymbolTableInfo:
 
     section_regex = re.compile('\\s+[0-9]+:\\s\\w+\\s+(\\w+)\\s+(?P<type>\\w+)\\s+(?P<bind>\\w+)\\s+(?P<visibility>\\w+)\\s+\\w+\\s+(?P<name>\\S+)')
 
-    def __init__(self, path):
+    def __init__(self, path, extra_flags):
         self.path = path
         self.symbols = []
         self.parsing_failed_reason = None
+        self.extra_flags = extra_flags
         self.parse()
 
     def parse(self):
         try:
-            r = subprocess.run(['readelf', '-W', '-s', self.path], encoding='utf8',
+            r = subprocess.run(['readelf', '-W', '-s', self.path] + self.extra_flags, encoding='utf8',
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
             if r.returncode != 0:
                 self.parsing_failed_reason = r.stderr
@@ -316,14 +320,15 @@ class ElfCommentInfo:
 
     comment_regex = re.compile('\\s+\\[[\\s[0-9]+\\]\\s+(?P<comment>.*)')
 
-    def __init__(self, path):
+    def __init__(self, path, extra_flags):
         self.path = path
         self.comments = []
         self.parsing_failed_reason = None
+        self.extra_flags = extra_flags
         self.parse()
 
     def parse(self):
-        r = subprocess.run(['readelf', '-p', '.comment', self.path], encoding='utf8',
+        r = subprocess.run(['readelf', '-p', '.comment', self.path] + self.extra_flags, encoding='utf8',
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
@@ -350,11 +355,16 @@ class ReadelfParser:
         self.is_shlib = self.so_regex.search(path)
         self.is_debug = path.endswith('.debug')
 
-        self.section_info = ElfSectionInfo(pkgfile_path)
-        self.program_header_info = ElfProgramHeaderInfo(pkgfile_path)
-        self.dynamic_section_info = ElfDynamicSectionInfo(pkgfile_path)
-        self.symbol_table_info = ElfSymbolTableInfo(pkgfile_path)
-        self.comment_section_info = ElfCommentInfo(pkgfile_path)
+        # Do not follow debug info links
+        output = subprocess.check_output('readelf --help', shell=True, encoding='utf8')
+        flag = '--debug-dump=no-follow-links'
+        extra_flags = [flag] if flag in output else []
+
+        self.section_info = ElfSectionInfo(pkgfile_path, extra_flags)
+        self.program_header_info = ElfProgramHeaderInfo(pkgfile_path, extra_flags)
+        self.dynamic_section_info = ElfDynamicSectionInfo(pkgfile_path, extra_flags)
+        self.symbol_table_info = ElfSymbolTableInfo(pkgfile_path, extra_flags)
+        self.comment_section_info = ElfCommentInfo(pkgfile_path, extra_flags)
 
     def parsing_failed_reason(self):
         reasons = [self.section_info.parsing_failed_reason,
