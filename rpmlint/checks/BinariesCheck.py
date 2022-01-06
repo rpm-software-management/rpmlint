@@ -564,11 +564,13 @@ class BinariesCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
                     return
 
-            self.objdump_parser = ObjdumpParser(pkgfile_path, path)
-            failed_reason = self.objdump_parser.parsing_failed_reason
-            if failed_reason:
-                self.output.add_info('E', pkg, 'objdump-failed', path, failed_reason)
-                return
+            if (self.config.configuration['MandatoryOptflags'] or
+                    self.config.configuration['ForbiddenOptflags']):
+                self.objdump_parser = ObjdumpParser(pkgfile_path, path)
+                failed_reason = self.objdump_parser.parsing_failed_reason
+                if failed_reason:
+                    self.output.add_info('E', pkg, 'objdump-failed', path, failed_reason)
+                    return
 
         # NOTE: the speed benefit of the ThreadPoolExecutor is limited due to
         # Global Interpreter Lock (GIL).
