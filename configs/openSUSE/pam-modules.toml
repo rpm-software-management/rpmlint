@@ -33,9 +33,10 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "samba-winbind"
+package = "samba-winbind-libs"
 type = "pam"
-note = "legacy: not audited"
+bug  = "bsc#1194573"
+note = "performs authentication against a Windows domain server"
 nodigests = [
     "*/security/pam_winbind.so",
 ]
