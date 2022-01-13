@@ -23,7 +23,7 @@ class SharedLibraryPolicyCheck(AbstractCheck):
         self.re_soname_strongly_versioned = re.compile(r'-[\d\.]+\.so$')
         # the pkgname is based on soname if ending with number; special option is flavor build
         self.re_soname_pkg = re.compile(r'^lib\S+(\d+(-(32|64)bit)?)$')
-        self.re_so_files = re.compile(r'\S+.so((.(\d+))+)?$')
+        self.re_so_files = re.compile(r'\S+.so((\.(\d+))*)$')
 
     def _check_missing_policy_lib(self, pkg):
         # check the pkg has any libname
