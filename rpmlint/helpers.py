@@ -7,7 +7,8 @@ import sys
 from rpmlint.color import Color
 
 
-ENGLISH_ENVIROMENT = dict(os.environ, LC_ALL='en_US.UTF-8')
+ENGLISH_ENVIROMENT = dict(os.environ, LC_ALL='en_US.UTF-8',
+                          LANGUAGE='en_US')
 
 
 def string_center(message, filler=' '):
