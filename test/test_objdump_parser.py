@@ -28,9 +28,9 @@ def objdumpparser(path, system_path=None):
     return ObjdumpParser(get_full_path(path), system_path)
 
 
-def run_elf_checks(test, pkg, fullpath, path):
-    test._detect_attributes(get_magic(fullpath))
-    test.run_elf_checks(pkg, fullpath, path)
+def run_elf_checks(test, pkg, pkgfile):
+    test._detect_attributes(get_magic(pkgfile.path))
+    test.run_elf_checks(pkg, pkgfile)
 
 
 def test_basic():
@@ -47,8 +47,11 @@ def test_basic():
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_executable_stack_package(binariescheck):
     output, test = binariescheck
-    run_elf_checks(test, FakePkg('fake'), get_full_path('executable-stack'), 'a.out')
-    out = output.print_results(output.results)
 
-    assert 'W: missing-mandatory-optflags a.out -fno-PIE -g -Ofast' in out
-    assert 'E: forbidden-optflags a.out -frounding-math' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = pkg.add_file(get_full_path('executable-stack'), 'a.out')
+        run_elf_checks(test, FakePkg('fake'), pkgfile)
+        out = output.print_results(output.results)
+
+        assert 'W: missing-mandatory-optflags a.out -fno-PIE -g -Ofast' in out
+        assert 'E: forbidden-optflags a.out -frounding-math' in out

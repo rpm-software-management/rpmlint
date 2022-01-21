@@ -27,9 +27,9 @@ def lddparser(path, system_path=None):
     return LddParser(get_full_path(path), system_path, True)
 
 
-def run_elf_checks(test, pkg, fullpath, path):
-    test._detect_attributes(get_magic(fullpath))
-    test.run_elf_checks(pkg, fullpath, path)
+def run_elf_checks(test, pkg, pkgfile):
+    test._detect_attributes(get_magic(pkgfile.path))
+    test.run_elf_checks(pkg, pkgfile)
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
@@ -64,38 +64,46 @@ def test_dependencies():
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_unused_dependency_in_package(binariescheck):
     output, test = binariescheck
-    run_elf_checks(test, FakePkg('fake'), get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
-    assert not test.readelf_parser.parsing_failed_reason()
-    assert not test.ldd_parser.parsing_failed_reason
-    out = output.print_results(output.results)
-    assert 'E: unused-direct-shlib-dependency ' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = pkg.add_file(get_full_path('libtirpc.so.3.0.0'), '/lib64/x.so')
+        run_elf_checks(test, pkg, pkgfile)
+        assert not test.readelf_parser.parsing_failed_reason()
+        assert not test.ldd_parser.parsing_failed_reason
+        out = output.print_results(output.results)
+        assert 'E: unused-direct-shlib-dependency ' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_unused_dependency_in_package_for_executable(binariescheck):
     output, test = binariescheck
-    run_elf_checks(test, FakePkg('fake'), get_full_path('appletviewer'), '/usr/bin/appletviewer')
-    assert not test.readelf_parser.parsing_failed_reason()
-    assert not test.ldd_parser.parsing_failed_reason
-    out = output.print_results(output.results)
-    assert 'W: unused-direct-shlib-dependency ' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = pkg.add_file(get_full_path('appletviewer'), '/usr/bin/appletviewer')
+        run_elf_checks(test, pkg, pkgfile)
+        assert not test.readelf_parser.parsing_failed_reason()
+        assert not test.ldd_parser.parsing_failed_reason
+        out = output.print_results(output.results)
+        assert 'W: unused-direct-shlib-dependency ' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_opt_dependency(binariescheck):
     output, test = binariescheck
-    run_elf_checks(test, FakePkg('fake'), get_full_path('opt-dependency'), '/bin/opt-dependency')
-    assert not test.readelf_parser.parsing_failed_reason()
-    assert not test.ldd_parser.parsing_failed_reason
-    out = output.print_results(output.results)
-    assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = pkg.add_file(get_full_path('opt-dependency'), '/bin/opt-dependency')
+        run_elf_checks(test, pkg, pkgfile)
+        assert not test.readelf_parser.parsing_failed_reason()
+        assert not test.ldd_parser.parsing_failed_reason
+        out = output.print_results(output.results)
+        assert 'E: linked-against-opt-library /bin/opt-dependency /opt/libfoo.so' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_usr_dependency(binariescheck):
     output, test = binariescheck
-    run_elf_checks(test, FakePkg('fake'), get_full_path('usr-dependency'), '/bin/usr-dependency')
-    assert not test.readelf_parser.parsing_failed_reason()
-    assert not test.ldd_parser.parsing_failed_reason
-    out = output.print_results(output.results)
-    assert 'W: linked-against-usr-library /bin/usr-dependency /usr/libfoo.so' in out
+    with FakePkg('fake') as pkg:
+        pkgfile = pkg.add_file(get_full_path('usr-dependency'), '/bin/usr-dependency')
+        run_elf_checks(test, pkg, pkgfile)
+        assert not test.readelf_parser.parsing_failed_reason()
+        assert not test.ldd_parser.parsing_failed_reason
+        out = output.print_results(output.results)
+        assert 'W: linked-against-usr-library /bin/usr-dependency /usr/libfoo.so' in out
