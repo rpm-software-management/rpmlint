@@ -777,6 +777,12 @@ class FakePkg(AbstractPkg):
         self.files = {}
         self.ghost_files = {}
 
+    def add_file(self, path, name):
+        pkgfile = PkgFile(name)
+        pkgfile.path = path
+        self.files[name] = pkgfile
+        return pkgfile
+
     def add_file_with_content(self, name, content, **flags):
         """
         Add file to the FakePkg and fill the file with provided

@@ -226,7 +226,7 @@ class BinariesCheck(AbstractCheck):
         if has_usr_lib_file and not has_binary_in_usr_lib:
             self.output.add_info('W', pkg, 'only-non-binary-in-usr-lib')
 
-    def _check_no_text_in_archive(self, pkg, pkgfile_path, path):
+    def _check_no_text_in_archive(self, pkg, pkgfile):
         """
         For an archive, test if any .text sections is non-empty.
         """
@@ -238,7 +238,7 @@ class BinariesCheck(AbstractCheck):
             # Starting with glibc 2.34, some static libraries were moved to libc
             # and there are empty archives for backward compatibility. Skip these
             # libraries.
-            stem = Path(path).stem
+            stem = Path(pkgfile.name).stem
             if stem in GLIBC_EMPTY_ARCHIVES or (stem.endswith('_p') and stem[:-2] in GLIBC_EMPTY_ARCHIVES):
                 return
 
@@ -250,10 +250,10 @@ class BinariesCheck(AbstractCheck):
                          sn.startswith('.data')) and
                             section.size > 0):
                         return
-            self.output.add_info('E', pkg, 'lto-no-text-in-archive', path)
+            self.output.add_info('E', pkg, 'lto-no-text-in-archive', pkgfile.name)
             return
 
-    def _check_missing_symtab_in_archive(self, pkg, pkgfile_path, path):
+    def _check_missing_symtab_in_archive(self, pkg, pkgfile):
         """
         FIXME Add test coverage.
         """
@@ -263,25 +263,25 @@ class BinariesCheck(AbstractCheck):
                     if section.name == '.symtab':
                         return
 
-            self.output.add_info('E', pkg, 'static-library-without-symtab', path)
+            self.output.add_info('E', pkg, 'static-library-without-symtab', pkgfile.name)
 
-    def _check_missing_debug_info_in_archive(self, pkg, pkgfile_path, path):
+    def _check_missing_debug_info_in_archive(self, pkg, pkgfile):
         if self.is_archive:
             for elf_file in self.readelf_parser.section_info.elf_files:
                 for section in elf_file:
                     if section.name.startswith('.debug_'):
                         return
-            self.output.add_info('E', pkg, 'static-library-without-debuginfo', path)
+            self.output.add_info('E', pkg, 'static-library-without-debuginfo', pkgfile.name)
 
     # Check for LTO sections
-    def _check_lto_section(self, pkg, pkgfile_path, path):
+    def _check_lto_section(self, pkg, pkgfile):
         for elf_file in self.readelf_parser.section_info.elf_files:
             for section in elf_file:
                 if '.gnu.lto_.' in section.name:
-                    self.output.add_info('E', pkg, 'lto-bytecode', path)
+                    self.output.add_info('E', pkg, 'lto-bytecode', pkgfile.name)
                     return
 
-    def _check_executable_stack(self, pkg, pkgfile_path, path):
+    def _check_executable_stack(self, pkg, pkgfile):
         """
         Check if the stack is declared as executable which is usually an error.
 
@@ -293,12 +293,12 @@ class BinariesCheck(AbstractCheck):
             return
 
         # Do not check kernel modules and archives
-        if not self.is_archive and not any(path.startswith(p) for p in KERNEL_MODULES_PATHS):
+        if not self.is_archive and not any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
-                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', path)
+                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', pkg.name)
             elif 'E' in stack_headers[0].flags:
-                self.output.add_info('E', pkg, 'executable-stack', path)
+                self.output.add_info('E', pkg, 'executable-stack', pkg.name)
 
     def _check_soname_symlink(self, pkg, shlib, soname):
         """
@@ -319,7 +319,7 @@ class BinariesCheck(AbstractCheck):
             if path.name.startswith('lib') or path.name.startswith('ld-'):
                 self.output.add_info('E', pkg, 'no-ldconfig-symlink', shlib)
 
-    def _check_shared_library(self, pkg, pkgfile_path, path):
+    def _check_shared_library(self, pkg, pkgfile):
         """
         Various checks for the shared library.
 
@@ -335,12 +335,12 @@ class BinariesCheck(AbstractCheck):
 
         soname = self.readelf_parser.dynamic_section_info.soname
         if not soname:
-            self.output.add_info('W', pkg, 'no-soname', path)
+            self.output.add_info('W', pkg, 'no-soname', pkgfile.name)
         else:
             if not self.validso_regex.search(soname):
-                self.output.add_info('E', pkg, 'invalid-soname', path, soname)
+                self.output.add_info('E', pkg, 'invalid-soname', pkgfile.name, soname)
             else:
-                self._check_soname_symlink(pkg, path, soname)
+                self._check_soname_symlink(pkg, pkgfile.name, soname)
 
                 # check if the major version of the library is in the package
                 # name (check only for lib* packages)
@@ -362,9 +362,9 @@ class BinariesCheck(AbstractCheck):
 
         # check if the object code in the library is compiled with PIC
         if self.readelf_parser.dynamic_section_info['TEXTREL']:
-            self.output.add_info('E', pkg, 'shlib-with-non-pic-code', path)
+            self.output.add_info('E', pkg, 'shlib-with-non-pic-code', pkgfile.name)
 
-    def _check_dependency(self, pkg, pkgfile_path, path):
+    def _check_dependency(self, pkg, pkgfile):
         """
         FIXME Add test coverage.
         """
@@ -378,12 +378,12 @@ class BinariesCheck(AbstractCheck):
         if not self.is_archive and not self.readelf_parser.is_debug:
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
-                self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', path, symbol)
+                self.output.add_info(info_type, pkg, 'undefined-non-weak-symbol', pkgfile.name, symbol)
             for dependency in self.ldd_parser.unused_dependencies:
                 self.output.add_info(info_type, pkg, 'unused-direct-shlib-dependency',
-                                     path, dependency)
+                                     pkgfile.name, dependency)
 
-    def _check_library_dependency_location(self, pkg, pkgfile_path, path):
+    def _check_library_dependency_location(self, pkg, pkgfile):
         """
         FIXME Add test coverage.
         """
@@ -393,17 +393,17 @@ class BinariesCheck(AbstractCheck):
         if not self.is_archive:
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/opt/'):
-                    self.output.add_info('E', pkg, 'linked-against-opt-library', path, dependency)
+                    self.output.add_info('E', pkg, 'linked-against-opt-library', pkgfile.name, dependency)
                     break
 
         nonusr = ('/bin', '/lib', '/sbin')
-        if path.startswith(nonusr):
+        if pkgfile.name.startswith(nonusr):
             for dependency in self.ldd_parser.dependencies:
                 if dependency.startswith('/usr/'):
-                    self.output.add_info('W', pkg, 'linked-against-usr-library', path, dependency)
+                    self.output.add_info('W', pkg, 'linked-against-usr-library', pkgfile.name, dependency)
                     break
 
-    def _check_security_functions(self, pkg, pkgfile_path, path):
+    def _check_security_functions(self, pkg, pkgfile):
         setgid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgid_call_regex))
         setuid = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setuid_call_regex))
         setgroups = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.setgroups_call_regex))
@@ -411,25 +411,25 @@ class BinariesCheck(AbstractCheck):
         gethostbyname = any(self.readelf_parser.symbol_table_info.get_functions_for_regex(self.gethostbyname_call_regex))
 
         if setgid and setuid and not setgroups:
-            is_uid = stat.S_ISUID & pkg.files[path].mode
-            self.output.add_info('W' if is_uid else 'E', pkg, 'missing-call-to-setgroups-before-setuid', path)
+            is_uid = stat.S_ISUID & pkgfile.mode
+            self.output.add_info('W' if is_uid else 'E', pkg, 'missing-call-to-setgroups-before-setuid', pkgfile.name)
 
         if mktemp:
-            self.output.add_info('E', pkg, 'call-to-mktemp', path)
+            self.output.add_info('E', pkg, 'call-to-mktemp', pkgfile.name)
 
         if gethostbyname:
-            self.output.add_info('W', pkg, 'binary-or-shlib-calls-gethostbyname', path)
+            self.output.add_info('W', pkg, 'binary-or-shlib-calls-gethostbyname', pkgfile.name)
 
-    def _check_rpath(self, pkg, pkgfile_path, path):
+    def _check_rpath(self, pkg, pkgfile):
         for runpath in self.readelf_parser.dynamic_section_info.runpath:
             if runpath in self.system_lib_paths or not self.usr_lib_regex.search(runpath):
-                self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', path, runpath)
+                self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, runpath)
                 return
 
-    def _check_library_dependency(self, pkg, pkgfile_path, path):
+    def _check_library_dependency(self, pkg, pkgfile):
         if self.is_archive:
             return
-        if any(path.startswith(p) for p in KERNEL_MODULES_PATHS):
+        if any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
@@ -439,7 +439,7 @@ class BinariesCheck(AbstractCheck):
                 msg = 'shared-library-without-dependency-information'
             else:
                 msg = 'statically-linked-binary'
-            self.output.add_info('E', pkg, msg, path)
+            self.output.add_info('E', pkg, msg, pkgfile.name)
         else:
             # linked against libc ?
             if 'libc.' not in dyn_section.runpath and \
@@ -453,9 +453,9 @@ class BinariesCheck(AbstractCheck):
                     msg = 'library-not-linked-against-libc'
                 else:
                     msg = 'program-not-linked-against-libc'
-                self.output.add_info('W', pkg, msg, path)
+                self.output.add_info('W', pkg, msg, pkgfile.name)
 
-    def _check_forbidden_functions(self, pkg, pkgfile_path, path):
+    def _check_forbidden_functions(self, pkg, pkgfile):
         forbidden_functions = self.config.configuration['WarnOnFunction']
         if forbidden_functions:
             for name, func in forbidden_functions.items():
@@ -475,10 +475,10 @@ class BinariesCheck(AbstractCheck):
         if not forbidden_calls:
             return
 
-        strings_parser = StringsParser(pkgfile_path)
+        strings_parser = StringsParser(pkgfile.path)
         failed_reason = strings_parser.parsing_failed_reason
         if failed_reason:
-            self.output.add_info('E', pkg, 'strings-failed', path, failed_reason)
+            self.output.add_info('E', pkg, 'strings-failed', pkgfile.name, failed_reason)
             return
 
         forbidden_functions_filtered = []
@@ -494,15 +494,15 @@ class BinariesCheck(AbstractCheck):
                 forbidden_functions_filtered.append(fn)
 
         for fn in forbidden_functions_filtered:
-            self.output.add_info('W', pkg, fn, path, forbidden_functions[fn]['f_name'])
+            self.output.add_info('W', pkg, fn, pkgfile.name, forbidden_functions[fn]['f_name'])
 
-    def _check_executable_shlib(self, pkg, pkgfile_path, path):
-        if not self.is_exec and self.readelf_parser.is_shlib:
+    def _check_executable_shlib(self, pkg, pkgfile):
+        if not (pkgfile.mode & stat.S_IEXEC) and self.readelf_parser.is_shlib:
             interp = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'INTERP']
             if interp:
-                self.output.add_info('E', pkg, 'shared-library-not-executable', path)
+                self.output.add_info('E', pkg, 'shared-library-not-executable', pkgfile.name)
 
-    def _check_optflags(self, pkg, pkgfile_path, path):
+    def _check_optflags(self, pkg, pkgfile):
         if self.is_archive:
             return
 
@@ -516,21 +516,21 @@ class BinariesCheck(AbstractCheck):
             missing = [mo for mo in mandatory_optflags if mo not in tokens]
             forbidden = [f for f in forbidden_optflags if f in tokens]
             if missing:
-                self.output.add_info('W', pkg, 'missing-mandatory-optflags', path, ' '.join(missing))
+                self.output.add_info('W', pkg, 'missing-mandatory-optflags', pkgfile.name, ' '.join(missing))
             if forbidden:
-                self.output.add_info('E', pkg, 'forbidden-optflags', path, ' '.join(forbidden))
+                self.output.add_info('E', pkg, 'forbidden-optflags', pkgfile.name, ' '.join(forbidden))
 
-    def _is_standard_archive(self, pkg, pkgfile_path, path):
+    def _is_standard_archive(self, pkg, pkgfile):
         # skip Klee bytecode archives
-        if pkgfile_path.endswith('.bca'):
+        if pkgfile.path.endswith('.bca'):
             return False
 
         # return false for e.g. Rust or Go packages that are archives
         # but files in the archive are not an ELF container
-        ar_parser = ArParser(pkgfile_path)
+        ar_parser = ArParser(pkgfile.path)
         failed_reason = ar_parser.parsing_failed_reason
         if failed_reason:
-            self.output.add_info('E', pkg, 'ar-failed', path, failed_reason)
+            self.output.add_info('E', pkg, 'ar-failed', pkgfile.name, failed_reason)
             return False
 
         needles = ('__.PKGDEF', '_go_.o', 'lib.rmeta')
@@ -544,32 +544,32 @@ class BinariesCheck(AbstractCheck):
         self.is_pie_exec = 'pie executable' in magic
         self.is_nonstandard_archive = False
 
-    def run_elf_checks(self, pkg, pkgfile_path, path):
-        if self.is_archive and not self._is_standard_archive(pkg, pkgfile_path, path):
+    def run_elf_checks(self, pkg, pkgfile):
+        if self.is_archive and not self._is_standard_archive(pkg, pkgfile):
             self.is_nonstandard_archive = True
             return
 
-        self.readelf_parser = ReadelfParser(pkgfile_path, path)
+        self.readelf_parser = ReadelfParser(pkgfile.path, pkgfile.name)
         failed_reason = self.readelf_parser.parsing_failed_reason()
         if failed_reason:
-            self.output.add_info('E', pkg, 'readelf-failed', path, failed_reason)
+            self.output.add_info('E', pkg, 'readelf-failed', pkgfile.name, failed_reason)
             return
 
         if not self.is_archive:
             if self.is_dynamically_linked:
                 is_installed_pkg = isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg)
-                self.ldd_parser = LddParser(pkgfile_path, path, is_installed_pkg)
+                self.ldd_parser = LddParser(pkgfile.path, pkgfile.name, is_installed_pkg)
                 failed_reason = self.ldd_parser.parsing_failed_reason
                 if failed_reason:
-                    self.output.add_info('E', pkg, 'ldd-failed', path, failed_reason)
+                    self.output.add_info('E', pkg, 'ldd-failed', pkgfile.name, failed_reason)
                     return
 
             if (self.config.configuration['MandatoryOptflags'] or
                     self.config.configuration['ForbiddenOptflags']):
-                self.objdump_parser = ObjdumpParser(pkgfile_path, path)
+                self.objdump_parser = ObjdumpParser(pkgfile.path, pkgfile.name)
                 failed_reason = self.objdump_parser.parsing_failed_reason
                 if failed_reason:
-                    self.output.add_info('E', pkg, 'objdump-failed', path, failed_reason)
+                    self.output.add_info('E', pkg, 'objdump-failed', pkgfile.name, failed_reason)
                     return
 
         # NOTE: the speed benefit of the ThreadPoolExecutor is limited due to
@@ -577,7 +577,7 @@ class BinariesCheck(AbstractCheck):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             futures = []
             for fn in self.check_functions:
-                futures.append(executor.submit(fn, pkg, pkgfile_path, path))
+                futures.append(executor.submit(fn, pkg, pkgfile))
             concurrent.futures.wait(futures)
             for future in futures:
                 err = future.exception()
@@ -661,7 +661,7 @@ class BinariesCheck(AbstractCheck):
             self._detect_attributes(pkgfile.magic)
 
             # run ELF checks
-            self.run_elf_checks(pkg, pkgfile.path, fname)
+            self.run_elf_checks(pkg, pkgfile)
 
             if self.is_nonstandard_archive:
                 continue
