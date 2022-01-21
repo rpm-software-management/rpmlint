@@ -497,7 +497,7 @@ class BinariesCheck(AbstractCheck):
             self.output.add_info('W', pkg, fn, pkgfile.name, forbidden_functions[fn]['f_name'])
 
     def _check_executable_shlib(self, pkg, pkgfile):
-        if not self.is_exec and self.readelf_parser.is_shlib:
+        if not (pkgfile.mode & stat.S_IEXEC) and self.readelf_parser.is_shlib:
             interp = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'INTERP']
             if interp:
                 self.output.add_info('E', pkg, 'shared-library-not-executable', pkgfile.name)
