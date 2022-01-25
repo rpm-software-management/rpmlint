@@ -282,7 +282,8 @@ class Lint(object):
             for checker in self.checks.values():
                 checker.after_checks()
 
-            self.output.validate_filters(pkg)
+            if not self.options['ignore_unused_rpmlintrc']:
+                self.output.validate_filters(pkg)
 
         if spec_checks:
             self.specfiles_checked += 1
