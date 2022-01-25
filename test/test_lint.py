@@ -22,7 +22,8 @@ options_preset = {
     'rpmlintrc': False,
     'installed': '',
     'time_report': False,
-    'profile': False
+    'profile': False,
+    'ignore_unused_rpmlintrc': False
 }
 
 basic_tests = [
