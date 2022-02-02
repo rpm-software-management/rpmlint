@@ -203,18 +203,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_unix-nis"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "*/security/pam_unix.so",
-    "*/security/pam_unix_acct.so",
-    "*/security/pam_unix_auth.so",
-    "*/security/pam_unix_passwd.so",
-    "*/security/pam_unix_session.so",
-]
-
-[[FileDigestGroup]]
 package = "pam-extra"
 type = "pam"
 note = "legacy: not audited"
