@@ -22,30 +22,42 @@ class FileDigestCheck(AbstractCheck):
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
-        for digest_group in self.digest_groups:
-            dg_type = digest_group['type']
-            if dg_type not in self.digest_configurations:
-                raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
-                               f'supported, known values: {list(self.digest_configurations)}')
-            # expand skip digests
-            for skip_digest in digest_group.get('nodigests', []):
-                if not digest_group.get('digests'):
-                    digest_group['digests'] = []
-                digest_group['digests'].append(
-                    {
-                        'path': skip_digest,
-                        'algorithm': 'skip',
-                        'hash': '',
-                    }
-                )
-            # verify digest algorithm
-            for digest in digest_group['digests']:
-                algorithm = digest['algorithm']
-                if algorithm == 'skip':
-                    pass
-                else:
-                    hashlib.new(algorithm)
         self.digest_cache = {}
+        for digest_group in self.digest_groups:
+            self._normalizeDigestGroup(digest_group)
+            self._verifyDigestGroup(digest_group)
+
+    def _normalizeDigestGroup(self, digest_group):
+        """Perform any operations on the digest_group to make it match the
+        format excepted by the rest of the checker.
+
+        Some convenience functionality like the nodigests list needs to be
+        translated into something that is easier to process by the check.
+        """
+        # expand skip digests
+        for skip_digest in digest_group.get('nodigests', []):
+            digests = digest_group.setdefault('digests', [])
+            digests.append(
+                {
+                    'path': skip_digest,
+                    'algorithm': 'skip',
+                    'hash': '',
+                }
+            )
+
+    def _verifyDigestGroup(self, digest_group):
+        dg_type = digest_group['type']
+        if dg_type not in self.digest_configurations:
+            raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
+                           f'supported, known values: {list(self.digest_configurations)}')
+        # verify digest algorithm
+        for digest in digest_group['digests']:
+            algorithm = digest['algorithm']
+            if algorithm == 'skip':
+                pass
+            else:
+                # this will raise on bad algorithm names
+                hashlib.new(algorithm)
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
