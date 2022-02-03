@@ -31,12 +31,30 @@ class FileMetadataCheck(AbstractCheck):
 
     def verify_whitelists(self, keys):
         for item in self.whitelists:
-            if 'package' not in item:
-                raise KeyError("FileMetadataCheck: missing 'package' key")
+            num_pkg_keys = sum(['package' in item, 'packages' in item])
+            if num_pkg_keys == 0:
+                raise KeyError('FileMetadataCheck: missing "package" or "packages" key')
+            elif num_pkg_keys == 2:
+                # don't allow both, looks like an error
+                raise KeyError('FileMetadataCheck: encountered both "package" and "packages" keys')
+
+            if not isinstance(item.get('packages', []), list):
+                raise KeyError('FileMetadataCheck: "packages" key contains non-list value')
+            elif not isinstance(item.get('package', ''), str):
+                raise KeyError('FileMetadataCheck: "package" key contains non-string value')
+
             for file_entry in item['files']:
                 for key in keys:
                     if key not in file_entry:
-                        raise KeyError(f"FileMetadataCheck: missing '{key}' in files")
+                        raise KeyError(f'FileMetadataCheck: missing "{key}" in files')
+
+    def _matches_pkg(self, whitelist, pkg):
+        if pkg.name == whitelist.get('package', ''):
+            return True
+        elif pkg.name in whitelist.get('packages', []):
+            return True
+
+        return False
 
     def _verify_package_whitelist(self, whitelist, files):
         errors = []
@@ -55,7 +73,7 @@ class FileMetadataCheck(AbstractCheck):
         best_errors = self._verify_package_whitelist({'files': []}, files)
 
         for whitelist in self.whitelists:
-            if whitelist['package'] == pkg.name:
+            if self._matches_pkg(whitelist, pkg):
                 errors = self._verify_package_whitelist(whitelist, files)
                 if len(errors) <= len(best_errors):
                     best_errors = errors
