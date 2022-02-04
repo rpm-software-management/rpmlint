@@ -206,6 +206,21 @@ def test_combination_nodigests_and_digests():
         assert error == 'testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:ab5ec199027247773d2d617895f49179d7b3186e, has:a6abec9ea1e13ca93d1c704758bd52f62ef16433'
 
 
+def test_multiple_packages():
+    # the first two should match, the last one shouldn't
+    for pkgname in ('testpkg2', 'otherpkg', 'badpkg'):
+        with FakePkg(pkgname) as pkg:
+            pkg.add_file_with_content('/restricted/1/afile', 'some file content')
+            output, test = get_digestcheck('digests.config')
+            test.check(pkg)
+
+            if pkgname != 'badpkg':
+                assert len(output.results) == 0
+            else:
+                error = output.results[0]
+                assert error.startswith(f'{pkgname}: E: somerestriction-file-unauthorized /restricted/1/afile')
+
+
 @pytest.mark.parametrize('package', ['binary/pam-module'])
 def test_pam_modules(tmpdir, package, digestcheck):
     output, test = get_digestcheck('digests_pam.config')

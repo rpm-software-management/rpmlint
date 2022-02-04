@@ -22,30 +22,63 @@ class FileDigestCheck(AbstractCheck):
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
-        for digest_group in self.digest_groups:
-            dg_type = digest_group['type']
-            if dg_type not in self.digest_configurations:
-                raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
-                               f'supported, known values: {list(self.digest_configurations)}')
-            # expand skip digests
-            for skip_digest in digest_group.get('nodigests', []):
-                if not digest_group.get('digests'):
-                    digest_group['digests'] = []
-                digest_group['digests'].append(
-                    {
-                        'path': skip_digest,
-                        'algorithm': 'skip',
-                        'hash': '',
-                    }
-                )
-            # verify digest algorithm
-            for digest in digest_group['digests']:
-                algorithm = digest['algorithm']
-                if algorithm == 'skip':
-                    pass
-                else:
-                    hashlib.new(algorithm)
         self.digest_cache = {}
+        for digest_group in self.digest_groups:
+            self._normalize_digest_group(digest_group)
+            self._verify_digest_group(digest_group)
+
+    def _normalize_digest_group(self, digest_group):
+        """Perform any operations on the digest_group to make it match the
+        format excepted by the rest of the checker.
+
+        Some convenience functionality like the nodigests list needs to be
+        translated into something that is easier to process by the check.
+        """
+        # expand skip digests
+        for skip_digest in digest_group.get('nodigests', []):
+            digests = digest_group.setdefault('digests', [])
+            digests.append(
+                {
+                    'path': skip_digest,
+                    'algorithm': 'skip',
+                    'hash': '',
+                }
+            )
+
+    def _verify_digest_group(self, digest_group):
+        dg_type = digest_group['type']
+        if dg_type not in self.digest_configurations:
+            raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
+                           f'supported, known values: {list(self.digest_configurations)}')
+        # verify digest algorithm
+        for digest in digest_group['digests']:
+            algorithm = digest['algorithm']
+            if algorithm == 'skip':
+                pass
+            else:
+                # this will raise on bad algorithm names
+                hashlib.new(algorithm)
+
+        package = digest_group.get('package', None)
+        packages = digest_group.get('packages', [])
+
+        if not package and not packages:
+            raise KeyError('FileDigestCheck: missing "package" or "packages" key in FileDigestGroup entry')
+        elif package and packages:
+            raise KeyError('FileDigestCheck: encountered both "package" and "packages" keys in FileDigestGroup entry')
+
+        if package and not isinstance(package, str):
+            raise KeyError('FileDigestCheck: "package" key contains non-string value')
+        elif packages and not isinstance(packages, list):
+            raise KeyError('FileDigestCheck: "packages" key contains non-list value')
+
+    def _matches_pkg(self, digest_group, pkg):
+        if pkg.name == digest_group.get('package', ''):
+            return True
+        elif pkg.name in digest_group.get('packages', []):
+            return True
+
+        return False
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
@@ -119,7 +152,7 @@ class FileDigestCheck(AbstractCheck):
         # Find all digest whitelisted paths that belong to group_type and focus on current package
         digests = []
         for digest_group in self.digest_groups:
-            if digest_group['type'] == group_type and digest_group['package'] == pkg.name:
+            if digest_group['type'] == group_type and self._matches_pkg(digest_group, pkg):
                 digests.extend(digest_group['digests'])
 
         # For all files in this package that fall into the secured paths: check if they are whitelisted
