@@ -2,11 +2,123 @@ from fnmatch import fnmatch
 import hashlib
 from pathlib import Path
 import stat
+import xml.etree.ElementTree as ET
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 DEFAULT_DIGEST_ALG = 'sha256'
+
+
+# We support different "filters" for calculating file digests for whitelisting
+# purposes. The reasoning behind this is that we want to detect *functional*
+# changes to certain files but we don't want to be bothered by any other
+# changes like changes in comments, copyright headers, whitespace and so on.
+#
+# To avoid such bogus changes showing up in the checker we can filter the
+# target files depending on their file type. Currently we have two common
+# special cases:
+#
+# - shell like files (configuration files, shell scripts, Python
+# scripts, Perl scripts etc) that can contain empty lines or comments
+# introduced by '#'.
+# - XML files for things like D-Bus configuration files or polkit policies.
+# Here also XML style comments and whitespace can occur.
+#
+# The filter classes help in calculating a file digest for a filtered version
+# of the target file that is normalized and therefore stable against the
+# outlined kinds of changes. Since this makes getting the right whitelisting
+# digests hard, a small companion tool in tools/get_whitelisting_digest.py
+# exists.
+
+
+class DefaultDigester:
+    """This class performs the default digest calculation of arbitrary file
+    contents as is."""
+
+    def __init__(self, path, halg):
+        self.path = path
+        self.halg = halg
+
+    def parse_content(self):
+        # simply generate chunks on binary level
+        with open(self.path, 'rb') as fd:
+            while True:
+                chunk = fd.read(4096)
+                if not chunk:
+                    break
+                yield chunk
+
+    def get_digest(self):
+        """This returns the hash digest of the *un*filtered input file."""
+        hasher = hashlib.new(self.halg)
+
+        for chunk in self.parse_content():
+            hasher.update(chunk)
+
+        return hasher.hexdigest()
+
+
+class ShellDigester(DefaultDigester):
+    """This class performs digest calculation of shell style configuration
+    files or scripts. Certain aspects like comments and whitespace will be
+    filtered out of the digest calculation."""
+
+    def parse_content(self):
+        # generate filtered lines
+        with open(self.path) as fd:
+            for line_nr, line in enumerate(fd):
+                stripped = line.strip()
+                if not stripped:
+                    # skip empty lines
+                    continue
+                elif line_nr == 0 and stripped.startswith('#!'):
+                    # keep shebang lines instact
+                    pass
+                elif stripped.startswith('#'):
+                    # skip comments
+                    # NOTE: we don't strip trailing comments like in
+                    # 'if [ 5 -eq $NUM ]; then # compare to 5'
+                    # because the danger would be too high to remove actual
+                    # content instead of just comments
+                    continue
+
+                # don't use the completely stripped version, in Python for
+                # example the indentation is part of the syntax and changes
+                # here could change the meaning
+                yield (line.rstrip() + '\n').encode()
+
+
+class XmlDigester(DefaultDigester):
+    """This class performs digest calculation of XML configuration files.
+    Certain aspects like comments and whitespace will be filtered out of the
+    digest calculation."""
+
+    def parse_content(self):
+        # NOTE: the ElementTree is not robust against malicious input. Rpmlint
+        # processes a lot of untrusted input. In the OBS context this only
+        # happens within the virtual machines where packagers can manipulate a
+        # lot of things anyway so it should be okay.
+
+        # this returns a canonicalized form of the XML without comments or
+        # anything. It is missing the XML preamble and DOCTYPE declaration,
+        # though. It's as good as I could get it to be without parsing XML on
+        # foot or relying on third party XML modules.
+
+        # chunked / line wise processing is likely impossible for XML so
+        # return the whole bunch
+        yield ET.canonicalize(from_file=self.path, strip_text=True).encode()
+
+
+# These values can be used in the FileDigest configuration for the "Digester"
+# key. A digester is always the same for one type of FileDigest whitelistings
+# and thus not tied to individual whitelisting entries but to the type of a
+# FileDigestGroup.
+DIGESTERS = {
+    'default': DefaultDigester,
+    'shell': ShellDigester,
+    'xml': XmlDigester,
+}
 
 
 class FileDigestCheck(AbstractCheck):
@@ -15,10 +127,16 @@ class FileDigestCheck(AbstractCheck):
         self.digest_configurations = {}
         self.follow_symlinks_in_group = {}
         self.name_patterns_in_group = {}
+        self.digester_for_group = {}
         for group, values in self.config.configuration['FileDigestLocation'].items():
             self.digest_configurations[group] = [Path(p) for p in values['Locations']]
             self.follow_symlinks_in_group[group] = values['FollowSymlinks']
             self.name_patterns_in_group[group] = values.get('NamePatterns')
+            digester_name = values.get('Digester', 'default')
+            digester = DIGESTERS.get(digester_name, None)
+            if not digester:
+                raise Exception(f'Invalid digester {digester_name} encountered for group {group}')
+            self.digester_for_group[group] = digester
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
@@ -99,7 +217,7 @@ class FileDigestCheck(AbstractCheck):
                     pass
         return None
 
-    def _is_valid_digest(self, path, digest, pkg):
+    def _is_valid_digest(self, group_type, path, digest, pkg):
         algorithm = digest['algorithm']
         if algorithm == 'skip':
             return (True, None)
@@ -108,7 +226,7 @@ class FileDigestCheck(AbstractCheck):
         if pkgfile is None:
             return (False, None)
 
-        file_digest = self._calc_digest(pkgfile, algorithm)
+        file_digest = self._calc_digest(group_type, pkgfile, algorithm)
         return (file_digest == digest['hash'], file_digest)
 
     def _resolve_links(self, pkg, path):
@@ -120,23 +238,19 @@ class FileDigestCheck(AbstractCheck):
 
         return pkgfile
 
-    def _calc_digest(self, pkgfile, algorithm):
-        pair = (pkgfile.name, algorithm)
+    def _calc_digest(self, group_type, pkgfile, algorithm):
+        # include the group_type in the cache key, because different groups
+        # can use different Digester types
+        cache_key = (group_type, pkgfile.name, algorithm)
 
-        digest = self.digest_cache.get(pair, None)
+        digest = self.digest_cache.get(cache_key, None)
         if digest is not None:
             return digest
 
-        h = hashlib.new(algorithm)
-        with open(pkgfile.path, 'rb') as fd:
-            while True:
-                chunk = fd.read(4096)
-                if not chunk:
-                    break
-                h.update(chunk)
+        digester = self.digester_for_group[group_type]
+        digest = digester(pkgfile.path, algorithm).get_digest()
 
-        digest = h.hexdigest()
-        self.digest_cache[pair] = digest
+        self.digest_cache[cache_key] = digest
         return digest
 
     def _check_group_type(self, pkg, group_type, secured_paths):
@@ -167,7 +281,7 @@ class FileDigestCheck(AbstractCheck):
                 pkgfile = self._resolve_links(pkg, spath)
                 digest_path = ''
                 if pkgfile:
-                    encountered_digest = self._calc_digest(pkgfile, DEFAULT_DIGEST_ALG)
+                    encountered_digest = self._calc_digest(group_type, pkgfile, DEFAULT_DIGEST_ALG)
                     if pkgfile.name != spath:
                         digest_path = ' of resolved path ' + pkgfile.name
                 else:
@@ -194,7 +308,7 @@ class FileDigestCheck(AbstractCheck):
                 if not pkg.files.get(path):
                     # This digest entry is not needed anymore and could be dropped
                     continue
-                valid_digest, file_digest = self._is_valid_digest(path, digest, pkg)
+                valid_digest, file_digest = self._is_valid_digest(group_type, path, digest, pkg)
                 if valid_digest:
                     # Valid digest found, no mismatch error will be printed
                     error_digests = []

@@ -221,6 +221,77 @@ def test_multiple_packages():
                 assert error.startswith(f'{pkgname}: E: somerestriction-file-unauthorized /restricted/1/afile')
 
 
+def test_shell_digest_filter():
+    with open(Testing.testpath() / 'data' / 'shell_digest.sh') as f:
+        shell_script = f.read()
+
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('shellpkg') as pkg:
+        pkg.add_file_with_content('/shell/test.sh', shell_script)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # the same file with removed empty lines and whitespace should result in
+    # the same digest
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('shellpkg') as pkg:
+        trimmed_script = '\n'.join([line.rstrip() for line in shell_script.splitlines() if line])
+        pkg.add_file_with_content('/shell/test.sh', trimmed_script)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # the file with changed actual code should result in a digest mismatch
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('shellpkg') as pkg:
+        changed_script = shell_script.replace('seq 10', 'seq 11')
+        pkg.add_file_with_content('/shell/test.sh', changed_script)
+        test.check(pkg)
+        assert len(output.results) == 1
+
+
+def test_xml_digest_filter():
+    with open(Testing.testpath() / 'data' / 'xml_digest.xml') as f:
+        xml_data = f.read()
+
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('xmlpkg') as pkg:
+        pkg.add_file_with_content('/xml/test.xml', xml_data)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # the stripped XML should still result in the same digest
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('xmlpkg') as pkg:
+        stripped_xml = '\n'.join([line.strip() for line in xml_data.splitlines() if line])
+        pkg.add_file_with_content('/xml/test.xml', stripped_xml)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # actually changed content should result in a whitelisting error
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('xmlpkg') as pkg:
+        changed_xml = xml_data.replace('"root"', '"nobody"')
+        pkg.add_file_with_content('/xml/test.xml', changed_xml)
+        test.check(pkg)
+        assert len(output.results) == 1
+
+
+def test_default_digester():
+    SOME_DATA = '   hello there   '
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('defaultpkg') as pkg:
+        pkg.add_file_with_content('/default/some.txt', SOME_DATA)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # changing whitespace should also change the digest
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('defaultpkg') as pkg:
+        pkg.add_file_with_content('/default/some.txt', SOME_DATA.strip())
+        test.check(pkg)
+        assert len(output.results) == 1
+
+
 @pytest.mark.parametrize('package', ['binary/pam-module'])
 def test_pam_modules(tmpdir, package, digestcheck):
     output, test = get_digestcheck('digests_pam.config')
