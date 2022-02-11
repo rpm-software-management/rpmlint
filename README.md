@@ -26,7 +26,7 @@ https://github.com/rpm-software-management/rpmlint
 For installation on your machine you will need the following packages:
 
 Mandatory:
-- Python 3.6 or newer
+- Python 3.8 or newer
 - python3-setuptools, python3-toml, python3-pyxdg, python3-beam
 - rpm and its python bindings
 - binutils, cpio, gzip, bzip, xz and zstd
