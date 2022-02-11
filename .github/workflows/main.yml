@@ -16,7 +16,6 @@ jobs:
         container:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
-          - 'registry.opensuse.org/opensuse/leap-dnf:15.3'
           - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
         include:
           - container: 'registry.fedoraproject.org/fedora:latest'
@@ -63,7 +62,7 @@ jobs:
               python3-pyenchant
         if: ${{ contains(matrix.container, 'opensuse') && matrix.build-type == 'normal' }}
       - run: dnf --assumeyes install python3-flake8-comprehensions
-        if: ${{ contains(matrix.container, 'opensuse/tumbleweed') }}
+        if: ${{ contains(matrix.container, 'opensuse') }}
       - run: dnf --nogpgcheck --assumeyes install
               /usr/bin/cpio
               /usr/bin/bzip2
