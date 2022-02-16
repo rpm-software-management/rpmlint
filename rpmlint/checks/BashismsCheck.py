@@ -12,7 +12,6 @@ class BashismsCheck(AbstractFilesCheck):
         self._detect_early_fail_option()
 
     def _detect_early_fail_option(self):
-        self.has_early_fail_option = False
         output = subprocess.check_output(['checkbashisms', '--help'],
                                          shell=True, encoding='utf8')
         # FIXME: remove in the future
