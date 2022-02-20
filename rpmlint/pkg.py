@@ -519,19 +519,17 @@ class Pkg(AbstractPkg):
             self.__tmpdir.cleanup()
 
     def grep(self, regex, filename):
-        """Grep regex from a file, return matching line numbers."""
-        ret = []
-        lineno = 0
+        """Grep regex from a file, return first matching line number (starting with 1)."""
         try:
             with open(Path(self.dirName() or '/', filename.lstrip('/'))) as in_file:
-                for line in in_file:
-                    lineno += 1
-                    if regex.search(line):
-                        ret.append(str(lineno))
-                        break
+                data = in_file.read()
+                match = regex.search(data)
+                if match:
+                    return data.count('\n', 0, match.start()) + 1
+                else:
+                    return None
         except Exception:
-            pass
-        return ret
+            return None
 
     def langtag(self, tag, lang):
         """Get value of tag in the given language."""
