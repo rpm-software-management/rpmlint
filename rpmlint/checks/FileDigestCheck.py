@@ -125,6 +125,8 @@ class FileDigestCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.digest_configurations = {}
+        # Build trie for fast lookup
+        self.digest_configuration_trie = {}
         self.follow_symlinks_in_group = {}
         self.name_patterns_in_group = {}
         self.digester_for_group = {}
@@ -137,6 +139,8 @@ class FileDigestCheck(AbstractCheck):
             if not digester:
                 raise Exception(f'Invalid digester {digester_name} encountered for group {group}')
             self.digester_for_group[group] = digester
+
+        self._setup_digest_location_trie()
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
@@ -144,6 +148,39 @@ class FileDigestCheck(AbstractCheck):
         for digest_group in self.digest_groups:
             self._normalize_digest_group(digest_group)
             self._verify_digest_group(digest_group)
+
+    def _setup_digest_location_trie(self):
+        # Build trie of Locations that are present in FileDigestLocation
+        for config_locations in self.digest_configurations.values():
+            for location in config_locations:
+                path = Path(location)
+                if not path.is_absolute():
+                    raise Exception(f'Absolute path expected: {path}')
+                node = self.digest_configuration_trie
+                # Skip initial '/'.
+                parts = path.parts[1:]
+                for part in parts[:-1]:
+                    node = node.setdefault(part, {})
+                    if node is None:
+                        raise Exception(f'Conflicting paths in trie {location}')
+                node[parts[-1]] = None
+
+    def _is_path_restricted(self, path):
+        """
+        Return true if there is a digest configuration that covers
+        provided file at given path.
+        """
+
+        # Skip initial '/'
+        parts = path.parts[1:]
+        node = self.digest_configuration_trie
+        for part in parts:
+            if node is None:
+                return True
+            if part not in node:
+                return False
+            node = node[part]
+        return False
 
     def _normalize_digest_group(self, digest_group):
         """Perform any operations on the digest_group to make it match the
@@ -202,7 +239,11 @@ class FileDigestCheck(AbstractCheck):
         if stat.S_ISDIR(pkgfile.mode):
             return None
 
+        # Make quick lookup in the built trie of configuration locations
         path = Path(pkgfile.name)
+        if not self._is_path_restricted(path):
+            return None
+
         for group, locations in self.digest_configurations.items():
             for location in locations:
                 try:
