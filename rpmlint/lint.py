@@ -126,7 +126,7 @@ class Lint(object):
         total = sum(self.check_duration.values())
         checked_files = [check.checked_files for check in self.checks.values() if check.checked_files]
         total_checked_files = max(checked_files) if checked_files else ''
-        print(f'\n{Color.Bold}Check time report{Color.Reset} (>{THRESHOLD}%):')
+        print(f'{Color.Bold}Check time report{Color.Reset} (>{THRESHOLD}%):')
 
         print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}  Checked files{Color.Reset}')
         for check, duration in sorted(self.check_duration.items(), key=operator.itemgetter(1), reverse=True):
@@ -140,11 +140,11 @@ class Lint(object):
                 if checked:
                     checked_files = checked
             print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
-        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}')
+        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')
 
     def _print_cprofile(self):
         N = 30
-        print(f'\n{Color.Bold}cProfile report:{Color.Reset}')
+        print(f'{Color.Bold}cProfile report:{Color.Reset}')
         self.profile.disable()
         stats = Stats(self.profile)
         stats.sort_stats('cumulative').print_stats(N)
