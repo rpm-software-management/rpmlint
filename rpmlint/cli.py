@@ -85,6 +85,8 @@ def process_lint_args(argv):
     parser.add_argument('-m', '--mini-mode', action='store_true', help='called from rpmlint-mini wrapper')
     parser.add_argument('--ignore-unused-rpmlintrc', action='store_true',
                         help='Do not report "unused-rpmlintrc-filter" errors')
+    parser.add_argument('--checks',
+                        help='Debugging option that enables only selected checks (separated by comma)')
     lint_modes_parser = parser.add_mutually_exclusive_group()
     lint_modes_parser.add_argument('-s', '--strict', action='store_true', help='treat all messages as errors')
     lint_modes_parser.add_argument('-P', '--permissive', action='store_true', help='treat individual errors as non-fatal')

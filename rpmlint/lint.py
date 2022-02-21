@@ -315,10 +315,15 @@ class Lint(object):
         SingletonTM
         """
 
+        selected_checks = self.options['checks']
+        if selected_checks:
+            selected_checks = selected_checks.split(',')
+
         for check in self.config.configuration['Checks']:
             if check in self.checks:
                 continue
-            self.checks[check] = self.load_check(check)
+            if not selected_checks or check in selected_checks:
+                self.checks[check] = self.load_check(check)
 
     def load_check(self, name):
         """Load a (check) module by its name, unless it is already loaded."""

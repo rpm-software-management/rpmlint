@@ -25,6 +25,7 @@ options_preset = {
     'time_report': False,
     'profile': False,
     'ignore_unused_rpmlintrc': False,
+    'checks': None,
     'mini_mode': False
 }
 
