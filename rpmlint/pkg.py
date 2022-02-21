@@ -9,6 +9,7 @@ from shlex import quote
 import stat
 import subprocess
 import tempfile
+import time
 from urllib.parse import urljoin
 
 try:
@@ -398,7 +399,11 @@ class Pkg(AbstractPkg):
     def __init__(self, filename, dirname, header=None, is_source=False, extracted=False, verbose=False):
         self.filename = filename
         self.extracted = extracted
+
+        # record decompression and extraction time
+        start = time.monotonic()
         self.dirname = self.dir_name(dirname, verbose)
+        self.extraction_time = time.monotonic() - start
         self.current_linenum = None
 
         self._req_names = -1
