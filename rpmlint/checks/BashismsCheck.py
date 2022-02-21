@@ -10,6 +10,7 @@ class BashismsCheck(AbstractFilesCheck):
         super().__init__(config, output, r'.*')
         self.use_threads = True
         self._detect_early_fail_option()
+        self.file_cache = {}
 
     def _detect_early_fail_option(self):
         output = subprocess.check_output(['checkbashisms', '--help'],
@@ -27,7 +28,14 @@ class BashismsCheck(AbstractFilesCheck):
                 pkgfile.magic.startswith('POSIX shell script')):
             return
 
-        self.check_bashisms(pkg, filepath, filename)
+        # There are package likes Linux kernel where there are common
+        # shell scripts present in multiple packages
+        # (kernel-source, kernel-source-vanilla).
+        if pkgfile.md5 not in self.file_cache:
+            self.file_cache[pkgfile.md5] = list(self.check_bashisms(pkg, filepath, filename))
+
+        for warning in self.file_cache[pkgfile.md5]:
+            self.output.add_info('W', pkg, warning, filename)
 
     def check_bashisms(self, pkg, filepath, filename):
         """
@@ -35,13 +43,14 @@ class BashismsCheck(AbstractFilesCheck):
 
         We need to see if it is valid syntax of bash and if there are no
         potential bash issues.
+        Return a warning message or None if there is no problem.
         """
         try:
             r = subprocess.run(['dash', '-n', filepath],
                                stderr=subprocess.DEVNULL,
                                env=ENGLISH_ENVIROMENT)
             if r.returncode == 2:
-                self.output.add_info('W', pkg, 'bin-sh-syntax-error', filename)
+                yield 'bin-sh-syntax-error'
             elif r.returncode == 127:
                 raise FileNotFoundError(filename)
         except UnicodeDecodeError:
@@ -56,7 +65,7 @@ class BashismsCheck(AbstractFilesCheck):
                                stderr=subprocess.DEVNULL,
                                env=ENGLISH_ENVIROMENT)
             if r.returncode == 1:
-                self.output.add_info('W', pkg, 'potential-bashisms', filename)
+                yield 'potential-bashisms'
             elif r.returncode == 2:
                 raise FileNotFoundError(filename)
         except UnicodeDecodeError:
