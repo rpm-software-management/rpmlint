@@ -43,6 +43,9 @@ class AbstractFilesCheck(AbstractCheck):
         if self.use_threads:
             # NOTE: the speed benefit of the ThreadPoolExecutor is limited due to
             # Global Interpreter Lock (GIL).
+
+            # start with the biggest files first
+            filenames = sorted(filenames, key=lambda x: pkg.files[x].size, reverse=True)
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = []
                 for filename in filenames:
