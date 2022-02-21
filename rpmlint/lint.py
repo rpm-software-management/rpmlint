@@ -1,3 +1,4 @@
+from collections import defaultdict
 import cProfile
 import importlib
 import operator
@@ -27,7 +28,7 @@ class Lint(object):
         self.options = options
         self.packages_checked = 0
         self.specfiles_checked = 0
-        self.check_duration = {}
+        self.check_duration = defaultdict(lambda: 0)
         if options['config']:
             self.config = Config(options['config'])
         else:
@@ -135,9 +136,12 @@ class Lint(object):
             fraction = 100.0 * duration / total
             if fraction < THRESHOLD:
                 continue
-            checked_files = self.checks[check].checked_files
-            if not checked_files:
-                checked_files = ''
+
+            checked_files = ''
+            if check in self.checks:
+                checked = self.checks[check].checked_files
+                if checked:
+                    checked_files = checked
             print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
         print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}')
 
@@ -256,6 +260,7 @@ class Lint(object):
             if pname.suffix == '.rpm' or pname.suffix == '.spm':
                 with Pkg(pname, self.config.configuration['ExtractDir'],
                          verbose=self.config.info) as pkg:
+                    self.check_duration['rpm2cpio'] += pkg.extraction_time
                     self.run_checks(pkg, is_last)
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:
@@ -270,8 +275,6 @@ class Lint(object):
     def run_checks(self, pkg, is_last):
         spec_checks = isinstance(pkg, FakePkg)
         for checker in self.checks:
-            if checker not in self.check_duration:
-                self.check_duration[checker] = 0
             start = time.monotonic()
             fn = self.checks[checker].check_spec if spec_checks else self.checks[checker].check
             fn(pkg)
