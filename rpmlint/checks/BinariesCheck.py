@@ -108,10 +108,10 @@ class BinariesCheck(AbstractCheck):
         If so then print a corresponding error with the matching line numbers.
         """
         if self.la_file_regex.search(fname):
-            lines = pkg.grep(self.invalid_dir_ref_regex, fname)
-            if lines:
+            line = pkg.grep(self.invalid_dir_ref_regex, fname)
+            if line:
                 self.output.add_info('E', pkg, 'invalid-la-file', fname,
-                                     '(line %s)' % ', '.join(lines))
+                                     f'(line {line})')
 
     def _check_binary_in_noarch(self, pkg, bin_name):
         """

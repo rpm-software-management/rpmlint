@@ -138,8 +138,8 @@ class Lint(object):
             checked_files = self.checks[check].checked_files
             if not checked_files:
                 checked_files = ''
-            print(f'    {check:32s} {duration:15.2f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
-        print(f'    {"TOTAL":32s} {total:15.2f} {100:17.2f} {total_checked_files:>14}')
+            print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
+        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}')
 
     def _print_cprofile(self):
         N = 30
