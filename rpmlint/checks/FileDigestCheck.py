@@ -125,8 +125,6 @@ class FileDigestCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.digest_configurations = {}
-        # Build trie for fast lookup
-        self.digest_configuration_locations = {}
         self.follow_symlinks_in_group = {}
         self.name_patterns_in_group = {}
         self.digester_for_group = {}
@@ -139,16 +137,6 @@ class FileDigestCheck(AbstractCheck):
             if not digester:
                 raise Exception(f'Invalid digester {digester_name} encountered for group {group}')
             self.digester_for_group[group] = digester
-
-        # Build trie of Locations that are present in FileDigestLocation
-        for config_locations in self.digest_configurations.values():
-            for location in config_locations:
-                parts = Path(location).parts
-                node = self.digest_configuration_locations
-                for part in parts:
-                    node = node.setdefault(part, {})
-                node[None] = None
-
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
@@ -210,30 +198,11 @@ class FileDigestCheck(AbstractCheck):
 
         return False
 
-    def _is_path_covered_by_digests(self, path):
-        """
-        Return true if there is a digest configuration that covers
-        provided file at given path.
-        """
-        parts = list(path.parts) + [None]
-        node = self.digest_configuration_locations
-        for part in parts:
-            if None in node:
-                return True
-            if part not in node:
-                return False
-            node = node[part]
-        return True
-
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
             return None
 
-        # Make quick lookup in the built trie of configuration locations
         path = Path(pkgfile.name)
-        if not self._is_path_covered_by_digests(path):
-            return None
-
         for group, locations in self.digest_configurations.items():
             for location in locations:
                 try:
