@@ -905,7 +905,7 @@ nodigests = [
 package = "connman-nmcompat"
 type = "dbus"
 bug = "bsc#1192827"
-comment = "thin NetworkManager compatibility interface"
+note = "thin NetworkManager compatibility interface"
 nodigests = [
     "/usr/share/dbus-1/system.d/connman-nmcompat.conf"
 ]
