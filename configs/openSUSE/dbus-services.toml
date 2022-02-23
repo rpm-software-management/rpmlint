@@ -475,10 +475,10 @@ nodigests = [
 [[FileDigestGroup]]
 package = "ModemManager"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#798273"
+note = "Mobile broadband modem control via D-Bus service, vast and complex interface"
+bug = ["bsc#798273", "bsc#1196170"]
 nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
+    "/usr/share/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service",
 ]
 
@@ -905,7 +905,7 @@ nodigests = [
 package = "connman-nmcompat"
 type = "dbus"
 bug = "bsc#1192827"
-comment = "thin NetworkManager compatibility interface"
+note = "thin NetworkManager compatibility interface"
 nodigests = [
     "/usr/share/dbus-1/system.d/connman-nmcompat.conf"
 ]
