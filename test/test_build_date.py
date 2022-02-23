@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from rpmlint.checks.BuildDateCheck import BuildDateCheck
+from rpmlint.checks.BuildRootAndDateCheck import BuildRootAndDateCheck
 from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_package
@@ -11,7 +11,7 @@ from Testing import CONFIG, get_tested_package
 def builddatecheck():
     CONFIG.info = True
     output = Filter(CONFIG)
-    test = BuildDateCheck(CONFIG, output)
+    test = BuildRootAndDateCheck(CONFIG, output)
     return output, test
 
 

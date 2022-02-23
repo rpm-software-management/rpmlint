@@ -2,6 +2,7 @@ import bz2
 from collections import namedtuple
 import gzip
 import lzma
+import mmap
 import os
 from pathlib import Path
 import re
@@ -525,16 +526,20 @@ class Pkg(AbstractPkg):
 
     def grep(self, regex, filename):
         """Grep regex from a file, return first matching line number (starting with 1)."""
+        data = self.read_with_mmap(filename)
+        match = regex.search(data)
+        if match:
+            return data.count('\n', 0, match.start()) + 1
+        else:
+            return None
+
+    def read_with_mmap(self, filename):
+        """Mmap a file, return it's content decoded."""
         try:
             with open(Path(self.dirName() or '/', filename.lstrip('/'))) as in_file:
-                data = in_file.read()
-                match = regex.search(data)
-                if match:
-                    return data.count('\n', 0, match.start()) + 1
-                else:
-                    return None
+                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
         except Exception:
-            return None
+            return ''
 
     def langtag(self, tag, lang):
         """Get value of tag in the given language."""
