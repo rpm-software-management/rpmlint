@@ -1112,3 +1112,13 @@ nodigests = [
     "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootFixit.service",
     "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootPrivileged.service"
 ]
+
+[[FileDigestGroup]]
+package = "kcron"
+type = "dbus"
+note = "a privilege separation helper to modify system crontab"
+bug = "bsc#1193945"
+nodigests = [
+    "/usr/share/dbus-1/system.d/local.kcron.crontab.conf",
+    "/usr/share/dbus-1/system-services/local.kcron.crontab.service"
+]
