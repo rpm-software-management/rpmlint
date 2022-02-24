@@ -421,7 +421,6 @@ class FilesCheck(AbstractCheck):
         return (chunk, istext)
 
     def check(self, pkg):
-
         for filename in pkg.header[rpm.RPMTAG_FILENAMES] or ():
             if not is_utf8_bytestr(filename):
                 self.output.add_info('E', pkg, 'filename-not-utf8', byte_to_string(filename))
@@ -588,7 +587,6 @@ class FilesCheck(AbstractCheck):
 
             # normal file check
             if stat.S_ISREG(mode):
-
                 # set[ug]id bit check
                 if stat.S_ISGID & mode or stat.S_ISUID & mode:
                     if stat.S_ISUID & mode:
