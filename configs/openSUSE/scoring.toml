@@ -75,5 +75,6 @@ cron-file-unauthorized = 10
 cron-file-symlink = 10
 dbus-file-digest-mismatch = 10
 dbus-file-ghost = 10
+dbus-file-parse-error = 10
 dbus-file-unauthorized = 10
 dbus-file-symlink = 10

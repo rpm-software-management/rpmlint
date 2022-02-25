@@ -11,6 +11,7 @@ Locations = [
 ]
 
 [FileDigestLocation.dbus]
+Digester = "xml"
 FollowSymlinks = false
 Locations = [
     "/usr/share/dbus-1/system-services/",

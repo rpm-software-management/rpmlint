@@ -1131,3 +1131,21 @@ bug = "bsc#1196149"
 nodigests = [
 	"/usr/share/dbus-1/system-services/tukitd.d-bus.service",
 ]
+
+[[FileDigestGroup]]
+package = "nvme-stas"
+type = "dbus"
+note = "Services for interacting with NMVe bus events"
+bug = "bsc#1195236"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/org.nvmexpress.stac.conf",
+        algorithm = "sha256",
+        hash = "96eeef5353252bc721a4724255ed9d3f3cd7d2ffd425c5c06d67e1ea3f05fb36"
+    },
+    {
+        path = "/usr/share/dbus-1/system.d/org.nvmexpress.staf.conf",
+        algorithm = "sha256",
+        hash = "e991c8b4e4b0b1459d16ee33863e6b5425f0b9a9afd3e2fb6e040ab545651a3d"
+    }
+]

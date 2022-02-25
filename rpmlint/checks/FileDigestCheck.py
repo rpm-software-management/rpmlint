@@ -322,7 +322,10 @@ class FileDigestCheck(AbstractCheck):
                 pkgfile = self._resolve_links(pkg, spath)
                 digest_path = ''
                 if pkgfile:
-                    encountered_digest = self._calc_digest(group_type, pkgfile, DEFAULT_DIGEST_ALG)
+                    try:
+                        encountered_digest = self._calc_digest(group_type, pkgfile, DEFAULT_DIGEST_ALG)
+                    except Exception as e:
+                        encountered_digest = f'failed to calculate digest: {e}'
                     if pkgfile.name != spath:
                         digest_path = ' of resolved path ' + pkgfile.name
                 else:
@@ -349,7 +352,11 @@ class FileDigestCheck(AbstractCheck):
                 if not pkg.files.get(path):
                     # This digest entry is not needed anymore and could be dropped
                     continue
-                valid_digest, file_digest = self._is_valid_digest(group_type, path, digest, pkg)
+                try:
+                    valid_digest, file_digest = self._is_valid_digest(group_type, path, digest, pkg)
+                except Exception as e:
+                    self.output.add_info('E', pkg, f'{group_type}-file-parse-error', path, f'failed to calculate digest: {e}')
+                    continue
                 if valid_digest:
                     # Valid digest found, no mismatch error will be printed
                     error_digests = []
