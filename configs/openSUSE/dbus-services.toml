@@ -1122,3 +1122,12 @@ nodigests = [
     "/usr/share/dbus-1/system.d/local.kcron.crontab.conf",
     "/usr/share/dbus-1/system-services/local.kcron.crontab.service"
 ]
+
+[[FileDigestGroup]]
+package = "tukitd"
+type = "dbus"
+note = "openSUSE transactional updates"
+bug = "bsc#1196149"
+nodigests = [
+	"/usr/share/dbus-1/system-services/tukitd.d-bus.service",
+]
