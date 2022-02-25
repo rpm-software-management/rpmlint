@@ -476,3 +476,12 @@ bug = "bsc#1188680"
 nodigests = [
     "*/security/pam_oddjob_gpupdate.so",
 ]
+
+[[FileDigestGroup]]
+package = "pam-fscrypt"
+type = "pam"
+note = "PAM session time unlocking of encrypted directories"
+bug = "bsc#1195623"
+nodigests = [
+    "*/security/pam_fscrypt.so",
+]
