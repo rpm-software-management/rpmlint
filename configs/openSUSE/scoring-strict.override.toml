@@ -5,6 +5,7 @@ cron-file-unauthorized = 10000
 cron-file-symlink = 10000
 dbus-file-digest-mismatch = 10000
 dbus-file-ghost = 10000
+dbus-file-parse-error = 10000
 dbus-file-unauthorized = 10000
 dbus-file-symlink = 10000
 device-mismatched-attrs = 10000
