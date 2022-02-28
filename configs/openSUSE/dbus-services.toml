@@ -275,7 +275,7 @@ type = "dbus"
 note = "privilege separation helper that does not provide a public API"
 bug = "bsc#1194799"
 nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.nm-priv-helper.service",
+    "/usr/share/dbus-1/system-services/org.freedesktop.nm_priv_helper.service",
     "/usr/share/dbus-1/system.d/nm-priv-helper.conf"
 ]
 
