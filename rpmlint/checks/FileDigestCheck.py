@@ -110,10 +110,9 @@ class XmlDigester(DefaultDigester):
         yield ET.canonicalize(from_file=self.path, strip_text=True).encode()
 
 
-# These values can be used in the FileDigest configuration for the "Digester"
-# key. A digester is always the same for one type of FileDigest whitelistings
-# and thus not tied to individual whitelisting entries but to the type of a
-# FileDigestGroup.
+# These values can be used in the individual "digests" entries of a
+# whitelisting entry for a given digest group. For example:
+# { path = "/some/path.xml", algorithm = "sha256", digester = "xml", hash = "..." }
 DIGESTERS = {
     'default': DefaultDigester,
     'shell': ShellDigester,
@@ -129,16 +128,10 @@ class FileDigestCheck(AbstractCheck):
         self.digest_configuration_trie = {}
         self.follow_symlinks_in_group = {}
         self.name_patterns_in_group = {}
-        self.digester_for_group = {}
         for group, values in self.config.configuration['FileDigestLocation'].items():
             self.digest_configurations[group] = [Path(p) for p in values['Locations']]
             self.follow_symlinks_in_group[group] = values['FollowSymlinks']
             self.name_patterns_in_group[group] = values.get('NamePatterns')
-            digester_name = values.get('Digester', 'default')
-            digester = DIGESTERS.get(digester_name, None)
-            if not digester:
-                raise Exception(f'Invalid digester {digester_name} encountered for group {group}')
-            self.digester_for_group[group] = digester
 
         self._setup_digest_location_trie()
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
@@ -148,6 +141,13 @@ class FileDigestCheck(AbstractCheck):
         for digest_group in self.digest_groups:
             self._normalize_digest_group(digest_group)
             self._verify_digest_group(digest_group)
+
+    def _get_digester(self, entry):
+        name = entry.get('digester', 'default')
+        try:
+            return DIGESTERS[name]
+        except KeyError:
+            raise Exception(f'Invalid digester {name} encountered for path {entry["path"]}')
 
     def _setup_digest_location_trie(self):
         # Build trie of Locations that are present in FileDigestLocation
@@ -205,14 +205,21 @@ class FileDigestCheck(AbstractCheck):
         if dg_type not in self.digest_configurations:
             raise KeyError(f'FileDigestGroup type "{dg_type}" is not '
                            f'supported, known values: {list(self.digest_configurations)}')
-        # verify digest algorithm
+
         for digest in digest_group['digests']:
+            # verify digest algorithm
             algorithm = digest['algorithm']
             if algorithm == 'skip':
                 pass
             else:
                 # this will raise on bad algorithm names
                 hashlib.new(algorithm)
+
+            if 'path' not in digest:
+                raise KeyError('FileDigestCheck: missing "path" key in FileDigestGroup entry')
+
+            # verify a valid digester is selected, if any
+            self._get_digester(digest)
 
         package = digest_group.get('package', None)
         packages = digest_group.get('packages', [])
@@ -258,7 +265,7 @@ class FileDigestCheck(AbstractCheck):
                     pass
         return None
 
-    def _is_valid_digest(self, group_type, path, digest, pkg):
+    def _is_valid_digest(self, path, digest, pkg):
         algorithm = digest['algorithm']
         if algorithm == 'skip':
             return (True, None)
@@ -267,7 +274,8 @@ class FileDigestCheck(AbstractCheck):
         if pkgfile is None:
             return (False, None)
 
-        file_digest = self._calc_digest(group_type, pkgfile, algorithm)
+        digester = self._get_digester(digest)
+        file_digest = self._calc_digest(digester, pkgfile, algorithm)
         return (file_digest == digest['hash'], file_digest)
 
     def _resolve_links(self, pkg, path):
@@ -279,16 +287,15 @@ class FileDigestCheck(AbstractCheck):
 
         return pkgfile
 
-    def _calc_digest(self, group_type, pkgfile, algorithm):
-        # include the group_type in the cache key, because different groups
-        # can use different Digester types
-        cache_key = (group_type, pkgfile.name, algorithm)
+    def _calc_digest(self, digester, pkgfile, algorithm):
+        # include the digester in the cache key, because different entries
+        # might be using different digester types
+        cache_key = (id(digester), pkgfile.name, algorithm)
 
         digest = self.digest_cache.get(cache_key, None)
         if digest is not None:
             return digest
 
-        digester = self.digester_for_group[group_type]
         digest = digester(pkgfile.path, algorithm).get_digest()
 
         self.digest_cache[cache_key] = digest
@@ -323,7 +330,10 @@ class FileDigestCheck(AbstractCheck):
                 digest_path = ''
                 if pkgfile:
                     try:
-                        encountered_digest = self._calc_digest(group_type, pkgfile, DEFAULT_DIGEST_ALG)
+                        # TODO: we could heuristically use a better suitable
+                        # digester e.g. 'xml' for D-Bus groups in a certain
+                        # path.
+                        encountered_digest = self._calc_digest(DIGESTERS['default'], pkgfile, DEFAULT_DIGEST_ALG)
                     except Exception as e:
                         encountered_digest = f'failed to calculate digest: {e}'
                     if pkgfile.name != spath:
@@ -353,7 +363,7 @@ class FileDigestCheck(AbstractCheck):
                     # This digest entry is not needed anymore and could be dropped
                     continue
                 try:
-                    valid_digest, file_digest = self._is_valid_digest(group_type, path, digest, pkg)
+                    valid_digest, file_digest = self._is_valid_digest(path, digest, pkg)
                 except Exception as e:
                     self.output.add_info('E', pkg, f'{group_type}-file-parse-error', path, f'failed to calculate digest: {e}')
                     continue
