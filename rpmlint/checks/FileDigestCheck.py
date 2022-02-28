@@ -214,6 +214,9 @@ class FileDigestCheck(AbstractCheck):
                 # this will raise on bad algorithm names
                 hashlib.new(algorithm)
 
+            if 'path' not in digest:
+                raise KeyError('FileDigestCheck: missing "path" key in FileDigestGroup entry')
+
         package = digest_group.get('package', None)
         packages = digest_group.get('packages', [])
 
