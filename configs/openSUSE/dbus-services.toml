@@ -476,7 +476,7 @@ nodigests = [
 package = "ModemManager"
 type = "dbus"
 note = "Mobile broadband modem control via D-Bus service, vast and complex interface"
-bug = ["bsc#798273", "bsc#1196170"]
+bugs = ["bsc#798273", "bsc#1196170"]
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service",
@@ -560,7 +560,7 @@ nodigests = [
 package = "tuned"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#787379, bsc#1007279"
+bugs = ["bsc#787379", "bsc#1007279"]
 nodigests = [
     "/etc/dbus-1/system.d/com.redhat.tuned.conf",
 ]
@@ -761,7 +761,7 @@ nodigests = [
 package = "backintime-qt"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1007723, bsc#1032717"
+bugs = ["bsc#1007723", "bsc#1032717"]
 nodigests = [
     "/etc/dbus-1/system.d/net.launchpad.backintime.serviceHelper.conf",
     "/usr/share/dbus-1/system-services/net.launchpad.backintime.serviceHelper.service",
@@ -973,7 +973,7 @@ nodigests = [
 package = "sssd-dbus"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1157663, bsc#1106600"
+bugs = ["bsc#1157663", "bsc#1106600"]
 nodigests = [
     "/usr/share/dbus-1/system-services/org.freedesktop.sssd.infopipe.service",
     "/etc/dbus-1/system.d/org.freedesktop.sssd.infopipe.conf",

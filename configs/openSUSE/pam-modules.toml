@@ -144,7 +144,7 @@ nodigests = [
 package = "pam"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1171564, bsc#1171563, bsc#1171562"
+bugs = ["bsc#1171564", "bsc#1171563", "bsc#1171562"]
 nodigests = [
     "*/security/pam_access.so",
     "*/security/pam_debug.so",
@@ -289,7 +289,7 @@ nodigests = [
 package = "slurm-pam_slurm"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1007053, bsc#1116758"
+bugs = ["bsc#1007053", "bsc#1116758"]
 nodigests = [
     "*/security/pam_slurm.so",
     "*/security/pam_slurm_adopt.so",
