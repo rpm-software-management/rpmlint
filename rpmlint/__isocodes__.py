@@ -2525,6 +2525,7 @@ LANGUAGES = set(
  'hwo',
  'hy',
  'hya',
+ 'hye',
  'hz',
  'ia',
  'iai',
