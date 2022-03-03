@@ -21,6 +21,12 @@ digests = [
         path = "/etc/dbus-1/system.d/rpmlint_mismatch.conf",
         algorithm = "sha256",
         hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
+    },
+    {
+        path = "/usr/share/dbus-1/system.d/nonsense.conf",
+        algorithm = "sha256",
+        hash = "9a4e829ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fda",
+        digester = "xml"
     }
 ]
 
