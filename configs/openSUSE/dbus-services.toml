@@ -1169,11 +1169,11 @@ digests = [
         algorithm = "sha256",
         digester = "xml",
         hash = "aee71755aa4d24b8d0dde83e704b45e453703c0083c4eb02010cd9ffba25c706"
-    },
+    }
+]
+nodigests = [
     {
         path = "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service",
-        algorithm = "sha256",
-        digester = "shell",
-        hash = "935e355306402268dcdb4c483f7c61587c621a468e65ee474dd2e08bb961b7f7"
+        algorithm = "sha256"
     }
 ]
