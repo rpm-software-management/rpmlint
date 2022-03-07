@@ -60,7 +60,6 @@ def substitute_shell_vars(val, script):
 
 
 class InitScriptCheck(AbstractCheck):
-
     def __init__(self, config, output):
         super().__init__(config, output)
         self.use_deflevels = self.config.configuration['UseDefaultRunlevels']

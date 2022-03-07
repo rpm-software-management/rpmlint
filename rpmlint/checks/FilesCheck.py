@@ -327,7 +327,6 @@ def script_interpreter(chunk):
 
 
 class FilesCheck(AbstractCheck):
-
     man_regex = re.compile(r'/man(?:\d[px]?|n)/')
     info_regex = re.compile(r'(/usr/share|/usr)/info/')
 

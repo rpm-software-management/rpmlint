@@ -32,7 +32,6 @@ oldest_changelog_timestamp = calendar.timegm(time.strptime('1995-01-01', '%Y-%m-
 
 
 class TagsCheck(AbstractCheck):
-
     def __init__(self, config, output):
         super().__init__(config, output)
         self.valid_groups = config.configuration['ValidGroups']

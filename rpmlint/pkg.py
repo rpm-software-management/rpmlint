@@ -382,7 +382,6 @@ def get_magic(path):
 # classes representing package
 
 class AbstractPkg(object):
-
     def cleanup(self):
         pass
 
@@ -394,7 +393,6 @@ class AbstractPkg(object):
 
 
 class Pkg(AbstractPkg):
-
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
 
     def __init__(self, filename, dirname, header=None, is_source=False, extracted=False, verbose=False):
