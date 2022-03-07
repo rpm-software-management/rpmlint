@@ -23,6 +23,10 @@ https://github.com/rpm-software-management/rpmlint
 
 ## Install
 
+Binary packages for the following distros are currently available.
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/rpmlint.svg)](https://repology.org/project/rpmlint/versions)
+
 For installation on your machine you will need the following packages:
 
 Mandatory:
