@@ -71,7 +71,6 @@ def check_syntax_script(prog, commandline, script):
 
 
 class PostCheck(AbstractCheck):
-
     def __init__(self, config, output):
         super().__init__(config, output)
         self.valid_shells = config.configuration['ValidShells']
