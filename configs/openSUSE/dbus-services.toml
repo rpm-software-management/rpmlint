@@ -1172,8 +1172,5 @@ digests = [
     }
 ]
 nodigests = [
-    {
-        path = "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service",
-        algorithm = "sha256"
-    }
+    "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service"
 ]
