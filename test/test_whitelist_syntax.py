@@ -25,6 +25,16 @@ def basic_syntax_checks(entry):
             assert prefix in ('bsc', 'boo')
             assert nr.isdigit()
 
+    for digest in entry.get('digests', []):
+        assert isinstance(digest, dict)
+        for key in ('path', 'hash'):
+            assert key in digest
+            val = digest.get(key, '')
+            assert isinstance(val, str)
+
+    for nodigest in entry.get('nodigests', []):
+        assert isinstance(nodigest, str)
+
     # we use 'note'
     assert 'comment' not in entry
 
