@@ -141,9 +141,9 @@ def test_check_summary_warning(tmpdir, package, tagscheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     # Test if package has a summary longer than 80 characters
-    assert 'E: summary-too-long   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
+    assert 'E: summary-too-long' in out
     # Test if package has leading space at the beginning of the summary
-    assert 'E: summary-has-leading-spaces   lorem Ipsum is simply dummy text of the printing and typesetting industry' in out
+    assert 'E: summary-has-leading-spaces' in out
     # Test if package has a shorter description than Summary
     assert 'W: description-shorter-than-summary' in out
     # Test if a package has a Version: tag
