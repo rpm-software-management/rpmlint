@@ -60,9 +60,15 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-pptp"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-pptp-service.conf",
+note = "NetworkManager pptp VPN protocol extension"
+bug = "bsc#1197054"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/nm-pptp-service.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
+    }
 ]
 
 [[FileDigestGroup]]
@@ -349,9 +355,15 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-vpnc"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-vpnc-service.conf",
+note = "NetworkManager vpnc (Cisco) VPN protocol extension"
+bug = "bsc#1197053"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/nm-vpnc-service.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "0e1ff5b6d001f1f244b75d71673e6f9f742dc166a3099a88a77359fafd99ad49"
+    }
 ]
 
 [[FileDigestGroup]]
@@ -406,11 +418,21 @@ nodigests = [
 [[FileDigestGroup]]
 package = "accountsservice"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#676638"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
-    "/etc/dbus-1/system.d/org.freedesktop.Accounts.conf",
+note = "GNOME accountsservice manages user account settings used by DisplayManagers"
+bugs = ["bsc#676638", "bsc#1197354"]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/org.freedesktop.Accounts.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "babd2d9490feaf4386f606860830979ddcf4e0ff9ac88ae736a9e47f767ca4b0"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "b9d536bc71a9befe88fda99e1d51b58baa49cf7bf7c00d485434d946451ef2c0"
+    }
 ]
 
 [[FileDigestGroup]]
