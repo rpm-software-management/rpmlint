@@ -418,11 +418,21 @@ nodigests = [
 [[FileDigestGroup]]
 package = "accountsservice"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#676638"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
-    "/etc/dbus-1/system.d/org.freedesktop.Accounts.conf",
+note = "GNOME accountsservice manages user account settings used by DisplayManagers"
+bugs = ["bsc#676638", "bsc#1197354"]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/org.freedesktop.Accounts.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "babd2d9490feaf4386f606860830979ddcf4e0ff9ac88ae736a9e47f767ca4b0"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "b9d536bc71a9befe88fda99e1d51b58baa49cf7bf7c00d485434d946451ef2c0"
+    }
 ]
 
 [[FileDigestGroup]]
