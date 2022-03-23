@@ -60,9 +60,15 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-pptp"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-pptp-service.conf",
+note = "NetworkManager pptp VPN protocol extension"
+bug = "bsc#1197054"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/nm-pptp-service.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
+    }
 ]
 
 [[FileDigestGroup]]
