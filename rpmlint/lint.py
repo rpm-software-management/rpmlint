@@ -122,16 +122,17 @@ class Lint(object):
         return f'{color}{fraction:17.1f}{Color.Reset}'
 
     def _print_time_report(self):
-        THRESHOLD = 1
+        PERCENT_THRESHOLD = 1
+        TIME_THRESHOLD = 0.1
         total = sum(self.check_duration.values())
         checked_files = [check.checked_files for check in self.checks.values() if check.checked_files]
         total_checked_files = max(checked_files) if checked_files else ''
-        print(f'{Color.Bold}Check time report{Color.Reset} (>{THRESHOLD}%):')
+        print(f'{Color.Bold}Check time report{Color.Reset} (>{PERCENT_THRESHOLD}% & >{TIME_THRESHOLD}s):')
 
         print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}  Checked files{Color.Reset}')
         for check, duration in sorted(self.check_duration.items(), key=operator.itemgetter(1), reverse=True):
             fraction = 100.0 * duration / total
-            if fraction < THRESHOLD:
+            if fraction < PERCENT_THRESHOLD or duration < TIME_THRESHOLD:
                 continue
 
             checked_files = ''
