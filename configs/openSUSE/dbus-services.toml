@@ -355,9 +355,15 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-vpnc"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-vpnc-service.conf",
+note = "NetworkManager vpnc (Cisco) VPN protocol extension"
+bug = "bsc#1197053"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/nm-vpnc-service.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "0e1ff5b6d001f1f244b75d71673e6f9f742dc166a3099a88a77359fafd99ad49"
+    }
 ]
 
 [[FileDigestGroup]]
