@@ -1159,6 +1159,13 @@ bug = "bsc#1196149"
 nodigests = [
 	"/usr/share/dbus-1/system-services/tukitd.d-bus.service",
 ]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf",
+        algorithm = "sha256",
+        hash = "05d397544bf468a228f7d9cd96685a6509c3a47239484b4439e8bd45c8cc869c"
+    }
+]
 
 [[FileDigestGroup]]
 package = "nvme-stas"
