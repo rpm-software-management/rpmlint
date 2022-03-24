@@ -143,7 +143,8 @@ def test_check_summary_warning(tmpdir, package, tagscheck):
     # Test if package has a summary longer than 80 characters
     assert 'E: summary-too-long' in out
     # Test if package has leading space at the beginning of the summary
-    assert 'E: summary-has-leading-spaces' in out
+    # where non-breaking space is used (U+00A0).
+    assert b'E: summary-has-leading-spaces \xc2\xa0\xc2\xa0lorem'.decode() in out
     # Test if package has a shorter description than Summary
     assert 'W: description-shorter-than-summary' in out
     # Test if a package has a Version: tag
