@@ -1203,3 +1203,23 @@ digests = [
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service"
 ]
+
+[[FileDigestGroup]]
+package = "usbguard"
+type = "dbus"
+note = "D-Bus bridge towards the usbguard custom IPC protocol"
+bug = "bsc#1196621"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/org.usbguard1.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "c517848d4b267f62c6004517e8bcd4160dceed7d4ed74e134f7531c0bb6f2ff1"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.usbguard1.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "3c2924c9228acdb0140639f5df6eb2d1bffb3cedb85a695e319fee5777dada00"
+    }
+]
