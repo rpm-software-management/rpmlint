@@ -30,11 +30,6 @@ class AlternativesCheck(AbstractCheck):
 
     def __init__(self, config, output):
         super().__init__(config, output)
-        # Containers for scriptlets as they will be used on multiple places
-        self.post = None
-        self.postun = None
-        self.install_binaries = {}
-        self.slave_binaries = []
 
     def check(self, pkg):
         if pkg.is_source:
@@ -45,6 +40,8 @@ class AlternativesCheck(AbstractCheck):
             self._check_libalternatives_requirements(pkg)
             self._check_libalternatives_filelist(pkg)
 
+        self.install_binaries = {}
+        self.slave_binaries = []
         # populate scriptlets
         self.post = byte_to_string(pkg.header[rpm.RPMTAG_POSTIN])
         self.postun = byte_to_string(pkg.header[rpm.RPMTAG_POSTUN])
