@@ -46,3 +46,11 @@ Locations = [
     "/lib/security/",
     "/lib64/security/"
 ]
+
+[FileDigestLocation.sudoers]
+FollowSymlinks = false
+# the directories for this are currently configured in /etc/sudoers via
+# the @includedir directive.
+Locations = [
+    "/etc/sudoers.d"
+]
