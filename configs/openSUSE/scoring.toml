@@ -78,3 +78,7 @@ dbus-file-ghost = 10
 dbus-file-parse-error = 10
 dbus-file-unauthorized = 10
 dbus-file-symlink = 10
+sudoers-file-digest-mismatch = 10
+sudoers-file-ghost = 10
+sudoers-file-unauthorized = 10
+sudoers-file-symlink = 10

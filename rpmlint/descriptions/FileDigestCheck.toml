@@ -27,3 +27,8 @@ dbus-file-digest-mismatch="A D-Bus configuration file changed in content. Packag
 dbus-file-ghost="This package installs a D-Bus configuration file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
 dbus-file-symlink="Symlinks are not allowed for D-Bus configuration files"
 dbus-file-parse-error="A digest of an D-Bus XML file could not be computed, because of an XML parsing error"
+
+sudoers-file-unauthorized="Packaging sudoers.d drop-in configuration files #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+sudoers-file-digest-mismatch="A whitelisting related sudoers.d drop-in file changed in content. Packaging sudoers.d drop in configuration files #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+sudoers-file-ghost="This package installs a sudoers.d drop-in configuration file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
+sudoers-file-symlink="Symlinks are not allowed for sudoers.d drop-in configuration files"
