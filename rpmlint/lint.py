@@ -238,17 +238,11 @@ class Lint(object):
     def _expand_filelist(self, files):
         packages = []
         for pkg in files:
-            if pkg.is_file() and self._check_valid_suffix(pkg):
+            if pkg.is_file() and pkg.suffix in ('.rpm', '.spm', '.spec'):
                 packages.append(pkg)
             elif pkg.is_dir():
                 packages.extend(self._expand_filelist(pkg.iterdir()))
         return packages
-
-    @staticmethod
-    def _check_valid_suffix(filename):
-        if any(ext == filename.suffix for ext in ['.rpm', '.spm', '.spec']):
-            return True
-        return False
 
     def validate_file(self, pname, is_last):
         try:
