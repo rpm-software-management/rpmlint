@@ -17,7 +17,7 @@ class LogrotateCheck(AbstractCheck):
 
             if f.startswith('/etc/logrotate.d/'):
                 try:
-                    for n, o in self.parselogrotateconf(pkg.dirName(), f).items():
+                    for n, o in self.parselogrotateconf(pkg.dir_name(), f).items():
                         if n in dirs and dirs[n] != o:
                             self.output.add_info('E', pkg, 'logrotate-duplicate', n)
                         else:
