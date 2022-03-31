@@ -426,11 +426,11 @@ class Pkg(AbstractPkg):
 
         (self.requires, self.prereq, self.provides, self.conflicts,
          self.obsoletes, self.recommends, self.suggests, self.enhances,
-         self.supplements) = self._gatherDepInfo()
+         self.supplements) = self._gather_dep_info()
 
         self.req_names = [x[0] for x in self.requires + self.prereq]
 
-        self.files = self._gatherFilesInfo()
+        self.files = self._gather_files_info()
         self.config_files = [x.name for x in self.files.values() if x.is_config]
         self.doc_files = [x.name for x in self.files.values() if x.is_doc]
         self.ghost_files = [x.name for x in self.files.values() if x.is_ghost]
@@ -504,7 +504,7 @@ class Pkg(AbstractPkg):
             self.extracted = True
         return dirname
 
-    def checkSignature(self):
+    def check_signature(self):
         ret = subprocess.run(('rpm', '-Kv', self.filename),
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                              env=ENGLISH_ENVIROMENT)
@@ -546,8 +546,7 @@ class Pkg(AbstractPkg):
         return ret
 
     # extract information about the files
-    def _gatherFilesInfo(self):
-
+    def _gather_files_info(self):
         ret = {}
         flags = self.header[rpm.RPMTAG_FILEFLAGS]
         modes = self.header[rpm.RPMTAG_FILEMODES]
@@ -657,7 +656,7 @@ class Pkg(AbstractPkg):
                     xs.append(DepInfo(name, flags[loop], evr))
         return xs, prereq
 
-    def _gatherDepInfo(self):
+    def _gather_dep_info(self):
         _requires = []
         _prereq = []
         _provides = []
@@ -722,7 +721,7 @@ class Pkg(AbstractPkg):
         return prog
 
 
-def getInstalledPkgs(name):
+def get_installed_pkgs(name):
     """Get list of installed package objects by name."""
 
     pkgs = []
@@ -761,7 +760,7 @@ class InstalledPkg(Pkg):
     def cleanup(self):
         pass
 
-    def checkSignature(self):
+    def check_signature(self):
         return (0, 'fake: pgp md5 OK')
 
 

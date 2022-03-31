@@ -11,7 +11,7 @@ from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 from rpmlint.helpers import print_warning, string_center
-from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
+from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
 from rpmlint.version import __version__
 
 
@@ -157,7 +157,7 @@ class Lint(object):
     def _load_installed_rpms(self, packages):
         existing_packages = []
         for name in packages:
-            pkg = getInstalledPkgs(name)
+            pkg = get_installed_pkgs(name)
             if pkg:
                 existing_packages.extend(pkg)
             else:
