@@ -140,7 +140,7 @@ class SUIDPermissionsCheck(AbstractCheck):
             # check for a .secure file first, falling back to the plain file
             for path in self._paths_to(f + '.secure', f):
                 if path in pkg.files.keys():
-                    fullpath = pkg.dirName() + path
+                    fullpath = pkg.dir_name() + path
                     try:
                         self._parse_profile(fullpath)
                     except Exception as e:

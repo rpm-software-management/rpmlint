@@ -49,7 +49,7 @@ class PolkitCheck(AbstractCheck):
                 continue
 
             try:
-                xml = parse(pkg.dirName() + f)
+                xml = parse(pkg.dir_name() + f)
             except Exception as x:
                 self.output.add_info('E', pkg, 'polkit-xml-exception', f'{f:s} raised an exception: {x}')
                 continue
