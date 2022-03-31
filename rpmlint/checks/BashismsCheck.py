@@ -19,7 +19,7 @@ class BashismsCheck(AbstractFilesCheck):
         self.use_early_fail = '[-e]' in output
 
     def check_file(self, pkg, filename):
-        root = pkg.dirName()
+        root = pkg.dir_name()
         pkgfile = pkg.files[filename]
         filepath = root + filename
 

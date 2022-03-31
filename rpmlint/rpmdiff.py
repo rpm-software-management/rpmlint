@@ -5,7 +5,7 @@ import tempfile
 
 import rpm
 from rpmlint.helpers import byte_to_string, print_warning
-from rpmlint.pkg import getInstalledPkgs, Pkg
+from rpmlint.pkg import get_installed_pkgs, Pkg
 
 
 class Rpmdiff(object):
@@ -141,7 +141,7 @@ class Rpmdiff(object):
                 return Pkg(name, tmpdir)
         except TypeError:
             pass
-        inst = getInstalledPkgs(str(name))
+        inst = get_installed_pkgs(str(name))
         if not inst:
             raise KeyError(f'No installed packages by name {name}')
         if len(inst) > 1:

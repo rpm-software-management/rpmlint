@@ -17,11 +17,11 @@ class SignatureCheck(AbstractCheck):
     invalid_sig_regex = re.compile(r'invalid OpenPGP signature')
 
     def check(self, pkg):
-        retcode, output = pkg.checkSignature()
+        retcode, output = pkg.check_signature()
 
-        # Skip all signature checks if checkSignature output is empty
+        # Skip all signature checks if check_signature output is empty
         if output is None:
-            print_warning(f'No output from checkSignature() for '
+            print_warning(f'No output from check_signature() for '
                           f'{pkg.filename}. Skipping signature checks.')
             return
 

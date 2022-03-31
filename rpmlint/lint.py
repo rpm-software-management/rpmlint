@@ -13,7 +13,7 @@ from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 from rpmlint.helpers import print_warning, string_center
-from rpmlint.pkg import FakePkg, getInstalledPkgs, Pkg
+from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
 from rpmlint.version import __version__
 
 
@@ -160,7 +160,7 @@ class Lint(object):
     def _load_installed_rpms(self, packages):
         existing_packages = []
         for name in packages:
-            pkg = getInstalledPkgs(name)
+            pkg = get_installed_pkgs(name)
             if pkg:
                 existing_packages.extend(pkg)
             else:
@@ -244,17 +244,11 @@ class Lint(object):
     def _expand_filelist(self, files):
         packages = []
         for pkg in files:
-            if pkg.is_file() and self._check_valid_suffix(pkg):
+            if pkg.is_file() and pkg.suffix in ('.rpm', '.spm', '.spec'):
                 packages.append(pkg)
             elif pkg.is_dir():
                 packages.extend(self._expand_filelist(pkg.iterdir()))
         return packages
-
-    @staticmethod
-    def _check_valid_suffix(filename):
-        if any(ext == filename.suffix for ext in ['.rpm', '.spm', '.spec']):
-            return True
-        return False
 
     def validate_file(self, pname, is_last):
         try:
