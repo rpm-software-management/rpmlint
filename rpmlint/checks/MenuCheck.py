@@ -92,7 +92,7 @@ class MenuCheck(AbstractCheck):
             elif not update_menus_regex.search(postun):
                 self.output.add_info('E', pkg, 'postun-without-update-menus')
 
-            directory = pkg.dirName()
+            directory = pkg.dir_name()
             for f in menus:
                 # remove comments and handle cpp continuation lines
                 text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT).stdout.decode()

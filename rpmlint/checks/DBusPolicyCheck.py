@@ -18,7 +18,7 @@ class DBusPolicyCheck(AbstractCheck):
             try:
                 if any(f.startswith(d) for d in DBUS_DIRECTORIES):
                     send_policy_seen = False
-                    lf = pkg.dirName() + f
+                    lf = pkg.dir_name() + f
                     xml = parse(lf)
                     for policy in xml.getElementsByTagName('policy'):
                         send_policy_seen = self._check_allow_policy_element(pkg, f, policy) or send_policy_seen

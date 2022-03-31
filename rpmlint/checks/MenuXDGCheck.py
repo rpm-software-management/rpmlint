@@ -42,7 +42,7 @@ class MenuXDGCheck(AbstractFilesCheck):
             self._has_binary(pkg, root, cfp, filename)
 
     def check_file(self, pkg, filename):
-        root = pkg.dirName()
+        root = pkg.dir_name()
         f = root + filename
         try:
             command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)

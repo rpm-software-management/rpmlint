@@ -401,7 +401,7 @@ class Pkg(AbstractPkg):
 
         # record decompression and extraction time
         start = time.monotonic()
-        self.dirname = self.dir_name(dirname, verbose)
+        self.dirname = self._extract_rpm(dirname, verbose)
         self.extraction_time = time.monotonic() - start
         self.current_linenum = None
 
@@ -474,14 +474,10 @@ class Pkg(AbstractPkg):
             return val
 
     # return the name of the directory where the package is extracted
-    def dirName(self):
+    def dir_name(self):
         return self.dirname
 
-    def dir_name(self, dirname, verbose):
-        return self._extract(dirname, verbose)
-
-    # extract rpm contents
-    def _extract(self, dirname, verbose):
+    def _extract_rpm(self, dirname, verbose):
         if not Path(dirname).is_dir():
             print_warning('Unable to access dir %s' % dirname)
         elif dirname == '/':
@@ -534,7 +530,7 @@ class Pkg(AbstractPkg):
     def read_with_mmap(self, filename):
         """Mmap a file, return it's content decoded."""
         try:
-            with open(Path(self.dirName() or '/', filename.lstrip('/'))) as in_file:
+            with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
                 return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
         except Exception:
             return ''
@@ -582,7 +578,7 @@ class Pkg(AbstractPkg):
             for idx, file in enumerate(files):
                 pkgfile = PkgFile(file)
                 pkgfile.path = os.path.normpath(os.path.join(
-                    self.dirName() or '/', pkgfile.name.lstrip('/')))
+                    self.dir_name() or '/', pkgfile.name.lstrip('/')))
                 pkgfile.flags = flags[idx]
                 pkgfile.mode = modes[idx]
                 pkgfile.user = byte_to_string(users[idx])
@@ -794,7 +790,7 @@ class FakePkg(AbstractPkg):
         string content.
         """
         basename = name.replace(os.path.sep, '_')
-        path = os.path.join(self.dirName(), basename)
+        path = os.path.join(self.dir_name(), basename)
         with open(path, 'w') as out:
             out.write(content)
             pkg_file = PkgFile(name)
@@ -818,7 +814,7 @@ class FakePkg(AbstractPkg):
         # HACK: reuse the real Pkg's logic
         return Pkg.readlink(self, pkgfile)
 
-    def dirName(self):
+    def dir_name(self):
         if not self.dirname:
             self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
             self.dirname = self.__tmpdir.name

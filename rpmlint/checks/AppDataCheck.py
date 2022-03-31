@@ -17,7 +17,7 @@ class AppDataCheck(AbstractFilesCheck):
         super().__init__(config, output, r'/usr/share/appdata/.*\.(appdata|metainfo).xml$')
 
     def check_file(self, pkg, filename):
-        root = pkg.dirName()
+        root = pkg.dir_name()
         f = root + filename
         cmd = self.cmd + f
 
