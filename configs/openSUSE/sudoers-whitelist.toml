@@ -67,3 +67,17 @@ digests = [
         hash = "88d39bcbdba7c9485ab5f73617b8d9763385aa8e9f598e808dd025fba0d8d445"
     }
 ]
+
+[[FileDigestGroup]]
+package = "ceph-base"
+type = "sudoers"
+note = "allows to run smartctl and nvme programs to collect device health metrics"
+bug = "bsc#1196141"
+digests = [
+    {
+        path = "/etc/sudoers.d/ceph-smartctl",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
+    }
+]
