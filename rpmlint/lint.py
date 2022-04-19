@@ -90,7 +90,8 @@ class Lint(object):
             retcode = 66
         elif self.output.printed_messages['E'] > 0 and not self.config.permissive:
             quit_color = Color.Red
-            retcode = 64
+            all_promoted = self.output.printed_messages['E'] == self.output.promoted_to_error
+            retcode = 65 if all_promoted else 64
 
         self._maybe_print_reports()
 

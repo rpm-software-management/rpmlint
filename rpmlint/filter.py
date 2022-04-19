@@ -45,6 +45,8 @@ class Filter(object):
 
         # Counter of how many issues we encountered
         self.printed_messages = {'I': 0, 'W': 0, 'E': 0}
+        # Number of promoted warnings and infos to errors
+        self.promoted_to_error = 0
         # Messages
         self.results = []
 
@@ -119,6 +121,8 @@ class Filter(object):
         # allow strict reporting where we override levels and treat everything
         # as an error
         if self.strict:
+            if level != 'E':
+                self.promoted_to_error += 1
             level = 'E'
 
         if badness is None:
