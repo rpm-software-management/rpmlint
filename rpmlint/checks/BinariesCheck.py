@@ -284,8 +284,6 @@ class BinariesCheck(AbstractCheck):
     def _check_executable_stack(self, pkg, pkgfile):
         """
         Check if the stack is declared as executable which is usually an error.
-
-        FIXME Add test coverage.
         """
 
         # Skip architectures that have non-executable stack by default
