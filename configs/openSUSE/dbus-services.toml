@@ -155,15 +155,6 @@ nodigests = [
 
 
 [[FileDigestGroup]]
-package = "gconf-polkit"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.gnome.GConf.Defaults.service",
-    "/etc/dbus-1/system.d/org.gnome.GConf.Defaults.conf",
-]
-
-[[FileDigestGroup]]
 package = "system-config-printer-applet"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
