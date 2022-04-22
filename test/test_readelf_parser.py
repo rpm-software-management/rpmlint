@@ -169,9 +169,9 @@ def test_archive_with_debuginfo(binariescheck):
 def test_executable_stack(binariescheck):
     output, test = binariescheck
     with FakePkg('fake') as pkg:
-        pkgfile = pkg.add_file(get_full_path('executable-stack'), 'a.out')
+        pkgfile = pkg.add_file(get_full_path('executable-stack'), '/lib64/my/a.out')
         run_elf_checks(test, pkg, pkgfile)
-        assert 'E: executable-stack' in output.results[0]
+        assert 'E: executable-stack /lib64/my/a.out' in output.results[0]
 
 
 def test_readelf_failure():
