@@ -294,9 +294,9 @@ class BinariesCheck(AbstractCheck):
         if not self.is_archive and not any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
             stack_headers = [h for h in self.readelf_parser.program_header_info.headers if h.name == 'GNU_STACK']
             if not stack_headers:
-                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', pkg.name)
+                self.output.add_info('E', pkg, 'missing-PT_GNU_STACK-section', pkgfile.name)
             elif 'E' in stack_headers[0].flags:
-                self.output.add_info('E', pkg, 'executable-stack', pkg.name)
+                self.output.add_info('E', pkg, 'executable-stack', pkgfile.name)
 
     def _check_soname_symlink(self, pkg, shlib, soname):
         """
