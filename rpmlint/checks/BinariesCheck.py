@@ -44,7 +44,7 @@ class BinariesCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.checked_files = 0
-        self.system_lib_paths = config.configuration['SystemLibPaths']
+        self.system_lib_paths = tuple(config.configuration['SystemLibPaths'])
         self.pie_exec_regex_list = []
         for regex in config.configuration['PieExecutables']:
             self.pie_exec_regex_list.append(re.compile(regex))
@@ -419,10 +419,11 @@ class BinariesCheck(AbstractCheck):
             self.output.add_info('W', pkg, 'binary-or-shlib-calls-gethostbyname', pkgfile.name)
 
     def _check_rpath(self, pkg, pkgfile):
-        for runpath in self.readelf_parser.dynamic_section_info.runpath:
-            if runpath in self.system_lib_paths or not self.usr_lib_regex.search(runpath):
-                self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, runpath)
-                return
+        for runpaths in self.readelf_parser.dynamic_section_info.runpaths:
+            for runpath in runpaths.split(':'):
+                if not runpath.startswith(self.system_lib_paths) and not self.usr_lib_regex.search(runpath):
+                    self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, runpath)
+                    return
 
     def _check_library_dependency(self, pkg, pkgfile):
         if self.is_archive:
@@ -440,7 +441,7 @@ class BinariesCheck(AbstractCheck):
             self.output.add_info('E', pkg, msg, pkgfile.name)
         else:
             # linked against libc ?
-            if 'libc.' not in dyn_section.runpath and \
+            if 'libc.' not in dyn_section.runpaths and \
                (not dyn_section.soname or
                 ('libc.' not in dyn_section.soname and
                  not self.ldso_soname_regex.search(dyn_section.soname))):

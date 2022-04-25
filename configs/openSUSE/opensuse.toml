@@ -155,7 +155,6 @@ Filters = [
     'ldconfig-post.*/ddiwrapper/wine/',
     'glibc\.\S+: \w: statically-linked-binary /usr/sbin/glibc_post_upgrade',
     ' symlink-should-be-relative ',
-    ' binary-or-shlib-defines-rpath .*ORIGIN',
     'libzypp.*shlib-policy-name-error.*libzypp',
     'libtool.*shlib-policy.*',
 
@@ -185,7 +184,6 @@ Filters = [
     ' postin-without-chkconfig ',
     ' preun-without-chkconfig ',
     ' no-dependency-on locales',
-    ' binary-or-shlib-defines-rpath',
     ' executable-marked-as-config-file',
     ' log-files-without-logrotate',
     ' hardcoded-prefix-tag',

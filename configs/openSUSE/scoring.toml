@@ -45,6 +45,7 @@ wrong-script-interpreter = 490
 obsolete-insserv-requirement = 10000
 deprecated-init-script = 10000
 deprecated-boot-script = 10000
+binary-or-shlib-defines-rpath = 10000
 pam-file-ghost = 10
 pam-file-unauthorized = 10
 pam-file-symlink = 10
