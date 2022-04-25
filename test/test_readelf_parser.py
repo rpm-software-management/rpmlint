@@ -92,8 +92,8 @@ def test_rpath():
     readelf = readelfparser('rpath-lib.so', '/lib64/rpath-lib.so')
     assert readelf.is_shlib
     assert not readelf.is_archive
-    assert len(readelf.dynamic_section_info.runpath) == 1
-    assert '/tmp/termcap.so.4' in readelf.dynamic_section_info.runpath
+    assert len(readelf.dynamic_section_info.runpaths) == 1
+    assert '/tmp/termcap.so.4' in readelf.dynamic_section_info.runpaths
 
 
 def test_lto_bytecode(binariescheck):
