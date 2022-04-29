@@ -33,7 +33,6 @@ class SourceCheck(AbstractCheck):
     def check_source(self, pkg):
         # process file list
         for fname, pkgfile in pkg.files.items():
-
             self._check_file_ext(fname, pkgfile, pkg)
             self._check_permissions(fname, pkgfile, pkg)
             self._check_compressed_source(fname, pkg)

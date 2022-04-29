@@ -172,14 +172,12 @@ class SpecCheck(AbstractCheck):
         self._check_non_utf8_spec_file(pkg)
 
         # gather info from spec lines
-
         pkg.current_linenum = 0
 
         nbsp = UNICODE_NBSP
 
         # Analyse specfile line by line to check for (E)rrors or (W)arnings
         for line in spec_lines:
-
             pkg.current_linenum += 1
 
             char = line.find(nbsp)
