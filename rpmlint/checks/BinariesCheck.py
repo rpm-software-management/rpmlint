@@ -593,7 +593,6 @@ class BinariesCheck(AbstractCheck):
         #  go through the all files, run files checks and collect data that are
         #  needed later
         for fname, pkgfile in pkg.files.items():
-
             # Common tests first
             self._check_libtool_wrapper(pkg, fname, pkgfile)
             self._check_invalid_la_file(pkg, fname)
