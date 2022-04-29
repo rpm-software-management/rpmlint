@@ -22,7 +22,6 @@ class SystemdInstallCheck(AbstractCheck):
         postun = pkg[rpm.RPMTAG_POSTUN] or pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
 
         for fname in pkg.files:
-
             if self.checked_units_regexp.search(fname):
                 processed = {'pre': False, 'post': False, 'preun': False, 'postun': False}
 
