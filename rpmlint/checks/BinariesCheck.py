@@ -41,6 +41,8 @@ class BinariesCheck(AbstractCheck):
     # The list is taken from glibc: sysdeps/${arch}/stackinfo.h
     default_executable_stack_archs = re.compile(r'alpha|arm.*|hppa|i.86|m68k|microblaze|mips|ppc|s390|s390x|sh|sparc|x86_64')
 
+    rpath_origin = '$ORIGIN'
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.checked_files = 0
@@ -421,6 +423,9 @@ class BinariesCheck(AbstractCheck):
     def _check_rpath(self, pkg, pkgfile):
         for runpaths in self.readelf_parser.dynamic_section_info.runpaths:
             for runpath in runpaths.split(':'):
+                if self.rpath_origin in runpath:
+                    runpath = runpath.replace(self.rpath_origin, str(Path(pkgfile.name).parent))
+                    runpath = str(Path(runpath).resolve())
                 if not runpath.startswith(self.system_lib_paths) and not self.usr_lib_regex.search(runpath):
                     self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, runpath)
                     return
