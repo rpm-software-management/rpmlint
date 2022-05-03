@@ -789,10 +789,15 @@ nodigests = [
 [[FileDigestGroup]]
 package = "switcheroo-control"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1034309"
-nodigests = [
-    "/etc/dbus-1/system.d/net.hadess.SwitcherooControl.conf",
+note = "small mostly read-only D-Bus service that detects the presence of dual-GPU hardware"
+bugs = ["bsc#1034309", "bsc#1199065"]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/net.hadess.SwitcherooControl.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "7d299bd3ac64cd7fdd4cd39c6707a7e86e330b1d8cf7b7474bb10d6eb9be7316"
+    }
 ]
 
 [[FileDigestGroup]]
