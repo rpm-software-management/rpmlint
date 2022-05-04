@@ -301,15 +301,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "gypsy"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/Gypsy.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.Gypsy.service",
-]
-
-[[FileDigestGroup]]
 package = "pommed"
 type = "dbus"
 note = "legacy: not audited"
