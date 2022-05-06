@@ -1150,7 +1150,7 @@ digests = [
     {
         path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf",
         algorithm = "sha256",
-        hash = "05d397544bf468a228f7d9cd96685a6509c3a47239484b4439e8bd45c8cc869c"
+        hash = "300ed6ebc147291c5bebe5bc09de3e4b09bdc597238212470d48d71797e0623e"
     }
 ]
 
