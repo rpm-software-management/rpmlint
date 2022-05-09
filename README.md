@@ -122,8 +122,11 @@ it can be normal `toml` file if you wish:
     setBadness('check', 0)
     addFilter('test-i-ignore')
     
-The location of `rpmlintrc` can be set using `--rpmlintrc` option. Or you can have any `*.rpmlintrc` or 
-`*-rpmlintrc` file in the current working directory.  The best practice is to store the name in `$PACKAGE_NAME.rpmlintrc`.
+The location of `rpmlintrc` can be set using `--rpmlintrc` option.
+Or it can load any `*.rpmlintrc` or `*-rpmlintrc` that are located in the same
+folder as check RPM file (or a specfile). Note the auto-loading happens only
+when one RPM file (or a specfile) is used.
+The best practice is to store the name in `$PACKAGE_NAME.rpmlintrc`.
 
 `setBadness` overrides a default badness for a given check and `addFilter` ignores all errors
 that match the given regular expression (one cannot filter out errors that are listed in `BlockedFilters`
