@@ -20,7 +20,7 @@ class ErlangCheck(AbstractFilesCheck):
                 self.output.add_info('W', pkg, 'beam-compile-info-missed', filename)
                 return
 
-            compile_state = byte_to_string(str(beam.compileinfo['source']))
+            compile_state = byte_to_string(beam.compileinfo['source'])
             if 'debug_info' not in beam.compileinfo['options']:
                 self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
 
