@@ -285,11 +285,21 @@ nodigests = [
 [[FileDigestGroup]]
 package = "bluez"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#768062"
-nodigests = [
-    "/etc/dbus-1/system.d/bluetooth.conf",
-    "/usr/share/dbus-1/system-services/org.bluez.service",
+note = "Provides bluetooth stack access via D-Bus"
+bugs = ["bsc#768062", "bsc#1199207"]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/bluetooth.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "529151093a482e8223738f86bec3dac4c23733c38fba1f318cc6130b5acaebfe"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.bluez.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "8004c707a071bab12c20f03d0f63d3edea59bbc4d1697ebec44b12fa58f81fea"
+    }
 ]
 
 [[FileDigestGroup]]
