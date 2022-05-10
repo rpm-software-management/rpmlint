@@ -3,7 +3,6 @@ from pathlib import Path
 import re
 import stat
 
-import rpm
 from rpmlint.arparser import ArParser
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.lddparser import LddParser
@@ -20,7 +19,6 @@ class BinariesCheck(AbstractCheck):
     """
     Checks for binary files in the package.
     """
-    srcname_regex = re.compile(r'(.*?)-[0-9]')
     validso_regex = re.compile(r'(\.so\.\d+(\.\d+)*|\d\.so)$')
     soversion_regex = re.compile(r'.*?(-(?P<pkgversion>[0-9][.0-9]*))?\.so(\.(?P<soversion>[0-9][.0-9]*))?')
     usr_lib_regex = re.compile(r'^/usr/lib(64)?/')
@@ -199,13 +197,13 @@ class BinariesCheck(AbstractCheck):
                         not self.versioned_dir_regex.search(fn):
                     self.output.add_info('E', pkg, 'non-versioned-file-in-library-package', f)
 
-    def _check_no_binary(self, pkg, has_binary, multi_pkg, has_file_in_lib64):
+    def _check_no_binary(self, pkg, has_binary, has_file_in_lib64):
         """
         Check if the arch dependent package contains any binaries.
 
         Print an error if there is no binary and it's not noarch.
         """
-        if not has_binary and not multi_pkg and not has_file_in_lib64 and \
+        if not has_binary and not has_file_in_lib64 and \
                 pkg.arch != 'noarch':
             self.output.add_info('E', pkg, 'no-binary')
 
@@ -588,7 +586,6 @@ class BinariesCheck(AbstractCheck):
 
     def check_binary(self, pkg):
         exec_files = []
-        multi_pkg = False
         pkg_has_lib = False
         pkg_has_binary = False
         pkg_has_binary_in_usrlib = False
@@ -690,19 +687,11 @@ class BinariesCheck(AbstractCheck):
 
                 self._check_non_pie(pkg, fname)
 
-        # find out if we have a multi-package
-        srpm = pkg[rpm.RPMTAG_SOURCERPM]
-        if srpm:
-            srcname = self.srcname_regex.search(srpm)
-            if srcname:
-                multi_pkg = (pkg.name != srcname.group(1))
-
         # run checks for the whole package
         # it uses data collected in the previous for-cycle
         self._check_exec_in_library(pkg, pkg_has_lib, exec_files)
         self._check_non_versioned(pkg, pkg_has_lib, exec_files)
-        self._check_no_binary(pkg, pkg_has_binary, multi_pkg,
-                              pkg_has_file_in_lib64)
+        self._check_no_binary(pkg, pkg_has_binary, pkg_has_file_in_lib64)
         self._check_noarch_with_lib64(pkg, pkg_has_file_in_lib64)
         self._check_only_non_binary_in_usrlib(pkg, pkg_has_usrlib_file,
                                               pkg_has_binary_in_usrlib)
