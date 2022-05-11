@@ -45,6 +45,8 @@ setup(
         'toml',
         'zstandard',
         'importlib-metadata;python_version<"3.8"',
+        'pyenchant',
+        'python-magic'
     ],
     tests_require=[
         'pytest',
