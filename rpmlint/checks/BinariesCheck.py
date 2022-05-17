@@ -31,6 +31,7 @@ class BinariesCheck(AbstractCheck):
     la_file_regex = re.compile(r'\.la$')
     invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
     usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
+    python_module_regex = re.compile(r'.*\.\w*(python|pypy)\w*(-\w+){4}\.so')
 
     lto_text_like_sections = {'.preinit_array', '.init_array', '.fini_array'}
     # The following sections are part of the RX ABI and do correspond to .text, .data and .bss
@@ -373,6 +374,11 @@ class BinariesCheck(AbstractCheck):
         # following issues are errors for shared libs and warnings for executables
         if not self.is_dynamically_linked:
             return
+
+        # Skip python packages
+        if self.python_module_regex.fullmatch(pkgfile.name):
+            return
+
         if not self.is_archive and not self.readelf_parser.is_debug:
             info_type = 'E' if self.readelf_parser.is_shlib else 'W'
             for symbol in self.ldd_parser.undefined_symbols:
