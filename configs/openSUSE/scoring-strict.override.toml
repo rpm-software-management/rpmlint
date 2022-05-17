@@ -36,5 +36,11 @@ sudoers-file-digest-mismatch = 10000
 sudoers-file-ghost = 10000
 sudoers-file-unauthorized = 10000
 sudoers-file-symlink = 10000
+# keep the strict settings disabled until necessary whitelisting entries are
+# established (bsc#1150905)
+#systemd-tmpfile-entry-unauthorized = 10000
+#systemd-tmpfile-ghost = 10000
+#systemd-tmpfile-parse-error = 10000
+#systemd-tmpfile-symlink = 10000
 world-writable-mismatched-attrs = 10000
 world-writable-unauthorized-file = 10000

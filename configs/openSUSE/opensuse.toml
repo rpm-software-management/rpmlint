@@ -21,6 +21,7 @@ Checks = [
     "KMPPolicyCheck",
     "PolkitCheck",
     "SystemdInstallCheck",
+    "SystemdTmpfilesCheck",
     "SUIDPermissionsCheck",
     "WorldWritableCheck",
 ]
@@ -264,6 +265,10 @@ BlockedFilters = [
     "polkit-untracked-privilege",
     "polkit-user-privilege",
     "polkit-xml-exception",
+    "systemd-tmpfile-ghost",
+    "systemd-tmpfile-symlink",
+    "systemd-tmpfile-parse-error",
+    "systemd-tmpfile-entry-unauthorized",
     "world-writable-mismatched-attrs",
     "world-writable-unauthorized-file",
 ]
@@ -288,6 +293,8 @@ paths = [
 [DeviceFilesWhitelist]
 
 [WorldWritableWhitelist]
+
+[SystemdTmpfilesWhitelist]
 
 [Descriptions]
 non-standard-uid = '''A file in this package is owned by an unregistered user id.
