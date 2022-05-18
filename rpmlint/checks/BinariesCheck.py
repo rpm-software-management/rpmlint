@@ -437,7 +437,9 @@ class BinariesCheck(AbstractCheck):
     def _check_library_dependency(self, pkg, pkgfile):
         if self.is_archive:
             return
-        if any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
+        elif any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
+            return
+        elif self.python_module_regex.fullmatch(pkgfile.name):
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
