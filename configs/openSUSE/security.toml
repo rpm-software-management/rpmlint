@@ -54,3 +54,17 @@ FollowSymlinks = false
 Locations = [
     "/etc/sudoers.d"
 ]
+
+[SystemdTmpfiles]
+DropinDirs = [
+    # nothing should ever be installed here, but lets stay on the safe side
+    "/etc/tmpfiles.d",
+    "/usr/lib/tmpfiles.d"
+]
+# base system packages that would create too much noise to include them in the
+# whitelistings
+IgnorePackages = [
+    "filesystem",
+    "udev",
+    "systemd"
+]

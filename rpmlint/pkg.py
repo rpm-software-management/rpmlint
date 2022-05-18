@@ -810,6 +810,12 @@ class FakePkg(AbstractPkg):
         pkg_file.linkto = target
         self.files[name] = pkg_file
 
+    def add_ghost(self, name):
+        pkg_file = PkgFile(name)
+        pkg_file.flags |= rpm.RPMFILE_GHOST
+        self.files[name] = pkg_file
+        self.ghost_files[name] = pkg_file
+
     def readlink(self, pkgfile):
         # HACK: reuse the real Pkg's logic
         return Pkg.readlink(self, pkgfile)

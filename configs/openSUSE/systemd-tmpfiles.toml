@@ -1,0 +1,8 @@
+[[SystemdTmpfilesWhitelist]]
+package = "rpmlint-integration-test"
+bug = "bsc#1150905"
+note = "valid test whitelisting entry for the OBS integration test package"
+path = "/usr/lib/tmpfiles.d/rpmlint-test.conf"
+entries = [
+	"d /tmp/.rpmlint-stuff 0777 root root -"
+]

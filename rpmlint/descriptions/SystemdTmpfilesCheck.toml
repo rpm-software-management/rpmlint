@@ -1,0 +1,19 @@
+TMPFILES_SUFFIX="Please refer to #AUDIT_BUG_URL# for more information"
+
+systemd-tmpfile-ghost="""
+This package installs a systemd-tmpfiles drop-in configuration file as %ghost
+file. This is not allowed, since it is impossible to review. #TMPFILES_SUFFIX#
+"""
+systemd-tmpfile-symlink="""
+This package installs a symlink as a systemd-tmpfiles drop-in configuration
+file. This is not allowed currently. #TMPFILES_SUFFIX#
+"""
+systemd-tmpfile-parse-error="""
+A warning occured trying to parse a systemd-tmpfiles drop-in configuration
+file line. Either the configuration file is inconsistent or this rpmlint check
+has issues. #TMPFILES_SUFFIX#
+"""
+systemd-tmpfile-entry-unauthorized="""
+This package installs a systemd-tmpfiles drop-in configuration file that
+contains sensitive configuration entries. #REVIEW_NEEDED_TEXT#
+"""
