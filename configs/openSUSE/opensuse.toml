@@ -26,6 +26,10 @@ Checks = [
     "WorldWritableCheck",
 ]
 
+# List of directory prefixes that are not allowed in packages
+DisallowedDirs = [
+    "/etc/NetworkManager/dispatcher.d",
+]
 
 Filters = [
 # Stuff autobuild takes care about
