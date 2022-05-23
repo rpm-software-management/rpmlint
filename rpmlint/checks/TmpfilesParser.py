@@ -131,7 +131,7 @@ class TmpfilesEntry:
     def get_group(self):
         if not self.group:
             return self._get_def_mode_label()
-        return self._group
+        return self.group
 
     def has_non_root_group(self):
         if self.group and self.group != 'root':
@@ -141,7 +141,7 @@ class TmpfilesEntry:
     def get_arg(self):
         """Returns the custom argument field, the meaning depends on the entry
         type."""
-        return self._arg if self._args else '-'
+        return self.arg if self.arg else '-'
 
     def get_comments(self):
         return self.comments

@@ -186,7 +186,7 @@ class SystemdTmpfilesCheck(AbstractCheck):
                 # if its accessible by non-root in some way then it's sensitive
                 return True
 
-            mode = self.getOctalMode()
+            mode = tf_entry.get_octal_mode()
             danger_bits = (stat.S_IROTH, stat.S_IWOTH)
             if any([(mode & bit) != 0 for bit in danger_bits]):
                 # world readable or writeable, sensitive
@@ -196,7 +196,7 @@ class SystemdTmpfilesCheck(AbstractCheck):
             return False
         elif base_type in ('h', 'H'):
             # sets chattr() attributes, possibly recursively (upper case)
-            attr = self.m_arg
+            attr = tf_entry.get_arg()
 
             for prefix in ('+', '-', '='):
                 # remove any possible prefix
