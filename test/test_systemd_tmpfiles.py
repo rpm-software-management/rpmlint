@@ -73,3 +73,25 @@ def test_whitelistings(tmpfilescheck):
                 assert 'systemd-tmpfile-entry-unauthorized' not in ''.join(output.results)
             else:
                 assert 'systemd-tmpfile-entry-unauthorized' in ''.join(output.results)
+
+
+def test_parser(tmpfilescheck):
+    # this simply tests whether various tmpfiles.d configuration parser code
+    # paths are robust
+    output, test, config = tmpfilescheck
+
+    LINES = (
+        'L /some/path 0777 root root - -',
+        'R /some/path - - - - -',
+        'X /some/path - - - - -',
+        'd /some/path 0755 root root 1d -',
+        'd /some/path - root root 1d -',
+        'f /some/path 4755 root root - -',
+        'c /some/path 0755 someone root - -',
+        'h /some/path - - - - +C',
+        'h /some/path - - - - +a',
+    )
+
+    with FakePkg('testpkg') as pkg:
+        pkg.add_file_with_content('/tmpfiles1/complex.conf', '\n'.join(LINES))
+        test.check(pkg)
