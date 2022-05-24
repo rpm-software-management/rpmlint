@@ -1220,3 +1220,23 @@ digests = [
         hash = "3c2924c9228acdb0140639f5df6eb2d1bffb3cedb85a695e319fee5777dada00"
     }
 ]
+
+[[FileDigestGroup]]
+package = "kinfocenter5"
+type = "dbus"
+note = "KDE utility that provides information about the user's system."
+bug = "bsc#1199735"
+digests = [
+    {
+        path = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
+    },
+    {
+        path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
+    }
+]
