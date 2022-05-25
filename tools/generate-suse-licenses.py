@@ -12,6 +12,7 @@ GPL-1.0+ GPL-1.0 GPL-2.0+ GPL-2.0 GPL-3.0+ GPL-3.0 LGPL-2.0 LGPL-2.0+ LGPL-2.1+ 
 IGNORED_FOR_PLUS = (' with ', '-with-', ' or ')
 
 licenses = requests.get('https://raw.githubusercontent.com/openSUSE/obs-service-format_spec_file/master/licenses_changes.txt')
+licenses_exceptions = requests.get('https://raw.githubusercontent.com/openSUSE/obs-service-format_spec_file/master/licences_exceptions.txt')
 
 with open('../configs/openSUSE/licenses.toml', 'w') as wfile:
     script_name = os.path.basename(__file__)
@@ -34,4 +35,10 @@ with open('../configs/openSUSE/licenses.toml', 'w') as wfile:
     wfile.write('    # SUSE EXCEPTIONS\n')
     for name in SUSE_EXCEPTIONS.strip().split(' '):
         wfile.write(f'    "{name}",\n')
+    wfile.write(']\n\n')
+
+    # Licenses Exceptions
+    wfile.write('ValidLicenseExceptions = [\n')
+    for line in licenses_exceptions.text.splitlines():
+        wfile.write(f'    "{line}",\n')
     wfile.write(']\n')
