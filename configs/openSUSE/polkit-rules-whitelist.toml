@@ -179,3 +179,16 @@ digests = [
         hash = "f8f1dc555dfc72fd95263e107cd87f44b3d1ce899dbdc0f11b7dfbccaa92a434"
     },
 ]
+
+[[FileDigestGroup]]
+package = "geoclue2"
+type = "polkit"
+note = "allows the srvGeoClue user to invoke ModemManager location methods"
+bug = "bsc#1199767"
+digests = [
+    {
+        path = "/usr/share/polkit-1/rules.d/50-org.freedesktop.GeoClue2.rules",
+        algorithm = "sha256",
+        hash = "685e010654c36f5fbb97fe78a1b7c681ea56df87395bcad2630264267ab884d1"
+    }
+]
