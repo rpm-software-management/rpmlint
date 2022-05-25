@@ -9,7 +9,6 @@ def test_distribution_tags():
     ignore = []
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
-    print(textdiff)
     # the count always reports one less
     assert 231 <= len(textdiff.splitlines()) <= 233
 
@@ -18,7 +17,6 @@ def test_distribution_tags():
     ignore.append('S')
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
-    print('----\n' + textdiff)
     assert 36 <= len(textdiff.splitlines()) <= 38
 
     assert 'added       /usr/share/mc/syntax/yaml.syntax' in textdiff
@@ -29,7 +27,7 @@ def test_exclude():
     newpkg = testpath() / 'binary/mc-4.8.21-2.1.x86_64.rpm'
     ignore = list('T5S')
 
-    print(Rpmdiff(oldpkg, newpkg, ignore=ignore).textdiff())
+    # print(Rpmdiff(oldpkg, newpkg, ignore=ignore).textdiff())
 
     for exclude in [], ['/usr/share/mc/ski'], ['/share/mc/skins'], ['skins']:
         diff = Rpmdiff(oldpkg, newpkg, ignore, exclude)
