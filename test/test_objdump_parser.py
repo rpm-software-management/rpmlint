@@ -11,7 +11,6 @@ from Testing import CONFIG, get_tested_path, IS_X86_64
 
 @pytest.fixture(scope='function', autouse=True)
 def binariescheck():
-    print(CONFIG)
     CONFIG.info = True
     output = Filter(CONFIG)
     test = BinariesCheck(CONFIG, output)
