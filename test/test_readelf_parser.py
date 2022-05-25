@@ -238,7 +238,7 @@ def test_no_ldconfig_symlink(binariescheck):
         run_elf_checks(test, pkg, pkgfile)
         out = output.print_results(output.results)
         assert 'no-ldconfig-symlink /lib64/libutil-2.29.so' in out
-        assert 'E: shlib-policy-name-error SONAME: libutil.so.1, expected package suffix: 1' in out
+        assert 'E: shlib-policy-name-error /lib64/libutil-2.29.so, SONAME: libutil.so.1, expected package suffix: 1' in out
 
 
 @pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
@@ -305,4 +305,4 @@ def test_shlib_policy_name_error(binariescheck):
         pkgfile = pkg.add_file(get_full_path('libgame.so'), '/lib64/libgame.so')
         run_elf_checks(test, pkg, pkgfile)
         out = output.print_results(output.results)
-        assert 'libgame: E: shlib-policy-name-error SONAME: libgame2-1.9.so.10.0.0, expected package suffix: 1_9-10_0_0' in out
+        assert 'libgame: E: shlib-policy-name-error /lib64/libgame.so, SONAME: libgame2-1.9.so.10.0.0, expected package suffix: 1_9-10_0_0' in out
