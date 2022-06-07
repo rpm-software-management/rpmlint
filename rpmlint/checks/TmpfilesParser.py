@@ -151,6 +151,11 @@ class TmpfilesEntry:
         entry."""
         return self.line
 
+    def get_normalized_line(self):
+        """Returns the full line with normalized field separators (i.e. one
+        space between fields)."""
+        return ' '.join(self.line.split())
+
 
 def parse(pkgfile):
     """Parses the given systemd-tmpfiles.d configuration file and returns a
