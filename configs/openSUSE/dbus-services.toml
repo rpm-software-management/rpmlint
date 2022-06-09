@@ -194,11 +194,11 @@ nodigests = [
 package = "wpa_supplicant"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#681116"
+bugs = ["bsc#681116", "bsc#1200342"]
 nodigests = [
     "/usr/lib/systemd/system/dbus-fi.w1.wpa_supplicant1.service",
     "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service",
-    "/etc/dbus-1/system.d/wpa_supplicant.conf",
+    "/usr/share/dbus-1/system.d/wpa_supplicant.conf",
 ]
 
 [[FileDigestGroup]]
