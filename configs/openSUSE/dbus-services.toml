@@ -306,8 +306,9 @@ digests = [
 package = "dnsmasq"
 type = "dbus"
 note = "legacy: not audited"
+bugs = ['bsc#1200344']
 nodigests = [
-    "/etc/dbus-1/system.d/dnsmasq.conf",
+    "/usr/share/dbus-1/system.d/dnsmasq.conf",
 ]
 
 [[FileDigestGroup]]
