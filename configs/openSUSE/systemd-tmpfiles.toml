@@ -6,3 +6,93 @@ path = "/usr/lib/tmpfiles.d/rpmlint-test.conf"
 entries = [
 	"d /tmp/.rpmlint-stuff 0777 root root -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "tmux"
+bug = "bsc#1150905"
+note = "tmux creates per-session directories there"
+path = "/usr/lib/tmpfiles.d/tmux.conf"
+entries = [
+	"d /run/tmux 1777 root root -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "libtss2-fapi1"
+bug = "bsc#1150905"
+note = "shared setgid tss directories for the feature API framework"
+path = "/usr/lib/tmpfiles.d/tpm2-tss-fapi-3.1.0.conf"
+entries = [
+	"d  /var/lib/tpm2-tss/system/keystore 2775 tss tss - -",
+	"d  /run/tpm2-tss/eventlog            2775 tss tss - -",
+	"a+ /var/lib/tpm2-tss/system/keystore - - - - default:group:tss:rwx",
+	"a+ /run/tpm2-tss/eventlog            - - - - default:group:tss:rwx"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "brltty"
+bug = "bsc#1150905"
+note = "directories for UNIX domain sockets"
+path = "/usr/lib/tmpfiles.d/brltty.conf"
+entries = [
+	"d /var/lib/brltty 2770 brltty brltty",
+	"d /var/lib/BrlAPI 3777 brltty brltty"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "rubygem-passenger"
+bug = "bsc#1150905"
+note = "alternative /tmp directory introduced through SUSE specific patch"
+path = "/usr/lib/tmpfiles.d/passenger.conf"
+entries = [
+	"D /run/passenger 1777 root root -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "openQA"
+bug = "bsc#1150905"
+note = "directory for downloading assets"
+path = "/usr/lib/tmpfiles.d/openqa-webui.conf"
+entries = [
+	"d /var/lib/openqa/share/factory/tmp 1777 root root 6h"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "parallel-printer-support"
+bug = "bsc#1150905"
+note = "device nodes for parallel printers that udev no longer creates"
+path = "/usr/lib/tmpfiles.d/parallel-printer.conf"
+entries = [
+	"c /dev/lp0 0660 root lp - 6:0",
+	"c /dev/lp1 0660 root lp - 6:1",
+	"c /dev/lp2 0660 root lp - 6:2",
+	"c /dev/lp3 0660 root lp - 6:3"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "screen"
+bug = "bsc#1150905"
+note = "shared session dir for non-root users"
+path = "/usr/lib/tmpfiles.d/screen.conf"
+entries = [
+	"d /run/uscreens 1777 root root -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "dkms"
+bug = "bsc#1150905"
+note = "private tmp directory for this package"
+path = "/usr/lib/tmpfiles.d/dkms.conf"
+entries = [
+	"d /var/tmp/dkms 0700 root root -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "pcfclock"
+bug = "bsc#1150905"
+note = "static device nodes for an old school parallel-port real time clock"
+path = "/usr/lib/tmpfiles.d/pcfclock.conf"
+entries = [
+	"c /dev/pcfclock0 0444 root root - 181:0",
+	"c /dev/pcfclock1 0444 root root - 181:1",
+	"c /dev/pcfclock2 0444 root root - 181:2",
+]

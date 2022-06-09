@@ -101,6 +101,10 @@ class SystemdTmpfilesCheck(AbstractCheck):
             # is present in an entry
             packages.append(entry['package'])
 
+        # normalize field separators
+        entries = [' '.join(line.split()) for line in entry['entries']]
+        entry['entries'] = entries
+
     def _sanity_check_whitelist_entry(self, entry):
         package = entry.get('package', None)
         packages = entry.get('packages', [])
@@ -220,7 +224,7 @@ class SystemdTmpfilesCheck(AbstractCheck):
             if tf_entry.get_config_file() != wl_entry['path']:
                 continue
 
-            if tf_entry.get_line() in wl_entry['entries']:
+            if tf_entry.get_normalized_line() in wl_entry['entries']:
                 return True
 
         return False
