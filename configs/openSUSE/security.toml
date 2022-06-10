@@ -66,5 +66,7 @@ DropinDirs = [
 IgnorePackages = [
     "filesystem",
     "udev",
-    "systemd"
+    "udev-mini",
+    "systemd",
+    "systemd-mini"
 ]
