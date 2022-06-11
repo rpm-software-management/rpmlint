@@ -16,11 +16,11 @@ jobs:
         container:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
-          - 'registry.opensuse.org/opensuse/tumbleweed:latest'
+          - 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
         include:
           - container: 'registry.fedoraproject.org/fedora:latest'
             build-type: 'no-optional-deps'
-          - container: 'registry.opensuse.org/opensuse/tumbleweed:latest'
+          - container: 'registry.opensuse.org/opensuse/tumbleweed-dnf:latest'
             build-type: 'no-optional-deps'
       fail-fast: false
 
@@ -29,7 +29,7 @@ jobs:
       options: --security-opt seccomp=unconfined
 
     steps:
-      - run: zypper -n install
+      - run: dnf --assumeyes install
               cpio gzip
               bzip2 xz
               binutils glibc glibc-32bit glibc-locale
@@ -54,14 +54,14 @@ jobs:
               rpm-build
               git
         if: ${{ contains(matrix.container, 'opensuse') }}
-      - run: zypper -n install
+      - run: dnf --assumeyes install
               checkbashisms dash
               desktop-file-utils
               appstream-glib
               myspell-en_US myspell-cs_CZ
               python3-pyenchant
         if: ${{ contains(matrix.container, 'opensuse') && matrix.build-type == 'normal' }}
-      - run: zypper -n install python3-flake8-comprehensions
+      - run: dnf --assumeyes install python3-flake8-comprehensions
         if: ${{ contains(matrix.container, 'opensuse') }}
       - run: dnf --nogpgcheck --assumeyes install
               /usr/bin/cpio
