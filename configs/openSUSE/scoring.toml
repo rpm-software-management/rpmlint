@@ -24,6 +24,7 @@ percent-in-conflicts = 10000
 percent-in-dependency = 10000
 percent-in-obsoletes = 10000
 percent-in-provides = 10000
+shlib-policy-name-error = 10000
 spurious-executable-perm = 50
 summary-ended-with-dot = 20
 summary-not-capitalized = 20
