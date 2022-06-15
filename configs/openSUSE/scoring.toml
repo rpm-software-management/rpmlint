@@ -35,5 +35,4 @@ obsolete-insserv-requirement = 10000
 deprecated-init-script = 10000
 deprecated-boot-script = 10000
 executable-stack = 10000
-# Temporarily disable once boo#1199268 gets fixed
-# binary-or-shlib-defines-rpath = 10000
+binary-or-shlib-defines-rpath = 10000
