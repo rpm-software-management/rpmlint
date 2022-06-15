@@ -357,7 +357,7 @@ class BinariesCheck(AbstractCheck):
                             pkgname = pkgname[:pkgname.rindex('.')]
                         if soversion and not pkgname.endswith(soversion):
                             self.output.add_info('E', pkg, 'shlib-policy-name-error',
-                                                 f'{pkgfile.name}, SONAME: {soname}, expected package suffix: {soversion}')
+                                                 f'SONAME: {soname} ({pkgfile.name}), expected package suffix: {soversion}')
 
         # check if the object code in the library is compiled with PIC
         if self.readelf_parser.dynamic_section_info['TEXTREL']:
