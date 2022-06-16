@@ -46,7 +46,8 @@ the libtool wrapper file run
 to install the relinked file.
 """
 binary-or-shlib-defines-rpath="""
-The binary or shared library defines `RPATH' (or `RUNPATH').
+The binary or shared library defines `RPATH' (or `RUNPATH') that points
+to a non-system library path.
 """
 statically-linked-binary="""
 The package installs a statically linked binary or object file.
