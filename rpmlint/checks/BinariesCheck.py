@@ -431,7 +431,7 @@ class BinariesCheck(AbstractCheck):
                     runpath = runpath.replace(self.rpath_origin, str(Path(pkgfile.name).parent))
                     runpath = str(Path(runpath).resolve())
                 if not runpath.startswith(self.system_lib_paths) and not self.usr_lib_regex.search(runpath):
-                    self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, runpath)
+                    self.output.add_info('E', pkg, 'binary-or-shlib-defines-rpath', pkgfile.name, f'(RUNPATH: {runpath})')
                     return
 
     def _check_library_dependency(self, pkg, pkgfile):
