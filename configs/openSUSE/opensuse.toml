@@ -158,7 +158,6 @@ Filters = [
     ' file-not-utf8',
     ' tag-not-utf8',
     ' setup-not-quiet',
-    ' no-cleaning-of-buildroot ',
     ' mixed-use-of-spaces-and-tabs ',
     ' prereq-use ',
 
