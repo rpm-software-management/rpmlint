@@ -172,6 +172,17 @@ def test_check_rpm_buildroot_usage_not_applied(package, speccheck):
     assert 'E: rpm-buildroot-usage' not in out
 
 
+@pytest.mark.parametrize('package', ['spec/rpm-buildroot-usage-shell-var'])
+def test_check_rpm_buildroot_usage_shell_var(package, speccheck):
+    """Test detection of $RPM_BUILD_ROOT shell variable in %prep/%build"""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: rpm-buildroot-usage %prep' not in out
+    assert out.count('E: rpm-buildroot-usage %build') == 2
+
+
 @pytest.mark.parametrize('package', ['spec/make-check-outside-check-section'])
 def test_check_make_check_outside_check_section(package, speccheck):
     """Test if specfile has `make check` outside %check."""

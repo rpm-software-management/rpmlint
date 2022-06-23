@@ -33,7 +33,7 @@ prereq_regex = re_tag_compile(r'PreReq(\(.*\))')
 
 make_check_regex = re.compile(r'(^|\s|%{?__)make}?\s+(check|test)')
 rm_regex = re.compile(r'(^|\s)((.*/)?rm|%{?__rm}?) ')
-rpm_buildroot_regex = re.compile(r'^[^#]*(?:(\\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
+rpm_buildroot_regex = re.compile(r'^[^#]*?(?:(\\*)\${?RPM_BUILD_ROOT}?|(%+){?buildroot}?)')
 configure_libdir_spec_regex = re.compile(r'ln |\./configure[^#]*--libdir=(\S+)[^#]*')
 lib_package_regex = re.compile(r'^%package.*\Wlib')
 ifarch_regex = re.compile(r'^\s*%ifn?arch\s')
