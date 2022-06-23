@@ -13,7 +13,7 @@ class BashismsCheck(AbstractFilesCheck):
         self.file_cache = {}
 
     def _detect_early_fail_option(self):
-        output = subprocess.check_output(['checkbashisms', '--help'],
+        output = subprocess.check_output('checkbashisms --help',
                                          shell=True, encoding='utf8')
         # FIXME: remove in the future
         self.use_early_fail = '[-e]' in output
