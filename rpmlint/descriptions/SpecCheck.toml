@@ -110,13 +110,6 @@ setup-not-quiet="""
 Use the -q option to the %setup macro to avoid useless build output from
 unpacking the sources.
 """
-no-cleaning-of-buildroot="""
-You should clean $RPM_BUILD_ROOT in the %clean section and in the beginning
-of the %install section. Use 'rm -rf $RPM_BUILD_ROOT'. Some rpm configurations
-do this automatically; if your package is only going to be built in such
-configurations, you can ignore this warning for the section(s) where your rpm
-takes care of it.
-"""
 rpm-buildroot-usage="""
 $RPM_BUILD_ROOT or %{buildroot} must not be touched during %build or %prep
 stage, as it will break short circuit builds and will not persist to %install

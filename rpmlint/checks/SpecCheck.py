@@ -157,7 +157,6 @@ class SpecCheck(AbstractCheck):
         if_depth = 0
         ifarch_depth = -1
         current_section = 'package'
-        buildroot_clean = {'clean': False, 'install': False}
         depscript_override = False
         depgen_disabled = False
         patch_fuzz_override = False
@@ -217,11 +216,6 @@ class SpecCheck(AbstractCheck):
                     ('check', 'changelog', 'package', 'description'):
                 self.output.add_info('W', pkg, 'make-check-outside-check-section',
                                      line[:-1])
-
-            if current_section in buildroot_clean and \
-                    not buildroot_clean[current_section] and \
-                    contains_buildroot(line) and rm_regex.search(line):
-                buildroot_clean[current_section] = True
 
             if ifarch_regex.search(line):
                 if_depth = if_depth + 1
@@ -502,7 +496,6 @@ class SpecCheck(AbstractCheck):
         pkg.current_linenum = None
 
         # Run checks for whole package
-        self._check_no_cleaning_of_buildroot(pkg, buildroot_clean)
         self._check_no_buildroot_tag(pkg, buildroot)
         self._check_no_s_section(pkg, section)
         self._check_superfluous_clean_section(pkg, section)
@@ -535,13 +528,6 @@ class SpecCheck(AbstractCheck):
             if not Pkg.is_utf8(self._spec_file):
                 self.output.add_info('E', pkg, 'non-utf8-spec-file',
                                      self._spec_name or self._spec_file)
-
-    def _check_no_cleaning_of_buildroot(self, pkg, buildroot_clean):
-        """Check if specfile has $RPM_BUILD_ROOT in the %clean section
-        in the beginning of the %install section.
-        """
-        for sect in (x for x in buildroot_clean if not buildroot_clean[x]):
-            self.output.add_info('W', pkg, 'no-cleaning-of-buildroot', '%' + sect)
 
     def _check_no_buildroot_tag(self, pkg, buildroot):
         """Check if BuildRoot tag is used in the specfile."""
