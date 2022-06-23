@@ -275,9 +275,6 @@ Filters = [
     'dangling-\S*symlink /usr/share/doc/HTML/\S+/common .+/common$',
     'hidden-file-or-dir .*/man5/\.k5login\.5[^/]+$',
     'blender.+ (wrong-script-interpreter|non-executable-script) .+/blender/.+\.py.*BPY.*',
-    # Fedora 12 and newer no longer need a buildroot defined, to have the buildroot cleaned at the beginning
-    # of %install, and do not need to define a %clean section unless the default is invalid.
-    ' no-cleaning-of-buildroot ',
     # Only EL4 needs the files-attr-not-set check, because rpm 4.4 and newer no longer need a %defattr line
     # (it automatically provides one).
     'files-attr-not-set',
