@@ -1120,10 +1120,20 @@ nodigests = [
 package = "power-profiles-daemon"
 type = "dbus"
 note = "a daemon dealing with system power settings"
-bug = "bsc#1189900"
+bug = [ "bsc#1189900", "bsc#1201125" ]
 nodigests = [
-    "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
-    "/etc/dbus-1/system.d/net.hadess.PowerProfiles.conf"
+    {
+        path = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "7d481c410356e61dc0ca7e9ed7725bb5a69c37aab2f51e6a36720894f6c1152f"
+    },
+    {
+        path = "/usr/share/dbus-1/system.d/net.hadess.PowerProfiles.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "3c9b773133201b3ecc7469dd9bc93253a992045e5cee5447def1d99f5b1e6ed5"
+    }
 ]
 
 [[FileDigestGroup]]
