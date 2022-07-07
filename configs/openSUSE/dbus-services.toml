@@ -1120,8 +1120,8 @@ nodigests = [
 package = "power-profiles-daemon"
 type = "dbus"
 note = "a daemon dealing with system power settings"
-bug = [ "bsc#1189900", "bsc#1201125" ]
-nodigests = [
+bugs = [ "bsc#1189900", "bsc#1201125" ]
+digests = [
     {
         path = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
         algorithm = "sha256",
