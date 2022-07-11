@@ -20,7 +20,7 @@ entries = [
 package = "libtss2-fapi1"
 bug = "bsc#1150905"
 note = "shared setgid tss directories for the feature API framework"
-path = "/usr/lib/tmpfiles.d/tpm2-tss-fapi-3.1.0.conf"
+path = "/usr/lib/tmpfiles.d/tpm2-tss-fapi.conf"
 entries = [
 	"d  /var/lib/tpm2-tss/system/keystore 2775 tss tss - -",
 	"d  /run/tpm2-tss/eventlog            2775 tss tss - -",
