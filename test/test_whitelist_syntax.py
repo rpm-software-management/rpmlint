@@ -1,3 +1,4 @@
+import rpmlint.checks.FileDigestCheck as fdc
 import toml
 
 
@@ -27,10 +28,11 @@ def basic_syntax_checks(entry):
 
     for digest in entry.get('digests', []):
         assert isinstance(digest, dict)
-        for key in ('path', 'hash'):
-            assert key in digest
-            val = digest.get(key, '')
-            assert isinstance(val, str)
+        for key, value in digest.items():
+            assert key in ('path', 'hash', 'algorithm', 'digester')
+            assert isinstance(value, str)
+            if key == 'digester':
+                assert value in fdc.DIGESTERS
 
     for nodigest in entry.get('nodigests', []):
         assert isinstance(nodigest, str)
