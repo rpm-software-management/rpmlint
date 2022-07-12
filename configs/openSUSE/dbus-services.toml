@@ -241,9 +241,20 @@ nodigests = [
 package = "avahi"
 type = "dbus"
 note = "zeroconf service discovery, received review without a bug#"
-nodigests = [
-    "/etc/dbus-1/system.d/avahi-dbus.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.Avahi.service",
+bugs = [ "bsc#1201345" ]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/avahi-dbus.conf",
+        digester = "xml",
+        algorithm = "sha256",
+        hash = "047f2e04019b25389c08c3c211dfdc595ca7ee1adfc3da6cf85fabb536ebbb7b"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.freedesktop.Avahi.service",
+        digester = "shell",
+        algorithm = "sha256",
+        hash = "de571101f4b9e23b1d2c28434cf047be0ab6bf00876c9267998531a645083dca"
+    }
 ]
 
 [[FileDigestGroup]]
