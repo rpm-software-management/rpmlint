@@ -5,6 +5,7 @@ import operator
 import os
 from pathlib import Path
 from pstats import Stats
+import re
 import sys
 from tempfile import gettempdir
 import time
@@ -21,6 +22,8 @@ class Lint(object):
     """
     Generic object handling the basic rpmlint operations
     """
+
+    rpmlint_package = re.compile(r'/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d')
 
     def __init__(self, options):
         # initialize configuration
@@ -53,6 +56,15 @@ class Lint(object):
             self.config.configuration['ExtractDir'] = gettempdir()
         # initialize output buffer
         self.output = Filter(self.config)
+
+        # Do not run rpmlint on rpmlint package that easily leads
+        # to run-time error as old rpmlint (taken from rpmlint-mini)
+        # uses a modified configuration.
+        for file in self.options['rpmfile']:
+            if self.rpmlint_package.search(str(file)):
+                print('Skipping rpmlint for rpmlint package!')
+                sys.exit(0)
+
         # preload the check list if we not print config
         # some of the config values are transformed e.g. to regular
         # expressions
