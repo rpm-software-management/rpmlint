@@ -56,10 +56,21 @@ nodigests = [
 [[FileDigestGroup]]
 package = "PackageKit"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.PackageKit.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service",
+note = "package manager abstraction layer service"
+bugs = [ "bsc#993505" ]
+digests = [
+    {
+        path = "/etc/dbus-1/system.d/org.freedesktop.PackageKit.conf",
+        algorithm = "sha256",
+        digester = "xml",
+        hash = "1f3fb4b17f1d3da139f19d8f907731cef4260ec806f61df172cb2245119fbbe8"
+    },
+    {
+        path = "/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service",
+        algorithm = "sha256",
+        digester = "shell",
+        hash = "fb23f33c456c6436778f78552461b7d18cf91109b14b9227da83169db84cd100"
+    }
 ]
 
 [[FileDigestGroup]]
