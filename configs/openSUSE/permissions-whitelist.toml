@@ -5,7 +5,6 @@ type = "permissions"
 digests = [
     {
         path = "/etc/permissions.d/valid",
-        algorithm = "sha256",
         hash = "3c07438f28b0545bfe83a2355693c94b91e3fe380c07f12d542e9d27a08de1f9"
     },
 ]
@@ -17,7 +16,6 @@ type = "permissions"
 digests = [
     {
         path = "/etc/permissions.d/mismatch",
-        algorithm = "sha256",
         hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
     },
 ]
@@ -28,12 +26,10 @@ type = "permissions"
 digests = [
     {
         path = "/etc/permissions.d/postfix",
-        algorithm = "sha256",
         hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
     },
     {
         path = "/etc/permissions.d/postfix.paranoid",
-        algorithm = "sha256",
         hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
     },
 ]
@@ -44,12 +40,10 @@ type = "permissions"
 digests = [
     {
         path = "/etc/permissions.d/postfix",
-        algorithm = "sha256",
         hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
     },
     {
         path = "/etc/permissions.d/postfix.paranoid",
-        algorithm = "sha256",
         hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
     },
 ]
@@ -63,12 +57,10 @@ note = """Be careful about calculating digest sums here, the sendmail package
 digests = [
     {
         path = "/etc/permissions.d/sendmail",
-        algorithm = "sha256",
         hash = "423780cfd9d5935a26981b1cfede12816c1ce4c0982c22dd28d4ceadeed5cce5"
     },
     {
         path = "/etc/permissions.d/sendmail.paranoid",
-        algorithm = "sha256",
         hash = "afa2a74dfef4ac98dd048a7c962a3528e4b5c932e538f7c3666f167924de2d4e"
     },
 ]
@@ -79,12 +71,10 @@ type = "permissions"
 digests = [
     {
         path = "/etc/permissions.d/texlive",
-        algorithm = "sha256",
         hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
     {
         path = "/etc/permissions.d/texlive.texlive",
-        algorithm = "sha256",
         hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
     },
 ]
