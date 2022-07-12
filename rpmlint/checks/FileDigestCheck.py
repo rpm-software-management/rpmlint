@@ -200,6 +200,10 @@ class FileDigestCheck(AbstractCheck):
                 }
             )
 
+        for digest in digest_group.get('digests', []):
+            # imply sha256 digests by default
+            digest.setdefault('algorithm', 'sha256')
+
     def _verify_digest_group(self, digest_group):
         dg_type = digest_group['type']
         if dg_type not in self.digest_configurations:
