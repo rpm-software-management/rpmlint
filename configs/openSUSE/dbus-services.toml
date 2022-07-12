@@ -33,10 +33,15 @@ digests = [
 [[FileDigestGroup]]
 package = "cups"
 type = "dbus"
-note = ""
-bug = "bsc#515977"
-nodigests = [
-    "/etc/dbus-1/system.d/cups.conf",
+note = "the well known printing system daemon"
+bugs = [ "bsc#515977", "bsc#1201346" ]
+digests = [
+    {
+        path = "/usr/share/dbus-1/system.d/cups.conf",
+        algorithm = "sha256",
+        hash = "1bbed8c1ecac00e546a3659235855aa2e88ec1142b3908b3d662e68ad4e664fe",
+        digester = "xml"
+    }
 ]
 
 [[FileDigestGroup]]
