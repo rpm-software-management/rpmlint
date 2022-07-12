@@ -240,7 +240,7 @@ nodigests = [
 [[FileDigestGroup]]
 package = "avahi"
 type = "dbus"
-note = "legacy: not audited"
+note = "zeroconf service discovery, received review without a bug#"
 nodigests = [
     "/etc/dbus-1/system.d/avahi-dbus.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.Avahi.service",
