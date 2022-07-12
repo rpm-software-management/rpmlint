@@ -6,7 +6,6 @@ bug = "bsc#1188704"
 digests = [
     {
         path = "/etc/sudoers.d/valid-but-evil-rules",
-        algorithm = "sha256",
         digester = "shell",
         hash = "84cf85013ddd404fd1f67ccf1259567b573057cd3b5bfa2696cf9f25c25dfcab"
     }
@@ -20,7 +19,6 @@ bug = "bsc#1188704"
 digests = [
     {
         path = "/etc/sudoers.d/mismatching-rules",
-        algorithm = "sha256",
         digester = "shell",
         hash = "a4cf85013ddd404ad1f67ccf1259567b57305acd3b5bfaa696cf9f25a25dfcaa"
     }
@@ -34,7 +32,6 @@ bug = "bsc#1196138"
 digests = [
     {
         path = "/etc/sudoers.d/monitoring-plugins-smart",
-        algorithm = "sha256",
         digester = "shell",
         hash = "171f2afffd74c52433e72443ba3023836e96b8edf14d98e6b3c337ef9de32bce"
     }
@@ -48,7 +45,6 @@ bug = "bsc#1196139"
 digests = [
     {
         path = "/etc/sudoers.d/check_zypper",
-        algorithm = "sha256",
         digester = "shell",
         hash = "7c28565571a13de93e79753e7c8ce6c0c7fd6fc5a2df8ba7c760ecc17004947a"
     }
@@ -62,7 +58,6 @@ bug = "bsc#1196140"
 digests = [
     {
         path = "/etc/sudoers.d/cscreen",
-        algorithm = "sha256",
         digester = "shell",
         hash = "f031ed532175450fa1352ab924130970509e9c742c95277a90f5d0da6c5f0f87"
     }
@@ -76,7 +71,6 @@ bug = "bsc#1196142"
 digests = [
     {
         path = "/etc/sudoers.d/leafnode",
-        algorithm = "sha256",
         digester = "shell",
         hash = "88d39bcbdba7c9485ab5f73617b8d9763385aa8e9f598e808dd025fba0d8d445"
     }
@@ -90,7 +84,6 @@ bug = "bsc#1196141"
 digests = [
     {
         path = "/etc/sudoers.d/ceph-smartctl",
-        algorithm = "sha256",
         digester = "shell",
         hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
     }

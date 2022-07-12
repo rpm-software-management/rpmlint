@@ -6,7 +6,6 @@ bug = "bsc#1188704"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/00-rpmlint.rules",
-        algorithm = "sha256",
         hash = "74a2881794c1762fd07cc7a4c55633fe00aec552a788b2bee4dc362a27b438e8"
     },
 ]
@@ -19,7 +18,6 @@ bug = "bsc#1188704"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/00-mismatch.rules",
-        algorithm = "sha256",
         hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
     },
 ]
@@ -45,7 +43,6 @@ bug = "bsc#1125314"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/50-default.rules",
-        algorithm = "sha256",
         hash = "aea3041de2c15db8683620de8533206e50241c309eb27893605d5ead17e5e75f"
     },
 ]
@@ -58,7 +55,6 @@ bug = "bsc#1125438"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules",
-        algorithm = "sha256",
         hash = "bf10f0b71878f90516b89d205a7fb2f8363cec6614ec717da88c2acf49c276a5"
     },
 ]
@@ -71,7 +67,6 @@ bug = "bsc#1125438"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules",
-        algorithm = "sha256",
         hash = "bf10f0b71878f90516b89d205a7fb2f8363cec6614ec717da88c2acf49c276a5"
     },
 ]
@@ -84,7 +79,6 @@ bug = "bsc#1185469"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules",
-        algorithm = "sha256",
         hash = "f199e386a9297858331b00df07ed0b0ee5fcf4bea67f6c0bccc8a92b7e310bbd"
     },
 ]
@@ -97,7 +91,6 @@ bug = "bsc#984817"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/60-org.freedesktop.Flatpak.rules",
-        algorithm = "sha256",
         hash = "a439399ec33c8909e935e68d2daf3a76dff411d94ade3a8e15243a7da68a7005"
     },
 ]
@@ -110,7 +103,6 @@ bug = "bsc#1161091"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/60-org.freedesktop.Flatpak.rules",
-        algorithm = "sha256",
         hash = "89e33e299ddf829a6302e855c005931a1f703c64696b86c423fb2851e225fbaf"
     },
 ]
@@ -123,7 +115,6 @@ bug = "bsc#1161091"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/50-libvirt.rules",
-        algorithm = "sha256",
         hash = "18ecc523dec42f91c679143043c9b28ef82eac68d1729a21d371c18eb93f2a18"
     },
 ]
@@ -136,7 +127,6 @@ bug = "bsc#1125432"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules",
-        algorithm = "sha256",
         hash = "6daefe0a835dc1b34513302f393e98089c137602823f41fd0c3dd984c40902d8"
     },
 ]
@@ -149,7 +139,6 @@ bug = "bsc#1192542"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules",
-        algorithm = "sha256",
         hash = "e8d930c2f4ef56727ab4e64ebe21c98e3ab7aaf3a4079d15ddc6acf324a5a412"
     },
 ]
@@ -162,7 +151,6 @@ bug = "bsc#1125432"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/libvirt-dbus.rules",
-        algorithm = "sha256",
         hash = "1ae3b094d372d0108f34b58f577d133fdf0c9527bd5b72edf1d22a13daa74f6e"
     },
 ]
@@ -175,7 +163,6 @@ bug = "bsc#1180593"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/org.a11y.brlapi.rules",
-        algorithm = "sha256",
         hash = "f8f1dc555dfc72fd95263e107cd87f44b3d1ce899dbdc0f11b7dfbccaa92a434"
     },
 ]
@@ -188,7 +175,6 @@ bug = "bsc#1199767"
 digests = [
     {
         path = "/usr/share/polkit-1/rules.d/50-org.freedesktop.GeoClue2.rules",
-        algorithm = "sha256",
         hash = "685e010654c36f5fbb97fe78a1b7c681ea56df87395bcad2630264267ab884d1"
     }
 ]

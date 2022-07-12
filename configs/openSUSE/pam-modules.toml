@@ -27,7 +27,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "gnome-keyring-pam"
 type = "pam"
-note = "legacy: not audited"
+note = "authenticate via Gnome keyring"
+bug = "bsc#297049"
 nodigests = [
     "*/security/pam_gnome_keyring.so",
 ]
@@ -238,7 +239,8 @@ nodigests = [
 [[FileDigestGroup]]
 package = "sssd"
 type = "pam"
-note = "legacy: not audited"
+note = "authenticate and get user information via sssd suite"
+bug = "bsc#1106600"
 nodigests = [
     "*/security/pam_sss.so",
 ]
