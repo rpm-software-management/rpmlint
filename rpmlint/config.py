@@ -162,10 +162,7 @@ class Config(object):
         for line in rpmlintrc_lines:
             m = self.re_filter.match(line)
             if m:
-                pattern = m.group(1)
-                # FIXME: this is a temporary workaround for systemd packge
-                pattern = pattern.replace('libsystemd0-mini.x86_64', r'libsystemd0-mini\..*')
-                filters.append(pattern)
+                filters.append(m.group(1))
             m = self.re_badness.match(line)
             if m:
                 self.configuration['Scoring'].update({m.group(1): m.group(2)})
