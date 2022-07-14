@@ -119,4 +119,4 @@ class DocCheck(AbstractCheck):
                 doc_size += files[f].size
 
         if doc_size * 2 >= complete_size and doc_size > 100 * 1024:
-            self.output.add_info('W', pkg, 'package-with-huge-docs: %3d%%' % (doc_size * 100 / complete_size))
+            self.output.add_info('W', pkg, 'package-with-huge-docs', '%d%%' % (doc_size * 100 / complete_size))
