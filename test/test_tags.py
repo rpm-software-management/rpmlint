@@ -34,6 +34,14 @@ def test_self_provides(tmpdir, package, tagscheck):
     assert 'E: useless-provides self' in out
 
 
+@pytest.mark.parametrize('package', ['binary/fuse-common'])
+def test_useless_provides_only_versions(tmpdir, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: useless-provides self' not in out
+
+
 @pytest.mark.parametrize('package', ['binary/foo-devel'])
 def test_development_package(tmpdir, package, tagscheck):
     output, test = tagscheck

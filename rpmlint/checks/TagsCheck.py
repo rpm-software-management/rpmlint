@@ -133,7 +133,7 @@ class TagsCheck(AbstractCheck):
             value = Pkg.formatRequire(*dep_token)
             self._unexpanded_macros(pkg, 'Obsoletes {}'.format(value,), value)
 
-        self._check_useless_provides(pkg, prov_names)
+        self._check_useless_provides(pkg, pkg.provides)
         self._check_forbidden_controlchar(pkg)
         self._check_self_obsoletion(pkg)
         self._check_non_coherent_filename(pkg)
@@ -666,10 +666,12 @@ class TagsCheck(AbstractCheck):
         for dep_token in (x for x in obs_names if x not in prov_names):
             self.output.add_info('W', pkg, 'obsolete-not-provided', dep_token)
 
-    def _check_useless_provides(self, pkg, prov_names):
+    def _check_useless_provides(self, pkg, provides):
         """Trigger check useless-provides
 
-        Check if a package has a multiple number of Provides: of the same dependency
+        Check if a package has a multiple number of Provides
+        (versioned and unversioned): of the same dependency
+
         example:
         Provides: foo
         Provides: foo = 1.0
@@ -680,14 +682,22 @@ class TagsCheck(AbstractCheck):
 
         # TODO: should take versions, <, <=, =, >=, > into account here
         #       https://bugzilla.redhat.com/460872
-        useless_provides = set()
-        for prov in prov_names:
-            if (prov_names.count(prov) != 1 and
-                    not prov.startswith('debuginfo(') and
-                    prov not in useless_provides):
-                useless_provides.add(prov)
-        for prov in sorted(useless_provides):
-            self.output.add_info('E', pkg, 'useless-provides', prov)
+        no_version_provides = set()
+        version_provides = set()
+
+        for provide in provides:
+            prov = provide[0]
+            if prov.startswith('debuginfo('):
+                continue
+            version = Pkg.versionToString(provide[2])
+            if version:
+                version_provides.add(prov)
+            else:
+                no_version_provides.add(prov)
+
+        for prov in sorted(no_version_provides):
+            if prov in version_provides:
+                self.output.add_info('E', pkg, 'useless-provides', prov)
 
     def _check_forbidden_controlchar(self, pkg):
         """Trigger check forbidden-controlchar-found
