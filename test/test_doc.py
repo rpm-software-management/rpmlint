@@ -20,7 +20,7 @@ def test_doccheck(tmpdir, package, doccheck):
     out = output.print_results(output.results)
     assert 'E: executable-docs /usr/share/doc/packages/mydoc/doc.html' in out
     assert 'E: executable-docs /usr/share/doc/packages/mydoc/README' in out
-    assert 'W: package-with-huge-docs: 100%' in out
+    assert 'W: package-with-huge-docs 100%' in out
 
 
 @pytest.mark.parametrize('package', ['binary/doc-file-dependency'])
@@ -39,5 +39,5 @@ def test_install_file_in_docs(tmpdir, package, doccheck):
     out = output.print_results(output.results)
     assert 'W: install-file-in-docs' in out
     assert 'E: executable-docs' not in out
-    assert 'W: package-with-huge-docs: 100%' not in out
+    assert 'W: package-with-huge-docs 100%' not in out
     assert 'W: doc-file-dependency' not in out
