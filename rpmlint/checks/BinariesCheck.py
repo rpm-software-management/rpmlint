@@ -41,6 +41,7 @@ class BinariesCheck(AbstractCheck):
     default_executable_stack_archs = re.compile(r'alpha|arm.*|hppa|i.86|m68k|microblaze|mips|ppc|s390|s390x|sh|sparc|x86_64')
 
     rpath_origin = '$ORIGIN'
+    hpc_locations = ('/usr/lib/mpi/', '/usr/lib64/mpi/', '/usr/lib/hpc/')
 
     def __init__(self, config, output):
         super().__init__(config, output)
@@ -343,7 +344,8 @@ class BinariesCheck(AbstractCheck):
 
                 # check if the major version of the library is in the package
                 # name (check only for lib* packages)
-                if pkg.name.startswith('lib'):
+                # for now skip all HPC libraries (#901)
+                if pkg.name.startswith('lib') and not pkgfile.name.startswith(self.hpc_locations):
                     # SLPP is defined here: https://en.opensuse.org/openSUSE:Shared_library_packaging_policy#Package_naming
                     # Example:
                     # SONAME = libgame2-1.9.so.10.0.0
