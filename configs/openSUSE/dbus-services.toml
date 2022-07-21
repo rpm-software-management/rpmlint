@@ -56,7 +56,7 @@ note = "package manager abstraction layer service"
 bugs = [ "bsc#993505" ]
 digests = [
     {
-        path = "/etc/dbus-1/system.d/org.freedesktop.PackageKit.conf",
+        path = "/usr/share/dbus-1/system.d/org.freedesktop.PackageKit.conf",
         digester = "xml",
         hash = "1f3fb4b17f1d3da139f19d8f907731cef4260ec806f61df172cb2245119fbbe8"
     },
