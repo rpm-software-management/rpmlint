@@ -2,61 +2,48 @@
 package = "rpmlint-integration-test"
 bug = "bsc#1188704"
 note = "test whitelisting entry for the OBS integration test package"
-files = [
-  {
-    path = '/run/rpmlint/socket',
-    mode = "-rw-rw-rw-",
-    owner = "root",
-    group = "root"
-  },
-  {
-    path = '/run/rpmlint/mismatch',
-    mode = "-rw-----w-",
-    owner = "root",
-    group = "root"
-  },
-  {
-    path = '/run/rpmlint/mismatch2',
-    mode = "-rw-rw--w-",
-    owner = "root",
-    group = "users"
-  }
-]
+[[WorldWritableWhitelist.files]]
+path = '/run/rpmlint/socket'
+mode = "-rw-rw-rw-"
+owner = "root"
+group = "root"
+[[WorldWritableWhitelist.files]]
+path = '/run/rpmlint/mismatch'
+mode = "-rw-----w-"
+owner = "root"
+group = "root"
+[[WorldWritableWhitelist.files]]
+path = '/run/rpmlint/mismatch2'
+mode = "-rw-rw--w-"
+owner = "root"
+group = "users"
 
 [[WorldWritableWhitelist]]
 package = "filesystem"
 bug = "bsc#1174642"
 note = "Public standard sticky-bit directories"
-files = [
-  {
-    path = '/tmp',
-    mode = "drwxrwxrwt",
-    owner = "root",
-    group = "root"
-  },
-  {
-    path = '/var/tmp',
-    mode = "drwxrwxrwt",
-    owner = "root",
-    group = "root"
-  },
-  {
-    path = '/var/spool/mail',
-    mode = "drwxrwxrwt",
-    owner = "root",
-    group = "root"
-  }
-]
+[[WorldWritableWhitelist.files]]
+path = '/tmp'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
+[[WorldWritableWhitelist.files]]
+path = '/var/tmp'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
+[[WorldWritableWhitelist.files]]
+path = '/var/spool/mail'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
 
 [[WorldWritableWhitelist]]
 package = "nscd"
 bug = "bsc#1174642"
 note = "nss caching daemon socket. is packaged as %ghost, therefore 'appears' to be a regular file."
-files = [
-  {
-    path = '/run/nscd/socket',
-    mode = "-rw-rw-rw-",
-    owner = "root",
-    group = "root"
-  }
-]
+[[WorldWritableWhitelist.files]]
+path = '/run/nscd/socket'
+mode = "-rw-rw-rw-"
+owner = "root"
+group = "root"
