@@ -28,7 +28,8 @@ For installation on your machine you will need the following packages:
 
 Mandatory:
 - Python 3.8 or newer
-- python3-setuptools, python3-toml, python3-pyxdg, python3-pybeam
+- python3-setuptools, python3-tomli (for `python3 < 3.11`), python3-tomli-w,
+  python3-pyxdg, python3-pybeam
 - rpm and its python bindings
 - binutils, cpio, gzip, bzip, xz and zstd
 
