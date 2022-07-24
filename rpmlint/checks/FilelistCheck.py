@@ -5,7 +5,11 @@ import re
 from rpm import RPMTAG_VENDOR
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
-import toml
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 
 class FilelistCheck(AbstractCheck):
@@ -43,7 +47,8 @@ class FilelistCheck(AbstractCheck):
         self._restricteddirs = set()
         self._restricteddirs.add('/')
 
-        config = toml.load(Path(__file__).parent / 'FilelistCheck.toml')
+        with open(Path(__file__).parent / 'FilelistCheck.toml', 'rb') as f:
+            config = tomllib.load(f)
         self.goodprefixes = tuple(config['GoodPrefixes'])
         self.checks = config['Check']
 
