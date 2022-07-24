@@ -4,7 +4,11 @@ import textwrap
 
 from rpmlint.color import Color
 from rpmlint.helpers import print_warning
-import toml
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 
 class Filter(object):
@@ -63,9 +67,10 @@ class Filter(object):
         descriptions = {}
         descr_folder = Path(__file__).parent / 'descriptions'
         try:
-            description_files = sorted(descr_folder.glob('*.toml'))
-            descriptions = toml.load(description_files)
-        except toml.decoder.TomlDecodeError as terr:
+            for description_file in sorted(descr_folder.glob('*.toml')):
+                with open(description_file, 'rb') as f:
+                    descriptions.update(tomllib.load(f))
+        except tomllib.TOMLDecodeError as terr:
             print_warning(f'(none): W: unable to parse description files: {terr}')
         return descriptions
 

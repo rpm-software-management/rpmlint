@@ -27,7 +27,8 @@ BuildRequires:  python3-pytest-flake8
 BuildRequires:  python3-pytest-xdist
 BuildRequires:  python3-pyxdg
 BuildRequires:  python3-rpm
-BuildRequires:  python3-toml
+BuildRequires:  python3-tomli
+BuildRequires:  python3-tomli-w
 BuildRequires:  python3-zstandard
 %else
 BuildRequires:  python3dist(setuptools)
@@ -41,7 +42,8 @@ BuildRequires:  python3dist(pytest-flake8)
 BuildRequires:  python3dist(pytest-xdist)
 BuildRequires:  python3dist(pyxdg)
 BuildRequires:  python3dist(rpm)
-BuildRequires:  python3dist(toml)
+BuildRequires:  (python3dist(tomli) if python3 < 3.11)
+BuildRequires:  python3dist(tomli-w)
 BuildRequires:  python3dist(zstandard)
 %endif
 
