@@ -49,7 +49,8 @@ jobs:
               python3-flake8-quotes
               python3-pyxdg
               python3-zstandard
-              python3-toml
+              python3-tomli
+              python3-tomli-w
               python3-pip
               rpm-build
               git
@@ -84,12 +85,15 @@ jobs:
               python3-flake8
               python3-flake8-import-order
               python3-pyxdg
-              python3-toml
+              python3-tomli-w
               python3-zstandard
               python3-pip
               rpm-build
               git
         if: ${{ contains(matrix.container, 'fedora') }}
+      - run: dnf --assumeyes install
+              python3-tomli
+        if: ${{ contains(matrix.container, 'fedora') && ! contains(matrix.container, 'rawhide') }}
       - run: dnf --nogpgcheck --assumeyes install
               /usr/bin/appstream-util
               /usr/bin/desktop-file-validate

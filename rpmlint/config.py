@@ -4,7 +4,11 @@ import re
 import sys
 
 from rpmlint.helpers import print_warning
-import toml
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+import tomli_w
 from xdg.BaseDirectory import xdg_config_dirs
 
 
@@ -143,9 +147,10 @@ class Config(object):
         self.conf_files = sorted(self.conf_files, key=self._sort_config_files)
         for cf in self.conf_files:
             try:
-                toml_config = toml.load(cf)
+                with open(cf, 'rb') as f:
+                    toml_config = tomllib.load(f)
                 self._merge_dictionaries(cfg, toml_config, self._is_override_config(cf))
-            except toml.decoder.TomlDecodeError as terr:
+            except tomllib.TOMLDecodeError as terr:
                 print_warning(f'(none): E: fatal error while parsing configuration file {cf}: {terr}')
                 sys.exit(4)
         self.configuration = cfg
@@ -173,7 +178,7 @@ class Config(object):
     def print_config(self):
         """Print the current state of the configuration."""
         if self.configuration:
-            print(toml.dumps(self.configuration))
+            print(tomli_w.dumps(self.configuration))
 
     def set_badness(self, result, badness):
         """Set specific badness for some result."""
