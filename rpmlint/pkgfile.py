@@ -1,7 +1,7 @@
 import rpm
 
 
-class PkgFile(object):
+class PkgFile:
     __slots__ = ['name', 'path', 'flags', 'mode', 'user', 'group', 'linkto',
                  'size', 'md5', 'mtime', 'rdev', 'inode', 'requires', 'provides',
                  'lang', 'magic', 'filecaps']

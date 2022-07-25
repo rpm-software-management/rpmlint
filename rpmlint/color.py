@@ -1,7 +1,7 @@
 import sys
 
 if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
-    class Color(object):
+    class Color:
         """
         Colors used when doing printouts with rpmlint
         """
@@ -10,7 +10,7 @@ if hasattr(sys.stdout, 'isatty') and sys.stdout.isatty():
         Yellow = '\x1b[33m'
         Reset = '\x1b[0m'
 else:
-    class Color(object):
+    class Color:
         """
         Colors used when doing printouts with rpmlint
         """

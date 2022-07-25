@@ -355,9 +355,8 @@ class SpecCheck(AbstractCheck):
                     self.output.add_info('W', pkg, 'hardcoded-packager-tag', res.group(1))
 
                 res = prefix_regex.search(line)
-                if res:
-                    if not res.group(1).startswith('%'):
-                        self.output.add_info('W', pkg, 'hardcoded-prefix-tag', res.group(1))
+                if res and not res.group(1).startswith('%'):
+                    self.output.add_info('W', pkg, 'hardcoded-prefix-tag', res.group(1))
 
                 res = prereq_regex.search(line)
                 if res:
@@ -450,18 +449,17 @@ class SpecCheck(AbstractCheck):
                     patch_fuzz_override = \
                         patch_fuzz_override_regex.search(line) is not None
 
-            if current_section == 'files':
-                # TODO: check scriptlets for these too?
-                if package_noarch.get(current_package) or \
-                        (current_package not in package_noarch and
-                         package_noarch.get(None)):
-                    res = libdir_regex.search(line)
-                    if res:
-                        pkgname = current_package
-                        if pkgname is None:
-                            pkgname = '(main package)'
-                        self.output.add_info('W', pkg, 'libdir-macro-in-noarch-package',
-                                             pkgname, line.rstrip())
+            # TODO: check scriptlets for these too?
+            if (current_section == 'files' and
+                    (package_noarch.get(current_package) or
+                        (current_package not in package_noarch and package_noarch.get(None)))):
+                res = libdir_regex.search(line)
+                if res:
+                    pkgname = current_package
+                    if pkgname is None:
+                        pkgname = '(main package)'
+                    self.output.add_info('W', pkg, 'libdir-macro-in-noarch-package',
+                                         pkgname, line.rstrip())
 
             if not indent_tabs and '\t' in line:
                 indent_tabs = pkg.current_linenum
@@ -524,10 +522,9 @@ class SpecCheck(AbstractCheck):
 
     def _check_non_utf8_spec_file(self, pkg):
         """Check if spec file has UTF-8 character encoding."""
-        if self._spec_file:
-            if not Pkg.is_utf8(self._spec_file):
-                self.output.add_info('E', pkg, 'non-utf8-spec-file',
-                                     self._spec_name or self._spec_file)
+        if self._spec_file and not Pkg.is_utf8(self._spec_file):
+            self.output.add_info('E', pkg, 'non-utf8-spec-file',
+                                 self._spec_name or self._spec_file)
 
     def _check_no_buildroot_tag(self, pkg, buildroot):
         """Check if BuildRoot tag is used in the specfile."""

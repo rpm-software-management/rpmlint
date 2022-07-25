@@ -2,7 +2,7 @@ import concurrent.futures
 import re
 
 
-class AbstractCheck(object):
+class AbstractCheck:
     def __init__(self, config, output):
         # Note: do not add any capturing parentheses here
         self.macro_regex = re.compile(r'%+[{(]?[a-zA-Z_]\w{2,}[)}]?')

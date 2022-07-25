@@ -125,9 +125,8 @@ class I18NCheck(AbstractCheck):
                     else:
                         self.output.add_info('E', pkg, 'invalid-locale-man-dir', f)
 
-            if f.endswith('.mo') or subdir:
-                if pkg.files[f].lang == '' and not webapp:
-                    self.output.add_info('W', pkg, 'file-not-in-%lang', f)
+            if (f.endswith('.mo') or subdir) and (pkg.files[f].lang == '' and not webapp):
+                self.output.add_info('W', pkg, 'file-not-in-%lang', f)
 
         main_dir, main_lang = ('', '')
         for f in files:
@@ -141,9 +140,8 @@ class I18NCheck(AbstractCheck):
         res = package_regex.search(name)
         if res:
             locales = 'locales-' + res.group(1)
-            if locales != name:
-                if locales not in (x[0] for x in pkg.requires):
-                    self.output.add_info('E', pkg, 'no-dependency-on', locales)
+            if locales != name and locales not in (x[0] for x in pkg.requires):
+                self.output.add_info('E', pkg, 'no-dependency-on', locales)
 
 
 def is_prefix(p, s):
