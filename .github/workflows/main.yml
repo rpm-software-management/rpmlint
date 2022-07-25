@@ -105,7 +105,7 @@ jobs:
         if: ${{ contains(matrix.container, 'fedora') && matrix.build-type == 'normal' }}
       - run: rm -rf $(rpm --eval '%_dbpath')
         if: matrix.build-type == 'no-optional-deps'
-      - run: pip install coveralls flake8-simplify
+      - run: pip install coveralls
       - uses: actions/checkout@v2
       - run: pytest
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
