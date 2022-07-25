@@ -39,9 +39,8 @@ def shell_var_value(var, script):
     res = assign_regex.search(script)
     if res:
         res2 = var_regex.search(res.group(1))
-        if res2:
-            if res2.group(2) == var:  # infinite loop
-                return None
+        if res2 and res2.group(2) == var:  # infinite loop
+            return None
         return substitute_shell_vars(res.group(1), script)
     else:
         return None
@@ -193,9 +192,8 @@ class InitScriptCheck(AbstractCheck):
                                 self.output.add_info('E', pkg, 'incoherent-subsys', fname,
                                                      name)
 
-            if 'Default-Start' in lsb_tags:
-                if ''.join(lsb_tags['Default-Start']):
-                    self.output.add_info('W', pkg, 'service-default-enabled', fname)
+            if 'Default-Start' in lsb_tags and ''.join(lsb_tags['Default-Start']):
+                self.output.add_info('W', pkg, 'service-default-enabled', fname)
 
             if not status_found:
                 self.output.add_info('E', pkg, 'no-status-entry', fname)

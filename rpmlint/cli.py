@@ -98,10 +98,9 @@ def process_lint_args(argv):
     options = parser.parse_args(args=argv)
 
     # make sure rpmlintrc exists
-    if options.rpmlintrc:
-        if not options.rpmlintrc.exists():
-            print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
-            exit(2)
+    if options.rpmlintrc and not options.rpmlintrc.exists():
+        print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
+        exit(2)
     # validate all the rpmlfile options to be either file or folder
     f_path = set()
     invalid_path = False

@@ -1,5 +1,6 @@
 import bz2
 from collections import namedtuple
+import contextlib
 import gzip
 import lzma
 import mmap
@@ -128,7 +129,7 @@ def is_utf8_bytestr(s):
 
 
 def has_forbidden_controlchars(val):
-    if isinstance(val, str) or isinstance(val, bytes):
+    if isinstance(val, (str, bytes)):
         string = val
         if isinstance(val, bytes):
             val = memoryview(val)
@@ -137,7 +138,7 @@ def has_forbidden_controlchars(val):
                 c = ord(c)
             if c < 32 and (c not in (9, 10, 13)):
                 return string
-    if isinstance(val, tuple) or isinstance(val, list):
+    if isinstance(val, (tuple, list)):
         for item in val:
             return has_forbidden_controlchars(item)
     return False
@@ -199,33 +200,25 @@ def rangeCompare(reqtuple, provtuple):
     if rc >= 1:
         if reqf in ['GT', 'GE', 4, 12]:
             return 1
-        if reqf in ['EQ', 8]:
-            if f in ['LE', 10, 'LT', 2]:
-                return 1
-        if reqf in ['LE', 'LT', 'EQ', 10, 2, 8]:
-            if f in ['LE', 'LT', 10, 2]:
-                return 1
+        if reqf in ['EQ', 8] and f in ['LE', 10, 'LT', 2]:
+            return 1
+        if reqf in ['LE', 'LT', 'EQ', 10, 2, 8] and f in ['LE', 'LT', 10, 2]:
+            return 1
 
     if rc == 0:
-        if reqf in ['GT', 4]:
-            if f in ['GT', 'GE', 4, 12]:
-                return 1
-        if reqf in ['GE', 12]:
-            if f in ['GT', 'GE', 'EQ', 'LE', 4, 12, 8, 10]:
-                return 1
-        if reqf in ['EQ', 8]:
-            if f in ['EQ', 'GE', 'LE', 8, 12, 10]:
-                return 1
-        if reqf in ['LE', 10]:
-            if f in ['EQ', 'LE', 'LT', 'GE', 8, 10, 2, 12]:
-                return 1
-        if reqf in ['LT', 2]:
-            if f in ['LE', 'LT', 10, 2]:
-                return 1
+        if reqf in ['GT', 4] and f in ['GT', 'GE', 4, 12]:
+            return 1
+        if reqf in ['GE', 12] and f in ['GT', 'GE', 'EQ', 'LE', 4, 12, 8, 10]:
+            return 1
+        if reqf in ['EQ', 8] and f in ['EQ', 'GE', 'LE', 8, 12, 10]:
+            return 1
+        if reqf in ['LE', 10] and f in ['EQ', 'LE', 'LT', 'GE', 8, 10, 2, 12]:
+            return 1
+        if reqf in ['LT', 2] and f in ['LE', 'LT', 10, 2]:
+            return 1
     if rc <= -1:
-        if reqf in ['GT', 'GE', 'EQ', 4, 12, 8]:
-            if f in ['GT', 'GE', 4, 12]:
-                return 1
+        if reqf in ['GT', 'GE', 'EQ', 4, 12, 8] and f in ['GT', 'GE', 4, 12]:
+            return 1
         if reqf in ['LE', 'LT', 10, 2]:
             return 1
 #                if rc >= 1:
@@ -245,17 +238,16 @@ def rangeCompare(reqtuple, provtuple):
 def formatRequire(name, flags, evr):
     s = name
 
-    if flags:
-        if flags & (rpm.RPMSENSE_LESS | rpm.RPMSENSE_GREATER |
-                    rpm.RPMSENSE_EQUAL):
-            s = s + ' '
-            if flags & rpm.RPMSENSE_LESS:
-                s = s + '<'
-            if flags & rpm.RPMSENSE_GREATER:
-                s = s + '>'
-            if flags & rpm.RPMSENSE_EQUAL:
-                s = s + '='
-            s = '%s %s' % (s, versionToString(evr))
+    if flags and flags & (rpm.RPMSENSE_LESS | rpm.RPMSENSE_GREATER |
+                          rpm.RPMSENSE_EQUAL):
+        s = s + ' '
+        if flags & rpm.RPMSENSE_LESS:
+            s = s + '<'
+        if flags & rpm.RPMSENSE_GREATER:
+            s = s + '>'
+        if flags & rpm.RPMSENSE_EQUAL:
+            s = s + '='
+        s = '%s %s' % (s, versionToString(evr))
     return s
 
 
@@ -280,11 +272,9 @@ def stringToVersion(verstring):
     epoch = None
     i = verstring.find(':')
     if i != -1:
-        try:
-            epoch = str(int(verstring[:i]))
-        except ValueError:
+        with contextlib.suppress(ValueError):
             # garbage in epoch, ignore it
-            pass
+            epoch = str(int(verstring[:i]))
     i += 1
     j = verstring.find('-', i)
     if j != -1:
@@ -381,7 +371,7 @@ def get_magic(path):
 
 # classes representing package
 
-class AbstractPkg(object):
+class AbstractPkg:
     def cleanup(self):
         pass
 
@@ -602,9 +592,7 @@ class Pkg(AbstractPkg):
                 if (not pkgfile.magic and
                         not pkgfile.is_ghost and _magic):
                     pkgfile.magic = get_magic(pkgfile.path)
-                if pkgfile.magic is None:
-                    pkgfile.magic = ''
-                elif Pkg._magic_from_compressed_re.search(pkgfile.magic):
+                if pkgfile.magic is None or Pkg._magic_from_compressed_re.search(pkgfile.magic):
                     # Discard magic from inside compressed files ('file -z')
                     # until PkgFile gets decompression support.  We may get
                     # such magic strings from package headers already now;

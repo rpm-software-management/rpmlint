@@ -556,21 +556,18 @@ class FilesCheck(AbstractCheck):
                     self.output.add_info('E', pkg, 'incoherent-logrotate-file', f)
 
             deps = [x[0] for x in pkg.requires + pkg.recommends + pkg.suggests]
-            if res and not ('logrotate' in deps) and pkg.name != 'logrotate':
+            if res and 'logrotate' not in deps and pkg.name != 'logrotate':
                 self.output.add_info('E', pkg, 'missing-dependency-to-logrotate', 'for logrotate script', f)
-            if f.startswith('/etc/cron.') \
-               and not ('crontabs' in deps) and pkg.name != 'crontabs':
+            if f.startswith('/etc/cron.') and 'crontabs' not in deps and pkg.name != 'crontabs':
                 self.output.add_info('E', pkg, 'missing-dependency-to-crontabs', 'for cron script', f)
-            if f.startswith('/etc/xinet.d/') \
-               and not ('xinetd' in deps) and pkg.name != 'xinetd':
+            if f.startswith('/etc/xinet.d/') and 'xinetd' not in deps and pkg.name != 'xinetd':
                 self.output.add_info('E', pkg, 'missing-dependency-to-xinetd', 'for xinet.d script', f)
 
             if link != '':
                 ext = compr_regex.search(link)
-                if ext:
-                    if not re.compile(r'\.%s$' % ext.group(1)).search(f):
-                        self.output.add_info('E', pkg, 'compressed-symlink-with-wrong-ext',
-                                             f, link)
+                if ext and not re.compile(r'\.%s$' % ext.group(1)).search(f):
+                    self.output.add_info('E', pkg, 'compressed-symlink-with-wrong-ext',
+                                         f, link)
 
             perm = mode & 0o7777
             mode_is_exec = mode & 0o111
@@ -590,13 +587,10 @@ class FilesCheck(AbstractCheck):
                 if stat.S_ISGID & mode or stat.S_ISUID & mode:
                     if stat.S_ISUID & mode:
                         self.output.add_info('E', pkg, 'setuid-binary', f, user, '%o' % perm)
-                    if stat.S_ISGID & mode:
-                        if not (group == 'games' and
-                                (games_path_regex.search(f) or
-                                 self.games_group_regex.search(
-                                    pkg[rpm.RPMTAG_GROUP]))):
-                            self.output.add_info('E', pkg, 'setgid-binary', f, group,
-                                                 '%o' % perm)
+                    if (stat.S_ISGID & mode and
+                            not (group == 'games' and (games_path_regex.search(f) or self.games_group_regex.search(pkg[rpm.RPMTAG_GROUP])))):
+                        self.output.add_info('E', pkg, 'setgid-binary', f, group,
+                                             '%o' % perm)
                     if mode & 0o777 != 0o755:
                         self.output.add_info('E', pkg, 'non-standard-executable-perm', f,
                                              '%o' % perm)
@@ -906,10 +900,9 @@ class FilesCheck(AbstractCheck):
 
                 elif is_doc and chunk and compr_regex.search(f):
                     ff = compr_regex.sub('', f)
-                    if not self.skipdocs_regex.search(ff):
-                        # compressed docs, eg. info and man files etc
-                        if not is_utf8(pkgfile.path):
-                            self.output.add_info('W', pkg, 'file-not-utf8', f)
+                    # compressed docs, eg. info and man files etc
+                    if not self.skipdocs_regex.search(ff) and not is_utf8(pkgfile.path):
+                        self.output.add_info('W', pkg, 'file-not-utf8', f)
 
             # normal dir check
             elif stat.S_ISDIR(mode):
@@ -1052,10 +1045,9 @@ class FilesCheck(AbstractCheck):
 
         Print a warning if it's not compressed.
         """
-        if self.compress_ext and self.man_regex.search(fname):
-            if not fname.endswith(self.compress_ext):
-                self.output.add_info('W', pkg, 'manpage-not-compressed',
-                                     self.compress_ext, fname)
+        if self.compress_ext and self.man_regex.search(fname) and not fname.endswith(self.compress_ext):
+            self.output.add_info('W', pkg, 'manpage-not-compressed',
+                                 self.compress_ext, fname)
 
     def _check_infopage_compressed(self, pkg, fname):
         """
@@ -1065,7 +1057,6 @@ class FilesCheck(AbstractCheck):
         Print a warning if it's not compressed.
         """
         if self.compress_ext and self.info_regex.search(fname) and \
-                not fname.endswith('/info/dir'):
-            if not fname.endswith(self.compress_ext):
-                self.output.add_info('W', pkg, 'infopage-not-compressed',
-                                     self.compress_ext, fname)
+                not fname.endswith('/info/dir') and not fname.endswith(self.compress_ext):
+            self.output.add_info('W', pkg, 'infopage-not-compressed',
+                                 self.compress_ext, fname)

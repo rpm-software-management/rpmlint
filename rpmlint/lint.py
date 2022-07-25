@@ -15,7 +15,7 @@ from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
 from rpmlint.version import __version__
 
 
-class Lint(object):
+class Lint:
     """
     Generic object handling the basic rpmlint operations
     """
@@ -180,7 +180,7 @@ class Lint(object):
             # do this only in a case where there is one folder parameter or one file
             # to avoid multiple folders handling
             rpmlintrc = []
-            if not len(self.options['rpmfile']) == 1:
+            if len(self.options['rpmfile']) != 1:
                 return
             pkg = self.options['rpmfile'][0]
             if pkg.is_file():

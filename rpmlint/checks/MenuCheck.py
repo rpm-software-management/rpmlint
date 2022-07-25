@@ -71,9 +71,8 @@ class MenuCheck(AbstractCheck):
                 else:
                     # Check non transparent xpm files
                     res = xpm_ext_regex.search(fname)
-                    if res:
-                        if stat.S_ISREG(mode) and not pkg.grep('None",', fname):
-                            self.output.add_info('W', pkg, 'non-transparent-xpm', fname)
+                    if res and stat.S_ISREG(mode) and not pkg.grep('None",', fname):
+                        self.output.add_info('W', pkg, 'non-transparent-xpm', fname)
                 if fname.startswith('/usr/lib64/menu'):
                     self.output.add_info('E', pkg, 'menu-in-wrong-dir', fname)
 
@@ -223,7 +222,7 @@ class MenuCheck(AbstractCheck):
 
                     res = xdg_migrated_regex.search(line)
                     if res:
-                        if not res.group(1).lower() == 'true':
+                        if res.group(1).lower() != 'true':
                             self.output.add_info('E', pkg, 'non-xdg-migrated-menu')
                     else:
                         self.output.add_info('E', pkg, 'non-xdg-migrated-menu')

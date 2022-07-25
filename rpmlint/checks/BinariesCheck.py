@@ -1,4 +1,5 @@
 import concurrent.futures
+import contextlib
 from pathlib import Path
 import re
 import stat
@@ -91,11 +92,8 @@ class BinariesCheck(AbstractCheck):
         """
         if 'shell script' in pkgfile.magic:
             file_start = None
-            try:
-                with open(pkgfile.path, 'rb') as inputf:
-                    file_start = inputf.read(2048)
-            except IOError:
-                pass
+            with contextlib.suppress(IOError), open(pkgfile.path, 'rb') as inputf:
+                file_start = inputf.read(2048)
             if (file_start and b'This wrapper script should never '
                                b'be moved out of the build directory'
                     in file_start):
@@ -437,11 +435,9 @@ class BinariesCheck(AbstractCheck):
                     return
 
     def _check_library_dependency(self, pkg, pkgfile):
-        if self.is_archive:
-            return
-        elif any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS):
-            return
-        elif self.python_module_regex.fullmatch(pkgfile.name):
+        if (self.is_archive or
+                any(pkgfile.name.startswith(p) for p in KERNEL_MODULES_PATHS) or
+                self.python_module_regex.fullmatch(pkgfile.name)):
             return
 
         dyn_section = self.readelf_parser.dynamic_section_info
@@ -567,7 +563,7 @@ class BinariesCheck(AbstractCheck):
 
         if not self.is_archive:
             if self.is_dynamically_linked:
-                is_installed_pkg = isinstance(pkg, InstalledPkg) or isinstance(pkg, FakePkg)
+                is_installed_pkg = isinstance(pkg, (InstalledPkg, FakePkg))
                 self.ldd_parser = LddParser(pkgfile.path, pkgfile.name, is_installed_pkg)
                 failed_reason = self.ldd_parser.parsing_failed_reason
                 if failed_reason:
