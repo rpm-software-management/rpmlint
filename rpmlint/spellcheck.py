@@ -13,7 +13,7 @@ except ImportError:
     ENCHANT = None
 
 
-class Spellcheck(object):
+class Spellcheck:
     """
     The object containing current state of spellchecking used within rpmlint
     """

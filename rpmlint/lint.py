@@ -18,7 +18,7 @@ from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
 from rpmlint.version import __version__
 
 
-class Lint(object):
+class Lint:
     """
     Generic object handling the basic rpmlint operations
     """

@@ -11,7 +11,7 @@ except ImportError:
     import tomli as tomllib
 
 
-class Filter(object):
+class Filter:
     """
     Handle all printing/formatting/filtering of the rpmlint output.
 

@@ -1,3 +1,4 @@
+import contextlib
 from itertools import chain
 import pathlib
 import sys
@@ -8,7 +9,7 @@ from rpmlint.helpers import byte_to_string, print_warning
 from rpmlint.pkg import get_installed_pkgs, Pkg
 
 
-class Rpmdiff(object):
+class Rpmdiff:
     # constants
     TAGS = (rpm.RPMTAG_NAME, rpm.RPMTAG_SUMMARY,
             rpm.RPMTAG_DESCRIPTION, rpm.RPMTAG_GROUP,
@@ -136,11 +137,9 @@ class Rpmdiff(object):
         # FIXME: redo to try file/installed and proceed based on that, or pick
         # one of the selected first
         tmpdir = tempfile.gettempdir()
-        try:
+        with contextlib.suppress(TypeError):
             if name.is_file():
                 return Pkg(name, tmpdir)
-        except TypeError:
-            pass
         inst = get_installed_pkgs(str(name))
         if not inst:
             raise KeyError(f'No installed packages by name {name}')

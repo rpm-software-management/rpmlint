@@ -157,10 +157,7 @@ class AlternativesCheck(AbstractCheck):
             if path.startswith('/usr/share/libalternatives/'):
                 return True
         # then check if package with the name "alts" is required
-        for req in pkg.requires + pkg.prereq:
-            if req[0] == self.alts_requirement:
-                return True
-        return False
+        return any(req[0] == self.alts_requirement for req in pkg.requires + pkg.prereq)
 
     def _check_scriptlet_for_alternatives(self, scriptlet):
         """
@@ -268,7 +265,7 @@ class AlternativesCheck(AbstractCheck):
                                         man_found = True
                                 if not man_found:
                                     self.output.add_info('W', pkg, 'man-entry-value-not-found', f, line_nr_str)
-                        elif not key == 'group' and not key == 'options':
+                        elif key != 'group' and key != 'options':
                             self.output.add_info('W', pkg, 'wrong-tag-found', f, line_nr_str)
                     if not bin_found:
                         self.output.add_info('W', pkg, 'wrong-or-missed-binary-entry', f)

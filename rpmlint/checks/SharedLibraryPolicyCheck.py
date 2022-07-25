@@ -35,10 +35,10 @@ class SharedLibraryPolicyCheck(AbstractCheck):
 
         # if we didn't find any library files then we
         # don't need to check anything
-        if not libfiles:
-            # verify if name does not match the slpp and if we still don't have any lib then error out
-            if self.re_soname_pkg.match(pkg.name):
-                self.output.add_info('E', pkg, 'shlib-policy-missing-lib')
+
+        # verify if name does not match the slpp and if we still don't have any lib then error out
+        if not libfiles and self.re_soname_pkg.match(pkg.name):
+            self.output.add_info('E', pkg, 'shlib-policy-missing-lib')
 
     def check(self, pkg):
         if pkg.is_source:
@@ -63,26 +63,26 @@ class SharedLibraryPolicyCheck(AbstractCheck):
 
         for filename, pkgfile in pkg.files.items():
             path = Path(filename)
-            if '.so.' in filename or filename.endswith('.so'):
-                if stat.S_ISREG(pkg.files[filename].mode) and pkgfile.magic.startswith('ELF '):
-                    readelf_parser = ReadelfParser(pkgfile.path, filename)
-                    failed_reason = readelf_parser.parsing_failed_reason()
-                    if failed_reason:
-                        self.output.add_info('E', pkg, 'readelf-failed', filename, failed_reason)
-                        return
-                    dyn_section = readelf_parser.dynamic_section_info
-                    libs_needed = libs_needed.union(dyn_section.needed)
-                    if dyn_section.soname:
-                        lib_dir = str(path.parent)
-                        libs.add(dyn_section.soname)
-                        libs_to_dir[dyn_section.soname] = lib_dir
-                    if dyn_section.soname in pkg_requires:
-                        # But not if the library is used by the pkg itself
-                        # This avoids program packages with their own
-                        # private lib
-                        # FIXME: we'd need to check if somebody else links
-                        # to this lib
-                        reqlibs.add(dyn_section.soname)
+            if (('.so.' in filename or filename.endswith('.so')) and
+                    stat.S_ISREG(pkg.files[filename].mode) and pkgfile.magic.startswith('ELF ')):
+                readelf_parser = ReadelfParser(pkgfile.path, filename)
+                failed_reason = readelf_parser.parsing_failed_reason()
+                if failed_reason:
+                    self.output.add_info('E', pkg, 'readelf-failed', filename, failed_reason)
+                    return
+                dyn_section = readelf_parser.dynamic_section_info
+                libs_needed = libs_needed.union(dyn_section.needed)
+                if dyn_section.soname:
+                    lib_dir = str(path.parent)
+                    libs.add(dyn_section.soname)
+                    libs_to_dir[dyn_section.soname] = lib_dir
+                if dyn_section.soname in pkg_requires:
+                    # But not if the library is used by the pkg itself
+                    # This avoids program packages with their own
+                    # private lib
+                    # FIXME: we'd need to check if somebody else links
+                    # to this lib
+                    reqlibs.add(dyn_section.soname)
 
         if not libs.difference(reqlibs):
             return

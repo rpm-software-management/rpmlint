@@ -114,11 +114,11 @@ def test_description_from_conf(tmpdir):
     # we can't test it now. It's tested in test_lint.py.
 
     assert not result.get_description('non-standard-dir-in-usr', cfg)
-    assert not result.get_description('non-standard-dir-in-usr', cfg) == \
+    assert result.get_description('non-standard-dir-in-usr', cfg) != \
         'A new text for non-standard-dir-in-usr error.\n\n'
 
     assert not result.get_description('non-standard-dir-in-var', cfg)
-    assert not result.get_description('non-standard-dir-in-var', cfg) == \
+    assert result.get_description('non-standard-dir-in-var', cfg) != \
         'A new text for non-standard-dir-in-var error.\n\n'
 
 

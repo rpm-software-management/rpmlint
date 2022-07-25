@@ -12,7 +12,7 @@ import tomli_w
 from xdg.BaseDirectory import xdg_config_dirs
 
 
-class Config(object):
+class Config:
     """
     Load and parse rpmlint configuration.
 
