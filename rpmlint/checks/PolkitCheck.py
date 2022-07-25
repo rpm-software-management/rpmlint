@@ -69,7 +69,7 @@ class PolkitCheck(AbstractCheck):
         try:
             defaults = action.getElementsByTagName('defaults')[0]
             for i in defaults.childNodes:
-                if not i.nodeType == i.ELEMENT_NODE:
+                if i.nodeType != i.ELEMENT_NODE:
                     continue
 
                 if i.nodeName in allow_types:
@@ -85,9 +85,8 @@ class PolkitCheck(AbstractCheck):
                 # code where the `ParserData` is zero initialized and a zero implicit corresponds
                 # to `no`.
                 settings[i] = 'no'
-            elif settings[i].find('auth_admin') != 0:
-                if settings[i] != 'no':
-                    found_unauthorized = True
+            elif settings[i].find('auth_admin') != 0 and settings[i] != 'no':
+                found_unauthorized = True
 
         action_settings = f'{action_id} ({settings[allow_types[0]]}:{settings[allow_types[1]]}:{settings[allow_types[2]]})'
         if found_unauthorized:

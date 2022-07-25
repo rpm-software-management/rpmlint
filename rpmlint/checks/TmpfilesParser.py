@@ -163,15 +163,16 @@ def parse(pkgfile):
     entries = []
     context = []
 
-    for line in open(pkgfile.path):
-        line = line.strip()
-        if not line:
-            context = []
-        elif line.startswith('#'):
-            context.append(line)
-        else:
-            entry = TmpfilesEntry(pkgfile.name, line, context)
-            entries.append(entry)
-            context = []
+    with open(pkgfile.path) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                context = []
+            elif line.startswith('#'):
+                context.append(line)
+            else:
+                entry = TmpfilesEntry(pkgfile.name, line, context)
+                entries.append(entry)
+                context = []
 
-    return entries
+        return entries

@@ -1,3 +1,4 @@
+import contextlib
 from fnmatch import fnmatch
 import hashlib
 from pathlib import Path
@@ -239,12 +240,8 @@ class FileDigestCheck(AbstractCheck):
             raise KeyError('FileDigestCheck: "packages" key contains non-list value')
 
     def _matches_pkg(self, digest_group, pkg):
-        if pkg.name == digest_group.get('package', ''):
-            return True
-        elif pkg.name in digest_group.get('packages', []):
-            return True
-
-        return False
+        return (pkg.name == digest_group.get('package', '') or
+                pkg.name in digest_group.get('packages', []))
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
@@ -257,7 +254,7 @@ class FileDigestCheck(AbstractCheck):
 
         for group, locations in self.digest_configurations.items():
             for location in locations:
-                try:
+                with contextlib.suppress(ValueError):
                     if path.relative_to(location):
                         if not self.name_patterns_in_group[group]:
                             return group
@@ -265,8 +262,6 @@ class FileDigestCheck(AbstractCheck):
                             for glob in self.name_patterns_in_group[group]:
                                 if fnmatch(path.name, glob):
                                     return group
-                except ValueError:
-                    pass
         return None
 
     def _is_valid_digest(self, path, digest, pkg):

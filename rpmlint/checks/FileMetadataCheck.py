@@ -49,12 +49,7 @@ class FileMetadataCheck(AbstractCheck):
                         raise KeyError(f'FileMetadataCheck: missing "{key}" in files')
 
     def _matches_pkg(self, whitelist, pkg):
-        if pkg.name == whitelist.get('package', ''):
-            return True
-        elif pkg.name in whitelist.get('packages', []):
-            return True
-
-        return False
+        return pkg.name == whitelist.get('package', '') or pkg.name in whitelist.get('packages', [])
 
     def _verify_package_whitelist(self, whitelist, files):
         errors = []

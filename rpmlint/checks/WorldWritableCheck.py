@@ -11,5 +11,5 @@ class WorldWritableCheck(FileMetadataCheck):
     def check_binary(self, pkg):
         files = [FileMeta(pfile) for pfile in pkg.files.values()]
         # select any world-writable files except device files and symlinks
-        files = {f.path: f for f in files if not f.mode[0] in 'bcl' and f.mode[-2] == 'w'}
+        files = {f.path: f for f in files if f.mode[0] not in 'bcl' and f.mode[-2] == 'w'}
         self.check_files(pkg, files)

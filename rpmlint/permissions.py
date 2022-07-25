@@ -1,3 +1,4 @@
+import contextlib
 import copy
 import os
 
@@ -38,13 +39,11 @@ class PermissionsEntry:
 class VariablesHandler:
     def __init__(self, variables_conf_path):
         self.variables = {}
-        try:
-            with open(variables_conf_path) as fd:
-                self._parse(variables_conf_path, fd)
-        except FileNotFoundError:
-            # this can happen during migration in OBS when the new permissions
-            # package is not yet around
-            pass
+
+        # this can happen during migration in OBS when the new permissions
+        # package is not yet around
+        with contextlib.suppress(FileNotFoundError), open(variables_conf_path) as fd:
+            self._parse(variables_conf_path, fd)
 
     def _parse(self, label, fd):
         for nr, line in enumerate(fd.readlines(), 1):

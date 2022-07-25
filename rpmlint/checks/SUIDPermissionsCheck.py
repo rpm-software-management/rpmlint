@@ -139,7 +139,7 @@ class SUIDPermissionsCheck(AbstractCheck):
         for f in permfiles:
             # check for a .secure file first, falling back to the plain file
             for path in self._paths_to(f + '.secure', f):
-                if path in pkg.files.keys():
+                if path in pkg.files:
                     fullpath = pkg.dir_name() + path
                     try:
                         self._parse_profile(fullpath)
@@ -185,6 +185,5 @@ class SUIDPermissionsCheck(AbstractCheck):
             if self._check_post_scriptlets(pkg, f, need_verifyscript):
                 need_set_permissions = True
 
-        if need_set_permissions:
-            if 'permissions' not in map(lambda x: x[0], pkg.prereq):
-                self.output.add_info('E', pkg, 'permissions-missing-requires', "missing 'permissions' in PreReq")
+        if need_set_permissions and 'permissions' not in map(lambda x: x[0], pkg.prereq):
+            self.output.add_info('E', pkg, 'permissions-missing-requires', "missing 'permissions' in PreReq")

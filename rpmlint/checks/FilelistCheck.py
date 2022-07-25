@@ -77,9 +77,8 @@ class FilelistCheck(AbstractCheck):
 
         files = pkg.files
         for check in self.checks:
-            if 'IgnorePkgIf' in check:
-                if getattr(self, check['IgnorePkgIf'])(pkg):
-                    continue
+            if 'IgnorePkgIf' in check and getattr(self, check['IgnorePkgIf'])(pkg):
+                continue
 
             if 'Good' in check or 'Bad' in check:
                 for f in files:
@@ -95,9 +94,8 @@ class FilelistCheck(AbstractCheck):
 
                     if 'Bad' in check:
                         for b in check['Bad']:
-                            if 'IgnoreFileIf' in check:
-                                if getattr(self, check['IgnoreFileIf'])(pkg, f):
-                                    continue
+                            if 'IgnoreFileIf' in check and getattr(self, check['IgnoreFileIf'])(pkg, f):
+                                continue
                             if ((not isinstance(b, str) and b.match(f)) or
                                     b == f):
                                 self.output.add_info('E', pkg, check['Message'], f)
@@ -122,7 +120,7 @@ class FilelistCheck(AbstractCheck):
                 # find the first invalid path component
                 # (/usr/foo/bar/baz -> /usr)
                 while (base[0] and not base[0].startswith(self.goodprefixes) and
-                       not base[0] in self._restricteddirs):
+                       base[0] not in self._restricteddirs):
                     pfx = base[0]
                     base = base[0].rpartition('/')
 

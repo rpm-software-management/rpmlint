@@ -32,9 +32,11 @@ class BrandingPolicyCheck(AbstractCheck):
             %package branding-upstream
             Provides: %{name}-branding = %{version}
             """
-            if self.re_branding_generic.match(require.name):
-                if require.flags != RPMSENSE_EQUAL and require.flags != RPMSENSE_GREATER and require.flags != RPMSENSE_GREATER + RPMSENSE_EQUAL:
-                    self.output.add_info('E', pkg, 'branding-requires-unversioned', require.name)
+            if (self.re_branding_generic.match(require.name) and
+                    require.flags != RPMSENSE_EQUAL and
+                    require.flags != RPMSENSE_GREATER and
+                    require.flags != RPMSENSE_GREATER + RPMSENSE_EQUAL):
+                self.output.add_info('E', pkg, 'branding-requires-unversioned', require.name)
 
     def _check_supplements(self, pkg, branding_pkg, branding_name):
         """Verify we have only one supplement on the branding and packagename"""
