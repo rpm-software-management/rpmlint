@@ -3,42 +3,32 @@ package = "rpmlint-integration-test"
 type = "dbus"
 note = "valid test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
-digests = [
-    {
-        path = "/etc/dbus-1/system.d/rpmlint_test.conf",
-        hash = "504c5a60b7173794e565755122ab77beaec9bcf208fb97a40237cb57c67b5a17"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/rpmlint_test.conf"
+hash = "504c5a60b7173794e565755122ab77beaec9bcf208fb97a40237cb57c67b5a17"
 
 [[FileDigestGroup]]
 package = "rpmlint-integration-test"
 type = "dbus"
 note = "mismatching valid test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
-digests = [
-    {
-        path = "/etc/dbus-1/system.d/rpmlint_mismatch.conf",
-        hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
-    },
-    {
-        path = "/usr/share/dbus-1/system.d/nonsense.conf",
-        hash = "9a4e829ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fda",
-        digester = "xml"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/rpmlint_mismatch.conf"
+hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nonsense.conf"
+hash = "9a4e829ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fda"
+digester = "xml"
 
 [[FileDigestGroup]]
 package = "cups"
 type = "dbus"
 note = "the well known printing system daemon"
 bugs = [ "bsc#515977", "bsc#1201346" ]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/cups.conf",
-        hash = "1bbed8c1ecac00e546a3659235855aa2e88ec1142b3908b3d662e68ad4e664fe",
-        digester = "xml"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/cups.conf"
+hash = "1bbed8c1ecac00e546a3659235855aa2e88ec1142b3908b3d662e68ad4e664fe"
+digester = "xml"
 
 [[FileDigestGroup]]
 package = "upower"
@@ -54,31 +44,24 @@ package = "PackageKit"
 type = "dbus"
 note = "package manager abstraction layer service"
 bugs = [ "bsc#993505" ]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.freedesktop.PackageKit.conf",
-        digester = "xml",
-        hash = "1f3fb4b17f1d3da139f19d8f907731cef4260ec806f61df172cb2245119fbbe8"
-    },
-    {
-        path = "/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service",
-        digester = "shell",
-        hash = "fb23f33c456c6436778f78552461b7d18cf91109b14b9227da83169db84cd100"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.PackageKit.conf"
+digester = "xml"
+hash = "1f3fb4b17f1d3da139f19d8f907731cef4260ec806f61df172cb2245119fbbe8"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service"
+digester = "shell"
+hash = "fb23f33c456c6436778f78552461b7d18cf91109b14b9227da83169db84cd100"
 
 [[FileDigestGroup]]
 package = "NetworkManager-pptp"
 type = "dbus"
 note = "NetworkManager pptp VPN protocol extension"
 bug = "bsc#1197054"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/nm-pptp-service.conf",
-        digester = "xml",
-        hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-pptp-service.conf"
+digester = "xml"
+hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 
 [[FileDigestGroup]]
 package = "gdm"
@@ -251,18 +234,14 @@ package = "avahi"
 type = "dbus"
 note = "zeroconf service discovery, received review without a bug#"
 bugs = [ "bsc#1201345" ]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/avahi-dbus.conf",
-        digester = "xml",
-        hash = "047f2e04019b25389c08c3c211dfdc595ca7ee1adfc3da6cf85fabb536ebbb7b"
-    },
-    {
-        path = "/usr/share/dbus-1/system-services/org.freedesktop.Avahi.service",
-        digester = "shell",
-        hash = "de571101f4b9e23b1d2c28434cf047be0ab6bf00876c9267998531a645083dca"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/avahi-dbus.conf"
+digester = "xml"
+hash = "047f2e04019b25389c08c3c211dfdc595ca7ee1adfc3da6cf85fabb536ebbb7b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.Avahi.service"
+digester = "shell"
+hash = "de571101f4b9e23b1d2c28434cf047be0ab6bf00876c9267998531a645083dca"
 
 [[FileDigestGroup]]
 package = "hp-drive-guard"
@@ -305,18 +284,14 @@ package = "bluez"
 type = "dbus"
 note = "Provides bluetooth stack access via D-Bus"
 bugs = ["bsc#768062", "bsc#1199207"]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/bluetooth.conf",
-        digester = "xml",
-        hash = "529151093a482e8223738f86bec3dac4c23733c38fba1f318cc6130b5acaebfe"
-    },
-    {
-        path = "/usr/share/dbus-1/system-services/org.bluez.service",
-        digester = "shell",
-        hash = "8004c707a071bab12c20f03d0f63d3edea59bbc4d1697ebec44b12fa58f81fea"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/bluetooth.conf"
+digester = "xml"
+hash = "529151093a482e8223738f86bec3dac4c23733c38fba1f318cc6130b5acaebfe"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.bluez.service"
+digester = "shell"
+hash = "8004c707a071bab12c20f03d0f63d3edea59bbc4d1697ebec44b12fa58f81fea"
 
 [[FileDigestGroup]]
 package = "dnsmasq"
@@ -366,13 +341,10 @@ package = "NetworkManager-vpnc"
 type = "dbus"
 note = "NetworkManager vpnc (Cisco) VPN protocol extension"
 bug = "bsc#1197053"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/nm-vpnc-service.conf",
-        digester = "xml",
-        hash = "0e1ff5b6d001f1f244b75d71673e6f9f742dc166a3099a88a77359fafd99ad49"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-vpnc-service.conf"
+digester = "xml"
+hash = "0e1ff5b6d001f1f244b75d71673e6f9f742dc166a3099a88a77359fafd99ad49"
 
 [[FileDigestGroup]]
 package = "strongswan-nm"
@@ -428,18 +400,14 @@ package = "accountsservice"
 type = "dbus"
 note = "GNOME accountsservice manages user account settings used by DisplayManagers"
 bugs = ["bsc#676638", "bsc#1197354"]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.freedesktop.Accounts.conf",
-        digester = "xml",
-        hash = "babd2d9490feaf4386f606860830979ddcf4e0ff9ac88ae736a9e47f767ca4b0"
-    },
-    {
-        path = "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service",
-        digester = "shell",
-        hash = "b9d536bc71a9befe88fda99e1d51b58baa49cf7bf7c00d485434d946451ef2c0"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.Accounts.conf"
+digester = "xml"
+hash = "babd2d9490feaf4386f606860830979ddcf4e0ff9ac88ae736a9e47f767ca4b0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.Accounts.service"
+digester = "shell"
+hash = "b9d536bc71a9befe88fda99e1d51b58baa49cf7bf7c00d485434d946451ef2c0"
 
 [[FileDigestGroup]]
 package = "colord"
@@ -806,13 +774,10 @@ package = "switcheroo-control"
 type = "dbus"
 note = "small mostly read-only D-Bus service that detects the presence of dual-GPU hardware"
 bugs = ["bsc#1034309", "bsc#1199065"]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/net.hadess.SwitcherooControl.conf",
-        digester = "xml",
-        hash = "7d299bd3ac64cd7fdd4cd39c6707a7e86e330b1d8cf7b7474bb10d6eb9be7316"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/net.hadess.SwitcherooControl.conf"
+digester = "xml"
+hash = "7d299bd3ac64cd7fdd4cd39c6707a7e86e330b1d8cf7b7474bb10d6eb9be7316"
 
 [[FileDigestGroup]]
 package = "pam_dbus"
@@ -1133,18 +1098,14 @@ package = "power-profiles-daemon"
 type = "dbus"
 note = "a daemon dealing with system power settings"
 bugs = [ "bsc#1189900", "bsc#1201125" ]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service",
-        digester = "shell",
-        hash = "7d481c410356e61dc0ca7e9ed7725bb5a69c37aab2f51e6a36720894f6c1152f"
-    },
-    {
-        path = "/usr/share/dbus-1/system.d/net.hadess.PowerProfiles.conf",
-        digester = "xml",
-        hash = "3c9b773133201b3ecc7469dd9bc93253a992045e5cee5447def1d99f5b1e6ed5"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service"
+digester = "shell"
+hash = "7d481c410356e61dc0ca7e9ed7725bb5a69c37aab2f51e6a36720894f6c1152f"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/net.hadess.PowerProfiles.conf"
+digester = "xml"
+hash = "3c9b773133201b3ecc7469dd9bc93253a992045e5cee5447def1d99f5b1e6ed5"
 
 [[FileDigestGroup]]
 package = "setroubleshoot-server"
@@ -1177,79 +1138,61 @@ bug = "bsc#1196149"
 nodigests = [
 	"/usr/share/dbus-1/system-services/tukitd.d-bus.service",
 ]
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf",
-        hash = "300ed6ebc147291c5bebe5bc09de3e4b09bdc597238212470d48d71797e0623e"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf"
+hash = "300ed6ebc147291c5bebe5bc09de3e4b09bdc597238212470d48d71797e0623e"
 
 [[FileDigestGroup]]
 package = "nvme-stas"
 type = "dbus"
 note = "Services for interacting with NMVe bus events"
 bug = "bsc#1195236"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.nvmexpress.stac.conf",
-        digester = "xml",
-        hash = "96eeef5353252bc721a4724255ed9d3f3cd7d2ffd425c5c06d67e1ea3f05fb36"
-    },
-    {
-        path = "/usr/share/dbus-1/system.d/org.nvmexpress.staf.conf",
-        digester = "xml",
-        hash = "e991c8b4e4b0b1459d16ee33863e6b5425f0b9a9afd3e2fb6e040ab545651a3d"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.nvmexpress.stac.conf"
+digester = "xml"
+hash = "96eeef5353252bc721a4724255ed9d3f3cd7d2ffd425c5c06d67e1ea3f05fb36"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.nvmexpress.staf.conf"
+digester = "xml"
+hash = "e991c8b4e4b0b1459d16ee33863e6b5425f0b9a9afd3e2fb6e040ab545651a3d"
 
 [[FileDigestGroup]]
 package = "kpmcore"
 type = "dbus"
 note = "Helper for (re)partitioning block devices"
 bug = "bsc#1178848"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.kde.kpmcore.helperinterface.conf",
-        digester = "xml",
-        hash = "aee71755aa4d24b8d0dde83e704b45e453703c0083c4eb02010cd9ffba25c706"
-    }
-]
 nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service"
 ]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.kpmcore.helperinterface.conf"
+digester = "xml"
+hash = "aee71755aa4d24b8d0dde83e704b45e453703c0083c4eb02010cd9ffba25c706"
 
 [[FileDigestGroup]]
 package = "usbguard"
 type = "dbus"
 note = "D-Bus bridge towards the usbguard custom IPC protocol"
 bug = "bsc#1196621"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system.d/org.usbguard1.conf",
-        digester = "xml",
-        hash = "c517848d4b267f62c6004517e8bcd4160dceed7d4ed74e134f7531c0bb6f2ff1"
-    },
-    {
-        path = "/usr/share/dbus-1/system-services/org.usbguard1.service",
-        digester = "shell",
-        hash = "3c2924c9228acdb0140639f5df6eb2d1bffb3cedb85a695e319fee5777dada00"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.usbguard1.conf"
+digester = "xml"
+hash = "c517848d4b267f62c6004517e8bcd4160dceed7d4ed74e134f7531c0bb6f2ff1"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.usbguard1.service"
+digester = "shell"
+hash = "3c2924c9228acdb0140639f5df6eb2d1bffb3cedb85a695e319fee5777dada00"
 
 [[FileDigestGroup]]
 package = "kinfocenter5"
 type = "dbus"
 note = "KDE utility that provides information about the user's system."
 bug = "bsc#1199735"
-digests = [
-    {
-        path = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service",
-        digester = "shell",
-        hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
-    },
-    {
-        path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf",
-        digester = "xml",
-        hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service"
+digester = "shell"
+hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
+digester = "xml"
+hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"

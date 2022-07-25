@@ -1,5 +1,8 @@
 import rpmlint.checks.FileDigestCheck as fdc
-import toml
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 
 def basic_syntax_checks(entry):
@@ -51,12 +54,11 @@ def test_file_digest_whitelists():
     ]
 
     for _type, whitelist in WHITELISTS:
-        path = f'configs/openSUSE/{whitelist}.toml'
-        data = toml.load(path)
-        for entry in data['FileDigestGroup']:
-            basic_syntax_checks(entry)
-
-            assert entry['type'] == _type
+        with open(f'configs/openSUSE/{whitelist}.toml', 'rb') as f:
+            data = tomllib.load(f)
+            for entry in data['FileDigestGroup']:
+                basic_syntax_checks(entry)
+                assert entry['type'] == _type
 
 
 def test_metadata_whitelists():
@@ -66,7 +68,7 @@ def test_metadata_whitelists():
     ]
 
     for key, whitelist in WHITELISTS:
-        path = f'configs/openSUSE/{whitelist}.toml'
-        data = toml.load(path)
-        for entry in data[key]:
-            basic_syntax_checks(entry)
+        with open(f'configs/openSUSE/{whitelist}.toml', 'rb') as f:
+            data = tomllib.load(f)
+            for entry in data[key]:
+                basic_syntax_checks(entry)

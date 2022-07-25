@@ -3,88 +3,67 @@ package = "rpmlint-integration-test"
 type = "sudoers"
 note = "valid test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
-digests = [
-    {
-        path = "/etc/sudoers.d/valid-but-evil-rules",
-        digester = "shell",
-        hash = "84cf85013ddd404fd1f67ccf1259567b573057cd3b5bfa2696cf9f25c25dfcab"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/valid-but-evil-rules"
+digester = "shell"
+hash = "84cf85013ddd404fd1f67ccf1259567b573057cd3b5bfa2696cf9f25c25dfcab"
 
 [[FileDigestGroup]]
 package = "rpmlint-integration-test"
 type = "sudoers"
 note = "mismatching test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
-digests = [
-    {
-        path = "/etc/sudoers.d/mismatching-rules",
-        digester = "shell",
-        hash = "a4cf85013ddd404ad1f67ccf1259567b57305acd3b5bfaa696cf9f25a25dfcaa"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/mismatching-rules"
+digester = "shell"
+hash = "a4cf85013ddd404ad1f67ccf1259567b57305acd3b5bfaa696cf9f25a25dfcaa"
 
 [[FileDigestGroup]]
 package = "monitoring-plugins-smart"
 type = "sudoers"
 note = "Nagios plugin for monitoring SMART device status. Rather complex Perl script"
 bug = "bsc#1196138"
-digests = [
-    {
-        path = "/etc/sudoers.d/monitoring-plugins-smart",
-        digester = "shell",
-        hash = "171f2afffd74c52433e72443ba3023836e96b8edf14d98e6b3c337ef9de32bce"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/monitoring-plugins-smart"
+digester = "shell"
+hash = "171f2afffd74c52433e72443ba3023836e96b8edf14d98e6b3c337ef9de32bce"
 
 [[FileDigestGroup]]
 package = "monitoring-plugins-zypper"
 type = "sudoers"
 note = "Nagios plugin for monitoring zypper update list. A couple of read-only zypper sub-commands"
 bug = "bsc#1196139"
-digests = [
-    {
-        path = "/etc/sudoers.d/check_zypper",
-        digester = "shell",
-        hash = "7c28565571a13de93e79753e7c8ce6c0c7fd6fc5a2df8ba7c760ecc17004947a"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/check_zypper"
+digester = "shell"
+hash = "7c28565571a13de93e79753e7c8ce6c0c7fd6fc5a2df8ba7c760ecc17004947a"
 
 [[FileDigestGroup]]
 package = "cscreen"
 type = "sudoers"
 note = "Allows members of the _cscreen group to attach to a shared screen session"
 bug = "bsc#1196140"
-digests = [
-    {
-        path = "/etc/sudoers.d/cscreen",
-        digester = "shell",
-        hash = "f031ed532175450fa1352ab924130970509e9c742c95277a90f5d0da6c5f0f87"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/cscreen"
+digester = "shell"
+hash = "f031ed532175450fa1352ab924130970509e9c742c95277a90f5d0da6c5f0f87"
 
 [[FileDigestGroup]]
 package = "leafnode"
 type = "sudoers"
 note = "Allows members of the newsadmin group to fetch news"
 bug = "bsc#1196142"
-digests = [
-    {
-        path = "/etc/sudoers.d/leafnode",
-        digester = "shell",
-        hash = "88d39bcbdba7c9485ab5f73617b8d9763385aa8e9f598e808dd025fba0d8d445"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/leafnode"
+digester = "shell"
+hash = "88d39bcbdba7c9485ab5f73617b8d9763385aa8e9f598e808dd025fba0d8d445"
 
 [[FileDigestGroup]]
 package = "ceph-base"
 type = "sudoers"
 note = "allows to run smartctl and nvme programs to collect device health metrics"
 bug = "bsc#1196141"
-digests = [
-    {
-        path = "/etc/sudoers.d/ceph-smartctl",
-        digester = "shell",
-        hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
-    }
-]
+[[FileDigestGroup.digests]]
+path = "/etc/sudoers.d/ceph-smartctl"
+digester = "shell"
+hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
