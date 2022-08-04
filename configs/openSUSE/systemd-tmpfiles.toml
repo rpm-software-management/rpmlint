@@ -96,3 +96,13 @@ entries = [
 	"c /dev/pcfclock1 0444 root root - 181:1",
 	"c /dev/pcfclock2 0444 root root - 181:2",
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "gromox"
+bug = "bsc#1200165"
+note = "gromox creates these two temporary directories"
+path = "/usr/lib/tmpfiles.d/tmpfiles-gromox.conf"
+entries = [
+	"d /run/gromox 0775 gromox gromox",
+	"d /var/tmp/gromox-fpm 0770 gromox gromox 1d"
+]

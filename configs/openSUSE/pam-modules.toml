@@ -487,3 +487,12 @@ bug = "bsc#1195623"
 nodigests = [
     "*/security/pam_fscrypt.so",
 ]
+
+[[FileDigestGroup]]
+package = "gromox"
+type = "pam"
+note = "PAM module provided by gromox to authenticate non-Gromox processes to a backend such as MySQL or LDAP"
+bug = "bsc#1200165"
+nodigests = [
+    "*/security/pam_gromox.so",
+]
