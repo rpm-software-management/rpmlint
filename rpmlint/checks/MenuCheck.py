@@ -94,7 +94,7 @@ class MenuCheck(AbstractCheck):
             directory = pkg.dir_name()
             for f in menus:
                 # remove comments and handle cpp continuation lines
-                text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT).stdout.decode()
+                text = subprocess.run(('/lib/cpp', directory + f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT).stdout.decode('utf-8', errors='replace')
                 if text.endswith('\n'):
                     text = text[:-1]
 

@@ -46,7 +46,7 @@ def byte_to_string(item):
         return [byte_to_string(i) for i in item]
 
     # everything else shall be decoded and fails replaced
-    return item.decode(encoding='UTF-8', errors='replace')
+    return item.decode(encoding='utf-8', errors='replace')
 
 
 def readlines(path):

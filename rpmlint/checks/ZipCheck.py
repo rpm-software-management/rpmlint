@@ -78,7 +78,7 @@ class ZipCheck(AbstractCheck):
             return
 
         # otherwise check for the hardcoded classpath
-        manifest = jarfile.read(mf).decode()
+        manifest = jarfile.read(mf).decode('utf-8', errors='replace')
         if classpath_regex.search(manifest):
             self.output.add_info('W', pkg, 'class-path-in-manifest', fname)
 

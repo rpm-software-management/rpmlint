@@ -116,7 +116,7 @@ def is_utf8_bytestr(s):
     Due to changes in rpm, needs to handle both bytes and unicode."""
     try:
         if hasattr(s, 'decode'):
-            s.decode('utf-8')
+            s.decode('utf-8', errors='replace')
         elif hasattr(s, 'encode'):
             s.encode('utf-8')
         else:
@@ -498,7 +498,7 @@ class Pkg(AbstractPkg):
         ret = subprocess.run(('rpm', '-Kv', self.filename),
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                              env=ENGLISH_ENVIROMENT)
-        text = ret.stdout.decode()
+        text = ret.stdout.decode('utf-8', errors='replace')
         if text.endswith('\n'):
             text = text[:-1]
         return ret.returncode, text
@@ -521,7 +521,7 @@ class Pkg(AbstractPkg):
         """Mmap a file, return it's content decoded."""
         try:
             with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
-                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
+                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode('utf-8', errors='replace')
         except Exception:
             return ''
 
