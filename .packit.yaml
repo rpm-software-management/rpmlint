@@ -10,8 +10,6 @@ jobs:
 - job: copr_build
   metadata:
     targets:
-    - fedora-rawhide-x86_64
-    - fedora-rawhide-aarch64
     - mageia-cauldron-x86_64
     - mageia-cauldron-aarch64
     - opensuse-tumbleweed-x86_64
@@ -21,8 +19,6 @@ jobs:
   trigger: commit
   metadata:
     targets:
-    - fedora-rawhide-x86_64
-    - fedora-rawhide-aarch64
     - mageia-cauldron-x86_64
     - mageia-cauldron-aarch64
     - opensuse-tumbleweed-x86_64
