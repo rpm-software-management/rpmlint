@@ -331,10 +331,14 @@ nodigests = [
 package = "cups-pk-helper"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.opensuse.CupsPkHelper.Mechanism.service",
-    "/etc/dbus-1/system.d/org.opensuse.CupsPkHelper.Mechanism.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.CupsPkHelper.Mechanism.service"
+digester = "shell"
+hash = "204d6c48ccd2aca2c21da64991932938502316c5df465173e86b2fe29a0bc29c"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.CupsPkHelper.Mechanism.conf"
+digest = "xml"
+hash = "ae744e8ed5c2dcd9f3c50a4b031ed467a6096434c106aa9dc0b949d445bc2fb9"
 
 [[FileDigestGroup]]
 package = "NetworkManager-vpnc"
