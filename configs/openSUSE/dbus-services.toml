@@ -1059,6 +1059,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "systemd-experimental"
+type = "dbus"
+note = "systemd-oomd out-of memory userspace handler based on control groups and PMI"
+bug = "bsc#1202454"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.oom1.conf"
+digester = "xml"
+hash = "c19a51f808ce54488bc12c712e481bc3b97fda072bfb884cdc0d2b49cb6cd9a0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.oom1.service"
+digester = "shell"
+hash = "20dbcf394e1f6cf471c4a397311eb81e364094915e8766c9811408918f3eeaa2"
+
+[[FileDigestGroup]]
 package = "oddjob-gpupdate"
 type = "dbus"
 note = "helper that calls samba-gpupdate"
