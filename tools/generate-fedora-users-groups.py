@@ -12,6 +12,8 @@ for uidgid_file in ['/usr/share/doc/setup/uidgid']:
         with open(uidgid_file) as fobj:
             try:
                 for line in fobj.read().strip().splitlines():
+                    if line.startswith('#'):
+                        continue
                     res = uidgid_regex.search(line)
                     if res:
                         name = res.group(1)
