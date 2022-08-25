@@ -73,7 +73,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_library_dependency,
                                 self._check_forbidden_functions,
                                 self._check_executable_shlib,
-                                self._check_optflags]
+                                self._check_optflags,
+                                self._check_hash_sections]
 
     @staticmethod
     def create_nonlibc_regexp_call(call):
@@ -525,6 +526,23 @@ class BinariesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'missing-mandatory-optflags', pkgfile.name, ' '.join(missing))
             if forbidden:
                 self.output.add_info('E', pkg, 'forbidden-optflags', pkgfile.name, ' '.join(forbidden))
+
+    def _check_hash_sections(self, pkg, pkgfile):
+        if not self.readelf_parser.is_shlib:
+            return
+
+        for elf_file in self.readelf_parser.section_info.elf_files:
+            needle = {'.hash', '.gnu.hash'}
+            for section in elf_file:
+                if not needle:
+                    break
+                if section.name in needle:
+                    needle.remove(section.name)
+
+            if '.hash' in needle:
+                self.output.add_info('E', pkg, 'missing-hash-section', pkgfile.name)
+            if '.gnu.hash' in needle:
+                self.output.add_info('W', pkg, 'missing-gnu-hash-section', pkgfile.name)
 
     def _is_standard_archive(self, pkg, pkgfile):
         # skip Klee bytecode archives
