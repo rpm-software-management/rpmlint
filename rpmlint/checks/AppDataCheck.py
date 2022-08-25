@@ -23,7 +23,8 @@ class AppDataCheck(AbstractFilesCheck):
 
         validation_failed = False
         try:
-            r = subprocess.run(cmd.split(), env=ENGLISH_ENVIROMENT)
+            r = subprocess.run(cmd.split(), env=ENGLISH_ENVIROMENT,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if r.returncode != 0:
                 validation_failed = True
         except FileNotFoundError:
