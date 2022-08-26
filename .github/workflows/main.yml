@@ -39,7 +39,6 @@ jobs:
               python3-pybeam
               python3-pytest
               python3-pytest-cov
-              python3-pytest-flake8
               python3-pytest-xdist
               python3-flake8
               python3-flake8-builtins
@@ -79,7 +78,6 @@ jobs:
               python3-pybeam
               python3-pytest
               python3-pytest-cov
-              python3-pytest-flake8
               python3-pytest-xdist
               python3-flake8
               python3-flake8-import-order
@@ -107,6 +105,7 @@ jobs:
       - run: pip install coveralls
       - uses: actions/checkout@v2
       - run: pytest
+      - run: flake8
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
       - run: python3 test/dump_stats.py profile.stats
       - name: Collect the coveralls report
