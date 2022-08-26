@@ -89,3 +89,4 @@ systemd-tmpfile-entry-unauthorized = 10
 systemd-tmpfile-ghost = 10
 systemd-tmpfile-parse-error = 10
 systemd-tmpfile-symlink = 10
+missing-hash-section = 10000
