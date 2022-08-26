@@ -92,6 +92,8 @@ def test_shlib_with_no_exec_glibc(tmpdir, package, binariescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'E: shared-library-not-executable /lib64/libpthread.so' in out
+    assert 'missing-hash-section' not in out
+    assert 'missing-gnu-hash-section' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/bcc-lua'])

@@ -178,3 +178,11 @@ This executable was not compiled with expected flags.
 forbidden-optflags="""
 This executable was compiled with an unexpected flag.
 """
+missing-hash-section="""
+SystemV requires each shared library must provide .hash section that
+is used for efficient symbol resolution.
+"""
+missing-gnu-hash-section="""
+The .gnu.hash section is missing and leads to a slower symbol resolution
+during dynamic linking.
+"""
