@@ -204,7 +204,7 @@ start_private_key_regex = re.compile(r'^----BEGIN PRIVATE KEY-----$')
 non_readable_regexs = (re.compile(r'^/var/log/'),
                        re.compile(r'^/etc/(g?shadow-?|securetty)$'))
 
-man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man[^/]+/(.+)\.[1-9n]')
+man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man(?P<category>[^/]+)/(?P<filename>.+)')
 
 fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
 fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
@@ -500,7 +500,7 @@ class FilesCheck(AbstractCheck):
             is_doc = f in pkg.doc_files
             nonexec_file = False
 
-            self._check_manpage_compressed(pkg, f)
+            self._check_manpage(pkg, f)
             self._check_infopage_compressed(pkg, f)
 
             for match in self.macro_regex.findall(f):
@@ -700,9 +700,9 @@ class FilesCheck(AbstractCheck):
                         self.output.add_info('E', pkg, 'rpath-in-buildconfig', f, 'lines', ln)
 
                 # look for man pages
-                res = man_base_regex.search(f)
+                res = man_base_regex.fullmatch(f)
                 if res:
-                    man_basenames.add(res.group(1))
+                    man_basenames.add(res.group('category'))
 
                 res = bin_regex.search(f)
                 if res:
@@ -922,9 +922,9 @@ class FilesCheck(AbstractCheck):
                 if not devel_pkg and is_so and not link.endswith('.so'):
                     self.output.add_info('W', pkg, 'devel-file-in-non-devel-package', f)
 
-                res = man_base_regex.search(f)
+                res = man_base_regex.fullmatch(f)
                 if res:
-                    man_basenames.add(res.group(1))
+                    man_basenames.add(res.group('category'))
                 else:
                     res = bin_regex.search(f)
                     if res:
@@ -1038,16 +1038,35 @@ class FilesCheck(AbstractCheck):
             if exe not in man_basenames:
                 self.output.add_info('W', pkg, 'no-manual-page-for-binary', exe)
 
-    def _check_manpage_compressed(self, pkg, fname):
+    def _check_manpage(self, pkg, fname):
         """
         Check if the the manual page is compressed with the compression method
         stated in the rpmlint configuration (CompressExtension option).
+        Check also for a correct manual page location and if not included in a subfolder.
 
         Print a warning if it's not compressed.
         """
-        if self.compress_ext and self.man_regex.search(fname) and not fname.endswith(self.compress_ext):
-            self.output.add_info('W', pkg, 'manpage-not-compressed',
-                                 self.compress_ext, fname)
+        if stat.S_ISDIR(pkg.files[fname].mode):
+            return
+
+        res = man_base_regex.fullmatch(fname)
+        if not res:
+            return
+
+        category = res.group('category')
+        filename = Path(res.group('filename'))
+        suffixes = filename.suffixes
+
+        if self.compress_ext:
+            if self.compress_ext != suffixes[-1][1:]:
+                self.output.add_info('W', pkg, 'manpage-not-compressed',
+                                     self.compress_ext, fname)
+            suffixes = suffixes[:-1]
+        file_category = suffixes[-1][1:]
+        if file_category != category:
+            self.output.add_info('E', pkg, 'bad-manual-page-folder', fname, f'expected folder: man{file_category}')
+        if str(filename.parent) != '.':
+            self.output.add_info('E', pkg, 'manual-page-in-subfolder', fname)
 
     def _check_infopage_compressed(self, pkg, fname):
         """
