@@ -15,6 +15,7 @@ jobs:
         build-type: ['normal']
         container:
           - 'registry.fedoraproject.org/fedora:latest'
+          - 'registry.fedoraproject.org/fedora:rawhide'
           - 'registry.opensuse.org/opensuse/tumbleweed:latest'
         include:
           - container: 'registry.fedoraproject.org/fedora:latest'
