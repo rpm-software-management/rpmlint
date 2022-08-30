@@ -1,7 +1,7 @@
 # Configuration for the rpmlint utility.
 
 # Configuration options used by the checks
-CompressExtension = ""
+CompressExtension = "gz"
 UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
