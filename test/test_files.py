@@ -224,3 +224,13 @@ def test_zero_length_ignore(tmpdir, package, filescheck, filename, show):
     out = output.print_results(output.results)
     assert filename in pkg.files
     assert (f'zero-length {filename}' in out) == show
+
+
+@pytest.mark.parametrize('package', ['binary/manual-pages'])
+def test_manual_pages(tmpdir, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: manual-page-in-subfolder /usr/share/man/man3/foo/bar/baz.3.gz' in out
+    assert 'W: manpage-not-compressed bz2 /usr/share/man/man1/test.1.zst' in out
+    assert 'E: bad-manual-page-folder /usr/share/man/man0p/foo.3.gz expected folder: man3' in out

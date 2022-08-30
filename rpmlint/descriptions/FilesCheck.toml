@@ -395,3 +395,11 @@ source package. Did you package a complete directory from the
 tarball by using %doc? Consider removing Makefile* from this
 directory at the end of your %install section to reduce bloat.
 """
+bad-manual-page-folder="""
+Manual page with section name X (e.g. man.1) should be placed
+corresponding manual folder manX (man1).
+"""
+manual-page-in-subfolder="""
+Manual page should not be placed in a subfolder of a manual section
+directory.
+"""
