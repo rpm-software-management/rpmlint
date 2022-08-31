@@ -1063,7 +1063,7 @@ class FilesCheck(AbstractCheck):
                                      self.compress_ext, fname)
             suffixes = suffixes[:-1]
         file_category = suffixes[-1][1:]
-        if file_category != category:
+        if not file_category.startswith(category):
             self.output.add_info('E', pkg, 'bad-manual-page-folder', fname, f'expected folder: man{file_category}')
         if str(filename.parent) != '.':
             self.output.add_info('E', pkg, 'manual-page-in-subfolder', fname)
