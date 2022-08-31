@@ -234,3 +234,4 @@ def test_manual_pages(tmpdir, package, filescheck):
     assert 'E: manual-page-in-subfolder /usr/share/man/man3/foo/bar/baz.3.gz' in out
     assert 'W: manpage-not-compressed bz2 /usr/share/man/man1/test.1.zst' in out
     assert 'E: bad-manual-page-folder /usr/share/man/man0p/foo.3.gz expected folder: man3' in out
+    assert 'bad-manual-page-folder /usr/share/man/man3/some.3pm.gz' not in out
