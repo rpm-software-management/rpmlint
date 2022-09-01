@@ -1062,11 +1062,13 @@ class FilesCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'manpage-not-compressed',
                                      self.compress_ext, fname)
             suffixes = suffixes[:-1]
-        file_category = suffixes[-1][1:]
-        if not file_category.startswith(category):
-            self.output.add_info('E', pkg, 'bad-manual-page-folder', fname, f'expected folder: man{file_category}')
-        if str(filename.parent) != '.':
-            self.output.add_info('E', pkg, 'manual-page-in-subfolder', fname)
+
+        if suffixes:
+            file_category = suffixes[-1][1:]
+            if not file_category.startswith(category):
+                self.output.add_info('E', pkg, 'bad-manual-page-folder', fname, f'expected folder: man{file_category}')
+            if str(filename.parent) != '.':
+                self.output.add_info('E', pkg, 'manual-page-in-subfolder', fname)
 
     def _check_infopage_compressed(self, pkg, fname):
         """
