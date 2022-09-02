@@ -498,7 +498,8 @@ class BinariesCheck(AbstractCheck):
                 forbidden_functions_filtered.append(fn)
                 continue
 
-            waiver = any(map(lambda string: f['waiver_regex'].search(string), strings_parser.strings))
+            # See: https://github.com/PyCQA/flake8-bugbear/issues/269
+            waiver = any(map(lambda string: f['waiver_regex'].search(string), strings_parser.strings))  # noqa: B023
             if not waiver:
                 forbidden_functions_filtered.append(fn)
 
