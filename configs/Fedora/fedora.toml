@@ -302,6 +302,8 @@ Filters = [
     # https://bugzilla.redhat.com/show_bug.cgi?id=1424684#c9
     'spelling-error.* \b(runtime|Runtime|metadata|cryptographic|multi|linux|filesystem|filesystems|backend|backends|userspace|addon|wayland|Wayland|util|utils|lossless|virtualization|toolkits|libvirtd|crypto|glyphs|GStreamer|http|extensibility|codec|codecs|truetype|scalable|pluggable|pixbuf|Kerberos|customizable|bitstream|tcp|libXss|libs|libc|encodings|GLib|udev|posix|libpng|glapi|gbm|freedesktop|spi|realtime|preprocessor|libaudit|hypervisor|embeddable|distributable|devel|config|cairo|bootloader|adaptors|pragma|passphrase|malloc|libvirt|libmagic|io|datetime|boolean|argparse|py|pinentry|namespace|middleware|lowlevel|libxcb|libudev|libsoup|libgcrypt|libcom|iSCSI|initramfs|GObject|executables|dialogs|checkpolicy|bitmapped|assistive|btrfs|crypttab|defrag|dracut|hostname|luks|mountpoints|netdev|rpmnew|rpmsave|storaged|tss|unlocker)\b',
     # Fedora no longer uses explicit ldconfig %post/%postun as of Fedora 28
+    'postin-without-ldconfig',
+    'postun-without-ldconfig',
     'library-without-ldconfig-postin',
     'library-without-ldconfig-postun',
     # Ignore 700 dir perms here
