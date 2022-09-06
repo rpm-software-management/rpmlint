@@ -822,7 +822,7 @@ class FilesCheck(AbstractCheck):
                     if nonexec_file:
                         self.output.add_info('W', pkg, 'spurious-executable-perm', f)
                 elif f.startswith('/etc/') and f not in config_files and \
-                        f not in ghost_files:
+                        f not in ghost_files and not f.startswith('/etc/ld.so.conf.d/'):
                     self.output.add_info('W', pkg, 'non-conffile-in-etc', f)
 
                 if pkg.arch == 'noarch' and f.startswith('/usr/lib64/python'):
