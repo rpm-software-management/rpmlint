@@ -2,9 +2,11 @@
 """ This script is used to generate values for
     config/Fedora/configs/Fedora/users-groups.toml
 """
+
+import datetime
 import os
 import re
-import datetime
+
 users = set()
 groups = set()
 uidgid_regex = re.compile(r'^\s*(\S+)\s+(-|\d+)\s+(-|\d+|\(\d+\))\s')
