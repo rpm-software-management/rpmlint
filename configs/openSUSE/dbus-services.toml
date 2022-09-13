@@ -1042,11 +1042,15 @@ nodigests = [
 package = "kdiskmark"
 type = "dbus"
 note = "HDD/SSD benchmark GUI"
-bug = "bsc#1182521"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.jonmagon.kdiskmark.service",
-    "/usr/share/dbus-1/system.d/org.jonmagon.kdiskmark.conf",
-]
+bugs = ["bsc#1182521", "bsc#1202725"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/dev.jonmagon.kdiskmark.helperinterface.conf"
+digester = "xml"
+hash = "daf713008b089cc5a9d51add5b8a21521a2824001bb01b26ccee4257ea5e324c"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/dev.jonmagon.kdiskmark.helperinterface.service"
+digester = "shell"
+hash = "9ae44bd6f4c16417e6752581fe7513f791d5660b849747bbed4307e25444606b"
 
 [[FileDigestGroup]]
 package = "systemd-experimental"
