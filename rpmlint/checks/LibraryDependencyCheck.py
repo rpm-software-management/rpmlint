@@ -1,6 +1,7 @@
 from pathlib import Path
 import stat
 
+from rpm import expandMacro
 from rpmlint.checks import FilesCheck
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.pkg import FakePkg
@@ -13,6 +14,7 @@ class LibraryDependencyCheck(AbstractCheck):
         self.package_so_symlinks = {}
         self.package_so_files = {}
         self.package_arch_mapping = {}
+        self.isa = expandMacro('%{_isa}')
 
     def check_binary(self, pkg):
         if pkg.is_source:
@@ -49,6 +51,8 @@ class LibraryDependencyCheck(AbstractCheck):
                         break
                     else:
                         definition = self.package_so_files[link]
-                        if definition not in self.package_requires[pkgname]:
+
+                        if (definition not in self.package_requires[pkgname] and
+                                definition + self.isa not in self.package_requires[pkgname]):
                             self.output.add_info('E', pkg, 'no-library-dependency-on', definition, link)
                             break
