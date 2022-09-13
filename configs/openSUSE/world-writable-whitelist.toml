@@ -39,6 +39,36 @@ owner = "root"
 group = "root"
 
 [[WorldWritableWhitelist]]
+package = "postfix"
+bug = "bsc#1179574"
+note = "Public standard sticky-bit directories"
+[[WorldWritableWhitelist.files]]
+path = '/var/spool/mail'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
+
+[[WorldWritableWhitelist]]
+package = "sendmail"
+bug = "bsc#1179574"
+note = "Public standard sticky-bit directories"
+[[WorldWritableWhitelist.files]]
+path = '/var/spool/mail'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
+
+[[WorldWritableWhitelist]]
+package = "exim"
+bug = "bsc#1179574"
+note = "Public standard sticky-bit directories"
+[[WorldWritableWhitelist.files]]
+path = '/var/spool/mail'
+mode = "drwxrwxrwt"
+owner = "root"
+group = "root"
+
+[[WorldWritableWhitelist]]
 package = "nscd"
 bug = "bsc#1174642"
 note = "nss caching daemon socket. is packaged as %ghost, therefore 'appears' to be a regular file."
