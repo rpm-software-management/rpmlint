@@ -466,9 +466,9 @@ nodigests = [
 package = "autofs"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#782691"
+bugs = ["bsc#782691", "bsc#1203362"]
 nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.AutoMount.conf",
+    "/usr/share/dbus-1/system.d/org.freedesktop.AutoMount.conf",
 ]
 
 [[FileDigestGroup]]
