@@ -27,7 +27,7 @@ filelist-forbidden-debuginfo="""
 File may only be packaged in the -debuginfo subpackage."""
 filelist-forbidden-locale="""
 Please use nb or nb_NO (and nn for nynorsk),
-see https://bugzilla.novell.com/show_bug.cgi?id=42748."""
+see https://bugzilla.opensuse.org/show_bug.cgi?id=42748."""
 filelist-forbidden-xorg="""
 Please use the updated paths for Xorg 7.1 and above."""
 filelist-forbidden-suseconfig="""
