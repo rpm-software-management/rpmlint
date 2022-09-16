@@ -467,9 +467,10 @@ package = "autofs"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bugs = ["bsc#782691", "bsc#1203362"]
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.AutoMount.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.AutoMount.conf"
+digester = "xml"
+hash = "d53d87b0673808f3cd01b9f474371b6ea5ed82fcad3277551c506055b4ace568"
 
 [[FileDigestGroup]]
 package = "NetworkManager-iodine"
