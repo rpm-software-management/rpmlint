@@ -568,11 +568,12 @@ nodigests = [
 [[FileDigestGroup]]
 package = "tuned"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#787379", "bsc#1007279"]
-nodigests = [
-    "/etc/dbus-1/system.d/com.redhat.tuned.conf",
-]
+note = "interface for selecting tuned profiles and other tuned settings"
+bugs = ["bsc#787379", "bsc#1007279", "bsc#1202339"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/com.redhat.tuned.conf"
+hash = "752a4b3ef1d1e3a7da380720735444c8eac526452457d9d2bde816e0c17661d0"
+digester = "xml"
 
 [[FileDigestGroup]]
 package = "kwalletmanager5"
