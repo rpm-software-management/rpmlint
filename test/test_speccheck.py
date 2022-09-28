@@ -1092,3 +1092,13 @@ def test_check_invalid_url_not_applied(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: invalid-url' not in out
+
+
+@pytest.mark.parametrize('package', ['spec/python-setup-test'])
+def test_python_setup_test(package, speccheck):
+    """Test if specfile has deprecated use of 'setup.py test'."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-setup-test' in out
