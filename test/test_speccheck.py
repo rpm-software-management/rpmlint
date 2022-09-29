@@ -1103,6 +1103,7 @@ def test_python_setup_test(package, speccheck):
     out = output.print_results(output.results)
     assert 'W: python-setup-test' in out
 
+
 @pytest.mark.parametrize('package', ['spec/suse-version'])
 def test_suse_version(package, speccheck):
     output, test = speccheck
