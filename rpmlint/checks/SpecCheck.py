@@ -79,6 +79,8 @@ filelist_regex = re.compile(r'\s+-f\s+\S+')
 pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
+python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
+
 UNICODE_NBSP = u'\xa0'
 
 
@@ -489,6 +491,10 @@ class SpecCheck(AbstractCheck):
                     res = re.match('%+', match)
                     if len(res.group(0)) % 2:
                         self.output.add_info('W', pkg, 'macro-in-comment', match)
+
+            # Test if the "python setup.py test" deprecated subcommand is used
+            if current_section == 'check' and python_setup_test_regex.search(line):
+                self.output.add_info('W', pkg, 'python-setup-test', line[:-1])
 
         # Last line read is not useful after this point
         pkg.current_linenum = None
