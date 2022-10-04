@@ -42,10 +42,10 @@ note = """Be careful about calculating digest sums here, the sendmail package
       values"""
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/sendmail"
-hash = "423780cfd9d5935a26981b1cfede12816c1ce4c0982c22dd28d4ceadeed5cce5"
+hash = "e09ca5efebd0b3c123afc2364f9745f4d85c4327fa83f709bccbaa64da764486"
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/sendmail.paranoid"
-hash = "afa2a74dfef4ac98dd048a7c962a3528e4b5c932e538f7c3666f167924de2d4e"
+hash = "2d5c56cdfb00ec169c182de791cf2934331159842f1849c5f2d7059f0086bd2c"
 
 [[FileDigestGroup]]
 package = "texlive-filesystem"
