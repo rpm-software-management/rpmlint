@@ -241,7 +241,7 @@ class SpecCheck(AbstractCheck):
                 if current_section != 'prep':
                     self.output.add_info('W', pkg, '%autopatch-not-in-prep')
             else:
-                res = autosetup_regex.search(line)
+                res = self.autosetup_regex.search(line)
                 if res:
                     if not autosetup_n_regex.search(res.group(1)):
                         patches_auto_applied = True
