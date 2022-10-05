@@ -89,6 +89,8 @@ ExtraMenuNeeds = [
 ]
 # Regexp string with exceptions for hardcoded library paths.
 HardcodedLibPathExceptions = '/lib/(modules|cpp|perl5|rpm|hotplug|firmware|systemd)($|[\s/,])'
+# Regexp string to match autosetup macro and its variants
+AutosetupMacro = '^\s*%autosetup(\s.*|$)'
 # Values for non-XDG legacy menu item sections
 ValidMenuSections = [
     "Office/Accessories",

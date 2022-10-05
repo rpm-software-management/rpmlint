@@ -71,7 +71,6 @@ setup_regex = re.compile(r'%setup\b')  # intentionally no whitespace before!
 setup_q_regex = re.compile(r' -[A-Za-z]*q')
 setup_t_regex = re.compile(r' -[A-Za-z]*T')
 setup_ab_regex = re.compile(r' -[A-Za-z]*[ab]')
-autosetup_regex = re.compile(r'^\s*%autosetup(\s.*|$)')
 autosetup_n_regex = re.compile(r' -[A-Za-z]*N')
 autopatch_regex = re.compile(r'^\s*%autopatch(?:\s|$)')
 
@@ -113,6 +112,7 @@ class SpecCheck(AbstractCheck):
                                          """The value of the Group tag in the package is not valid.  Valid groups are:
                                          '%s'.""" % ', '.join(self.valid_groups)})
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
+        self.autosetup_regex = re.compile(config.configuration['AutosetupMacro'])
 
     def check_source(self, pkg):
         """Find specfile in SRPM and run spec file related checks."""
