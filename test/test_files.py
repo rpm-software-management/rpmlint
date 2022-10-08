@@ -175,6 +175,7 @@ def test_distribution_tags(tmpdir, package, filescheck):
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'manpage-not-compressed' in out
+    assert 'no-manual-page-for-binary' not in out
     assert 'This manual page is not compressed with the bz2 compression' in out
 
 
