@@ -204,7 +204,7 @@ start_private_key_regex = re.compile(r'^----BEGIN PRIVATE KEY-----$')
 non_readable_regexs = (re.compile(r'^/var/log/'),
                        re.compile(r'^/etc/(g?shadow-?|securetty)$'))
 
-man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man(?P<category>[^/]+)/(?P<filename>.+)')
+man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man(?P<category>[^/]+)/(?P<filename>((?P<binary>[^.]+)\..+))')
 
 fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
 fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|Franklin\s+Steet|02139|02111-1307)', re.IGNORECASE)
@@ -702,7 +702,7 @@ class FilesCheck(AbstractCheck):
                 # look for man pages
                 res = man_base_regex.fullmatch(f)
                 if res:
-                    man_basenames.add(res.group('category'))
+                    man_basenames.add(res.group('binary'))
 
                 res = bin_regex.search(f)
                 if res:
@@ -924,7 +924,7 @@ class FilesCheck(AbstractCheck):
 
                 res = man_base_regex.fullmatch(f)
                 if res:
-                    man_basenames.add(res.group('category'))
+                    man_basenames.add(res.group('binary'))
                 else:
                     res = bin_regex.search(f)
                     if res:
