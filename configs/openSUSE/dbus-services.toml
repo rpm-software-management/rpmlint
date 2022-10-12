@@ -533,20 +533,25 @@ nodigests = [
 package = "geoclue2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#838360"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.GeoClue2.service",
-    "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.conf",
-]
+bugs = ["bsc#838360", "bsc#1204054"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.GeoClue2.conf"
+digester = "xml"
+hash = "05e274fe5cc5ee2653b3dcd37f600800a0bfbc9b4b9c4329e4a7f8894fcaa1b1"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.GeoClue2.service"
+digester = "shell"
+hash = "2b462a23384343646bbf6c46305f90379bd705c6e89b740b9e446d260aa6b6ec"
 
 [[FileDigestGroup]]
 package = "geoclue2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#862216"
-nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.GeoClue2.Agent.conf",
-]
+bugs = ["bsc#862216", "bsc#1204054"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.GeoClue2.Agent.conf"
+digester = "xml"
+hash = "fd364cc370bb15f3af04b03f6320ba18ab12af5be293b335fddf5c356a86daa5"
 
 [[FileDigestGroup]]
 package = "mate-settings-daemon"
