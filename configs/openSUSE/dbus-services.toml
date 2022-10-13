@@ -150,7 +150,7 @@ nodigests = [
 package = "system-config-printer-applet"
 type = "dbus"
 note = "graphical CUPS applet for managing printer queue etc."
-bugs = ["bsc#694640", "bsc#1202340"]
+bugs = ["bsc#694640", "bsc#1202340", "bsc#1202359"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/com.redhat.NewPrinterNotification.conf"
 digester = "xml"
@@ -160,7 +160,7 @@ hash = "058c23e41ed78c4e7c76feb287f53ff9e0c6e82531659a0395cdc99c3d586839"
 package = "python3-cupshelpers"
 type = "dbus"
 note = "support for installing CUPS printer drivers, higher level CUPS interface"
-bugs = ["bsc#694640", "bsc#1202340"]
+bugs = ["bsc#694640", "bsc#1202340", "bsc#1202359"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/com.redhat.PrinterDriversInstaller.conf"
 digester = "xml"
