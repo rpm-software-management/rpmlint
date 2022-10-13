@@ -60,5 +60,5 @@ class PythonCheck(AbstractFilesCheck):
         metadata if applicable.
         """
         # Check for (deprecated) distutils style metadata.
-        if os.path.isfile(os.path.join(pkg.dirName(), filename.lstrip('/'))):
+        if os.path.isfile(os.path.join(pkg.dir_name(), filename.lstrip('/'))):
             self.output.add_info('E', pkg, ERRS['egg-distutils'], filename)
