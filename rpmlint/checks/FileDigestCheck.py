@@ -300,6 +300,25 @@ class FileDigestCheck(AbstractCheck):
         self.digest_cache[cache_key] = digest
         return digest
 
+    def _get_digest_hint(self, pkg, path):
+        pkgfile = self._resolve_links(pkg, path)
+        digest_hint = f'{DEFAULT_DIGEST_ALG} file digest'
+        if not pkgfile:
+            return digest_hint + ': <failed to resolve pkgfile>'
+
+        if pkgfile.name != path:
+            digest_hint += ' of resolved path ' + pkgfile.name
+
+        for dtype, digester in DIGESTERS.items():
+            try:
+                digest = self._calc_digest(digester, pkgfile, DEFAULT_DIGEST_ALG)
+            except Exception:
+                digest = '<failed-to-calculate>'
+
+            digest_hint += f' {dtype} filter:{digest}'
+
+        return digest_hint
+
     def _check_group_type(self, pkg, group_type, secured_paths):
         """ Check all secured files of a group type
 
@@ -325,23 +344,8 @@ class FileDigestCheck(AbstractCheck):
                     # filepath is whitelisted
                     break
             else:
-                pkgfile = self._resolve_links(pkg, spath)
-                digest_path = ''
-                if pkgfile:
-                    try:
-                        # TODO: we could heuristically use a better suitable
-                        # digester e.g. 'xml' for D-Bus groups in a certain
-                        # path.
-                        encountered_digest = self._calc_digest(DIGESTERS['default'], pkgfile, DEFAULT_DIGEST_ALG)
-                    except Exception as e:
-                        encountered_digest = f'failed to calculate digest: {e}'
-                    if pkgfile.name != spath:
-                        digest_path = ' of resolved path ' + pkgfile.name
-                else:
-                    encountered_digest = '<failed-to-calculate-digest>'
-
-                digest_hint = f'(file digest{digest_path} {DEFAULT_DIGEST_ALG}:{encountered_digest})'
-                self.output.add_info('E', pkg, f'{group_type}-file-unauthorized', spath, digest_hint)
+                digest_hint = self._get_digest_hint(pkg, spath)
+                self.output.add_info('E', pkg, f'{group_type}-file-unauthorized', spath, f'({digest_hint})')
 
         # For all digest whitelisted files check if the digests in the package are correct
         # If not correct print error: file-digest-mismatch
