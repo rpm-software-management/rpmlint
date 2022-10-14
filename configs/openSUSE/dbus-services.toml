@@ -676,10 +676,11 @@ nodigests = [
 package = "iio-sensor-proxy"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#939191"
-nodigests = [
-    "/etc/dbus-1/system.d/net.hadess.SensorProxy.conf",
-]
+bugs = ["bsc#939191", "bsc#1204055"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/net.hadess.SensorProxy.conf"
+digester = "xml"
+hash = "4695ec7205d52d47595db7a1cab533ed216d3e8913ecc0ad81bf74ec3388b1ad"
 
 [[FileDigestGroup]]
 package = "tcmu-runner"
