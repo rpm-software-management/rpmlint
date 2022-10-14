@@ -37,7 +37,7 @@ def process_diff_args(argv):
 
     parser = argparse.ArgumentParser(prog='rpmdiff',
                                      description='Shows basic differences between two rpm packages',
-                                     epilog="""When using multiple values for the -i or -e options,
+                                     epilog="""When using the -i or -e options,
                                                separate values from package arguments with '--',
                                                e.g.: 'rpmdiff -i 5 T -- old.rpm new.rpm' or place
                                                the options _after_ the package arguments.""")
