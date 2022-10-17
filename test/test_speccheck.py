@@ -1102,3 +1102,30 @@ def test_python_setup_test(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: python-setup-test' in out
+
+
+@pytest.mark.parametrize('package', ['spec/python-module-def'])
+def test_python_module_definition(package, speccheck):
+    """Test if python_module macro is defined in the spec file."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-module-def' in out
+
+
+@pytest.mark.parametrize('package', [
+    'spec/SpecCheck',
+    'spec/SpecCheck2',
+    'spec/SpecCheck3',
+    'spec/SpecCheck4',
+])
+def test_python_module_definition_not_present(package, speccheck):
+    """Test if python_module macro warning is not shown if the macro is not
+       defined in the spec file.
+    """
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-module-def' not in out

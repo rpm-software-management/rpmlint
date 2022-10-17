@@ -79,6 +79,7 @@ pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
+python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 
 UNICODE_NBSP = '\xa0'
 
@@ -364,6 +365,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_valid_groups(line)
         self._checkline_macros_in_comments(line)
         self._checkline_python_setup_test(line)
+        self._checkline_python_module_def(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -740,3 +742,12 @@ class SpecCheck(AbstractCheck):
         # Test if the "python setup.py test" deprecated subcommand is used
         if self.current_section == 'check' and python_setup_test_regex.search(line):
             self.output.add_info('W', self.pkg, 'python-setup-test', line[:-1])
+
+    def _checkline_python_module_def(self, line):
+        """
+        Test if the "python_module" macro is defined in the spec file
+        This macro was in py2pack but now it should be provided by
+        python-rpm-macros
+        """
+        if python_module_def_regex.search(line):
+            self.output.add_info('W', self.pkg, 'python-module-def', line[:-1])
