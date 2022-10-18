@@ -114,6 +114,31 @@ class SpecCheck(AbstractCheck):
                                          '%s'.""" % ', '.join(self.valid_groups)})
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
 
+        # Default state
+        self.patches = {}
+        self.applied_patches = []
+        self.applied_patches_ifarch = []
+        self.patches_auto_applied = False
+        self.source_dir = False
+        self.buildroot = False
+        self.configure_linenum = None
+        self.configure_cmdline = ''
+        self.mklibname = False
+        self.is_lib_pkg = False
+        self.if_depth = 0
+        self.ifarch_depth = -1
+        self.depscript_override = False
+        self.depgen_disabled = False
+        self.patch_fuzz_override = False
+        self.indent_spaces = 0
+        self.indent_tabs = 0
+        self.section = {}
+
+        self.current_section = 'package'
+        # None == main package
+        self.current_package = None
+        self.package_noarch = {}
+
     def check_source(self, pkg):
         """Find specfile in SRPM and run spec file related checks."""
         wrong_spec = False
@@ -144,372 +169,31 @@ class SpecCheck(AbstractCheck):
         """Find specfile in specified path and run spec file related checks."""
         self._spec_file = pkg.name
         self._spec_file_dir = str(Path(self._spec_file).parent)
-        spec_only = isinstance(pkg, Pkg.FakePkg)
-        spec_lines = readlines(self._spec_file)
-        patches = {}
-        applied_patches = []
-        applied_patches_ifarch = []
-        patches_auto_applied = False
-        source_dir = False
-        buildroot = False
-        configure_linenum = None
-        configure_cmdline = ''
-        mklibname = False
-        is_lib_pkg = False
-        if_depth = 0
-        ifarch_depth = -1
-        current_section = 'package'
-        depscript_override = False
-        depgen_disabled = False
-        patch_fuzz_override = False
-        indent_spaces = 0
-        indent_tabs = 0
-        section = {}
-        # None == main package
-        current_package = None
-        package_noarch = {}
 
         # method call
         self._check_non_utf8_spec_file(pkg)
 
-        # gather info from spec lines
-        pkg.current_linenum = 0
+        self.pkg = pkg
+        self.spec_only = isinstance(pkg, Pkg.FakePkg)
 
-        nbsp = UNICODE_NBSP
-
+        spec_lines = readlines(self._spec_file)
         # Analyse specfile line by line to check for (E)rrors or (W)arnings
-        for line in spec_lines:
-            pkg.current_linenum += 1
-
-            char = line.find(nbsp)
-            if char != -1:
-                self.output.add_info('W', pkg, 'non-break-space', 'line %s, char %d' %
-                                     (pkg.current_linenum, char))
-
-            section_marker = False
-            for sec, regex in section_regexs.items():
-                res = regex.search(line)
-                if res:
-                    current_section = sec
-                    section_marker = True
-                    section[sec] = section.get(sec, 0) + 1
-                    if sec in ('package', 'files'):
-                        rest = filelist_regex.sub('', line[res.end() - 1:])
-                        res = pkgname_regex.search(rest)
-                        if res:
-                            current_package = res.group(1)
-                        else:
-                            current_package = None
-                    break
-
-            if section_marker:
-
-                if not is_lib_pkg and lib_package_regex.search(line):
-                    is_lib_pkg = True
-
-                continue
-
-            if (current_section in Pkg.RPM_SCRIPTLETS + ('prep', 'build') and
-                    contains_buildroot(line)):
-                self.output.add_info('E', pkg, 'rpm-buildroot-usage', '%' + current_section,
-                                     line[:-1].strip())
-
-            if make_check_regex.search(line) and current_section not in \
-                    ('check', 'changelog', 'package', 'description'):
-                self.output.add_info('W', pkg, 'make-check-outside-check-section',
-                                     line[:-1])
-
-            if ifarch_regex.search(line):
-                if_depth = if_depth + 1
-                ifarch_depth = if_depth
-
-            if if_regex.search(line):
-                if_depth = if_depth + 1
-
-            if setup_regex.match(line):
-                if not setup_q_regex.search(line):
-                    # Don't warn if there's a -T without -a or -b
-                    if setup_t_regex.search(line):
-                        if setup_ab_regex.search(line):
-                            self.output.add_info('W', pkg, 'setup-not-quiet')
-                    else:
-                        self.output.add_info('W', pkg, 'setup-not-quiet')
-                if current_section != 'prep':
-                    self.output.add_info('W', pkg, 'setup-not-in-prep')
-            elif autopatch_regex.search(line):
-                patches_auto_applied = True
-                if current_section != 'prep':
-                    self.output.add_info('W', pkg, '%autopatch-not-in-prep')
-            else:
-                res = autosetup_regex.search(line)
-                if res:
-                    if not autosetup_n_regex.search(res.group(1)):
-                        patches_auto_applied = True
-                    if current_section != 'prep':
-                        self.output.add_info('W', pkg, '%autosetup-not-in-prep')
-
-            if endif_regex.search(line):
-                if ifarch_depth == if_depth:
-                    ifarch_depth = -1
-                if_depth = if_depth - 1
-
-            res = applied_patch_regex.search(line)
-            if res:
-                pnum = res.group(1) or 0
-                for tmp in applied_patch_p_regex.findall(line) or [pnum]:
-                    pnum = int(tmp)
-                    applied_patches.append(pnum)
-                    if ifarch_depth > 0:
-                        applied_patches_ifarch.append(pnum)
-            else:
-                res = applied_patch_pipe_regex.search(line)
-                if res:
-                    pnum = int(res.group(1))
-                    applied_patches.append(pnum)
-                    if ifarch_depth > 0:
-                        applied_patches_ifarch.append(pnum)
-                else:
-                    res = applied_patch_i_regex.search(line)
-                    if res:
-                        pnum = int(res.group(1))
-                        applied_patches.append(pnum)
-                        if ifarch_depth > 0:
-                            applied_patches_ifarch.append(pnum)
-            if not res and not source_dir:
-                res = source_dir_regex.search(line)
-                if res:
-                    source_dir = True
-                    self.output.add_info('E', pkg, 'use-of-RPM_SOURCE_DIR')
-
-            if configure_linenum:
-                if configure_cmdline[-1] == '\\':
-                    configure_cmdline = configure_cmdline[:-1] + line.strip()
-                else:
-                    res = configure_libdir_spec_regex.search(configure_cmdline)
-                    if not res:
-                        # Hack to get the correct (start of ./configure) line
-                        # number displayed:
-                        real_linenum = pkg.current_linenum
-                        pkg.current_linenum = configure_linenum
-                        self.output.add_info('W', pkg, 'configure-without-libdir-spec')
-                        pkg.current_linenum = real_linenum
-                    elif res.group(1):
-                        res = re.match(hardcoded_library_paths, res.group(1))
-                        if res:
-                            self.output.add_info('E', pkg, 'hardcoded-library-path',
-                                                 res.group(1), 'in configure options')
-                    configure_linenum = None
-
-            hash_pos = line.find('#')
-
-            if current_section != 'changelog':
-                cfg_pos = line.find('./configure')
-                if cfg_pos != -1 and (hash_pos == -1 or hash_pos > cfg_pos):
-                    # store line where it started
-                    configure_linenum = pkg.current_linenum
-                    configure_cmdline = line.strip()
-
-            res = hardcoded_library_path_regex.search(line)
-            if current_section != 'changelog' and res and not \
-                    (biarch_package_regex.match(pkg.name) or
-                     self.hardcoded_lib_path_exceptions_regex.search(
-                         res.group(1).lstrip())):
-                self.output.add_info('E', pkg, 'hardcoded-library-path', 'in',
-                                     res.group(1).lstrip())
-
-            if '%mklibname' in line:
-                mklibname = True
-
-            if current_section == 'package':
-
-                # Would be cleaner to get sources and patches from the
-                # specfile parsed in Python (see below), but we want to
-                # catch %ifarch'd etc ones as well, and also catch these when
-                # the specfile is not parseable.
-
-                res = patch_regex.search(line)
-                if res:
-                    pnum = int(res.group(1) or 0)
-                    patches[pnum] = res.group(2)
-
-                res = obsolete_tags_regex.search(line)
-                if res:
-                    self.output.add_info('W', pkg, 'obsolete-tag', res.group(1))
-
-                res = buildroot_regex.search(line)
-                if res:
-                    buildroot = True
-                    if res.group(1).startswith('/'):
-                        self.output.add_info('W', pkg, 'hardcoded-path-in-buildroot-tag',
-                                             res.group(1))
-
-                res = buildarch_regex.search(line)
-                if res:
-                    if res.group(1) != 'noarch':
-                        self.output.add_info('E', pkg,
-                                             'buildarch-instead-of-exclusivearch-tag',
-                                             res.group(1))
-                    else:
-                        package_noarch[current_package] = True
-
-                res = packager_regex.search(line)
-                if res:
-                    self.output.add_info('W', pkg, 'hardcoded-packager-tag', res.group(1))
-
-                res = prefix_regex.search(line)
-                if res and not res.group(1).startswith('%'):
-                    self.output.add_info('W', pkg, 'hardcoded-prefix-tag', res.group(1))
-
-                res = prereq_regex.search(line)
-                if res:
-                    self.output.add_info('E', pkg, 'prereq-use', res.group(2))
-
-                res = buildprereq_regex.search(line)
-                if res:
-                    self.output.add_info('E', pkg, 'buildprereq-use', res.group(1))
-
-                res = requires_regex.search(line)
-                if res:
-                    reqs = Pkg.parse_deps(res.group(1))
-                    deptoken = Pkg.has_forbidden_controlchars(reqs)
-                    if deptoken:
-                        self.output.add_info('E', pkg,
-                                             'forbidden-controlchar-found',
-                                             f'Requires: {deptoken}')
-                    for req in unversioned(reqs):
-                        if compop_regex.search(req):
-                            self.output.add_info('W', pkg,
-                                                 'comparison-operator-in-deptoken',
-                                                 req)
-
-                res = provides_regex.search(line)
-                if res:
-                    provs = Pkg.parse_deps(res.group(1))
-                    deptoken = Pkg.has_forbidden_controlchars(provs)
-                    if deptoken:
-                        self.output.add_info('E', pkg,
-                                             'forbidden-controlchar-found',
-                                             f'Provides: {deptoken}')
-                    for prov in unversioned(provs):
-                        if not prov.startswith('/'):
-                            self.output.add_info('W', pkg, 'unversioned-explicit-provides',
-                                                 prov)
-                        if compop_regex.search(prov):
-                            self.output.add_info('W', pkg,
-                                                 'comparison-operator-in-deptoken',
-                                                 prov)
-
-                res = obsoletes_regex.search(line)
-                if res:
-                    obses = Pkg.parse_deps(res.group(1))
-                    deptoken = Pkg.has_forbidden_controlchars(obses)
-                    if deptoken:
-                        self.output.add_info('E', pkg,
-                                             'forbidden-controlchar-found',
-                                             f'Obsoletes: {deptoken}')
-                    for obs in unversioned(obses):
-                        if not obs.startswith('/'):
-                            self.output.add_info('W', pkg, 'unversioned-explicit-obsoletes',
-                                                 obs)
-                        if compop_regex.search(obs):
-                            self.output.add_info('W', pkg,
-                                                 'comparison-operator-in-deptoken',
-                                                 obs)
-
-                res = conflicts_regex.search(line)
-                if res:
-                    confs = Pkg.parse_deps(res.group(1))
-                    deptoken = Pkg.has_forbidden_controlchars(confs)
-                    if deptoken:
-                        self.output.add_info('E', pkg,
-                                             'forbidden-controlchar-found',
-                                             f'Conflicts: {deptoken}')
-                    for conf in unversioned(confs):
-                        if compop_regex.search(conf):
-                            self.output.add_info('W', pkg,
-                                                 'comparison-operator-in-deptoken',
-                                                 conf)
-
-            if current_section == 'changelog':
-                deptoken = Pkg.has_forbidden_controlchars(line)
-                if deptoken:
-                    self.output.add_info('E', pkg,
-                                         'forbidden-controlchar-found',
-                                         '%%changelog: %s' % deptoken)
-                for match in self.macro_regex.findall(line):
-                    res = re.match('%+', match)
-                    if len(res.group(0)) % 2 and match != '%autochangelog':
-                        self.output.add_info('W', pkg, 'macro-in-%changelog', match)
-            else:
-                if not depscript_override:
-                    depscript_override = \
-                        depscript_override_regex.search(line) is not None
-                if not depgen_disabled:
-                    depgen_disabled = \
-                        depgen_disable_regex.search(line) is not None
-                if not patch_fuzz_override:
-                    patch_fuzz_override = \
-                        patch_fuzz_override_regex.search(line) is not None
-
-            # TODO: check scriptlets for these too?
-            if (current_section == 'files' and
-                    (package_noarch.get(current_package) or
-                        (current_package not in package_noarch and package_noarch.get(None)))):
-                res = libdir_regex.search(line)
-                if res:
-                    pkgname = current_package
-                    if pkgname is None:
-                        pkgname = '(main package)'
-                    self.output.add_info('W', pkg, 'libdir-macro-in-noarch-package',
-                                         pkgname, line.rstrip())
-
-            if not indent_tabs and '\t' in line:
-                indent_tabs = pkg.current_linenum
-            if not indent_spaces and indent_spaces_regex.search(line):
-                indent_spaces = pkg.current_linenum
-
-            # Check if egrep or fgrep is used
-            if current_section not in \
-                    ('package', 'changelog', 'description', 'files'):
-                greps = deprecated_grep_regex.findall(line)
-                if greps:
-                    self.output.add_info('W', pkg, 'deprecated-grep', greps)
-
-            # If not checking spec file only, we're checking one inside a
-            # SRPM -> skip this check to avoid duplicate warnings (#167)
-            if spec_only and self.valid_groups and \
-               line.lower().startswith('group:'):
-                group = line[6:].strip()
-                if group not in self.valid_groups:
-                    self.output.add_info('W', pkg, 'non-standard-group', group)
-
-            # Test if there are macros in comments
-            if hash_pos != -1 and \
-                    (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
-                for match in self.macro_regex.findall(
-                        line[hash_pos + 1:]):
-                    res = re.match('%+', match)
-                    if len(res.group(0)) % 2:
-                        self.output.add_info('W', pkg, 'macro-in-comment', match)
-
-            # Test if the "python setup.py test" deprecated subcommand is used
-            if current_section == 'check' and python_setup_test_regex.search(line):
-                self.output.add_info('W', pkg, 'python-setup-test', line[:-1])
-
-        # Last line read is not useful after this point
-        pkg.current_linenum = None
+        # And initialize the SpecCheck instance for following checks
+        self._check_lines(spec_lines)
 
         # Run checks for whole package
-        self._check_no_buildroot_tag(pkg, buildroot)
-        self._check_no_s_section(pkg, section)
-        self._check_superfluous_clean_section(pkg, section)
-        self._check_more_than_one_changelog_section(pkg, section)
-        self._check_lib_package_without_mklibname(pkg, is_lib_pkg, mklibname)
-        self._check_descript_without_disabling_depgen(pkg, depscript_override, depgen_disabled)
-        self._check_patch_fuzz_is_changed(pkg, patch_fuzz_override)
-        self._check_mixed_use_of_space_and_tabs(pkg, indent_spaces, indent_tabs)
-        self.check_ifarch_and_not_applied_patches(pkg, patches_auto_applied, patches,
-                                                  applied_patches_ifarch, applied_patches)
+        self._check_no_buildroot_tag(pkg, self.buildroot)
+        self._check_no_s_section(pkg, self.section)
+        self._check_superfluous_clean_section(pkg, self.section)
+        self._check_more_than_one_changelog_section(pkg, self.section)
+        self._check_lib_package_without_mklibname(pkg, self.is_lib_pkg, self.mklibname)
+        self._check_descript_without_disabling_depgen(pkg, self.depscript_override,
+                                                      self.depgen_disabled)
+        self._check_patch_fuzz_is_changed(pkg, self.patch_fuzz_override)
+        self._check_mixed_use_of_space_and_tabs(pkg, self.indent_spaces, self.indent_tabs)
+        self.check_ifarch_and_not_applied_patches(pkg, self.patches_auto_applied, self.patches,
+                                                  self.applied_patches_ifarch, self.applied_patches)
+
         # Checks below require a real spec file
         if not self._spec_file:
             return
@@ -646,3 +330,414 @@ class SpecCheck(AbstractCheck):
                     continue
                 elif srctype == 'Source' and tarball_regex.search(url):
                     self.output.add_info('W', pkg, 'invalid-url', '%s:' % tag, url)
+
+    def _check_lines(self, lines):
+        # gather info from spec lines
+        self.pkg.current_linenum = 0
+        for line in lines:
+            self.pkg.current_linenum += 1
+            self._check_line(line)
+        # Last line read is not useful after this point
+        self.pkg.current_linenum = None
+
+    def _check_line(self, line):
+        """
+        Run check methods for this line.
+        """
+
+        self._checkline_break_space(line)
+        if self._checkline_section(line):
+            return
+        self._checkline_buildroot_usage(line)
+        self._checkline_make_check(line)
+        self._checkline_setup(line)
+        self._checkline_autopatch(line)
+        self._checkline_applied_patch(line)
+        self._checkline_sourcedir(line)
+        self._checkline_configure(line)
+        self._checkline_hardcoded_library_path(line)
+        self._checkline_mklibname(line)
+        self._checkline_package(line)
+        self._checkline_changelog(line)
+        self._checkline_files(line)
+        self._checkline_indent(line)
+        self._checkline_deprecated_grep(line)
+        self._checkline_valid_groups(line)
+        self._checkline_macros_in_comments(line)
+        self._checkline_python_setup_test(line)
+
+        # If statement, starts
+        if ifarch_regex.search(line):
+            self.if_depth = self.if_depth + 1
+            self.ifarch_depth = self.if_depth
+        elif if_regex.search(line):
+            self.if_depth = self.if_depth + 1
+
+        # If statement, ends
+        elif endif_regex.search(line):
+            if self.ifarch_depth == self.if_depth:
+                self.ifarch_depth = -1
+            self.if_depth = self.if_depth - 1
+
+    # line checks methods
+
+    def _checkline_break_space(self, line):
+        char = line.find(UNICODE_NBSP)
+        if char != -1:
+            self.output.add_info('W', self.pkg, 'non-break-space', 'line %s, char %d' %
+                                 (self.pkg.current_linenum, char))
+
+    def _checkline_section(self, line):
+        section_marker = False
+        for sec, regex in section_regexs.items():
+            res = regex.search(line)
+            if res:
+                self.current_section = sec
+                section_marker = True
+                self.section[sec] = self.section.get(sec, 0) + 1
+                if sec in ('package', 'files'):
+                    rest = filelist_regex.sub('', line[res.end() - 1:])
+                    res = pkgname_regex.search(rest)
+                    if res:
+                        self.current_package = res.group(1)
+                    else:
+                        self.current_package = None
+                break
+
+        if section_marker:
+            if not self.is_lib_pkg and lib_package_regex.search(line):
+                self.is_lib_pkg = True
+            return True
+
+    def _checkline_buildroot_usage(self, line):
+        if (self.current_section in Pkg.RPM_SCRIPTLETS + ('prep', 'build') and
+                contains_buildroot(line)):
+            self.output.add_info('E', self.pkg, 'rpm-buildroot-usage', '%' + self.current_section,
+                                 line[:-1].strip())
+
+    def _checkline_make_check(self, line):
+        if make_check_regex.search(line) and self.current_section not in \
+                ('check', 'changelog', 'package', 'description'):
+            self.output.add_info('W', self.pkg, 'make-check-outside-check-section',
+                                 line[:-1])
+
+    def _checkline_setup(self, line):
+        # %setup check
+        if setup_regex.match(line):
+            if not setup_q_regex.search(line):
+                # Don't warn if there's a -T without -a or -b
+                if setup_t_regex.search(line):
+                    if setup_ab_regex.search(line):
+                        self.output.add_info('W', self.pkg, 'setup-not-quiet')
+                else:
+                    self.output.add_info('W', self.pkg, 'setup-not-quiet')
+
+            if self.current_section != 'prep':
+                self.output.add_info('W', self.pkg, 'setup-not-in-prep')
+            return
+
+        res = autosetup_regex.search(line)
+        if res:
+            if not autosetup_n_regex.search(res.group(1)):
+                self.patches_auto_applied = True
+            if self.current_section != 'prep':
+                self.output.add_info('W', self.pkg, '%autosetup-not-in-prep')
+
+    def _checkline_autopatch(self, line):
+        # %autopach check
+        if autopatch_regex.search(line):
+            self.patches_auto_applied = True
+            if self.current_section != 'prep':
+                self.output.add_info('W', self.pkg, '%autopatch-not-in-prep')
+
+    def _checkline_applied_patch(self, line):
+        # Check for %patch -P
+        res = applied_patch_regex.search(line)
+        if res:
+            pnum = res.group(1) or 0
+            for tmp in applied_patch_p_regex.findall(line) or [pnum]:
+                pnum = int(tmp)
+                self.applied_patches.append(pnum)
+                if self.ifarch_depth > 0:
+                    self.applied_patches_ifarch.append(pnum)
+            return
+
+        # Check for %{PATCH0} | patch
+        res = applied_patch_pipe_regex.search(line)
+        if res:
+            pnum = int(res.group(1))
+            self.applied_patches.append(pnum)
+            if self.ifarch_depth > 0:
+                self.applied_patches_ifarch.append(pnum)
+            return
+
+        # Check for patch < %{PATCH0}
+        res = applied_patch_i_regex.search(line)
+        if res:
+            pnum = int(res.group(1))
+            self.applied_patches.append(pnum)
+            if self.ifarch_depth > 0:
+                self.applied_patches_ifarch.append(pnum)
+            return
+
+    def _checkline_sourcedir(self, line):
+        if self.source_dir:
+            return
+
+        res = source_dir_regex.search(line)
+        if res:
+            self.source_dir = True
+            self.output.add_info('E', self.pkg, 'use-of-RPM_SOURCE_DIR')
+
+    def _checkline_configure(self, line):
+        if self.configure_linenum:
+            if self.configure_cmdline[-1] == '\\':
+                self.configure_cmdline = self.configure_cmdline[:-1] + line.strip()
+            else:
+                res = configure_libdir_spec_regex.search(self.configure_cmdline)
+                if not res:
+                    # Hack to get the correct (start of ./configure) line
+                    # number displayed:
+                    real_linenum = self.pkg.current_linenum
+                    self.pkg.current_linenum = self.configure_linenum
+                    self.output.add_info('W', self.pkg, 'configure-without-libdir-spec')
+                    self.pkg.current_linenum = real_linenum
+                elif res.group(1):
+                    res = re.match(hardcoded_library_paths, res.group(1))
+                    if res:
+                        self.output.add_info('E', self.pkg, 'hardcoded-library-path',
+                                             res.group(1), 'in configure options')
+                self.configure_linenum = None
+
+        hash_pos = line.find('#')
+
+        if self.current_section != 'changelog':
+            cfg_pos = line.find('./configure')
+            if cfg_pos != -1 and (hash_pos == -1 or hash_pos > cfg_pos):
+                # store line where it started
+                self.configure_linenum = self.pkg.current_linenum
+                self.configure_cmdline = line.strip()
+
+    def _checkline_hardcoded_library_path(self, line):
+        res = hardcoded_library_path_regex.search(line)
+        if self.current_section != 'changelog' and res and not \
+                (biarch_package_regex.match(self.pkg.name) or
+                 self.hardcoded_lib_path_exceptions_regex.search(
+                     res.group(1).lstrip())):
+            self.output.add_info('E', self.pkg, 'hardcoded-library-path', 'in',
+                                 res.group(1).lstrip())
+
+    def _checkline_mklibname(self, line):
+        self.mklibname = '%mklibname' in line
+
+    # line checks package methods
+    def _checkline_package_patch(self, line):
+        # Would be cleaner to get sources and patches from the
+        # specfile parsed in Python (see below), but we want to
+        # catch %ifarch'd etc ones as well, and also catch these when
+        # the specfile is not parseable.
+        res = patch_regex.search(line)
+        if res:
+            pnum = int(res.group(1) or 0)
+            self.patches[pnum] = res.group(2)
+
+    def _checkline_package_obsolete_tags(self, line):
+        res = obsolete_tags_regex.search(line)
+        if res:
+            self.output.add_info('W', self.pkg, 'obsolete-tag', res.group(1))
+
+    def _checkline_package_buildroot(self, line):
+        res = buildroot_regex.search(line)
+        if res:
+            self.buildroot = True
+            if res.group(1).startswith('/'):
+                self.output.add_info('W', self.pkg, 'hardcoded-path-in-buildroot-tag',
+                                     res.group(1))
+
+    def _checkline_package_buildarch(self, line):
+        res = buildarch_regex.search(line)
+        if res:
+            if res.group(1) != 'noarch':
+                self.output.add_info('E', self.pkg,
+                                     'buildarch-instead-of-exclusivearch-tag',
+                                     res.group(1))
+            else:
+                self.package_noarch[self.current_package] = True
+
+    def _checkline_package_packager(self, line):
+        res = packager_regex.search(line)
+        if res:
+            self.output.add_info('W', self.pkg, 'hardcoded-packager-tag', res.group(1))
+
+    def _checkline_package_prefix(self, line):
+        res = prefix_regex.search(line)
+        if res and not res.group(1).startswith('%'):
+            self.output.add_info('W', self.pkg, 'hardcoded-prefix-tag', res.group(1))
+
+    def _checkline_package_prereq(self, line):
+        res = prereq_regex.search(line)
+        if res:
+            self.output.add_info('E', self.pkg, 'prereq-use', res.group(2))
+
+    def _checkline_package_buildprereq(self, line):
+        res = buildprereq_regex.search(line)
+        if res:
+            self.output.add_info('E', self.pkg, 'buildprereq-use', res.group(1))
+
+    def _checkline_package_requires(self, line):
+        res = requires_regex.search(line)
+        if res:
+            reqs = Pkg.parse_deps(res.group(1))
+            deptoken = Pkg.has_forbidden_controlchars(reqs)
+            if deptoken:
+                self.output.add_info('E', self.pkg,
+                                     'forbidden-controlchar-found',
+                                     f'Requires: {deptoken}')
+            for req in unversioned(reqs):
+                if compop_regex.search(req):
+                    self.output.add_info('W', self.pkg,
+                                         'comparison-operator-in-deptoken',
+                                         req)
+
+    def _checkline_package_provides(self, line):
+        res = provides_regex.search(line)
+        if res:
+            provs = Pkg.parse_deps(res.group(1))
+            deptoken = Pkg.has_forbidden_controlchars(provs)
+            if deptoken:
+                self.output.add_info('E', self.pkg,
+                                     'forbidden-controlchar-found',
+                                     f'Provides: {deptoken}')
+            for prov in unversioned(provs):
+                if not prov.startswith('/'):
+                    self.output.add_info('W', self.pkg, 'unversioned-explicit-provides',
+                                         prov)
+                if compop_regex.search(prov):
+                    self.output.add_info('W', self.pkg,
+                                         'comparison-operator-in-deptoken',
+                                         prov)
+
+    def _checkline_package_obsoletes(self, line):
+        res = obsoletes_regex.search(line)
+        if res:
+            obses = Pkg.parse_deps(res.group(1))
+            deptoken = Pkg.has_forbidden_controlchars(obses)
+            if deptoken:
+                self.output.add_info('E', self.pkg,
+                                     'forbidden-controlchar-found',
+                                     f'Obsoletes: {deptoken}')
+            for obs in unversioned(obses):
+                if not obs.startswith('/'):
+                    self.output.add_info('W', self.pkg, 'unversioned-explicit-obsoletes',
+                                         obs)
+                if compop_regex.search(obs):
+                    self.output.add_info('W', self.pkg,
+                                         'comparison-operator-in-deptoken',
+                                         obs)
+
+    def _checkline_package_conflicts(self, line):
+        res = conflicts_regex.search(line)
+        if res:
+            confs = Pkg.parse_deps(res.group(1))
+            deptoken = Pkg.has_forbidden_controlchars(confs)
+            if deptoken:
+                self.output.add_info('E', self.pkg,
+                                     'forbidden-controlchar-found',
+                                     f'Conflicts: {deptoken}')
+            for conf in unversioned(confs):
+                if compop_regex.search(conf):
+                    self.output.add_info('W', self.pkg,
+                                         'comparison-operator-in-deptoken',
+                                         conf)
+
+    def _checkline_package(self, line):
+        if self.current_section != 'package':
+            return
+
+        self._checkline_package_patch(line)
+        self._checkline_package_obsolete_tags(line)
+        self._checkline_package_buildroot(line)
+        self._checkline_package_buildarch(line)
+        self._checkline_package_packager(line)
+        self._checkline_package_prefix(line)
+        self._checkline_package_prereq(line)
+        self._checkline_package_buildprereq(line)
+        self._checkline_package_requires(line)
+        self._checkline_package_provides(line)
+        self._checkline_package_obsoletes(line)
+        self._checkline_package_conflicts(line)
+
+    def _checkline_changelog(self, line):
+        if self.current_section == 'changelog':
+            deptoken = Pkg.has_forbidden_controlchars(line)
+            if deptoken:
+                self.output.add_info('E', self.pkg,
+                                     'forbidden-controlchar-found',
+                                     '%%changelog: %s' % deptoken)
+            for match in self.macro_regex.findall(line):
+                res = re.match('%+', match)
+                if len(res.group(0)) % 2 and match != '%autochangelog':
+                    self.output.add_info('W', self.pkg, 'macro-in-%changelog', match)
+        else:
+            if not self.depscript_override:
+                self.depscript_override = \
+                    depscript_override_regex.search(line) is not None
+            if not self.depgen_disabled:
+                self.depgen_disabled = \
+                    depgen_disable_regex.search(line) is not None
+            if not self.patch_fuzz_override:
+                self.patch_fuzz_override = \
+                    patch_fuzz_override_regex.search(line) is not None
+
+    def _checkline_files(self, line):
+        # TODO: check scriptlets for these too?
+        if (self.current_section == 'files' and
+                (self.package_noarch.get(self.current_package) or
+                    (self.current_package not in self.package_noarch and self.package_noarch.get(None)))):
+            res = libdir_regex.search(line)
+            if res:
+                pkgname = self.current_package
+                if pkgname is None:
+                    pkgname = '(main package)'
+                self.output.add_info('W', self.pkg, 'libdir-macro-in-noarch-package',
+                                     pkgname, line.rstrip())
+
+    def _checkline_indent(self, line):
+        if not self.indent_tabs and '\t' in line:
+            self.indent_tabs = self.pkg.current_linenum
+        if not self.indent_spaces and indent_spaces_regex.search(line):
+            self.indent_spaces = self.pkg.current_linenum
+
+    def _checkline_deprecated_grep(self, line):
+        # Check if egrep or fgrep is used
+        if self.current_section not in \
+                ('package', 'changelog', 'description', 'files'):
+            greps = deprecated_grep_regex.findall(line)
+            if greps:
+                self.output.add_info('W', self.pkg, 'deprecated-grep', greps)
+
+    def _checkline_valid_groups(self, line):
+        # If not checking spec file only, we're checking one inside a
+        # SRPM -> skip this check to avoid duplicate warnings (#167)
+
+        if self.spec_only and self.valid_groups and \
+           line.lower().startswith('group:'):
+            group = line[6:].strip()
+            if group not in self.valid_groups:
+                self.output.add_info('W', self.pkg, 'non-standard-group', group)
+
+    def _checkline_macros_in_comments(self, line):
+        hash_pos = line.find('#')
+        # Test if there are macros in comments
+        if hash_pos != -1 and \
+                (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
+            for match in self.macro_regex.findall(
+                    line[hash_pos + 1:]):
+                res = re.match('%+', match)
+                if len(res.group(0)) % 2:
+                    self.output.add_info('W', self.pkg, 'macro-in-comment', match)
+
+    def _checkline_python_setup_test(self, line):
+        # Test if the "python setup.py test" deprecated subcommand is used
+        if self.current_section == 'check' and python_setup_test_regex.search(line):
+            self.output.add_info('W', self.pkg, 'python-setup-test', line[:-1])
