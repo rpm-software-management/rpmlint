@@ -53,7 +53,7 @@ class TagsCheck(AbstractCheck):
 
         for i in ('obsoletes', 'conflicts', 'provides', 'recommends', 'suggests',
                   'enhances', 'supplements'):
-            self.output.error_details.update({'no-epoch-in-{}'.format(i):
+            self.output.error_details.update({f'no-epoch-in-{i}':
                                               'Your package contains a versioned %s entry without an Epoch.'
                                               % i.capitalize()})
         self.output.error_details.update({'non-standard-group':
@@ -106,7 +106,7 @@ class TagsCheck(AbstractCheck):
         for pf in pkg.files:
             ignored_words.update(pf.split('/'))
         for tag in ('provides', 'requires', 'conflicts', 'obsoletes'):
-            ignored_words.update((x[0] for x in 'pkg.' + str(tag)))
+            ignored_words.update(x[0] for x in 'pkg.' + str(tag))
 
         # Run checks for whole package
         self._check_invalid_packager(pkg)
@@ -131,7 +131,7 @@ class TagsCheck(AbstractCheck):
 
         for dep_token in pkg.obsoletes:
             value = Pkg.formatRequire(*dep_token)
-            self._unexpanded_macros(pkg, 'Obsoletes {}'.format(value,), value)
+            self._unexpanded_macros(pkg, f'Obsoletes {value}', value)
 
         self._check_useless_provides(pkg, pkg.provides)
         self._check_forbidden_controlchar(pkg)
@@ -295,7 +295,7 @@ class TagsCheck(AbstractCheck):
                         'suggests', 'enhances', 'supplements'):
                 for x in (x for x in getattr(pkg, tag)()
                           if x[1] and x[2][0] is None):
-                    self.output.add_info('W', pkg, 'no-epoch-in-{}'.format(tag),
+                    self.output.add_info('W', pkg, f'no-epoch-in-{tag}',
                                          Pkg.formatRequire(*x))
 
     def _check_multiple_dependencies(self, pkg, deps, is_source, is_devel):
@@ -354,7 +354,7 @@ class TagsCheck(AbstractCheck):
             # For Ex:- Requires: python==3.8
             if dep[1] == rpm.RPMSENSE_EQUAL and dep[2][2] is not None:
                 self.output.add_info('W', pkg, 'requires-on-release', value)
-            self._unexpanded_macros(pkg, 'dependency {}'.format(value,), value)
+            self._unexpanded_macros(pkg, f'dependency {value}', value)
 
     def _check_multiple_tags(self, pkg, name, is_devel,
                              is_source, deps, epoch, version):
@@ -545,7 +545,7 @@ class TagsCheck(AbstractCheck):
                 elif version and release:
                     srpm = pkg[rpm.RPMTAG_SOURCERPM] or ''
                     # only check when source name correspond to name
-                    if srpm[0:-8] == '%s-%s-%s' % (name, version, release):
+                    if srpm[0:-8] == f'{name}-{version}-{release}':
                         expected = [version + '-' + release]
                         if epoch is not None:  # regardless of use_epoch
                             expected[0] = str(epoch) + ':' + expected[0]
@@ -636,8 +636,8 @@ class TagsCheck(AbstractCheck):
     def _check_url(self, pkg):
         """Trigger check invalid-url, no-url-tag """
         for tag in ('URL', 'DistURL', 'BugURL'):
-            if hasattr(rpm, 'RPMTAG_{}'.format(tag.upper())):
-                url = byte_to_string(pkg[getattr(rpm, 'RPMTAG_{}'.format(tag.upper()))])
+            if hasattr(rpm, f'RPMTAG_{tag.upper()}'):
+                url = byte_to_string(pkg[getattr(rpm, f'RPMTAG_{tag.upper()}')])
                 self._unexpanded_macros(pkg, tag, url, is_url=True)
                 if url:
                     (scheme, netloc) = urlparse(url)[0:2]
@@ -724,9 +724,9 @@ class TagsCheck(AbstractCheck):
                     self.output.add_info('E',
                                          pkg,
                                          'forbidden-controlchar-found',
-                                         '{}: {}'.format(tagname, dep))
+                                         f'{tagname}: {dep}')
                 value = Pkg.formatRequire(*item)
-                self._unexpanded_macros(pkg, '{} {}'.format(tagname, value), value)
+                self._unexpanded_macros(pkg, f'{tagname} {value}', value)
 
             # Check if a package contains forbidden-controlchar in Requires: tag.
             for pkg_token in (pkg.requires):
@@ -735,7 +735,7 @@ class TagsCheck(AbstractCheck):
                     self.output.add_info('E',
                                          pkg,
                                          'forbidden-controlchar-found',
-                                         'Requires: {}'.format(dep))
+                                         f'Requires: {dep}')
 
     def _check_self_obsoletion(self, pkg):
         """Trigger check self-obsoletion

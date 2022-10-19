@@ -16,7 +16,7 @@ class StringsParser:
 
     def parse(self):
         r = subprocess.run(['strings', self.pkgfile_path], encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return

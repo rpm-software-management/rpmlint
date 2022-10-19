@@ -1,8 +1,8 @@
 # flake8: noqa
 # Generated with tools/generate-isocodes.py
 
-LANGUAGES = set(
-['aa',
+LANGUAGES = {
+'aa',
  'aaa',
  'aab',
  'aac',
@@ -7916,11 +7916,11 @@ LANGUAGES = set(
  'zyn',
  'zyp',
  'zza',
- 'zzj']
-)
+ 'zzj'
+}
 
-COUNTRIES = set(
-['AD',
+COUNTRIES = {
+'AD',
  'AE',
  'AF',
  'AG',
@@ -8168,5 +8168,5 @@ COUNTRIES = set(
  'YT',
  'ZA',
  'ZM',
- 'ZW']
-)
+ 'ZW'
+}

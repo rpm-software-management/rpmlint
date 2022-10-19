@@ -122,7 +122,7 @@ def is_utf8_bytestr(s):
         else:
             unexpected = type(s).__name__
             raise TypeError(
-                'Expected str/unicode/bytes, not {}'.format(unexpected))
+                f'Expected str/unicode/bytes, not {unexpected}')
     except UnicodeError:
         return False
     return True
@@ -247,7 +247,7 @@ def formatRequire(name, flags, evr):
             s = s + '>'
         if flags & rpm.RPMSENSE_EQUAL:
             s = s + '='
-        s = '%s %s' % (s, versionToString(evr))
+        s = f'{s} {versionToString(evr)}'
     return s
 
 

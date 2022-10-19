@@ -1,4 +1,3 @@
-
 #
 # check xdg file format violation
 #
