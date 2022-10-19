@@ -42,7 +42,7 @@ with urlopen(iso_639_2_url) as f:
 # compatible with Python 2.6, do it with set([...]) instead.
 
 print('# flake8: noqa')
-print('# Generated with {}'.format(sys.argv[0]))
+print(f'# Generated with {sys.argv[0]}')
 print('')
 print('LANGUAGES = set(')
 pprint(sorted(langs))

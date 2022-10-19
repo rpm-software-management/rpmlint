@@ -390,7 +390,7 @@ class FilesCheck(AbstractCheck):
         try:
             with open(filename, 'rb') as fobj:
                 chunk = fobj.read(length)
-        except IOError as e:  # eg. https://bugzilla.redhat.com/209876
+        except OSError as e:  # eg. https://bugzilla.redhat.com/209876
             self.output.add_info('W', pkg, 'read-error', e)
             return (chunk, False)
 
@@ -807,7 +807,7 @@ class FilesCheck(AbstractCheck):
 
         is_so = sofile_regex.search(fname)
         if not is_so:
-            abslink = '%s/%s' % (Path(fname).parent, link)
+            abslink = f'{Path(fname).parent}/{link}'
             abslink = os.path.normpath(abslink)
             if abslink not in pkg.files and abslink not in self.req_names:
                 is_exception = False
@@ -1139,9 +1139,9 @@ class FilesCheck(AbstractCheck):
         if not self.python_dep_error:
             res = python_regex.search(fname)
             if (res and not
-                    any((pkg.check_versioned_dep(dep, res.group(1))
+                    any(pkg.check_versioned_dep(dep, res.group(1))
                         for dep in (
-                            'python', 'python-base', 'python(abi)')))):
+                            'python', 'python-base', 'python(abi)'))):
                 self.output.add_info('E', pkg, 'no-dependency-on', 'python-base',
                                      res.group(1))
                 self.python_dep_error = True

@@ -125,7 +125,7 @@ class InitScriptCheck(AbstractCheck):
                     for kw in RECOMMENDED_LSB_KEYWORDS:
                         if kw not in lsb_tags:
                             self.output.add_info('W', pkg, 'missing-lsb-keyword',
-                                                 '%s in %s' % (kw, fname))
+                                                 f'{kw} in {fname}')
                 if in_lsb_tag:
                     # TODO maybe we do not have to handle this ?
                     if lastline.endswith('\\'):

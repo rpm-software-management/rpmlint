@@ -27,7 +27,7 @@ class PkgConfigCheck(AbstractFilesCheck):
             return
 
         try:
-            with open(pkg.dir_name() + '/' + filename, 'r', encoding='utf-8') as pc_file:
+            with open(pkg.dir_name() + '/' + filename, encoding='utf-8') as pc_file:
                 for line in pc_file:
                     self._check_invalid_pkgconfig_file(pkg, filename, line)
                     self._check_invalid_libs_dir(pkg, filename, line)

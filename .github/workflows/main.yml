@@ -104,9 +104,11 @@ jobs:
       - run: rm -rf $(rpm --eval '%_dbpath')
         if: matrix.build-type == 'no-optional-deps'
       - run: pip install coveralls
+      - run: pip install pyupgrade
       - uses: actions/checkout@v2
       - run: pytest
       - run: flake8
+      - run: find . -name '*.py' | xargs pyupgrade --py38-plus
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
       - run: python3 test/dump_stats.py profile.stats
       - name: Collect the coveralls report

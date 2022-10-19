@@ -13,7 +13,7 @@ DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
 
 
 def re_tag_compile(tag):
-    rpm_tag = r'^{}\s*:\s*(\S.*?)\s*$'.format(tag)
+    rpm_tag = fr'^{tag}\s*:\s*(\S.*?)\s*$'
     return re.compile(rpm_tag, re.IGNORECASE)
 
 
@@ -42,10 +42,9 @@ if_regex = re.compile(r'^\s*%if\s')
 endif_regex = re.compile(r'^\s*%endif\b')
 biarch_package_regex = re.compile(DEFAULT_BIARCH_PACKAGES)
 libdir_regex = re.compile(r'%{?_lib(?:dir)?\}?\b')
-section_regexs = dict(
-    ([x, re.compile('^%' + x + r'(?:\s|$)')]
-     for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
-               'install', 'package', 'prep') + Pkg.RPM_SCRIPTLETS))
+section_regexs = {x: re.compile('^%' + x + r'(?:\s|$)')
+                  for x in ('build', 'changelog', 'check', 'clean', 'description', 'files',
+                            'install', 'package', 'prep') + Pkg.RPM_SCRIPTLETS}
 deprecated_grep_regex = re.compile(r'\b[ef]grep\b')
 
 # Only check for /lib, /usr/lib, /usr/X11R6/lib
@@ -82,7 +81,7 @@ tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 
-UNICODE_NBSP = u'\xa0'
+UNICODE_NBSP = '\xa0'
 
 
 def unversioned(deps):
@@ -328,7 +327,7 @@ class SpecCheck(AbstractCheck):
                     srctype = 'Source'
                 else:
                     srctype = 'Patch'
-                tag = '%s%s' % (srctype, num)
+                tag = f'{srctype}{num}'
                 if scheme and netloc:
                     continue
                 elif srctype == 'Source' and tarball_regex.search(url):

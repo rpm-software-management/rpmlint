@@ -208,10 +208,10 @@ class Rpmdiff:
         # filter self provides, TODO: self %name(%_isa) as well
         if name == 'PROVIDES':
             oldE = old['epoch'] is not None and str(old['epoch']) + ':' or ''
-            oldV = '%s%s' % (oldE, old.format('%{VERSION}-%{RELEASE}'))
+            oldV = '{}{}'.format(oldE, old.format('%{VERSION}-%{RELEASE}'))
             oldNV = (old['name'], rpm.RPMSENSE_EQUAL, oldV.encode())
             newE = new['epoch'] is not None and str(new['epoch']) + ':' or ''
-            newV = '%s%s' % (newE, new.format('%{VERSION}-%{RELEASE}'))
+            newV = '{}{}'.format(newE, new.format('%{VERSION}-%{RELEASE}'))
             newNV = (new['name'], rpm.RPMSENSE_EQUAL, newV.encode())
             o = [entry for entry in o if entry != oldNV]
             n = [entry for entry in n if entry != newNV]

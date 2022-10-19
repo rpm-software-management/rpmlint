@@ -34,7 +34,7 @@ def test_pep0488():
 
 def chunk_from_pyc(version, size=16):
     """Helper to get start of an example pyc file as bytes"""
-    path = get_tested_path('pyc/__future__.cpython-{}.pyc'.format(version))
+    path = get_tested_path(f'pyc/__future__.cpython-{version}.pyc')
     with open(path, 'rb') as f:
         return f.read(size)
 
