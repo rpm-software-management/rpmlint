@@ -86,7 +86,7 @@ class ElfSectionInfo:
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-S', self.path] + self.extra_flags, encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return
@@ -155,7 +155,7 @@ class ElfProgramHeaderInfo:
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-l', self.path] + self.extra_flags, encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return
@@ -230,7 +230,7 @@ class ElfDynamicSectionInfo:
 
     def parse(self):
         r = subprocess.run(['readelf', '-W', '-d', self.path] + self.extra_flags, encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return
@@ -299,7 +299,7 @@ class ElfSymbolTableInfo:
     def parse(self):
         try:
             r = subprocess.run(['readelf', '-W', '-s', self.path] + self.extra_flags, encoding='utf8',
-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                               capture_output=True, env=ENGLISH_ENVIROMENT)
             if r.returncode != 0:
                 self.parsing_failed_reason = r.stderr
                 return
@@ -336,7 +336,7 @@ class ElfCommentInfo:
 
     def parse(self):
         r = subprocess.run(['readelf', '-p', '.comment', self.path] + self.extra_flags, encoding='utf8',
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIROMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return

@@ -101,7 +101,7 @@ class AlternativesCheck(AbstractCheck):
         binaries = list(self.install_binaries.values())
         # we remove from the binaries list in the loop, copy it
         for binary in binaries.copy():
-            re_remove = re.compile(r'--remove\s+{}\b'.format(re.escape(binary)))
+            re_remove = re.compile(fr'--remove\s+{re.escape(binary)}\b')
             for line in script:
                 if re_remove.search(line) and binary in binaries:
                     binaries.remove(binary)

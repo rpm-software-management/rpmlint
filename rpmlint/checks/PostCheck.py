@@ -82,14 +82,14 @@ class PostCheck(AbstractCheck):
         for scriptlet in map(lambda x: '%' + x, Pkg.RPM_SCRIPTLETS):
             post_details_dict.update({
                 'one-line-command-in-%s' % scriptlet:
-                """You should use %s -p <command> instead of using:
+                """You should use {} -p <command> instead of using:
 
-                %s
+                {}
                 <command>
 
                 It will avoid the fork of a shell interpreter to execute your command as
                 well as allows rpm to automatically mark the dependency on your command
-                for the execution of the scriptlet.""" % (scriptlet, scriptlet),
+                for the execution of the scriptlet.""".format(scriptlet, scriptlet),
 
                 'percent-in-%s' % scriptlet:
                 """The %s scriptlet contains a '%%' in a context which might indicate it being
