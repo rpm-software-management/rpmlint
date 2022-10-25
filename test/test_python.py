@@ -1,10 +1,8 @@
 import pytest
-from pathlib import Path
 from rpmlint.checks.PythonCheck import PythonCheck
 from rpmlint.filter import Filter
-from rpmlint.pkg import FakePkg, Pkg
 
-from Testing import CONFIG, get_tested_package, get_tested_path
+from Testing import CONFIG, get_tested_package
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -30,18 +28,10 @@ def test_python_doc_in_package(tmpdir, package, pythoncheck):
     assert 'W: python-doc-in-package /usr/lib64/python3.8/site-packages/python-mypackage/docs' in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-package'])
+@pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-package2'])
 def test_python_tests_in_package(tmpdir, package, pythoncheck):
     output, test = pythoncheck
-
-    # Do not use get_tested_package because there are two:
-    # * pythoncheck-python-tests-in-package
-    # * pythoncheck-python-tests-in-package-test
-    filename = Path(package).name + '-*.rpm'
-    candidates = list(get_tested_path(package).parent.glob(filename))
-    pkg = Pkg(candidates[0], tmpdir)
-
-    test.check(pkg)
+    test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/test' in out
     assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/tests' in out
