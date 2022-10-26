@@ -43,7 +43,7 @@ class PythonCheck(AbstractFilesCheck):
                 if key == 'tests':
                     # Ignore "-test" and "-tests" packages since these are
                     # supposed to contain tests.
-                    if pkg.name.endswith('test') or pkg.name.endswith('tests'):
+                    if pkg.name.endswith(('test', 'tests')):
                         continue
                 self.output.add_info('W', pkg, WARNS[key], filename)
 
