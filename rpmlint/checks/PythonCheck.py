@@ -4,25 +4,35 @@ import re
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 
 # Warning messages
-WARNS = {'tests': 'python-tests-in-package',
-         'doc': 'python-doc-in-package'}
+WARNS = {
+    'tests': 'python-tests-in-package',
+    'doc': 'python-doc-in-package',
+}
 
 # Error messages
-ERRS = {'egg-distutils': 'python-egg-info-distutils-style',
-        'tests': 'python-tests-in-site-packages',
-        'doc': 'python-doc-in-site-packages',
-        'src': 'python-src-in-site-packages'}
+ERRS = {
+    'egg-distutils': 'python-egg-info-distutils-style',
+    'tests': 'python-tests-in-site-packages',
+    'doc': 'python-doc-in-site-packages',
+    'src': 'python-src-in-site-packages',
+}
+
+SITELIB_RE = '/usr/lib[^/]*/python[^/]*/site-packages'
 
 # Paths that shouldn't be in any packages, ever, because they clobber global
 # name space.
-ERR_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/tests?$': 'tests',
-             '/usr/lib[^/]*/python[^/]*/site-packages/docs?$': 'doc',
-             '/usr/lib[^/]*/python[^/]*/site-packages/src$': 'src'}
+ERR_PATHS = [
+    (re.compile(f'{SITELIB_RE}/tests?$'), 'tests'),
+    (re.compile(f'{SITELIB_RE}/docs?$'), 'doc'),
+    (re.compile(f'{SITELIB_RE}/src$'), 'src'),
+]
 
 # Paths that shouldn't be in any packages, but might need to be under
 # sufficiently special circumstances.
-WARN_PATHS = {'/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/tests?$': 'tests',
-              '/usr/lib[^/]*/python[^/]*/site-packages/[^/]+/docs?$': 'doc'}
+WARN_PATHS = [
+    (re.compile(f'{SITELIB_RE}/[^/]+/tests?$'), 'tests'),
+    (re.compile(f'{SITELIB_RE}/[^/]+/docs?$'), 'doc'),
+]
 
 
 class PythonCheck(AbstractFilesCheck):
@@ -35,10 +45,7 @@ class PythonCheck(AbstractFilesCheck):
         if egg_info_re.match(filename):
             self.check_egginfo(pkg, filename)
 
-        for path in WARN_PATHS:
-            path_re = re.compile(path)
-            key = WARN_PATHS[path]
-
+        for path_re, key in WARN_PATHS:
             if path_re.match(filename):
                 if key == 'tests':
                     # Ignore "-test" and "-tests" packages since these are
@@ -47,10 +54,7 @@ class PythonCheck(AbstractFilesCheck):
                         continue
                 self.output.add_info('W', pkg, WARNS[key], filename)
 
-        for path in ERR_PATHS:
-            path_re = re.compile(path)
-            key = ERR_PATHS[path]
-
+        for path_re, key in ERR_PATHS:
             if path_re.match(filename):
                 self.output.add_info('E', pkg, ERRS[key], filename)
 
