@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import re
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
@@ -59,6 +59,9 @@ class PythonCheck(AbstractFilesCheck):
         Check type of egg-info metadata and check Requires against egg-info
         metadata if applicable.
         """
+
+        filepath = Path(pkg.dir_name())
+        filepath = filepath.joinpath(filename.lstrip('/'))
         # Check for (deprecated) distutils style metadata.
-        if os.path.isfile(os.path.join(pkg.dir_name(), filename.lstrip('/'))):
+        if filepath.is_file():
             self.output.add_info('E', pkg, ERRS['egg-distutils'], filename)
