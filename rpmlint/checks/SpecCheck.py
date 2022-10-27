@@ -80,6 +80,7 @@ tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
+python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 
 UNICODE_NBSP = '\xa0'
 
@@ -366,6 +367,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_macros_in_comments(line)
         self._checkline_python_setup_test(line)
         self._checkline_python_module_def(line)
+        self._checkline_python_sitelib_glob(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -751,3 +753,12 @@ class SpecCheck(AbstractCheck):
         """
         if python_module_def_regex.search(line):
             self.output.add_info('W', self.pkg, 'python-module-def', line[:-1])
+
+    def _checkline_python_sitelib_glob(self, line):
+        """Test if %{python_sitelib}/* is present in %files section."""
+        if self.current_section != 'files':
+            return
+
+        if python_sitelib_glob_regex.match(line):
+            self.output.add_info('W', self.pkg, 'python-sitelib-glob-in-files',
+                                 line[:-1])
