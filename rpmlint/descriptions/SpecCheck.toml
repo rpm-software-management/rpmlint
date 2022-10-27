@@ -194,3 +194,10 @@ macro is present in recent versions of python-rpm-macros.
 The following conditional python_module macro definition can be removed:
 %{?!python_module:%define python_module() python-%{**} python3-%{**}}
 """
+python-sitelib-glob-in-files="""
+The %files section contains "%{python_sitelib}/*" or "%{python_sitearch}/*"
+that can get something not wanted in the package. Please use a more specific
+file path like:
+%{python_sitelib}/packagename
+%{python_sitelib}/packagename-%{version}*-info
+"""

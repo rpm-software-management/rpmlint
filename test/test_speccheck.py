@@ -1129,3 +1129,26 @@ def test_python_module_definition_not_present(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: python-module-def' not in out
+
+
+@pytest.mark.parametrize('package', [
+    'spec/python-sitelib-glob',
+    'spec/python-sitearch-glob',
+])
+def test_python_sitelib_glob(package, speccheck):
+    """Test if %{python_sitelib}/* is present in %files section."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-sitelib-glob-in-files' in out
+
+
+@pytest.mark.parametrize('package', ['spec/python-sitelib'])
+def test_python_sitelib(package, speccheck):
+    """Test if %{python_sitelib}/* is present in %files section."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-sitelib-glob-in-files' not in out
