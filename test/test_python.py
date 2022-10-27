@@ -33,14 +33,14 @@ def test_python_tests_in_package(tmpdir, package, pythoncheck):
     output, test = pythoncheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/test' in out
-    assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/tests' in out
-    assert 'W: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/test' in out
-    assert 'W: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/tests' in out
-    assert 'W: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/test' in out
-    assert 'W: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/tests' in out
-    assert 'W: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/test' in out
-    assert 'W: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/tests' in out
+    assert 'E: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/test' in out
+    assert 'E: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/tests' in out
+    assert 'E: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/test' in out
+    assert 'E: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/tests' in out
+    assert 'E: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/test' in out
+    assert 'E: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/tests' in out
+    assert 'E: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/test' in out
+    assert 'E: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/tests' in out
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-package-test'])
@@ -48,14 +48,14 @@ def test_python_tests_in_test_package(tmpdir, package, pythoncheck):
     output, test = pythoncheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/test' not in out
-    assert 'W: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/tests' not in out
-    assert 'W: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/test' not in out
-    assert 'W: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/tests' not in out
-    assert 'W: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/test' not in out
-    assert 'W: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/tests' not in out
-    assert 'W: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/test' not in out
-    assert 'W: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/tests' not in out
+    assert 'E: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/test' not in out
+    assert 'E: python-tests-in-package /usr/lib/python2.7/site-packages/python-mypackage/tests' not in out
+    assert 'E: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/test' not in out
+    assert 'E: python-tests-in-package /usr/lib/python3.10/site-packages/python-mypackage/tests' not in out
+    assert 'E: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/test' not in out
+    assert 'E: python-tests-in-package /usr/lib64/python2.7/site-packages/python-mypackage/tests' not in out
+    assert 'E: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/test' not in out
+    assert 'E: python-tests-in-package /usr/lib64/python3.10/site-packages/python-mypackage/tests' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-egg-info-distutils-style'])

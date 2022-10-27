@@ -5,7 +5,6 @@ from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 
 # Warning messages
 WARNS = {
-    'tests': 'python-tests-in-package',
     'doc': 'python-doc-in-package',
 }
 
@@ -15,6 +14,7 @@ ERRS = {
     'tests': 'python-tests-in-site-packages',
     'doc': 'python-doc-in-site-packages',
     'src': 'python-src-in-site-packages',
+    'tests-package': 'python-tests-in-package',
 }
 
 SITELIB_RE = '/usr/lib[^/]*/python[^/]*/site-packages'
@@ -25,12 +25,12 @@ ERR_PATHS = [
     (re.compile(f'{SITELIB_RE}/tests?$'), 'tests'),
     (re.compile(f'{SITELIB_RE}/docs?$'), 'doc'),
     (re.compile(f'{SITELIB_RE}/src$'), 'src'),
+    (re.compile(f'{SITELIB_RE}/[^/]+/tests?$'), 'tests-package'),
 ]
 
 # Paths that shouldn't be in any packages, but might need to be under
 # sufficiently special circumstances.
 WARN_PATHS = [
-    (re.compile(f'{SITELIB_RE}/[^/]+/tests?$'), 'tests'),
     (re.compile(f'{SITELIB_RE}/[^/]+/docs?$'), 'doc'),
 ]
 
@@ -47,15 +47,15 @@ class PythonCheck(AbstractFilesCheck):
 
         for path_re, key in WARN_PATHS:
             if path_re.match(filename):
-                if key == 'tests':
-                    # Ignore "-test" and "-tests" packages since these are
-                    # supposed to contain tests.
-                    if pkg.name.endswith(('test', 'tests')):
-                        continue
                 self.output.add_info('W', pkg, WARNS[key], filename)
 
         for path_re, key in ERR_PATHS:
             if path_re.match(filename):
+                if key == 'tests-package':
+                    # Ignore "-test" and "-tests" packages since these are
+                    # supposed to contain tests.
+                    if pkg.name.endswith(('test', 'tests')):
+                        continue
                 self.output.add_info('E', pkg, ERRS[key], filename)
 
     def check_egginfo(self, pkg, filename):
