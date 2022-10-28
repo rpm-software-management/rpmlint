@@ -448,11 +448,12 @@ nodigests = [
 [[FileDigestGroup]]
 package = "NetworkManager-openconnect"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#732915"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-openconnect-service.conf",
-]
+note = "network manager plugin to integrate Cisco AnyConnect VPN"
+bugs = ["bsc#732915", "bsc#1204795"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-openconnect-service.conf"
+digester = "xml"
+hash = "1a37697640982bd2cb2dff6b7c173ca83a9c52fb57aa14806767daf4aa7582dc"
 
 [[FileDigestGroup]]
 package = "snapper"
