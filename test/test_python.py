@@ -28,6 +28,21 @@ def test_python_doc_in_package(tmpdir, package, pythoncheck):
     assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/docs' in out
 
 
+@pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-module-in-package'])
+def test_python_doc_module_in_package(tmpdir, package, pythoncheck):
+    output, test = pythoncheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/doc' not in out
+    assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/docs' not in out
+    assert 'W: python-doc-in-package /usr/lib/python3.10/site-packages/python-mypackage/doc' not in out
+    assert 'W: python-doc-in-package /usr/lib/python3.10/site-packages/python-mypackage/docs' not in out
+    assert 'W: python-doc-in-package /usr/lib64/python2.7/site-packages/python-mypackage/doc' not in out
+    assert 'W: python-doc-in-package /usr/lib64/python2.7/site-packages/python-mypackage/docs' not in out
+    assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/doc' not in out
+    assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/docs' not in out
+
+
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-package2'])
 def test_python_tests_in_package(tmpdir, package, pythoncheck):
     output, test = pythoncheck

@@ -47,6 +47,12 @@ class PythonCheck(AbstractFilesCheck):
 
         for path_re, key in WARN_PATHS:
             if path_re.match(filename):
+                if key == 'doc':
+                    # Check for __init__.py file inside doc, maybe this is a
+                    # module, not documentation
+                    module_file = f'{filename}/__init__.py'
+                    if module_file in pkg.files.keys():
+                        continue
                 self.output.add_info('W', pkg, WARNS[key], filename)
 
         for path_re, key in ERR_PATHS:
