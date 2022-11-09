@@ -290,6 +290,9 @@ ValidLicenseExceptions = []
 # Default list of authorized PAM modules
 PAMAuthorizedModules = []
 
+# Minimum size of files to check duplicates, in bytes
+# DuplicatesMinSize = 4
+
 # Additional warnings on specific function calls
 [WarnOnFunction]
 #[WarnOnFunction.testname]
