@@ -291,7 +291,7 @@ ValidLicenseExceptions = []
 PAMAuthorizedModules = []
 
 # Minimum size of files to check duplicates, in bytes
-# DuplicatesMinSize = 4
+DuplicatesMinSize = 2
 
 # Additional warnings on specific function calls
 [WarnOnFunction]
