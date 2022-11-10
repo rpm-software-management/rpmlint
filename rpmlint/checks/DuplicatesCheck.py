@@ -18,6 +18,10 @@ class DuplicatesCheck(AbstractCheck):
     - values: size of the file
     """
 
+    def __init__(self, config, output):
+        super().__init__(config, output)
+        self.min_size = self.config.configuration.get('DuplicatesMinSize', 0)
+
     def check(self, pkg):
         if pkg.is_source:
             return
@@ -29,6 +33,10 @@ class DuplicatesCheck(AbstractCheck):
 
         for fname, pkgfile in pkg.files.items():
             if fname in pkg.ghost_files or not stat.S_ISREG(pkgfile.mode):
+                continue
+
+            # Skip small files
+            if pkgfile.size <= self.min_size:
                 continue
 
             # fillup md5s and sizes dicts

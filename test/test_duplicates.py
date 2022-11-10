@@ -23,7 +23,8 @@ def test_duplicates(tmpdir, package, duplicatescheck):
     assert 'E: hardlink-across-config-files /var/foo2 /etc/foo2' in out
     assert 'W: files-duplicate /etc/bar3 /etc/bar:/etc/bar2' in out
     assert 'W: files-duplicate /etc/strace2.txt /etc/strace1.txt' in out
-    assert 'E: files-duplicated-waste 270516' in out
+    assert 'W: files-duplicate /etc/small2 /etc/small' not in out
+    assert 'E: files-duplicated-waste 270544' in out
 
 
 @pytest.mark.parametrize('package', ['binary/bad-crc-uncompressed'])
