@@ -2,11 +2,9 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "main", "opensuse", "rpmlint-1.x" ]
+    branches: [ "main", "opensuse" ]
   pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: "25 10 * * 5"
+    branches: [ "main", "opensuse" ]
 
 jobs:
   analyze:
