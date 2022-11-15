@@ -25,7 +25,7 @@ ERR_PATHS = [
     (re.compile(f'{SITELIB_RE}/tests?$'), 'tests'),
     (re.compile(f'{SITELIB_RE}/docs?$'), 'doc'),
     (re.compile(f'{SITELIB_RE}/src$'), 'src'),
-    (re.compile(f'{SITELIB_RE}/[^/]+/tests?$'), 'tests-package'),
+    (re.compile(f'{SITELIB_RE}/.+/tests?$'), 'tests-package'),
 ]
 
 # Paths that shouldn't be in any packages, but might need to be under
