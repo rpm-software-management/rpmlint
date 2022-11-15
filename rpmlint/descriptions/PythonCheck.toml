@@ -1,7 +1,7 @@
 python-tests-in-package="""
 test/ or tests/ directory in Python package directory. Tests in %{python_sitelib}/<pkgname> should be packaged in a separate test or tests subpackage or not packaged."""
 python-doc-in-package="""
-doc/ or docs/ directory in package directory. Documentation should go into %{docdir}, not %{python_sitelib}/<pkgname>"""
+doc/ or docs/ directory in Python package directory. Documentation should go into %{docdir}, not %{python_sitelib}/<pkgname>"""
 python-egg-info-distutils-style="""
 The package's egg-info is a distutils style file.
 Please update to dist-info standardized core metadata.
