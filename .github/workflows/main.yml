@@ -26,7 +26,6 @@ jobs:
 
     container:
       image: ${{ matrix.container }}
-      options: --security-opt seccomp=unconfined
 
     steps:
       - run: zypper -n install
