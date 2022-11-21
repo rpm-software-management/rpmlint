@@ -1231,3 +1231,37 @@ hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
 path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
 digester = "xml"
 hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
+
+[[FileDigestGroup]]
+package = "ruby3.1-rubygem-d-installer"
+type = "dbus"
+note = "YaST installer backend for e.g. installation over the web browser. IMPORTANT: must be callable only by root or a dedicated user account."
+bug = "bsc#1202059"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.Questions.service"
+digester = "shell"
+hash = "267c112eaf789e78d4aa1eeff9668d0c4b52842458225fbae0f2badd0ab104b2"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.service"
+digester = "shell"
+hash = "336d41ca53cedcac9aeb57f334e6f560fe41f89abc854277cfd97f52d64ea127"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.Language.service"
+digester = "shell"
+hash = "304f80dc531919fd46e611dbc8d5e5d4fa76f0e282454f21096f4e26d974abec"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.Users.service"
+digester = "shell"
+hash = "aa5098db3367b9176cd88295f42cfef69fd511a9db98081f4ad8ef6978ccf155"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.Software.service"
+digester = "shell"
+hash = "7028fc71bd59095eb3727cbb26d92fbe0e3f55e60c9d70affacb80cd7e3306b0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.DInstaller.Storage.service"
+digester = "shell"
+hash = "fa26ad5580054daaea6d6c34f6367ee862f0ab5aa690b00b8d7b32c522d85124"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.DInstaller.conf"
+digester = "xml"
+hash = "aea42c6d50139487bb800d81a0d0eb23281f0bd8aa73bba4ae0d2d801ea3fc95"
