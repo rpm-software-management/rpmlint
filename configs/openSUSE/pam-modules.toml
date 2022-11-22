@@ -496,3 +496,12 @@ bug = "bsc#1200165"
 nodigests = [
     "*/security/pam_gromox.so",
 ]
+
+[[FileDigestGroup]]
+package = "pam_saslauthd"
+type = "pam"
+note = "Connects to a local cyrus-saslauthd for authentication"
+bug = "bsc#1205459"
+nodigests = [
+    "*/security/pam_saslauthd.so",
+]
