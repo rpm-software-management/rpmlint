@@ -444,11 +444,8 @@ class BinariesCheck(AbstractCheck):
         dyn_section = self.readelf_parser.dynamic_section_info
         if not len(dyn_section.needed) and not (dyn_section.soname and
                                                 self.ldso_soname_regex.search(dyn_section.soname)):
-            if self.is_shobj:
-                msg = 'shared-library-without-dependency-information'
-            else:
-                msg = 'statically-linked-binary'
-            self.output.add_info('E', pkg, msg, pkgfile.name)
+            if not self.is_shobj:
+                self.output.add_info('E', pkg, 'statically-linked-binary', pkgfile.name)
         else:
             # linked against libc ?
             if 'libc.' not in dyn_section.runpaths and \
@@ -458,11 +455,8 @@ class BinariesCheck(AbstractCheck):
                 for lib in dyn_section.needed:
                     if 'libc.' in lib:
                         return
-                if self.is_shobj:
-                    msg = 'library-not-linked-against-libc'
-                else:
-                    msg = 'program-not-linked-against-libc'
-                self.output.add_info('W', pkg, msg, pkgfile.name)
+                if not self.is_shobj:
+                    self.output.add_info('W', pkg, 'program-not-linked-against-libc', pkgfile.name)
 
     def _check_forbidden_functions(self, pkg, pkgfile):
         forbidden_functions = self.config.configuration['WarnOnFunction']

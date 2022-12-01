@@ -162,15 +162,8 @@ This library doesn't have the executable bit set. Without this bit set,
 rpm for instance won't be able identify the file as a library and not
 generate dependencies or strip debug symbols from it.
 """
-library-not-linked-against-libc="""
-The library is not dynamically linked against libc.
-"""
 program-not-linked-against-libc="""
 The binary is not dynamically linked against libc.
-"""
-shared-library-without-dependency-information="""
-The listed shared library doesn't include information about which other
-libraries the library was linked against.
 """
 missing-mandatory-optflags="""
 This executable was not compiled with expected flags.
