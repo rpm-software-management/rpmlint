@@ -276,17 +276,6 @@ def test_call_gethostbyname(binariescheck):
         assert 'W: binary-or-shlib-calls-gethostbyname' in out
 
 
-@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
-def test_missing_dependency(binariescheck):
-    output, test = binariescheck
-
-    with FakePkg('fake') as pkg:
-        pkgfile = pkg.add_file(get_full_path('no-dependency.so'), '/lib64/no-dependency.so')
-        run_elf_checks(test, pkg, pkgfile)
-        out = output.print_results(output.results)
-        assert 'E: shared-library-without-dependency-information' in out
-
-
 def test_bca_files(binariescheck):
     output, test = binariescheck
 

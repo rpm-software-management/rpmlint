@@ -126,7 +126,6 @@ Filters = [
 # Doesn't seem to make sense
     'invalid-ldconfig-symlink',
     'invalid-soname',
-    'library-not-linked-against-libc',
     'only-non-binary-in-usr-lib',
     'outside-libdir-files',
 
