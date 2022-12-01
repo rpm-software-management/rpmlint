@@ -268,12 +268,3 @@ def test_multiple_errors(tmpdir, package, binariescheck):
     assert 'E: call-to-mktemp' in out
     assert 'E: missing-call-to-setgroups-before-setuid' in out
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
-
-
-@pytest.mark.parametrize('package', ['binary/dependency-info'])
-def test_dependency_information(tmpdir, package, binariescheck):
-    output, test = binariescheck
-    test.check(get_tested_package(package, tmpdir))
-    out = output.print_results(output.results)
-    assert 'E: shared-library-without-dependency-information /usr/lib64/ruby/enc/gb2312.so' in out
-    assert 'W: library-not-linked-against-libc /usr/lib64/ruby/continuation.so' in out
