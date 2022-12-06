@@ -430,11 +430,12 @@ nodigests = [
 [[FileDigestGroup]]
 package = "lightdm"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#708205"
-nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.DisplayManager.conf",
-]
+note = "D-Bus API of the display manager."
+bugs = ["bsc#708205", "bsc#1205939"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.DisplayManager.conf"
+digester = "xml"
+hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 
 [[FileDigestGroup]]
 package = "sddm"
