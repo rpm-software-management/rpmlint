@@ -1266,3 +1266,13 @@ hash = "fa26ad5580054daaea6d6c34f6367ee862f0ab5aa690b00b8d7b32c522d85124"
 path = "/usr/share/dbus-1/system.d/org.opensuse.DInstaller.conf"
 digester = "xml"
 hash = "aea42c6d50139487bb800d81a0d0eb23281f0bd8aa73bba4ae0d2d801ea3fc95"
+
+[[FileDigestGroup]]
+package = "transactional-update-notifier"
+type = "dbus"
+note = "Forwards system notifications from the transactional update system into individual user sessions"
+bug = "bsc#1206163"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.Updated.conf"
+digester = "xml"
+hash = "79448ff58b92e27ed0fecfb0d496582e4df8467b015147bb30aef3189e27df57"
