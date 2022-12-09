@@ -2,9 +2,6 @@
 
 [![Build and Test](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml)
 [![Build and Test 2](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml/badge.svg?branch=opensuse)](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/rpm-software-management/rpmlint.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/rpm-software-management/rpmlint/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/rpm-software-management/rpmlint.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/rpm-software-management/rpmlint/context:python)
-[![Coverage Status](https://coveralls.io/repos/github/rpm-software-management/rpmlint/badge.svg?branch=main)](https://coveralls.io/github/rpm-software-management/rpmlint?branch=main)
 [![repology](https://repology.org/badge/latest-versions/rpmlint.svg)](https://repology.org/project/rpmlint/versions)
 
 `rpmlint` is a tool for checking common errors in RPM packages.
