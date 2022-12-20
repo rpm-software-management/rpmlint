@@ -192,9 +192,10 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_unix"
+package = "pam"
 type = "pam"
 note = "legacy: not audited"
+bugs = ["bsc#1206485"]
 nodigests = [
     "*/security/pam_unix.so",
     "*/security/pam_unix_acct.so",

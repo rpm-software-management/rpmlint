@@ -441,10 +441,11 @@ hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 package = "sddm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "boo#897788"
-nodigests = [
-    "/etc/dbus-1/system.d/sddm_org.freedesktop.DisplayManager.conf",
-]
+bugs = ["boo#897788", "bsc#1206348"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/sddm_org.freedesktop.DisplayManager.conf"
+digester = "xml"
+hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 
 [[FileDigestGroup]]
 package = "NetworkManager-openconnect"
