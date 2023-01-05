@@ -47,6 +47,12 @@ Locations = [
     "/lib64/security/"
 ]
 
+[FileDigestLocation.zypperplugin]
+FollowSymlinks = true
+Locations = [
+    "/usr/lib/zypp/plugins/"
+]
+
 [FileDigestLocation.sudoers]
 FollowSymlinks = false
 # the directories for this are currently configured in /etc/sudoers via

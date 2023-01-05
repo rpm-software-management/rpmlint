@@ -273,6 +273,9 @@ BlockedFilters = [
     "systemd-tmpfile-entry-unauthorized",
     "world-writable-mismatched-attrs",
     "world-writable-unauthorized-file",
+    "zypperplugin-file-digest-mismatch",
+    "zypperplugin-file-ghost",
+    "zypperplugin-file-unauthorized"
 ]
 
 [DanglingSymlinkExceptions."/usr/share/doc/licenses/"]

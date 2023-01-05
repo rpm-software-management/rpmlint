@@ -90,3 +90,6 @@ systemd-tmpfile-ghost = 10
 systemd-tmpfile-parse-error = 10
 systemd-tmpfile-symlink = 10
 missing-hash-section = 10000
+zypperplugin-file-digest-mismatch = 10
+zypperplugin-file-ghost = 10
+zypperplugin-file-unauthorized = 10
