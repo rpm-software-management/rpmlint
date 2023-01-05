@@ -1,0 +1,78 @@
+[[FileDigestGroup]]
+package = "rpmlint-integration-test"
+type = "zypperplugin"
+note = "test whitelisting entry for the OBS integration test package"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/test-plugin.sh"
+digester = "shell"
+hash = "2709ba21a4c4905560166ab13bb7bf6a92ff604adc7cb61fa1768d3f562ab189"
+
+[[FileDigestGroup]]
+package = "btrfsmaintenance"
+type = "zypperplugin"
+note = "this plugin defragments the RPM database after zypper operations are complete"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/btrfs-defrag-plugin.sh"
+digester = "shell"
+hash = "dbfdf581ce1929f2815ed854c267b1e47bbedb9e8083e835f66850168fabf2d2"
+
+[[FileDigestGroup]]
+package = "etckeeper-zypp-plugin"
+type = "zypperplugin"
+note = "this plugin performs commits for /etc before and after every zypper operation"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/zypper-etckeeper.py"
+digester = "shell"
+hash = "14f744b4146f304b9432ec768cb2a08b184a1a214ecb9bf5086b9a98151dc4b0"
+
+[[FileDigestGroup]]
+package = "libzypp-plugin-appdata"
+type = "zypperplugin"
+note = "this plugin maintains AppStream metadata for each installed package"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/appdata/InstallAppdata"
+digester = "shell"
+hash = "659f9bdf79eebdca9f69a4924c0c3b53388ab3469c737759c1ea133eab460969"
+
+[[FileDigestGroup]]
+package = "permissions-zypp-plugin"
+type = "zypperplugin"
+note = "this plugin calls `chkstat --system` after certain package install to make sure the permission settings are maintained at all times"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/permissions.py"
+digester = "shell"
+hash = "db141ad0e17dd6c0b34a671159f95357914693c3ab5e23f64f3724f713bb7c5d"
+
+[[FileDigestGroup]]
+package = "snapper-zypp-plugin"
+type = "zypperplugin"
+note = "this plugin creates snapper snapshots before zypper modifications take place"
+bug = "bsc#1204314"
+nodigests = [
+    "/usr/lib/zypp/plugins/commit/snapper-zypp-plugin"
+]
+
+[[FileDigestGroup]]
+package = "container-suseconnect"
+type = "zypperplugin"
+note = "this plugin make host SUSE subscriptions available in containers"
+bug = "bsc#1204314"
+nodigests = [
+    "/usr/lib/zypp/plugins/services/container-suseconnect-zypp",
+    "/usr/lib/zypp/plugins/urlresolver/susecloud"
+]
+
+[[FileDigestGroup]]
+package = "salt-minion"
+type = "zypperplugin"
+note = "this plugin maintains a timestamp and checksum of the RPM database"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/zyppnotify"
+digester = "shell"
+hash = "58a04efaa1ca353f298b61be48dbb7a6512837733ef42468fcb5cb07cd82db92"

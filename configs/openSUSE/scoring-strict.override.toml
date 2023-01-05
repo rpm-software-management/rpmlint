@@ -42,3 +42,6 @@ systemd-tmpfile-parse-error = 10000
 systemd-tmpfile-symlink = 10000
 world-writable-mismatched-attrs = 10000
 world-writable-unauthorized-file = 10000
+zypperplugin-file-digest-mismatch = 10000
+zypperplugin-file-ghost = 10000
+zypperplugin-file-unauthorized = 10000

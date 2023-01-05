@@ -32,3 +32,8 @@ sudoers-file-unauthorized="Packaging sudoers.d drop-in configuration files #SUFF
 sudoers-file-digest-mismatch="A whitelisting related sudoers.d drop-in file changed in content. Packaging sudoers.d drop in configuration files #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 sudoers-file-ghost="This package installs a sudoers.d drop-in configuration file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
 sudoers-file-symlink="Symlinks are not allowed for sudoers.d drop-in configuration files"
+
+zypperplugin-file-digest-mismatch="A whitelisting related zypper plugin file changed in content. Packaging zypper plugins #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+zypperplugin-file-unauthorized="Packaging new zypper plugins #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+zypperplugin-file-ghost="This package installs a zypper plugin as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
+zypperplugin-file-symlink="this should never happen"
