@@ -480,11 +480,12 @@ hash = "d53d87b0673808f3cd01b9f474371b6ea5ed82fcad3277551c506055b4ace568"
 [[FileDigestGroup]]
 package = "NetworkManager-iodine"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#781071"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-iodine-service.conf",
-]
+note = "NetworkManager plugin to integrate iodine IPv4-over-DNS"
+bugs = ["bsc#1206756","bsc#781071"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-iodine-service.conf"
+digester = "xml"
+hash = "52afe8f7e8a0e2c57a3273e273fbcd8010a731cddcb3a7af8de1f9593bbac2e7"
 
 [[FileDigestGroup]]
 package = "ModemManager"
