@@ -631,9 +631,7 @@ class BinariesCheck(AbstractCheck):
 
             # find out if we have a file in /usr/lib64/ directory (needed later
             # for the package checks)
-            if stat.S_ISREG(pkgfile.mode) and \
-                    (fname.startswith('/usr/lib64') or
-                     fname.startswith('/lib64')):
+            if fname.startswith(('/usr/lib64', '/lib64')):
                 pkg_has_file_in_lib64 = True
 
             # skip the rest of the tests for non-binaries
