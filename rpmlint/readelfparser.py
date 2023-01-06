@@ -32,17 +32,6 @@ class ElfDynamicSection:
         self.value = value
 
 
-class ElfSymbol:
-    """
-    A simple wrapper representing one ELF symbol.
-    """
-    def __init__(self, kind, bind, visibility, name):
-        self.type = kind
-        self.bind = bind
-        self.visibility = visibility
-        self.name = name
-
-
 class ElfSectionInfo:
     """
     Class contains information about ELF sections of an ELF file. The information
@@ -287,11 +276,9 @@ class ElfSymbolTableInfo:
      8: 0000000000000000    21 FUNC    GLOBAL DEFAULT    1 main
     """
 
-    section_regex = re.compile('\\s+[0-9]+:\\s\\w+\\s+(\\w+)\\s+(?P<type>\\w+)\\s+(?P<bind>\\w+)\\s+(?P<visibility>\\w+)\\s+\\w+\\s+(?P<name>\\S+)')
-
     def __init__(self, path, extra_flags):
         self.path = path
-        self.symbols = []
+        self.functions = set()
         self.parsing_failed_reason = None
         self.extra_flags = extra_flags
         self.parse()
@@ -306,16 +293,15 @@ class ElfSymbolTableInfo:
 
             lines = r.stdout.splitlines()
             for line in lines:
-                r = self.section_regex.search(line)
-                if r and r.group('type') != 'SECTION':
-                    self.symbols.append(ElfSymbol(r.group('type'), r.group('bind'),
-                                                  r.group('visibility'), r.group('name')))
+                parts = line.split()
+                if len(parts) >= 8 and parts[3] == 'FUNC':
+                    self.functions.add(parts[7])
         except UnicodeDecodeError as e:
             self.parsing_failed_reason = str(e)
 
     def get_functions_for_regex(self, regex):
-        for sym in self.symbols:
-            if sym.type == 'FUNC' and regex.search(sym.name):
+        for sym in self.functions:
+            if regex.search(sym):
                 yield sym
 
 
