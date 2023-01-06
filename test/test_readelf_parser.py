@@ -37,7 +37,7 @@ def run_elf_checks(test, pkg, pkgfile):
 def test_empty_archive():
     readelf = readelfparser('empty-archive.a')
     assert len(readelf.section_info.elf_files) == 0
-    assert len(readelf.symbol_table_info.symbols) == 0
+    assert len(readelf.symbol_table_info.functions) == 0
 
 
 def test_simple_archive():
@@ -48,17 +48,7 @@ def test_simple_archive():
     assert len(elf_file) == 11
     assert elf_file[0].name == '.text'
     assert elf_file[0].size == 21
-    assert len(readelf.symbol_table_info.symbols) == 3
-    sym0 = readelf.symbol_table_info.symbols[0]
-    assert sym0.name == 'main.c'
-    assert sym0.type == 'FILE'
-    assert sym0.bind == 'LOCAL'
-    assert sym0.visibility == 'DEFAULT'
-    sym1 = readelf.symbol_table_info.symbols[1]
-    assert sym1.name == 'main'
-    assert sym1.type == 'FUNC'
-    assert sym1.bind == 'GLOBAL'
-    assert sym1.visibility == 'DEFAULT'
+    assert readelf.symbol_table_info.functions == {'main'}
     assert len(list(readelf.symbol_table_info.get_functions_for_regex(re.compile('mai.')))) == 1
 
 
