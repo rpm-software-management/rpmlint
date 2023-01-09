@@ -2,7 +2,7 @@
 
 [![Build and Test](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml)
 [![Build and Test 2](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml/badge.svg?branch=opensuse)](https://github.com/rpm-software-management/rpmlint/actions/workflows/main.yml)
-[![build result](https://build.opensuse.org/projects/devel:openSUSE:Factory:rpmlint/packages/rpmlint/badge.svg?type=default&repository=openSUSE_Factory)](https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint/rpmlint)
+[![build result](https://build.opensuse.org/projects/devel:openSUSE:Factory:rpmlint/packages/rpmlint/badge.svg?type=default)](https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint/rpmlint)
 [![repology](https://repology.org/badge/latest-versions/rpmlint.svg)](https://repology.org/project/rpmlint/versions)
 
 `rpmlint` is a tool for checking common errors in RPM packages.
