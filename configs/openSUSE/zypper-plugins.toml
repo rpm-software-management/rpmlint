@@ -9,6 +9,16 @@ digester = "shell"
 hash = "2709ba21a4c4905560166ab13bb7bf6a92ff604adc7cb61fa1768d3f562ab189"
 
 [[FileDigestGroup]]
+package = "rpmlint-integration-test"
+type = "zypperplugin"
+note = "test whitelisting entry for the OBS integration test package (invalid digest)"
+bug = "bsc#1204314"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/zypp/plugins/commit/mismatching-plugin.sh"
+digester = "shell"
+hash = "36416902a4636949e17cecd375524609cc599c83245ca5b5ab9ddcacd77e4d64"
+
+[[FileDigestGroup]]
 package = "btrfsmaintenance"
 type = "zypperplugin"
 note = "this plugin defragments the RPM database after zypper operations are complete"
