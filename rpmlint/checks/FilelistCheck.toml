@@ -213,6 +213,7 @@ GoodPrefixes = [
     Bad = [
         "/lib/systemd/system/*",
         "/lib/udev/rules.d/*",
+	"/etc/pam.d/*",
     ]
 [[Check]]
     Message = "wrong-suse-capitalisation"
