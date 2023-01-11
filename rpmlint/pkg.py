@@ -16,12 +16,9 @@ from urllib.parse import urljoin
 
 try:
     import magic
-    # TODO: magic.MAGIC_COMPRESS when PkgFile gets decompress support.
-    _magic = magic.open(magic.MAGIC_NONE)
-    _ = _magic.descriptor  # magic >= 5.05 needed
-    _magic.load()
+    has_magic = True
 except ImportError:
-    _magic = None
+    has_magic = False
 import rpm
 from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
 from rpmlint.pkgfile import PkgFile
@@ -358,14 +355,9 @@ def parse_deps(line):
 
 
 def get_magic(path):
-    # file() method evaluates every file twice with python2,
-    # use descriptor() method instead
     try:
-        fd = os.open(path, os.O_RDONLY)
-        magic = byte_to_string(_magic.descriptor(fd))
-        os.close(fd)
-        return magic
-    except OSError:
+        return magic.detect_from_filename(path).name
+    except ValueError:
         return ''
 
 
@@ -590,7 +582,7 @@ class Pkg(AbstractPkg):
                     elif not pkgfile.size:
                         pkgfile.magic = 'empty'
                 if (not pkgfile.magic and
-                        not pkgfile.is_ghost and _magic):
+                        not pkgfile.is_ghost and has_magic):
                     pkgfile.magic = get_magic(pkgfile.path)
                 if pkgfile.magic is None or Pkg._magic_from_compressed_re.search(pkgfile.magic):
                     # Discard magic from inside compressed files ('file -z')
