@@ -37,17 +37,10 @@ with urlopen(iso_639_2_url) as f:
         if entry_code not in langs:
             langs.add(entry_code)
 
-# Note that we are not pprint()ing the set directly because with
-# Python 3 it results in curly brace set initializers that are not
-# compatible with Python 2.6, do it with set([...]) instead.
-
-print('# flake8: noqa')
 print(f'# Generated with {sys.argv[0]}')
 print('')
-print('LANGUAGES = set(')
-pprint(sorted(langs))
-print(')')
+print('LANGUAGES = \\')
+pprint(langs)
 print('')
-print('COUNTRIES = set(')
-pprint(sorted(countries))
-print(')')
+print('COUNTRIES = \\')
+pprint(countries)
