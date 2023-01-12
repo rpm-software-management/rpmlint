@@ -49,6 +49,8 @@ class Filter:
         self.printed_messages = {'I': 0, 'W': 0, 'E': 0}
         # Number of promoted warnings and infos to errors
         self.promoted_to_error = 0
+        # Number of messaged that are filtered out
+        self.filtered_out = 0
         # Messages
         self.results = []
 
@@ -136,6 +138,7 @@ class Filter:
             for f in self.filters_regexes:
                 if f.search(result_no_color):
                     self.used_filters.add(f.pattern)
+                    self.filtered_out += 1
                     return
 
         # raise the counters

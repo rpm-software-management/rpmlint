@@ -94,7 +94,8 @@ class Lint:
 
         duration = time.monotonic() - start
         msg = string_center(f'{self.packages_checked} packages and {self.specfiles_checked} specfiles checked; '
-                            f'{self.output.printed_messages["E"]} errors, {self.output.printed_messages["W"]} warnings, '
+                            f'{self.output.printed_messages["E"]} errors, {self.output.printed_messages["W"]} warnings'
+                            f', {self.output.filtered_out} filtered, '
                             f'{self.output.score} badness; has taken {duration:.1f} s', '=')
         print(f'{quit_color}{msg}{Color.Reset}')
 
