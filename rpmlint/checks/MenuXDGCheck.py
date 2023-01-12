@@ -44,8 +44,9 @@ class MenuXDGCheck(AbstractFilesCheck):
         root = pkg.dir_name()
         f = root + filename
         try:
-            command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=ENGLISH_ENVIROMENT)
-            text = command.stdout.decode()
+            command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                     env=ENGLISH_ENVIROMENT, text=True)
+            text = command.stdout
             if command.returncode:
                 error_printed = False
                 for line in text.splitlines():

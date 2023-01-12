@@ -490,8 +490,8 @@ class Pkg(AbstractPkg):
     def check_signature(self):
         ret = subprocess.run(('rpm', '-Kv', self.filename),
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                             env=ENGLISH_ENVIROMENT)
-        text = ret.stdout.decode()
+                             env=ENGLISH_ENVIROMENT, text=True)
+        text = ret.stdout
         if text.endswith('\n'):
             text = text[:-1]
         return ret.returncode, text
