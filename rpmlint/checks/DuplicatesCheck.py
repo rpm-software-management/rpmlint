@@ -18,6 +18,8 @@ class DuplicatesCheck(AbstractCheck):
     - values: size of the file
     """
 
+    DUPLICATES_DISPLAY_LIMIT = 5
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.min_size = self.config.configuration.get('DuplicatesMinSize', 0)
@@ -94,8 +96,14 @@ class DuplicatesCheck(AbstractCheck):
             # is not a link and wasn't ignored by the previous step),
             # report a warning
             if sizes[md5_hash] and diff > 0:
+                display_duplicates = duplicates[:self.DUPLICATES_DISPLAY_LIMIT]
+                other_duplicates = len(duplicates[self.DUPLICATES_DISPLAY_LIMIT:])
+
+                description = ':'.join([x.name for x in display_duplicates])
+                if other_duplicates > 0:
+                    description += f':(and {other_duplicates} more)'
                 self.output.add_info('W', pkg, 'files-duplicate', first.name,
-                                     ':'.join([x.name for x in duplicates]))
+                                     description)
             total_dup_size += sizes[md5_hash] * diff
 
         # check the overall size of the duplicates and print an error if it's
