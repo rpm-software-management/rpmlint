@@ -42,11 +42,11 @@ hash = "14f744b4146f304b9432ec768cb2a08b184a1a214ecb9bf5086b9a98151dc4b0"
 package = "libzypp-plugin-appdata"
 type = "zypperplugin"
 note = "this plugin maintains AppStream metadata for each installed package"
-bug = "bsc#1204314"
+bugs = ["bsc#1204314", "bsc#1206836"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/zypp/plugins/appdata/InstallAppdata"
 digester = "shell"
-hash = "659f9bdf79eebdca9f69a4924c0c3b53388ab3469c737759c1ea133eab460969"
+hash = "ba77e8dab356d70dfe0f38a63c9cced0b81d47c8af36b41f88fa30597330ff43"
 
 [[FileDigestGroup]]
 package = "permissions-zypp-plugin"
