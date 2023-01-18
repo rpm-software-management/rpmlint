@@ -115,7 +115,7 @@ class DuplicatesCheck(AbstractCheck):
     @staticmethod
     def _get_prefix(pkgfile):
         """Return first two directories in the given path."""
-        pathlist = str.split(pkgfile.name, '/')
+        pathlist = pkgfile.name.split('/')
         if len(pathlist) == 3:
             return '/'.join(pathlist[0:2])
         return '/'.join(pathlist[0:3])
