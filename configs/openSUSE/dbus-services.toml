@@ -890,10 +890,11 @@ nodigests = [
 package = "NetworkManager-libreswan"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1089340"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-libreswan-service.conf",
-]
+bugs = ["bsc#1206757", "bsc#1089340"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-libreswan-service.conf"
+digester = "xml"
+hash = "a523ae98035b99f39ed8190d243ee0ca765641096707733afc3f3ee4945055d7"
 
 [[FileDigestGroup]]
 package = "ratbagd"
