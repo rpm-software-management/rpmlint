@@ -53,6 +53,20 @@ Locations = [
     "/usr/lib/zypp/plugins/"
 ]
 
+[FileDigestLocation.sysctl]
+FollowSymlinks = false
+NamePatterns = [
+    # sysctl only considers *.conf files in the drop in directories
+    "*.conf",
+]
+Locations = [
+    "/etc/sysctl.d/",
+    "/run/sysctl.d/",
+    "/usr/local/lib/sysctl.d/",
+    "/usr/lib/sysctl.d/",
+    "/lib/sysctl.d/"
+]
+
 [FileDigestLocation.sudoers]
 FollowSymlinks = false
 # the directories for this are currently configured in /etc/sudoers via
