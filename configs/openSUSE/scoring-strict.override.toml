@@ -36,10 +36,13 @@ sudoers-file-digest-mismatch = 10000
 sudoers-file-ghost = 10000
 sudoers-file-unauthorized = 10000
 sudoers-file-symlink = 10000
-sysctl-file-digest-mismatch = 10000
-sysctl-file-ghost = 10000
-sysctl-file-unauthorized = 10000
-sysctl-file-symlink = 10000
+
+# Temporarily disable due to:
+# https://github.com/rpm-software-management/rpmlint/pull/994#issuecomment-1401471987
+# sysctl-file-digest-mismatch = 10000
+# sysctl-file-ghost = 10000
+# sysctl-file-unauthorized = 10000
+# sysctl-file-symlink = 10000
 systemd-tmpfile-entry-unauthorized = 10000
 systemd-tmpfile-ghost = 10000
 systemd-tmpfile-parse-error = 10000
