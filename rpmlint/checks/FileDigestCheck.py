@@ -136,6 +136,7 @@ class FileDigestCheck(AbstractCheck):
 
         self._setup_digest_location_trie()
         self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
+        self.symlink_exceptions = self.config.configuration.get('SymlinkExceptions', [])
 
         self.digest_groups = self.config.configuration.get('FileDigestGroup', [])
         self.digest_cache = {}
@@ -396,6 +397,20 @@ class FileDigestCheck(AbstractCheck):
                 return True
         return False
 
+    def _check_symlink_exceptions(self, pkg, name):
+        """ Check if a symlink'ed file is in the exception list
+
+        For some checks we generally don't want to support symlinks at all,
+        but certain corner cases make it necessary to ignore certain
+        package/path combinations. For these cases a separate exception list
+        is maintained.
+        """
+
+        for symlink_exception in self.symlink_exceptions:
+            if pkg.name == symlink_exception['package'] and name in symlink_exception['paths']:
+                return True
+        return False
+
     def check_binary(self, pkg):
         """
         Check that all files in secured locations are covered by a file digest group
@@ -413,7 +428,8 @@ class FileDigestCheck(AbstractCheck):
                 if not self._check_ghost_exceptions(pkg, pkgfile.name):
                     self.output.add_info('E', pkg, f'{group}-file-ghost', pkgfile.name)
             elif stat.S_ISLNK(pkgfile.mode) and not self.follow_symlinks_in_group[group]:
-                self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
+                if not self._check_symlink_exceptions(pkg, pkgfile.name):
+                    self.output.add_info('E', pkg, f'{group}-file-symlink', pkgfile.name)
             else:
                 file_list = secured_paths.setdefault(group, [])
                 file_list.append(pkgfile.name)
