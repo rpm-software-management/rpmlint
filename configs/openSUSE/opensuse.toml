@@ -285,10 +285,23 @@ name = "licenses"
 path = "consolehelper$"
 name = "usermode-consoleonly"
 
+# package/path combinations that are allowed to ship %ghost files in locations
+# restricted by FileDigestCheck
 [[GhostFilesExceptions]]
 package = "polkit-default-privs"
 paths = [
     "/etc/polkit-1/rules.d/90-default-privs.rules",
+]
+
+# package/path combinations that are allowed to ship symlinks in locations
+# restricted by FileDigestCheck (where otherwise symlinks are rejected)
+#
+# files matching this condition will be ignored and not be verified at all
+[[SymlinkExceptions]]
+package = "systemd"
+paths = [
+    # compability symlink towards /etc/sysctl.conf for systemd-sysctl
+    "/usr/lib/sysctl.d/99-sysctl.conf"
 ]
 
 [FileDigestLocation]
