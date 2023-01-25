@@ -298,7 +298,7 @@ paths = [
 #
 # files matching this condition will be ignored and not be verified at all
 [[SymlinkExceptions]]
-package = "systemd"
+packages = ["systemd", "systemd-mini"]
 paths = [
     # compability symlink towards /etc/sysctl.conf for systemd-sysctl
     "/usr/lib/sysctl.d/99-sysctl.conf"
