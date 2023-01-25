@@ -144,6 +144,11 @@ class FileDigestCheck(AbstractCheck):
             self._normalize_digest_group(digest_group)
             self._verify_digest_group(digest_group)
 
+        for exc in self.ghost_file_exceptions:
+            self._verify_package_keys_in_dict('GhostFilesExceptions', exc)
+        for exc in self.symlink_exceptions:
+            self._verify_package_keys_in_dict('SymlinkExceptions', exc)
+
     def _get_digester(self, entry):
         name = entry.get('digester', 'default')
         try:
@@ -227,22 +232,46 @@ class FileDigestCheck(AbstractCheck):
             # verify a valid digester is selected, if any
             self._get_digester(digest)
 
-        package = digest_group.get('package', None)
-        packages = digest_group.get('packages', [])
+        self._verify_package_keys_in_dict('FileDigestGroup', digest_group)
+
+    def _verify_package_keys_in_dict(self, context, d):
+        """verifies package/packages keys in the given dictionary.
+
+        This supports a single `package = "name"` key as well as a `packages =
+        ["one", "two"]` list. Sanity checks are performed verifying that at
+        least one package is specified, the value types match but not both
+        keys are present.
+
+        context should be a string label for adding context to error messages.
+        """
+
+        package = d.get('package', None)
+        packages = d.get('packages', [])
 
         if not package and not packages:
-            raise KeyError('FileDigestCheck: missing "package" or "packages" key in FileDigestGroup entry')
+            raise KeyError(f'FileDigestCheck: missing "package" or "packages" key in {context}')
         elif package and packages:
-            raise KeyError('FileDigestCheck: encountered both "package" and "packages" keys in FileDigestGroup entry')
+            raise KeyError(f'FileDigestCheck: encountered both "package" and "packages" keys in {context}')
 
         if package and not isinstance(package, str):
-            raise KeyError('FileDigestCheck: "package" key contains non-string value')
+            raise KeyError(f'FileDigestCheck: "package" key contains non-string value in {context}')
         elif packages and not isinstance(packages, list):
-            raise KeyError('FileDigestCheck: "packages" key contains non-list value')
+            raise KeyError(f'FileDigestCheck: "packages" key contains non-list value in {context}')
+
+    def _gather_packages_from_dict(self, d):
+        """returns a list of packages specified in a dictionary.
+
+        This supports both a single `package="name"` key as well as a list of
+        `packages=["one", "two"]`. Use _verify_package_keys_in_dict() to verify
+        consistency before using this function."""
+        pkg = d.get('package', None)
+        if pkg:
+            return [pkg]
+        else:
+            return d['packages']
 
     def _matches_pkg(self, digest_group, pkg):
-        return (pkg.name == digest_group.get('package', '') or
-                pkg.name in digest_group.get('packages', []))
+        return pkg.name in self._gather_packages_from_dict(digest_group)
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
@@ -393,7 +422,9 @@ class FileDigestCheck(AbstractCheck):
         - name: paths of the ghosted file
         """
         for ghost_exception in self.ghost_file_exceptions:
-            if pkg.name == ghost_exception['package'] and name in ghost_exception['paths']:
+            if pkg.name not in self._gather_packages_from_dict(ghost_exception):
+                continue
+            if name in ghost_exception['paths']:
                 return True
         return False
 
@@ -407,7 +438,9 @@ class FileDigestCheck(AbstractCheck):
         """
 
         for symlink_exception in self.symlink_exceptions:
-            if pkg.name == symlink_exception['package'] and name in symlink_exception['paths']:
+            if pkg.name not in self._gather_packages_from_dict(symlink_exception):
+                continue
+            if name in symlink_exception['paths']:
                 return True
         return False
 
