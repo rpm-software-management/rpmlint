@@ -228,10 +228,12 @@ nodigests = [
 [[FileDigestGroup]]
 package = "pulseaudio"
 type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/pulseaudio-system.conf",
-]
+note = "allows the pulse user to run system-wide pulseaudio, which is not recommended"
+bugs = [ "bsc#1207584" ]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/pulseaudio-system.conf"
+digester = "xml"
+hash = "e1789ae52de64043fc6ba4ab184850c081e86a9fa7dc28ffb7be5c66ef9952e3"
 
 [[FileDigestGroup]]
 package = "avahi"
