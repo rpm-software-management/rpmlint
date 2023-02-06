@@ -940,10 +940,11 @@ nodigests = [
 package = "NetworkManager-fortisslvpn"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1109938"
-nodigests = [
-    "/etc/dbus-1/system.d/nm-fortisslvpn-service.conf",
-]
+bugs = ["bsc#1109938", "bsc#1207585"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-fortisslvpn-service.conf"
+digester = "xml"
+hash = "382e31dfc5f6a62b811535e54c09d95b59689dff2641f0aaeee4927d5705bfca"
 
 [[FileDigestGroup]]
 package = "systemd"
