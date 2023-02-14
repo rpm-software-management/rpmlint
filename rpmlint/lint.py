@@ -269,7 +269,8 @@ class Lint:
             if pname.suffix == '.rpm' or pname.suffix == '.spm':
                 with Pkg(pname, self.config.configuration['ExtractDir'],
                          verbose=self.config.info) as pkg:
-                    self.check_duration['rpm2cpio'] += pkg.extraction_time
+                    for k, v in pkg.timers.items():
+                        self.check_duration[k] += v
                     self.run_checks(pkg, is_last)
             elif pname.suffix == '.spec':
                 with FakePkg(pname) as pkg:
