@@ -384,7 +384,7 @@ class Pkg(AbstractPkg):
         # record decompression and extraction time
         start = time.monotonic()
         self.dirname = self._extract_rpm(dirname, verbose)
-        self.extraction_time = time.monotonic() - start
+        self.timers = {'rpm2cpio': time.monotonic() - start, 'libmagic': 0}
         self.current_linenum = None
 
         self._req_names = -1
@@ -583,7 +583,9 @@ class Pkg(AbstractPkg):
                         pkgfile.magic = 'empty'
                 if (not pkgfile.magic and
                         not pkgfile.is_ghost and has_magic):
+                    start = time.monotonic()
                     pkgfile.magic = get_magic(pkgfile.path)
+                    self.timers['libmagic'] += time.monotonic() - start
                 if pkgfile.magic is None or Pkg._magic_from_compressed_re.search(pkgfile.magic):
                     # Discard magic from inside compressed files ('file -z')
                     # until PkgFile gets decompression support.  We may get
