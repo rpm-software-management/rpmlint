@@ -31,6 +31,10 @@ DisallowedDirs = [
     "/etc/NetworkManager/dispatcher.d",
 ]
 
+FilterErrorTitles = [
+    'cross-directory-hard-link',
+]
+
 Filters = [
 # Stuff autobuild takes care about
     '.*invalid-version.*',
@@ -41,7 +45,6 @@ Filters = [
     '.*non-versioned-file-in-library-package.*',
     '.*hardcoded-path-in-buildroot-tag.*',
     '.*no-buildroot-tag.*',
-    '.*cross-directory-hard-link.*',
 
 # Do not validate package rpm groups
     '.*devel-package-with-non-devel-group.*',
