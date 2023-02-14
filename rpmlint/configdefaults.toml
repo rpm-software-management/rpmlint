@@ -28,6 +28,8 @@ Checks = [
     "ZipCheck",
     "ZyppSyntaxCheck",
 ]
+# List of error titles that should be filtered
+FilterErrorTitles = []
 # Various output filters, list of regexp strings eg. "E: .* no-signature"
 Filters = []
 # List of errors that can't be filtered
