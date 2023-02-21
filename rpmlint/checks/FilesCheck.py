@@ -899,7 +899,7 @@ class FilesCheck(AbstractCheck):
         self._file_is_buildconfig = False
 
         # set[ug]id bit check
-        self._check_file_normal_file_setui_bit_check(pkg, fname, pkgfile)
+        self._check_file_normal_file_setuid_bit(pkg, fname, pkgfile)
         self._check_file_normal_file_libfile(pkg, fname)
         self._check_file_normal_file_logfile(pkg, fname, pkgfile)
         # Fill class attributes, chunk, istext, interpreter, is_buildconfig
@@ -933,7 +933,7 @@ class FilesCheck(AbstractCheck):
         self._check_file_normal_file_text(pkg, fname, pkgfile)
         self._check_file_normal_file_not_utf8(pkg, fname, pkgfile)
 
-    def _check_file_normal_file_setui_bit_check(self, pkg, fname, pkgfile):
+    def _check_file_normal_file_setuid_bit(self, pkg, fname, pkgfile):
         user = pkgfile.user
         group = pkgfile.group
         mode = pkgfile.mode
