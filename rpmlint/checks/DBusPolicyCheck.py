@@ -25,7 +25,7 @@ class DBusPolicyCheck(AbstractCheck):
                         self._check_deny_policy_element(pkg, f, policy)
 
                     if not send_policy_seen:
-                        self.output.add_info('E', pkg, 'dbus-communication-not-allowed', f)
+                        self.output.add_info('E', pkg, 'dbus-policy-missing-allow', f)
 
             except Exception as e:
                 self.output.add_info('E', pkg, 'dbus-parsing-exception', 'raised an exception: ' + str(e), f)
