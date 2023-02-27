@@ -113,6 +113,9 @@ class Filter:
             *details: Details of the rpmlint issue
         """
 
+        if ' ' in rpmlint_issue:
+            raise ValueError(f'Space cannot be part of an issue name: "{rpmlint_issue}"')
+
         # filename in some cases can contain tmp paths and we don't need it
         # for the printout
         filename = Path(package.name).name
