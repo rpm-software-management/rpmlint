@@ -23,7 +23,7 @@ def test_update_alternative_ok(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'I: package supports update-alternatives' in out
+    assert 'I: package-supports-update-alternatives' in out
     assert 'E' not in out
     assert 'W' not in out
 
@@ -68,7 +68,7 @@ def test_libalternative_ok(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'I: package supports libalternatives' in out
+    assert 'I: package-supports-libalternatives' in out
     assert 'E' not in out
     assert 'W' not in out
 
@@ -78,7 +78,7 @@ def test_libalternative_borked(tmpdir, package, alternativescheck):
     output, test = alternativescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
-    assert 'I: package supports libalternatives' in out
+    assert 'I: package-supports-libalternatives' in out
     assert 'I: libalternatives-conf-not-found' in out
     assert 'E: alts-requirement-missed' in out
     assert 'E: libalternatives-directory-not-exist' in out

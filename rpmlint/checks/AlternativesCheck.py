@@ -36,7 +36,7 @@ class AlternativesCheck(AbstractCheck):
             return
 
         if self._check_libalternatives_presence(pkg):
-            self.output.add_info('I', pkg, 'package supports libalternatives')
+            self.output.add_info('I', pkg, 'package-supports-libalternatives')
             self._check_libalternatives_requirements(pkg)
             self._check_libalternatives_filelist(pkg)
 
@@ -48,7 +48,7 @@ class AlternativesCheck(AbstractCheck):
 
         if not self._check_ua_presence(pkg):
             return
-        self.output.add_info('I', pkg, 'package supports update-alternatives')
+        self.output.add_info('I', pkg, 'package-supports-update-alternatives')
 
         self._check_requirements(pkg)
         self._check_post_phase(pkg, self.post)
