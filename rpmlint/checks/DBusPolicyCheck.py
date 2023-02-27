@@ -21,11 +21,11 @@ class DBusPolicyCheck(AbstractCheck):
                     lf = pkg.dir_name() + f
                     xml = parse(lf)
                     for policy in xml.getElementsByTagName('policy'):
-                        send_policy_seen = self._check_allow_policy_element(pkg, f, policy) or send_policy_seen
+                        send_policy_seen |= self._check_allow_policy_element(pkg, f, policy)
                         self._check_deny_policy_element(pkg, f, policy)
 
                     if not send_policy_seen:
-                        self.output.add_info('E', pkg, 'communication not allowed', f)
+                        self.output.add_info('E', pkg, 'dbus-communication-not-allowed', f)
 
             except Exception as e:
                 self.output.add_info('E', pkg, 'dbus-parsing-exception', 'raised an exception: ' + str(e), f)
