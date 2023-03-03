@@ -25,3 +25,4 @@ owner = "root"
 group = "root"
 device_minor = 9
 device_major = 1
+

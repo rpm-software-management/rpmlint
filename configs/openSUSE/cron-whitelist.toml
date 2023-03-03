@@ -155,3 +155,4 @@ bug = "bsc#1172859"
 [[FileDigestGroup.digests]]
 path = "/etc/cron.daily/run_diag_encl"
 hash = "5519586bca9edc47be4c76faa7353eb8a0ecd68b9f04c0b20e7acfdb9d9eb261"
+

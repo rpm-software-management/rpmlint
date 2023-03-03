@@ -67,3 +67,4 @@ bug = "bsc#1196141"
 path = "/etc/sudoers.d/ceph-smartctl"
 digester = "shell"
 hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
+
