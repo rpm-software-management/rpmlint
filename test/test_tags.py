@@ -77,6 +77,18 @@ def test_valid_license_exception(tmpdir, package, tagscheck):
     assert 'W: invalid-license-exception' not in out
 
 
+@pytest.mark.parametrize('package', ['source/valid-exception-in-grouping'])
+def test_valid_license_exception_in_grouping(tmpdir, package, tagscheck):
+    CONFIG.info = True
+    CONFIG.configuration['ValidLicenses'] = ['BSD-3-Clause', 'GPL-2.0-only']
+    CONFIG.configuration['ValidLicenseExceptions'] = ['Qt-GPL-exception-1.0']
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: invalid-license-exception' not in out
+
+
 @pytest.mark.parametrize('package', ['binary/xtables-addons-kmp-default'])
 def test_forbidden_controlchar_found_requires(tmpdir, package, tagscheck):
     output, test = tagscheck
