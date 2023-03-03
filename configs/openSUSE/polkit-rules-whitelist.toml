@@ -81,10 +81,10 @@ path = "/usr/share/polkit-1/rules.d/60-org.freedesktop.Flatpak.rules"
 hash = "89e33e299ddf829a6302e855c005931a1f703c64696b86c423fb2851e225fbaf"
 
 [[FileDigestGroup]]
-package = "libvirt-daemon"
+package = "libvirt-daemon-common"
 type = "polkit"
 note = "allows members of the group libvirt to manage libvirt without password"
-bug = "bsc#1161091"
+bugs = ["bsc#1161091", "bsc#1208876"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/50-libvirt.rules"
 hash = "18ecc523dec42f91c679143043c9b28ef82eac68d1729a21d371c18eb93f2a18"
