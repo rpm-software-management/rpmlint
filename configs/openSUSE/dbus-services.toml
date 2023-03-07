@@ -1075,6 +1075,21 @@ digester = "shell"
 hash = "9ae44bd6f4c16417e6752581fe7513f791d5660b849747bbed4307e25444606b"
 
 [[FileDigestGroup]]
+package = "kde-inotify-survey"
+type = "dbus"
+note = "KDE tooling for monitoring inotify limits"
+bugs = ["bsc#1208689"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.kded.inotify.conf"
+digester = "xml"
+hash = "4eb68f2c3bc75842df0f3d67874588fc672ec540769db09c3a71cbb292a989f7"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kde.kded.inotify.service"
+digester = "shell"
+hash = "89a2ce5a4c6ebd7cb471f820a28fbd2dd418e377cb2ed0eaea1af59840c1dabd"
+
+
+[[FileDigestGroup]]
 package = "systemd-experimental"
 type = "dbus"
 note = "systemd-homed helper service for providing portable home directory containers"
