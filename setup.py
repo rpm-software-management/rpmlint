@@ -59,6 +59,7 @@ setup(
     packages=[
         'rpmlint',
         'rpmlint.checks',
+        'rpmlint.descriptions',
     ],
     package_data={
         'rpmlint': ['configdefaults.toml'],
