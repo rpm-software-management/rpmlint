@@ -51,7 +51,8 @@ Optional, for running the test suite:
 ## Testing
 
 You will need to have all the required modules as listed on the Install section above.
-You will also need `pytest`,`pytest-cov` and `pytest-xdist`.
+You will also need `pytest`,`pytest-cov` and `pytest-xdist`, 
+which you can install individually or by running `pip install -e ".[test]"`.
 
 If all the dependencies are present you can just execute tests using:
 

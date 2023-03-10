@@ -4,6 +4,76 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "rpmlint"
+version = "2.4.0"
+description = "Check for common errors in RPM packages"
+license = {file = "COPYING"}
+authors = [
+    {name = "Frédéric Lepied", email = "flepied@mandriva.com"}
+]
+maintainers = [
+    {name = "RPMLint maintainers", email = "rpm-ecosystem@lists.rpm.org"}
+]
+readme = "README.md"
+classifiers = [
+    # complete classifier list:
+    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Utilities",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: System :: Archiving :: Packaging",
+]
+keywords = ["RPM", ".spec", "validator"]
+dependencies = [
+    "pybeam",
+    "pyxdg",
+    "rpm",
+    "tomli;python_version<'3.11'",
+    "tomli-w",
+    "zstandard",
+    "importlib-metadata;python_version<'3.8'",
+    "pyenchant",
+    "python-magic"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist"
+]
+
+[project.scripts]
+rpmdiff = "rpmlint.cli:diff"
+rpmlint = "rpmlint.cli:lint"
+
+[project.urls]
+homepage = "https://github.com/rpm-software-management/rpmlint"
+download-url = "https://github.com/rpm-software-management/rpmlint"
+
+[tool.setuptools]
+platforms = ["Linux"]
+packages = [
+    "rpmlint",
+    "rpmlint.checks"
+]
+include-package-data = true
+
+
+[tool.setuptools.package-data]
+rpmlint = ["configdefaults.toml"]
+"rpmlint.descriptions" = ["*.toml"] 
+
 [tool.ruff]
 
 ignore = ["E501"]
