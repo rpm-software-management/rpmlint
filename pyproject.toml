@@ -65,7 +65,8 @@ download-url = "https://github.com/rpm-software-management/rpmlint"
 platforms = ["Linux"]
 packages = [
     "rpmlint",
-    "rpmlint.checks"
+    "rpmlint.checks",
+    "rpmlint.descriptions"
 ]
 include-package-data = true
 
