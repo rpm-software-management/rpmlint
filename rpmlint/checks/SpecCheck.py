@@ -586,7 +586,7 @@ class SpecCheck(AbstractCheck):
             version = int(res.group('version'))
             if version > 0 and version < 1315:
                 self.output.add_info('E', self.pkg, 'obsolete-suse-version-check', version)
-            elif version > 1550:
+            elif version > 1599:
                 self.output.add_info('E', self.pkg, 'invalid-suse-version-check', version)
 
     def _checkline_package_prereq(self, line):
