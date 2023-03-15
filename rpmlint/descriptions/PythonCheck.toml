@@ -16,3 +16,15 @@ python-src-in-site-packages="""
 src/ directory installed to %{python_sitelib}. This should never happen
 since this is a global name space not owned by any particular package.
 """
+
+python-missing-require="""
+The python package declare some requirement that's not detected in the
+rpm package. Please, verify that all dependencies are added as
+Requires.
+"""
+
+python-leftover-require="""
+Some python module Requires can't be found in the python package
+requirements declaration. Please verify that all dependencies are
+really needed.
+"""
