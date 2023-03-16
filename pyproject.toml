@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=39.2"
+    "setuptools>=61.0"
 ]
 build-backend = "setuptools.build_meta"
 
@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "rpmlint"
 version = "2.4.0"
 description = "Check for common errors in RPM packages"
-license = {file = "COPYING"}
+license = {text = "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)"}
 authors = [
     {name = "Frédéric Lepied", email = "flepied@mandriva.com"}
 ]
@@ -43,7 +43,8 @@ dependencies = [
     "zstandard",
     "importlib-metadata;python_version<'3.8'",
     "pyenchant",
-    "python-magic"
+    "python-magic",
+    "packaging"
 ]
 
 [project.optional-dependencies]
@@ -62,6 +63,7 @@ homepage = "https://github.com/rpm-software-management/rpmlint"
 download-url = "https://github.com/rpm-software-management/rpmlint"
 
 [tool.setuptools]
+license-files = ['COPYING']
 platforms = ["Linux"]
 packages = [
     "rpmlint",
