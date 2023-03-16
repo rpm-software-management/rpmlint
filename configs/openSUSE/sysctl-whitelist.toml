@@ -152,11 +152,13 @@ packages = [
     "kubernetes1.21-kubeadm",
     "kubernetes1.22-kubeadm",
     "kubernetes1.23-kubeadm",
-    "kubernetes1.24-kubeadm"
+    "kubernetes1.24-kubeadm",
+    "kubernetes1.25-kubeadm",
+    "kubernetes1.26-kubeadm"
 ]
 type = "sysctl"
 note = "enabled IPv4 forwarding system wide, same content for all kubeadm versions"
-bug = "bsc#1174722"
+bugs = ["bsc#1174722", "bsc#1209363"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/90-kubeadm.conf"
 digester = "shell"
