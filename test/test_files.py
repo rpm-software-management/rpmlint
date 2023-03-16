@@ -38,12 +38,14 @@ def chunk_from_pyc(version, size=16):
     with open(path, 'rb') as f:
         return f.read(size)
 
+
 @pytest.mark.parametrize('package', ['binary/unexpanded-macro-files'])
 def test_unexpanded_macros(tmpdir, package, filescheck):
     output, test = filescheck
     test.check(get_tested_package(package, tmpdir))
     out = output.print_results(output.results)
     assert 'unexpanded-macro' in out
+
 
 @pytest.mark.parametrize('package', ['binary/python3-power'])
 def test_python_bytecode_magic(tmpdir, package, filescheck):
