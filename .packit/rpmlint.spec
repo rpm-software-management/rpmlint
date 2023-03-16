@@ -23,7 +23,6 @@ BuildRequires:  python3-pybeam
 BuildRequires:  python3-pyenchant
 BuildRequires:  python3-pytest
 BuildRequires:  python3-pytest-cov
-BuildRequires:  python3-pytest-flake8
 BuildRequires:  python3-pytest-xdist
 BuildRequires:  python3-pyxdg
 BuildRequires:  python3-rpm
