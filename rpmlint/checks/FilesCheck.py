@@ -163,7 +163,7 @@ buildconfigfile_regex = re.compile(r'(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
 buildconfig_rpath_regex = re.compile(r'(?:-rpath|Wl,-R)\b')
 sofile_regex = re.compile(r'/lib(64)?/(.+/)?lib[^/]+\.so$')
-devel_regex = re.compile(r'(.*)-(debug(info|source)?|devel|headers|source|static)$')
+devel_regex = re.compile(r'(.*)-(debug(info|source)?|devel|headers|source|static|prof)$')
 debuginfo_package_regex = re.compile(r'-debug(info)?$')
 debugsource_package_regex = re.compile(r'-debugsource$')
 lib_regex = re.compile(r'/lib(?:64)?/lib[A-Za-z0-9](?:(?:|[\w\-\.]*[A-Za-z0-9])\.so\.[\w+\.]+|\w*-\d(?:|[\w\-\.]*[A-Za-z0-9])\.so)$')  # see commit log for detail
