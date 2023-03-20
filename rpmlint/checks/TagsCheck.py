@@ -21,7 +21,7 @@ lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$',
 leading_space_regex = re.compile(r'^\s+')
 pkg_config_regex = re.compile(r'^/usr/(?:lib\d*|share)/pkgconfig/')
 license_regex = re.compile(r'\(([^)]+)\)|\s(?:and|or|AND|OR)\s')
-license_exception_regex = re.compile(r'(\S+)\s(?:WITH|with)\s([^)\s]+)')
+license_exception_regex = re.compile(r'([^(\s]+)\s(?:WITH|with)\s([^)\s]+)')
 invalid_version_regex = re.compile(r'([0-9](?:rc|alpha|beta|pre).*)', re.IGNORECASE)
 # () are here for grouping purpose in the regexp
 tag_regex = re.compile(r'^((?:Auto(?:Req|Prov|ReqProv)|Build(?:Arch(?:itectures)?|Root)|(?:Build)?Conflicts|(?:Build)?(?:Pre)?Requires|Copyright|(?:CVS|SVN)Id|Dist(?:ribution|Tag|URL)|DocDir|(?:Build)?Enhances|Epoch|Exclu(?:de|sive)(?:Arch|OS)|Group|Icon|License|Name|No(?:Patch|Source)|Obsoletes|Packager|Patch\d*|Prefix(?:es)?|Provides|(?:Build)?Recommends|Release|RHNPlatform|Serial|Source\d*|(?:Build)?Suggests|Summary|(?:Build)?Supplements|(?:Bug)?URL|Vendor|Version)(?:\([^)]+\))?:)\s*\S', re.IGNORECASE)
