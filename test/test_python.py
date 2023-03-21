@@ -93,3 +93,37 @@ def test_python_tests_in_site_packages(tmpdir, package, pythoncheck):
     assert 'E: python-tests-in-site-packages /usr/lib64/python2.7/site-packages/tests' in out
     assert 'E: python-tests-in-site-packages /usr/lib64/python3.10/site-packages/test' in out
     assert 'E: python-tests-in-site-packages /usr/lib64/python3.10/site-packages/tests' in out
+
+
+@pytest.mark.parametrize('package', [
+    'binary/python3-flit-3.8.0',
+    'binary/python3-icecream-2.1.3',
+])
+def test_python_dependencies(tmpdir, package, pythoncheck):
+    output, test = pythoncheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [
+    'binary/python3-icecream-missingdeps',
+    'binary/python3-flit-missingdeps',
+])
+def test_python_dependencies_missing(tmpdir, package, pythoncheck):
+    output, test = pythoncheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' in out
+
+
+@pytest.mark.parametrize('package', [
+    'binary/python3-icecream-leftovers',
+    'binary/python3-flit-leftovers',
+])
+def test_python_dependencies_leftover(tmpdir, package, pythoncheck):
+    output, test = pythoncheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'W: python-leftover-require' in out
