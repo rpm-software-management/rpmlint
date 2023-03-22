@@ -506,3 +506,12 @@ bug = "bsc#1205459"
 nodigests = [
     "*/security/pam_saslauthd.so",
 ]
+
+[[FileDigestGroup]]
+package = "lastlog2"
+type = "pam"
+note = "Logs user session information to an sqlite3 database"
+bug = "bsc#1209238"
+nodigests = [
+    "*/security/pam_lastlog2.so",
+]
