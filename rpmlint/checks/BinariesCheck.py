@@ -74,7 +74,8 @@ class BinariesCheck(AbstractCheck):
                                 self._check_forbidden_functions,
                                 self._check_executable_shlib,
                                 self._check_optflags,
-                                self._check_hash_sections]
+                                self._check_hash_sections,
+                                self._check_no_patchable_function_entries_in_archive]
 
     @staticmethod
     def create_nonlibc_regexp_call(call):
@@ -253,6 +254,18 @@ class BinariesCheck(AbstractCheck):
                         return
             self.output.add_info('E', pkg, 'lto-no-text-in-archive', pkgfile.name)
             return
+
+    def _check_no_patchable_function_entries_in_archive(self, pkg, pkgfile):
+        """
+        For static libraries, we should not ship __patchable_function_entries as it can
+        accidentally make a shared library or an executable live-patchable.
+        """
+        if self.is_archive:
+            for elf_file in self.readelf_parser.section_info.elf_files:
+                for section in elf_file:
+                    if section.name == '__patchable_function_entries':
+                        self.output.add_info('E', pkg, 'patchable-function-entry-in-archive', pkgfile.name)
+                        return
 
     def _check_missing_symtab_in_archive(self, pkg, pkgfile):
         """
