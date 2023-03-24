@@ -176,6 +176,11 @@ class PythonCheck(AbstractFilesCheck):
                 continue
 
             module_name = match.group('name').strip().lower()
+            # ignore python-base packages, that are provided by python
+            # base interpreter library
+            if module_name == 'base':
+                continue
+
             names = set(self._module_names(module_name))
 
             if not (names & requirements):
