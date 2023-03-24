@@ -168,14 +168,14 @@ class PythonCheck(AbstractFilesCheck):
         """
 
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
-        requirements = {i.lower() for i in requirements}
+        requirements = {i.strip().lower() for i in requirements}
 
         for req in pkg.req_names:
             match = pythonpac.match(req)
             if not match:
                 continue
 
-            module_name = match.group('name').lower()
+            module_name = match.group('name').strip().lower()
             names = set(self._module_names(module_name))
 
             if not (names & requirements):
