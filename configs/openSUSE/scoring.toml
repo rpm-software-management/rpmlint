@@ -48,6 +48,7 @@ deprecated-init-script = 10000
 deprecated-boot-script = 10000
 executable-stack = 10000
 binary-or-shlib-defines-rpath = 10000
+patchable-function-entry-in-archive = 10000
 pam-file-ghost = 10
 pam-file-unauthorized = 10
 pam-file-symlink = 10

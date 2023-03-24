@@ -268,3 +268,11 @@ def test_multiple_errors(tmpdir, package, binariescheck):
     assert 'E: call-to-mktemp' in out
     assert 'E: missing-call-to-setgroups-before-setuid' in out
     assert 'W: binary-or-shlib-calls-gethostbyname' in out
+
+
+@pytest.mark.parametrize('package', ['binary/libtest'])
+def test_patchable_function_entry_archive(tmpdir, package, binariescheck):
+    output, test = binariescheck
+    test.check(get_tested_package(package, tmpdir))
+    out = output.print_results(output.results)
+    assert 'E: patchable-function-entry-in-archive /usr/lib64/libhello.a' in out

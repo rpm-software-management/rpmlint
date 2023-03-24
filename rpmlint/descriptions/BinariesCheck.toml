@@ -179,3 +179,7 @@ missing-gnu-hash-section="""
 The .gnu.hash section is missing and leads to a slower symbol resolution
 during dynamic linking.
 """
+patchable-function-entry-in-archive="""
+This archive contains a __patchable_function_entries section and can
+accidentally make a shared library or an executable live-patchable.
+"""
