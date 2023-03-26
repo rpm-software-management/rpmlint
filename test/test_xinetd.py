@@ -14,8 +14,8 @@ def xinetdcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/needxinetd'])
-def test_xinetd(tmpdir, package, xinetdcheck):
+def test_xinetd(tmp_path, package, xinetdcheck):
     output, test = xinetdcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: obsolete-xinetd-requirement' in out

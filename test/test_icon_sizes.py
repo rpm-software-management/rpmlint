@@ -14,8 +14,8 @@ def iconsizescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/tasque'])
-def test_icon_sizes(tmpdir, package, iconsizescheck):
+def test_icon_sizes(tmp_path, package, iconsizescheck):
     output, test = iconsizescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: wrong-icon-size /usr/share/tasque/icons/hicolor/16x16/status/tasque-note.png expected: 16x16 actual: 22x22' in out

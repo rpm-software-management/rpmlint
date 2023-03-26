@@ -19,9 +19,9 @@ def alternativescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/alternatives-ok'])
-def test_update_alternative_ok(tmpdir, package, alternativescheck):
+def test_update_alternative_ok(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'I: package-supports-update-alternatives' in out
     assert 'E' not in out
@@ -29,9 +29,9 @@ def test_update_alternative_ok(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/alternatives-borked'])
-def test_update_alternative_borked(tmpdir, package, alternativescheck):
+def test_update_alternative_borked(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: update-alternatives-requirement-missing' in out
     assert 'E: alternative-generic-name-not-symlink' in out
@@ -40,9 +40,9 @@ def test_update_alternative_borked(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/self'])
-def test_non_update_alternative_pkg(tmpdir, package, alternativescheck):
+def test_non_update_alternative_pkg(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     # here we just check if there is no requirements checking on
     # non update-alternatived package
@@ -51,9 +51,9 @@ def test_non_update_alternative_pkg(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/python39-evtx'])
-def test_update_alternatives_correctness(tmpdir, package, alternativescheck):
+def test_update_alternatives_correctness(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: update-alternatives-postun-call-missing' not in out
 
@@ -64,9 +64,9 @@ def test_update_alternatives_correctness(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/libalternatives-ok'])
-def test_libalternative_ok(tmpdir, package, alternativescheck):
+def test_libalternative_ok(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'I: package-supports-libalternatives' in out
     assert 'E' not in out
@@ -74,9 +74,9 @@ def test_libalternative_ok(tmpdir, package, alternativescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/libalternatives-borked'])
-def test_libalternative_borked(tmpdir, package, alternativescheck):
+def test_libalternative_borked(tmp_path, package, alternativescheck):
     output, test = alternativescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'I: package-supports-libalternatives' in out
     assert 'I: libalternatives-conf-not-found' in out

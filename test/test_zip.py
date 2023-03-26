@@ -14,9 +14,9 @@ def zipcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/bad-crc-uncompressed'])
-def test_bad_crc_and_compression(tmpdir, package, zipcheck):
+def test_bad_crc_and_compression(tmp_path, package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'bad-crc-in-zip' in out
@@ -27,9 +27,9 @@ def test_bad_crc_and_compression(tmpdir, package, zipcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/asm'])
-def test_classpath_and_index(tmpdir, package, zipcheck):
+def test_classpath_and_index(tmp_path, package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'class-path-in-manifest' in out
     assert 'jar contains a hardcoded Class-Path' in out
@@ -39,9 +39,9 @@ def test_classpath_and_index(tmpdir, package, zipcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/ruby2.5-rubygem-rubyzip-testsuite'])
-def test_zip1(tmpdir, package, zipcheck):
+def test_zip1(tmp_path, package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     # these are PW protected not broken so do not error about them
     assert 'W: unable-to-read-zip' in out
@@ -52,8 +52,8 @@ def test_zip1(tmpdir, package, zipcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/texlive-codepage-doc'])
-def test_zip2(tmpdir, package, zipcheck):
+def test_zip2(tmp_path, package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: unable-to-read-zip' in out

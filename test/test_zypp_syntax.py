@@ -14,9 +14,9 @@ def zyppsyntaxcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/packageand'])
-def test_packageand(tmpdir, package, zyppsyntaxcheck):
+def test_packageand(tmp_path, package, zyppsyntaxcheck):
     output, test = zyppsyntaxcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'suse-zypp-packageand packageand(c:d)' in out
     assert 'suse-zypp-packageand packageand(a:b)' in out

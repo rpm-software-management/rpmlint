@@ -14,12 +14,12 @@ def fhscheck():
 
 
 @pytest.mark.parametrize('package', ['binary/non-fhs'])
-def test_FHS_compliance(tmpdir, package, fhscheck):
+def test_FHS_compliance(tmp_path, package, fhscheck):
     """
     Check that the directories are not FHS compliant.
     """
     output, test = fhscheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     # Check invalid /usr subdirectory

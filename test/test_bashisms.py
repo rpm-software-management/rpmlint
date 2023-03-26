@@ -16,9 +16,9 @@ def bashismscheck():
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('package', ['binary/bashisms'])
-def test_bashisms(tmpdir, package, bashismscheck):
+def test_bashisms(tmp_path, package, bashismscheck):
     output, test = bashismscheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: potential-bashisms /bin/script1' in out
     assert 'W: bin-sh-syntax-error /bin/script2' in out
@@ -27,9 +27,9 @@ def test_bashisms(tmpdir, package, bashismscheck):
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('package', ['binary/bashisms'])
-def test_bashisms_error(tmpdir, package, bashismscheck):
+def test_bashisms_error(tmp_path, package, bashismscheck):
     output, test = bashismscheck
-    package = get_tested_package(package, tmpdir)
+    package = get_tested_package(package, tmp_path)
     package.dirname = 'I-do-not-exist-for-sure'
     with pytest.raises(FileNotFoundError):
         test.check(package)

@@ -14,9 +14,9 @@ def dbuspolicycheck():
 
 
 @pytest.mark.parametrize('package', ['binary/dbusrule'])
-def test_dbus_policy(tmpdir, package, dbuspolicycheck):
+def test_dbus_policy(tmp_path, package, dbuspolicycheck):
     output, test = dbuspolicycheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: dbus-parsing-exception raised an exception: no element found: line 1, column 0 /etc/dbus-1/system.d/noxml.conf' in out
     assert 'E: dbus-policy-allow-without-destination <allow send_interface="org.freedesktop.NetworkManager.PPP"/>' in out
