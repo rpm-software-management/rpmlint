@@ -40,26 +40,26 @@ def chunk_from_pyc(version, size=16):
 
 
 @pytest.mark.parametrize('package', ['binary/unexpanded-macro-files'])
-def test_unexpanded_macros(tmpdir, package, filescheck):
+def test_unexpanded_macros(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'unexpanded-macro' in out
 
 
 @pytest.mark.parametrize('package', ['binary/python3-power'])
-def test_python_bytecode_magic(tmpdir, package, filescheck):
+def test_python_bytecode_magic(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     assert not output.results
     out = output.print_results(output.results)
     assert 'python-bytecode-wrong-magic-value' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/testdocumentation'])
-def test_file_not_utf8_for_compression_algorithms(tmpdir, package, filescheck):
+def test_file_not_utf8_for_compression_algorithms(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'file-not-utf8 /usr/share/doc/packages/testdocumentation/README1.gz' in out
     assert 'file-not-utf8 /usr/share/doc/packages/testdocumentation/README2.bz2' in out
@@ -79,9 +79,9 @@ def test_pyc_mtime_from_chunk(version, mtime):
 
 
 @pytest.mark.parametrize('package', ['binary/netmask-debugsource'])
-def test_devel_files(tmpdir, package, filescheck):
+def test_devel_files(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     assert len(output.results) == 5
     out = output.print_results(output.results)
     assert 'devel-file-in-non-devel-package' not in out
@@ -90,25 +90,25 @@ def test_devel_files(tmpdir, package, filescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/makefile-junk'])
-def test_makefile_junk(tmpdir, package, filescheck):
+def test_makefile_junk(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: makefile-junk /usr/share/Makefile.am' in out
     assert out.count('W: makefile-junk') == 1
 
 
 @pytest.mark.parametrize('package', ['binary/python3-greenlet'])
-def test_sphinx_inv_files(tmpdir, package, filescheck):
+def test_sphinx_inv_files(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     assert not len(output.results)
 
 
 @pytest.mark.parametrize('package', ['binary/filechecks'])
-def test_invalid_package(tmpdir, package, filescheck):
+def test_invalid_package(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: non-ghost-in-run /run/foo' in out
     assert 'W: systemd-unit-in-etc /etc/systemd/system/foo' in out
@@ -124,9 +124,9 @@ def test_invalid_package(tmpdir, package, filescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/tclpackage'])
-def test_tcl_package(tmpdir, package, filescheck):
+def test_tcl_package(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: tcl-extension-file /usr/lib64/tcl/pkgIndex.tcl' in out
 
@@ -169,18 +169,18 @@ def test_lib_regex():
 
 
 @pytest.mark.parametrize('package', ['binary/rust'])
-def test_rust_files(tmpdir, package, filescheck):
+def test_rust_files(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: wrong-script-interpreter /etc/foo.rs' in out
     assert 'E: wrong-script-interpreter /etc/bar.rs' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/ngircd'])
-def test_distribution_tags(tmpdir, package, filescheck):
+def test_distribution_tags(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'manpage-not-compressed' in out
     assert 'no-manual-page-for-binary' not in out
@@ -188,17 +188,17 @@ def test_distribution_tags(tmpdir, package, filescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/development'])
-def test_provides_devel(tmpdir, package, filescheck):
+def test_provides_devel(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: non-devel-file-in-devel-package /usr/x.typelib' in out
 
 
 @pytest.mark.parametrize('package', ['binary/shlib1'])
-def test_shlib1(tmpdir, package, filescheck):
+def test_shlib1(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
@@ -206,9 +206,9 @@ def test_shlib1(tmpdir, package, filescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/shlib2-devel'])
-def test_shlib2_devel(tmpdir, package, filescheck):
+def test_shlib2_devel(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
@@ -226,9 +226,9 @@ def test_shlib2_devel(tmpdir, package, filescheck):
      ('/usr/lib/python/py.typed', False),
      ('/usr/lib/python/pypackagefromwheel-0.0.0.dist-info/REQUESTED', False),
      ('/usr/lib/ruby/gem.build_complete', False)])
-def test_zero_length_ignore(tmpdir, package, filescheck, filename, show):
+def test_zero_length_ignore(tmp_path, package, filescheck, filename, show):
     output, test = filescheck
-    pkg = get_tested_package(package, tmpdir)
+    pkg = get_tested_package(package, tmp_path)
     test.check(pkg)
     out = output.print_results(output.results)
     assert filename in pkg.files
@@ -236,9 +236,9 @@ def test_zero_length_ignore(tmpdir, package, filescheck, filename, show):
 
 
 @pytest.mark.parametrize('package', ['binary/manual-pages'])
-def test_manual_pages(tmpdir, package, filescheck):
+def test_manual_pages(tmp_path, package, filescheck):
     output, test = filescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: manual-page-in-subfolder /usr/share/man/man3/foo/bar/baz.3.gz' in out
     assert 'W: manpage-not-compressed bz2 /usr/share/man/man1/test.1.zst' in out

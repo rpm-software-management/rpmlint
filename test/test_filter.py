@@ -22,14 +22,14 @@ def test_filters_regexp():
     assert cfg.configuration['Filters'][0] == '.*invalid-buildhost.*'
 
 
-def test_data_storing(tmpdir):
+def test_data_storing(tmp_path):
     """
     Load some filters and make sure we generate nice regexp
     """
     cfg = Config(TEST_CONFIG_FILTERS)
     cfg.load_rpmlintrc(TEST_RPMLINTRC)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    pkg = get_tested_package(TEST_PACKAGE, tmp_path)
     # this should be upgraded to error
     result.add_info('I', pkg, 'suse-other-error', '')
     assert len(result.results) == 1
@@ -42,7 +42,7 @@ def test_data_storing(tmpdir):
     assert result.printed_messages['E'] == 1
 
 
-def test_data_storing_backward_compat(tmpdir):
+def test_data_storing_backward_compat(tmp_path):
     """
     Make sure we can load some filters from rpmlintrc that
     worked with rpmlint v1.
@@ -56,7 +56,7 @@ def test_data_storing_backward_compat(tmpdir):
     assert 'doublequotes-instead-of-singlequotes' in parsed_filters
 
 
-def test_description_storing(tmpdir):
+def test_description_storing(tmp_path):
     """
     Test if we can store extra destcriptions and formatting is up par
     """
@@ -68,7 +68,7 @@ eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    pkg = get_tested_package(TEST_PACKAGE, tmp_path)
     assert len(result.results) == 0
     result.add_info('E', pkg, 'dbus-file-unauthorized', '')
     # two options so we check the description is added only once
@@ -80,7 +80,7 @@ in culpa qui officia deserunt mollit anim id est laborum.\n\n"""
     assert result.get_description('suse-other-error') == lorem_formated
 
 
-def test_description_from_toml(tmpdir):
+def test_description_from_toml(tmp_path):
     """
     Test if description loaded from toml shows up details
     """
@@ -90,7 +90,7 @@ def test_description_from_toml(tmpdir):
     assert result.get_description('uncompressed-zip') == 'The zip file is not compressed.\n\n'
 
 
-def test_description_from_conf(tmpdir):
+def test_description_from_conf(tmp_path):
     """
     Test that descriptions strings are updated from configuration file.
 
@@ -122,7 +122,7 @@ def test_description_from_conf(tmpdir):
         'A new text for non-standard-dir-in-var error.\n\n'
 
 
-def test_output(tmpdir):
+def test_output(tmp_path):
     """
     Test the actual output of rpmlint on one file
     """
@@ -145,8 +145,8 @@ https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs for
 more information.\n\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
-    pkg2 = get_tested_package(TEST_PACKAGE2, tmpdir)
+    pkg = get_tested_package(TEST_PACKAGE, tmp_path)
+    pkg2 = get_tested_package(TEST_PACKAGE2, tmp_path)
     # here we check if empty detail will not add whitespace
     result.add_info('E', pkg, 'dbus-file-unauthorized', '')
     # two options so we check the description is added only once
@@ -160,10 +160,10 @@ more information.\n\n"""
     assert result.print_results(result.results) == expected_output
 
 
-def test_filtered_output(tmpdir):
+def test_filtered_output(tmp_path):
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    pkg = get_tested_package(TEST_PACKAGE, tmp_path)
     assert len(result.results) == 0
     result.add_info('E', pkg, 'no-regex', '')
     result.add_info('E', pkg, 'no-regex-with-leading-space', '')
@@ -172,11 +172,11 @@ def test_filtered_output(tmpdir):
     assert len(result.results) == 0
 
 
-def test_blocked_filters(tmpdir):
+def test_blocked_filters(tmp_path):
     key = 'fatal-error'
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
-    pkg = get_tested_package(TEST_PACKAGE, tmpdir)
+    pkg = get_tested_package(TEST_PACKAGE, tmp_path)
     assert len(result.results) == 0
     assert key in cfg.configuration['Filters']
     result.add_info('E', pkg, key, '')

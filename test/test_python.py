@@ -14,9 +14,9 @@ def pythoncheck():
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-in-package'])
-def test_python_doc_in_package(tmpdir, package, pythoncheck):
+def test_python_doc_in_package(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/doc' in out
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/docs' in out
@@ -29,9 +29,9 @@ def test_python_doc_in_package(tmpdir, package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-module-in-package'])
-def test_python_doc_module_in_package(tmpdir, package, pythoncheck):
+def test_python_doc_module_in_package(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/doc' not in out
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/docs' not in out
@@ -44,9 +44,9 @@ def test_python_doc_module_in_package(tmpdir, package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-egg-info-distutils-style'])
-def test_python_distutils_egg_info(tmpdir, package, pythoncheck):
+def test_python_distutils_egg_info(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: python-egg-info-distutils-style /usr/lib/python2.7/site-packages/mydistutilspackage.egg-info' in out
     assert 'E: python-egg-info-distutils-style /usr/lib/python3.10/site-packages/mydistutilspackage.egg-info' in out
@@ -55,9 +55,9 @@ def test_python_distutils_egg_info(tmpdir, package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-in-site-packages'])
-def test_python_doc_in_site_packages(tmpdir, package, pythoncheck):
+def test_python_doc_in_site_packages(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: python-doc-in-site-packages /usr/lib/python2.7/site-packages/doc' in out
     assert 'E: python-doc-in-site-packages /usr/lib/python2.7/site-packages/docs' in out
@@ -70,9 +70,9 @@ def test_python_doc_in_site_packages(tmpdir, package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-src-in-site-packages'])
-def test_python_src_in_site_packages(tmpdir, package, pythoncheck):
+def test_python_src_in_site_packages(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: python-src-in-site-packages /usr/lib/python2.7/site-packages/src' in out
     assert 'E: python-src-in-site-packages /usr/lib/python3.10/site-packages/src' in out
@@ -81,9 +81,9 @@ def test_python_src_in_site_packages(tmpdir, package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-site-packages'])
-def test_python_tests_in_site_packages(tmpdir, package, pythoncheck):
+def test_python_tests_in_site_packages(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: python-tests-in-site-packages /usr/lib/python2.7/site-packages/test' in out
     assert 'E: python-tests-in-site-packages /usr/lib/python2.7/site-packages/tests' in out
@@ -99,9 +99,9 @@ def test_python_tests_in_site_packages(tmpdir, package, pythoncheck):
     'binary/python3-flit-3.8.0',
     'binary/python3-icecream-2.1.3',
 ])
-def test_python_dependencies(tmpdir, package, pythoncheck):
+def test_python_dependencies(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-missing-require' not in out
     assert 'W: python-leftover-require' not in out
@@ -111,9 +111,9 @@ def test_python_dependencies(tmpdir, package, pythoncheck):
     'binary/python3-icecream-missingdeps',
     'binary/python3-flit-missingdeps',
 ])
-def test_python_dependencies_missing(tmpdir, package, pythoncheck):
+def test_python_dependencies_missing(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-missing-require' in out
 
@@ -122,8 +122,8 @@ def test_python_dependencies_missing(tmpdir, package, pythoncheck):
     'binary/python3-icecream-leftovers',
     'binary/python3-flit-leftovers',
 ])
-def test_python_dependencies_leftover(tmpdir, package, pythoncheck):
+def test_python_dependencies_leftover(tmp_path, package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-leftover-require' in out

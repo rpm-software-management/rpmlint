@@ -14,9 +14,9 @@ def doccheck():
 
 
 @pytest.mark.parametrize('package', ['binary/mydoc'])
-def test_doccheck(tmpdir, package, doccheck):
+def test_doccheck(tmp_path, package, doccheck):
     output, test = doccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: executable-docs /usr/share/doc/packages/mydoc/doc.html' in out
     assert 'E: executable-docs /usr/share/doc/packages/mydoc/README' in out
@@ -24,18 +24,18 @@ def test_doccheck(tmpdir, package, doccheck):
 
 
 @pytest.mark.parametrize('package', ['binary/doc-file-dependency'])
-def test_doc_file_dep(tmpdir, package, doccheck):
+def test_doc_file_dep(tmp_path, package, doccheck):
     output, test = doccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: doc-file-dependency' in out
     assert 'W: install-file-in-docs' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/install-file-in-docs'])
-def test_install_file_in_docs(tmpdir, package, doccheck):
+def test_install_file_in_docs(tmp_path, package, doccheck):
     output, test = doccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: install-file-in-docs' in out
     assert 'E: executable-docs' not in out

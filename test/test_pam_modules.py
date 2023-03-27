@@ -14,8 +14,8 @@ def pammodulecheck():
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam_modules(tmpdir, package, pammodulecheck):
+def test_pam_modules(tmp_path, package, pammodulecheck):
     output, test = pammodulecheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: pam-unauthorized-module pam-module.so' in out

@@ -15,9 +15,9 @@ def speccheck():
     return output, test
 
 
-def test_check_include(tmpdir, speccheck):
+def test_check_include(tmp_path, speccheck):
     output, test = speccheck
-    test.check_source(get_tested_package('source/CheckInclude', tmpdir))
+    test.check_source(get_tested_package('source/CheckInclude', tmp_path))
     out = output.print_results(output.results)
     assert "specfile-error can't parse specfile" not in out
     assert 'no-buildroot-tag' in out
@@ -67,19 +67,19 @@ def test_forbidden_controlchars_found(package, speccheck):
 
 
 @pytest.mark.parametrize('package', ['source/no-spec-file'])
-def test_check_no_spec_file(tmpdir, package, speccheck):
+def test_check_no_spec_file(tmp_path, package, speccheck):
     """Test if spec file is not found inside RPM metadata."""
     output, test = speccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: no-spec-file' in out
 
 
 @pytest.mark.parametrize('package', ['source/CheckInclude'])
-def test_check_no_spec_file_not_applied(tmpdir, package, speccheck):
+def test_check_no_spec_file_not_applied(tmp_path, package, speccheck):
     """Test if there is no spec file inside RPM metadata."""
     output, test = speccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: no-spec-file' not in out
 
@@ -105,19 +105,19 @@ def test_check_non_utf8_spec_file_not_applied(package, speccheck):
 
 
 @pytest.mark.parametrize('package', ['source/invalid-spec-name'])
-def test_check_invalid_spec_name(tmpdir, package, speccheck):
+def test_check_invalid_spec_name(tmp_path, package, speccheck):
     """Test if specfile name does not matches the ('Name: ') tag."""
     output, test = speccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: invalid-spec-name' in out
 
 
 @pytest.mark.parametrize('package', ['source/CheckInclude'])
-def test_check_invalid_spec_name_not_applied(tmpdir, package, speccheck):
+def test_check_invalid_spec_name_not_applied(tmp_path, package, speccheck):
     """Test if specfile has specfile name as ('Name: ') tag."""
     output, test = speccheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: invalid-spec-name' not in out
 

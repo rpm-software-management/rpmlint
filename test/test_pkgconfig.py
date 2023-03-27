@@ -14,9 +14,9 @@ def pkgconfigcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/pc'])
-def test_pkg_config(tmpdir, package, pkgconfigcheck):
+def test_pkg_config(tmp_path, package, pkgconfigcheck):
     output, test = pkgconfigcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: invalid-pkgconfig-file /tmp/pkgconfig/xcb.pc' in out
     assert 'E: pkgconfig-invalid-libs-dir /tmp/pkgconfig/xcb.pc Libs: -L/usr/lib' in out
@@ -24,9 +24,9 @@ def test_pkg_config(tmpdir, package, pkgconfigcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/libreiserfscore-devel'])
-def test_pkg_config_correct(tmpdir, package, pkgconfigcheck):
+def test_pkg_config_correct(tmp_path, package, pkgconfigcheck):
     output, test = pkgconfigcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: invalid-pkgconfig-file' not in out
     assert 'E: pkgconfig-invalid-libs-dir' not in out

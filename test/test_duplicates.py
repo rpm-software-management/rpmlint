@@ -14,9 +14,9 @@ def duplicatescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/duplicates'])
-def test_duplicates(tmpdir, package, duplicatescheck):
+def test_duplicates(tmp_path, package, duplicatescheck):
     output, test = duplicatescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'E: hardlink-across-partition /var/foo /etc/foo' in out
@@ -28,9 +28,9 @@ def test_duplicates(tmpdir, package, duplicatescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/bad-crc-uncompressed'])
-def test_duplicates_correct(tmpdir, package, duplicatescheck):
+def test_duplicates_correct(tmp_path, package, duplicatescheck):
     output, test = duplicatescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'E: hardlink-across-partition' not in out
