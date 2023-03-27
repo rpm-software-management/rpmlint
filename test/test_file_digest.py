@@ -26,17 +26,17 @@ def digestcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/file-signature-good'])
-def test_signatures(tmpdir, package, digestcheck):
+def test_signatures(tmp_path, package, digestcheck):
     output, test = digestcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert not out
 
 
 @pytest.mark.parametrize('package', ['binary/file-signature-symlinks'])
-def test_signatures_symlinks(tmpdir, package, digestcheck):
+def test_signatures_symlinks(tmp_path, package, digestcheck):
     output, test = digestcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert len(output.results) == 2
     assert 'file-signature-symlinks.x86_64: E: cron-file-symlink /etc/cron.daily/symlink' in out
@@ -44,15 +44,15 @@ def test_signatures_symlinks(tmpdir, package, digestcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/file-signature-bad'])
-def test_signatures_bad(tmpdir, package, digestcheck):
+def test_signatures_bad(tmp_path, package, digestcheck):
     output, test = digestcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert len(output.results) == 1
     assert 'file-signature-bad.x86_64: E: cron-file-digest-mismatch /etc/cron.daily/suse.de-sarg expected sha256:edeaaff3f1774ad2888673770c6d64097e391bc362d7d6fb34982ddf0efd18cb, has:8dbb513cddb18fe825dad6836161e03c109de7736913444dd5ad3de9d5579afe' in out
 
 
-def test_description_message(tmpdir, digestcheck):
+def test_description_message(tmp_path, digestcheck):
     output, test = digestcheck
     assert 'https://en.opensuse.org/openSUSE:Package_security_guidelines#audit_bugs' in output.get_description('cron-file-unauthorized')
 
@@ -113,9 +113,9 @@ def test_missing_entry():
 
 
 @pytest.mark.parametrize('package', ['binary/tmpwatch'])
-def test_file_digest_mismatch(tmpdir, package):
+def test_file_digest_mismatch(tmp_path, package):
     output, test = get_digestcheck('digests2.config')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'tmpwatch.x86_64: E: cron-file-unauthorized /etc/cron.daily/tmpwatch' not in out
     assert 'tmpwatch.x86_64: E: cron-file-digest-mismatch /etc/cron.daily/tmpwatch' in out
@@ -293,32 +293,32 @@ def test_default_digester():
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam_modules(tmpdir, package, digestcheck):
+def test_pam_modules(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam.config')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'pam-module.x86_64: E: pamempty-file-unauthorized /usr/lib64/security/pam-module.so' in out
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam_includeonly_nonexistent(tmpdir, package, digestcheck):
+def test_pam_includeonly_nonexistent(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam1.config')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'pamincludetxt' not in out
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam_includeonly_existent(tmpdir, package, digestcheck):
+def test_pam_includeonly_existent(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam2.config')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'pam-module.x86_64: E: pamincludeso-file-unauthorized /usr/lib64/security/pam-module.so' in out
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam(tmpdir, package, digestcheck):
+def test_pam(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam3.config')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert not out

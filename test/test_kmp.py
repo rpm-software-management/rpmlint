@@ -14,9 +14,9 @@ def kmpcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/noreq-kmp-default'])
-def test_kmp_noreq(tmpdir, package, kmpcheck):
+def test_kmp_noreq(tmp_path, package, kmpcheck):
     output, test = kmpcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'kmp-missing-supplements' in out
     assert 'kmp-missing-requires' in out
@@ -24,9 +24,9 @@ def test_kmp_noreq(tmpdir, package, kmpcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/exces-enhances-kmp-default'])
-def test_kmp_enhances(tmpdir, package, kmpcheck):
+def test_kmp_enhances(tmp_path, package, kmpcheck):
     output, test = kmpcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'kmp-missing-supplements' in out
     assert 'kmp-missing-requires' not in out
@@ -35,9 +35,9 @@ def test_kmp_enhances(tmpdir, package, kmpcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/supplements-kmp-default'])
-def test_kmp_supplements(tmpdir, package, kmpcheck):
+def test_kmp_supplements(tmp_path, package, kmpcheck):
     output, test = kmpcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'kmp-missing-supplements' not in out
     assert 'kmp-missing-requires' not in out

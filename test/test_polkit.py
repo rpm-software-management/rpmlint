@@ -26,32 +26,32 @@ def polkit_check():
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_actions_malformatted(tmpdir, package, polkit_check):
+def test_check_actions_malformatted(tmp_path, package, polkit_check):
     output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'testpolkitcheck.x86_64: E: polkit-xml-exception /usr/share/polkit-1/actions/malformatted.xml.policy raised an exception: mismatched tag: line 23, column 51' in out
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_actions_ghost_file(tmpdir, package, polkit_check):
+def test_check_actions_ghost_file(tmp_path, package, polkit_check):
     output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'testpolkitcheck.x86_64: E: polkit-ghost-file /usr/share/polkit-1/actions/ghost.policy' in out
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_actions_missing_allow_type(tmpdir, package, polkit_check):
+def test_check_actions_missing_allow_type(tmp_path, package, polkit_check):
     output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'testpolkitcheck.x86_64: E: polkit-untracked-privilege missing.allow.type (no:auth_admin_keep:auth_admin_keep)' in out
 
 
 @pytest.mark.parametrize('package', ['binary/testpolkitcheck'])
-def test_check_actions_auth_admin(tmpdir, package, polkit_check):
+def test_check_actions_auth_admin(tmp_path, package, polkit_check):
     output, test = polkit_check
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'testpolkitcheck.x86_64: E: polkit-untracked-privilege auth.admin.policy (auth_admin:no:auth_admin_keep)' in out

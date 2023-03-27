@@ -14,9 +14,9 @@ def brandingcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/brandingdep-testpackage'])
-def test_branding_requires(tmpdir, package, brandingcheck):
+def test_branding_requires(tmp_path, package, brandingcheck):
     output, test = brandingcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'branding-requires-specific-flavor testingpackage-branding-openSUSE' in out
     assert 'branding-requires-unversioned testingpackage-branding-openSUSE' not in out
@@ -26,9 +26,9 @@ def test_branding_requires(tmpdir, package, brandingcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/bla-branding-upstream'])
-def test_branding_pkg1(tmpdir, package, brandingcheck):
+def test_branding_pkg1(tmp_path, package, brandingcheck):
     output, test = brandingcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'branding-supplements-missing' not in out
     assert 'branding-provides-unversioned' not in out
@@ -37,9 +37,9 @@ def test_branding_pkg1(tmpdir, package, brandingcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/bla-theme-openSUSE'])
-def test_branding_pkg2(tmpdir, package, brandingcheck):
+def test_branding_pkg2(tmp_path, package, brandingcheck):
     output, test = brandingcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'branding-excessive-suggests suggie' in out
     assert 'branding-excessive-recommends recommendie' in out

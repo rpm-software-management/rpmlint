@@ -14,9 +14,9 @@ def filelistcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/filelist'])
-def test_filelist(tmpdir, package, filelistcheck):
+def test_filelist(tmp_path, package, filelistcheck):
     output, test = filelistcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: filelist-forbidden-sysconfig /etc/rc.config.d/foo.config' in out
     assert 'E: filelist-forbidden /var/adm/setup' in out

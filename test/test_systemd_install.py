@@ -15,9 +15,9 @@ def systemdinstallcheck():
 
 @pytest.mark.parametrize('package', ['binary/dnf-automatic'])
 @pytest.mark.skipif(IS_FEDORA_RELEASE, reason='Fedora does not define %{_unitdir} rpm macro')
-def test_bashisms(tmpdir, package, systemdinstallcheck):
+def test_bashisms(tmp_path, package, systemdinstallcheck):
     output, test = systemdinstallcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     for scriptlet_type in ['add_pre', 'add_post', 'del_preun', 'del_postun']:
