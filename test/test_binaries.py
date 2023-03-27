@@ -271,8 +271,8 @@ def test_multiple_errors(tmp_path, package, binariescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/libtest'])
-def test_patchable_function_entry_archive(tmpdir, package, binariescheck):
+def test_patchable_function_entry_archive(tmp_path, package, binariescheck):
     output, test = binariescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: patchable-function-entry-in-archive /usr/lib64/libhello.a' in out
