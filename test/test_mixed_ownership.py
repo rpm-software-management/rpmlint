@@ -14,9 +14,9 @@ def mixedownershipcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/mixed-ownership'])
-def test_mixed_ownership(tmpdir, package, mixedownershipcheck):
+def test_mixed_ownership(tmp_path, package, mixedownershipcheck):
     output, test = mixedownershipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'noproblem' not in out
     assert 'file-parent-ownership-mismatch Path "/var/lib/badfolder/broken1" owned by "root" is stored in directory owned by "nobody"' in out

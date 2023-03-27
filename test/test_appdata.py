@@ -17,9 +17,9 @@ def appdatacheck():
 
 @pytest.mark.skipif(not HAS_APPSTREAM_GLIB, reason='Optional dependency appstream-glib not installed')
 @pytest.mark.parametrize('package', ['binary/appdata'])
-def test_appdata_fail(tmpdir, package, appdatacheck):
+def test_appdata_fail(tmp_path, package, appdatacheck):
     output, test = appdatacheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     # there are two borked packages
     assert len(output.results) == 2
@@ -28,9 +28,9 @@ def test_appdata_fail(tmpdir, package, appdatacheck):
 
 @pytest.mark.parametrize('package', ['binary/appdata'])
 @patch('rpmlint.checks.AppDataCheck.AppDataCheck.cmd', 'command-really-not-found')
-def test_appdata_fail_no_checker(tmpdir, package, appdatacheck):
+def test_appdata_fail_no_checker(tmp_path, package, appdatacheck):
     output, test = appdatacheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     # there is just one borked file as the other is invalid content
     # but valid xml

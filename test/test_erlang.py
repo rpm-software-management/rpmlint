@@ -16,9 +16,9 @@ def erlangcheck():
 
 @pytest.mark.skipif(get_distribution('pybeam').parsed_version < parse_version('0.7'), reason='pybeam >= 0.7 required')
 @pytest.mark.parametrize('package', ['binary/erlang-test'])
-def test_erlang(tmpdir, package, erlangcheck):
+def test_erlang(tmp_path, package, erlangcheck):
     output, test = erlangcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: beam-compiled-without-debuginfo /usr/lib/erlang/m.beam' in out
     assert 'W: beam-compile-info-missed /usr/lib/erlang/m-no-CInf.beam' in out

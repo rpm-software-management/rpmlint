@@ -14,12 +14,12 @@ def lsbcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/fPing'])
-def test_LSB_compliance(tmpdir, package, lsbcheck):
+def test_LSB_compliance(tmp_path, package, lsbcheck):
     """
     Check that the package name, version and release number are LSB compliant.
     """
     output, test = lsbcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     # Check invalid package name

@@ -14,9 +14,9 @@ def sourcescheck():
 
 
 @pytest.mark.parametrize('package', ['source/wrongsrc'])
-def test_extension_and_permissions(tmpdir, package, sourcescheck):
+def test_extension_and_permissions(tmp_path, package, sourcescheck):
     output, test = sourcescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert len(output.results) == 1
@@ -29,9 +29,9 @@ def test_extension_and_permissions(tmpdir, package, sourcescheck):
 
 
 @pytest.mark.parametrize('package', ['source/not-compressed-multi-spec'])
-def test_compression_and_multispec(tmpdir, package, sourcescheck):
+def test_compression_and_multispec(tmp_path, package, sourcescheck):
     output, test = sourcescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'source-not-compressed' in out

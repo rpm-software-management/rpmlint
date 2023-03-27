@@ -14,9 +14,9 @@ def buildrootcheck():
 
 
 @pytest.mark.parametrize('package', ['binary/buildroot'])
-def test_build_root(tmpdir, package, buildrootcheck):
+def test_build_root(tmp_path, package, buildrootcheck):
     output, test = buildrootcheck
     test.prepare_regex('/home/marxin/rpmbuild/BUILDROOT/%{NAME}-%{VERSION}-%{RELEASE}.x86_64')
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: file-contains-buildroot /bin/trace' in out

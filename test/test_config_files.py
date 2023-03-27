@@ -14,9 +14,9 @@ def configfilescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/config-files'])
-def test_config_files(tmpdir, package, configfilescheck):
+def test_config_files(tmp_path, package, configfilescheck):
     output, test = configfilescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'non-etc-or-var-file-marked-as-conffile /usr/share/conffile3' in out
     assert 'conffile-without-noreplace-flag /etc/conffile1' in out
@@ -25,9 +25,9 @@ def test_config_files(tmpdir, package, configfilescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/logrotate'])
-def test_config_files_correct(tmpdir, package, configfilescheck):
+def test_config_files_correct(tmp_path, package, configfilescheck):
     output, test = configfilescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'non-etc-or-var-file-marked-as-conffile' not in out
     assert 'conffile-without-noreplace-flag' not in out

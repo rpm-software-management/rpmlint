@@ -14,9 +14,9 @@ def logrotatecheck():
 
 
 @pytest.mark.parametrize('package', ['binary/logrotate'])
-def test_logrotate(tmpdir, package, logrotatecheck):
+def test_logrotate(tmp_path, package, logrotatecheck):
     output, test = logrotatecheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: logrotate-log-dir-not-packaged /var/log/myapp' in out
     assert 'E: logrotate-duplicate /var/log/myapp' in out

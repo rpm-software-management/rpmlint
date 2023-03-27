@@ -14,9 +14,9 @@ def libdependencycheck():
 
 
 @pytest.mark.parametrize('package', ['binary/shlib2-devel'])
-def test_shlib2_devel(tmpdir, package, libdependencycheck):
+def test_shlib2_devel(tmp_path, package, libdependencycheck):
     output, test = libdependencycheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     test.after_checks()
     out = output.print_results(output.results)
     assert 'E: no-library-dependency-for /usr/lib/libfoo.so.1' in out

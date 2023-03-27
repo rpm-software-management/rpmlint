@@ -14,9 +14,9 @@ def tmpfilescheck():
 
 
 @pytest.mark.parametrize('package', ['binary/tempfiled'])
-def test_tmpfiles(tmpdir, package, tmpfilescheck):
+def test_tmpfiles(tmp_path, package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation ' not in out
@@ -26,9 +26,9 @@ def test_tmpfiles(tmpdir, package, tmpfilescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/systemd-tmpfiles'])
-def test_tmpfiles2(tmpdir, package, tmpfilescheck):
+def test_tmpfiles2(tmp_path, package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation /usr/lib/tmpfiles.d/systemd-tmpfiles.conf' in out
@@ -38,9 +38,9 @@ def test_tmpfiles2(tmpdir, package, tmpfilescheck):
 
 
 @pytest.mark.parametrize('package', ['binary/systemd-tmpfiles_correct'])
-def test_tmpfiles_correct(tmpdir, package, tmpfilescheck):
+def test_tmpfiles_correct(tmp_path, package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation' not in out
