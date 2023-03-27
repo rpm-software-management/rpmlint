@@ -271,7 +271,7 @@ def stringToVersion(verstring):
     if i != -1:
         with contextlib.suppress(ValueError):
             # garbage in epoch, ignore it
-            epoch = str(int(verstring[:i]))
+            epoch = int(verstring[:i])
     i += 1
     j = verstring.find('-', i)
     if j != -1:

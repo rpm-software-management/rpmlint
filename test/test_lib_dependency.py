@@ -20,3 +20,12 @@ def test_shlib2_devel(tmp_path, package, libdependencycheck):
     test.after_checks()
     out = output.print_results(output.results)
     assert 'E: no-library-dependency-for /usr/lib/libfoo.so.1' in out
+
+
+@pytest.mark.parametrize('package', ['binary/xrootd-devel'])
+def test_missing_depency_on(tmp_path, package, libdependencycheck):
+    output, test = libdependencycheck
+    test.check(get_tested_package(package, tmp_path))
+    test.after_checks()
+    out = output.print_results(output.results)
+    assert 'W: missing-dependency-on' not in out
