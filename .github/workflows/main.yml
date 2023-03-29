@@ -32,7 +32,7 @@ jobs:
               cpio gzip
               bzip2 xz
               binutils glibc glibc-32bit glibc-locale
-              python3-magic
+              python3-python-magic
               python3-rpm
               python3-base
               python3-setuptools
