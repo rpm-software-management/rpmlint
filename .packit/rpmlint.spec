@@ -18,7 +18,7 @@ BuildRequires:  python3-devel
 BuildRequires:  python-rpm-macros
 BuildRequires:  python3-setuptools
 # For tests
-BuildRequires:  python3-magic
+BuildRequires:  python3-python-magic
 BuildRequires:  python3-pybeam
 BuildRequires:  python3-pyenchant
 BuildRequires:  python3-pytest
