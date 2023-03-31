@@ -152,7 +152,12 @@ class PythonCheck(AbstractFilesCheck):
         # Add pythonX-foo variants
         names += [f'python\\d*-{re.escape(i)}' for i in names]
         regex = '|'.join(names)
-        regex = re.compile(f'^({regex})$', re.IGNORECASE)
+        try:
+            regex = re.compile(f'^({regex})$', re.IGNORECASE)
+        except re.error:
+            # Bad regular expression, it could be a name with weird
+            # characters
+            return False
 
         for req in pkg.req_names:
             if regex.match(req):
@@ -168,7 +173,7 @@ class PythonCheck(AbstractFilesCheck):
         """
 
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
-        requirements = {i.strip().lower() for i in requirements}
+        requirements = {self._normalize_modname(i).lower() for i in requirements}
 
         for req in pkg.req_names:
             match = pythonpac.match(req)
@@ -186,11 +191,38 @@ class PythonCheck(AbstractFilesCheck):
             if not (names & requirements):
                 self.output.add_info('W', pkg, 'python-leftover-require', req)
 
+    def _normalize_modname(self, name):
+        """
+        Convert a python module requirement spec to a common python
+        package possible name, replacing extra declaration with "-".
+
+        Examples:
+         * module[extra] -> module-extra
+         * module[e1,e2] -> module-e1-e2
+        """
+        name = name.strip()
+
+        # Handle names with extras like jsonschema[format-nongpl]
+        extras = re.match(r'^(?P<module_name>.*)\[(?P<extra>.+)]$',
+                          name)
+        if extras:
+            name = extras.group('module_name')
+            extra = extras.group('extra').replace(',', '-')
+            name = f'{name}-{extra}'
+
+        return name
+
     def _module_names(self, module_name):
         """
         Return a list with possible variants of the module name,
         replacing "-", "_".
+
+        It also replaces extras declaration to dash like:
+        module[extra] -> module-extra
         """
+
+        module_name = self._normalize_modname(module_name)
+
         return [
             module_name,
             module_name.replace('-', '_'),
