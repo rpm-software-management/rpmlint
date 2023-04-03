@@ -3,7 +3,7 @@ from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg
 
-from Testing import CONFIG, get_tested_package, IS_X86_64
+from Testing import CONFIG, Config, get_tested_package, IS_X86_64, TEST_CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -128,9 +128,10 @@ def test_only_non_binary_in_usr_lib(tmp_path, package, binariescheck):
 @pytest.mark.parametrize('package',
                          ['binary/only-non-binary-in-usr-lib_exception'])
 def test_only_non_binary_in_usr_lib_exception(tmp_path, package, binariescheck):
-    CONFIG.configuration['UsrLibBinaryException'] = '^/usr/lib(64)?/python'
-    output = Filter(CONFIG)
-    test = BinariesCheck(CONFIG, output)
+    config = Config(TEST_CONFIG)
+    config.configuration['UsrLibBinaryException'] = '^/usr/lib(64)?/python'
+    output = Filter(config)
+    test = BinariesCheck(config, output)
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: only-non-binary-in-usr-lib' not in out
