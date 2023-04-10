@@ -24,7 +24,11 @@ def test_check_include(tmp_path, speccheck):
     assert 'E: specfile-error error: query of specfile' not in out
 
 
-@pytest.mark.parametrize('package', ['spec/SpecCheck2', 'spec/SpecCheck3'])
+@pytest.mark.parametrize('package', [
+    'spec/SpecCheck2',
+    'spec/SpecCheck3',
+    'spec/SpecCheckPatch',
+])
 def test_patch_not_applied(package, speccheck):
     output, test = speccheck
     pkg = get_tested_spec_package(package)
