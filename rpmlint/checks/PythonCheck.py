@@ -173,7 +173,11 @@ class PythonCheck(AbstractFilesCheck):
         """
 
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
-        requirements = {self._normalize_modname(i).lower() for i in requirements}
+        reqs = set()
+        for i in requirements:
+            names = self._normalize_modname(i)
+            for n in names:
+                reqs.add(n.lower())
 
         for req in pkg.req_names:
             match = pythonpac.match(req)
@@ -188,29 +192,32 @@ class PythonCheck(AbstractFilesCheck):
 
             names = set(self._module_names(module_name))
 
-            if not (names & requirements):
+            if not (names & reqs):
                 self.output.add_info('W', pkg, 'python-leftover-require', req)
 
     def _normalize_modname(self, name):
         """
         Convert a python module requirement spec to a common python
-        package possible name, replacing extra declaration with "-".
+        package possible names, replacing extra declaration with "-".
 
         Examples:
-         * module[extra] -> module-extra
-         * module[e1,e2] -> module-e1-e2
+         * module[extra] -> [module-extra]
+         * module[e1,e2] -> [module-e1, module-e2]
         """
         name = name.strip()
+        names = []
 
         # Handle names with extras like jsonschema[format-nongpl]
         extras = re.match(r'^(?P<module_name>.*)\[(?P<extra>.+)]$',
                           name)
         if extras:
             name = extras.group('module_name')
-            extra = extras.group('extra').replace(',', '-')
-            name = f'{name}-{extra}'
+            extras = [i.strip() for i in extras.group('extra').split(',')]
+            names = [f'{name}-{extra}' for extra in extras]
+        else:
+            names = [name]
 
-        return name
+        return names
 
     def _module_names(self, module_name):
         """
@@ -221,10 +228,15 @@ class PythonCheck(AbstractFilesCheck):
         module[extra] -> module-extra
         """
 
-        module_name = self._normalize_modname(module_name)
+        module_names = self._normalize_modname(module_name)
+
+        # Name variants changing '-' with '_'
+        variants = []
+        for i in module_names:
+            variants.append(i.replace('-', '_'))
+            variants.append(i.replace('_', '-'))
 
         return [
-            module_name,
-            module_name.replace('-', '_'),
-            module_name.replace('_', '-'),
+            *module_names,
+            *variants,
         ]
