@@ -52,7 +52,6 @@ setup(
     tests_require=[
         'pytest',
         'pytest-cov',
-        'pytest-flake8',
         'pytest-xdist',
     ],
 
