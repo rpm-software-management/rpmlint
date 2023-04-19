@@ -157,7 +157,6 @@ nodigests = [
     "*/security/pam_filter.so",
     "*/security/pam_ftp.so",
     "*/security/pam_group.so",
-    "*/security/pam_issue.so",
     "*/security/pam_keyinit.so",
     "*/security/pam_lastlog.so",
     "*/security/pam_limits.so",
@@ -180,7 +179,6 @@ nodigests = [
     "*/security/pam_stress.so",
     "*/security/pam_succeed_if.so",
     "*/security/pam_time.so",
-    "*/security/pam_timestamp.so",
     "*/security/pam_tty_audit.so",
     "*/security/pam_umask.so",
     "*/security/pam_warn.so",
@@ -189,6 +187,16 @@ nodigests = [
     "*/security/pam_usertype.so",
     "*/security/pam_setquota.so",
     "*/security/pam_faillock.so",
+]
+
+[[FileDigestGroup]]
+package = "pam-extra"
+type = "pam"
+note = "imported from rpmlint1 PAMModules.WhiteList, moved to new sub-package"
+bugs = ["bsc#1210371"]
+nodigests = [
+    "*/security/pam_timestamp.so",
+    "*/security/pam_issue.so",
 ]
 
 [[FileDigestGroup]]
@@ -205,9 +213,10 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam-extra"
+package = "pam-userdb"
 type = "pam"
 note = "legacy: not audited"
+bugs = ["bsc#1210371"]
 nodigests = [
     "*/security/pam_userdb.so",
 ]
