@@ -47,7 +47,7 @@ Optional, for running the test suite:
 ## Testing
 
 You will need to have all the required modules as listed on the Install section above.
-You will also need `pytest`,`pytest-cov`, `pytest-xdist`, and `pytest-flake8`.
+You will also need `pytest`,`pytest-cov` and `pytest-xdist`.
 
 If all the dependencies are present you can just execute tests using:
 
@@ -120,7 +120,7 @@ it can be normal `toml` file if you wish:
 
     setBadness('check', 0)
     addFilter('test-i-ignore')
-    
+
 The location of `rpmlintrc` can be set using `--rpmlintrc` option.
 Or it can load any `*.rpmlintrc` or `*-rpmlintrc` that are located in the same
 folder as check RPM file (or a specfile). Note the auto-loading happens only
