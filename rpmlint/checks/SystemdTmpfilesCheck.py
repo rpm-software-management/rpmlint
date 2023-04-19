@@ -175,7 +175,7 @@ class SystemdTmpfilesCheck(AbstractCheck):
             # limiting than exposing, but in some special circumstances they
             # might ease exploits.
             danger_bits = (stat.S_IWOTH, stat.S_ISUID, stat.S_ISGID)
-            if any([(mode & bit) != 0 for bit in danger_bits]):
+            if any((mode & bit) != 0 for bit in danger_bits):
                 # a dangerous bit is set, so it's sensitive
                 return True
 
@@ -192,7 +192,7 @@ class SystemdTmpfilesCheck(AbstractCheck):
 
             mode = tf_entry.get_octal_mode()
             danger_bits = (stat.S_IROTH, stat.S_IWOTH)
-            if any([(mode & bit) != 0 for bit in danger_bits]):
+            if any((mode & bit) != 0 for bit in danger_bits):
                 # world readable or writeable, sensitive
                 return True
 
