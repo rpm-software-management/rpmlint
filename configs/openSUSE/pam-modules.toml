@@ -524,3 +524,12 @@ bug = "bsc#1209238"
 nodigests = [
     "*/security/pam_lastlog2.so",
 ]
+
+[[FileDigestGroup]]
+package = "wtmpdb"
+type = "pam"
+note = "Keeps Y2038 safe login records in a sqlite database"
+bug = "bsc#1209963"
+nodigests = [
+    "*/security/pam_wtmpdb.so",
+]
