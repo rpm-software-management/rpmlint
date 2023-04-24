@@ -356,8 +356,8 @@ def parse_deps(line):
 
 def get_magic(path):
     try:
-        return magic.detect_from_filename(path).name
-    except ValueError:
+        return magic.from_file(path)
+    except (ValueError, FileNotFoundError):
         return ''
 
 

@@ -32,7 +32,7 @@ BuildRequires:  python3-zstandard
 %else
 BuildRequires:  python3dist(setuptools)
 # For tests
-BuildRequires:  python3dist(file-magic)
+BuildRequires:  python3dist(magic)
 BuildRequires:  python3dist(pybeam)
 BuildRequires:  python3dist(pyenchant)
 BuildRequires:  python3dist(pytest)
