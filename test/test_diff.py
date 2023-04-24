@@ -1,11 +1,11 @@
 from rpmlint.rpmdiff import Rpmdiff
 
-from Testing import testpath
+from Testing import get_tested_path
 
 
 def test_distribution_tags():
-    oldpkg = testpath() / 'binary/mc-4.8.15-10.3.1.x86_64.rpm'
-    newpkg = testpath() / 'binary/mc-4.8.21-2.1.x86_64.rpm'
+    oldpkg = get_tested_path('binary/mc-4.8.15-10.3.1.x86_64.rpm')
+    newpkg = get_tested_path('binary/mc-4.8.21-2.1.x86_64.rpm')
     ignore = []
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
@@ -23,8 +23,8 @@ def test_distribution_tags():
 
 
 def test_exclude():
-    oldpkg = testpath() / 'binary/mc-4.8.15-10.3.1.x86_64.rpm'
-    newpkg = testpath() / 'binary/mc-4.8.21-2.1.x86_64.rpm'
+    oldpkg = get_tested_path('binary/mc-4.8.15-10.3.1.x86_64.rpm')
+    newpkg = get_tested_path('binary/mc-4.8.21-2.1.x86_64.rpm')
     ignore = list('T5S')
 
     # print(Rpmdiff(oldpkg, newpkg, ignore=ignore).textdiff())
