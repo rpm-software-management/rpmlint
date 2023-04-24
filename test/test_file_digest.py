@@ -6,13 +6,13 @@ from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg
 
 import Testing
-from Testing import get_tested_package
+from Testing import get_tested_package, get_tested_path
 
 
 def get_digestcheck(config_path):
     from rpmlint.config import Config
     if not os.path.isabs(config_path):
-        config_path = Testing.testpath() / 'configs' / config_path
+        config_path = get_tested_path('configs', config_path)
     config = Config([config_path])
     config.info = True
     output = Filter(config)
@@ -222,7 +222,7 @@ def test_multiple_packages():
 
 
 def test_shell_digest_filter():
-    with open(Testing.testpath() / 'data' / 'shell_digest.sh') as f:
+    with open(get_tested_path('data/shell_digest.sh')) as f:
         shell_script = f.read()
 
     output, test = get_digestcheck('digests_filtered.config')
@@ -250,7 +250,7 @@ def test_shell_digest_filter():
 
 
 def test_xml_digest_filter():
-    with open(Testing.testpath() / 'data' / 'xml_digest.xml') as f:
+    with open(get_tested_path('data/xml_digest.xml')) as f:
         xml_data = f.read()
 
     output, test = get_digestcheck('digests_filtered.config')

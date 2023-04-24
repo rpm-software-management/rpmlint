@@ -5,14 +5,14 @@ from rpmlint.checks.PolkitCheck import PolkitCheck
 from rpmlint.filter import Filter
 
 import Testing
-from Testing import get_tested_package
+from Testing import get_tested_package, get_tested_path
 
 
 def get_polkit_check(config_path):
     from rpmlint.config import Config
 
     if not os.path.isabs(config_path):
-        config_path = Testing.testpath() / 'configs' / config_path
+        config_path = get_tested_path('configs', config_path)
     config = Config([config_path])
     config.info = True
     output = Filter(config)

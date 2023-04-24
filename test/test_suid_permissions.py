@@ -5,14 +5,14 @@ from rpmlint.checks.SUIDPermissionsCheck import SUIDPermissionsCheck
 from rpmlint.filter import Filter
 
 import Testing
-from Testing import get_tested_package
+from Testing import get_tested_package, get_tested_path
 
 
 def get_suid_permissions_check(config_path):
     from rpmlint.config import Config
 
     if not os.path.isabs(config_path):
-        config_path = Testing.testpath() / 'configs' / config_path
+        config_path = get_tested_path('configs', config_path)
     config = Config([config_path])
     config.info = True
     output = Filter(config)
@@ -23,7 +23,7 @@ def get_suid_permissions_check(config_path):
 @pytest.fixture(scope='function', autouse=True)
 def permissions_check_profile(permissions_check):
     output, test = permissions_check
-    test._parse_profile(str(Testing.testpath() / 'configs' / 'permissions.secure'))
+    test._parse_profile(str(get_tested_path('configs/permissions.secure')))
     return output, test
 
 

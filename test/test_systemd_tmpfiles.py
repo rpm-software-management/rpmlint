@@ -7,11 +7,12 @@ from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg
 
 import Testing
+from Testing import get_tested_path
 
 
 def get_tmpfilescheck(config_path):
     if not os.path.isabs(config_path):
-        config_path = Testing.testpath() / 'configs' / config_path
+        config_path = get_tested_path('configs', config_path)
     config = Config([config_path])
     config.info = True
     output = Filter(config)
