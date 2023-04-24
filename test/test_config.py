@@ -3,16 +3,16 @@ from pathlib import Path
 import pytest
 from rpmlint.config import Config
 
-from Testing import TEST_CONFIG, testpath
+from Testing import get_tested_path, TEST_CONFIG
 
 
-TEST_CONFIG_2 = [testpath() / 'configs/test2.config']
-TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
-TEST_LIST1 = [testpath() / 'configs/testlists1.config']
-TEST_LIST2 = [testpath() / 'configs/testlists2.config']
-TEST_OVERRIDE = [testpath() / 'configs/test.override.config']
-TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
-TEST_BROKEN = [testpath() / 'configs/broken.config']
+TEST_CONFIG_2 = [get_tested_path('configs/test2.config')]
+TEST_CONFIG_FILTERS = [get_tested_path('configs/testfilters.config')]
+TEST_LIST1 = [get_tested_path('configs/testlists1.config')]
+TEST_LIST2 = [get_tested_path('configs/testlists2.config')]
+TEST_OVERRIDE = [get_tested_path('configs/test.override.config')]
+TEST_RPMLINTRC = get_tested_path('configs/testing-rpmlintrc')
+TEST_BROKEN = [get_tested_path('configs/broken.config')]
 
 
 def test_printing(capsys):

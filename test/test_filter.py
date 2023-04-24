@@ -3,14 +3,14 @@ from pathlib import Path
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 
-from Testing import get_tested_package, testpath
+from Testing import get_tested_package, get_tested_path
 
-TEST_CONFIG_FILTERS = [testpath() / 'configs/testfilters.config']
-TEST_RPMLINTRC = testpath() / 'configs/testing-rpmlintrc'
-TEST3_RPMLINTRC = testpath() / 'configs/testing3-rpmlintrc'
+TEST_CONFIG_FILTERS = [get_tested_path('configs/testfilters.config')]
+TEST_RPMLINTRC = get_tested_path('configs/testing-rpmlintrc')
+TEST3_RPMLINTRC = get_tested_path('configs/testing3-rpmlintrc')
 TEST_PACKAGE = Path('binary', 'ngircd')
 TEST_PACKAGE2 = Path('binary', 'tempfiled')
-TEST_DESCRIPTIONS = [testpath() / 'configs/descriptions.config']
+TEST_DESCRIPTIONS = [get_tested_path('configs/descriptions.config')]
 
 
 def test_filters_regexp():

@@ -6,11 +6,11 @@ from rpmlint.lint import Lint
 from rpmlint.spellcheck import ENCHANT
 
 from Testing import (
-    HAS_CHECKBASHISMS, HAS_DASH, HAS_ENGLISH_DICTIONARY, HAS_RPMDB,
-    TEST_CONFIG, testpath
+    get_tested_path, HAS_CHECKBASHISMS, HAS_DASH, HAS_ENGLISH_DICTIONARY, HAS_RPMDB,
+    TEST_CONFIG
 )
 
-TEST_RPMLINTRC = testpath() / 'configs/testing2-rpmlintrc'
+TEST_RPMLINTRC = get_tested_path('configs/testing2-rpmlintrc')
 
 options_preset = {
     'config': TEST_CONFIG,
@@ -142,7 +142,7 @@ def test_explain_no_binary_from_cfg(capsys):
     'descriptions.config' file.
     """
     additional_options = {
-        'config': [testpath() / 'configs/descriptions.config'],
+        'config': [get_tested_path('configs/descriptions.config')],
         'explain': ['no-binary']
     }
     options = get_options(additional_options)
@@ -166,7 +166,7 @@ def test_explain_non_standard_dir_from_cfg(capsys):
     'descriptions.config' file.
     """
     additional_options = {
-        'config': [testpath() / 'configs/descriptions.config'],
+        'config': [get_tested_path('configs/descriptions.config')],
         'explain': ['non-standard-dir-in-usr']
     }
     options = get_options(additional_options)
@@ -191,7 +191,7 @@ def test_descriptions_from_config(capsys, packages):
     'descriptions.config' file.
     """
     additional_options = {
-        'config': [testpath() / 'configs/descriptions.config'],
+        'config': [get_tested_path('configs/descriptions.config')],
         'rpmfile': [packages]
     }
     options_preset['verbose'] = True
