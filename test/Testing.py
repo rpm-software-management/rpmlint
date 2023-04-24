@@ -43,8 +43,8 @@ HAS_ENGLISH_DICTIONARY = _has_dictionary('en_US')
 HAS_CZECH_DICTIONARY = _has_dictionary('cs_CZ')
 
 
-def get_tested_path(path):
-    return _testpath() / path
+def get_tested_path(*paths):
+    return _testpath().joinpath(*paths)
 
 
 def get_tested_package(name, testdir):
