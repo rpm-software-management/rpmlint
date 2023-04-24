@@ -6,11 +6,13 @@ import re
 import shutil
 import subprocess
 
+import pytest
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
 import rpmlint.spellcheck
 
 
+@pytest.mark.skip
 def testpath():
     return Path(os.environ.get('TESTPATH', Path(__file__).parent))
 
