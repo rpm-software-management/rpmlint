@@ -6,18 +6,16 @@ import re
 import shutil
 import subprocess
 
-import pytest
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
 import rpmlint.spellcheck
 
 
-@pytest.mark.skip
-def testpath():
+def _testpath():
     return Path(os.environ.get('TESTPATH', Path(__file__).parent))
 
 
-TEST_CONFIG = [testpath() / 'configs/test.config']
+TEST_CONFIG = [_testpath() / 'configs/test.config']
 CONFIG = Config(TEST_CONFIG)
 
 # predicates used for pytest.mark.skipif decorators
@@ -46,7 +44,7 @@ HAS_CZECH_DICTIONARY = _has_dictionary('cs_CZ')
 
 
 def get_tested_path(path):
-    return testpath() / path
+    return _testpath() / path
 
 
 def get_tested_package(name, testdir):
