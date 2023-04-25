@@ -152,8 +152,12 @@ class PythonCheck(AbstractFilesCheck):
         # Add pythonX-foo variants
         names += [f'python\\d*-{re.escape(i)}' for i in names]
         regex = '|'.join(names)
+        # Support complex requirements like
+        # (python310-jupyter-server >= 1.15 with python310-jupyter-server < 3)
+        version_req = r'\s*(==|<|<=|>|>=)\s*[\w.]+\s*'
+        richop_req = r'\s+(and|or|if|unless|else|with|without)\s+.*'
         try:
-            regex = re.compile(f'^({regex})$', re.IGNORECASE)
+            regex = re.compile(rf'^\(?({regex})({version_req})?({richop_req})?\)?\s*$', re.IGNORECASE)
         except re.error:
             # Bad regular expression, it could be a name with weird
             # characters
