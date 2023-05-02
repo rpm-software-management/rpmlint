@@ -90,7 +90,7 @@ class PythonCheck(AbstractFilesCheck):
                     break
 
                 # Ignore version limitations for now
-                requirement, *_ = re.split('[<>=!~]', requirement)
+                requirement, *_ = re.split('[<>=!~;]', requirement)
                 requirements.append(requirement)
 
         self._check_requirements(pkg, requirements)
@@ -120,7 +120,7 @@ class PythonCheck(AbstractFilesCheck):
                     continue
 
                 # Ignore version limitations for now
-                requirement, *_ = re.split('[ <>=!~]', requirement)
+                requirement, *_ = re.split('[ <>=!~;]', requirement)
                 requirements.append(requirement)
 
         self._check_requirements(pkg, requirements)
