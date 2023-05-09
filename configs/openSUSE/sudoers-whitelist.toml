@@ -22,11 +22,11 @@ hash = "a4cf85013ddd404ad1f67ccf1259567b57305acd3b5bfaa696cf9f25a25dfcaa"
 package = "monitoring-plugins-smart"
 type = "sudoers"
 note = "Nagios plugin for monitoring SMART device status. Rather complex Perl script"
-bug = "bsc#1196138"
+bugs = ["bsc#1196138", "bsc#1211003"]
 [[FileDigestGroup.digests]]
 path = "/etc/sudoers.d/monitoring-plugins-smart"
 digester = "shell"
-hash = "171f2afffd74c52433e72443ba3023836e96b8edf14d98e6b3c337ef9de32bce"
+hash = "33f31f541d7c2cc42ba513d4b062019cf79569a7ea1b3b58e875c4edce413a25"
 
 [[FileDigestGroup]]
 package = "monitoring-plugins-zypper"
