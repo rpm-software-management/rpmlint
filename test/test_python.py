@@ -98,6 +98,8 @@ def test_python_tests_in_site_packages(tmp_path, package, pythoncheck):
 @pytest.mark.parametrize('package', [
     'binary/python3-flit-3.8.0',
     'binary/python3-icecream-2.1.3',
+    'binary/python310-jupyter-server-fileid-0.9.0',
+    'binary/python310-scikit-build-0.17.2',
 ])
 def test_python_dependencies(tmp_path, package, pythoncheck):
     output, test = pythoncheck
