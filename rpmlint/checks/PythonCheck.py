@@ -170,7 +170,8 @@ class PythonCheck(AbstractFilesCheck):
         python3-foo, etc.
         """
 
-        names = self._module_names(requirement.name)
+        names = self._module_names(requirement.name, extras=requirement.extras)
+
         # Add pythonX-foo variants
         names += [f'python\\d*-{re.escape(i)}' for i in names]
         regex = '|'.join(names)
@@ -201,7 +202,8 @@ class PythonCheck(AbstractFilesCheck):
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
         reqs = set()
         for i in requirements:
-            reqs.add(i.name.lower())
+            for n in self._module_names(i.name, extras=i.extras):
+                reqs.add(n.lower())
 
         for req in pkg.req_names:
             match = pythonpac.match(req)
@@ -219,7 +221,7 @@ class PythonCheck(AbstractFilesCheck):
             if not (names & reqs):
                 self.output.add_info('W', pkg, 'python-leftover-require', req)
 
-    def _module_names(self, module_name):
+    def _module_names(self, module_name, extras=None):
         """
         Return a list with possible variants of the module name,
         replacing "-", "_".
@@ -229,6 +231,11 @@ class PythonCheck(AbstractFilesCheck):
         variants = []
         variants.append(module_name.replace('-', '_'))
         variants.append(module_name.replace('_', '-'))
+
+        # Look also for python-MOD-EXTRA
+        if extras:
+            for e in extras:
+                variants += self._module_names(f'{module_name}-{e}')
 
         return [
             module_name,

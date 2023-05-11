@@ -100,6 +100,7 @@ def test_python_tests_in_site_packages(tmp_path, package, pythoncheck):
     'binary/python3-icecream-2.1.3',
     'binary/python310-jupyter-server-fileid-0.9.0',
     'binary/python310-scikit-build-0.17.2',
+    'binary/python310-jupyter-events-0.6.3',
 ])
 def test_python_dependencies(tmp_path, package, pythoncheck):
     output, test = pythoncheck
