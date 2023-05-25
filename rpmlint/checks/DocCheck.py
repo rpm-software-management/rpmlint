@@ -60,7 +60,7 @@ class DocCheck(AbstractCheck):
         core_reqs = {}  # dependencies of non-doc files
         doc_reqs = {}   # dependencies of doc files
 
-        for dep in pkg.header.dsFromHeader():
+        for dep in rpm.ds(pkg.header, 'requires'):
             # skip deps which were found by find-requires
             if dep.Flags() & rpm.RPMSENSE_FIND_REQUIRES != 0:
                 continue
