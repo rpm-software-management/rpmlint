@@ -670,6 +670,8 @@ class SpecCheck(AbstractCheck):
         self._checkline_package_obsoletes(line)
         self._checkline_package_conflicts(line)
 
+        self._checkline_forbidden_controlchars(line)
+
     def _checkline_changelog(self, line):
         if self.current_section == 'changelog':
             deptoken = Pkg.has_forbidden_controlchars(line)
@@ -762,3 +764,9 @@ class SpecCheck(AbstractCheck):
         if python_sitelib_glob_regex.match(line):
             self.output.add_info('W', self.pkg, 'python-sitelib-glob-in-files',
                                  line[:-1])
+
+    def _checkline_forbidden_controlchars(self, line):
+        """Look for controlchar in any line"""
+        # https://github.com/rpm-software-management/rpmlint/issues/1067
+        if Pkg.has_forbidden_controlchars(line):
+            self.output.add_info('W', self.pkg, 'forbidden-controlchar-found')
