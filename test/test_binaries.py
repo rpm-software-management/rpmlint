@@ -3,7 +3,7 @@ from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 from rpmlint.pkg import FakePkg
 
-from Testing import CONFIG, Config, get_tested_package, IS_X86_64, TEST_CONFIG
+from Testing import CONFIG, Config, get_tested_package, get_tested_mock_package, IS_X86_64, TEST_CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -279,12 +279,13 @@ def test_patchable_function_entry_archive(tmp_path, package, binariescheck):
     out = output.print_results(output.results)
     assert 'E: patchable-function-entry-in-archive /usr/lib64/libhello.a' in out
 
-
-def test_systemd_unit_file(binariescheck):
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(files={
+        '/usr/lib/systemd/system/yast-timesync.service': { 'content': '' }
+    })
+])
+def test_systemd_unit_file(package, binariescheck):
     output, test = binariescheck
-    with FakePkg('fake') as pkg:
-        pkg.add_file_with_content('/usr/lib/systemd/system/yast-timesync.service', '')
-        output, test = binariescheck
-        test.check(pkg)
-        out = output.print_results(output.results)
-        assert 'only-non-binary-in-usr-lib' not in out
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'only-non-binary-in-usr-lib' not in out

@@ -60,3 +60,11 @@ def get_tested_spec_package(name):
     candidates = list(get_tested_path(name).parent.glob(filename))
     assert len(candidates) == 1
     return FakePkg(candidates[0])
+
+
+def get_tested_mock_package(**kwargs):
+    mockPkg = FakePkg('mockPkg')
+    if 'files' in kwargs:
+        for file in kwargs['files']:
+            mockPkg.add_file_with_content(file, kwargs['files'][file]['content'])
+    return mockPkg
