@@ -1263,17 +1263,3 @@ bug = "bsc#1206163"
 path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.Updated.conf"
 digester = "xml"
 hash = "79448ff58b92e27ed0fecfb0d496582e4df8467b015147bb30aef3189e27df57"
-
-[[FileDigestGroup]]
-package = "libproxy-daemon"
-type = "dbus"
-note = "Transparent proxy server configuration retrieval"
-bug = "bsc#1209376"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.libproxy.proxy.service"
-digester = "shell"
-hash = "d1e7cb621af13693f3a1aa48e54a7598f7662f6f196b50a1f00d47ea9c2c6202"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.libproxy.proxy.conf"
-digester = "xml"
-hash = "57063e4cfb323470bf590ac4fdde4b7b9bd4152bc1022d34492e0b5781505130"
