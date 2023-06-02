@@ -83,16 +83,6 @@ path = "/etc/cron.d/nextcloud"
 hash = "5f883ad50e790de95f4ffbafd9515dc0bc88f9e49fcb404d16ed0d781fbd4c77"
 
 [[FileDigestGroup]]
-package = "texlive-filesystem"
-type = "cron"
-note = "more or less broken security concept, disagreement with package maintainer. due to importance of TeX a wildcard whitelisting until the matter is settled"
-bug = "bsc#1150556"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/suse-texlive"
-algorithm = "skip"
-hash = ""
-
-[[FileDigestGroup]]
 package = "matomo"
 type = "cron"
 note = "a complex PHP script is called as wwwrun user"
