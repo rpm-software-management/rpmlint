@@ -134,14 +134,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "opie"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "*/security/pam_opie.so",
-]
-
-[[FileDigestGroup]]
 package = "pam"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
