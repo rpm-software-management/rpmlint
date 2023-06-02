@@ -366,26 +366,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "mumble-server"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#660784"
-nodigests = [
-    "/etc/dbus-1/system.d/mumble-server.conf",
-    "/usr/lib/tmpfiles.d/mumble-server.conf",
-]
-
-[[FileDigestGroup]]
-package = "mumble-server"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#660784"
-nodigests = [
-    "/etc/dbus-1/system.d/mumble-server.conf",
-    "/usr/lib/tmpfiles.d/mumble-server.conf",
-]
-
-[[FileDigestGroup]]
 package = "powerdevil5"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
