@@ -62,9 +62,9 @@ def get_tested_spec_package(name):
     return FakePkg(candidates[0])
 
 
-def get_tested_mock_package(**kwargs):
+def get_tested_mock_package(files=None):
     mockPkg = FakePkg('mockPkg')
-    if 'files' in kwargs:
-        for file in kwargs['files']:
-            mockPkg.add_file_with_content(file, kwargs['files'][file]['content'])
+    if files is not None:
+        for file in files:
+            mockPkg.add_file_with_content(file, files[file]['content'])
     return mockPkg
