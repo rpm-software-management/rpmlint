@@ -1,7 +1,6 @@
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
-from rpmlint.pkg import FakePkg
 
 from Testing import CONFIG, Config, get_tested_package, get_tested_mock_package, IS_X86_64, TEST_CONFIG
 
