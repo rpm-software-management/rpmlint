@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, Config, get_tested_package, get_tested_mock_package, IS_X86_64, TEST_CONFIG
+from Testing import CONFIG, Config, get_tested_mock_package, get_tested_package, IS_X86_64, TEST_CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -278,9 +278,10 @@ def test_patchable_function_entry_archive(tmp_path, package, binariescheck):
     out = output.print_results(output.results)
     assert 'E: patchable-function-entry-in-archive /usr/lib64/libhello.a' in out
 
+
 @pytest.mark.parametrize('package', [
     get_tested_mock_package(files={
-        '/usr/lib/systemd/system/yast-timesync.service': { 'content': '' }
+        '/usr/lib/systemd/system/yast-timesync.service': {'content': ''}
     })
 ])
 def test_systemd_unit_file(package, binariescheck):
