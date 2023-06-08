@@ -21,19 +21,17 @@ class Rpmdiff:
     PRCO = ('REQUIRES', 'PROVIDES', 'CONFLICTS', 'OBSOLETES',
             'RECOMMENDS', 'SUGGESTS', 'ENHANCES', 'SUPPLEMENTS')
 
-    # {fname : (size, mode, mtime, flags, dev, inode,
-    #           nlink, state, vflags, user, group, digest)}
-    __FILEIDX = [['S', 0],
-                 ['M', 1],
-                 ['5', 11],
-                 ['D', 4],
-                 ['N', 6],
-                 ['L', 7],
-                 ['V', 8],
-                 ['U', 9],
-                 ['G', 10],
-                 ['F', 3],
-                 ['T', 2]]
+    __FILEIDX = [['S', 'size'],
+                 ['M', 'mode'],
+                 ['5', 'digest'],
+                 ['D', 'rdev'],
+                 ['N', 'nlink'],
+                 ['L', 'state'],
+                 ['V', 'vflags'],
+                 ['U', 'user'],
+                 ['G', 'group'],
+                 ['F', 'fflags'],
+                 ['T', 'mtime']]
 
     DEPFORMAT = '%-12s%s %s %s %s'
     FORMAT = '%-12s%s'
@@ -78,9 +76,8 @@ class Rpmdiff:
             self.__comparePRCOs(old, new, tag)
 
         # compare the files
-
-        old_files_dict = self.__fileIteratorToDict(old.fiFromHeader())
-        new_files_dict = self.__fileIteratorToDict(new.fiFromHeader())
+        old_files_dict = self.__fileIteratorToDict(rpm.files(old))
+        new_files_dict = self.__fileIteratorToDict(rpm.files(new))
         files = list(set(chain(iter(old_files_dict), iter(new_files_dict))))
         files.sort()
 
@@ -101,7 +98,7 @@ class Rpmdiff:
                 fmt = ''
                 for entry in FILEIDX:
                     if entry[1] is not None and \
-                            old_file[entry[1]] != new_file[entry[1]]:
+                            getattr(old_file, entry[1]) != getattr(new_file, entry[1]):
                         fmt += entry[0]
                         diff = True
                     else:
@@ -236,5 +233,5 @@ class Rpmdiff:
     def __fileIteratorToDict(self, fi):
         result = {}
         for filedata in fi:
-            result[filedata[0]] = filedata[1:]
+            result[filedata.name] = filedata
         return result
