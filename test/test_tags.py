@@ -421,3 +421,16 @@ def test_summary_on_multiple_lines(tmp_path, package, tagscheck):
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: summary-on-multiple-lines' in out
+
+
+@pytest.mark.parametrize('package', [
+    'binary/spellingerrors-default',
+    'binary/spellingerrors-lang',
+    'binary/spellingerrors-lang2',
+    'binary/spellingerrors-lang3',
+])
+def test_description_spelling_error(tmp_path, package, tagscheck):
+    output, test = tagscheck
+    test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'E: spelling-error' in out
