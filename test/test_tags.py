@@ -1,8 +1,10 @@
 import pytest
 from rpmlint.checks.TagsCheck import TagsCheck
 from rpmlint.filter import Filter
+import rpmlint.spellcheck
 
 from Testing import CONFIG, get_tested_package
+from Testing import HAS_ENGLISH_DICTIONARY, HAS_FRENCH_DICTIONARY
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -423,6 +425,9 @@ def test_summary_on_multiple_lines(tmp_path, package, tagscheck):
     assert 'E: summary-on-multiple-lines' in out
 
 
+@pytest.mark.skipif(not rpmlint.spellcheck.ENCHANT, reason='Missing enchant bindings')
+@pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
+@pytest.mark.skipif(not HAS_FRENCH_DICTIONARY, reason='Missing French dictionary')
 @pytest.mark.parametrize('package', [
     'binary/spellingerrors-default',
     'binary/spellingerrors-lang',
