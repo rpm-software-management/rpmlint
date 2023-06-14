@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.PythonCheck import PythonCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_mock_package, get_tested_package
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +13,21 @@ def pythoncheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-in-package'])
-def test_python_doc_in_package(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python2.7/site-packages/python-mypackage/doc': {'content': ''},
+        '/usr/lib/python2.7/site-packages/python-mypackage/docs': {'content': ''},
+        '/usr/lib/python3.10/site-packages/python-mypackage/doc': {'content': ''},
+        '/usr/lib/python3.10/site-packages/python-mypackage/docs': {'content': ''},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/doc': {'content': ''},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/docs': {'content': ''},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/doc': {'content': ''},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/docs': {'content': ''}
+    }
+)])
+def test_python_doc_in_package(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/doc' in out
     assert 'W: python-doc-in-package /usr/lib/python2.7/site-packages/python-mypackage/docs' in out
