@@ -41,26 +41,14 @@ def test_python_doc_in_package(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/python-mypackage': {'content': ''},
-        '/usr/lib/python2.7/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': ''},
-        '/usr/lib/python2.7/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': ''}
+        '/usr/lib/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1}
     }
 )])
 def test_python_doc_module_in_package(package, pythoncheck):
@@ -88,10 +76,21 @@ def test_python_distutils_egg_info(tmp_path, package, pythoncheck):
     assert 'E: python-egg-info-distutils-style /usr/lib64/python3.10/site-packages/mydistutilspackage.egg-info' in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-in-site-packages'])
-def test_python_doc_in_site_packages(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python2.7/site-packages/doc': {'content': '', 'create_dirs': False},
+        '/usr/lib/python2.7/site-packages/docs': {'content': '', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/doc': {'content': '', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/docs': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/doc': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/docs': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/doc': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/docs': {'content': '', 'create_dirs': False}
+    }
+)])
+def test_python_doc_in_site_packages(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: python-doc-in-site-packages /usr/lib/python2.7/site-packages/doc' in out
     assert 'E: python-doc-in-site-packages /usr/lib/python2.7/site-packages/docs' in out
@@ -103,10 +102,17 @@ def test_python_doc_in_site_packages(tmp_path, package, pythoncheck):
     assert 'E: python-doc-in-site-packages /usr/lib64/python3.10/site-packages/docs' in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-src-in-site-packages'])
-def test_python_src_in_site_packages(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python2.7/site-packages/src': {'content': '', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/src': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/src': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/src': {'content': '', 'create_dirs': False}
+    }
+)])
+def test_python_src_in_site_packages(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: python-src-in-site-packages /usr/lib/python2.7/site-packages/src' in out
     assert 'E: python-src-in-site-packages /usr/lib/python3.10/site-packages/src' in out
@@ -114,10 +120,21 @@ def test_python_src_in_site_packages(tmp_path, package, pythoncheck):
     assert 'E: python-src-in-site-packages /usr/lib64/python3.10/site-packages/src' in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-tests-in-site-packages'])
-def test_python_tests_in_site_packages(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python2.7/site-packages/test': {'content': '', 'create_dirs': False},
+        '/usr/lib/python2.7/site-packages/tests': {'content': '', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/test': {'content': '', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/tests': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/test': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/tests': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/test': {'content': '', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/tests': {'content': '', 'create_dirs': False}
+    }
+)])
+def test_python_tests_in_site_packages(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: python-tests-in-site-packages /usr/lib/python2.7/site-packages/test' in out
     assert 'E: python-tests-in-site-packages /usr/lib/python2.7/site-packages/tests' in out
