@@ -1156,3 +1156,15 @@ def test_python_sitelib(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: python-sitelib-glob-in-files' not in out
+
+
+@pytest.mark.parametrize('package', [
+    'spec/null-char-last',
+    'spec/null-char-first',
+])
+def test_null_char(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'forbidden-controlchar-found' in out
