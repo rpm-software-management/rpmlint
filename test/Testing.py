@@ -62,12 +62,12 @@ def get_tested_spec_package(name):
     return FakePkg(candidates[0])
 
 
-def get_tested_mock_package(files=None):
+def get_tested_mock_package(files=None, dirs=None):
     mockPkg = FakePkg('mockPkg')
     if files is not None:
         for path, file in files.items():
             if file.get('create_dirs'):
                 for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
                     mockPkg.add_dir(str(i))
-            mockPkg.add_file_with_content(path, file.get('content'))
+            mockPkg.add_file_with_content(path, file.get('content'), dirs=dirs)
     return mockPkg
