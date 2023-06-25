@@ -772,20 +772,22 @@ class FakePkg(AbstractPkg):
         self.files[path] = pkgdir
         return pkgdir
 
-    def add_file_with_content(self, name, content, **flags):
+    def add_file_with_content(self, name, content, dirs=False, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
         """
-        basename = name.replace(os.path.sep, '_')
-        path = os.path.join(self.dir_name(), basename)
-        with open(path, 'w') as out:
-            out.write(content)
-            pkg_file = PkgFile(name)
-            pkg_file.path = path
-            for key, value in flags.items():
-                setattr(pkg_file, key, value)
-            self.files[name] = pkg_file
+        path = os.path.join(self.dir_name(), name.lstrip('/'))
+        pkg_file = PkgFile(name)
+        pkg_file.path = path
+        for key, value in flags.items():
+            setattr(pkg_file, key, value)
+        self.files[name] = pkg_file
+
+        if dirs is True:
+            os.makedirs(Path(path).parent, exist_ok=True)
+            with open(Path(path), 'w') as out:
+                out.write(content)
 
     def add_symlink_to(self, name, target):
         """

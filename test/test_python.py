@@ -65,10 +65,18 @@ def test_python_doc_module_in_package(package, pythoncheck):
     assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/docs' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/pythoncheck-python-egg-info-distutils-style'])
-def test_python_distutils_egg_info(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python2.7/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False},
+        '/usr/lib/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False},
+        '/usr/lib64/python2.7/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False},
+        '/usr/lib64/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False}
+    },
+    dirs=True
+)])
+def test_python_distutils_egg_info(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: python-egg-info-distutils-style /usr/lib/python2.7/site-packages/mydistutilspackage.egg-info' in out
     assert 'E: python-egg-info-distutils-style /usr/lib/python3.10/site-packages/mydistutilspackage.egg-info' in out
