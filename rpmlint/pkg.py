@@ -772,7 +772,7 @@ class FakePkg(AbstractPkg):
         self.files[path] = pkgdir
         return pkgdir
 
-    def add_file_with_content(self, name, content, dirs=False, **flags):
+    def add_file_with_content(self, name, content, real_files=False, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
@@ -784,7 +784,7 @@ class FakePkg(AbstractPkg):
             setattr(pkg_file, key, value)
         self.files[name] = pkg_file
 
-        if dirs is True:
+        if real_files:
             os.makedirs(Path(path).parent, exist_ok=True)
             with open(Path(path), 'w') as out:
                 out.write(content)

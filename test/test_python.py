@@ -72,7 +72,7 @@ def test_python_doc_module_in_package(package, pythoncheck):
         '/usr/lib64/python2.7/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False},
         '/usr/lib64/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck', 'create_dirs': False}
     },
-    dirs=True
+    real_files=True
 )])
 def test_python_distutils_egg_info(package, pythoncheck):
     output, test = pythoncheck
