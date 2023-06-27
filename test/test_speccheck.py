@@ -12,7 +12,19 @@ def speccheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = SpecCheck(CONFIG, output)
-    return output, test
+    yield output, test
+
+
+@pytest.fixture
+def output(speccheck):
+    output, _test = speccheck
+    yield output
+
+
+@pytest.fixture
+def test(speccheck):
+    _output, test = speccheck
+    yield test
 
 
 def test_check_include(tmp_path, speccheck):
@@ -1168,3 +1180,13 @@ def test_null_char(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'forbidden-controlchar-found' in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_spec_package('spec/MacroInComment'),
+])
+def test_special_comments(package, output, test):
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert 'W: macro-in-comment %configure' in out
+    assert 'W: macro-in-comment %{name}' not in out
