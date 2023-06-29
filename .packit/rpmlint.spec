@@ -56,9 +56,11 @@ BuildRequires:  /usr/bin/desktop-file-validate
 %if 0%{?suse_version}
 BuildRequires:  myspell-en_US
 BuildRequires:  myspell-cs_CZ
+BuildRequires:  myspell-fr_FR
 %else
 BuildRequires:  hunspell-en
 BuildRequires:  hunspell-cs
+BuildRequires:  hunspell-fr
 %endif
 
 %if 0%{?fedora} || 0%{?rhel} >= 8
