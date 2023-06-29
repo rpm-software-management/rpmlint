@@ -736,8 +736,13 @@ class SpecCheck(AbstractCheck):
         # Test if there are macros in comments
         if hash_pos != -1 and \
                 (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
-            for match in self.macro_regex.findall(
-                    line[hash_pos + 1:]):
+
+            comment = line[hash_pos + 1:]
+            # Ignore special comments like #!BuildIgnore
+            if comment and comment[0] == '!':
+                return
+
+            for match in self.macro_regex.findall(comment):
                 res = re.match('%+', match)
                 if len(res.group(0)) % 2:
                     self.output.add_info('W', self.pkg, 'macro-in-comment', match)
