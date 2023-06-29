@@ -58,6 +58,7 @@ jobs:
               desktop-file-utils
               appstream-glib
               myspell-en_US myspell-cs_CZ
+              myspell-fr_FR
               python3-pyenchant
         if: ${{ contains(matrix.container, 'opensuse') && matrix.build-type == 'normal' }}
       - run: zypper -n install python3-flake8-comprehensions
@@ -98,6 +99,7 @@ jobs:
               devscripts-checkbashisms
               hunspell-en
               hunspell-cs
+              hunspell-fr
               python3-enchant
         if: ${{ contains(matrix.container, 'fedora') && matrix.build-type == 'normal' }}
       - run: rm -rf $(rpm --eval '%_dbpath')

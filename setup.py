@@ -47,7 +47,8 @@ setup(
         'zstandard',
         'importlib-metadata;python_version<"3.8"',
         'pyenchant',
-        'python-magic'
+        'python-magic',
+        'packaging',
     ],
     tests_require=[
         'pytest',

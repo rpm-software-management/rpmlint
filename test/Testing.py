@@ -41,6 +41,7 @@ def _has_dictionary(language):
 
 HAS_ENGLISH_DICTIONARY = _has_dictionary('en_US')
 HAS_CZECH_DICTIONARY = _has_dictionary('cs_CZ')
+HAS_FRENCH_DICTIONARY = _has_dictionary('fr')
 
 
 def get_tested_path(*paths):

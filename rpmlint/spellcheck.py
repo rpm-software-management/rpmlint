@@ -61,6 +61,10 @@ class Spellcheck:
         warned = set()
         suggestions = {}
 
+        # C lang is 'en_US'
+        if lang == 'C':
+            lang = 'en_US'
+
         # Initialize spelling dictionary if not already done
         if lang not in self._enchant_checkers:
             self._init_checker(lang)

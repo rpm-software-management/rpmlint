@@ -670,6 +670,8 @@ class SpecCheck(AbstractCheck):
         self._checkline_package_obsoletes(line)
         self._checkline_package_conflicts(line)
 
+        self._checkline_forbidden_controlchars(line)
+
     def _checkline_changelog(self, line):
         if self.current_section == 'changelog':
             deptoken = Pkg.has_forbidden_controlchars(line)
@@ -734,8 +736,13 @@ class SpecCheck(AbstractCheck):
         # Test if there are macros in comments
         if hash_pos != -1 and \
                 (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
-            for match in self.macro_regex.findall(
-                    line[hash_pos + 1:]):
+
+            comment = line[hash_pos + 1:]
+            # Ignore special comments like #!BuildIgnore
+            if comment and comment[0] == '!':
+                return
+
+            for match in self.macro_regex.findall(comment):
                 res = re.match('%+', match)
                 if len(res.group(0)) % 2:
                     self.output.add_info('W', self.pkg, 'macro-in-comment', match)
@@ -762,3 +769,9 @@ class SpecCheck(AbstractCheck):
         if python_sitelib_glob_regex.match(line):
             self.output.add_info('W', self.pkg, 'python-sitelib-glob-in-files',
                                  line[:-1])
+
+    def _checkline_forbidden_controlchars(self, line):
+        """Look for controlchar in any line"""
+        # https://github.com/rpm-software-management/rpmlint/issues/1067
+        if Pkg.has_forbidden_controlchars(line):
+            self.output.add_info('W', self.pkg, 'forbidden-controlchar-found')
