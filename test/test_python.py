@@ -155,7 +155,6 @@ def test_python_tests_in_site_packages(package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', [
-    'binary/python3-icecream-2.1.3',
     'binary/python310-jupyter-server-fileid-0.9.0',
     'binary/python310-scikit-build-0.17.2',
     'binary/python310-jupyter-events-0.6.3',
@@ -192,6 +191,36 @@ Requires-Dist: sphinx ; extra == "doc"
     },
 )])
 def test_python_dependencies_metadata(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
+            'content': """
+asttokens>=2.0.1
+colorama>=0.3.9
+executing>=0.3.1
+pygments>=2.2.0
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'asttokens>=2.0.1',
+            'colorama>=0.3.9',
+            'executing>=0.3.1',
+            'pygments>=2.2.0',
+        ],
+    },
+)])
+def test_python_dependencies_requires(package, pythoncheck):
     output, test = pythoncheck
     test.check(package)
     out = output.print_results(output.results)
