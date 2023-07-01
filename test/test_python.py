@@ -155,7 +155,6 @@ def test_python_tests_in_site_packages(package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', [
-    'binary/python3-flit-3.8.0',
     'binary/python3-icecream-2.1.3',
     'binary/python310-jupyter-server-fileid-0.9.0',
     'binary/python310-scikit-build-0.17.2',
@@ -164,6 +163,37 @@ def test_python_tests_in_site_packages(package, pythoncheck):
 def test_python_dependencies(tmp_path, package, pythoncheck):
     output, test = pythoncheck
     test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
+            'content': """
+Requires-Dist: flit_core >=3.8.0
+Requires-Dist: requests
+Requires-Dist: docutils
+Requires-Dist: tomli-w
+Requires-Dist: sphinx ; extra == "doc"
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python-flit_core',
+            'python-requests',
+            'python-tomli-w',
+            'python310-docutils',
+        ],
+    },
+)])
+def test_python_dependencies_metadata(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-missing-require' not in out
     assert 'W: python-leftover-require' not in out

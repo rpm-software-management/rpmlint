@@ -747,7 +747,7 @@ class InstalledPkg(Pkg):
 
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
-class FakePkg(AbstractPkg):
+class FakePkg(Pkg):
     def __init__(self, name, is_source=False):
         self.name = str(name)
         self.arch = None
@@ -758,6 +758,34 @@ class FakePkg(AbstractPkg):
         # files are dictionary where key is name of a file
         self.files = {}
         self.ghost_files = {}
+
+        # header is a dictionary to mock rpm metadata
+        self.header = {
+            rpm.RPMTAG_REQUIRENAME: [],
+            rpm.RPMTAG_REQUIREFLAGS: [],
+            rpm.RPMTAG_REQUIREVERSION: [],
+            rpm.RPMTAG_CONFLICTNAME: '',
+            rpm.RPMTAG_CONFLICTFLAGS: '',
+            rpm.RPMTAG_CONFLICTVERSION: '',
+            rpm.RPMTAG_PROVIDENAME: '',
+            rpm.RPMTAG_PROVIDEFLAGS: '',
+            rpm.RPMTAG_PROVIDEVERSION: '',
+            rpm.RPMTAG_OBSOLETENAME: '',
+            rpm.RPMTAG_OBSOLETEFLAGS: '',
+            rpm.RPMTAG_OBSOLETEVERSION: '',
+            rpm.RPMTAG_RECOMMENDNAME: '',
+            rpm.RPMTAG_RECOMMENDFLAGS: '',
+            rpm.RPMTAG_RECOMMENDVERSION: '',
+            rpm.RPMTAG_SUGGESTNAME: '',
+            rpm.RPMTAG_SUGGESTFLAGS: '',
+            rpm.RPMTAG_SUGGESTVERSION: '',
+            rpm.RPMTAG_ENHANCENAME: '',
+            rpm.RPMTAG_ENHANCEFLAGS: '',
+            rpm.RPMTAG_ENHANCEVERSION: '',
+            rpm.RPMTAG_SUPPLEMENTNAME: '',
+            rpm.RPMTAG_SUPPLEMENTFLAGS: '',
+            rpm.RPMTAG_SUPPLEMENTVERSION: '',
+        }
 
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
@@ -788,6 +816,24 @@ class FakePkg(AbstractPkg):
             os.makedirs(Path(path).parent, exist_ok=True)
             with open(Path(path), 'w') as out:
                 out.write(content)
+
+    def add_header(self, header):
+        for k, v in header.items():
+            if k == 'requires':
+                for req in v:
+                    self.header[rpm.RPMTAG_REQUIRENAME].append(req)
+                    self.header[rpm.RPMTAG_REQUIREFLAGS].append(0)
+                    self.header[rpm.RPMTAG_REQUIREVERSION].append('1.0')
+                continue
+
+            key = getattr(rpm, f'RPMTAG_{k}'.upper())
+            self.header[key] = v
+
+        (self.requires, self.prereq, self.provides, self.conflicts,
+         self.obsoletes, self.recommends, self.suggests, self.enhances,
+         self.supplements) = self._gather_dep_info()
+
+        self.req_names = [x[0] for x in self.requires + self.prereq]
 
     def add_symlink_to(self, name, target):
         """
