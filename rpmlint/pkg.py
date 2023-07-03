@@ -762,7 +762,7 @@ class InstalledPkg(Pkg):
 
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
-class FakePkg(Pkg):
+class FakePkg(AbstractPkg):
     def __init__(self, name, is_source=False):
         self.name = str(name)
         self.arch = None
@@ -801,6 +801,70 @@ class FakePkg(Pkg):
             rpm.RPMTAG_SUPPLEMENTFLAGS: '',
             rpm.RPMTAG_SUPPLEMENTVERSION: '',
         }
+
+    def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
+                    prereq=None):
+        names = header[nametag]
+        flags = header[flagstag]
+        versions = header[versiontag]
+
+        if versions:
+            for loop in range(len(versions)):
+                name = byte_to_string(names[loop])
+                evr = stringToVersion(byte_to_string(versions[loop]))
+                if prereq is not None and flags[loop] & PREREQ_FLAG:
+                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
+                else:
+                    xs.append(DepInfo(name, flags[loop], evr))
+        return xs, prereq
+
+    def _gather_dep_info(self):
+        _requires = []
+        _prereq = []
+        _provides = []
+        _conflicts = []
+        _obsoletes = []
+        _recommends = []
+        _suggests = []
+        _enhances = []
+        _supplements = []
+
+        _requires, _prereq = self._gather_aux(self.header, _requires,
+                                              rpm.RPMTAG_REQUIRENAME,
+                                              rpm.RPMTAG_REQUIREFLAGS,
+                                              rpm.RPMTAG_REQUIREVERSION,
+                                              _prereq)
+        _conflits, _ = self._gather_aux(self.header, _conflicts,
+                                        rpm.RPMTAG_CONFLICTNAME,
+                                        rpm.RPMTAG_CONFLICTFLAGS,
+                                        rpm.RPMTAG_CONFLICTVERSION)
+        _provides, _ = self._gather_aux(self.header, _provides,
+                                        rpm.RPMTAG_PROVIDENAME,
+                                        rpm.RPMTAG_PROVIDEFLAGS,
+                                        rpm.RPMTAG_PROVIDEVERSION)
+        _obsoletes, _ = self._gather_aux(self.header, _obsoletes,
+                                         rpm.RPMTAG_OBSOLETENAME,
+                                         rpm.RPMTAG_OBSOLETEFLAGS,
+                                         rpm.RPMTAG_OBSOLETEVERSION)
+        _recommends, _ = self._gather_aux(self.header, _recommends,
+                                          rpm.RPMTAG_RECOMMENDNAME,
+                                          rpm.RPMTAG_RECOMMENDFLAGS,
+                                          rpm.RPMTAG_RECOMMENDVERSION)
+        _suggests, _ = self._gather_aux(self.header, _suggests,
+                                        rpm.RPMTAG_SUGGESTNAME,
+                                        rpm.RPMTAG_SUGGESTFLAGS,
+                                        rpm.RPMTAG_SUGGESTVERSION)
+        _enhances, _ = self._gather_aux(self.header, _enhances,
+                                        rpm.RPMTAG_ENHANCENAME,
+                                        rpm.RPMTAG_ENHANCEFLAGS,
+                                        rpm.RPMTAG_ENHANCEVERSION)
+        _supplements, _ = self._gather_aux(self.header, _supplements,
+                                           rpm.RPMTAG_SUPPLEMENTNAME,
+                                           rpm.RPMTAG_SUPPLEMENTFLAGS,
+                                           rpm.RPMTAG_SUPPLEMENTVERSION)
+
+        return (_requires, _prereq, _provides, _conflicts, _obsoletes, _recommends,
+                _suggests, _enhances, _supplements)
 
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
