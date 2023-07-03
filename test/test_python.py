@@ -154,17 +154,6 @@ def test_python_tests_in_site_packages(package, pythoncheck):
     assert 'E: python-tests-in-site-packages /usr/lib64/python3.10/site-packages/tests' in out
 
 
-@pytest.mark.parametrize('package', [
-    'binary/python310-jupyter-events-0.6.3',
-])
-def test_python_dependencies(tmp_path, package, pythoncheck):
-    output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
-    out = output.print_results(output.results)
-    assert 'W: python-missing-require' not in out
-    assert 'W: python-leftover-require' not in out
-
-
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
         '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
@@ -322,6 +311,71 @@ Requires-Dist: virtualenv; extra == 'test'
     },
 )])
 def test_python_dependencies_metadata3(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/jupyter_server_fileid-0.9.0.dist-info/METADATA': {
+            'content': """
+Requires-Dist: jsonschema[format-nongpl]>=3.2.0
+Requires-Dist: python-json-logger>=2.0.4
+Requires-Dist: pyyaml>=5.3
+Requires-Dist: rfc3339-validator
+Requires-Dist: rfc3986-validator>=0.1.1
+Requires-Dist: traitlets>=5.3
+Provides-Extra: cli
+Requires-Dist: click; extra == 'cli'
+Requires-Dist: rich; extra == 'cli'
+Provides-Extra: docs
+Requires-Dist: jupyterlite-sphinx; extra == 'docs'
+Requires-Dist: myst-parser; extra == 'docs'
+Requires-Dist: pydata-sphinx-theme; extra == 'docs'
+Requires-Dist: sphinxcontrib-spelling; extra == 'docs'
+Provides-Extra: test
+Requires-Dist: click; extra == 'test'
+Requires-Dist: coverage; extra == 'test'
+Requires-Dist: pre-commit; extra == 'test'
+Requires-Dist: pytest-asyncio>=0.19.0; extra == 'test'
+Requires-Dist: pytest-console-scripts; extra == 'test'
+Requires-Dist: pytest-cov; extra == 'test'
+Requires-Dist: pytest>=7.0; extra == 'test'
+Requires-Dist: rich; extra == 'test'
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python-jsonschema',
+            'python-python-json-logger',
+            'python-pyyaml',
+            'python-rfc3339-validator',
+            'python-rfc3986-validator',
+            'python-traitlets',
+            'python-click',
+            'python-rich',
+            'python-jupyterlite-sphinx',
+            'python-myst-parser',
+            'python-pydata-sphinx-theme',
+            'python-sphinxcontrib-spelling',
+            'python-click',
+            'python-coverage',
+            'python-pre-commit',
+            'python-pytest-asyncio',
+            'python-pytest-console-scripts',
+            'python-pytest-cov',
+            'python-pytest',
+            'python-rich',
+        ],
+    },
+)])
+def test_python_dependencies_metadata4(package, pythoncheck):
     output, test = pythoncheck
     test.check(package)
     out = output.print_results(output.results)
