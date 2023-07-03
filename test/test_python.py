@@ -155,7 +155,6 @@ def test_python_tests_in_site_packages(package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', [
-    'binary/python310-scikit-build-0.17.2',
     'binary/python310-jupyter-events-0.6.3',
 ])
 def test_python_dependencies(tmp_path, package, pythoncheck):
@@ -255,6 +254,74 @@ Requires-Dist: pytest-cov; extra == 'test'
     },
 )])
 def test_python_dependencies_metadata2(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/jupyter_server_fileid-0.9.0.dist-info/METADATA': {
+            'content': """
+Requires-Dist: distro
+Requires-Dist: packaging
+Requires-Dist: setuptools>=42.0.0
+Requires-Dist: tomli; python_version < '3.11'
+Requires-Dist: typing-extensions>=3.7; python_version < '3.8'
+Requires-Dist: wheel>=0.32.0
+Requires-Dist: coverage[toml]>=4.2; extra == 'cov'
+Requires-Dist: pytest-cov>=2.7.1; extra == 'cov'
+Requires-Dist: pygments; extra == 'docs'
+Requires-Dist: sphinx-issues; extra == 'docs'
+Requires-Dist: sphinx-rtd-theme>=1.0; extra == 'docs'
+Requires-Dist: sphinx>=4; extra == 'docs'
+Requires-Dist: sphinxcontrib-moderncmakedomain>=3.19; extra == 'docs'
+Requires-Dist: ubelt>=0.8.2; extra == 'doctest'
+Requires-Dist: xdoctest>=0.10.0; extra == 'doctest'
+Requires-Dist: build>=0.7; extra == 'test'
+Requires-Dist: cython>=0.25.1; extra == 'test'
+Requires-Dist: importlib-metadata; python_version < '3.8' and extra == 'test'
+Requires-Dist: pytest-mock>=1.10.4; extra == 'test'
+Requires-Dist: pytest-virtualenv>=1.2.5; extra == 'test'
+Requires-Dist: pytest>=6.0.0; extra == 'test'
+Requires-Dist: requests; extra == 'test'
+Requires-Dist: virtualenv; extra == 'test'
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python-distro',
+            'python-packaging',
+            'python-setuptools',
+            'python-tomli',
+            'python-typing-extensions',
+            'python-wheel',
+            'python-coverage',
+            'python-pytest-cov',
+            'python-pygments',
+            'python-sphinx-issues',
+            'python-sphinx-rtd-theme',
+            'python-sphinx',
+            'python-sphinxcontrib-moderncmakedomain',
+            'python-ubelt',
+            'python-xdoctest',
+            'python-build',
+            'python-cython',
+            'python-importlib-metadata',
+            'python-pytest-mock',
+            'python-pytest-virtualenv',
+            'python-pytest',
+            'python-requests',
+            'python-virtualenv',
+        ],
+    },
+)])
+def test_python_dependencies_metadata3(package, pythoncheck):
     output, test = pythoncheck
     test.check(package)
     out = output.print_results(output.results)
