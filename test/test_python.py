@@ -155,7 +155,6 @@ def test_python_tests_in_site_packages(package, pythoncheck):
 
 
 @pytest.mark.parametrize('package', [
-    'binary/python310-jupyter-server-fileid-0.9.0',
     'binary/python310-scikit-build-0.17.2',
     'binary/python310-jupyter-events-0.6.3',
 ])
@@ -221,6 +220,41 @@ pygments>=2.2.0
     },
 )])
 def test_python_dependencies_requires(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' not in out
+    assert 'W: python-leftover-require' not in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/jupyter_server_fileid-0.9.0.dist-info/METADATA': {
+            'content': """
+Requires-Python: >=3.7
+Requires-Dist: jupyter-events>=0.5.0
+Requires-Dist: jupyter-server<3,>=1.15
+Requires-Dist: click; extra == 'cli'
+Requires-Dist: jupyter-server[test]<3,>=1.15; extra == 'test'
+Requires-Dist: pytest; extra == 'test'
+Requires-Dist: pytest-cov; extra == 'test'
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python-jupyter-events',
+            'python-jupyter-server',
+            'python-click',
+            'python-jupyter-server',
+            'python-pytest',
+            'python-pytest-cov',
+        ],
+    },
+)])
+def test_python_dependencies_metadata2(package, pythoncheck):
     output, test = pythoncheck
     test.check(package)
     out = output.print_results(output.results)
