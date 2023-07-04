@@ -56,11 +56,6 @@ def process_diff_args(argv):
                                 When relative, files matching the pattern anywhere
                                 are excluded but not directory contents.""")
 
-    # print help if there is no argument or less than the 2 mandatory ones
-    if len(argv) < 2:
-        parser.print_help()
-        sys.exit(0)
-
     options = parser.parse_args(args=argv)
 
     # convert options to dict

@@ -29,6 +29,7 @@ BuildRequires:  python3-rpm
 BuildRequires:  python3-tomli
 BuildRequires:  python3-tomli-w
 BuildRequires:  python3-zstandard
+BuildRequires:  python3-packaging
 %else
 BuildRequires:  python3dist(setuptools)
 # For tests
@@ -43,6 +44,7 @@ BuildRequires:  python3dist(rpm)
 BuildRequires:  (python3dist(tomli) if python3 < 3.11)
 BuildRequires:  python3dist(tomli-w)
 BuildRequires:  python3dist(zstandard)
+BuildRequires:  python3dist(packaging)
 %endif
 
 # Rest of the test dependencies
@@ -54,9 +56,11 @@ BuildRequires:  /usr/bin/desktop-file-validate
 %if 0%{?suse_version}
 BuildRequires:  myspell-en_US
 BuildRequires:  myspell-cs_CZ
+BuildRequires:  myspell-fr_FR
 %else
 BuildRequires:  hunspell-en
 BuildRequires:  hunspell-cs
+BuildRequires:  hunspell-fr
 %endif
 
 %if 0%{?fedora} || 0%{?rhel} >= 8

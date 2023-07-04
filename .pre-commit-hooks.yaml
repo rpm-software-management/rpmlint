@@ -1,0 +1,7 @@
+- id: rpmlint
+  name: Check RPM package errors
+  description: rpmlint is a tool for checking common errors in RPM packages. 
+  entry: rpmlint
+  language: python
+  files: \.rpm
+  types: [file]

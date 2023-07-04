@@ -1,6 +1,8 @@
 from pathlib import Path
+import platform
 import re
 
+from packaging.requirements import InvalidRequirement, Requirement
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 
 # Warning messages
@@ -89,9 +91,13 @@ class PythonCheck(AbstractFilesCheck):
                 if requirement.startswith('['):
                     break
 
-                # Ignore version limitations for now
-                requirement, *_ = re.split('[<>=!~]', requirement)
-                requirements.append(requirement)
+                # Ignore broken requirements
+                try:
+                    req = Requirement(requirement)
+                except InvalidRequirement:
+                    continue
+
+                requirements.append(req)
 
         self._check_requirements(pkg, requirements)
 
@@ -112,16 +118,14 @@ class PythonCheck(AbstractFilesCheck):
                     continue
 
                 requirement = match.group('req')
-                # Ignore extra requires
-                if 'extra ==' in requirement:
-                    continue
-                # Ignore windows platform
-                if 'platform_system == "Windows"' in requirement:
+
+                # Ignore broken requirements
+                try:
+                    req = Requirement(requirement)
+                except InvalidRequirement:
                     continue
 
-                # Ignore version limitations for now
-                requirement, *_ = re.split('[ <>=!~]', requirement)
-                requirements.append(requirement)
+                requirements.append(req)
 
         self._check_requirements(pkg, requirements)
 
@@ -131,29 +135,52 @@ class PythonCheck(AbstractFilesCheck):
         declared requires.
         """
 
+        env = {
+            'python_version': '.'.join(platform.python_version_tuple()[:2]),
+            'os_name': 'posix',
+            'platform_system': 'Linux',
+        }
+
+        # Look for python version
+        for req in pkg.requires:
+            if req.name == 'python(abi)':
+                _, pyv, _ = req.version
+                env['python_version'] = pyv
+                break
+
         # Check for missing requirements
         for req in requirements:
-            self._check_require(pkg, req.strip())
+            if req.marker:
+                # Ignore extra requires
+                if 'extra' in str(req.marker):
+                    continue
+                # Ignore not env requirements
+                if not req.marker.evaluate(environment=env):
+                    continue
+
+            self._check_require(pkg, req)
 
         # Check for python requirement not needed
         self._check_leftover_requirements(pkg, requirements)
 
-    def _check_require(self, pkg, module_name):
+    def _check_require(self, pkg, requirement):
         """
         Look for the module_name in the package requirements, looking
         for common python rpm package names like python-foo,
         python3-foo, etc.
         """
 
-        if not module_name:
-            return True
+        names = self._module_names(requirement.name, extras=requirement.extras)
 
-        names = self._module_names(module_name)
         # Add pythonX-foo variants
         names += [f'python\\d*-{re.escape(i)}' for i in names]
         regex = '|'.join(names)
+        # Support complex requirements like
+        # (python310-jupyter-server >= 1.15 with python310-jupyter-server < 3)
+        version_req = r'\s*(==|<|<=|>|>=)\s*[\w.]+\s*'
+        richop_req = r'\s+(and|or|if|unless|else|with|without)\s+.*'
         try:
-            regex = re.compile(f'^({regex})$', re.IGNORECASE)
+            regex = re.compile(rf'^\(?({regex})({version_req})?({richop_req})?\)?\s*$', re.IGNORECASE)
         except re.error:
             # Bad regular expression, it could be a name with weird
             # characters
@@ -163,7 +190,7 @@ class PythonCheck(AbstractFilesCheck):
             if regex.match(req):
                 return True
 
-        self.output.add_info('W', pkg, 'python-missing-require', module_name)
+        self.output.add_info('W', pkg, 'python-missing-require', requirement.name)
         return False
 
     def _check_leftover_requirements(self, pkg, requirements):
@@ -175,8 +202,7 @@ class PythonCheck(AbstractFilesCheck):
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
         reqs = set()
         for i in requirements:
-            names = self._normalize_modname(i)
-            for n in names:
+            for n in self._module_names(i.name, extras=i.extras):
                 reqs.add(n.lower())
 
         for req in pkg.req_names:
@@ -195,48 +221,23 @@ class PythonCheck(AbstractFilesCheck):
             if not (names & reqs):
                 self.output.add_info('W', pkg, 'python-leftover-require', req)
 
-    def _normalize_modname(self, name):
-        """
-        Convert a python module requirement spec to a common python
-        package possible names, replacing extra declaration with "-".
-
-        Examples:
-         * module[extra] -> [module-extra]
-         * module[e1,e2] -> [module-e1, module-e2]
-        """
-        name = name.strip()
-        names = []
-
-        # Handle names with extras like jsonschema[format-nongpl]
-        extras = re.match(r'^(?P<module_name>.*)\[(?P<extra>.+)]$',
-                          name)
-        if extras:
-            name = extras.group('module_name')
-            extras = [i.strip() for i in extras.group('extra').split(',')]
-            names = [f'{name}-{extra}' for extra in extras]
-        else:
-            names = [name]
-
-        return names
-
-    def _module_names(self, module_name):
+    def _module_names(self, module_name, extras=None):
         """
         Return a list with possible variants of the module name,
         replacing "-", "_".
-
-        It also replaces extras declaration to dash like:
-        module[extra] -> module-extra
         """
-
-        module_names = self._normalize_modname(module_name)
 
         # Name variants changing '-' with '_'
         variants = []
-        for i in module_names:
-            variants.append(i.replace('-', '_'))
-            variants.append(i.replace('_', '-'))
+        variants.append(module_name.replace('-', '_'))
+        variants.append(module_name.replace('_', '-'))
+
+        # Look also for python-MOD-EXTRA
+        if extras:
+            for e in extras:
+                variants += self._module_names(f'{module_name}-{e}')
 
         return [
-            *module_names,
+            module_name,
             *variants,
         ]
