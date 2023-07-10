@@ -383,13 +383,66 @@ def test_python_dependencies_metadata4(package, pythoncheck):
     assert 'W: python-leftover-require' not in out
 
 
-@pytest.mark.parametrize('package', [
-    'binary/python3-icecream-missingdeps',
-    'binary/python3-flit-missingdeps',
-])
-def test_python_dependencies_missing(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
+            'content': """
+asttokens>=2.0.1
+colorama>=0.3.9
+executing>=0.3.1
+pygments>=2.2.0
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'asttokens>=2.0.1',
+            'executing>=0.3.1',
+            'pygments>=2.2.0',
+        ],
+    },
+)])
+def test_python_dependencies_missing_requires(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-missing-require' in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
+            'content': """
+Requires-Dist: flit_core >=3.8.0
+Requires-Dist: requests
+Requires-Dist: docutils
+Requires-Dist: tomli-w
+Requires-Dist: sphinx ; extra == "doc"
+Requires-Dist: sphinxcontrib_github_alt ; extra == "doc"
+Requires-Dist: pygments-github-lexers ; extra == "doc"
+Requires-Dist: testpath ; extra == "test"
+Requires-Dist: responses ; extra == "test"
+Requires-Dist: pytest>=2.7.3 ; extra == "test"
+Requires-Dist: pytest-cov ; extra == "test"
+Requires-Dist: tomli ; extra == "test"
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python3-flit-core',
+            'python3-requests',
+            'python3-tomli-w',
+        ],
+    },
+)])
+def test_python_dependencies_missing_metadata(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-missing-require' in out
 
