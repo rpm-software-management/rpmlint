@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.PythonCheck import PythonCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_mock_package, get_tested_package
+from Testing import CONFIG, get_tested_mock_package
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -447,12 +447,69 @@ def test_python_dependencies_missing_metadata(package, pythoncheck):
     assert 'W: python-missing-require' in out
 
 
-@pytest.mark.parametrize('package', [
-    'binary/python3-icecream-leftovers',
-    'binary/python3-flit-leftovers',
-])
-def test_python_dependencies_leftover(tmp_path, package, pythoncheck):
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
+            'content': """
+asttokens>=2.0.1
+colorama>=0.3.9
+executing>=0.3.1
+pygments>=2.2.0
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python3-asttokens >= 2.0.1',
+            'python3-colorama >= 0.3.9',
+            'python3-executing >= 0.3.1',
+            'python3-poetry',
+            'python3-pygments >= 2.2.0',
+        ],
+    },
+)])
+def test_python_dependencies_leftover1(package, pythoncheck):
     output, test = pythoncheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-leftover-require' in out
+
+
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
+            'content': """
+Requires-Dist: flit_core >=3.8.0
+Requires-Dist: requests
+Requires-Dist: docutils
+Requires-Dist: tomli-w
+Requires-Dist: sphinx ; extra == "doc"
+Requires-Dist: sphinxcontrib_github_alt ; extra == "doc"
+Requires-Dist: pygments-github-lexers ; extra == "doc"
+Requires-Dist: testpath ; extra == "test"
+Requires-Dist: responses ; extra == "test"
+Requires-Dist: pytest>=2.7.3 ; extra == "test"
+Requires-Dist: pytest-cov ; extra == "test"
+Requires-Dist: tomli ; extra == "test"
+""",
+            'create_dirs': True
+        },
+    },
+    real_files=True,
+    header={
+        'requires': [
+            'python3-docutils',
+            'python3-flit-core',
+            'python3-poetry',
+            'python3-requests',
+            'python3-tomli-w',
+        ],
+    },
+)])
+def test_python_dependencies_leftover2(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-leftover-require' in out
