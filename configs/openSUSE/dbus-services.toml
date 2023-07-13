@@ -138,17 +138,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd-mini"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1111254"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf",
-]
-
-
-[[FileDigestGroup]]
 package = "system-config-printer-applet"
 type = "dbus"
 note = "graphical CUPS applet for managing printer queue etc."
@@ -927,14 +916,32 @@ digester = "xml"
 hash = "382e31dfc5f6a62b811535e54c09d95b59689dff2641f0aaeee4927d5705bfca"
 
 [[FileDigestGroup]]
-package = "systemd"
+package = "udev"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1111254"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf",
-]
+note = "imported from rpmlint1 DBUSServices.WhiteList. later moved to udev"
+bugs = ["bsc#1111254", "bsc#1213292"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service"
+digester = "shell"
+hash = "1319308c6b4c72399d29ff75fe9fd8b08a0fde71297c0eccdd0badc395e7e178"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf"
+digester = "xml"
+hash = "feecf1770babd5649face9cd0eb879fef642153ca87995b35b90897413b022a4"
+
+[[FileDigestGroup]]
+package = "udev-mini"
+type = "dbus"
+note = "imported from rpmlint1 DBUSServices.WhiteList. later moved to udev"
+bugs = ["bsc#1111254", "bsc#1213292"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service"
+digester = "shell"
+hash = "1319308c6b4c72399d29ff75fe9fd8b08a0fde71297c0eccdd0badc395e7e178"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf"
+digester = "xml"
+hash = "feecf1770babd5649face9cd0eb879fef642153ca87995b35b90897413b022a4"
 
 [[FileDigestGroup]]
 package = "keepalived"
