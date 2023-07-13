@@ -1,6 +1,6 @@
 import glob
 import os
-from pathlib import Path, PurePath
+from pathlib import Path
 import platform
 import re
 import shutil
@@ -65,11 +65,7 @@ def get_tested_spec_package(name):
 def get_tested_mock_package(files=None, real_files=None, header=None):
     mockPkg = FakePkg('mockPkg')
     if files is not None:
-        for path, file in files.items():
-            if file.get('create_dirs'):
-                for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
-                    mockPkg.add_dir(str(i))
-            mockPkg.add_file_with_content(path, file.get('content'), real_files=real_files)
+        mockPkg.create_files(files, real_files)
     if header is not None:
         mockPkg.add_header(header)
     return mockPkg

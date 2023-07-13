@@ -5,7 +5,7 @@ import gzip
 import lzma
 import mmap
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import re
 from shlex import quote
 import stat
@@ -807,6 +807,15 @@ class FakePkg(AbstractPkg):
         pkgfile.path = path
         self.files[name] = pkgfile
         return pkgfile
+
+    def create_files(self, files, real_files=None):
+        """ This is a helper method to create files(real files);
+         not PkgFile objects. """
+        for path, file in files.items():
+            if file.get('create_dirs'):
+                for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
+                    self.add_dir(str(i))
+            self.add_file_with_content(path, file.get('content'), real_files=real_files)
 
     def add_dir(self, path):
         pkgdir = PkgFile(path)
