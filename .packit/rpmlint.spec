@@ -52,6 +52,8 @@ BuildRequires:  dash
 BuildRequires:  /usr/bin/appstream-util
 BuildRequires:  /usr/bin/checkbashisms
 BuildRequires:  /usr/bin/desktop-file-validate
+# required for the systemd test
+BuildRequires:  rpm_macro(_unitdir)
 
 %if 0%{?suse_version}
 BuildRequires:  myspell-en_US
