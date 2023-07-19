@@ -32,7 +32,6 @@ jobs:
               cpio gzip
               bzip2 xz
               binutils glibc glibc-32bit glibc-locale
-              python3-python-magic
               python3-rpm
               python3-base
               python3-setuptools
@@ -104,7 +103,7 @@ jobs:
         if: ${{ contains(matrix.container, 'fedora') && matrix.build-type == 'normal' }}
       - run: rm -rf $(rpm --eval '%_dbpath')
         if: matrix.build-type == 'no-optional-deps'
-      - run: pip install coveralls pyupgrade ruff
+      - run: pip install coveralls pyupgrade ruff file-magic
       - uses: actions/checkout@v3
       - run: pytest
       - run: flake8
