@@ -1077,14 +1077,18 @@ hash = "89a2ce5a4c6ebd7cb471f820a28fbd2dd418e377cb2ed0eaea1af59840c1dabd"
 
 
 [[FileDigestGroup]]
-package = "systemd-experimental"
+package = "systemd-homed"
 type = "dbus"
 note = "systemd-homed helper service for providing portable home directory containers"
-bug = "bsc#1185285"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.home1.service",
-]
+bugs = ["bsc#1185285", "bsc#1213692"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf"
+digester = "xml"
+hash = "c47cf4b450df384104c2b66dddff75098def43c17feaa3b9f455d96336530868"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.home1.service"
+digester = "shell"
+hash = "c4281ad74af8c43a963806142e2770751b153df8c1217da4edf212b334ecddcf"
 
 [[FileDigestGroup]]
 package = "systemd-experimental"
