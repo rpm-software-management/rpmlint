@@ -33,6 +33,9 @@ class BinariesCheck(AbstractCheck):
     invalid_dir_ref_regex = re.compile(r'/(home|tmp)(\W|$)')
     usr_arch_share_regex = re.compile(r'/share/.*/(?:x86|i.86|x86_64|ppc|ppc64|s390|s390x|ia64|m68k|arm|aarch64|mips|riscv)')
     python_module_regex = re.compile(r'.*\.(\w*(python|pypy)\w*(-\w+){4}|abi3)\.so')
+    # Starts with ELF or with a special qualifiers like setuid or setgid
+    # https://github.com/rpm-software-management/rpmlint/issues/1088
+    elf_regex = re.compile(r'^(\w+ )?ELF ')
 
     lto_text_like_sections = {'.preinit_array', '.init_array', '.fini_array'}
     # The following sections are part of the RX ABI and do correspond to .text, .data and .bss
@@ -651,8 +654,11 @@ class BinariesCheck(AbstractCheck):
             # binary files only from here on
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
-            if not (pkgfile.magic.startswith('ELF ') or 'current ar archive'
-                    in pkgfile.magic or is_ocaml_native or is_lua_bytecode):
+            # Look for ELF in the file magic to check if it's really a binary
+            # file
+            if not (self.elf_regex.match(pkgfile.magic) or
+                    'current ar archive' in pkgfile.magic or
+                    is_ocaml_native or is_lua_bytecode):
                 continue
 
             self.checked_files += 1
