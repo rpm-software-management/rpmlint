@@ -28,3 +28,8 @@ Some python module Requires can't be found in the python package
 requirements declaration. Please verify that all dependencies are
 really needed.
 """
+
+python-pyc-multiple-versions="""
+There are .pyc files in the rpm that are from the different Python
+interperters. Please, verify that all files are needed for this package.
+"""

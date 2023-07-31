@@ -10,7 +10,19 @@ def pythoncheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = PythonCheck(CONFIG, output)
-    return output, test
+    yield output, test
+
+
+@pytest.fixture
+def output(pythoncheck):
+    output, _test = pythoncheck
+    yield output
+
+
+@pytest.fixture
+def test(pythoncheck):
+    _output, test = pythoncheck
+    yield test
 
 
 @pytest.mark.parametrize('package', ['binary/pythoncheck-python-doc-in-package'])
@@ -130,3 +142,27 @@ def test_python_dependencies_leftover(tmp_path, package, pythoncheck):
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'W: python-leftover-require' in out
+
+
+@pytest.mark.parametrize('package', [
+    # Sources can be found at
+    # https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/different-python-pyc
+    'binary/python39-blinker-1.6.2',
+])
+def test_python_pyc_multiple_versions(tmp_path, package, output, test):
+    test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'W: python-pyc-multiple-versions expected: 310' in out
+
+
+@pytest.mark.parametrize('package', [
+    'binary/python3-flit-3.8.0',
+    'binary/python3-icecream-2.1.3',
+    'binary/python310-jupyter-server-fileid-0.9.0',
+    'binary/python310-scikit-build-0.17.2',
+    'binary/python310-jupyter-events-0.6.3',
+])
+def test_python_pyc_single_version(tmp_path, package, output, test):
+    test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'W: python-pyc-multiple-versions' not in out
