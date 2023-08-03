@@ -354,10 +354,25 @@ def parse_deps(line):
     return prcos
 
 
+def _get_magic_libmagic(path):
+    return magic.detect_from_filename(path).name
+
+
+def _get_magic_python_magic(path):
+    return magic.from_file(path)
+
+
 def get_magic(path):
+    # python-magic & libmagic compatibility code
+    # https://github.com/ahupp/python-magic/blob/master/COMPAT.md
+    detect_magic = _get_magic_python_magic
+    if not hasattr(magic, 'from_file'):
+        # libmagic python bindings
+        detect_magic = _get_magic_libmagic
+
     try:
-        return magic.detect_from_filename(path).name
-    except ValueError:
+        return detect_magic(path)
+    except (ValueError, FileNotFoundError):
         return ''
 
 
