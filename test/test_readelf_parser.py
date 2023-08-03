@@ -161,7 +161,12 @@ def test_executable_stack(binariescheck):
     with FakePkg('fake') as pkg:
         pkgfile = pkg.add_file(get_full_path('executable-stack'), '/lib64/my/a.out')
         run_elf_checks(test, pkg, pkgfile)
-        assert 'E: executable-stack /lib64/my/a.out' in output.results[0]
+        out = output.print_results(output.results)
+
+        if 'ldd-failed' in out:
+            pytest.skip("ldd failed, maybe it's a different architecture")
+
+        assert 'E: executable-stack /lib64/my/a.out' in out
 
 
 def test_readelf_failure():
