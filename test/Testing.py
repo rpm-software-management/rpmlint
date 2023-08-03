@@ -68,4 +68,5 @@ def get_tested_mock_package(files=None, real_files=None, header=None):
         mockPkg.create_files(files, real_files)
     if header is not None:
         mockPkg.add_header(header)
+    mockPkg.initiate_files_base_data()
     return mockPkg
