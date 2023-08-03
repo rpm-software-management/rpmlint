@@ -2,6 +2,7 @@ import bz2
 from collections import namedtuple
 import contextlib
 import gzip
+import hashlib
 import lzma
 import mmap
 import os
@@ -797,10 +798,13 @@ class FakePkg(AbstractPkg):
         """ This is a helper method to create files(real files);
          not PkgFile objects. """
         for path, file in files.items():
+            metadata = None
             if file.get('create_dirs'):
                 for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
                     self.add_dir(str(i))
-            self.add_file_with_content(path, file.get('content'), real_files=real_files)
+            if file.get('metadata'):
+                metadata = file.get('metadata')
+            self.add_file_with_content(path, file.get('content'), real_files=real_files, metadata=metadata)
 
     def add_dir(self, path):
         pkgdir = PkgFile(path)
@@ -809,7 +813,7 @@ class FakePkg(AbstractPkg):
         self.files[path] = pkgdir
         return pkgdir
 
-    def add_file_with_content(self, name, content, real_files=False, **flags):
+    def add_file_with_content(self, name, content, real_files=False, metadata=None, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
@@ -817,14 +821,31 @@ class FakePkg(AbstractPkg):
         path = os.path.join(self.dir_name(), name.lstrip('/'))
         pkg_file = PkgFile(name)
         pkg_file.path = path
-        for key, value in flags.items():
-            setattr(pkg_file, key, value)
+        pkg_file.mode = stat.S_IFREG | 0o0644
         self.files[name] = pkg_file
 
         if real_files:
             os.makedirs(Path(path).parent, exist_ok=True)
             with open(Path(path), 'w') as out:
                 out.write(content)
+            # Generating md5 hash values for real files:
+            pkg_file.md5 = self.md5_checksum(Path(path))
+            pkg_file.size = os.path.getsize(Path(path))
+            pkg_file.inode = os.stat(Path(path)).st_ino
+
+        if metadata:
+            for k, v in metadata.items():
+                setattr(pkg_file, k, v)
+        for key, value in flags.items():
+            setattr(pkg_file, key, value)
+
+    def initiate_files_base_data(self):
+        """ This method is called after adding metadata of each file """
+        self.config_files = [x.name for x in self.files.values() if x.is_config]
+        self.doc_files = [x.name for x in self.files.values() if x.is_doc]
+        self.ghost_files = [x.name for x in self.files.values() if x.is_ghost]
+        self.noreplace_files = [x.name for x in self.files.values() if x.is_noreplace]
+        self.missingok_files = [x.name for x in self.files.values() if x.is_missingok]
 
     def add_header(self, header):
         for k, v in header.items():
@@ -864,6 +885,13 @@ class FakePkg(AbstractPkg):
             self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
             self.dirname = self.__tmpdir.name
         return self.dirname
+
+    def md5_checksum(self, file_name):
+        md5_hash = hashlib.md5()
+        with open(file_name, 'rb') as f:
+            for byte_block in iter(lambda: f.read(4096), b''):
+                md5_hash.update(byte_block)
+        return md5_hash.hexdigest()
 
     def cleanup(self):
         if self.dirname:
