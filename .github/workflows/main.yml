@@ -81,7 +81,9 @@ jobs:
               python3-pytest-cov
               python3-pytest-xdist
               python3-flake8
+              python3-flake8-builtins
               python3-flake8-import-order
+              python3-flake8-quotes
               python3-pyxdg
               python3-tomli-w
               python3-zstandard
