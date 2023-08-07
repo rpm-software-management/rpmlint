@@ -8,6 +8,7 @@ from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 # Warning messages
 WARNS = {
     'doc': 'python-doc-in-package',
+    'sphinx': 'python-sphinx-doctrees-leftover',
 }
 
 # Error messages
@@ -32,6 +33,7 @@ ERR_PATHS = [
 # sufficiently special circumstances.
 WARN_PATHS = [
     (re.compile(f'{SITELIB_RE}/[^/]+/docs?$'), 'doc'),
+    (re.compile(r'.*/\.doctrees$'), 'sphinx'),
 ]
 
 

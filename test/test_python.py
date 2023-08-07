@@ -418,3 +418,24 @@ def test_python_pyc_single_version(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-pyc-multiple-versions' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(files=['/usr/share/doc/packages/python-blinker-doc/.doctrees']),
+    get_tested_mock_package(files=['/usr/lib/python3.11/site-packages/python-blinker/.doctrees']),
+])
+def test_python_sphinx_doctrees_leftover_warn(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-sphinx-doctrees-leftover' in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(files=['/usr/lib/python3.11/site-packages/python-blinker/doctrees.py']),
+    get_tested_mock_package(files=['/usr/share/doc/packages/python-blinker-doc/doctrees']),
+    get_tested_mock_package(files=['/usr/share/doc/packages/python-blinker-doc/.doctrees.html']),
+])
+def test_python_sphinx_doctrees_leftover_nowarn(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: python-sphinx-doctrees-leftover' not in out
