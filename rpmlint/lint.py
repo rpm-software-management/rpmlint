@@ -93,8 +93,10 @@ class Lint:
         self._maybe_print_reports()
 
         duration = time.monotonic() - start
+        error_messages = self.output.printed_messages['E']
+        warning_messages = self.output.printed_messages['W']
         msg = string_center(f'{self.packages_checked} packages and {self.specfiles_checked} specfiles checked; '
-                            f'{self.output.printed_messages["E"]} errors, {self.output.printed_messages["W"]} warnings'
+                            f'{error_messages} errors, {warning_messages} warnings'
                             f', {self.output.filtered_out} filtered, '
                             f'{self.output.score} badness; has taken {duration:.1f} s', '=')
         print(f'{quit_color}{msg}{Color.Reset}')
@@ -131,7 +133,11 @@ class Lint:
         total_checked_files = max(checked_files) if checked_files else ''
         print(f'{Color.Bold}Check time report{Color.Reset} (>{PERCENT_THRESHOLD}% & >{TIME_THRESHOLD}s):')
 
-        print(f'{Color.Bold}    {"Check":32s} {"Duration (in s)":>12} {"Fraction (in %)":>17}  Checked files{Color.Reset}')
+        check = format('Check', ':32s')
+        duration = format('Duration (in s)', ':>12')
+        fraction = format('Fraction (in %)', ':>17')
+        print(f'{Color.Bold}    {check} {duration} {fraction}  Checked files{Color.Reset}')
+
         for check, duration in sorted(self.check_duration.items(), key=operator.itemgetter(1), reverse=True):
             fraction = 100.0 * duration / total
             if fraction < PERCENT_THRESHOLD or duration < TIME_THRESHOLD:
@@ -143,7 +149,8 @@ class Lint:
                 if checked:
                     checked_files = checked
             print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
-        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')
+
+        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')       # noqa Q000
 
     def _print_cprofile(self):
         N = 30
