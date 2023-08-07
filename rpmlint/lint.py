@@ -150,8 +150,7 @@ class Lint:
                     checked_files = checked
             print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
 
-        total = format('Total', ':32s')
-        print(f'    {total} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')
+        print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')       # noqa Q000
 
     def _print_cprofile(self):
         N = 30
