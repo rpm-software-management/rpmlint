@@ -527,25 +527,43 @@ def test_python_dependencies_leftover2(package, pythoncheck):
     assert 'W: python-leftover-require' in out
 
 
-@pytest.mark.parametrize('package', [
-    # Sources can be found at
-    # https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/different-python-pyc
-    'binary/python39-blinker-1.6.2',
-])
-def test_python_pyc_multiple_versions(tmp_path, package, output, test):
-    test.check(get_tested_package(package, tmp_path))
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-310.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-310.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-310.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-310.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {'content': ''},
+    }
+)])
+def test_python_pyc_multiple_versions(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-pyc-multiple-versions expected: 310' in out
 
 
-@pytest.mark.parametrize('package', [
-    'binary/python3-flit-3.8.0',
-    'binary/python3-icecream-2.1.3',
-    'binary/python310-jupyter-server-fileid-0.9.0',
-    'binary/python310-scikit-build-0.17.2',
-    'binary/python310-jupyter-events-0.6.3',
-])
-def test_python_pyc_single_version(tmp_path, package, output, test):
-    test.check(get_tested_package(package, tmp_path))
+@pytest.mark.parametrize('package', [get_tested_mock_package(
+    files={
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {'content': ''},
+    }
+)])
+def test_python_pyc_single_version(package, pythoncheck):
+    output, test = pythoncheck
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-pyc-multiple-versions' not in out
