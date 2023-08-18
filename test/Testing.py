@@ -60,3 +60,13 @@ def get_tested_spec_package(name):
     candidates = list(get_tested_path(name).parent.glob(filename))
     assert len(candidates) == 1
     return FakePkg(candidates[0])
+
+
+def get_tested_mock_package(files=None, real_files=None, header=None):
+    mockPkg = FakePkg('mockPkg')
+    if files is not None:
+        mockPkg.create_files(files, real_files)
+    if header is not None:
+        mockPkg.add_header(header)
+    mockPkg.initiate_files_base_data()
+    return mockPkg
