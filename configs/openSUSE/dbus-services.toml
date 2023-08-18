@@ -1125,6 +1125,20 @@ nodigests = [
 [[FileDigestGroup]]
 package = "deepin-api"
 type = "dbus"
+note = "compatibility entry for the time being until the rename from bsc#1211376 comes into effect"
+bugs = ["bsc#1070943", "bsc#1214101"]
+nodigests = [
+    "/usr/share/dbus-1/system-services/com.deepin.api.Device.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.Device.conf",
+    "/usr/share/dbus-1/system-services/com.deepin.api.LocaleHelper.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.LocaleHelper.conf",
+    "/usr/share/dbus-1/system-services/com.deepin.api.SoundThemePlayer.service",
+    "/usr/share/dbus-1/system.d/com.deepin.api.SoundThemePlayer.conf"
+]
+
+[[FileDigestGroup]]
+package = "deepin-api"
+type = "dbus"
 note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
 bugs = ["bsc#1070943", "bsc#1211376"]
 [[FileDigestGroup.digests]]
