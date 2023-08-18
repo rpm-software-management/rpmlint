@@ -50,6 +50,7 @@ jobs:
               python3-tomli
               python3-tomli-w
               python3-pip
+              python3-pipx
               rpm-build
               git
         if: ${{ contains(matrix.container, 'opensuse') }}
@@ -88,6 +89,7 @@ jobs:
               python3-tomli-w
               python3-zstandard
               python3-pip
+              pipx
               rpm-build
               git
         if: ${{ contains(matrix.container, 'fedora') }}
@@ -106,17 +108,19 @@ jobs:
         if: ${{ contains(matrix.container, 'fedora') && matrix.build-type == 'normal' }}
       - run: rm -rf $(rpm --eval '%_dbpath')
         if: matrix.build-type == 'no-optional-deps'
-      - run: pip install coveralls pyupgrade ruff
+      - run: pipx install coveralls
+      - run: pipx install pyupgrade
+      - run: pipx install ruff
       - uses: actions/checkout@v3
       - run: pytest
       - run: flake8
-      - run: ruff .
-      - run: find . -name '*.py' | xargs pyupgrade --py38-plus
+      - run: /github/home/.local/bin/ruff .
+      - run: find . -name '*.py' | xargs /github/home/.local/bin/pyupgrade --py38-plus
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
       - run: python3 test/dump_stats.py profile.stats
       - name: Collect the coveralls report
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls
+        run: /github/home/.local/bin/coveralls
         if: github.event_name != 'pull_request'
