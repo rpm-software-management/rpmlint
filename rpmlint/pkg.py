@@ -814,12 +814,12 @@ class FakePkg(AbstractPkg):
          not PkgFile objects. """
         for path, file in files.items():
             metadata = None
-            if file.get('create_dirs'):
+            if file.get('create_dirs', False):
                 for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
                     self.add_dir(str(i))
             if file.get('metadata'):
                 metadata = file.get('metadata')
-            self.add_file_with_content(path, file.get('content'), real_files=real_files, metadata=metadata)
+            self.add_file_with_content(path, file.get('content', ''), real_files=real_files, metadata=metadata)
 
     def add_dir(self, path):
         pkgdir = PkgFile(path)

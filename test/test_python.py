@@ -27,14 +27,14 @@ def test(pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib/python2.7/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib/python3.10/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/docs': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/doc': {'content': ''},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/docs': {'content': ''}
+        '/usr/lib/python2.7/site-packages/python-mypackage/doc': {},
+        '/usr/lib/python2.7/site-packages/python-mypackage/docs': {},
+        '/usr/lib/python3.10/site-packages/python-mypackage/doc': {},
+        '/usr/lib/python3.10/site-packages/python-mypackage/docs': {},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/doc': {},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/docs': {},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/doc': {},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/docs': {}
     }
 )])
 def test_python_doc_in_package(package, pythoncheck):
@@ -53,14 +53,14 @@ def test_python_doc_in_package(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
-        '/usr/lib/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
-        '/usr/lib64/python2.7/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
-        '/usr/lib/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
-        '/usr/lib/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/doc/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 2},
-        '/usr/lib64/python3.10/site-packages/python-mypackage/docs/__init__.py': {'content': '', 'create_dirs': True, 'include_dirs': 1}
+        '/usr/lib/python2.7/site-packages/python-mypackage/doc/__init__.py': {'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib/python2.7/site-packages/python-mypackage/docs/__init__.py': {'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/doc/__init__.py': {'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib64/python2.7/site-packages/python-mypackage/docs/__init__.py': {'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib/python3.10/site-packages/python-mypackage/doc/__init__.py': {'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib/python3.10/site-packages/python-mypackage/docs/__init__.py': {'create_dirs': True, 'include_dirs': 1},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/doc/__init__.py': {'create_dirs': True, 'include_dirs': 2},
+        '/usr/lib64/python3.10/site-packages/python-mypackage/docs/__init__.py': {'create_dirs': True, 'include_dirs': 1}
     }
 )])
 def test_python_doc_module_in_package(package, pythoncheck):
@@ -98,14 +98,14 @@ def test_python_distutils_egg_info(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/doc': {'content': '', 'create_dirs': False},
-        '/usr/lib/python2.7/site-packages/docs': {'content': '', 'create_dirs': False},
-        '/usr/lib/python3.10/site-packages/doc': {'content': '', 'create_dirs': False},
-        '/usr/lib/python3.10/site-packages/docs': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python2.7/site-packages/doc': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python2.7/site-packages/docs': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python3.10/site-packages/doc': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python3.10/site-packages/docs': {'content': '', 'create_dirs': False}
+        '/usr/lib/python2.7/site-packages/doc': {},
+        '/usr/lib/python2.7/site-packages/docs': {},
+        '/usr/lib/python3.10/site-packages/doc': {},
+        '/usr/lib/python3.10/site-packages/docs': {},
+        '/usr/lib64/python2.7/site-packages/doc': {},
+        '/usr/lib64/python2.7/site-packages/docs': {},
+        '/usr/lib64/python3.10/site-packages/doc': {},
+        '/usr/lib64/python3.10/site-packages/docs': {}
     }
 )])
 def test_python_doc_in_site_packages(package, pythoncheck):
@@ -124,10 +124,10 @@ def test_python_doc_in_site_packages(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/src': {'content': '', 'create_dirs': False},
-        '/usr/lib/python3.10/site-packages/src': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python2.7/site-packages/src': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python3.10/site-packages/src': {'content': '', 'create_dirs': False}
+        '/usr/lib/python2.7/site-packages/src': {},
+        '/usr/lib/python3.10/site-packages/src': {},
+        '/usr/lib64/python2.7/site-packages/src': {},
+        '/usr/lib64/python3.10/site-packages/src': {}
     }
 )])
 def test_python_src_in_site_packages(package, pythoncheck):
@@ -142,14 +142,14 @@ def test_python_src_in_site_packages(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/lib/python2.7/site-packages/test': {'content': '', 'create_dirs': False},
-        '/usr/lib/python2.7/site-packages/tests': {'content': '', 'create_dirs': False},
-        '/usr/lib/python3.10/site-packages/test': {'content': '', 'create_dirs': False},
-        '/usr/lib/python3.10/site-packages/tests': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python2.7/site-packages/test': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python2.7/site-packages/tests': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python3.10/site-packages/test': {'content': '', 'create_dirs': False},
-        '/usr/lib64/python3.10/site-packages/tests': {'content': '', 'create_dirs': False}
+        '/usr/lib/python2.7/site-packages/test': {},
+        '/usr/lib/python2.7/site-packages/tests': {},
+        '/usr/lib/python3.10/site-packages/test': {},
+        '/usr/lib/python3.10/site-packages/tests': {},
+        '/usr/lib64/python2.7/site-packages/test': {},
+        '/usr/lib64/python2.7/site-packages/tests': {},
+        '/usr/lib64/python3.10/site-packages/test': {},
+        '/usr/lib64/python3.10/site-packages/tests': {}
     }
 )])
 def test_python_tests_in_site_packages(package, pythoncheck):
@@ -529,18 +529,18 @@ def test_python_dependencies_leftover2(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-310.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-310.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-310.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-310.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-310.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-310.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-310.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-310.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {},
     }
 )])
 def test_python_pyc_multiple_versions(package, pythoncheck):
@@ -552,14 +552,14 @@ def test_python_pyc_multiple_versions(package, pythoncheck):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {'content': ''},
-        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {'content': ''},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/__init__.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_saferef.cpython-39.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.opt-1.pyc': {},
+        'usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc': {},
     }
 )])
 def test_python_pyc_single_version(package, pythoncheck):
