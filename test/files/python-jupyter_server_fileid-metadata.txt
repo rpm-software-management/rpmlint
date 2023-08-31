@@ -1,0 +1,146 @@
+Metadata-Version: 2.1
+Name: jupyter_server_fileid
+Version: 0.9.0
+Project-URL: Home, https://github.com/jupyter-server/jupyter_server_fileid
+Author-email: "David L. Qiu" <david@qiu.dev>
+License: BSD 3-Clause License
+
+        Copyright (c) 2022, David L. Qiu
+        All rights reserved.
+
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+
+        1. Redistributions of source code must retain the above copyright notice, this
+           list of conditions and the following disclaimer.
+
+        2. Redistributions in binary form must reproduce the above copyright notice,
+           this list of conditions and the following disclaimer in the documentation
+           and/or other materials provided with the distribution.
+
+        3. Neither the name of the copyright holder nor the names of its
+           contributors may be used to endorse or promote products derived from
+           this software without specific prior written permission.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License-File: LICENSE
+Keywords: Extension,Jupyter
+Classifier: Framework :: Jupyter
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.7
+Requires-Dist: jupyter-events>=0.5.0
+Requires-Dist: jupyter-server<3,>=1.15
+Provides-Extra: cli
+Requires-Dist: click; extra == 'cli'
+Provides-Extra: test
+Requires-Dist: jupyter-server[test]<3,>=1.15; extra == 'test'
+Requires-Dist: pytest; extra == 'test'
+Requires-Dist: pytest-cov; extra == 'test'
+Description-Content-Type: text/markdown
+
+# jupyter_server_fileid
+
+[![Github Actions Status](https://github.com/jupyter-server/jupyter_server_fileid/workflows/Build/badge.svg)](https://github.com/jupyter-server/jupyter_server_fileid/actions/workflows/build.yml)
+
+A Jupyter Server extension providing an implementation of the File ID service.
+
+## Requirements
+
+- Jupyter Server
+
+## Install
+
+To install the extension, execute:
+
+```bash
+pip install jupyter_server_fileid
+```
+
+## Uninstall
+
+To remove the extension, execute:
+
+```bash
+pip uninstall jupyter_server_fileid
+```
+
+## Troubleshoot
+
+If you are seeing the frontend extension, but it is not working, check
+that the server extension is enabled:
+
+```bash
+jupyter server extension list
+```
+
+## Contributing
+
+### Development install
+
+```bash
+# Clone the repo to your local environment
+# Change directory to the jupyter_server_fileid directory
+# Install package in development mode - will automatically enable
+# The server extension.
+pip install -e .
+```
+
+
+You can watch the source directory and run your Jupyter Server-based application at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.  For example,
+when running JupyterLab:
+
+```bash
+jupyter lab --autoreload
+```
+
+If your extension does not depend a particular frontend, you can run the
+server directly:
+
+```bash
+jupyter server --autoreload
+```
+
+### Running Tests
+
+Install dependencies:
+
+```bash
+pip install -e ".[test]"
+```
+
+To run the python tests, use:
+
+```bash
+pytest
+
+# To test a specific file
+pytest jupyter_server_fileid/tests/test_handlers.py
+
+# To run a specific test
+pytest jupyter_server_fileid/tests/test_handlers.py -k "test_get"
+```
+
+### Development uninstall
+
+```bash
+pip uninstall jupyter_server_fileid
+```
+
+### Packaging the extension
+
+See [RELEASE](RELEASE.md)
