@@ -280,9 +280,7 @@ def test_patchable_function_entry_archive(tmp_path, package, binariescheck):
 
 
 @pytest.mark.parametrize('package', [
-    get_tested_mock_package(files={
-        '/usr/lib/systemd/system/yast-timesync.service': {'content': ''}
-    })
+    get_tested_mock_package(files=['/usr/lib/systemd/system/yast-timesync.service']),
 ])
 def test_systemd_unit_file(package, binariescheck):
     output, test = binariescheck

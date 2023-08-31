@@ -58,6 +58,10 @@ def test_python_doc_in_site_packages(package, pythoncheck):
 **`files`**:
 `files` argument takes each file's path and a dictionary as shown above `'/usr/lib/python2.7/site-packages/doc': {}` the value part is again a dictionary with file related data such as `create_dirs`, `metadata` and `include_dirs`. `metadata` is yet versatile it can assign any rpm related options or simply rpm file meta data unique to file.
 
+If the content or metadata of the files in the package is not important, it's
+possible to use just a list of paths and the files will be created with default
+empty content and default flags.
+
 
 **`real_files`**:
 Each of the above file is converted into a `PkgFile` object by default, and into real file only if `real_file` is passed with `True` parameter.
