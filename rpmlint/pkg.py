@@ -3,12 +3,14 @@ from collections import namedtuple
 import contextlib
 import gzip
 import hashlib
+import io
 import lzma
 import mmap
 import os
 from pathlib import Path, PurePath
 import re
 from shlex import quote
+import shutil
 import stat
 import subprocess
 import tempfile
@@ -809,17 +811,38 @@ class FakePkg(AbstractPkg):
         self.files[name] = pkgfile
         return pkgfile
 
+    def _mock_file(self, path, attrs, real_files=False):
+        metadata = None
+        if attrs.get('create_dirs', False):
+            for i in PurePath(path).parents[:attrs.get('include_dirs', -1)]:
+                self.add_dir(str(i))
+        metadata = attrs.get('metadata', None)
+
+        content = ''
+        if 'content-path' in attrs:
+            content = open(attrs['content-path'])
+        elif 'content' in attrs:
+            content = attrs['content']
+
+        self.add_file_with_content(path, content, real_files=real_files, metadata=metadata)
+
+        if 'content-path' in attrs:
+            content.close()
+
     def create_files(self, files, real_files=None):
-        """ This is a helper method to create files(real files);
-         not PkgFile objects. """
-        for path, file in files.items():
-            metadata = None
-            if file.get('create_dirs', False):
-                for i in PurePath(path).parents[:file.get('include_dirs', -1)]:
-                    self.add_dir(str(i))
-            if file.get('metadata'):
-                metadata = file.get('metadata')
-            self.add_file_with_content(path, file.get('content', ''), real_files=real_files, metadata=metadata)
+        """
+        This is a helper method to create files(real files); not PkgFile
+        objects.
+        """
+
+        # files can be just a list
+        if isinstance(files, list) or isinstance(files, tuple):
+            for path in files:
+                self._mock_file(path, {}, real_files)
+        # list of files with attributes and content
+        elif isinstance(files, dict):
+            for path, file in files.items():
+                self._mock_file(path, file, real_files)
 
     def add_dir(self, path):
         pkgdir = PkgFile(path)
@@ -841,8 +864,15 @@ class FakePkg(AbstractPkg):
 
         if real_files:
             os.makedirs(Path(path).parent, exist_ok=True)
+
             with open(Path(path), 'w') as out:
-                out.write(content)
+                # file like content
+                if isinstance(content, io.IOBase):
+                    shutil.copyfileobj(content, out)
+                # text content
+                else:
+                    out.write(content)
+
             # Generating md5 hash values for real files:
             pkg_file.md5 = self.md5_checksum(Path(path))
             pkg_file.size = os.path.getsize(Path(path))

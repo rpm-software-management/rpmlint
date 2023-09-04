@@ -65,6 +65,12 @@ def get_tested_spec_package(name):
 def get_tested_mock_package(files=None, real_files=None, header=None):
     mockPkg = FakePkg('mockPkg')
     if files is not None:
+        if isinstance(files, dict):
+            # full path for test files
+            for attrs in files.values():
+                if 'content-path' in attrs:
+                    attrs['content-path'] = get_tested_path(attrs['content-path'])
+
         mockPkg.create_files(files, real_files)
     if header is not None:
         mockPkg.add_header(header)
