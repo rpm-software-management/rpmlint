@@ -33,3 +33,8 @@ python-pyc-multiple-versions="""
 There are .pyc files in the rpm that are from the different Python
 interperters. Please, verify that all files are needed for this package.
 """
+
+python-sphinx-doctrees-leftover="""
+Cache Sphinx build folder found in the package ".doctrees". Please, make sure
+to do not include any build files in the final package.
+"""
