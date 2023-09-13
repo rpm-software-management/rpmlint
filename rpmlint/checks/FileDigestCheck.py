@@ -154,7 +154,8 @@ class FileDigestCheck(AbstractCheck):
         try:
             return DIGESTERS[name]
         except KeyError:
-            raise Exception(f'Invalid digester {name} encountered for path {entry["path"]}')
+            path = entry['path']
+            raise Exception(f'Invalid digester {name} encountered for path {path}')
 
     def _setup_digest_location_trie(self):
         # Build trie of Locations that are present in FileDigestLocation
@@ -409,7 +410,10 @@ class FileDigestCheck(AbstractCheck):
                     error_digests.append(digest)
             if error_digests:
                 for digest in error_digests:
-                    self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', path, f'expected {digest["algorithm"]}:{digest["hash"]}, has:{file_digest}')
+                    algorithm = digest['algorithm']
+                    hash = digest['hash']
+                    self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', path,
+                                         f'expected {algorithm}:{hash}, has:{file_digest}')
 
     def _check_ghost_exceptions(self, pkg, name):
         """ Check if a ghosted file is whilelisted
