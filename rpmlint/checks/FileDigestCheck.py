@@ -410,10 +410,10 @@ class FileDigestCheck(AbstractCheck):
                     error_digests.append(digest)
             if error_digests:
                 for digest in error_digests:
-                    algorithm = digest['algorithm']
-                    hash = digest['hash']
+                    digest_algorithm = digest['algorithm']
+                    digest_hash = digest['hash']
                     self.output.add_info('E', pkg, f'{group_type}-file-digest-mismatch', path,
-                                         f'expected {algorithm}:{hash}, has:{file_digest}')
+                                         f'expected {digest_algorithm}:{digest_hash}, has:{file_digest}')
 
     def _check_ghost_exceptions(self, pkg, name):
         """ Check if a ghosted file is whilelisted
