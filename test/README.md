@@ -9,7 +9,7 @@ In this new test suite, we will utilize a `FakePkg` class, which acts as a mock 
 The `get_tested_mock_package` function's interface is as follows:
 
 ```python
-def get_tested_mock_package(files=None, real_files=None, header=None)
+def get_tested_mock_package(files=None, header=None)
 ```
 
 For each new test, we employ the `get_tested_mock_package` function, a helper from `test/Testing.py`. This function leverages the `FakePkg` class to create a mock package named `mockPkg`.
@@ -17,10 +17,10 @@ For each new test, we employ the `get_tested_mock_package` function, a helper fr
 The current implementation of the `get_tested_mock_package` function is as follows:
 
 ```python
-def get_tested_mock_package(files=None, real_files=None, header=None):
+def get_tested_mock_package(files=None, header=None):
     mockPkg = FakePkg('mockPkg')
     if files is not None:
-        mockPkg.create_files(files, real_files)
+        mockPkg.create_files(files)
     if header is not None:
         mockPkg.add_header(header)
     mockPkg.initiate_files_base_data()
@@ -29,7 +29,6 @@ def get_tested_mock_package(files=None, real_files=None, header=None):
 
 The `get_tested_mock_package` function can accept arguments
 - `files`
-- `real_files`
 - `header`
 
 See the example test function below to get basic idea
@@ -61,10 +60,6 @@ def test_python_doc_in_site_packages(package, pythoncheck):
 If the content or metadata of the files in the package is not important, it's
 possible to use just a list of paths and the files will be created with default
 empty content and default flags.
-
-
-**`real_files`**:
-Each of the above file is converted into a `PkgFile` object by default, and into real file only if `real_file` is passed with `True` parameter.
 
 **`header`**:
 Header is dictionary object that is specific to rpm file. We can pass specific rpm file header information with this parameter. See [`test_python.py`](https://github.com/afrid18/rpmlint/blob/c7e36548742f94acc9e102dc328605fdea06329c/test/test_python.py#L183) tests for more info
