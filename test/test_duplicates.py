@@ -27,7 +27,6 @@ def duplicatescheck():
         '/var/foo': {'content': 'Foo file', 'metadata': {'mode': 33188, 'inode': 10}},
         '/var/foo2': {'content': 'Foo 2 file', 'metadata': {'mode': 33188, 'flags': 1, 'inode': 5}}
     },
-    real_files=True
 )])
 def test_duplicates1(package, duplicatescheck):
     output, test = duplicatescheck
@@ -47,7 +46,6 @@ def test_duplicates1(package, duplicatescheck):
         '/usr/share/bad-crc.zip': {'content': 'this is a zip file', 'metadata': {'mode': 33188, 'flags': 1}},
         '/usr/share/uncompressed.zip': {'content': 'this is an another zip file', 'metadata': {'mode': 33188, 'flags': 1}},
     },
-    real_files=True
 )])
 def test_duplicates_correct(package, duplicatescheck):
     output, test = duplicatescheck

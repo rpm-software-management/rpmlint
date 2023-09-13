@@ -82,7 +82,6 @@ def test_python_doc_module_in_package(package, test, output):
         '/usr/lib64/python2.7/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck'},
         '/usr/lib64/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck'},
     },
-    real_files=True
 )])
 def test_python_distutils_egg_info(package, test, output):
     test.check(package)
@@ -168,7 +167,6 @@ def test_python_tests_in_site_packages(package, test, output):
                 'create_dirs': True,
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python-flit_core',
@@ -185,7 +183,6 @@ def test_python_tests_in_site_packages(package, test, output):
                 'create_dirs': True
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python-jupyter-events',
@@ -201,7 +198,6 @@ def test_python_tests_in_site_packages(package, test, output):
                 'create_dirs': True
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python-jsonschema',
@@ -234,7 +230,6 @@ def test_python_tests_in_site_packages(package, test, output):
                 'create_dirs': True
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python-distro',
@@ -265,7 +260,6 @@ pygments>=2.2.0
             'create_dirs': True
         },
     },
-    real_files=True,
     header={
         'requires': [
             'asttokens>=2.0.1',
@@ -294,7 +288,6 @@ pygments>=2.2.0
             'create_dirs': True
         },
     },
-    real_files=True,
     header={
         'requires': [
             'asttokens>=2.0.1',
@@ -316,7 +309,6 @@ def test_python_dependencies_missing_requires(package, test, output):
             'create_dirs': True
         },
     },
-    real_files=True,
     header={
         'requires': [
             'python3-flit-core',
@@ -344,7 +336,6 @@ pygments>=2.2.0
                 'create_dirs': True
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python3-asttokens >= 2.0.1',
@@ -362,7 +353,6 @@ pygments>=2.2.0
                 'create_dirs': True
             },
         },
-        real_files=True,
         header={
             'requires': [
                 'python3-docutils',
