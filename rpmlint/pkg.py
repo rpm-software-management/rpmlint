@@ -811,7 +811,7 @@ class FakePkg(AbstractPkg):
         self.files[name] = pkgfile
         return pkgfile
 
-    def _mock_file(self, path, attrs, real_files=False):
+    def _mock_file(self, path, attrs):
         metadata = None
         if attrs.get('create_dirs', False):
             for i in PurePath(path).parents[:attrs.get('include_dirs', -1)]:
@@ -824,12 +824,12 @@ class FakePkg(AbstractPkg):
         elif 'content' in attrs:
             content = attrs['content']
 
-        self.add_file_with_content(path, content, real_files=real_files, metadata=metadata)
+        self.add_file_with_content(path, content, metadata=metadata)
 
         if 'content-path' in attrs:
             content.close()
 
-    def create_files(self, files, real_files=None):
+    def create_files(self, files):
         """
         This is a helper method to create files(real files); not PkgFile
         objects.
@@ -838,11 +838,11 @@ class FakePkg(AbstractPkg):
         # files can be just a list
         if isinstance(files, list) or isinstance(files, tuple):
             for path in files:
-                self._mock_file(path, {}, real_files)
+                self._mock_file(path, {})
         # list of files with attributes and content
         elif isinstance(files, dict):
             for path, file in files.items():
-                self._mock_file(path, file, real_files)
+                self._mock_file(path, file)
 
     def add_dir(self, path):
         pkgdir = PkgFile(path)
@@ -851,7 +851,7 @@ class FakePkg(AbstractPkg):
         self.files[path] = pkgdir
         return pkgdir
 
-    def add_file_with_content(self, name, content, real_files=False, metadata=None, **flags):
+    def add_file_with_content(self, name, content, metadata=None, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
@@ -862,21 +862,21 @@ class FakePkg(AbstractPkg):
         pkg_file.mode = stat.S_IFREG | 0o0644
         self.files[name] = pkg_file
 
-        if real_files:
-            os.makedirs(Path(path).parent, exist_ok=True)
+        # create files in filesystem
+        os.makedirs(Path(path).parent, exist_ok=True)
 
-            with open(Path(path), 'w') as out:
-                # file like content
-                if isinstance(content, io.IOBase):
-                    shutil.copyfileobj(content, out)
-                # text content
-                else:
-                    out.write(content)
+        with open(Path(path), 'w') as out:
+            # file like content
+            if isinstance(content, io.IOBase):
+                shutil.copyfileobj(content, out)
+            # text content
+            else:
+                out.write(content)
 
-            # Generating md5 hash values for real files:
-            pkg_file.md5 = self.md5_checksum(Path(path))
-            pkg_file.size = os.path.getsize(Path(path))
-            pkg_file.inode = os.stat(Path(path)).st_ino
+        # Generating md5 hash values for real files:
+        pkg_file.md5 = self.md5_checksum(Path(path))
+        pkg_file.size = os.path.getsize(Path(path))
+        pkg_file.inode = os.stat(Path(path)).st_ino
 
         if metadata:
             for k, v in metadata.items():

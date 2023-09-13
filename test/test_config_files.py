@@ -1,4 +1,5 @@
 import pytest
+from rpm import RPMFILE_CONFIG, RPMFILE_NOREPLACE
 from rpmlint.checks.ConfigFilesCheck import ConfigFilesCheck
 from rpmlint.filter import Filter
 
@@ -15,9 +16,9 @@ def configfilescheck():
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/etc/conffile1': {'content': '# Conffile1', 'metadata': {'flags': 1}},
-        '/var/conffile2': {'content': '# Conffile2', 'metadata': {'flags': 1}},
-        '/usr/share/conffile3': {'content': '# Conffile3', 'metadata': {'flags': 1}},
+        '/etc/conffile1': {'metadata': {'flags': RPMFILE_CONFIG}},
+        '/var/conffile2': {'metadata': {'flags': RPMFILE_CONFIG}},
+        '/usr/share/conffile3': {'metadata': {'flags': RPMFILE_CONFIG}},
     }
 )])
 def test_config_files1(package, configfilescheck):
@@ -30,16 +31,22 @@ def test_config_files1(package, configfilescheck):
     assert 'conffile-without-noreplace-flag /usr/share/conffile3' in out
 
 
-@pytest.mark.parametrize('package', [get_tested_mock_package(
-    files={
-        'tmp/foo/my.log': {'content': '', 'metadata': {'flags': 0}},
-        'tmp/foo2': {'content': '', 'metadata': {'flags': 0}},
-        'tmp/foo2/my.log': {'content': '', 'metadata': {'flags': 0}},
-        'etc/logrotate.d': {'content': '', 'metadata': {'flags': 0}},
-        'etc/logrotate.d/logrotate2.conf': {'content': '', 'metadata': {'flags': 0}},
-        'etc/logrotate.d/logrotate.conf': {'content': '', 'metadata': {'flags': 0}},
-    }
-)])
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        files=[
+            'tmp/foo/my.log',
+            'tmp/foo2/my.log',
+            'etc/logrotate.d/logrotate2.conf',
+            'etc/logrotate.d/logrotate.conf',
+        ]
+    ),
+    get_tested_mock_package(
+        files={
+            '/etc/conffile1': {'metadata': {'flags': RPMFILE_CONFIG & RPMFILE_NOREPLACE}},
+            '/var/conffile2': {'metadata': {'flags': RPMFILE_CONFIG & RPMFILE_NOREPLACE}},
+        }
+    )
+])
 def test_config_files_correct1(package, configfilescheck):
     output, test = configfilescheck
     test.check(package)

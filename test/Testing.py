@@ -62,7 +62,7 @@ def get_tested_spec_package(name):
     return FakePkg(candidates[0])
 
 
-def get_tested_mock_package(files=None, real_files=None, header=None):
+def get_tested_mock_package(files=None, header=None):
     mockPkg = FakePkg('mockPkg')
     if files is not None:
         if isinstance(files, dict):
@@ -71,7 +71,7 @@ def get_tested_mock_package(files=None, real_files=None, header=None):
                 if 'content-path' in attrs:
                     attrs['content-path'] = get_tested_path(attrs['content-path'])
 
-        mockPkg.create_files(files, real_files)
+        mockPkg.create_files(files)
     if header is not None:
         mockPkg.add_header(header)
     mockPkg.initiate_files_base_data()
