@@ -52,5 +52,8 @@ def test_executable_stack_package(binariescheck):
         run_elf_checks(test, FakePkg('fake'), pkgfile)
         out = output.print_results(output.results)
 
+        if 'ldd-failed' in out:
+            pytest.skip("ldd failed, maybe it's a different architecture")
+
         assert 'W: missing-mandatory-optflags a.out -fno-PIE -g -Ofast' in out
         assert 'E: forbidden-optflags a.out -frounding-math' in out

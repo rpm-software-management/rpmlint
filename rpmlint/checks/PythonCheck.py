@@ -8,6 +8,7 @@ from rpmlint.checks.AbstractCheck import AbstractFilesCheck
 # Warning messages
 WARNS = {
     'doc': 'python-doc-in-package',
+    'sphinx': 'python-sphinx-doctrees-leftover',
 }
 
 # Error messages
@@ -32,25 +33,32 @@ ERR_PATHS = [
 # sufficiently special circumstances.
 WARN_PATHS = [
     (re.compile(f'{SITELIB_RE}/[^/]+/docs?$'), 'doc'),
+    (re.compile(r'.*/\.doctrees$'), 'sphinx'),
 ]
+
+
+EGG_INFO_RE = re.compile('.*egg-info$')
+PYC_RE = re.compile(r'cpython-(\d+)')
 
 
 class PythonCheck(AbstractFilesCheck):
     def __init__(self, config, output):
         super().__init__(config, output, r'.*')
 
+    def check_binary(self, pkg):
+        self._pyc_version = None
+        super().check_binary(pkg)
+
     def check_file(self, pkg, filename):
         # egg-info format
         if filename.endswith('egg-info/requires.txt'):
-            self.check_requires_txt(pkg, filename)
+            self._check_requires_txt(pkg, filename)
         # dist-info format
         if filename.endswith('dist-info/METADATA'):
-            self.check_requires_metadata(pkg, filename)
+            self._check_requires_metadata(pkg, filename)
 
-        egg_info_re = re.compile('.*egg-info$')
-
-        if egg_info_re.match(filename):
-            self.check_egginfo(pkg, filename)
+        if EGG_INFO_RE.match(filename):
+            self._check_egginfo(pkg, filename)
 
         for path_re, key in WARN_PATHS:
             if path_re.match(filename):
@@ -66,7 +74,26 @@ class PythonCheck(AbstractFilesCheck):
             if path_re.match(filename):
                 self.output.add_info('E', pkg, ERRS[key], filename)
 
-    def check_egginfo(self, pkg, filename):
+        if filename.endswith('pyc'):
+            # Check for .pyc from different python versions in the same package
+            self._check_multiple_python_pyc(pkg, filename)
+
+    def _check_multiple_python_pyc(self, pkg, filename):
+        """
+        """
+        search = PYC_RE.search(filename)
+        if not search:
+            return
+
+        version = search.group(1)
+        if self._pyc_version is None:
+            # First pyc file, just store the version
+            self._pyc_version = version
+        elif self._pyc_version != version:
+            self.output.add_info('W', pkg, 'python-pyc-multiple-versions',
+                                 'expected:', self._pyc_version, filename)
+
+    def _check_egginfo(self, pkg, filename):
         """
         Check type of egg-info metadata and check Requires against egg-info
         metadata if applicable.
@@ -77,7 +104,7 @@ class PythonCheck(AbstractFilesCheck):
         if filepath.is_file():
             self.output.add_info('E', pkg, ERRS['egg-distutils'], filename)
 
-    def check_requires_txt(self, pkg, filename):
+    def _check_requires_txt(self, pkg, filename):
         """
         Look for all requirements defined in the python package and
         compare with the requirements defined in the rpm package
@@ -101,7 +128,7 @@ class PythonCheck(AbstractFilesCheck):
 
         self._check_requirements(pkg, requirements)
 
-    def check_requires_metadata(self, pkg, filename):
+    def _check_requires_metadata(self, pkg, filename):
         """
         Look for all requirements defined in the python package and
         compare with the requirements defined in the rpm package

@@ -2,12 +2,15 @@ import bz2
 from collections import namedtuple
 import contextlib
 import gzip
+import hashlib
+import io
 import lzma
 import mmap
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import re
 from shlex import quote
+import shutil
 import stat
 import subprocess
 import tempfile
@@ -354,10 +357,25 @@ def parse_deps(line):
     return prcos
 
 
+def _get_magic_libmagic(path):
+    return magic.detect_from_filename(path).name
+
+
+def _get_magic_python_magic(path):
+    return magic.from_file(path)
+
+
 def get_magic(path):
+    # python-magic & libmagic compatibility code
+    # https://github.com/ahupp/python-magic/blob/master/COMPAT.md
+    detect_magic = _get_magic_python_magic
+    if not hasattr(magic, 'from_file'):
+        # libmagic python bindings
+        detect_magic = _get_magic_libmagic
+
     try:
-        return magic.detect_from_filename(path).name
-    except ValueError:
+        return detect_magic(path)
+    except (ValueError, FileNotFoundError):
         return ''
 
 
@@ -366,6 +384,71 @@ def get_magic(path):
 class AbstractPkg:
     def cleanup(self):
         pass
+
+    # internal function to gather dependency info used by the above ones
+    def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
+                    prereq=None):
+        names = header[nametag]
+        flags = header[flagstag]
+        versions = header[versiontag]
+
+        if versions:
+            for loop in range(len(versions)):
+                name = byte_to_string(names[loop])
+                evr = stringToVersion(byte_to_string(versions[loop]))
+                if prereq is not None and flags[loop] & PREREQ_FLAG:
+                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
+                else:
+                    xs.append(DepInfo(name, flags[loop], evr))
+        return xs, prereq
+
+    def _gather_dep_info(self):
+        _requires = []
+        _prereq = []
+        _provides = []
+        _conflicts = []
+        _obsoletes = []
+        _recommends = []
+        _suggests = []
+        _enhances = []
+        _supplements = []
+
+        _requires, _prereq = self._gather_aux(self.header, _requires,
+                                              rpm.RPMTAG_REQUIRENAME,
+                                              rpm.RPMTAG_REQUIREFLAGS,
+                                              rpm.RPMTAG_REQUIREVERSION,
+                                              _prereq)
+        _conflits, _ = self._gather_aux(self.header, _conflicts,
+                                        rpm.RPMTAG_CONFLICTNAME,
+                                        rpm.RPMTAG_CONFLICTFLAGS,
+                                        rpm.RPMTAG_CONFLICTVERSION)
+        _provides, _ = self._gather_aux(self.header, _provides,
+                                        rpm.RPMTAG_PROVIDENAME,
+                                        rpm.RPMTAG_PROVIDEFLAGS,
+                                        rpm.RPMTAG_PROVIDEVERSION)
+        _obsoletes, _ = self._gather_aux(self.header, _obsoletes,
+                                         rpm.RPMTAG_OBSOLETENAME,
+                                         rpm.RPMTAG_OBSOLETEFLAGS,
+                                         rpm.RPMTAG_OBSOLETEVERSION)
+        _recommends, _ = self._gather_aux(self.header, _recommends,
+                                          rpm.RPMTAG_RECOMMENDNAME,
+                                          rpm.RPMTAG_RECOMMENDFLAGS,
+                                          rpm.RPMTAG_RECOMMENDVERSION)
+        _suggests, _ = self._gather_aux(self.header, _suggests,
+                                        rpm.RPMTAG_SUGGESTNAME,
+                                        rpm.RPMTAG_SUGGESTFLAGS,
+                                        rpm.RPMTAG_SUGGESTVERSION)
+        _enhances, _ = self._gather_aux(self.header, _enhances,
+                                        rpm.RPMTAG_ENHANCENAME,
+                                        rpm.RPMTAG_ENHANCEFLAGS,
+                                        rpm.RPMTAG_ENHANCEVERSION)
+        _supplements, _ = self._gather_aux(self.header, _supplements,
+                                           rpm.RPMTAG_SUPPLEMENTNAME,
+                                           rpm.RPMTAG_SUPPLEMENTFLAGS,
+                                           rpm.RPMTAG_SUPPLEMENTVERSION)
+
+        return (_requires, _prereq, _provides, _conflicts, _obsoletes, _recommends,
+                _suggests, _enhances, _supplements)
 
     def __enter__(self):
         return self
@@ -622,71 +705,6 @@ class Pkg(AbstractPkg):
                 return True
         return False
 
-    # internal function to gather dependency info used by the above ones
-    def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
-                    prereq=None):
-        names = header[nametag]
-        flags = header[flagstag]
-        versions = header[versiontag]
-
-        if versions:
-            for loop in range(len(versions)):
-                name = byte_to_string(names[loop])
-                evr = stringToVersion(byte_to_string(versions[loop]))
-                if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
-                else:
-                    xs.append(DepInfo(name, flags[loop], evr))
-        return xs, prereq
-
-    def _gather_dep_info(self):
-        _requires = []
-        _prereq = []
-        _provides = []
-        _conflicts = []
-        _obsoletes = []
-        _recommends = []
-        _suggests = []
-        _enhances = []
-        _supplements = []
-
-        _requires, _prereq = self._gather_aux(self.header, _requires,
-                                              rpm.RPMTAG_REQUIRENAME,
-                                              rpm.RPMTAG_REQUIREFLAGS,
-                                              rpm.RPMTAG_REQUIREVERSION,
-                                              _prereq)
-        _conflits, _ = self._gather_aux(self.header, _conflicts,
-                                        rpm.RPMTAG_CONFLICTNAME,
-                                        rpm.RPMTAG_CONFLICTFLAGS,
-                                        rpm.RPMTAG_CONFLICTVERSION)
-        _provides, _ = self._gather_aux(self.header, _provides,
-                                        rpm.RPMTAG_PROVIDENAME,
-                                        rpm.RPMTAG_PROVIDEFLAGS,
-                                        rpm.RPMTAG_PROVIDEVERSION)
-        _obsoletes, _ = self._gather_aux(self.header, _obsoletes,
-                                         rpm.RPMTAG_OBSOLETENAME,
-                                         rpm.RPMTAG_OBSOLETEFLAGS,
-                                         rpm.RPMTAG_OBSOLETEVERSION)
-        _recommends, _ = self._gather_aux(self.header, _recommends,
-                                          rpm.RPMTAG_RECOMMENDNAME,
-                                          rpm.RPMTAG_RECOMMENDFLAGS,
-                                          rpm.RPMTAG_RECOMMENDVERSION)
-        _suggests, _ = self._gather_aux(self.header, _suggests,
-                                        rpm.RPMTAG_SUGGESTNAME,
-                                        rpm.RPMTAG_SUGGESTFLAGS,
-                                        rpm.RPMTAG_SUGGESTVERSION)
-        _enhances, _ = self._gather_aux(self.header, _enhances,
-                                        rpm.RPMTAG_ENHANCENAME,
-                                        rpm.RPMTAG_ENHANCEFLAGS,
-                                        rpm.RPMTAG_ENHANCEVERSION)
-        _supplements, _ = self._gather_aux(self.header, _supplements,
-                                           rpm.RPMTAG_SUPPLEMENTNAME,
-                                           rpm.RPMTAG_SUPPLEMENTFLAGS,
-                                           rpm.RPMTAG_SUPPLEMENTVERSION)
-
-        return (_requires, _prereq, _provides, _conflicts, _obsoletes, _recommends,
-                _suggests, _enhances, _supplements)
-
     def scriptprog(self, which):
         """
         Get the specified script interpreter as a string.
@@ -760,26 +778,138 @@ class FakePkg(AbstractPkg):
         self.files = {}
         self.ghost_files = {}
 
+        # header is a dictionary to mock rpm metadata
+        self.header = {
+            rpm.RPMTAG_REQUIRENAME: [],
+            rpm.RPMTAG_REQUIREFLAGS: [],
+            rpm.RPMTAG_REQUIREVERSION: [],
+            rpm.RPMTAG_CONFLICTNAME: '',
+            rpm.RPMTAG_CONFLICTFLAGS: '',
+            rpm.RPMTAG_CONFLICTVERSION: '',
+            rpm.RPMTAG_PROVIDENAME: '',
+            rpm.RPMTAG_PROVIDEFLAGS: '',
+            rpm.RPMTAG_PROVIDEVERSION: '',
+            rpm.RPMTAG_OBSOLETENAME: '',
+            rpm.RPMTAG_OBSOLETEFLAGS: '',
+            rpm.RPMTAG_OBSOLETEVERSION: '',
+            rpm.RPMTAG_RECOMMENDNAME: '',
+            rpm.RPMTAG_RECOMMENDFLAGS: '',
+            rpm.RPMTAG_RECOMMENDVERSION: '',
+            rpm.RPMTAG_SUGGESTNAME: '',
+            rpm.RPMTAG_SUGGESTFLAGS: '',
+            rpm.RPMTAG_SUGGESTVERSION: '',
+            rpm.RPMTAG_ENHANCENAME: '',
+            rpm.RPMTAG_ENHANCEFLAGS: '',
+            rpm.RPMTAG_ENHANCEVERSION: '',
+            rpm.RPMTAG_SUPPLEMENTNAME: '',
+            rpm.RPMTAG_SUPPLEMENTFLAGS: '',
+            rpm.RPMTAG_SUPPLEMENTVERSION: '',
+        }
+
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
         pkgfile.path = path
         self.files[name] = pkgfile
         return pkgfile
 
-    def add_file_with_content(self, name, content, **flags):
+    def _mock_file(self, path, attrs, real_files=False):
+        metadata = None
+        if attrs.get('create_dirs', False):
+            for i in PurePath(path).parents[:attrs.get('include_dirs', -1)]:
+                self.add_dir(str(i))
+        metadata = attrs.get('metadata', None)
+
+        content = ''
+        if 'content-path' in attrs:
+            content = open(attrs['content-path'])
+        elif 'content' in attrs:
+            content = attrs['content']
+
+        self.add_file_with_content(path, content, real_files=real_files, metadata=metadata)
+
+        if 'content-path' in attrs:
+            content.close()
+
+    def create_files(self, files, real_files=None):
+        """
+        This is a helper method to create files(real files); not PkgFile
+        objects.
+        """
+
+        # files can be just a list
+        if isinstance(files, list) or isinstance(files, tuple):
+            for path in files:
+                self._mock_file(path, {}, real_files)
+        # list of files with attributes and content
+        elif isinstance(files, dict):
+            for path, file in files.items():
+                self._mock_file(path, file, real_files)
+
+    def add_dir(self, path):
+        pkgdir = PkgFile(path)
+        pkgdir.magic = 'directory'
+        pkgdir.path = path
+        self.files[path] = pkgdir
+        return pkgdir
+
+    def add_file_with_content(self, name, content, real_files=False, metadata=None, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
         """
-        basename = name.replace(os.path.sep, '_')
-        path = os.path.join(self.dir_name(), basename)
-        with open(path, 'w') as out:
-            out.write(content)
-            pkg_file = PkgFile(name)
-            pkg_file.path = path
-            for key, value in flags.items():
-                setattr(pkg_file, key, value)
-            self.files[name] = pkg_file
+        path = os.path.join(self.dir_name(), name.lstrip('/'))
+        pkg_file = PkgFile(name)
+        pkg_file.path = path
+        pkg_file.mode = stat.S_IFREG | 0o0644
+        self.files[name] = pkg_file
+
+        if real_files:
+            os.makedirs(Path(path).parent, exist_ok=True)
+
+            with open(Path(path), 'w') as out:
+                # file like content
+                if isinstance(content, io.IOBase):
+                    shutil.copyfileobj(content, out)
+                # text content
+                else:
+                    out.write(content)
+
+            # Generating md5 hash values for real files:
+            pkg_file.md5 = self.md5_checksum(Path(path))
+            pkg_file.size = os.path.getsize(Path(path))
+            pkg_file.inode = os.stat(Path(path)).st_ino
+
+        if metadata:
+            for k, v in metadata.items():
+                setattr(pkg_file, k, v)
+        for key, value in flags.items():
+            setattr(pkg_file, key, value)
+
+    def initiate_files_base_data(self):
+        """ This method is called after adding metadata of each file """
+        self.config_files = [x.name for x in self.files.values() if x.is_config]
+        self.doc_files = [x.name for x in self.files.values() if x.is_doc]
+        self.ghost_files = [x.name for x in self.files.values() if x.is_ghost]
+        self.noreplace_files = [x.name for x in self.files.values() if x.is_noreplace]
+        self.missingok_files = [x.name for x in self.files.values() if x.is_missingok]
+
+    def add_header(self, header):
+        for k, v in header.items():
+            if k == 'requires':
+                for req in v:
+                    self.header[rpm.RPMTAG_REQUIRENAME].append(req)
+                    self.header[rpm.RPMTAG_REQUIREFLAGS].append(0)
+                    self.header[rpm.RPMTAG_REQUIREVERSION].append('1.0')
+                continue
+
+            key = getattr(rpm, f'RPMTAG_{k}'.upper())
+            self.header[key] = v
+
+        (self.requires, self.prereq, self.provides, self.conflicts,
+         self.obsoletes, self.recommends, self.suggests, self.enhances,
+         self.supplements) = self._gather_dep_info()
+
+        self.req_names = [x[0] for x in self.requires + self.prereq]
 
     def add_symlink_to(self, name, target):
         """
@@ -807,6 +937,13 @@ class FakePkg(AbstractPkg):
             self.__tmpdir = tempfile.TemporaryDirectory(prefix='rpmlint.%s.' % Path(self.name).name)
             self.dirname = self.__tmpdir.name
         return self.dirname
+
+    def md5_checksum(self, file_name):
+        md5_hash = hashlib.md5()
+        with open(file_name, 'rb') as f:
+            for byte_block in iter(lambda: f.read(4096), b''):
+                md5_hash.update(byte_block)
+        return md5_hash.hexdigest()
 
     def cleanup(self):
         if self.dirname:
