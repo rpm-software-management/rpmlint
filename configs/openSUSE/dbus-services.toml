@@ -1216,13 +1216,15 @@ nodigests = [
 package = "tukitd"
 type = "dbus"
 note = "openSUSE transactional updates"
-bug = "bsc#1196149"
-nodigests = [
-	"/usr/share/dbus-1/system-services/tukitd.d-bus.service",
-]
+bugs = ["bsc#1196149", "bsc#1215216"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf"
-hash = "300ed6ebc147291c5bebe5bc09de3e4b09bdc597238212470d48d71797e0623e"
+digester = "xml"
+hash = "ad0e4ef18f2c459a4991645ad55de61b49eb119324cb625a275a75f8793c8f44"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.tukit.service"
+digester = "shell"
+hash = "32bbd0895234c5ed4d952f437cc511cb95419304b1174069a2c84efab6b771e7"
 
 [[FileDigestGroup]]
 package = "nvme-stas"
