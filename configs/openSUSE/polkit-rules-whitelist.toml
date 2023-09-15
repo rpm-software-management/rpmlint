@@ -133,3 +133,12 @@ bug = "bsc#1199767"
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/50-org.freedesktop.GeoClue2.rules"
 hash = "685e010654c36f5fbb97fe78a1b7c681ea56df87395bcad2630264267ab884d1"
+
+[[FileDigestGroup]]
+package = "gnome-branding-Aeon"
+type = "polkit"
+note = "gives members of the wheel group admin privileges"
+bug = "bsc#1215276"
+[[FileDigestGroup.digests]]
+path = "/usr/share/polkit-1/rules.d/49-aeon.rules"
+hash = "d26cd444235c36d2270a4950b24e2aefbb772d5654232338289a4f2775aebb5d"
