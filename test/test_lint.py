@@ -92,6 +92,19 @@ def test_configoutput(capsys):
     assert not err
 
 
+def test_time_report(capsys):
+    additional_options = {
+        'time_report': True,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+    assert out
+    assert 'Duration' in out
+    assert 'TOTAL' in out
+
+
 def test_explain_unknown(capsys):
     message = ['bullcrap']
     additional_options = {

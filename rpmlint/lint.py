@@ -148,9 +148,9 @@ class Lint:
         total_checked_files = max(checked_files) if checked_files else ''
         print(f'{Color.Bold}Check time report{Color.Reset} (>{PERCENT_THRESHOLD}% & >{TIME_THRESHOLD}s):')
 
-        check = format('Check', ':32s')
-        duration = format('Duration (in s)', ':>12')
-        fraction = format('Fraction (in %)', ':>17')
+        check = format('Check', '32s')
+        duration = format('Duration (in s)', '>12')
+        fraction = format('Fraction (in %)', '>17')
         print(f'{Color.Bold}    {check} {duration} {fraction}  Checked files{Color.Reset}')
 
         for check, duration in sorted(self.check_duration.items(), key=operator.itemgetter(1), reverse=True):
