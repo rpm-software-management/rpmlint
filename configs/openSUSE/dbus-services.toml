@@ -419,6 +419,16 @@ digester = "xml"
 hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 
 [[FileDigestGroup]]
+package = "sddm-qt6"
+type = "dbus"
+note = "identical to sddm"
+bugs = ["boo#897788", "bsc#1206348", "bsc#1215441"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/sddm_org.freedesktop.DisplayManager.conf"
+digester = "xml"
+hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
+
+[[FileDigestGroup]]
 package = "NetworkManager-openconnect"
 type = "dbus"
 note = "network manager plugin to integrate Cisco AnyConnect VPN"
