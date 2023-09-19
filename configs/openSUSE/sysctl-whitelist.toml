@@ -29,16 +29,6 @@ digester = "shell"
 hash = "7642699dc64ccba77154ede500b8657989cbe0e82c67753a3df8c334efa0a8f8"
 
 [[FileDigestGroup]]
-package = "microos-tools"
-type = "sysctl"
-note = "sets a basic core_pattern for /var/tmp"
-bug = "bsc#1174722"
-[[FileDigestGroup.digests]]
-path = "/usr/lib/sysctl.d/30-corefiles.conf"
-digester = "shell"
-hash = "76b113d7e9bad9585437a32fb4b28d701ca945bdbc4697018e2f29e04e00f920"
-
-[[FileDigestGroup]]
 package = "owncloud-client"
 type = "sysctl"
 note = "increases inotify max user watches"
