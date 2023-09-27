@@ -141,16 +141,28 @@ packages = [
     "kubernetes1.20-kubeadm",
     "kubernetes1.21-kubeadm",
     "kubernetes1.22-kubeadm",
-    "kubernetes1.23-kubeadm",
-    "kubernetes1.24-kubeadm",
-    "kubernetes1.25-kubeadm",
-    "kubernetes1.26-kubeadm",
-    "kubernetes1.27-kubeadm"
+    "kubernetes1.23-kubeadm"
 ]
 type = "sysctl"
-note = "enabled IPv4 forwarding system wide, same content for all kubeadm versions"
+note = "enabled IPv4 forwarding system wide, same content for all kubeadm versions <= 1.23"
 bugs = ["bsc#1174722", "bsc#1209363", "bsc#1210951"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/90-kubeadm.conf"
 digester = "shell"
 hash = "e2c2ac17097616ee184af9965776f83ad87dcf9e82ada5c8a3ea0f8371813fe8"
+
+[[FileDigestGroup]]
+packages = [
+    "kubernetes1.24-kubeadm",
+    "kubernetes1.25-kubeadm",
+    "kubernetes1.26-kubeadm",
+    "kubernetes1.27-kubeadm",
+    "kubernetes1.28-kubeadm"
+]
+type = "sysctl"
+note = "enabled IPv4 forwarding system wide, same content for all kubeadm versions >= 1.24"
+bugs = ["bsc#1174722", "bsc#1209363", "bsc#1210951", "bsc#1215542"]
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/90-kubeadm.conf"
+digester = "shell"
+hash = "43e95061f764465452c91708145e6d5948ab0e4750ed9ce98b59e1a1f223f45a"
