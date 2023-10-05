@@ -1300,3 +1300,17 @@ bug = "bsc#1206163"
 path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.Updated.conf"
 digester = "xml"
 hash = "79448ff58b92e27ed0fecfb0d496582e4df8467b015147bb30aef3189e27df57"
+
+[[FileDigestGroup]]
+package = "policycoreutils-dbus"
+type = "dbus"
+note = "management DBUS API use to manage an SELinux environment"
+bug = "bsc#1213435"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.selinux.service"
+digester = "shell"
+hash = "72e1dbaa64ae4f041b45d87c1ec65ae1f6596245171cf6bd967e4d13e4d48600"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.selinux.conf"
+digester = "xml"
+hash = "0ec37dac1d4ff66ca0ff3aec940c28ad9468e70f7376571dcaf311c58ef66927"
