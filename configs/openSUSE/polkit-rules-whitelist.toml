@@ -142,3 +142,30 @@ bug = "bsc#1215276"
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/49-aeon.rules"
 hash = "d26cd444235c36d2270a4950b24e2aefbb772d5654232338289a4f2775aebb5d"
+
+[[FileDigestGroup]]
+package = "fudo"
+type = "polkit"
+note = "allows members of a configurable group to pass the machinectl authentication"
+bug = "bsc#1215948"
+[[FileDigestGroup.digests]]
+path = "/usr/share/polkit-1/rules.d/30-fudo-machinectl-shell.rules"
+hash = "c1be55f0eba968d13b88d5d8894917241a508118cdc782cda5855da835f74851"
+
+[[FileDigestGroup]]
+package = "fudo-policy-selfauth-wheel"
+type = "polkit"
+note = "allows members of the wheel group to authenticate machinectl by entering their own password"
+bug = "bsc#1215948"
+[[FileDigestGroup.digests]]
+path = "/usr/share/polkit-1/rules.d/31-fudo-machinectl-shell-selfauth-wheel.rules"
+hash = "fe0b6c4f13620426740496c941bef82158d016b00c782f0ada8fa02f93ef9cff"
+
+[[FileDigestGroup]]
+package = "fudo-policy-noauth-wheel"
+type = "polkit"
+note = "allows members of the wheel group to authenticate machinectl without entering a password"
+bug = "bsc#1215948"
+[[FileDigestGroup.digests]]
+path = "/usr/share/polkit-1/rules.d/31-fudo-machinectl-shell-noauth-wheel.rules"
+hash = "14da7473389b5567b12a324ac291bd42cdd538186530152ce48d6c0f9877c718"
