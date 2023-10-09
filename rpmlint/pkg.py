@@ -767,6 +767,17 @@ class InstalledPkg(Pkg):
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
+    _autoheaders = [
+        'requires',
+        'conflicts',
+        'provides',
+        'obsoletes',
+        'recommends',
+        'suggests',
+        'enhances',
+        'supplements',
+    ]
+
     def __init__(self, name, is_source=False):
         self.name = str(name)
         self.arch = None
@@ -779,32 +790,13 @@ class FakePkg(AbstractPkg):
         self.ghost_files = {}
 
         # header is a dictionary to mock rpm metadata
-        self.header = {
-            rpm.RPMTAG_REQUIRENAME: [],
-            rpm.RPMTAG_REQUIREFLAGS: [],
-            rpm.RPMTAG_REQUIREVERSION: [],
-            rpm.RPMTAG_CONFLICTNAME: '',
-            rpm.RPMTAG_CONFLICTFLAGS: '',
-            rpm.RPMTAG_CONFLICTVERSION: '',
-            rpm.RPMTAG_PROVIDENAME: '',
-            rpm.RPMTAG_PROVIDEFLAGS: '',
-            rpm.RPMTAG_PROVIDEVERSION: '',
-            rpm.RPMTAG_OBSOLETENAME: '',
-            rpm.RPMTAG_OBSOLETEFLAGS: '',
-            rpm.RPMTAG_OBSOLETEVERSION: '',
-            rpm.RPMTAG_RECOMMENDNAME: '',
-            rpm.RPMTAG_RECOMMENDFLAGS: '',
-            rpm.RPMTAG_RECOMMENDVERSION: '',
-            rpm.RPMTAG_SUGGESTNAME: '',
-            rpm.RPMTAG_SUGGESTFLAGS: '',
-            rpm.RPMTAG_SUGGESTVERSION: '',
-            rpm.RPMTAG_ENHANCENAME: '',
-            rpm.RPMTAG_ENHANCEFLAGS: '',
-            rpm.RPMTAG_ENHANCEVERSION: '',
-            rpm.RPMTAG_SUPPLEMENTNAME: '',
-            rpm.RPMTAG_SUPPLEMENTFLAGS: '',
-            rpm.RPMTAG_SUPPLEMENTVERSION: '',
-        }
+        self.header = {}
+        for i in self._autoheaders:
+            # the header name wihtout the ending 's'
+            tagname = i[:-1].upper()
+            self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')] = []
+            self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')] = []
+            self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')] = []
 
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
@@ -895,11 +887,15 @@ class FakePkg(AbstractPkg):
 
     def add_header(self, header):
         for k, v in header.items():
-            if k == 'requires':
-                for req in v:
-                    self.header[rpm.RPMTAG_REQUIRENAME].append(req)
-                    self.header[rpm.RPMTAG_REQUIREFLAGS].append(0)
-                    self.header[rpm.RPMTAG_REQUIREVERSION].append('1.0')
+            if k in self._autoheaders:
+                # the header name wihtout the ending 's'
+                tagname = k[:-1].upper()
+                for i in v:
+                    name, flags, version = parse_deps(i)[0]
+                    version = f'{version[1]}-{version[2]}'
+                    self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
+                    self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
+                    self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)
                 continue
 
             key = getattr(rpm, f'RPMTAG_{k}'.upper())
