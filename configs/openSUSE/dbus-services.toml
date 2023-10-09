@@ -686,16 +686,6 @@ nodigests = [
 package = "sysprof"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#996111"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.gnome.Sysprof2.service",
-    "/usr/share/dbus-1/system.d/org.gnome.Sysprof2.conf"
-]
-
-[[FileDigestGroup]]
-package = "sysprof"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1151418"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.gnome.Sysprof3.conf",
