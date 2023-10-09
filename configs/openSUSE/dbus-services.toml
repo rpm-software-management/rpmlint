@@ -655,12 +655,16 @@ nodigests = [
 [[FileDigestGroup]]
 package = "thermald"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#954771"
-nodigests = [
-    "/etc/dbus-1/system.d/org.freedesktop.thermald.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.thermald.service",
-]
+note = "Daemon to control thermal settings. Not fit for unprivileges API access!"
+bugs = ["bsc#954771", "bsc#1215873"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.thermald.service"
+digester = "shell"
+hash = "0400fd4be2dc9607e29b51c257b867bea932d461e78f84fc2986637dee6fba87"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.thermald.conf"
+digester = "xml"
+hash = "ee724388f3ea73402b1ceb753d77a19636cf14b74c2a79bf5581ae4067aa49b5"
 
 [[FileDigestGroup]]
 package = "iio-sensor-proxy"
