@@ -26,7 +26,7 @@ class Lint:
         self.options = options
         self.packages_checked = 0
         self.specfiles_checked = 0
-        self.check_duration = defaultdict(lambda: 0)
+        self.check_duration = defaultdict(int)
         if options['config']:
             self.config = Config(options['config'])
         else:
