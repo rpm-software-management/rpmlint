@@ -817,7 +817,10 @@ class FakePkg(AbstractPkg):
         elif 'content' in attrs:
             content = attrs['content']
 
-        self.add_file_with_content(path, content, metadata=metadata)
+        if 'linkto' in attrs:
+            self.add_symlink_to(path, attrs['linkto'])
+        else:
+            self.add_file_with_content(path, content, metadata=metadata)
         self.header[rpm.RPMTAG_FILENAMES].append(path)
 
         if 'content-path' in attrs:
