@@ -796,6 +796,7 @@ class FakePkg(AbstractPkg):
             self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')] = []
             self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')] = []
             self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')] = []
+        self.header[rpm.RPMTAG_FILENAMES] = []
 
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
@@ -817,6 +818,7 @@ class FakePkg(AbstractPkg):
             content = attrs['content']
 
         self.add_file_with_content(path, content, metadata=metadata)
+        self.header[rpm.RPMTAG_FILENAMES].append(path)
 
         if 'content-path' in attrs:
             content.close()
