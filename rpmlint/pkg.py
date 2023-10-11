@@ -857,6 +857,8 @@ class FakePkg(AbstractPkg):
         pkg_file = PkgFile(name)
         pkg_file.path = path
         pkg_file.mode = stat.S_IFREG | 0o0644
+        pkg_file.user = 'root'
+        pkg_file.group = 'root'
         self.files[name] = pkg_file
 
         # create files in filesystem
@@ -920,6 +922,8 @@ class FakePkg(AbstractPkg):
         pkg_file = PkgFile(name)
         pkg_file.mode = stat.S_IFLNK
         pkg_file.linkto = target
+        pkg_file.user = 'root'
+        pkg_file.group = 'root'
         self.files[name] = pkg_file
 
     def readlink(self, pkgfile):
