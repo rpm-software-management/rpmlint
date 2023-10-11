@@ -450,6 +450,22 @@ class AbstractPkg:
         return (_requires, _prereq, _provides, _conflicts, _obsoletes, _recommends,
                 _suggests, _enhances, _supplements)
 
+    def scriptprog(self, which):
+        """
+        Get the specified script interpreter as a string.
+        Depending on rpm-python version, the string may or may not include
+        interpreter arguments, if any.
+        """
+        if which is None:
+            return ''
+        prog = self[which]
+        if prog is None:
+            prog = ''
+        elif isinstance(prog, (list, tuple)):
+            # http://rpm.org/ticket/847#comment:2
+            prog = ''.join(prog)
+        return prog
+
     def __enter__(self):
         return self
 
@@ -704,22 +720,6 @@ class Pkg(AbstractPkg):
                 return True
         return False
 
-    def scriptprog(self, which):
-        """
-        Get the specified script interpreter as a string.
-        Depending on rpm-python version, the string may or may not include
-        interpreter arguments, if any.
-        """
-        if which is None:
-            return ''
-        prog = self[which]
-        if prog is None:
-            prog = ''
-        elif isinstance(prog, (list, tuple)):
-            # http://rpm.org/ticket/847#comment:2
-            prog = ''.join(prog)
-        return prog
-
 
 def get_installed_pkgs(name):
     """Get list of installed package objects by name."""
@@ -937,3 +937,7 @@ class FakePkg(AbstractPkg):
     def cleanup(self):
         if self.dirname:
             self.__tmpdir.cleanup()
+
+    # access the tags like an array
+    def __getitem__(self, key):
+        return self.header.get(key, None)
