@@ -125,6 +125,27 @@ def test_explain_known(capsys):
     assert not err
 
 
+@pytest.mark.parametrize('configs', [
+    # Message defined in configs/Fedora/warn-on-functions.toml
+    (Path('configs/Fedora/warn-on-functions.toml'), False),
+    (Path('configs/Fedora/scoring.toml'), True),
+])
+def test_explain_known_warn_on_function(capsys, configs):
+    extraconfig, unknown = configs
+    message = ['crypto-policy-non-compliance-openssl']
+    additional_options = {
+        'explain': message,
+        'config': [extraconfig],
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, err = capsys.readouterr()
+
+    assert ('Unknown message' in out) == unknown
+    assert not err
+
+
 def test_explain_with_unknown(capsys):
     message = ['infopage-not-compressed', 'blablablabla']
     additional_options = {

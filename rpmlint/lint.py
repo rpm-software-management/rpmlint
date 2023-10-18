@@ -305,7 +305,14 @@ class Lint:
         for message in messages:
             explanation = self.output.get_description(message, config)
             if not explanation:
+                # check if it's a WarnOnFunction warning configuration
+                forbidden_functions = config.configuration['WarnOnFunction']
+                if message in forbidden_functions:
+                    explanation = forbidden_functions[message].get('description')
+
+            if not explanation:
                 explanation = 'Unknown message, please report a bug if the description should be present.\n\n'
+
             print(f'{message}:\n{explanation}')
 
     def load_checks(self):
