@@ -1,3 +1,7 @@
+files-duplicate="""
+Your package contains duplicated files that are not hard- or symlinks.
+You should use the %fdupes macro to link the files to one.
+"""
 files-duplicated-waste="""
 Your package contains duplicated files that are not hard- or symlinks.
 You should use the %fdupes macro to link the files to one.
