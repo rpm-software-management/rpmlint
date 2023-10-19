@@ -862,6 +862,35 @@ class FilesCheck(AbstractCheck):
                                          'symlink-contains-up-and-down-segments',
                                          fname, link)
 
+    def _check_file_link_bindir_shebang(self, pkg, fname, pkgfile):
+        basedir = Path(fname).parent
+        linkto = str((basedir / Path(pkgfile.linkto)).resolve())
+        # Link to a file not in the package, so ignore
+        if linkto not in pkg.files:
+            return
+
+        realbin = pkg.files[linkto]
+        # Link to something in bindir is okay
+        if bin_regex.search(realbin.name):
+            return
+        if not stat.S_ISREG(realbin.mode):
+            return
+
+        file_chunk, file_istext = self.peek(realbin.path, pkg)
+        file_interpreter, _file_interpreter_args = script_interpreter(file_chunk)
+        # Not a script with shebang, so ignore
+        if not file_interpreter:
+            return
+
+        # If the shebang interpreter is a dependency, it's okay
+        deps = [x[0] for x in pkg.requires]
+        if file_interpreter in deps:
+            return
+
+        self.output.add_info('W', pkg, 'symlink-to-binary-with-shebang', fname,
+                             f'is a link to a script ({realbin.name}) but missing'
+                             f' requires for {file_interpreter}')
+
     def _check_file_link(self, pkg, fname, pkgfile):
         if not stat.S_ISLNK(pkgfile.mode):
             return
@@ -871,6 +900,7 @@ class FilesCheck(AbstractCheck):
         self._check_file_link_bindir_exes(pkg, fname)
         self._check_file_link_absolute(pkg, fname, pkgfile)
         self._check_file_link_relative(pkg, fname, pkgfile)
+        self._check_file_link_bindir_shebang(pkg, fname, pkgfile)
 
     def _check_file_dir(self, pkg, fname, pkgfile):
         if not stat.S_ISDIR(pkgfile.mode):

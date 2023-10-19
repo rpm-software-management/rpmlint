@@ -403,3 +403,9 @@ manual-page-in-subfolder="""
 Manual page should not be placed in a subfolder of a manual section
 directory.
 """
+
+symlink-to-binary-with-shebang="""
+A file in /usr/bin is a link to a script in a different place with a shebang.
+rpm won't be able to inject the needed interpreter as dependency, so it should
+be done manually.
+"""
