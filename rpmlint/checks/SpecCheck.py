@@ -18,7 +18,7 @@ def re_tag_compile(tag):
 
 
 patch_regex = re_tag_compile(r'Patch(\d*)')
-applied_patch_regex = re.compile(r'^%patch(\d*)')
+applied_patch_regex = re.compile(r'^%patch\s*(\d*)')
 applied_patch_p_regex = re.compile(r'\s-P\s*(\d+)\b')
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
 applied_patch_i_regex = re.compile(r'(?:%\{?__)?patch\}?.*?\s+(?:<|-i)\s+%\{PATCH(\d+)\}')
