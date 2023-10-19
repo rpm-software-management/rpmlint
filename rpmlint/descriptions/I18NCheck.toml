@@ -2,3 +2,15 @@
 If /foo/bar is not tagged %lang(XX) whereas /foo is, the package won't be
 installable if XX is not in %_install_langs.
 """
+
+"invalid-lc-messages-dir"="""
+The package contains a languages file for a language code that's not recognized
+by rpmlint, in a path like /usr/share/locale/LANGCODE/LC_MESSAGES/FILE.mo.
+please report a bug if the LANGCODE is correct.
+"""
+
+"invalid-locale-man-dir"="""
+The package contains a man page file for a language code that's not recognized
+by rpmlint, in a path like /usr/share/man/LANGCODE/man1/FILE.1.gz.
+please report a bug if the LANGCODE is correct.
+"""
