@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rpmlint"
-version = "2.4.0"
+version = "2.5.0"
 description = "Check for common errors in RPM packages"
 license = {text = "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)"}
 authors = [
@@ -75,7 +75,7 @@ include-package-data = true
 
 [tool.setuptools.package-data]
 rpmlint = ["configdefaults.toml"]
-"rpmlint.descriptions" = ["*.toml"] 
+"rpmlint.descriptions" = ["*.toml"]
 
 [tool.ruff]
 

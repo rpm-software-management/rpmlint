@@ -14,6 +14,7 @@ from urllib.request import urlopen
 iso_3166_1_url = os.environ.get('ISO_3166_1_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_3166-1.json')
 iso_639_3_url = os.environ.get('ISO_639_3_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_639-3.json')
 iso_639_2_url = os.environ.get('ISO_639_2_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_639-2.json')
+iso_15924_url = os.environ.get('ISO_15924_URL', 'https://salsa.debian.org/iso-codes-team/iso-codes/raw/main/data/iso_15924.json')
 
 langs = set()
 countries = set()
@@ -36,6 +37,11 @@ with urlopen(iso_639_2_url) as f:
         entry_code = entry.get('alpha_2') or entry['alpha_3']
         if entry_code not in langs:
             langs.add(entry_code)
+# ISO 15924, Codes for the representation of names of scripts
+with urlopen(iso_15924_url) as f:
+    data = json.load(codecs.getreader('utf-8')(f))
+    for entry in data['15924']:
+        countries.add(entry['alpha_4'])
 
 print(f'# Generated with {sys.argv[0]}')
 print('')

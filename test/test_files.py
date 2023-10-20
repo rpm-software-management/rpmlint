@@ -1,3 +1,5 @@
+import stat
+
 import pytest
 from rpmlint.checks.FilesCheck import FilesCheck
 from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
@@ -5,7 +7,7 @@ from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
 from rpmlint.checks.FilesCheck import script_interpreter as se
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package, get_tested_path
+from Testing import CONFIG, get_tested_mock_package, get_tested_package, get_tested_path
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,7 +15,19 @@ def filescheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = FilesCheck(CONFIG, output)
-    return output, test
+    yield output, test
+
+
+@pytest.fixture
+def output(filescheck):
+    output, _test = filescheck
+    yield output
+
+
+@pytest.fixture
+def test(filescheck):
+    _output, test = filescheck
+    yield test
 
 
 def test_pep3147():
@@ -244,3 +258,45 @@ def test_manual_pages(tmp_path, package, filescheck):
     assert 'W: manpage-not-compressed bz2 /usr/share/man/man1/test.1.zst' in out
     assert 'E: bad-manual-page-folder /usr/share/man/man0p/foo.3.gz expected folder: man3' in out
     assert 'bad-manual-page-folder /usr/share/man/man3/some.3pm.gz' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        files={
+            '/usr/share/package/bin.py': {
+                'content': '#!/usr/bin/python3\nprint("python required")',
+                'metadata': {'mode': 0o755 | stat.S_IFREG},
+            },
+            '/usr/bin/testlink': {
+                'linkto': '../share/package/bin.py',
+            },
+        },
+        header={},
+    ),
+])
+def test_shebang(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: symlink-to-binary-with-shebang /usr/bin/testlink' in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        files={
+            '/usr/share/package/bin.py': {
+                'content': '#!/usr/bin/python3\nprint("python required")',
+                'metadata': {'mode': 0o755 | stat.S_IFREG},
+            },
+            '/usr/bin/testlink': {
+                'linkto': '../share/package/bin.py',
+            },
+        },
+        header={
+            'requires': ['/usr/bin/python3'],
+        },
+    ),
+])
+def test_shebang_ok(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: symlink-to-binary-with-shebang /usr/bin/testlink' not in out
