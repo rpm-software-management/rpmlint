@@ -86,3 +86,12 @@ bug = "bsc#1204314"
 path = "/usr/lib/zypp/plugins/commit/zyppnotify"
 digester = "shell"
 hash = "58a04efaa1ca353f298b61be48dbb7a6512837733ef42468fcb5cb07cd82db92"
+
+[[FileDigestGroup]]
+package = "zypp-boot-plugin"
+type = "zypperplugin"
+note = "a helper for ALP to determine when a soft/hard reboot is required due to updates"
+bug = "bsc#1215988"
+nodigests = [
+    "/usr/lib/zypp/plugins/commit/boot-plugin",
+]
