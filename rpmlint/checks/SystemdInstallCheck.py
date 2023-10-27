@@ -30,20 +30,26 @@ class SystemdInstallCheck(AbstractCheck):
                 PREUN_PATTERN = re.compile(r'systemctl --no-reload disable .*' + escaped_basename)
                 POSTUN_PATTERN = re.compile(r'(systemctl try-restart .*|# Restart of .*)' + escaped_basename)
 
+                # systemd macro expansion using systemd-update-helper
+                PRE_HELPER_PATTERN = re.compile(r'systemd-update-helper mark-install-system-units .*' + escaped_basename)
+                POST_HELPER_PATTERN = re.compile(r'systemd-update-helper install-system-units .*' + escaped_basename)
+                PREUN_HELPER_PATTERN = re.compile(r'systemd-update-helper remove-system-units .*' + escaped_basename)
+                POSTUN_HELPER_PATTERN = re.compile(r'systemd-update-helper mark-restart-system-units .*' + escaped_basename)
+
                 for line in pre.split('\n'):
-                    if PRE_POST_PATTERN.search(line):
+                    if PRE_POST_PATTERN.search(line) or PRE_HELPER_PATTERN.search(line):
                         processed['pre'] = True
                         break
                 for line in post.split('\n'):
-                    if PRE_POST_PATTERN.search(line):
+                    if PRE_POST_PATTERN.search(line) or POST_HELPER_PATTERN.search(line):
                         processed['post'] = True
                         break
                 for line in preun.split('\n'):
-                    if PREUN_PATTERN.search(line):
+                    if PREUN_PATTERN.search(line) or PREUN_HELPER_PATTERN.search(line):
                         processed['preun'] = True
                         break
                 for line in postun.split('\n'):
-                    if POSTUN_PATTERN.search(line):
+                    if POSTUN_PATTERN.search(line) or POSTUN_HELPER_PATTERN.search(line):
                         processed['postun'] = True
                         break
 
