@@ -26,16 +26,17 @@ class SystemdInstallCheck(AbstractCheck):
                 processed = {'pre': False, 'post': False, 'preun': False, 'postun': False}
 
                 escaped_basename = re.escape(Path(fname).name)
-                PRE_POST_PATTERN = re.compile(r'for service in .*' + escaped_basename)
-                PREUN_PATTERN = re.compile(r'systemctl --no-reload disable .*' + escaped_basename)
-                POSTUN_PATTERN = re.compile(r'(systemctl try-restart .*|# Restart of .*)' + escaped_basename)
+                PRE_PATTERN = re.compile(r'systemd-update-helper mark-install-system-units .*' + escaped_basename)
+                POST_PATTERN = re.compile(r'systemd-update-helper install-system-units .*' + escaped_basename)
+                PREUN_PATTERN = re.compile(r'systemd-update-helper remove-system-units .*' + escaped_basename)
+                POSTUN_PATTERN = re.compile(r'systemd-update-helper mark-restart-system-units .*' + escaped_basename)
 
                 for line in pre.split('\n'):
-                    if PRE_POST_PATTERN.search(line):
+                    if PRE_PATTERN.search(line):
                         processed['pre'] = True
                         break
                 for line in post.split('\n'):
-                    if PRE_POST_PATTERN.search(line):
+                    if POST_PATTERN.search(line):
                         processed['post'] = True
                         break
                 for line in preun.split('\n'):
