@@ -56,15 +56,6 @@ path = "/etc/cron.daily/patch2mail"
 hash = "2db3aaa7addba83e60e24fdb868dd6f353bfb76b005fd2a2fdaf079fb54fe597"
 
 [[FileDigestGroup]]
-package = "tmpwatch"
-type = "cron"
-note = "removes outdated file in /tmp and some other directories"
-bug = "bsc#1150557"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/tmpwatch"
-hash = "b2e7cb31833f7737215b2bb44d9e8ab42f5b0787ca613b176a490248ad035adb"
-
-[[FileDigestGroup]]
 package = "nextcloud"
 type = "cron"
 note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
@@ -118,24 +109,6 @@ bug = "bsc#1174464"
 path = "/etc/cron.daily/opa-cablehealth"
 algorithm = "skip"
 hash = ""
-
-[[FileDigestGroup]]
-package = "sarg"
-type = "cron"
-note = "builds statistics based on Squid logfile metadata. include sarg-reports which is SUSE specific and important for privilege dropping."
-bug = "bsc#1150554"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/suse.de-sarg"
-hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.monthly/suse.de-sarg"
-hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.weekly/suse.de-sarg"
-hash = "d536dc68e198189149048a907ea6d56a7ee9fc732ae8fec5a4072ad06640e359"
-[[FileDigestGroup.digests]]
-path = "/usr/sbin/sarg-reports"
-hash = "00ad25400bdc2031cd09f9b8f9e56c448c93b6b89a702d36dce6a385d79e637c"
 
 [[FileDigestGroup]]
 package = "ppc64-diag"

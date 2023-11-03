@@ -404,7 +404,6 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1146353"
 nodigests = [
-    "*/security/pam_oslogin_admin.so",
     "*/security/pam_oslogin_login.so",
 ]
 
