@@ -56,15 +56,6 @@ path = "/etc/cron.daily/patch2mail"
 hash = "2db3aaa7addba83e60e24fdb868dd6f353bfb76b005fd2a2fdaf079fb54fe597"
 
 [[FileDigestGroup]]
-package = "tmpwatch"
-type = "cron"
-note = "removes outdated file in /tmp and some other directories"
-bug = "bsc#1150557"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/tmpwatch"
-hash = "b2e7cb31833f7737215b2bb44d9e8ab42f5b0787ca613b176a490248ad035adb"
-
-[[FileDigestGroup]]
 package = "nextcloud"
 type = "cron"
 note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
