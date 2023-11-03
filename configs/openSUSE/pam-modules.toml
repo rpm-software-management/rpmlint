@@ -525,3 +525,12 @@ bug = "bsc#1209963"
 nodigests = [
     "*/security/pam_wtmpdb.so",
 ]
+
+[[FileDigestGroup]]
+package = "pam-himmelblau"
+type = "pam"
+note = "Based on kanidm's PAM module this here allows to authenticate against MS Azure Cloud AD"
+bug = "bsc#1215355"
+nodigests = [
+    "*/security/pam_himmelblau.so",
+]
