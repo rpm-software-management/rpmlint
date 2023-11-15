@@ -36,16 +36,22 @@ path = "/usr/share/polkit-1/rules.d/50-default.rules"
 hash = "3b5781af8a450c5184c7a2d5408f4af7d3c65f23548ee0962ad0eabb70072c32"
 
 [[FileDigestGroup]]
-package = "sudo"
+package = "sudo-policy-sudo-auth-self"
 type = "polkit"
-note = "see also https://build.opensuse.org/request/show/1114990"
+note = "self auth as admin"
 bug = "bsc#1215652"
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/51-sudo.rules"
-hash = "f771f054dff80233218bb658419bed786dfc30ca35ea0d3cd1ed4855be8ae4f"
+hash = "f771f054dff80233218bb658419bed786dfc30ca35ea0d3cd1ed4855be8ae4fd"
+
+[[FileDigestGroup]]
+package = "sudo-policy-wheel-auth-self"
+type = "polkit"
+note = "self auth as admin"
+bug = "bsc#1215652"
 [[FileDigestGroup.digests]]
-path = "usr/share/polkit-1/rules.d/51-wheel.rules"
-hash = "6fa951c8cb81606a10bd82e6ef8e260e98cc84e68e9a49310a8a670889e31b4"
+path = "/usr/share/polkit-1/rules.d/51-wheel.rules"
+hash = "6fa951c8cb81606a10bd82e6ef8e260e98cc84e68e9a49310a8a670889e31b4d"
 
 
 [[FileDigestGroup]]
