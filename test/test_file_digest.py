@@ -249,6 +249,46 @@ def test_shell_digest_filter():
         assert len(output.results) == 1
 
 
+def test_shell_digest_filter_shebang():
+    with open(get_tested_path('data/shell_digest_shebang.py')) as f:
+        python_script = f.read()
+
+    output, test = get_digestcheck('digests_filtered.config')
+    with FakePkg('shellpkg') as pkg:
+        pkg.add_file_with_content('/shell/test.py', python_script)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # These shebangs should yield the same hash
+    equivalent_shebangs = [
+        "#!/usr/bin/python3",
+        "#!/usr/bin/python3.11",
+    ]
+    # These should yield a different hash
+    different_shebangs = [
+        "#!/usr/bin/python3 -v",
+        "#!/usr/bin/python3.11 -v",
+        "#!/usr/bin/python3.z"
+    ]
+
+    for shebang in equivalent_shebangs:
+        output, test = get_digestcheck('digests_filtered.config')
+        with FakePkg('shellpkg') as pkg:
+            changed_script = f"{shebang}\n" + \
+                    "\n".join(python_script.splitlines()[1:])
+            pkg.add_file_with_content('/shell/test.py', changed_script)
+            test.check(pkg)
+            assert len(output.results) == 0
+
+    for shebang in different_shebangs:
+        output, test = get_digestcheck('digests_filtered.config')
+        with FakePkg('shellpkg') as pkg:
+            changed_script = f"{shebang}\n" + \
+                    "\n".join(python_script.splitlines()[1:])
+            pkg.add_file_with_content('/shell/test.py', changed_script)
+            test.check(pkg)
+            assert len(output.results) == 1
+
 def test_xml_digest_filter():
     with open(get_tested_path('data/xml_digest.xml')) as f:
         xml_data = f.read()

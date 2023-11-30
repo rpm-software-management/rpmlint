@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 import stat
 import xml.etree.ElementTree as ET
+import re
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -74,8 +75,11 @@ class ShellDigester(DefaultDigester):
                     # skip empty lines
                     continue
                 elif line_nr == 0 and stripped.startswith('#!'):
-                    # keep shebang lines instact
-                    pass
+                    # keep shebang lines mostly intact,
+                    # but ignore minor interpreter versions
+                    shebang = re.sub(r'\bpython3\.\d+\b', 'python3', line)
+                    yield(shebang.encode())
+                    continue
                 elif stripped.startswith('#'):
                     # skip comments
                     # NOTE: we don't strip trailing comments like in
