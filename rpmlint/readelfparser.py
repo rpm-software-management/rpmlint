@@ -285,7 +285,7 @@ class ElfSymbolTableInfo:
 
     def parse(self):
         try:
-            r = subprocess.run(['readelf', '-W', '-s', self.path] + self.extra_flags, encoding='utf8',
+            r = subprocess.run(['readelf', '-Ui', '-W', '-s', self.path] + self.extra_flags, encoding='utf8',
                                capture_output=True, env=ENGLISH_ENVIROMENT)
             if r.returncode != 0:
                 self.parsing_failed_reason = r.stderr
