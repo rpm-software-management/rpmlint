@@ -2,6 +2,7 @@ import contextlib
 from fnmatch import fnmatch
 import hashlib
 from pathlib import Path
+import re
 import stat
 import xml.etree.ElementTree as ET
 
@@ -74,8 +75,9 @@ class ShellDigester(DefaultDigester):
                     # skip empty lines
                     continue
                 elif line_nr == 0 and stripped.startswith('#!'):
-                    # keep shebang lines instact
-                    pass
+                    # keep shebang lines mostly intact,
+                    # but ignore minor interpreter versions
+                    line = re.sub(r'\bpython3\.\d+\b', 'python3', line)
                 elif stripped.startswith('#'):
                     # skip comments
                     # NOTE: we don't strip trailing comments like in
