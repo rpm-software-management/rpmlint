@@ -35,18 +35,6 @@ path = "/etc/cron.hourly/0anacron"
 hash = "6e8a152a16e84ddc10e8ab1c2ed2bad28adbfc3b0b1ced62518c4ab0ada87220"
 
 [[FileDigestGroup]]
-package = "logdigest"
-type = "cron"
-note = "scours through log files to find 'interesting' information and mails it to root"
-bug = "bsc#1150546"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/logdigest"
-hash = "1dcd29ceaa35914c126bf76b0b00b955de332744636573dc2b907c1c542f81c4"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.d/logdigest-all-ignores-autogeneration"
-hash = "052d8f93980ade99937c2a4b972d5cf5a77367c9af6c7b02f0e05e8ca5b06797"
-
-[[FileDigestGroup]]
 package = "patch2mail"
 type = "cron"
 note = "looks up pending zypper patches and sens them out by mail"
