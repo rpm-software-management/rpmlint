@@ -71,34 +71,6 @@ path = "/etc/cron.d/matomo-archive"
 hash = "b55bb543d9e890522aaabd016e8e8c80e3d0b6529f10da3ea264348e375eaf82"
 
 [[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "fibre channel management software, this cron job monitors cable health using a complex bash script and C programs"
-bug = "bsc#1162255"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-hash = "7e837d9ba6f1361d63bdb5e716e1f5ce9ac774f22fa79ef32d51a9e0c925c11b"
-
-[[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "just a version string changed in the script"
-bug = "bsc#1172859"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-hash = "56fda31f1bfbda32d628250ed17a72ef04823b120ad1449045b380b9983d86e8"
-
-[[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "finally a wildcard whitelisting since there's a version string encoded in the script"
-bug = "bsc#1174464"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-algorithm = "skip"
-hash = ""
-
-[[FileDigestGroup]]
 package = "ppc64-diag"
 type = "cron"
 note = "ppc specific hardware health diagnosis and error reporting"
