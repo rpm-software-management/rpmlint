@@ -35,18 +35,6 @@ path = "/etc/cron.hourly/0anacron"
 hash = "6e8a152a16e84ddc10e8ab1c2ed2bad28adbfc3b0b1ced62518c4ab0ada87220"
 
 [[FileDigestGroup]]
-package = "logdigest"
-type = "cron"
-note = "scours through log files to find 'interesting' information and mails it to root"
-bug = "bsc#1150546"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/logdigest"
-hash = "1dcd29ceaa35914c126bf76b0b00b955de332744636573dc2b907c1c542f81c4"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.d/logdigest-all-ignores-autogeneration"
-hash = "052d8f93980ade99937c2a4b972d5cf5a77367c9af6c7b02f0e05e8ca5b06797"
-
-[[FileDigestGroup]]
 package = "patch2mail"
 type = "cron"
 note = "looks up pending zypper patches and sens them out by mail"
@@ -81,34 +69,6 @@ bug = "bsc#1150548"
 [[FileDigestGroup.digests]]
 path = "/etc/cron.d/matomo-archive"
 hash = "b55bb543d9e890522aaabd016e8e8c80e3d0b6529f10da3ea264348e375eaf82"
-
-[[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "fibre channel management software, this cron job monitors cable health using a complex bash script and C programs"
-bug = "bsc#1162255"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-hash = "7e837d9ba6f1361d63bdb5e716e1f5ce9ac774f22fa79ef32d51a9e0c925c11b"
-
-[[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "just a version string changed in the script"
-bug = "bsc#1172859"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-hash = "56fda31f1bfbda32d628250ed17a72ef04823b120ad1449045b380b9983d86e8"
-
-[[FileDigestGroup]]
-package = "opa-fastfabric"
-type = "cron"
-note = "finally a wildcard whitelisting since there's a version string encoded in the script"
-bug = "bsc#1174464"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/opa-cablehealth"
-algorithm = "skip"
-hash = ""
 
 [[FileDigestGroup]]
 package = "ppc64-diag"
