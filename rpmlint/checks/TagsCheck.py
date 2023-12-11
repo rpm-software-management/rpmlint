@@ -393,6 +393,8 @@ class TagsCheck(AbstractCheck):
                             dep = d
                             break
                     if dep and version:
+                        if epoch is not None:
+                            epoch = str(epoch)
                         exp = (epoch, version, None)
                         sexp = Pkg.versionToString(exp)
                         if not dep[1]:
