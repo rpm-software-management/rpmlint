@@ -69,10 +69,10 @@ digester = "shell"
 hash = "bdb2f32eb3285679a23b428303a3529b7d35978e7f29bcd93d711034953f2429"
 
 [[FileDigestGroup]]
-package = "gnome-branding-Aeon"
+packages = ["gnome-branding-Aeon", "plasma-branding-Kalpa"]
 type = "sudoers"
 note = "allow wheel group members to run commands as root by entering their own password"
-bug = "bsc#1215276"
+bugs = ["bsc#1215276", "bsc#1217706"]
 [[FileDigestGroup.digests]]
 path = "/etc/sudoers.d/50-aeon"
 digester = "shell"
