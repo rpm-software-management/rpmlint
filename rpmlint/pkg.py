@@ -764,6 +764,29 @@ class InstalledPkg(Pkg):
         return (0, 'fake: pgp md5 OK')
 
 
+class FakeHeader(dict):
+    def sprintf(self, expr):
+        """
+        Replaces expressions like %{} with actual package
+        """
+
+        tagre = re.compile(r'%{([^}]*)}')
+        for tag in tagre.findall(expr):
+            expr = expr.replace(f'%{tag}', self[f'RPMTAG_{tag}'])
+        return expr
+
+    def __missing__(self, key):
+        try:
+            key = getattr(rpm, key)
+        except (TypeError, KeyError):
+            raise KeyError
+
+        if key not in self:
+            raise KeyError
+
+        return self[key]
+
+
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
     _autoheaders = [
@@ -779,6 +802,7 @@ class FakePkg(AbstractPkg):
 
     def __init__(self, name, is_source=False):
         self.name = str(name)
+        self.filename = f'{name}.rpm'
         self.arch = None
         self.current_linenum = None
         self.dirname = None
@@ -789,7 +813,7 @@ class FakePkg(AbstractPkg):
         self.ghost_files = {}
 
         # header is a dictionary to mock rpm metadata
-        self.header = {}
+        self.header = FakeHeader()
         for i in self._autoheaders:
             # the header name wihtout the ending 's'
             tagname = i[:-1].upper()
@@ -898,7 +922,7 @@ class FakePkg(AbstractPkg):
                 tagname = k[:-1].upper()
                 for i in v:
                     name, flags, version = parse_deps(i)[0]
-                    version = f'{version[1]}-{version[2]}'
+                    version = f'{version[0]}:{version[1]}-{version[2]}'
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)
