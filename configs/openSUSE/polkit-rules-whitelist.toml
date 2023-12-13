@@ -188,3 +188,12 @@ bug = "bsc#1215948"
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/31-fudo-machinectl-shell-noauth-wheel.rules"
 hash = "14da7473389b5567b12a324ac291bd42cdd538186530152ce48d6c0f9877c718"
+
+[[FileDigestGroup]]
+package = "gamemoded"
+type = "polkit"
+note = "allows members of the gamemode group to pkexec some helper programs"
+bug = "bsc#1217915"
+[[FileDigestGroup.digests]]
+path = "/usr/share/polkit-1/rules.d/40-gamemode.rules"
+hash = "9e12a279a21d11c92a41ccd818edcb9b7c89a162984a6e1ca5609b9bbcbbf989"
