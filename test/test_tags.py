@@ -4,6 +4,7 @@ from rpmlint.filter import Filter
 import rpmlint.spellcheck
 
 from Testing import CONFIG, get_tested_package
+from Testing import get_tested_mock_package
 from Testing import HAS_ENGLISH_DICTIONARY, HAS_FRENCH_DICTIONARY
 
 
@@ -12,7 +13,19 @@ def tagscheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    return output, test
+    yield output, test
+
+
+@pytest.fixture
+def output(tagscheck):
+    output, _test = tagscheck
+    yield output
+
+
+@pytest.fixture
+def test(tagscheck):
+    _output, test = tagscheck
+    yield test
 
 
 @pytest.mark.parametrize('package', ['binary/unexpanded1'])
@@ -439,3 +452,28 @@ def test_description_spelling_error(tmp_path, package, tagscheck):
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: spelling-error' in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_package('binary/xrootd-devel', '/tmp/'),
+    get_tested_mock_package(
+        name='xrootd-devel',
+        files=[
+            '/usr/lib64/libXrdXml.so',
+        ],
+        header={
+            'requires': [
+                'xrootd-libs(x86-64) = 1:5.6.3-2.fc39',
+            ],
+            'ARCH': 'noarch',
+            'NAME': 'xrootd-devel',
+            'VERSION': '5.6.3',
+            'RELEASE': '2.fc39',
+            'EPOCH': 1,
+        },
+    ),
+])
+def test_missing_dependency_on_with_epoch(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: missing-dependency-on' not in out
