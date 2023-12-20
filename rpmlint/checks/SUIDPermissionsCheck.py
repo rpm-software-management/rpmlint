@@ -31,13 +31,15 @@ class SUIDPermissionsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'permissions-directory-setuid-bit', msg)
 
     def _verify_entry(self, pkg, path, mode, owner):
-        if stat.S_ISDIR(mode):
-            if path in self.perms:
-                self.output.add_info('W', pkg, 'permissions-dir-without-slash', path)
-            else:
-                path += '/'
-
         entry = self.perms[path]
+
+        is_listed_as_dir = entry.path.endswith('/')
+        is_packaged_as_dir = stat.S_ISDIR(mode)
+
+        if is_packaged_as_dir and not is_listed_as_dir:
+            self.output.add_info('W', pkg, 'permissions-dir-without-slash', path)
+        elif is_listed_as_dir and not is_packaged_as_dir:
+            self.output.add_info('W', pkg, 'permissions-file-as-dir', f'{path} is a file but listed as directory')
 
         m = entry.mode
         o = ':'.join((entry.owner, entry.group))
@@ -83,9 +85,6 @@ class SUIDPermissionsCheck(AbstractCheck):
                 self.output.add_info('W', pkg, 'permissions-missing-verifyscript', f'missing %verify_permissions -e {path}')
 
         return need_set_permissions
-
-    def _exists_permissions_entry(self, path, mode):
-        return path in self.perms or (stat.S_ISDIR(mode) and path + '/' in self.perms)
 
     def _is_static_entry(self, entry):
         # entries coming from the fixed permissions profile are considered
@@ -166,7 +165,7 @@ class SUIDPermissionsCheck(AbstractCheck):
             owner = pkgfile.user + ':' + pkgfile.group
 
             need_verifyscript = False
-            if self._exists_permissions_entry(f, mode):
+            if f in self.perms:
                 if stat.S_ISLNK(mode):
                     self.output.add_info('W', pkg, 'permissions-symlink', f)
                     continue
@@ -175,9 +174,6 @@ class SUIDPermissionsCheck(AbstractCheck):
                 self._verify_entry(pkg, f, mode, owner)
 
             elif not stat.S_ISLNK(mode):
-                if f + '/' in self.perms:
-                    self.output.add_info('W', pkg, 'permissions-file-as-dir', f'{f} is a file but listed as directory')
-
                 if mode & (stat.S_ISUID | stat.S_ISGID):
                     need_verifyscript = True
                     self._check_restricted_mode(pkg, f, mode)
