@@ -1,0 +1,55 @@
+name: 🚀 release
+run-name: Release ${{ inputs.ref || github.ref_name }} (${{ github.event_name }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Tag to release
+        required: true
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+permissions: {}
+
+jobs:
+  dist:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+         ref: ${{ inputs.ref }}
+      - name: Build package
+        run: pipx run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+  upload_pypi:
+    name: Upload
+    needs: [ dist ]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/rpmlint/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+  release:
+    needs: [ upload_pypi ]
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v1
+        with:
+          name: RPMLint ${{ github.ref_name }}
+          draft: true
+          generate_release_notes: true
