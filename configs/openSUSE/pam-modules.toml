@@ -137,7 +137,6 @@ nodigests = [
 package = "pam"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
-bugs = ["bsc#1171564", "bsc#1171563", "bsc#1171562"]
 nodigests = [
     "*/security/pam_access.so",
     "*/security/pam_debug.so",
@@ -158,7 +157,6 @@ nodigests = [
     "*/security/pam_mail.so",
     "*/security/pam_mkhomedir.so",
     "*/security/pam_motd.so",
-    "*/security/pam_namespace.so",
     "*/security/pam_nologin.so",
     "*/security/pam_permit.so",
     "*/security/pam_pwhistory.so",
@@ -176,9 +174,42 @@ nodigests = [
     "*/security/pam_warn.so",
     "*/security/pam_wheel.so",
     "*/security/pam_xauth.so",
-    "*/security/pam_usertype.so",
-    "*/security/pam_setquota.so",
+]
+
+[[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "configurable account locking upon login failures"
+bugs = ["bsc#1171562"]
+nodigests = [
     "*/security/pam_faillock.so",
+]
+
+[[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "checks whether an account is a system or a regular user account"
+bugs = ["bsc#1171564"]
+nodigests = [
+    "*/security/pam_usertype.so",
+]
+
+[[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "verifies session quotas on session start"
+bugs = ["bsc#1171563"]
+nodigests = [
+    "*/security/pam_setquota.so",
+]
+
+[[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "creates poly-instantiated directories e.g. of /tmp, where each login session gets its unique instance"
+bugs = ["bsc#1218108"]
+nodigests = [
+    "*/security/pam_namespace.so",
 ]
 
 [[FileDigestGroup]]
