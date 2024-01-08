@@ -17,7 +17,7 @@ entries = [
 ]
 
 [[SystemdTmpfilesWhitelist]]
-package = "libtss2-fapi1"
+package = "libtss2-fapi-common"
 bug = "bsc#1150905"
 note = "shared setgid tss directories for the feature API framework"
 path = "/usr/lib/tmpfiles.d/tpm2-tss-fapi.conf"
