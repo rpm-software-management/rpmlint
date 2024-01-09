@@ -969,12 +969,16 @@ nodigests = [
 [[FileDigestGroup]]
 package = "certmonger"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1129452"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.fedorahosted.certmonger.service",
-    "/etc/dbus-1/system.d/certmonger.conf",
-]
+note = ""
+bugs = ["bsc#1129452","bsc#1218616"]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.fedorahosted.certmonger.conf"
+digester = "xml"
+hash = "c66589178c4712c6d7d29503caed9b16979d775221c512ae9a47cc2d0cd97858"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.fedorahosted.certmonger.service"
+digester = "shell"
+hash = "4e019e8d652ea80e697676b711fc063d5da965c5e20f2b5b7ae4200056a810a3"
 
 [[FileDigestGroup]]
 package = "systemd-portable"
