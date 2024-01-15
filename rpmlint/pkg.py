@@ -9,7 +9,6 @@ import mmap
 import os
 from pathlib import Path, PurePath
 import re
-from shlex import quote
 import shutil
 import stat
 import subprocess
@@ -577,10 +576,12 @@ class Pkg(AbstractPkg):
             # usage is doing chdir before invocation.
             filename = Path(self.filename).resolve()
             with pushd(dirname):
-                command_str = f'(cat {quote(str(filename))} | rpm2archive - | tar -xz); chmod -R +rX .'
                 stderr = None if verbose else subprocess.DEVNULL
-                subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
-                                        stderr=stderr)
+                stdout = subprocess.check_output(['cat', str(filename)], env=ENGLISH_ENVIROMENT,
+                                                 stderr=stderr)
+                subprocess.check_output('rpm2archive - | tar -xz; chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                        stderr=stderr, input=stdout)
+
             self.extracted = True
         return dirname
 
