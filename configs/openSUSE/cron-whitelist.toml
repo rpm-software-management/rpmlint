@@ -20,29 +20,10 @@ hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
 package = "cronie-anacron"
 type = "cron"
 note = "Executes daily, weekly, monthly cron jobs"
-bug = "bsc#1150541"
+bugs = ["bsc#1150541", "bsc#1190521", "bsc#1218107", "bsc#1218756"]
 [[FileDigestGroup.digests]]
 path = "/etc/cron.hourly/0anacron"
-hash = "aa129d2165f669770b20d20fe5d826f242a069a8f9fc2323333b91d0c9ca40c9"
-
-[[FileDigestGroup]]
-package = "cronie-anacron"
-type = "cron"
-note = "Minor change in some logic that checks whether the system runs on battery"
-bug = "bsc#1190521"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.hourly/0anacron"
-hash = "6e8a152a16e84ddc10e8ab1c2ed2bad28adbfc3b0b1ced62518c4ab0ada87220"
-
-[[FileDigestGroup]]
-package = "cronie-anacron"
-type = "cron"
-note = "another minor change that allows to disable the battery mode logic"
-bug = "bsc#1218107"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.hourly/0anacron"
-digester = "shell"
-hash = "b524844288537ac70b4c40f62559d363afb368d5d04fb25ca9626768c5ef451b"
+hash = "6981b346a1cdafbc018c6f69819a28994c64d9b0a9d6365235f1a79b7054312f"
 
 [[FileDigestGroup]]
 package = "patch2mail"
