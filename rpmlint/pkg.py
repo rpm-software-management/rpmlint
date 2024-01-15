@@ -571,22 +571,16 @@ class Pkg(AbstractPkg):
             )
             dirname = self.__tmpdir.name
             # TODO: sequence based command invocation
-            # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
+            # TODO: warn some way if this fails (e.g. rpm2archive not installed)
 
             # BusyBox' cpio does not support '-D' argument and the only safe
             # usage is doing chdir before invocation.
             filename = Path(self.filename).resolve()
             with pushd(dirname):
-                command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
-                res = subprocess.run(command_str, check=True, shell=True, env=ENGLISH_ENVIROMENT,
-                                     stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-                if verbose:
-                    print(res.stderr.decode())
-                if b"rpm2archive" in res.stderr:
-                    command_str = f'(cat {quote(str(filename))} | rpm2archive - | tar -xz); chmod -R +rX .'
-                    stderr = None if verbose else subprocess.DEVNULL
-                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
-                                            stderr=stderr)
+                command_str = f'(cat {quote(str(filename))} | rpm2archive - | tar -xz); chmod -R +rX .'
+                stderr = None if verbose else subprocess.DEVNULL
+                subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
+                                        stderr=stderr)
             self.extracted = True
         return dirname
 
