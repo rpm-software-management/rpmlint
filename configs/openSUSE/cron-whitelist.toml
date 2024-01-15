@@ -23,6 +23,7 @@ note = "Executes daily, weekly, monthly cron jobs"
 bugs = ["bsc#1150541", "bsc#1190521", "bsc#1218107", "bsc#1218756"]
 [[FileDigestGroup.digests]]
 path = "/etc/cron.hourly/0anacron"
+digester = "shell"
 hash = "6981b346a1cdafbc018c6f69819a28994c64d9b0a9d6365235f1a79b7054312f"
 
 [[FileDigestGroup]]
