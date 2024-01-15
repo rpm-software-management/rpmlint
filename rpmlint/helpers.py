@@ -1,8 +1,8 @@
 # File containing various helper functions used across rpmlint
 
 import os
-from shutil import get_terminal_size
 from contextlib import contextmanager
+from shutil import get_terminal_size
 import sys
 
 from rpmlint.color import Color
