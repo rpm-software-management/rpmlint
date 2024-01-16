@@ -1,7 +1,7 @@
 # File containing various helper functions used across rpmlint
 
-import os
 from contextlib import contextmanager
+import os
 from shutil import get_terminal_size
 import sys
 
