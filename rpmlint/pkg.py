@@ -569,8 +569,6 @@ class Pkg(AbstractPkg):
                 prefix='rpmlint.%s.' % Path(self.filename).name, dir=dirname
             )
             dirname = self.__tmpdir.name
-            # TODO: sequence based command invocation
-            # TODO: warn some way if this fails (e.g. rpm2archive not installed)
 
             # BusyBox' cpio does not support '-D' argument and the only safe
             # usage is doing chdir before invocation.
