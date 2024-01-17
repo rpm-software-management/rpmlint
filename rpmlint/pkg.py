@@ -576,10 +576,9 @@ class Pkg(AbstractPkg):
             with pushd(dirname):
                 stderr = None if verbose else subprocess.DEVNULL
                 if shutil.which('rpm2archive'):
-                    stdout = subprocess.check_output(['cat', str(filename)], env=ENGLISH_ENVIROMENT,
-                                                     stderr=stderr)
-                    subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
-                                            stderr=stderr, input=stdout)
+                    with open(filename, 'rb') as rpm_data:
+                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                                stderr=stderr, stdin=rpm_data)
                 else:
                     stdout = subprocess.check_output(['rpm2cpio', str(filename)], env=ENGLISH_ENVIROMENT,
                                                      stderr=stderr)
