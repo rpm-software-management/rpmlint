@@ -577,11 +577,16 @@ class Pkg(AbstractPkg):
             filename = Path(self.filename).resolve()
             with pushd(dirname):
                 stderr = None if verbose else subprocess.DEVNULL
-                stdout = subprocess.check_output(['cat', str(filename)], env=ENGLISH_ENVIROMENT,
-                                                 stderr=stderr)
-                subprocess.check_output('rpm2archive - | tar -xz; chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
-                                        stderr=stderr, input=stdout)
-
+                if shutil.which('rpm2archive'):
+                    stdout = subprocess.check_output(['cat', str(filename)], env=ENGLISH_ENVIROMENT,
+                                                     stderr=stderr)
+                    subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                            stderr=stderr, input=stdout)
+                else:
+                    stdout = subprocess.check_output(['rpm2cpio', str(filename)], env=ENGLISH_ENVIROMENT,
+                                                     stderr=stderr)
+                    subprocess.check_output('cpio -id && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                            stderr=stderr, input=stdout)
             self.extracted = True
         return dirname
 
