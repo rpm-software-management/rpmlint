@@ -9,7 +9,6 @@ import mmap
 import os
 from pathlib import Path, PurePath
 import re
-from shlex import quote
 import shutil
 import stat
 import subprocess
@@ -23,7 +22,8 @@ try:
 except ImportError:
     has_magic = False
 import rpm
-from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
+from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIROMENT,
+                             print_warning, pushd)
 from rpmlint.pkgfile import PkgFile
 import zstandard as zstd
 
@@ -483,7 +483,7 @@ class Pkg(AbstractPkg):
         # record decompression and extraction time
         start = time.monotonic()
         self.dirname = self._extract_rpm(dirname, verbose)
-        self.timers = {'rpm2cpio': time.monotonic() - start, 'libmagic': 0}
+        self.timers = {'ExtractRpm': time.monotonic() - start, 'libmagic': 0}
         self.current_linenum = None
 
         self._req_names = -1
@@ -569,19 +569,21 @@ class Pkg(AbstractPkg):
                 prefix='rpmlint.%s.' % Path(self.filename).name, dir=dirname
             )
             dirname = self.__tmpdir.name
-            # TODO: sequence based command invocation
-            # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
 
             # BusyBox' cpio does not support '-D' argument and the only safe
             # usage is doing chdir before invocation.
             filename = Path(self.filename).resolve()
-            cwd = os.getcwd()
-            os.chdir(dirname)
-            command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
-            stderr = None if verbose else subprocess.DEVNULL
-            subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
-                                    stderr=stderr)
-            os.chdir(cwd)
+            with pushd(dirname):
+                stderr = None if verbose else subprocess.DEVNULL
+                if shutil.which('rpm2archive'):
+                    with open(filename, 'rb') as rpm_data:
+                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                                stderr=stderr, stdin=rpm_data)
+                else:
+                    stdout = subprocess.check_output(['rpm2cpio', str(filename)], env=ENGLISH_ENVIROMENT,
+                                                     stderr=stderr)
+                    subprocess.check_output('cpio -id && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                            stderr=stderr, input=stdout)
             self.extracted = True
         return dirname
 
@@ -635,6 +637,8 @@ class Pkg(AbstractPkg):
         groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
         links = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILELINKTOS]]
         sizes = self.header[rpm.RPMTAG_FILESIZES]
+        if len(sizes) != len(flags):
+            sizes = self.header[rpm.RPMTAG_LONGFILESIZES]
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]

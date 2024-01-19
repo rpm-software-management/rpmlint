@@ -1,5 +1,6 @@
 # File containing various helper functions used across rpmlint
 
+from contextlib import contextmanager
 import os
 from shutil import get_terminal_size
 import sys
@@ -53,3 +54,16 @@ def readlines(path):
     with open(path, 'rb') as fobj:
         for line in fobj:
             yield byte_to_string(line)
+
+
+@contextmanager
+def pushd(new_dir):
+    """
+    Mimics Unix pushd/popd
+    """
+    cwd = os.getcwd()
+    os.chdir(new_dir)
+    try:
+        yield
+    finally:
+        os.chdir(cwd)
