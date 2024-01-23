@@ -115,6 +115,9 @@ class SpecCheck(AbstractCheck):
                                          '%s'.""" % ', '.join(self.valid_groups)})
         self.hardcoded_lib_path_exceptions_regex = re.compile(config.configuration['HardcodedLibPathExceptions'])
 
+        self._default_state()
+
+    def _default_state(self):
         # Default state
         self.patches = {}
         self.applied_patches = []
@@ -139,6 +142,11 @@ class SpecCheck(AbstractCheck):
         # None == main package
         self.current_package = None
         self.package_noarch = {}
+
+    def reset(self):
+        self._spec_file = None
+        self._spec_name = None
+        self._default_state()
 
     def check_source(self, pkg):
         """Find specfile in SRPM and run spec file related checks."""

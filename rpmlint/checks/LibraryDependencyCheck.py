@@ -16,6 +16,13 @@ class LibraryDependencyCheck(AbstractCheck):
         self.package_arch_mapping = {}
         self.isa = expandMacro('%{_isa}')
 
+    def reset(self):
+        self.package_requires = {}
+        self.package_so_symlinks = {}
+        self.package_so_files = {}
+        self.package_arch_mapping = {}
+        self.isa = expandMacro('%{_isa}')
+
     def check_binary(self, pkg):
         if pkg.is_source:
             return

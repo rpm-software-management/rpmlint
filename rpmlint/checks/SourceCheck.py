@@ -30,6 +30,9 @@ class SourceCheck(AbstractCheck):
         }
         self.output.error_details.update(source_details_dict)
 
+    def reset(self):
+        self.spec_file = None
+
     def check_source(self, pkg):
         # process file list
         for fname, pkgfile in pkg.files.items():

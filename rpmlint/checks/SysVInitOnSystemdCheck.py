@@ -10,6 +10,11 @@ class SysVInitOnSystemdCheck(AbstractCheck):
         self.bootscripts = set()
         self.systemdscripts = set()
 
+    def reset(self):
+        self.initscripts = set()
+        self.bootscripts = set()
+        self.systemdscripts = set()
+
     def check(self, pkg):
         if pkg.is_source:
             return

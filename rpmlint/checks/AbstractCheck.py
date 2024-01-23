@@ -28,6 +28,9 @@ class AbstractCheck:
     def after_checks(self):
         return
 
+    def reset(self):
+        return
+
 
 class AbstractFilesCheck(AbstractCheck):
     def __init__(self, config, output, file_regexp):
@@ -59,6 +62,9 @@ class AbstractFilesCheck(AbstractCheck):
             for filename in filenames:
                 self.check_file(pkg, filename)
         self.checked_files += len(filenames)
+
+    def reset(self):
+        self.checked_files = None
 
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed
