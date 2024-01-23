@@ -9,7 +9,6 @@ import mmap
 import os
 from pathlib import Path, PurePath
 import re
-from shlex import quote
 import shutil
 import stat
 import subprocess
@@ -23,7 +22,8 @@ try:
 except ImportError:
     has_magic = False
 import rpm
-from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT, print_warning
+from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIROMENT,
+                             print_warning, pushd)
 from rpmlint.pkgfile import PkgFile
 import zstandard as zstd
 
@@ -483,7 +483,7 @@ class Pkg(AbstractPkg):
         # record decompression and extraction time
         start = time.monotonic()
         self.dirname = self._extract_rpm(dirname, verbose)
-        self.timers = {'rpm2cpio': time.monotonic() - start, 'libmagic': 0}
+        self.timers = {'ExtractRpm': time.monotonic() - start, 'libmagic': 0}
         self.current_linenum = None
 
         self._req_names = -1
@@ -569,20 +569,23 @@ class Pkg(AbstractPkg):
                 prefix='rpmlint.%s.' % Path(self.filename).name, dir=dirname
             )
             dirname = self.__tmpdir.name
-            # TODO: sequence based command invocation
-            # TODO: warn some way if this fails (e.g. rpm2cpio not installed)
 
             # BusyBox' cpio does not support '-D' argument and the only safe
             # usage is doing chdir before invocation.
             filename = Path(self.filename).resolve()
-            cwd = os.getcwd()
-            os.chdir(dirname)
-            command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
-            # SUSE-specific: never print stderr
-            stderr = subprocess.DEVNULL
-            subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT,
-                                    stderr=stderr)
-            os.chdir(cwd)
+            with pushd(dirname):
+                stderr = None if verbose else subprocess.DEVNULL
+                # SUSE-specific: never print stderr
+                stderr = subprocess.DEVNULL
+                if shutil.which('rpm2archive'):
+                    with open(filename, 'rb') as rpm_data:
+                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                                stderr=stderr, stdin=rpm_data)
+                else:
+                    stdout = subprocess.check_output(['rpm2cpio', str(filename)], env=ENGLISH_ENVIROMENT,
+                                                     stderr=stderr)
+                    subprocess.check_output('cpio -id && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                                            stderr=stderr, input=stdout)
             self.extracted = True
         return dirname
 
@@ -636,6 +639,8 @@ class Pkg(AbstractPkg):
         groups = self.header[rpm.RPMTAG_FILEGROUPNAME]
         links = [byte_to_string(x) for x in self.header[rpm.RPMTAG_FILELINKTOS]]
         sizes = self.header[rpm.RPMTAG_FILESIZES]
+        if len(sizes) != len(flags):
+            sizes = self.header[rpm.RPMTAG_LONGFILESIZES]
         md5s = self.header[rpm.RPMTAG_FILEMD5S]
         mtimes = self.header[rpm.RPMTAG_FILEMTIMES]
         rdevs = self.header[rpm.RPMTAG_FILERDEVS]
@@ -765,6 +770,29 @@ class InstalledPkg(Pkg):
         return (0, 'fake: pgp md5 OK')
 
 
+class FakeHeader(dict):
+    def sprintf(self, expr):
+        """
+        Replaces expressions like %{} with actual package
+        """
+
+        tagre = re.compile(r'%{([^}]*)}')
+        for tag in tagre.findall(expr):
+            expr = expr.replace(f'%{tag}', self[f'RPMTAG_{tag}'])
+        return expr
+
+    def __missing__(self, key):
+        try:
+            key = getattr(rpm, key)
+        except (TypeError, KeyError):
+            raise KeyError
+
+        if key not in self:
+            raise KeyError
+
+        return self[key]
+
+
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
 class FakePkg(AbstractPkg):
     _autoheaders = [
@@ -780,6 +808,7 @@ class FakePkg(AbstractPkg):
 
     def __init__(self, name, is_source=False):
         self.name = str(name)
+        self.filename = f'{name}.rpm'
         self.arch = None
         self.current_linenum = None
         self.dirname = None
@@ -790,7 +819,7 @@ class FakePkg(AbstractPkg):
         self.ghost_files = {}
 
         # header is a dictionary to mock rpm metadata
-        self.header = {}
+        self.header = FakeHeader()
         for i in self._autoheaders:
             # the header name wihtout the ending 's'
             tagname = i[:-1].upper()
@@ -899,7 +928,7 @@ class FakePkg(AbstractPkg):
                 tagname = k[:-1].upper()
                 for i in v:
                     name, flags, version = parse_deps(i)[0]
-                    version = f'{version[1]}-{version[2]}'
+                    version = f'{version[0]}:{version[1]}-{version[2]}'
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)

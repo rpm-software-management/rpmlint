@@ -41,6 +41,7 @@ def test_check_include(tmp_path, speccheck):
     'spec/SpecCheck3',
     'spec/SpecCheckPatch',
     'spec/intltool',
+    'spec/ghc',
 ])
 def test_patch_not_applied(package, speccheck):
     output, test = speccheck

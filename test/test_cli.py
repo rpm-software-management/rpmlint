@@ -82,3 +82,12 @@ def test_parsing_fedora_conf(test_arguments):
         if score_key.startswith('percent-in-'):
             continue
         assert score_key in checks
+
+
+def test_reset_check():
+    files = ['test/spec/SpecCheck2.spec', 'test/spec/SpecCheck3.spec']
+    options = process_lint_args(['--checks', 'SpecCheck'] + files)
+    lint = Lint(options)
+    lint.run()
+    out = lint.output.print_results(lint.output.results, lint.config)
+    assert 'more-than-one-%changelog-section' not in out

@@ -63,8 +63,8 @@ def get_tested_spec_package(name):
     return FakePkg(candidates[0])
 
 
-def get_tested_mock_package(files=None, header=None):
-    mockPkg = FakePkg('mockPkg')
+def get_tested_mock_package(files=None, header=None, name='mockPkg'):
+    mockPkg = FakePkg(name)
     if files is not None:
         if isinstance(files, dict):
             # full path for test files

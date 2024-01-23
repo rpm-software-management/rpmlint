@@ -242,6 +242,7 @@ class Lint:
     def validate_installed_packages(self, packages):
         for pkg in packages:
             self.run_checks(pkg, pkg == packages[-1])
+            self.reset_checks()
 
     def validate_files(self, files):
         """
@@ -261,6 +262,7 @@ class Lint:
         packages = sorted(packages)
         for pkg in packages:
             self.validate_file(pkg, pkg == packages[-1])
+            self.reset_checks()
 
     def _expand_filelist(self, files):
         packages = []
@@ -348,6 +350,14 @@ class Lint:
                 continue
             if not selected_checks or check in selected_checks:
                 self.checks[check] = self.load_check(check)
+
+    def reset_checks(self):
+        """
+        Reset all check objects to set to the default state
+        """
+        to_reset = self.checks.keys()
+        for check in to_reset:
+            self.checks[check] = self.load_check(check)
 
     def load_check(self, name):
         """Load a (check) module by its name, unless it is already loaded."""
