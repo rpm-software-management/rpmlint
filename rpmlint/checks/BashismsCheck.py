@@ -12,6 +12,10 @@ class BashismsCheck(AbstractFilesCheck):
         self._detect_early_fail_option()
         self.file_cache = {}
 
+    def reset(self):
+        super().reset()
+        self.file_cache = {}
+
     def _detect_early_fail_option(self):
         output = subprocess.check_output('checkbashisms --help',
                                          shell=True, encoding='utf8')

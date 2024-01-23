@@ -80,6 +80,9 @@ class BinariesCheck(AbstractCheck):
                                 self._check_hash_sections,
                                 self._check_no_patchable_function_entries_in_archive]
 
+    def reset(self):
+        self.checked_files = 0
+
     @staticmethod
     def create_nonlibc_regexp_call(call):
         r = r'(%s)\s?.*$' % call

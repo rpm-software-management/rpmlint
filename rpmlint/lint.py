@@ -337,9 +337,8 @@ class Lint:
         """
         Reset all check objects to set to the default state
         """
-        to_reset = self.checks.keys()
-        for check in to_reset:
-            self.checks[check] = self.load_check(check)
+        for check in self.checks.values():
+            check.reset()
 
     def load_check(self, name):
         """Load a (check) module by its name, unless it is already loaded."""
