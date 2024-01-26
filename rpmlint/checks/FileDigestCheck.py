@@ -352,6 +352,19 @@ class FileDigestCheck(AbstractCheck):
 
         return digest_hint
 
+    def _check_paths_match(self, rpm_path, whitelist_path):
+        """This checks a whitelisted path against a file path found in the RPM
+        if they match. This also handles special cases like globbing
+        characters in the whitelisting."""
+        if rpm_path == whitelist_path:
+            # exact match
+            return True
+        elif whitelist_path.startswith('glob:'):
+            pattern = whitelist_path.split(':', 1)[1]
+            return fnmatch(rpm_path, pattern)
+        else:
+            return False
+
     def _check_group_type(self, pkg, group_type, secured_paths):
         """ Check all secured files of a group type
 
@@ -373,8 +386,8 @@ class FileDigestCheck(AbstractCheck):
         whitelisted_paths = {dg['path'] for dg in digests}
         for spath in secured_paths:
             for wpath in whitelisted_paths:
-                if fnmatch(spath, wpath):
-                    # filepath is whitelisted
+                # filepath is whitelisted
+                if self._check_paths_match(spath, wpath):
                     break
             else:
                 digest_hint = self._get_digest_hint(pkg, spath)
@@ -388,7 +401,7 @@ class FileDigestCheck(AbstractCheck):
             # version of this package with same whitelisted paths and different digests
             digests_of_path = []
             for digest in digests:
-                if fnmatch(path, digest['path']):
+                if self._check_paths_match(path, digest['path']):
                     digests_of_path.append(digest)
             # If *any* digest with the same path matches the package's file
             # digest of that path, then we assume the file is correctly whitelisted
