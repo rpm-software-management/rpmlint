@@ -96,6 +96,59 @@ def test_related_mismatch():
         assert error.startswith('testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:')
 
 
+def test_glob_support():
+    # this tests globbing in package names and globbing in digest paths
+    TESTSTRING = 'globbing is fun'
+    GLOB_PATH_ROOT = '/glob/me/please'
+    RESTRICTED_PATH = f'{GLOB_PATH_ROOT}/restricted'
+    GLOBBING_CFG = 'digests_globbing.config'
+
+    # package with non-matching name for glob, should trigger even though the
+    # digest and path match. This covers both the singular 'package = "glob:'
+    # as well as plural 'packages = ["glob:' variants.
+    for pkgname in ('glob-fake-package', 'some10-package'):
+        with FakePkg(pkgname) as pkg:
+            output, test = get_digestcheck(GLOBBING_CFG)
+            pkg.add_file_with_content(RESTRICTED_PATH, TESTSTRING)
+            test.check(pkg)
+            assert len(output.results) == 1
+            error = output.results[0]
+            assert error.startswith(f'{pkg.name}: E: globber-file-unauthorized {RESTRICTED_PATH} (sha256')
+
+    # this one with a name matching the glob should trigger no error instead
+    with FakePkg('globpackage-with-suffix') as pkg:
+        output, test = get_digestcheck(GLOBBING_CFG)
+        pkg.add_file_with_content(RESTRICTED_PATH, TESTSTRING)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # this one should match the plural 'packages' group and no error should result
+    with FakePkg('some9-package') as pkg:
+        output, test = get_digestcheck(GLOBBING_CFG)
+        pkg.add_file_with_content(RESTRICTED_PATH, TESTSTRING)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # this checks a non-matching path where a glob-path is specified
+    # this uses fixed package names to avoid too much complexity at once
+    with FakePkg('somepkg') as pkg:
+        output, test = get_digestcheck(GLOBBING_CFG)
+        NON_MATCHING_GLOB = f'{GLOB_PATH_ROOT}/glob_10'
+        pkg.add_file_with_content(NON_MATCHING_GLOB, TESTSTRING)
+        test.check(pkg)
+        assert len(output.results) == 1
+        error = output.results[0]
+        assert error.startswith(f'{pkg.name}: E: globber-file-unauthorized {NON_MATCHING_GLOB} (sha256')
+
+    # this finally checks two matching glob-paths
+    with FakePkg('somepkg') as pkg:
+        output, test = get_digestcheck(GLOBBING_CFG)
+        pkg.add_file_with_content(f'{GLOB_PATH_ROOT}/glob-1', TESTSTRING)
+        pkg.add_file_with_content(f'{GLOB_PATH_ROOT}/glob-and-a-lot', TESTSTRING)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+
 def test_missing_entry():
     # this tests that an extra file not present in the whitelist is recognized
     # as missing

@@ -465,7 +465,7 @@ class FileDigestCheck(AbstractCheck):
         """
 
         for symlink_exception in self.symlink_exceptions:
-            if self._matches_pkg(symlink_exception, pkg):
+            if not self._matches_pkg(symlink_exception, pkg):
                 continue
             if name in symlink_exception['paths']:
                 return True
