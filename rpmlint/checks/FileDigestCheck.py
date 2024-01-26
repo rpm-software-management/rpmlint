@@ -273,8 +273,16 @@ class FileDigestCheck(AbstractCheck):
         else:
             return d['packages']
 
-    def _matches_pkg(self, digest_group, pkg):
-        return pkg.name in self._gather_packages_from_dict(digest_group)
+    def _matches_pkg(self, config_dict, pkg):
+        for candidate in self._gather_packages_from_dict(config_dict):
+            if pkg.name == candidate:
+                return True
+            elif candidate.startswith('glob:'):
+                pattern = candidate.split(':', 1)[1]
+                if fnmatch(pkg.name, pattern):
+                    return True
+
+        return False
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
@@ -441,7 +449,7 @@ class FileDigestCheck(AbstractCheck):
         - name: paths of the ghosted file
         """
         for ghost_exception in self.ghost_file_exceptions:
-            if pkg.name not in self._gather_packages_from_dict(ghost_exception):
+            if not self._matches_pkg(ghost_exception, pkg):
                 continue
             if name in ghost_exception['paths']:
                 return True
@@ -457,7 +465,7 @@ class FileDigestCheck(AbstractCheck):
         """
 
         for symlink_exception in self.symlink_exceptions:
-            if pkg.name not in self._gather_packages_from_dict(symlink_exception):
+            if self._matches_pkg(symlink_exception, pkg):
                 continue
             if name in symlink_exception['paths']:
                 return True
