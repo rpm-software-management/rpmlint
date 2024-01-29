@@ -201,6 +201,8 @@ class PythonCheck(AbstractFilesCheck):
 
         # Add pythonX-foo variants
         names += [f'python\\d*-{re.escape(i)}' for i in names]
+        # Add python3.12dist(foo) variants
+        names += [f'python\\d+(\\.\\d+)?dist\\({re.escape(i)}\\)' for i in names]
         regex = '|'.join(names)
         # Support complex requirements like
         # (python310-jupyter-server >= 1.15 with python310-jupyter-server < 3)
