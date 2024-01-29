@@ -4,7 +4,7 @@ type = "pam"
 note = "test whitelisting entry for the OBS integration test package"
 bug = "bsc#1188704"
 nodigests = [
-    "*/security/pam_rpmlint.so",
+    "glob:*/security/pam_rpmlint.so",
 ]
 
 [[FileDigestGroup]]
@@ -12,8 +12,8 @@ package = "pam_krb5"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_krb5.so",
-    "*/security/pam_krb5afs.so",
+    "glob:*/security/pam_krb5.so",
+    "glob:*/security/pam_krb5afs.so",
 ]
 
 [[FileDigestGroup]]
@@ -21,7 +21,7 @@ package = "ecryptfs-utils"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_ecryptfs.so",
+    "glob:*/security/pam_ecryptfs.so",
 ]
 
 [[FileDigestGroup]]
@@ -30,7 +30,7 @@ type = "pam"
 note = "authenticate via Gnome keyring"
 bug = "bsc#297049"
 nodigests = [
-    "*/security/pam_gnome_keyring.so",
+    "glob:*/security/pam_gnome_keyring.so",
 ]
 
 [[FileDigestGroup]]
@@ -39,7 +39,7 @@ type = "pam"
 bug  = "bsc#1194573"
 note = "performs authentication against a Windows domain server"
 nodigests = [
-    "*/security/pam_winbind.so",
+    "glob:*/security/pam_winbind.so",
 ]
 
 [[FileDigestGroup]]
@@ -47,7 +47,7 @@ package = "pam_ssh"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_ssh.so",
+    "glob:*/security/pam_ssh.so",
 ]
 
 [[FileDigestGroup]]
@@ -56,7 +56,7 @@ type = "pam"
 note = ""
 bug  = "bsc#1190983"
 nodigests = [
-    "*/security/pam_ssh_agent_auth.so",
+    "glob:*/security/pam_ssh_agent_auth.so",
 ]
 
 [[FileDigestGroup]]
@@ -65,7 +65,7 @@ type = "pam"
 note = ""
 bug  = "bsc#1190790"
 nodigests = [
-    "*/security/pam_u2f.so",
+    "glob:*/security/pam_u2f.so",
 ]
 
 
@@ -74,7 +74,7 @@ package = "pam_mount"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_mount.so",
+    "glob:*/security/pam_mount.so",
 ]
 
 [[FileDigestGroup]]
@@ -82,7 +82,7 @@ package = "pam_ccreds"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_ccreds.so",
+    "glob:*/security/pam_ccreds.so",
 ]
 
 [[FileDigestGroup]]
@@ -90,7 +90,7 @@ package = "pam_radius"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_radius_auth.so",
+    "glob:*/security/pam_radius_auth.so",
 ]
 
 [[FileDigestGroup]]
@@ -98,7 +98,7 @@ package = "pam_pkcs11"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_pkcs11.so",
+    "glob:*/security/pam_pkcs11.so",
 ]
 
 [[FileDigestGroup]]
@@ -106,7 +106,7 @@ package = "nss-pam-ldapd"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_ldap.so",
+    "glob:*/security/pam_ldap.so",
 ]
 
 [[FileDigestGroup]]
@@ -114,7 +114,7 @@ package = "pam_passwdqc"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_passwdqc.so",
+    "glob:*/security/pam_passwdqc.so",
 ]
 
 [[FileDigestGroup]]
@@ -122,7 +122,7 @@ package = "pam_userpass"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_userpass.so",
+    "glob:*/security/pam_userpass.so",
 ]
 
 [[FileDigestGroup]]
@@ -130,7 +130,7 @@ package = "pam_apparmor"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_apparmor.so",
+    "glob:*/security/pam_apparmor.so",
 ]
 
 [[FileDigestGroup]]
@@ -138,42 +138,42 @@ package = "pam"
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 nodigests = [
-    "*/security/pam_access.so",
-    "*/security/pam_debug.so",
-    "*/security/pam_deny.so",
-    "*/security/pam_echo.so",
-    "*/security/pam_env.so",
-    "*/security/pam_exec.so",
-    "*/security/pam_faildelay.so",
-    "*/security/pam_filter.so",
-    "*/security/pam_ftp.so",
-    "*/security/pam_group.so",
-    "*/security/pam_keyinit.so",
-    "*/security/pam_lastlog.so",
-    "*/security/pam_limits.so",
-    "*/security/pam_listfile.so",
-    "*/security/pam_localuser.so",
-    "*/security/pam_loginuid.so",
-    "*/security/pam_mail.so",
-    "*/security/pam_mkhomedir.so",
-    "*/security/pam_motd.so",
-    "*/security/pam_nologin.so",
-    "*/security/pam_permit.so",
-    "*/security/pam_pwhistory.so",
-    "*/security/pam_rhosts.so",
-    "*/security/pam_rootok.so",
-    "*/security/pam_securetty.so",
-    "*/security/pam_selinux.so",
-    "*/security/pam_sepermit.so",
-    "*/security/pam_shells.so",
-    "*/security/pam_stress.so",
-    "*/security/pam_succeed_if.so",
-    "*/security/pam_time.so",
-    "*/security/pam_tty_audit.so",
-    "*/security/pam_umask.so",
-    "*/security/pam_warn.so",
-    "*/security/pam_wheel.so",
-    "*/security/pam_xauth.so",
+    "glob:*/security/pam_access.so",
+    "glob:*/security/pam_debug.so",
+    "glob:*/security/pam_deny.so",
+    "glob:*/security/pam_echo.so",
+    "glob:*/security/pam_env.so",
+    "glob:*/security/pam_exec.so",
+    "glob:*/security/pam_faildelay.so",
+    "glob:*/security/pam_filter.so",
+    "glob:*/security/pam_ftp.so",
+    "glob:*/security/pam_group.so",
+    "glob:*/security/pam_keyinit.so",
+    "glob:*/security/pam_lastlog.so",
+    "glob:*/security/pam_limits.so",
+    "glob:*/security/pam_listfile.so",
+    "glob:*/security/pam_localuser.so",
+    "glob:*/security/pam_loginuid.so",
+    "glob:*/security/pam_mail.so",
+    "glob:*/security/pam_mkhomedir.so",
+    "glob:*/security/pam_motd.so",
+    "glob:*/security/pam_nologin.so",
+    "glob:*/security/pam_permit.so",
+    "glob:*/security/pam_pwhistory.so",
+    "glob:*/security/pam_rhosts.so",
+    "glob:*/security/pam_rootok.so",
+    "glob:*/security/pam_securetty.so",
+    "glob:*/security/pam_selinux.so",
+    "glob:*/security/pam_sepermit.so",
+    "glob:*/security/pam_shells.so",
+    "glob:*/security/pam_stress.so",
+    "glob:*/security/pam_succeed_if.so",
+    "glob:*/security/pam_time.so",
+    "glob:*/security/pam_tty_audit.so",
+    "glob:*/security/pam_umask.so",
+    "glob:*/security/pam_warn.so",
+    "glob:*/security/pam_wheel.so",
+    "glob:*/security/pam_xauth.so",
 ]
 
 [[FileDigestGroup]]
@@ -182,7 +182,7 @@ type = "pam"
 note = "configurable account locking upon login failures"
 bugs = ["bsc#1171562"]
 nodigests = [
-    "*/security/pam_faillock.so",
+    "glob:*/security/pam_faillock.so",
 ]
 
 [[FileDigestGroup]]
@@ -191,7 +191,7 @@ type = "pam"
 note = "checks whether an account is a system or a regular user account"
 bugs = ["bsc#1171564"]
 nodigests = [
-    "*/security/pam_usertype.so",
+    "glob:*/security/pam_usertype.so",
 ]
 
 [[FileDigestGroup]]
@@ -200,7 +200,7 @@ type = "pam"
 note = "verifies session quotas on session start"
 bugs = ["bsc#1171563"]
 nodigests = [
-    "*/security/pam_setquota.so",
+    "glob:*/security/pam_setquota.so",
 ]
 
 [[FileDigestGroup]]
@@ -209,7 +209,7 @@ type = "pam"
 note = "creates poly-instantiated directories e.g. of /tmp, where each login session gets its unique instance"
 bugs = ["bsc#1218108"]
 nodigests = [
-    "*/security/pam_namespace.so",
+    "glob:*/security/pam_namespace.so",
 ]
 
 [[FileDigestGroup]]
@@ -218,8 +218,8 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList, moved to new sub-package"
 bugs = ["bsc#1210371"]
 nodigests = [
-    "*/security/pam_timestamp.so",
-    "*/security/pam_issue.so",
+    "glob:*/security/pam_timestamp.so",
+    "glob:*/security/pam_issue.so",
 ]
 
 [[FileDigestGroup]]
@@ -228,11 +228,11 @@ type = "pam"
 note = "legacy: not audited"
 bugs = ["bsc#1206485"]
 nodigests = [
-    "*/security/pam_unix.so",
-    "*/security/pam_unix_acct.so",
-    "*/security/pam_unix_auth.so",
-    "*/security/pam_unix_passwd.so",
-    "*/security/pam_unix_session.so",
+    "glob:*/security/pam_unix.so",
+    "glob:*/security/pam_unix_acct.so",
+    "glob:*/security/pam_unix_auth.so",
+    "glob:*/security/pam_unix_passwd.so",
+    "glob:*/security/pam_unix_session.so",
 ]
 
 [[FileDigestGroup]]
@@ -241,7 +241,7 @@ type = "pam"
 note = "legacy: not audited"
 bugs = ["bsc#1210371"]
 nodigests = [
-    "*/security/pam_userdb.so",
+    "glob:*/security/pam_userdb.so",
 ]
 
 [[FileDigestGroup]]
@@ -249,7 +249,7 @@ package = "systemd"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_systemd.so",
+    "glob:*/security/pam_systemd.so",
 ]
 
 [[FileDigestGroup]]
@@ -257,7 +257,7 @@ package = "systemd-mini"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_systemd.so",
+    "glob:*/security/pam_systemd.so",
 ]
 
 [[FileDigestGroup]]
@@ -266,7 +266,7 @@ type = "pam"
 note = "authentication and session-time mount of per-user (portable, encrypted) home directories"
 bugs = ["bsc#1185285", "bsc#1213692"]
 nodigests = [
-    "*/security/pam_systemd_home.so",
+    "glob:*/security/pam_systemd_home.so",
 ]
 
 [[FileDigestGroup]]
@@ -275,7 +275,7 @@ type = "pam"
 note = "authenticate and get user information via sssd suite"
 bug = "bsc#1106600"
 nodigests = [
-    "*/security/pam_sss.so",
+    "glob:*/security/pam_sss.so",
 ]
 
 [[FileDigestGroup]]
@@ -283,7 +283,7 @@ package = "pam_mktemp"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_mktemp.so",
+    "glob:*/security/pam_mktemp.so",
 ]
 
 [[FileDigestGroup]]
@@ -291,7 +291,7 @@ package = "pam_csync"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_csync.so",
+    "glob:*/security/pam_csync.so",
 ]
 
 [[FileDigestGroup]]
@@ -299,7 +299,7 @@ package = "pam_chroot"
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
-    "*/security/pam_chroot.so",
+    "glob:*/security/pam_chroot.so",
 ]
 
 [[FileDigestGroup]]
@@ -308,7 +308,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#815383"
 nodigests = [
-    "*/security/pam_snapper.so",
+    "glob:*/security/pam_snapper.so",
 ]
 
 [[FileDigestGroup]]
@@ -317,7 +317,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1004346"
 nodigests = [
-    "*/security/pam_gdm.so",
+    "glob:*/security/pam_gdm.so",
 ]
 
 [[FileDigestGroup]]
@@ -326,8 +326,8 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bugs = ["bsc#1007053", "bsc#1116758"]
 nodigests = [
-    "*/security/pam_slurm.so",
-    "*/security/pam_slurm_adopt.so",
+    "glob:*/security/pam_slurm.so",
+    "glob:*/security/pam_slurm_adopt.so",
 ]
 
 [[FileDigestGroup]]
@@ -336,7 +336,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1039848"
 nodigests = [
-    "*/security/pam_script.so",
+    "glob:*/security/pam_script.so",
 ]
 
 [[FileDigestGroup]]
@@ -345,7 +345,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1087060"
 nodigests = [
-    "*/security/pam_yubico.so",
+    "glob:*/security/pam_yubico.so",
 ]
 
 [[FileDigestGroup]]
@@ -354,7 +354,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1089114"
 nodigests = [
-    "*/security/pam_oath.so",
+    "glob:*/security/pam_oath.so",
 ]
 
 [[FileDigestGroup]]
@@ -363,7 +363,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1123916"
 nodigests = [
-    "*/security/pam_p11.so",
+    "glob:*/security/pam_p11.so",
 ]
 
 [[FileDigestGroup]]
@@ -372,7 +372,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150527"
 nodigests = [
-    "*/security/pam_cifscreds.so",
+    "glob:*/security/pam_cifscreds.so",
 ]
 
 [[FileDigestGroup]]
@@ -381,7 +381,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150520"
 nodigests = [
-    "*/security/pam_pwquality.so",
+    "glob:*/security/pam_pwquality.so",
 ]
 
 [[FileDigestGroup]]
@@ -390,7 +390,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150519"
 nodigests = [
-    "*/security/pam_cgfs.so",
+    "glob:*/security/pam_cgfs.so",
 ]
 
 [[FileDigestGroup]]
@@ -399,7 +399,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1150524"
 nodigests = [
-    "*/security/pam_google_authenticator.so",
+    "glob:*/security/pam_google_authenticator.so",
 ]
 
 [[FileDigestGroup]]
@@ -408,7 +408,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1087061"
 nodigests = [
-    "*/security/pam_u2f.so",
+    "glob:*/security/pam_u2f.so",
 ]
 
 [[FileDigestGroup]]
@@ -417,7 +417,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#993806"
 nodigests = [
-    "*/security/pam_kwallet5.so",
+    "glob:*/security/pam_kwallet5.so",
 ]
 
 [[FileDigestGroup]]
@@ -426,7 +426,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1039709"
 nodigests = [
-    "*/security/pam_dbus.so",
+    "glob:*/security/pam_dbus.so",
 ]
 
 [[FileDigestGroup]]
@@ -435,7 +435,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1146353"
 nodigests = [
-    "*/security/pam_oslogin_login.so",
+    "glob:*/security/pam_oslogin_login.so",
 ]
 
 [[FileDigestGroup]]
@@ -444,7 +444,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#792095"
 nodigests = [
-    "*/security/pam_fprintd.so",
+    "glob:*/security/pam_fprintd.so",
 ]
 
 [[FileDigestGroup]]
@@ -453,7 +453,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1163362"
 nodigests = [
-    "*/security/pam_user_map.so",
+    "glob:*/security/pam_user_map.so",
 ]
 
 [[FileDigestGroup]]
@@ -462,7 +462,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169494"
 nodigests = [
-    "*/security/pam_oddjob_mkhomedir.so",
+    "glob:*/security/pam_oddjob_mkhomedir.so",
 ]
 
 [[FileDigestGroup]]
@@ -471,8 +471,8 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169614"
 nodigests = [
-    "*/security/pam_cockpit_cert.so",
-    "*/security/pam_ssh_add.so",
+    "glob:*/security/pam_cockpit_cert.so",
+    "glob:*/security/pam_ssh_add.so",
 ]
 
 [[FileDigestGroup]]
@@ -481,7 +481,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1173387"
 nodigests = [
-    "*/security/pam_kanidm.so",
+    "glob:*/security/pam_kanidm.so",
 ]
 
 [[FileDigestGroup]]
@@ -490,7 +490,7 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1177974"
 nodigests = [
-    "*/security/pam_malcontent.so",
+    "glob:*/security/pam_malcontent.so",
 ]
 
 [[FileDigestGroup]]
@@ -499,7 +499,7 @@ type = "pam"
 note = "sssd gssapi extension"
 bug = "bsc#1182509"
 nodigests = [
-    "*/security/pam_sss_gss.so",
+    "glob:*/security/pam_sss_gss.so",
 ]
 
 [[FileDigestGroup]]
@@ -508,7 +508,7 @@ type = "pam"
 note = "samba group-policy update helper"
 bug = "bsc#1188680"
 nodigests = [
-    "*/security/pam_oddjob_gpupdate.so",
+    "glob:*/security/pam_oddjob_gpupdate.so",
 ]
 
 [[FileDigestGroup]]
@@ -517,7 +517,7 @@ type = "pam"
 note = "PAM session time unlocking of encrypted directories"
 bug = "bsc#1195623"
 nodigests = [
-    "*/security/pam_fscrypt.so",
+    "glob:*/security/pam_fscrypt.so",
 ]
 
 [[FileDigestGroup]]
@@ -526,7 +526,7 @@ type = "pam"
 note = "PAM module provided by gromox to authenticate non-Gromox processes to a backend such as MySQL or LDAP"
 bug = "bsc#1200165"
 nodigests = [
-    "*/security/pam_gromox.so",
+    "glob:*/security/pam_gromox.so",
 ]
 
 [[FileDigestGroup]]
@@ -535,7 +535,7 @@ type = "pam"
 note = "Connects to a local cyrus-saslauthd for authentication"
 bug = "bsc#1205459"
 nodigests = [
-    "*/security/pam_saslauthd.so",
+    "glob:*/security/pam_saslauthd.so",
 ]
 
 [[FileDigestGroup]]
@@ -544,7 +544,7 @@ type = "pam"
 note = "Logs user session information to an sqlite3 database"
 bug = "bsc#1209238"
 nodigests = [
-    "*/security/pam_lastlog2.so",
+    "glob:*/security/pam_lastlog2.so",
 ]
 
 [[FileDigestGroup]]
@@ -553,7 +553,7 @@ type = "pam"
 note = "Keeps Y2038 safe login records in a sqlite database"
 bug = "bsc#1209963"
 nodigests = [
-    "*/security/pam_wtmpdb.so",
+    "glob:*/security/pam_wtmpdb.so",
 ]
 
 [[FileDigestGroup]]
@@ -562,5 +562,5 @@ type = "pam"
 note = "Based on kanidm's PAM module this here allows to authenticate against MS Azure Cloud AD"
 bug = "bsc#1215355"
 nodigests = [
-    "*/security/pam_himmelblau.so",
+    "glob:*/security/pam_himmelblau.so",
 ]

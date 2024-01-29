@@ -273,8 +273,16 @@ class FileDigestCheck(AbstractCheck):
         else:
             return d['packages']
 
-    def _matches_pkg(self, digest_group, pkg):
-        return pkg.name in self._gather_packages_from_dict(digest_group)
+    def _matches_pkg(self, config_dict, pkg):
+        for candidate in self._gather_packages_from_dict(config_dict):
+            if pkg.name == candidate:
+                return True
+            elif candidate.startswith('glob:'):
+                pattern = candidate.split(':', 1)[1]
+                if fnmatch(pkg.name, pattern):
+                    return True
+
+        return False
 
     def _get_digest_configuration_group(self, pkgfile):
         if stat.S_ISDIR(pkgfile.mode):
@@ -352,6 +360,19 @@ class FileDigestCheck(AbstractCheck):
 
         return digest_hint
 
+    def _check_paths_match(self, rpm_path, whitelist_path):
+        """This checks a whitelisted path against a file path found in the RPM
+        if they match. This also handles special cases like globbing
+        characters in the whitelisting."""
+        if rpm_path == whitelist_path:
+            # exact match
+            return True
+        elif whitelist_path.startswith('glob:'):
+            pattern = whitelist_path.split(':', 1)[1]
+            return fnmatch(rpm_path, pattern)
+        else:
+            return False
+
     def _check_group_type(self, pkg, group_type, secured_paths):
         """ Check all secured files of a group type
 
@@ -373,8 +394,8 @@ class FileDigestCheck(AbstractCheck):
         whitelisted_paths = {dg['path'] for dg in digests}
         for spath in secured_paths:
             for wpath in whitelisted_paths:
-                if fnmatch(spath, wpath):
-                    # filepath is whitelisted
+                # filepath is whitelisted
+                if self._check_paths_match(spath, wpath):
                     break
             else:
                 digest_hint = self._get_digest_hint(pkg, spath)
@@ -388,7 +409,7 @@ class FileDigestCheck(AbstractCheck):
             # version of this package with same whitelisted paths and different digests
             digests_of_path = []
             for digest in digests:
-                if fnmatch(path, digest['path']):
+                if self._check_paths_match(path, digest['path']):
                     digests_of_path.append(digest)
             # If *any* digest with the same path matches the package's file
             # digest of that path, then we assume the file is correctly whitelisted
@@ -428,7 +449,7 @@ class FileDigestCheck(AbstractCheck):
         - name: paths of the ghosted file
         """
         for ghost_exception in self.ghost_file_exceptions:
-            if pkg.name not in self._gather_packages_from_dict(ghost_exception):
+            if not self._matches_pkg(ghost_exception, pkg):
                 continue
             if name in ghost_exception['paths']:
                 return True
@@ -444,7 +465,7 @@ class FileDigestCheck(AbstractCheck):
         """
 
         for symlink_exception in self.symlink_exceptions:
-            if pkg.name not in self._gather_packages_from_dict(symlink_exception):
+            if not self._matches_pkg(symlink_exception, pkg):
                 continue
             if name in symlink_exception['paths']:
                 return True
