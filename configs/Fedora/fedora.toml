@@ -328,6 +328,11 @@ Filters = [
     ' info-files-without-install-info-postin',
     ' info-files-without-install-info-postun ',
     ' postin-without-install-info ',
+
+# In Fedora dependencies are generated from upstream metadata, so python checks
+# are not needed here. https://github.com/rpm-software-management/rpmlint/issues/1171
+    'python-missing-require',
+    'python-leftover-require',
 ]
 
 [DanglingSymlinkExceptions."/usr/share/doc/licenses/"]
