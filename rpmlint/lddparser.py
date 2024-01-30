@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 
 class LddParser:
