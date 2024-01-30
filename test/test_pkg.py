@@ -1,5 +1,8 @@
+import pytest
 import rpm
 from rpmlint.pkg import parse_deps, rangeCompare
+
+from Testing import get_tested_package
 
 
 def test_parse_deps():
@@ -19,3 +22,8 @@ def test_range_compare():
          ('foo', rpm.RPMSENSE_EQUAL, (1, '0.5', None))),
     ):
         assert not rangeCompare(req, prov)
+
+
+@pytest.mark.parametrize('package', ['binary/python311-pytest-xprocess'])
+def test_extract(package, tmp_path):
+    get_tested_package(package, tmp_path)
