@@ -9,6 +9,7 @@ import mmap
 import os
 from pathlib import Path, PurePath
 import re
+from shlex import quote
 import shutil
 import stat
 import subprocess
@@ -582,10 +583,8 @@ class Pkg(AbstractPkg):
                         subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
                                                 stderr=stderr, stdin=rpm_data)
                 else:
-                    stdout = subprocess.check_output(['rpm2cpio', str(filename)], env=ENGLISH_ENVIROMENT,
-                                                     stderr=stderr)
-                    subprocess.check_output('cpio -id && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
-                                            stderr=stderr, input=stdout)
+                    command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
+                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT, stderr=stderr)
             self.extracted = True
         return dirname
 

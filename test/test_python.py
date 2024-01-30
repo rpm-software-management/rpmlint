@@ -240,6 +240,22 @@ def test_python_tests_in_site_packages(package, test, output):
             ],
         },
     ),
+    get_tested_mock_package(
+        files={
+            '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
+                'content-path': 'files/python-flit-metadata.txt',
+                'create_dirs': True,
+            },
+        },
+        header={
+            'requires': [
+                'python3.12dist(docutils)',
+                'python3.12dist(flit-core) >= 3.8',
+                'python3.12dist(requests)',
+                'python3.12dist(tomli-w)',
+            ],
+        },
+    ),
 ])
 def test_python_dependencies_metadata(package, test, output):
     test.check(package)
