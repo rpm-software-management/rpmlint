@@ -10,7 +10,7 @@ from pathlib import Path
 import subprocess
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 STANDARD_BIN_DIRS = ('/bin', '/sbin', '/usr/bin', '/usr/sbin')
 
@@ -45,7 +45,7 @@ class MenuXDGCheck(AbstractFilesCheck):
         f = root + filename
         try:
             command = subprocess.run(('desktop-file-validate', f), stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                     env=ENGLISH_ENVIROMENT, text=True)
+                                     env=ENGLISH_ENVIRONMENT, text=True)
             text = command.stdout
             if command.returncode:
                 error_printed = False
