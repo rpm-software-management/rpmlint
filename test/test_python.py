@@ -1,22 +1,22 @@
+from mock_packages import (
+    PythonBlinkerMockPackage,
+    PythonDistutilsMockPackage,
+    PythonFlitMockPackage,
+    PythonFlitUpdatedMockPackage,
+    PythonIcecreamPackage,
+    PythonJupyterEventsMockPackage,
+    PythonJupyterServerFileidMockPackage,
+    PythonModuleMockPackage,
+    PythonScikitBuildMockPackage,
+    PythonSiteBlinkerMockPackage,
+    PythonSitePackage,
+)
 import pytest
 from rpmlint.checks.PythonCheck import PythonCheck
 from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_mock_package
 
-from mock_packages import( 
-    PythonSitePackage,
-    PythonModuleMockPackage,
-    PythonDistutilsMockPackage,
-    PythonFlitMockPackage,
-    PythonJupyterServerFileidMockPackage,
-    PythonJupyterEventsMockPackage,
-    PythonScikitBuildMockPackage,
-    PythonFlitUpdatedMockPackage,
-    PythonIcecreamPackage,
-    PythonBlinkerMockPackage,
-    PythonSiteBlinkerMockPackage,
-)
 
 @pytest.fixture(scope='function', autouse=True)
 def pythoncheck():
@@ -144,11 +144,10 @@ def test_python_tests_in_site_packages(package, test, output):
 
 
 @pytest.mark.parametrize('package', [PythonFlitMockPackage,
-    PythonJupyterServerFileidMockPackage,
-    PythonJupyterEventsMockPackage,
-    PythonScikitBuildMockPackage,
-    PythonFlitUpdatedMockPackage,
-])
+                                     PythonJupyterServerFileidMockPackage,
+                                     PythonJupyterEventsMockPackage,
+                                     PythonScikitBuildMockPackage,
+                                     PythonFlitUpdatedMockPackage,])
 def test_python_dependencies_metadata(package, test, output):
     test.check(package)
     out = output.print_results(output.results)

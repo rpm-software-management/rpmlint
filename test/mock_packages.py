@@ -79,25 +79,25 @@ PythonJupyterEventsMockPackage = get_tested_mock_package(
     header={
         'requires': [
             'python-jsonschema',
-                'python-python-json-logger',
-                'python-pyyaml',
-                'python-rfc3339-validator',
-                'python-rfc3986-validator',
-                'python-traitlets',
-                'python-click',
-                'python-rich',
-                'python-jupyterlite-sphinx',
-                'python-myst-parser',
-                'python-pydata-sphinx-theme',
-                'python-sphinxcontrib-spelling',
-                'python-click',
-                'python-coverage',
-                'python-pre-commit',
-                'python-pytest-asyncio',
-                'python-pytest-console-scripts',
-                'python-pytest-cov',
-                'python-pytest',
-                'python-rich',
+            'python-python-json-logger',
+            'python-pyyaml',
+            'python-rfc3339-validator',
+            'python-rfc3986-validator',
+            'python-traitlets',
+            'python-click',
+            'python-rich',
+            'python-jupyterlite-sphinx',
+            'python-myst-parser',
+            'python-pydata-sphinx-theme',
+            'python-sphinxcontrib-spelling',
+            'python-click',
+            'python-coverage',
+            'python-pre-commit',
+            'python-pytest-asyncio',
+            'python-pytest-console-scripts',
+            'python-pytest-cov',
+            'python-pytest',
+            'python-rich',
         ],
     },
 )
@@ -142,9 +142,9 @@ PythonIcecreamPackage = get_tested_mock_package(
         '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
             'content': """
 asttokens>=2.0.1
-colorama>=0.3.9 
+colorama>=0.3.9
 executing>=0.3.1
-pygments>=2.2.0 
+pygments>=2.2.0
 """,
             'create_dirs': True
         },
@@ -189,4 +189,3 @@ PythonSiteBlinkerMockPackage = get_tested_mock_package(
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc',
     ]
 )
-
