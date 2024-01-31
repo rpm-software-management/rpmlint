@@ -40,14 +40,12 @@ bugs = ["bsc#1219339"]
 type = "permissions"
 note = """Be careful about calculating digest sums here, the sendmail package
       replaces file contents during RPM build time with architecture dependent
-      values.
-      The globbing is due to the UsrMerge. We can remove /etc once the dust has
-      settled."""
+      values."""
 [[FileDigestGroup.digests]]
-path = "glob:{/etc,/usr/share/permissions}/permissions.d/sendmail"
+path = "/usr/share/permissions/permissions.d/sendmail"
 hash = "e09ca5efebd0b3c123afc2364f9745f4d85c4327fa83f709bccbaa64da764486"
 [[FileDigestGroup.digests]]
-path = "glob:{/etc,/usr/share/permissions}/permissions.d/sendmail.paranoid"
+path = "/usr/share/permissions/permissions.d/sendmail.paranoid"
 hash = "2d5c56cdfb00ec169c182de791cf2934331159842f1849c5f2d7059f0086bd2c"
 
 [[FileDigestGroup]]
