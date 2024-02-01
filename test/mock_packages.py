@@ -1,7 +1,12 @@
-# mock_packages.py
 from Testing import get_tested_mock_package
 
-PythonSitePackage = get_tested_mock_package(
+
+########################
+# Python mock packages #
+########################
+
+# Not valid doc folder in python packages
+PythonDocFolderPackage = get_tested_mock_package(
     files=[
         '/usr/lib/python2.7/site-packages/python-mypackage/doc',
         '/usr/lib/python2.7/site-packages/python-mypackage/docs',
@@ -14,7 +19,9 @@ PythonSitePackage = get_tested_mock_package(
     ]
 )
 
-PythonModuleMockPackage = get_tested_mock_package(
+
+# Valid doc folder in python package if it's a python module
+PythonDocModulePackage = get_tested_mock_package(
     files={
         '/usr/lib/python2.7/site-packages/python-mypackage/doc/__init__.py': {'create_dirs': True, 'include_dirs': 2},
         '/usr/lib/python2.7/site-packages/python-mypackage/docs/__init__.py': {'create_dirs': True, 'include_dirs': 1},
@@ -27,7 +34,9 @@ PythonModuleMockPackage = get_tested_mock_package(
     }
 )
 
-PythonDistutilsMockPackage = get_tested_mock_package(
+
+# Python package with old egginfo file, not folder
+PythonEggInfoFileackage = get_tested_mock_package(
     files={
         '/usr/lib/python2.7/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck'},
         '/usr/lib/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck'},
@@ -35,6 +44,7 @@ PythonDistutilsMockPackage = get_tested_mock_package(
         '/usr/lib64/python3.10/site-packages/mydistutilspackage.egg-info': {'content': 'Metadata-Version: 2.1\nName: pythoncheck'},
     }
 )
+
 
 PythonFlitMockPackage = get_tested_mock_package(
     files={
@@ -53,6 +63,7 @@ PythonFlitMockPackage = get_tested_mock_package(
     },
 )
 
+
 PythonJupyterServerFileidMockPackage = get_tested_mock_package(
     files={
         '/usr/lib/python3.10/site-packages/jupyter_server_fileid-0.9.0.dist-info/METADATA': {
@@ -68,6 +79,7 @@ PythonJupyterServerFileidMockPackage = get_tested_mock_package(
         ],
     },
 )
+
 
 PythonJupyterEventsMockPackage = get_tested_mock_package(
     files={
@@ -102,6 +114,7 @@ PythonJupyterEventsMockPackage = get_tested_mock_package(
     },
 )
 
+
 PythonScikitBuildMockPackage = get_tested_mock_package(
     files={
         '/usr/lib/python3.10/site-packages/scikit_build-0.17.2.dist-info/METADATA': {
@@ -120,7 +133,9 @@ PythonScikitBuildMockPackage = get_tested_mock_package(
     },
 )
 
-PythonFlitUpdatedMockPackage = get_tested_mock_package(
+
+# Python flit package with python3.12dist(foo) requirements (used in Fedora see #1171)
+PythonFlitFedoraMockPackage = get_tested_mock_package(
     files={
         '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
             'content-path': 'files/python-flit-metadata.txt',
@@ -137,6 +152,8 @@ PythonFlitUpdatedMockPackage = get_tested_mock_package(
     },
 )
 
+
+# Python package with old setuptools metadata format, egg-info folder
 PythonIcecreamPackage = get_tested_mock_package(
     files={
         '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
@@ -160,7 +177,9 @@ pygments>=2.2.0
 )
 
 
-PythonBlinkerMockPackage = get_tested_mock_package(
+# Python package with multiple pyc for different python versions in the same
+# sitelib
+PythonMultiplePYCMockPackage = get_tested_mock_package(
     files=[
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-310.pyc',
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc',
@@ -177,7 +196,9 @@ PythonBlinkerMockPackage = get_tested_mock_package(
     ]
 )
 
-PythonSiteBlinkerMockPackage = get_tested_mock_package(
+
+# Python package with pyc files but just the correct version
+PythonSinglePYCMockPackage = get_tested_mock_package(
     files=[
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.opt-1.pyc',
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/base.cpython-39.pyc',

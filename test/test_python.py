@@ -1,15 +1,15 @@
 from mock_packages import (
-    PythonBlinkerMockPackage,
-    PythonDistutilsMockPackage,
+    PythonDocFolderPackage,
+    PythonDocModulePackage,
+    PythonEggInfoFileackage,
+    PythonFlitFedoraMockPackage,
     PythonFlitMockPackage,
-    PythonFlitUpdatedMockPackage,
     PythonIcecreamPackage,
     PythonJupyterEventsMockPackage,
     PythonJupyterServerFileidMockPackage,
-    PythonModuleMockPackage,
+    PythonMultiplePYCMockPackage,
     PythonScikitBuildMockPackage,
-    PythonSiteBlinkerMockPackage,
-    PythonSitePackage,
+    PythonSinglePYCMockPackage,
 )
 import pytest
 from rpmlint.checks.PythonCheck import PythonCheck
@@ -38,7 +38,7 @@ def test(pythoncheck):
     yield test
 
 
-@pytest.mark.parametrize('package', [PythonSitePackage])
+@pytest.mark.parametrize('package', [PythonDocFolderPackage])
 def test_python_doc_in_package(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -52,7 +52,7 @@ def test_python_doc_in_package(package, test, output):
     assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/docs' in out
 
 
-@pytest.mark.parametrize('package', [PythonModuleMockPackage])
+@pytest.mark.parametrize('package', [PythonDocModulePackage])
 def test_python_doc_module_in_package(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -66,7 +66,7 @@ def test_python_doc_module_in_package(package, test, output):
     assert 'W: python-doc-in-package /usr/lib64/python3.10/site-packages/python-mypackage/docs' not in out
 
 
-@pytest.mark.parametrize('package', [PythonDistutilsMockPackage])
+@pytest.mark.parametrize('package', [PythonEggInfoFileackage])
 def test_python_distutils_egg_info(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -147,7 +147,7 @@ def test_python_tests_in_site_packages(package, test, output):
                                      PythonJupyterServerFileidMockPackage,
                                      PythonJupyterEventsMockPackage,
                                      PythonScikitBuildMockPackage,
-                                     PythonFlitUpdatedMockPackage,])
+                                     PythonFlitFedoraMockPackage,])
 def test_python_dependencies_metadata(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -257,14 +257,14 @@ def test_python_dependencies_leftover(package, test, output):
     assert 'W: python-leftover-require' in out
 
 
-@pytest.mark.parametrize('package', [PythonBlinkerMockPackage])
+@pytest.mark.parametrize('package', [PythonMultiplePYCMockPackage])
 def test_python_pyc_multiple_versions(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-pyc-multiple-versions expected: 310' in out
 
 
-@pytest.mark.parametrize('package', [PythonSiteBlinkerMockPackage])
+@pytest.mark.parametrize('package', [PythonSinglePYCMockPackage])
 def test_python_pyc_single_version(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
