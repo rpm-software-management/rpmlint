@@ -236,6 +236,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "pam"
+type = "pam"
+note = "A minimal PAM auth module that harmonizes usernames"
+bugs = ["bsc#1219358"]
+nodigests = [
+    "glob:*/security/pam_canonicalize_user.so",
+]
+
+[[FileDigestGroup]]
 package = "pam-userdb"
 type = "pam"
 note = "legacy: not audited"
