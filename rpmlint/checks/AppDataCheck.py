@@ -2,7 +2,7 @@ import subprocess
 from xml.etree import ElementTree
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 
 class AppDataCheck(AbstractFilesCheck):
@@ -23,7 +23,7 @@ class AppDataCheck(AbstractFilesCheck):
 
         validation_failed = False
         try:
-            r = subprocess.run(cmd.split(), env=ENGLISH_ENVIROMENT,
+            r = subprocess.run(cmd.split(), env=ENGLISH_ENVIRONMENT,
                                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if r.returncode != 0:
                 validation_failed = True

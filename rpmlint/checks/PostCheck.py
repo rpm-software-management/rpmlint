@@ -15,7 +15,7 @@ import tempfile
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string, ENGLISH_ENVIROMENT
+from rpmlint.helpers import byte_to_string, ENGLISH_ENVIRONMENT
 
 
 # shells that grok the -n switch for debugging
@@ -63,7 +63,7 @@ def check_syntax_script(prog, commandline, script):
     try:
         tmpfile.write(script)
         tmpfile.close()
-        ret = subprocess.run((prog, commandline, tmpname), env=ENGLISH_ENVIROMENT)
+        ret = subprocess.run((prog, commandline, tmpname), env=ENGLISH_ENVIRONMENT)
     finally:
         tmpfile.close()
         os.remove(tmpname)

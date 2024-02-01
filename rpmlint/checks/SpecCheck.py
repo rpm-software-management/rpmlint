@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import ENGLISH_ENVIROMENT, readlines
+from rpmlint.helpers import ENGLISH_ENVIRONMENT, readlines
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -304,7 +304,7 @@ class SpecCheck(AbstractCheck):
         try:
             outcmd = subprocess.run(
                 ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % self._spec_file_dir,
-                 '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIROMENT)
+                 '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIRONMENT)
 
             for line in outcmd.stderr.splitlines():
                 line = line.strip()

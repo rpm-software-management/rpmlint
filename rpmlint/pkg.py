@@ -23,7 +23,7 @@ try:
 except ImportError:
     has_magic = False
 import rpm
-from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIROMENT,
+from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIRONMENT,
                              print_warning, pushd)
 from rpmlint.pkgfile import PkgFile
 import zstandard as zstd
@@ -578,18 +578,18 @@ class Pkg(AbstractPkg):
                 stderr = None if verbose else subprocess.DEVNULL
                 if shutil.which('rpm2archive'):
                     with open(filename, 'rb') as rpm_data:
-                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIRONMENT,
                                                 stderr=stderr, stdin=rpm_data)
                 else:
                     command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
-                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT, stderr=stderr)
+                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIRONMENT, stderr=stderr)
             self.extracted = True
         return dirname
 
     def check_signature(self):
         ret = subprocess.run(('rpm', '-Kv', self.filename),
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                             env=ENGLISH_ENVIROMENT, text=True)
+                             env=ENGLISH_ENVIRONMENT, text=True)
         text = ret.stdout
         if text.endswith('\n'):
             text = text[:-1]
