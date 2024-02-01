@@ -3,7 +3,11 @@ from mock_packages import (
     PythonDocModulePackage,
     PythonEggInfoFileackage,
     PythonFlitFedoraMockPackage,
+    PythonFlitLeftoverRequirePackage,
+    PythonFlitMissingRequirePackage,
     PythonFlitMockPackage,
+    PythonIcecreamLeftoverRequirePackage,
+    PythonIcecreamMissingRequirePackage,
     PythonIcecreamPackage,
     PythonJupyterEventsMockPackage,
     PythonJupyterServerFileidMockPackage,
@@ -163,47 +167,14 @@ def test_python_dependencies_requires(package, test, output):
     assert 'W: python-leftover-require' not in out
 
 
-@pytest.mark.parametrize('package', [get_tested_mock_package(
-    files={
-        '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
-            'content': """
-asttokens>=2.0.1
-colorama>=0.3.9
-executing>=0.3.1
-pygments>=2.2.0
-""",
-            'create_dirs': True
-        },
-    },
-    header={
-        'requires': [
-            'asttokens>=2.0.1',
-            'executing>=0.3.1',
-            'pygments>=2.2.0',
-        ],
-    },
-)])
+@pytest.mark.parametrize('package', [PythonIcecreamMissingRequirePackage])
 def test_python_dependencies_missing_requires(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-missing-require' in out
 
 
-@pytest.mark.parametrize('package', [get_tested_mock_package(
-    files={
-        '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
-            'content-path': 'files/python-flit-metadata.txt',
-            'create_dirs': True
-        },
-    },
-    header={
-        'requires': [
-            'python3-flit-core',
-            'python3-requests',
-            'python3-tomli-w',
-        ],
-    },
-)])
+@pytest.mark.parametrize('package', [PythonFlitMissingRequirePackage])
 def test_python_dependencies_missing_metadata(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -211,45 +182,8 @@ def test_python_dependencies_missing_metadata(package, test, output):
 
 
 @pytest.mark.parametrize('package', [
-    get_tested_mock_package(
-        files={
-            '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
-                'content': """
-asttokens>=2.0.1
-colorama>=0.3.9
-executing>=0.3.1
-pygments>=2.2.0
-""",
-                'create_dirs': True
-            },
-        },
-        header={
-            'requires': [
-                'python3-asttokens >= 2.0.1',
-                'python3-colorama >= 0.3.9',
-                'python3-executing >= 0.3.1',
-                'python3-poetry',
-                'python3-pygments >= 2.2.0',
-            ],
-        },
-    ),
-    get_tested_mock_package(
-        files={
-            '/usr/lib/python3.10/site-packages/flit-3.8.0.dist-info/METADATA': {
-                'content-path': 'files/python-flit-metadata.txt',
-                'create_dirs': True
-            },
-        },
-        header={
-            'requires': [
-                'python3-docutils',
-                'python3-flit-core',
-                'python3-poetry',
-                'python3-requests',
-                'python3-tomli-w',
-            ],
-        },
-    ),
+    PythonIcecreamLeftoverRequirePackage,
+    PythonFlitLeftoverRequirePackage,
 ])
 def test_python_dependencies_leftover(package, test, output):
     test.check(package)
