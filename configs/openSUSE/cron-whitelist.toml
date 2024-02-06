@@ -27,15 +27,6 @@ digester = "shell"
 hash = "6981b346a1cdafbc018c6f69819a28994c64d9b0a9d6365235f1a79b7054312f"
 
 [[FileDigestGroup]]
-package = "patch2mail"
-type = "cron"
-note = "looks up pending zypper patches and sens them out by mail"
-bug = "bsc#1150552"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.daily/patch2mail"
-hash = "2db3aaa7addba83e60e24fdb868dd6f353bfb76b005fd2a2fdaf079fb54fe597"
-
-[[FileDigestGroup]]
 package = "nextcloud"
 type = "cron"
 note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
