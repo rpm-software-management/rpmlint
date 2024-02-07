@@ -48,6 +48,10 @@ class SystemdInstallCheck(AbstractCheck):
                         processed['postun'] = True
                         break
 
+                # accept %service_del_postun_without_restart() macro
+                if not processed['postun'] and ':' == postun.strip():
+                    processed['postun'] = True
+
                 basename = Path(fname).name
                 if not processed['pre']:
                     self.output.add_info('E', pkg, 'systemd-service-without-service_add_pre', basename)
