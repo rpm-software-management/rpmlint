@@ -52,7 +52,7 @@ hash = "167ec7922affa2b784540a0d755f02a270cd5d816aea402db2e6489cee293bad"
 package = "aaa_base"
 type = "sysctl"
 note = "some base hardenings of networking, (sym)link protection etc."
-bug = "bsc#1174722"
+bugs = ["bsc#1174722", "bsc#1219656"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-default.conf"
 digester = "shell"
@@ -64,7 +64,7 @@ hash = "4292c83e211bc30c928712a25708edf1cbeb94cf39d4d17b6594ad5559eef2e0"
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/52-yama.conf"
 digester = "shell"
-hash = "e874c084daaf0035d29687ec65275ad5b429ca312b72ef7f6362d2fd9d5bcc46"
+hash = "f801b862fe65a66ff56283254946e86016212977dd8583ac65d1a650b94131a8"
 
 [[FileDigestGroup]]
 package = "raspberrypi-firmware"
