@@ -605,6 +605,16 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "kf6-kauth"
+type     = "dbus"
+note     = "KDE6 kauth helper service - framework built around Polkit authentication for KDE applications"
+bug      = "bsc#1217178"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kf6auth.conf"
+digester = "xml"
+hash     = "0309e22585e819d00213a570949be1b219b087a150ac90ae3ad1d2ed67545ac6"
+
+[[FileDigestGroup]]
 package = "firewalld"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
