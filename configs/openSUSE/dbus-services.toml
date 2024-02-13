@@ -1084,6 +1084,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-disks"
+type     = "dbus"
+note     = "allows to invoke smartctl on block devices"
+bug      = "bsc#1217185"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf"
+digester = "xml"
+hash     = "83b4e002b9bdab964dd49e9aacca5531e5b3f28c524f43b90de74020b05e90ce"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kded.smart.service"
+digester = "shell"
+hash     = "cce8e0b79baedb4dbc75ae1f4dbdfa4db626ce4161f6cc702ba85ba8bfbcc590"
+
+[[FileDigestGroup]]
 package = "kdenetwork-filesharing"
 type = "dbus"
 note = "Samba configuration helper"
