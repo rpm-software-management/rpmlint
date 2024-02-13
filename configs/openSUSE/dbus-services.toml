@@ -196,6 +196,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-desktop"
+type     = "dbus"
+note     = "helper for setting time, date, ntp, timezone"
+bug      = "bsc#1217184"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf"
+digester = "xml"
+hash     = "ed225dc29086a779b4ff52cafbf9c65b7b31edb7436768726f7b5ba1f0539168"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service"
+digester = "shell"
+hash     = "727328d0cf3839edcee6a95bebd7593df539fb36799839d3c574b2cde96aaebd"
+
+[[FileDigestGroup]]
 package = "plasma5-workspace"
 type = "dbus"
 note = "legacy: not audited"
