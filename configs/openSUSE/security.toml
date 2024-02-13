@@ -30,7 +30,8 @@ Locations = [
 FollowSymlinks = false
 Locations = [
     "/etc/permissions.d/",
-    "/usr/share/permissions/permissions.d/"
+    "/usr/share/permissions/permissions.d/",
+    "/usr/share/permissions/packages.d/"
 ]
 
 [FileDigestLocation.pam]

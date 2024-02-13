@@ -5,13 +5,15 @@ import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.permissions import PermissionsParser, VariablesHandler
 
+SHARE_DIR = '/usr/share/permissions'
+
 
 class SUIDPermissionsCheck(AbstractCheck):
     def __init__(self, config, output):
         super().__init__(config, output)
         self.perms = {}
 
-        self.var_handler = VariablesHandler('/usr/share/permissions/variables.conf')
+        self.var_handler = VariablesHandler(f'{SHARE_DIR}/variables.conf')
 
         for fname in self._paths_to('permissions', 'permissions.secure'):
             if not os.path.exists(fname):
@@ -100,38 +102,40 @@ class SUIDPermissionsCheck(AbstractCheck):
             # return the new path first.
             # chkstat prefers the new paths over the old ones, so callers that only care about the
             # first matching file must mimic that.
-            yield '/usr/share/permissions/' + name
-            yield '/etc/' + name
+            yield f'{SHARE_DIR}/{name}'
+            yield f'/etc/{name}'
 
     def check(self, pkg):
         if pkg.is_source:
             return
 
         permfiles = set()
-        # first pass, find and parse permissions.d files
+        # first pass, find and parse per-package drop-in files
         for f in pkg.files.keys():
-            for prefix in self._paths_to('permissions.d/'):
+            for prefix in list(self._paths_to('permissions.d/')) + [f'{SHARE_DIR}/packages.d/']:
                 if f.startswith(prefix):
                     if f in pkg.ghost_files:
                         continue
 
+                    dropin_dir = prefix.rstrip('/').split('/')[-1]
+
                     # Attention: We require the FileDigestLocation config to
-                    # mark all permissions.d paths as "blacklisted" paths.
+                    # mark all packages.d paths as "blacklisted" paths.
                     # e.g. [FileDigestLocation.permissions] with Locations
                     # /etc/permissions.d/ and /usr/share/permissions/permissions.d/
-                    # This ensures that an file-unauthorized error is thrown when a permissions.d
-                    # package is not whitelisted.
+                    # This ensures that an file-unauthorized error is thrown when an
+                    # entry is not whitelisted.
                     #
-                    # To whitelist a permissions.d file after a successful review,
+                    # To whitelist a drop-in file after a successful review,
                     # the path and its digest need to be added as FileDigestCheck config
                     # having respective FileDigestLocation type (e.g.
                     # "permissions").
                     #
-                    # Here we add *all* files in a package's permissions.d directory to our
+                    # Here we add *all* files a package has in a dropin.d directory to our
                     # valid permissions files *without* checking if they belong
                     # to a whitelist as we assume it will be checked by
                     # FileDigestCheck and FileDigestLocation.
-                    bn = 'permissions.d/' + f[len(prefix):].split('.')[0]
+                    bn = f'{dropin_dir}/' + f[len(prefix):].split('.')[0]
                     if bn not in permfiles:
                         permfiles.add(bn)
 
