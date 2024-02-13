@@ -1300,6 +1300,20 @@ digester = "xml"
 hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
 
 [[FileDigestGroup]]
+package  = "kinfocenter6"
+type     = "dbus"
+note     = "KDE utility that provides information about the user's system."
+bug      = "bsc#1217179"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service"
+digester = "shell"
+hash     = "c888f9180e66dc729ec637113863ea766fb28c3a8fe62e6f7dd872e44cf6e671"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
+digester = "xml"
+hash     = "55400352c8d0450d3d4c1eeb8f009c2a2741a02b9ec5d3f8f1034644a7f9e2d2"
+
+[[FileDigestGroup]]
 package = "transactional-update-notifier"
 type = "dbus"
 note = "Forwards system notifications from the transactional update system into individual user sessions"
