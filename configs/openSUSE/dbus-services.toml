@@ -215,6 +215,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "libksysguard6-plugins"
+type     = "dbus"
+note     = "send signals to and change scheduling properties of arbitrary processes"
+bug      = "bsc#1217182"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.ksysguard.processlisthelper.conf"
+digester = "xml"
+hash     = "e08be1fffd5b7ebddb31f396f603e7a9fac08784c5473f37195262b55c663d45"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.ksysguard.processlisthelper.service"
+digester = "shell"
+hash     = "adc9ea7f2e2c649aa9bd30ddfd3e497d23de6cf801424460723a0df0a56514aa"
+
+[[FileDigestGroup]]
 package = "pulseaudio"
 type = "dbus"
 note = "allows the pulse user to run system-wide pulseaudio, which is not recommended"
