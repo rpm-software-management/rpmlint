@@ -220,6 +220,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-workspace"
+note     = "supports managing system fonts - this is a high risk legacy D-Bus interface"
+bug      = "bsc#1217186"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.fontinst.service"
+digester = "shell"
+hash     = "50af031d691c490b93422de45d78e836c306c411a36a56d87cbcdcc629147103"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.fontinst.conf"
+digester = "xml"
+hash     = "656eba9d70d121ced1111d166440d4fe930af14f885bd2330843a150c08aee2d"
+
+[[FileDigestGroup]]
 package = "libksysguard5-plugins"
 type = "dbus"
 note = "legacy: not audited"
