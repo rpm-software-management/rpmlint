@@ -393,6 +393,36 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "powerdevil6"
+type     = "dbus"
+note     = "handles battery, backlight and GPU hardware settings"
+bug      = "bsc#1217187"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf"
+digester = "xml"
+hash     = "f02b05e676bbb34326f20660226474344da140ff79f987998fb841946e23619b"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service"
+digester = "shell"
+hash     = "50b69e7812dc59de0c5d230e79299d0c5e38c3f3ed0272be6e03a11dd8c165ea"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.discretegpuhelper.conf"
+digester = "xml"
+hash     = "bdccdac44566ff80abc3e9d3ce2c1f1c4b13945dc770ba9da648703bc72c85e2"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.discretegpuhelper.service"
+digester = "shell"
+hash     = "b1393dba57d7c748c114e2a7da6edd10c25aa4363d8a0812b1815a4e90fa4589"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.chargethresholdhelper.conf"
+digester = "xml"
+hash     = "52c613384410bd2f310f798c0cea579ac4fdd5a3ba1646516934666fbc5a56a6"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.chargethresholdhelper.service"
+digester = "shell"
+hash     = "0545200b52de9d787d5a2a0e9d46304c037c8aa6392d0e5296ed7632de570767"
+
+[[FileDigestGroup]]
 package = "urfkill"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
