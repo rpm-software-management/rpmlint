@@ -196,6 +196,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-desktop"
+type     = "dbus"
+note     = "helper for setting time, date, ntp, timezone"
+bug      = "bsc#1217184"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf"
+digester = "xml"
+hash     = "ed225dc29086a779b4ff52cafbf9c65b7b31edb7436768726f7b5ba1f0539168"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service"
+digester = "shell"
+hash     = "727328d0cf3839edcee6a95bebd7593df539fb36799839d3c574b2cde96aaebd"
+
+[[FileDigestGroup]]
 package = "plasma5-workspace"
 type = "dbus"
 note = "legacy: not audited"
@@ -206,6 +220,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-workspace"
+note     = "supports managing system fonts - this is a high risk legacy D-Bus interface"
+bug      = "bsc#1217186"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.fontinst.service"
+digester = "shell"
+hash     = "50af031d691c490b93422de45d78e836c306c411a36a56d87cbcdcc629147103"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.fontinst.conf"
+digester = "xml"
+hash     = "656eba9d70d121ced1111d166440d4fe930af14f885bd2330843a150c08aee2d"
+
+[[FileDigestGroup]]
 package = "libksysguard5-plugins"
 type = "dbus"
 note = "legacy: not audited"
@@ -213,6 +241,20 @@ nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.ksysguard.processlisthelper.service",
     "/usr/share/dbus-1/system.d/org.kde.ksysguard.processlisthelper.conf",
 ]
+
+[[FileDigestGroup]]
+package  = "libksysguard6-plugins"
+type     = "dbus"
+note     = "send signals to and change scheduling properties of arbitrary processes"
+bug      = "bsc#1217182"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.ksysguard.processlisthelper.conf"
+digester = "xml"
+hash     = "e08be1fffd5b7ebddb31f396f603e7a9fac08784c5473f37195262b55c663d45"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.ksysguard.processlisthelper.service"
+digester = "shell"
+hash     = "adc9ea7f2e2c649aa9bd30ddfd3e497d23de6cf801424460723a0df0a56514aa"
 
 [[FileDigestGroup]]
 package = "pulseaudio"
@@ -363,6 +405,36 @@ nodigests = [
     "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service",
     "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf",
 ]
+
+[[FileDigestGroup]]
+package  = "powerdevil6"
+type     = "dbus"
+note     = "handles battery, backlight and GPU hardware settings"
+bug      = "bsc#1217187"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf"
+digester = "xml"
+hash     = "f02b05e676bbb34326f20660226474344da140ff79f987998fb841946e23619b"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service"
+digester = "shell"
+hash     = "50b69e7812dc59de0c5d230e79299d0c5e38c3f3ed0272be6e03a11dd8c165ea"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.discretegpuhelper.conf"
+digester = "xml"
+hash     = "bdccdac44566ff80abc3e9d3ce2c1f1c4b13945dc770ba9da648703bc72c85e2"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.discretegpuhelper.service"
+digester = "shell"
+hash     = "b1393dba57d7c748c114e2a7da6edd10c25aa4363d8a0812b1815a4e90fa4589"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.chargethresholdhelper.conf"
+digester = "xml"
+hash     = "52c613384410bd2f310f798c0cea579ac4fdd5a3ba1646516934666fbc5a56a6"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.chargethresholdhelper.service"
+digester = "shell"
+hash     = "0545200b52de9d787d5a2a0e9d46304c037c8aa6392d0e5296ed7632de570767"
 
 [[FileDigestGroup]]
 package = "urfkill"
@@ -603,6 +675,16 @@ bug = "bsc#864716"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.kde.kf5auth.conf",
 ]
+
+[[FileDigestGroup]]
+package  = "kf6-kauth"
+type     = "dbus"
+note     = "KDE6 kauth helper service - framework built around Polkit authentication for KDE applications"
+bug      = "bsc#1217178"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kf6auth.conf"
+digester = "xml"
+hash     = "0309e22585e819d00213a570949be1b219b087a150ac90ae3ad1d2ed67545ac6"
 
 [[FileDigestGroup]]
 package = "firewalld"
@@ -1046,6 +1128,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "plasma6-disks"
+type     = "dbus"
+note     = "allows to invoke smartctl on block devices"
+bug      = "bsc#1217185"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf"
+digester = "xml"
+hash     = "83b4e002b9bdab964dd49e9aacca5531e5b3f28c524f43b90de74020b05e90ce"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kded.smart.service"
+digester = "shell"
+hash     = "cce8e0b79baedb4dbc75ae1f4dbdfa4db626ce4161f6cc702ba85ba8bfbcc590"
+
+[[FileDigestGroup]]
 package = "kdenetwork-filesharing"
 type = "dbus"
 note = "Samba configuration helper"
@@ -1288,6 +1384,20 @@ hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
 path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
 digester = "xml"
 hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
+
+[[FileDigestGroup]]
+package  = "kinfocenter6"
+type     = "dbus"
+note     = "KDE utility that provides information about the user's system."
+bug      = "bsc#1217179"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service"
+digester = "shell"
+hash     = "c888f9180e66dc729ec637113863ea766fb28c3a8fe62e6f7dd872e44cf6e671"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
+digester = "xml"
+hash     = "55400352c8d0450d3d4c1eeb8f009c2a2741a02b9ec5d3f8f1034644a7f9e2d2"
 
 [[FileDigestGroup]]
 package = "transactional-update-notifier"

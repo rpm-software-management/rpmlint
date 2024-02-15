@@ -421,10 +421,10 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_kwallet"
+packages = ["pam_kwallet", "pam_kwallet6"]
 type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#993806"
+bugs = ["bsc#993806", "bsc#1217183"]
 nodigests = [
     "glob:*/security/pam_kwallet5.so",
 ]
