@@ -1184,11 +1184,11 @@ hash = "89a2ce5a4c6ebd7cb471f820a28fbd2dd418e377cb2ed0eaea1af59840c1dabd"
 package = "systemd-homed"
 type = "dbus"
 note = "systemd-homed helper service for providing portable home directory containers"
-bugs = ["bsc#1185285", "bsc#1213692"]
+bugs = ["bsc#1185285", "bsc#1213692", "bsc#1219916"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf"
 digester = "xml"
-hash = "c47cf4b450df384104c2b66dddff75098def43c17feaa3b9f455d96336530868"
+hash = "8bfb27085d0f465591b56f17b33c0f9100b917a0a592fe662eed52b039ac6737"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.home1.service"
 digester = "shell"
