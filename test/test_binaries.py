@@ -77,6 +77,54 @@ def test_no_arch_issues(tmp_path, package, binariescheck):
     assert 'E: noarch-with-lib64' in out
 
 
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/ebpf.o': {'content-path': 'files/ebpf.o', 'create_dirs': True}},
+        header={'ARCH': 'noarch'},
+    ),
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/python-flit-metadata.txt': {'content-path': 'files/python-flit-metadata.txt', 'create_dirs': True}},
+        header={'ARCH': 'noarch'},
+    ),
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/x86_64.o': {'content-path': 'files/x86_64.o', 'create_dirs': True}},
+        header={'ARCH': 'x86-64'},
+    ),
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/aarch64.o': {'content-path': 'files/aarch64.o', 'create_dirs': True}},
+        header={'ARCH': 'aarch64'},
+    ),
+])
+def test_no_arch_eBPF(package, binariescheck):
+    output, test = binariescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: arch-independent-package-contains-binary-or-object' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/x86_64.o': {'content-path': 'files/x86_64.o', 'create_dirs': True}},
+        header={'ARCH': 'noarch'},
+    ),
+    get_tested_mock_package(
+        lazyload=True,
+        files={'/opt/aarch64.o': {'content-path': 'files/aarch64.o', 'create_dirs': True}},
+        header={'ARCH': 'noarch'},
+    ),
+])
+def test_no_arch_error(package, binariescheck):
+    output, test = binariescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: arch-independent-package-contains-binary-or-object' in out
+
+
 @pytest.mark.parametrize('package', ['binary/libnoexec'])
 def test_shlib_with_no_exec(tmp_path, package, binariescheck):
     output, test = binariescheck
