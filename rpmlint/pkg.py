@@ -843,6 +843,9 @@ class FakePkg(AbstractPkg):
                 self.add_dir(str(i))
         metadata = attrs.get('metadata', None)
 
+        if attrs.get('is_dir', False):
+            self.add_dir(path, metadata=metadata)
+
         content = ''
         if 'content-path' in attrs:
             content = open(attrs['content-path'], 'rb')
@@ -873,11 +876,16 @@ class FakePkg(AbstractPkg):
             for path, file in files.items():
                 self._mock_file(path, file)
 
-    def add_dir(self, path):
+    def add_dir(self, path, metadata=None):
         pkgdir = PkgFile(path)
         pkgdir.magic = 'directory'
         pkgdir.path = path
         self.files[path] = pkgdir
+
+        if metadata:
+            for k, v in metadata.items():
+                setattr(pkgdir, k, v)
+
         return pkgdir
 
     def add_file_with_content(self, name, content, metadata=None, **flags):

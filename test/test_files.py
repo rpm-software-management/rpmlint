@@ -300,3 +300,36 @@ def test_shebang_ok(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: symlink-to-binary-with-shebang /usr/bin/testlink' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        header={'requires': []},
+        files={
+            '/etc/raddb/mods-config/sql/moonshot-targeted-ids/mysql': {
+                'is_dir': True,
+                'metadata': {'mode': 0o640 | stat.S_IFDIR},
+            },
+            '/etc/raddb/mods-config/sql/moonshot-targeted-ids/postgresql': {
+                'is_dir': True,
+                'metadata': {'mode': 0o640 | stat.S_IFDIR},
+            },
+            '/etc/raddb/mods-config/sql/moonshot-targeted-ids/sqlite': {
+                'is_dir': True,
+                'metadata': {'mode': 0o640 | stat.S_IFDIR},
+            },
+        },
+    ),
+])
+def test_directory_without_x_permission(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: non-standard-dir-perm' in out
+
+
+@pytest.mark.parametrize('package', ['binary/freeradius-server'])
+def test_directory_without_x_permission2(tmp_path, package, filescheck):
+    output, test = filescheck
+    test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'E: non-standard-dir-perm' in out
