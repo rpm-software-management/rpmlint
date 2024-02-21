@@ -16,6 +16,14 @@ use a directory for building, use $RPM_BUILD_ROOT instead.
 patch-not-applied="""
 A patch is included in your package but was not applied.
 """
+patch-macro-old-format="""
+The usage of %patchN is not supported by RPM >= 4.20. The preferred way to
+apply patches are, in order:
+ * %autosetup -p1
+ * %autosetup -N / %autopatch -p1
+ * %setup / %patch -P <N> -p 1 (upper case P denotes patch number,
+   lower case is the usual patch -p<num> strip level)
+"""
 obsolete-tag="""
 The following tags are obsolete: Copyright and Serial. They must
 be replaced by License and Epoch respectively.
