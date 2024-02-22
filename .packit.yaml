@@ -14,8 +14,11 @@ jobs:
     - fedora-rawhide-aarch64
 #    - mageia-cauldron-x86_64
 #    - mageia-cauldron-aarch64
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+#    opensuse images are failing becuse dnf-plugins-core package is not updated
+#    in the Tumbleweed image container.
+#    gh#rpm-software-management/rpmlint#981#issuecomment-1929280102
+#    - opensuse-tumbleweed-x86_64
+#    - opensuse-tumbleweed-aarch64
   trigger: pull_request
 - job: copr_build
   trigger: commit
@@ -25,8 +28,11 @@ jobs:
     - fedora-rawhide-aarch64
 #    - mageia-cauldron-x86_64
 #    - mageia-cauldron-aarch64
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+#    opensuse images are failing becuse dnf-plugins-core package is not updated
+#    in the Tumbleweed image container.
+#    gh#rpm-software-management/rpmlint#981#issuecomment-1929280102
+#    - opensuse-tumbleweed-x86_64
+#    - opensuse-tumbleweed-aarch64
     branch: main
     project: rpm-software-management-rpmlint-mainline
     list_on_homepage: True
@@ -35,8 +41,11 @@ jobs:
   trigger: commit
   metadata:
     targets:
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+#    opensuse images are failing becuse dnf-plugins-core package is not updated
+#    in the Tumbleweed image container.
+#    gh#rpm-software-management/rpmlint#981#issuecomment-1929280102
+#    - opensuse-tumbleweed-x86_64
+#    - opensuse-tumbleweed-aarch64
     branch: opensuse
     project: rpm-software-management-rpmlint-opensuse
     list_on_homepage: True
