@@ -657,9 +657,14 @@ class BinariesCheck(AbstractCheck):
             # binary files only from here on
             is_ocaml_native = 'Objective caml native' in pkgfile.magic
             is_lua_bytecode = 'Lua bytecode' in pkgfile.magic
+            #  eBPF binaries are arch independent
+            # https://github.com/rpm-software-management/rpmlint/issues/1193
+            is_ebpf = 'eBPF' in pkgfile.magic
             # Look for ELF in the file magic to check if it's really a binary
             # file
-            if not (self.elf_regex.match(pkgfile.magic) or
+            is_elf = self.elf_regex.match(pkgfile.magic) and not is_ebpf
+
+            if not (is_elf or
                     'current ar archive' in pkgfile.magic or
                     is_ocaml_native or is_lua_bytecode):
                 continue

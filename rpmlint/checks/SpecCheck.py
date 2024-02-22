@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import rpm
 from rpmlint import pkg as Pkg
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import ENGLISH_ENVIROMENT, readlines
+from rpmlint.helpers import ENGLISH_ENVIRONMENT, readlines
 
 # Don't check for hardcoded library paths in biarch packages
 DEFAULT_BIARCH_PACKAGES = '^(gcc|glibc)'
@@ -18,6 +18,8 @@ def re_tag_compile(tag):
 
 
 patch_regex = re_tag_compile(r'Patch(\d*)')
+# rpm 4.20 doesn't support %patchN anymore, we should warn about this
+applied_patch_rpm420_regex = re.compile(r'^%patch(\d+)')
 applied_patch_regex = re.compile(r'^%patch\s*(\d*)')
 applied_patch_p_regex = re.compile(r'\s-P\s*(\d+)\b')
 applied_patch_pipe_regex = re.compile(r'\s%\{PATCH(\d+)\}\s*\|\s*(%\{?__)?patch\b')
@@ -307,7 +309,7 @@ class SpecCheck(AbstractCheck):
         try:
             outcmd = subprocess.run(
                 ('rpm', '-q', '--qf=', '-D', '_sourcedir %s' % self._spec_file_dir,
-                 '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIROMENT)
+                 '--specfile', self._spec_file), stderr=subprocess.PIPE, encoding='utf8', env=ENGLISH_ENVIRONMENT)
 
             for line in outcmd.stderr.splitlines():
                 line = line.strip()
@@ -468,6 +470,10 @@ class SpecCheck(AbstractCheck):
         # Check for %patch -P
         res = applied_patch_regex.search(line)
         if res:
+            # Check for %patchN (not supported by rpm >= 4.20)
+            if applied_patch_rpm420_regex.match(line):
+                self.output.add_info('E', self.pkg, 'patch-macro-old-format')
+
             pnum = res.group(1) or 0
             for tmp in applied_patch_p_regex.findall(line) or [pnum]:
                 pnum = int(tmp)

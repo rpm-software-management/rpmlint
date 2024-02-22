@@ -63,7 +63,51 @@ def get_tested_spec_package(name):
     return FakePkg(candidates[0])
 
 
-def get_tested_mock_package(files=None, header=None, name='mockPkg'):
+class LazyMock:
+    """
+    Class to store mock package definition and create the actual mock package
+    when needed, when some internal attribute or method is requested.
+    """
+
+    def __init__(self, files, header, name):
+        self._lazy_pkg = None
+        self._lazy_files = files
+        self._lazy_header = header
+        self._lazy_name = name
+
+    @property
+    def _fake_pkg(self):
+        if not self._lazy_pkg:
+            self._lazy_pkg = get_tested_mock_package(self._lazy_files,
+                                                     self._lazy_header,
+                                                     self._lazy_name)
+        return self._lazy_pkg
+
+    def clone(self, files=None, header=None, name=None):
+        """
+        Copies this LazyMock modifying some properties
+        """
+
+        if files is None:
+            files = self._lazy_files
+        if header is None:
+            header = self._lazy_header
+        if name is None:
+            name = self._lazy_name
+
+        return LazyMock(files, header, name)
+
+    def __getitem__(self, key):
+        return self._fake_pkg.__getitem__(key)
+
+    def __getattr__(self, name):
+        return getattr(self._fake_pkg, name)
+
+
+def get_tested_mock_package(files=None, header=None, name='mockPkg', lazyload=False):
+    if lazyload:
+        return LazyMock(files, header, name)
+
     mockPkg = FakePkg(name)
     if files is not None:
         if isinstance(files, dict):

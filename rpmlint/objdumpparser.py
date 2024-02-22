@@ -1,6 +1,6 @@
 import subprocess
 
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 
 class ObjdumpParser:
@@ -32,7 +32,7 @@ class ObjdumpParser:
 
     def parse_dwarf_compilation_units(self):
         r = subprocess.run(['objdump', '--dwarf=info', '--dwarf-depth=1', self.pkgfile_path], encoding='utf8',
-                           capture_output=True, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIRONMENT)
         # here ldd should always return 0
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr

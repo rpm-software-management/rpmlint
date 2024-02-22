@@ -23,7 +23,7 @@ try:
 except ImportError:
     has_magic = False
 import rpm
-from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIROMENT,
+from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIRONMENT,
                              print_warning, pushd)
 from rpmlint.pkgfile import PkgFile
 import zstandard as zstd
@@ -386,6 +386,28 @@ class AbstractPkg:
     def cleanup(self):
         pass
 
+    def _calc_magic(self, pkgfile):
+        magic = pkgfile.magic
+        if not magic:
+            if stat.S_ISDIR(pkgfile.mode):
+                magic = 'directory'
+            elif stat.S_ISLNK(pkgfile.mode):
+                magic = "symbolic link to `%s'" % pkgfile.linkto
+            elif not pkgfile.size:
+                magic = 'empty'
+        if not magic and not pkgfile.is_ghost and has_magic:
+            start = time.monotonic()
+            magic = get_magic(pkgfile.path)
+            self.timers['libmagic'] += time.monotonic() - start
+        if magic is None or Pkg._magic_from_compressed_re.search(magic):
+            # Discard magic from inside compressed files ('file -z')
+            # until PkgFile gets decompression support.  We may get
+            # such magic strings from package headers already now;
+            # for example Fedora's rpmbuild as of F-11's 4.7.1 is
+            # patched so it generates them.
+            magic = ''
+        return magic
+
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
                     prereq=None):
@@ -580,18 +602,18 @@ class Pkg(AbstractPkg):
                 stderr = subprocess.DEVNULL
                 if shutil.which('rpm2archive'):
                     with open(filename, 'rb') as rpm_data:
-                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIROMENT,
+                        subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIRONMENT,
                                                 stderr=stderr, stdin=rpm_data)
                 else:
                     command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
-                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIROMENT, stderr=stderr)
+                    subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIRONMENT, stderr=stderr)
             self.extracted = True
         return dirname
 
     def check_signature(self):
         ret = subprocess.run(('rpm', '-Kv', self.filename),
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                             env=ENGLISH_ENVIROMENT, text=True)
+                             env=ENGLISH_ENVIRONMENT, text=True)
         text = ret.stdout
         if text.endswith('\n'):
             text = text[:-1]
@@ -678,25 +700,7 @@ class Pkg(AbstractPkg):
                 pkgfile.provides = parse_deps(provides[idx])
                 pkgfile.lang = byte_to_string(langs[idx])
                 pkgfile.magic = magics[idx]
-                if not pkgfile.magic:
-                    if stat.S_ISDIR(pkgfile.mode):
-                        pkgfile.magic = 'directory'
-                    elif stat.S_ISLNK(pkgfile.mode):
-                        pkgfile.magic = "symbolic link to `%s'" % pkgfile.linkto
-                    elif not pkgfile.size:
-                        pkgfile.magic = 'empty'
-                if (not pkgfile.magic and
-                        not pkgfile.is_ghost and has_magic):
-                    start = time.monotonic()
-                    pkgfile.magic = get_magic(pkgfile.path)
-                    self.timers['libmagic'] += time.monotonic() - start
-                if pkgfile.magic is None or Pkg._magic_from_compressed_re.search(pkgfile.magic):
-                    # Discard magic from inside compressed files ('file -z')
-                    # until PkgFile gets decompression support.  We may get
-                    # such magic strings from package headers already now;
-                    # for example Fedora's rpmbuild as of F-11's 4.7.1 is
-                    # patched so it generates them.
-                    pkgfile.magic = ''
+                pkgfile.magic = self._calc_magic(pkgfile)
                 if filecaps:
                     pkgfile.filecaps = byte_to_string(filecaps[idx])
                 ret[pkgfile.name] = pkgfile
@@ -806,6 +810,7 @@ class FakePkg(AbstractPkg):
     ]
 
     def __init__(self, name, is_source=False):
+        self.timers = {'ExtractRpm': 0, 'libmagic': 0}
         self.name = str(name)
         self.filename = f'{name}.rpm'
         self.arch = None
@@ -840,9 +845,12 @@ class FakePkg(AbstractPkg):
                 self.add_dir(str(i))
         metadata = attrs.get('metadata', None)
 
+        if attrs.get('is_dir', False):
+            self.add_dir(path, metadata=metadata)
+
         content = ''
         if 'content-path' in attrs:
-            content = open(attrs['content-path'])
+            content = open(attrs['content-path'], 'rb')
         elif 'content' in attrs:
             content = attrs['content']
 
@@ -870,11 +878,16 @@ class FakePkg(AbstractPkg):
             for path, file in files.items():
                 self._mock_file(path, file)
 
-    def add_dir(self, path):
+    def add_dir(self, path, metadata=None):
         pkgdir = PkgFile(path)
         pkgdir.magic = 'directory'
         pkgdir.path = path
         self.files[path] = pkgdir
+
+        if metadata:
+            for k, v in metadata.items():
+                setattr(pkgdir, k, v)
+
         return pkgdir
 
     def add_file_with_content(self, name, content, metadata=None, **flags):
@@ -893,11 +906,13 @@ class FakePkg(AbstractPkg):
         # create files in filesystem
         os.makedirs(Path(path).parent, exist_ok=True)
 
-        with open(Path(path), 'w') as out:
+        if isinstance(content, str):
+            content = content.encode('utf-8', errors='ignore')
+
+        with open(Path(path), 'wb') as out:
             # file like content
             if isinstance(content, io.IOBase):
                 shutil.copyfileobj(content, out)
-            # text content
             else:
                 out.write(content)
 
@@ -905,6 +920,7 @@ class FakePkg(AbstractPkg):
         pkg_file.md5 = self.md5_checksum(Path(path))
         pkg_file.size = os.path.getsize(Path(path))
         pkg_file.inode = os.stat(Path(path)).st_ino
+        pkg_file.magic = self._calc_magic(pkg_file)
 
         if metadata:
             for k, v in metadata.items():
@@ -935,6 +951,9 @@ class FakePkg(AbstractPkg):
 
             key = getattr(rpm, f'RPMTAG_{k}'.upper())
             self.header[key] = v
+
+            if key == rpm.RPMTAG_ARCH:
+                self.arch = v
 
         (self.requires, self.prereq, self.provides, self.conflicts,
          self.obsoletes, self.recommends, self.suggests, self.enhances,

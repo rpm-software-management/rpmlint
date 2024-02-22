@@ -1069,6 +1069,34 @@ def test_check_patch_not_applied(package, speccheck):
     assert 'W: patch-not-applied' in out
 
 
+@pytest.mark.parametrize('package', [
+    'spec/SpecCheck',
+    'spec/%ifarch-applied-patch',
+    'spec/prereq_use',
+    'spec/mixed-use-of-spaces-and-tabs',
+])
+def test_check_patch_rpm_420(package, speccheck):
+    """Test if specfile uses %patchN."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: patch-macro-old-format' in out
+
+
+@pytest.mark.parametrize('package', [
+    'spec/intltool',
+    'spec/ghc',
+    'spec/SpecCheckPatch',
+])
+def test_check_patch_rpm_not_420(package, speccheck):
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: patch-macro-old-format' not in out
+
+
 @pytest.mark.parametrize('package', ['spec/mixed-use-of-spaces-and-tabs'])
 def test_check_patch_not_found(package, speccheck):
     """Test if specfile have all patch applied by %autopatch."""

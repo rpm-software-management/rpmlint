@@ -1,6 +1,6 @@
 import subprocess
 
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 
 class ArParser:
@@ -16,7 +16,7 @@ class ArParser:
 
     def parse(self):
         r = subprocess.run(['ar', 't', self.pkgfile_path], encoding='utf8',
-                           capture_output=True, env=ENGLISH_ENVIROMENT)
+                           capture_output=True, env=ENGLISH_ENVIRONMENT)
         if r.returncode != 0:
             self.parsing_failed_reason = r.stderr
             return

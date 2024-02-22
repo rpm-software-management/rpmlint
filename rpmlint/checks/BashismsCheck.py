@@ -2,7 +2,7 @@ import stat
 import subprocess
 
 from rpmlint.checks.AbstractCheck import AbstractFilesCheck
-from rpmlint.helpers import ENGLISH_ENVIROMENT
+from rpmlint.helpers import ENGLISH_ENVIRONMENT
 
 
 class BashismsCheck(AbstractFilesCheck):
@@ -52,7 +52,7 @@ class BashismsCheck(AbstractFilesCheck):
         try:
             r = subprocess.run(['dash', '-n', filepath],
                                stderr=subprocess.DEVNULL,
-                               env=ENGLISH_ENVIROMENT)
+                               env=ENGLISH_ENVIRONMENT)
             if r.returncode == 2:
                 yield 'bin-sh-syntax-error'
             elif r.returncode == 127:
@@ -67,7 +67,7 @@ class BashismsCheck(AbstractFilesCheck):
                 cmd.append('-e')
             r = subprocess.run(cmd,
                                stderr=subprocess.DEVNULL,
-                               env=ENGLISH_ENVIROMENT)
+                               env=ENGLISH_ENVIRONMENT)
             if r.returncode == 1:
                 yield 'potential-bashisms'
             elif r.returncode == 2:
