@@ -53,15 +53,17 @@ Optional, for running the test suite:
 
 You will need to have all the required modules as listed on the Install section above.
 You will also need `pytest`,`pytest-cov` and `pytest-xdist`, 
-which you can install individually or by running `pip install -e ".[test]"`.
+which you can install individually or by running:
+
+    pip install -e ".[test]"
 
 If all the dependencies are present you can just execute tests using:
 
-`python3 -m pytest`
+    python3 -m pytest
 
 Or even pick one of the tests using `pytest`:
 
-`python3 -m pytest test/test_config.py`
+    python3 -m pytest test/test_config.py
 
 ## Bugfixing and contributing
 
