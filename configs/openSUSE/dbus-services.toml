@@ -203,7 +203,7 @@ bug      = "bsc#1217184"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf"
 digester = "xml"
-hash     = "ed225dc29086a779b4ff52cafbf9c65b7b31edb7436768726f7b5ba1f0539168"
+hash     = "714253ca0a9f797dbd44be98b3d2cf19ee62e39f4c504a9fe9b449095df2803d"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service"
 digester = "shell"
@@ -231,7 +231,7 @@ hash     = "50af031d691c490b93422de45d78e836c306c411a36a56d87cbcdcc629147103"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.fontinst.conf"
 digester = "xml"
-hash     = "656eba9d70d121ced1111d166440d4fe930af14f885bd2330843a150c08aee2d"
+hash     = "e998cd9a4da176bc8b521e944556f14b4a993fb405fb88871499b2dd976ad5b7"
 
 [[FileDigestGroup]]
 package = "libksysguard5-plugins"
@@ -250,7 +250,7 @@ bug      = "bsc#1217182"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.ksysguard.processlisthelper.conf"
 digester = "xml"
-hash     = "e08be1fffd5b7ebddb31f396f603e7a9fac08784c5473f37195262b55c663d45"
+hash     = "0eb5379a313fff2be98a64e5adbebffdb45ba5879a6434e7787f203334cf5785"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.ksysguard.processlisthelper.service"
 digester = "shell"
@@ -414,7 +414,7 @@ bug      = "bsc#1217187"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf"
 digester = "xml"
-hash     = "f02b05e676bbb34326f20660226474344da140ff79f987998fb841946e23619b"
+hash     = "1575e4603b4af49a7acb704b6ab5d7123a0f678fe381fb0e7bce621236778096"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service"
 digester = "shell"
@@ -422,7 +422,7 @@ hash     = "50b69e7812dc59de0c5d230e79299d0c5e38c3f3ed0272be6e03a11dd8c165ea"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.discretegpuhelper.conf"
 digester = "xml"
-hash     = "bdccdac44566ff80abc3e9d3ce2c1f1c4b13945dc770ba9da648703bc72c85e2"
+hash     = "ade45e6bf79f1fbd3fad4b6414aa3797ecf489b0fa903c0297e746e028caba0c"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.discretegpuhelper.service"
 digester = "shell"
@@ -430,7 +430,7 @@ hash     = "b1393dba57d7c748c114e2a7da6edd10c25aa4363d8a0812b1815a4e90fa4589"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.powerdevil.chargethresholdhelper.conf"
 digester = "xml"
-hash     = "52c613384410bd2f310f798c0cea579ac4fdd5a3ba1646516934666fbc5a56a6"
+hash     = "0e8eff2a677151a8b3162f37ffa0eca0c8167f248c7451cd3951803919267127"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.powerdevil.chargethresholdhelper.service"
 digester = "shell"
@@ -1135,7 +1135,7 @@ bug      = "bsc#1217185"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf"
 digester = "xml"
-hash     = "83b4e002b9bdab964dd49e9aacca5531e5b3f28c524f43b90de74020b05e90ce"
+hash     = "5d237d26c933e2b8b525c666c0d1c97e76bdffbc123ec9896a4b726067fd2cad"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.kded.smart.service"
 digester = "shell"
@@ -1397,7 +1397,7 @@ hash     = "c888f9180e66dc729ec637113863ea766fb28c3a8fe62e6f7dd872e44cf6e671"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
 digester = "xml"
-hash     = "55400352c8d0450d3d4c1eeb8f009c2a2741a02b9ec5d3f8f1034644a7f9e2d2"
+hash     = "6ac8b997890e65dc800e9106444f39c75c1b87416fd7ad4d82f05c0e9eae1aea"
 
 [[FileDigestGroup]]
 package = "transactional-update-notifier"
