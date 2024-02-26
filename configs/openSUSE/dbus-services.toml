@@ -1179,6 +1179,19 @@ path = "/usr/share/dbus-1/system-services/org.kde.kded.inotify.service"
 digester = "shell"
 hash = "89a2ce5a4c6ebd7cb471f820a28fbd2dd418e377cb2ed0eaea1af59840c1dabd"
 
+[[FileDigestGroup]]
+package  = "kde-inotify-survey"
+note     = "KDE tooling for monitoring inotify limits (kde6 update)"
+bugs     = ["bsc#1217191"]
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kded.inotify.service"
+digester = "shell"
+hash     = "e56b75bc5cbaa9e4dfb5829dcb5c0d5d871c0533076b83ea2c0f363c00318ad4"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kded.inotify.conf"
+digester = "xml"
+hash     = "7dd017f2535dabd623fdb59ecb6362ac60fa836e9a146243c2a450b04d9aee5d"
 
 [[FileDigestGroup]]
 package = "systemd-homed"
