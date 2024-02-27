@@ -78,7 +78,24 @@ Primarily we just need the offending rpm file (best the smallest you can
 find or we would soon take few GB to take a checkout) and some basic
 expectation of what should happen.
 
-### Example workflow
+### Building the tool
+This section focuses on how to build the tool as you develop it.
+
+To build the tool, we'll use a tool called `packit`. First, install `packit` on your system:
+
+    dnf install packit
+
+Then, build the project using:
+
+    packit build locally
+
+If you encounter any errors, install the missing dependencies and run the same command again. Once the build is successful, you'll find a RPM file under the `noarch` directory. To install the package on your system, run:
+
+    dnf install <the_rpm_you_just_built>
+
+Alternatively, the built binary can be found in the `rpmlint` directory under the `.packit` directory, which you can run directly.
+
+### Example workflow for testing a functionality
 
 1) I have rpmfile that should report unreadable zip file
 2) I store this file in git under `test/binary/texlive-codepage-doc-2018.151.svn21126-38.1.noarch.rpm`
