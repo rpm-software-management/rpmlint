@@ -279,6 +279,15 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package = "systemd"
+type = "pam"
+note = "reuse encryption password stored in a kernel keyring for unlocking display manager etc."
+bugs = ["bsc#1220249"]
+nodigests = [
+    "glob:*/security/pam_systemd_loadkey.so",
+]
+
+[[FileDigestGroup]]
 package = "sssd"
 type = "pam"
 note = "authenticate and get user information via sssd suite"
