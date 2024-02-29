@@ -1449,3 +1449,17 @@ hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
 path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
 digester = "xml"
 hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
+
+[[FileDigestGroup]]
+package  = "drkonqi6"
+note     = "extension to systemd-coredump to pull coredumps into user sessions"
+bug      = "bsc#1220190"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.drkonqi.conf"
+digester = "xml"
+hash     = "3326c5271c6321c5b3a703d187443eef260d54aa7347bc8f05d9090a153a04bd"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.drkonqi.service"
+digester = "shell"
+hash     = "b6f2a505903e2d8874d7da96a197944ab4a11f351f3db80ffeeec86d9eefd79a"
