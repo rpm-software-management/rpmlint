@@ -115,17 +115,16 @@ def is_utf8(fname):
 def is_utf8_bytestr(s):
     """Returns True whether the given text is UTF-8.
     Due to changes in rpm, needs to handle both bytes and unicode."""
+    if not isinstance(s, (bytes, str)):
+        unexpected = type(s).__name__
+        raise TypeError(f'Expected str/unicode/bytes, not {unexpected}')
+
     try:
-        if hasattr(s, 'decode'):
+        if isinstance(s, bytes):
             s.decode('utf-8')
-        elif hasattr(s, 'encode'):
-            s.encode('utf-8')
-        else:
-            unexpected = type(s).__name__
-            raise TypeError(
-                f'Expected str/unicode/bytes, not {unexpected}')
     except UnicodeError:
         return False
+
     return True
 
 
