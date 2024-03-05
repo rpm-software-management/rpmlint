@@ -92,30 +92,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#641924"
-nodigests = [
-    "/usr/share/dbus-1/services/org.freedesktop.systemd1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.hostname1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf",
-    "/usr/share/dbus-1/system.d/org.freedesktop.login1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.login1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.login1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.timedate1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.timedate1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.locale1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.locale1.service",
-]
-
-[[FileDigestGroup]]
-package = "systemd-mini"
+packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#641924"
