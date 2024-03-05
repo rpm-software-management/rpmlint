@@ -10,7 +10,19 @@ def duplicatescheck():
     CONFIG.info = True
     output = Filter(CONFIG)
     test = DuplicatesCheck(CONFIG, output)
-    return output, test
+    yield output, test
+
+
+@pytest.fixture()
+def test(duplicatescheck):
+    _output, test = duplicatescheck
+    yield test
+
+
+@pytest.fixture()
+def output(duplicatescheck):
+    output, _test = duplicatescheck
+    yield output
 
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
@@ -28,8 +40,7 @@ def duplicatescheck():
         '/var/foo2': {'content': 'Foo 2 file', 'metadata': {'mode': 33188, 'flags': 1, 'inode': 5}}
     },
 )])
-def test_duplicates1(package, duplicatescheck):
-    output, test = duplicatescheck
+def test_duplicates1(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
 
@@ -47,8 +58,7 @@ def test_duplicates1(package, duplicatescheck):
         '/usr/share/uncompressed.zip': {'content': 'this is an another zip file', 'metadata': {'mode': 33188, 'flags': 1}},
     },
 )])
-def test_duplicates_correct(package, duplicatescheck):
-    output, test = duplicatescheck
+def test_duplicates_correct(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
 
