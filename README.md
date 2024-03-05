@@ -78,7 +78,7 @@ Primarily we just need the offending rpm file (best the smallest you can
 find or we would soon take few GB to take a checkout) and some basic
 expectation of what should happen.
 
-### Building the tool
+### Building the installable rpm and installing
 This section focuses on how to build the tool as you develop it.
 
 To build the tool, we'll use a tool called `packit`. First, install `packit` on your system:
