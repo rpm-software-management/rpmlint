@@ -117,7 +117,7 @@ def is_utf8_bytestr(s):
     Due to changes in rpm, needs to handle both bytes and unicode."""
     if not isinstance(s, (bytes, str)):
         unexpected = type(s).__name__
-        raise TypeError(f'Expected str/unicode/bytes, not {unexpected}')
+        raise TypeError(f'Expected str/bytes, not {unexpected}')
 
     try:
         if isinstance(s, bytes):
