@@ -254,15 +254,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "glob:*/security/pam_systemd.so",
-]
-
-[[FileDigestGroup]]
-package = "systemd-mini"
+packages = ["systemd", "systemd-mini"]
 type = "pam"
 note = "legacy: not audited"
 nodigests = [
@@ -279,7 +271,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd"
+packages = ["systemd", "systemd-mini"]
 type = "pam"
 note = "reuse encryption password stored in a kernel keyring for unlocking display manager etc."
 bugs = ["bsc#1220249"]

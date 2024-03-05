@@ -64,14 +64,14 @@ digester = "xml"
 hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 
 [[FileDigestGroup]]
-package = "gdm"
-type = "dbus"
-note = "legacy: only conf file audited"
-bug = "bsc#1204052"
+package  = "gdm"
+type     = "dbus"
+note     = "D-Bus interface for managing GDM sessions"
+bugs     = ["bsc#1204052", "bsc#1218922"]
 [[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/gdm.conf"
+path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
-hash = "620bf31e3c93b37a70e34f21a0a4cb61274d04a65939bd718a0c886a31c95673"
+hash     = "127c6446350030991bd98c583eab96d7a5ff4b9301faa8e88bc7928c48dba0a8"
 
 [[FileDigestGroup]]
 package = "udisks2"
@@ -92,30 +92,7 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#641924"
-nodigests = [
-    "/usr/share/dbus-1/services/org.freedesktop.systemd1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.hostname1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf",
-    "/usr/share/dbus-1/system.d/org.freedesktop.login1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.login1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.login1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.timedate1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.timedate1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.locale1.service",
-    "/usr/share/dbus-1/system-services/org.freedesktop.locale1.service",
-]
-
-[[FileDigestGroup]]
-package = "systemd-mini"
+packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#641924"
