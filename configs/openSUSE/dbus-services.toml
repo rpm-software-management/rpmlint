@@ -902,6 +902,20 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "sddm-kcm6"
+note     = "display manager API e.g. for setting up themes"
+bug      = "bsc#1217188"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmsddm.service"
+digester = "shell"
+hash     = "b185d23b0f5976718cafd00105aa5b65bf1d294f8f9c0aef64508d6e4266531d"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmsddm.conf"
+digester = "xml"
+hash     = "a376b5eb14baccd7cd1a903b7129f0c3c5535708d727a1e95df588c080e34a2f"
+
+[[FileDigestGroup]]
 package = "usbauth"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
