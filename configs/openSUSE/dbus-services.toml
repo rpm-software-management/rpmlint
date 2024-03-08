@@ -66,6 +66,16 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 [[FileDigestGroup]]
 package  = "gdm"
 type     = "dbus"
+note     = "Legacy: provide old whitelisting during bsc#1218922 transition period"
+bugs     = ["bsc#1204052", "bsc#1218922"]
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/gdm.conf"
+digester = "xml"
+hash     = "620bf31e3c93b37a70e34f21a0a4cb61274d04a65939bd718a0c886a31c95673"
+
+[[FileDigestGroup]]
+package  = "gdm"
+type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
 bugs     = ["bsc#1204052", "bsc#1218922"]
 [[FileDigestGroup.digests]]
