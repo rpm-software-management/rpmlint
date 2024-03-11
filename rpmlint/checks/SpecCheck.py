@@ -85,6 +85,11 @@ python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 
+# openmpi requirement check
+requires_mpi_regex = re.compile(r'^(Build)?Requires\s*:\s*openmpi(-(libs|devel))?\s*$', re.IGNORECASE)
+requires_libmpi_regex = re.compile(r'^Requires\s*:\s*openmpi[0-9]+-libs\s*$', re.IGNORECASE)
+requires_openmpi_macros_regex = re.compile(r'^BuildRequires\s*:\s*openmpi[0-9]*-macros-devel\s*$', re.IGNORECASE)
+
 UNICODE_NBSP = '\xa0'
 
 
@@ -141,6 +146,8 @@ class SpecCheck(AbstractCheck):
         self.indent_spaces = 0
         self.indent_tabs = 0
         self.section = {}
+        self.requires_openmpi_macros = False
+        self.requires_libmpi = False
 
         self.current_section = 'package'
         # None == main package
@@ -193,6 +200,9 @@ class SpecCheck(AbstractCheck):
         # Analyse specfile line by line to check for (E)rrors or (W)arnings
         # And initialize the SpecCheck instance for following checks
         self._check_lines(spec_lines)
+
+        # check openmi condition
+        self._check_libmpi(pkg)
 
         # Run checks for whole package
         self._check_no_buildroot_tag(pkg, self.buildroot)
@@ -284,6 +294,11 @@ class SpecCheck(AbstractCheck):
                                  '(spaces: line %d, tab: line %d)' %
                                  (indent_spaces, indent_tabs))
             pkg.current_linenum = None
+
+    def _check_libmpi(self, pkg):
+        if self.requires_libmpi and not self.requires_openmpi_macros:
+            message = 'requirement on openmpi-libs without usage of openmpi-macros-devel'
+            self.output.add_info('W', self.pkg, 'libmpi-req-compat', message)
 
     def check_ifarch_and_not_applied_patches(self, pkg, patches_auto_applied,
                                              patches, applied_patches_ifarch, applied_patches):
@@ -699,6 +714,8 @@ class SpecCheck(AbstractCheck):
 
         self._checkline_forbidden_controlchars(line)
 
+        self._checkline_package_libmpi(line)
+
     def _checkline_changelog(self, line):
         if self.current_section == 'changelog':
             deptoken = Pkg.has_forbidden_controlchars(line)
@@ -802,3 +819,25 @@ class SpecCheck(AbstractCheck):
         # https://github.com/rpm-software-management/rpmlint/issues/1067
         if Pkg.has_forbidden_controlchars(line):
             self.output.add_info('W', self.pkg, 'forbidden-controlchar-found')
+
+    def _checkline_package_libmpi(self, line):
+        """
+        Look for openmpi requirement in package
+
+        * No BuildRequires/Requires to openmpi|openmpi-libs|openmpi-devel ever
+          in any package
+        * If package has a dependency to libmpi.so.40:
+          * it has to BuildRequire: openmpi[0-9]*-macros-devel
+        """
+
+        res = requires_mpi_regex.search(line)
+        if res:
+            _, post, _all = res.groups()
+            message = f'openmpi{post} in requirements, use openmpi-macros-devel'
+            self.output.add_info('W', self.pkg, 'libmpi-req-compat', message)
+
+        if requires_openmpi_macros_regex.search(line):
+            self.requires_openmpi_macros = True
+
+        if requires_libmpi_regex.search(line):
+            self.requires_libmpi = True
