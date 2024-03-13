@@ -233,10 +233,10 @@ class SpecCheck(AbstractCheck):
             self.output.add_info('W', pkg, 'no-buildroot-tag')
 
     def _check_no_s_section(self, pkg, section):
-        """Check if there is no (%prep, %build, %install)
+        """Check if there is no (%prep, %build, %install, %check)
         in the specfile.
         """
-        for sec in ('prep', 'build', 'install'):
+        for sec in ('prep', 'build', 'install', 'check'):
             if not section.get(sec):
                 self.output.add_info('W', pkg, 'no-%%%s-section' % sec)
 
