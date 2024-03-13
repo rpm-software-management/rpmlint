@@ -84,6 +84,12 @@ don't directly need it, section markers may be overridden in rpm's
 configuration to provide additional 'under the hood' functionality.  Add the
 section, even if empty.
 """
+"no-%check-section"="""
+The spec file does not contain an %check section.  Even if some packages don't
+directly need it, section markers may be overridden in rpm's configuration to
+provide additional 'under the hood' functionality.  Add the section, even if
+empty.
+"""
 "more-than-one-%changelog-section"="""
 The spec file unnecessarily contains more than one %changelog section.
 """
