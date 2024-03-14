@@ -1,4 +1,4 @@
-from mock_packages import (
+from mockdata.mock_python import (
     PythonDocFolderPackage,
     PythonDocModulePackage,
     PythonEggInfoFileackage,
