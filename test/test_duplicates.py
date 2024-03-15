@@ -1,8 +1,12 @@
+from mockdata.mock_duplicates import (
+    HardlinksAndDuplicatesPresent,
+    NoHardLinksAndDuplicatesPresent
+)
 import pytest
 from rpmlint.checks.DuplicatesCheck import DuplicatesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_mock_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -25,21 +29,7 @@ def output(duplicatescheck):
     yield output
 
 
-@pytest.mark.parametrize('package', [get_tested_mock_package(
-    files={
-        '/etc/bar': {'content': 'large enough file', 'metadata': {'mode': 33188}},
-        '/etc/bar2': {'content': 'large enough file', 'metadata': {'mode': 33188}},
-        '/etc/bar3': {'content': 'large enough file', 'metadata': {'mode': 33188}},
-        '/etc/foo': {'content': 'Foo file', 'metadata': {'mode': 33188, 'inode': 10}},
-        '/etc/foo2': {'content': 'Foo 2 file', 'metadata': {'mode': 33188, 'flags': 1, 'inode': 5}},
-        '/etc/small': {'content': ' \n', 'metadata': {'mode': 33188}},
-        '/etc/small2': {'content': ' \n', 'metadata': {'mode': 33188}},
-        '/etc/strace1.txt': {'content': 'this is a very large file', 'metadata': {'mode': 33188, 'size': 270509}},
-        '/etc/strace2.txt': {'content': 'this is a very large file', 'metadata': {'mode': 33188, 'size': 270509}},
-        '/var/foo': {'content': 'Foo file', 'metadata': {'mode': 33188, 'inode': 10}},
-        '/var/foo2': {'content': 'Foo 2 file', 'metadata': {'mode': 33188, 'flags': 1, 'inode': 5}}
-    },
-)])
+@pytest.mark.parametrize('package', [HardlinksAndDuplicatesPresent])
 def test_duplicates1(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -52,12 +42,7 @@ def test_duplicates1(package, test, output):
     assert 'E: files-duplicated-waste 270543' in out
 
 
-@pytest.mark.parametrize('package', [get_tested_mock_package(
-    files={
-        '/usr/share/bad-crc.zip': {'content': 'this is a zip file', 'metadata': {'mode': 33188, 'flags': 1}},
-        '/usr/share/uncompressed.zip': {'content': 'this is an another zip file', 'metadata': {'mode': 33188, 'flags': 1}},
-    },
-)])
+@pytest.mark.parametrize('package', [NoHardLinksAndDuplicatesPresent])
 def test_duplicates_correct(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
