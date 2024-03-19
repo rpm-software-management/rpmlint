@@ -23,8 +23,8 @@ Conflicts:      Onelastthing==2.0
 %description
 macro-in-%changelog-deptoken:-
 (Developer Note)
-    Macro can cause a warning which you can escape by using %%buildroot or 
-    %+buildroot or %.buildroot or any othersign prefixed with % 
+    Macro can cause a warning which you can escape by using %%buildroot or
+    %+buildroot or %.buildroot or any othersign prefixed with %
     for example %(-, +, .) and so on.
     Make sure you exclude %_buildroot or usage of % followed by _
 
@@ -38,6 +38,8 @@ make %{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
