@@ -1,8 +1,9 @@
+from mockdata.mock_xinetd import RequireXinetd
 import pytest
 from rpmlint.checks.XinetdDepCheck import XinetdDepCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,9 +14,9 @@ def xinetdcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/needxinetd'])
-def test_xinetd(tmp_path, package, xinetdcheck):
+@pytest.mark.parametrize('package', [RequireXinetd])
+def test_xinetd(package, xinetdcheck):
     output, test = xinetdcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: obsolete-xinetd-requirement' in out
