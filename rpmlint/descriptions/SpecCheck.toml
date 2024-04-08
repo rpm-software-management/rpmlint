@@ -85,10 +85,11 @@ configuration to provide additional 'under the hood' functionality.  Add the
 section, even if empty.
 """
 "no-%check-section"="""
-The spec file does not contain an %check section.  Even if some packages don't
-directly need it, section markers may be overridden in rpm's configuration to
-provide additional 'under the hood' functionality.  Add the section, even if
-empty.
+The spec file does not contain an %check section.
+Please check if the package has a testsuite and what it takes to enable the
+testsuite as part of the package build. If it is not possible to run it in the
+build environment (OBS/koji) or no testsuite exists, then please ignore this
+warning. You should not insert an empty %check section.
 """
 "more-than-one-%changelog-section"="""
 The spec file unnecessarily contains more than one %changelog section.
