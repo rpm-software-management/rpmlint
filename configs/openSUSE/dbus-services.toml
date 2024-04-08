@@ -1462,3 +1462,17 @@ hash     = "3326c5271c6321c5b3a703d187443eef260d54aa7347bc8f05d9090a153a04bd"
 path     = "/usr/share/dbus-1/system-services/org.kde.drkonqi.service"
 digester = "shell"
 hash     = "b6f2a505903e2d8874d7da96a197944ab4a11f351f3db80ffeeec86d9eefd79a"
+
+[[FileDigestGroup]]
+package  = "dnf5daemon-server"
+note     = "D-Bus API for the dnf5 package manager"
+bug      = "bsc#1218327"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.rpm.dnf.v0.conf"
+digester = "xml"
+hash     = "bd2c589d0cb083d7b8a7696b98e0a344b2501ecd2d91a7fe447028cb47f75210"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.rpm.dnf.v0.service"
+digester = "shell"
+hash     = "8dff187bd14e516fd976731fb4ab3996bb92b36dfa944733655641a6aec215e1"
