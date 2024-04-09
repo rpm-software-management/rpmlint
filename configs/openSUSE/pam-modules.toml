@@ -558,15 +558,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "util-linux-systemd"
-type = "pam"
-note = "Logs user session information to an sqlite3 database"
-bugs = ["bsc#1209238", "bsc#1222329"]
-nodigests = [
-    "glob:*/security/pam_lastlog2.so",
-]
-
-[[FileDigestGroup]]
 package = "wtmpdb"
 type = "pam"
 note = "Keeps Y2038 safe login records in a sqlite database"
