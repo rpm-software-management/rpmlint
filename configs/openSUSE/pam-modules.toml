@@ -442,10 +442,11 @@ nodigests = [
 [[FileDigestGroup]]
 package = "google-guest-oslogin"
 type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1146353"
+note = "authorization and management of users based on the Google cloud metadata instance service"
+bugs = ["bsc#1146353", "bsc#1222457"]
 nodigests = [
     "glob:*/security/pam_oslogin_login.so",
+    "glob:*/security/pam_oslogin_admin.so"
 ]
 
 [[FileDigestGroup]]
