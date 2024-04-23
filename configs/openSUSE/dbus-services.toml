@@ -1149,36 +1149,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "deepin-api"
-type = "dbus"
-note = "an assorted mix of D-Bus interfaces for the Deepin desktop"
-bugs = ["bsc#1070943", "bsc#1211376"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.deepin.dde.Device1.conf"
-digester = "xml"
-hash = "9c06e3f62398fec6f6e85f26890e1b0e7af02f14b001d8c5884f46cd170b0318"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.deepin.dde.Device1.service"
-digester = "shell"
-hash = "92d8a3a121455680b4c4860ad6064e24c7c85ff628f0c318c93191faeca893f0"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.deepin.dde.SoundThemePlayer1.conf"
-digester = "xml"
-hash = "1dd8b8d48fc3b20f5e20ed58a01e172ee9f929c39ed2325a54fa9bc90f4e3348"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.deepin.dde.SoundThemePlayer1.service"
-digester = "shell"
-hash = "0b8742779a2d7bece8c8b552f505b4ff24628ee134e45b9af50ec7acc849ce22"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.deepin.dde.LocaleHelper1.conf"
-digester = "xml"
-hash = "/usr/share/dbus-1/system.d/org.deepin.dde.LocaleHelper1.conf"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.deepin.dde.LocaleHelper1.service"
-digester = "shell"
-hash = "b23c6c4f60b3b23859f5a0fba5c762c5dc487be4d94ddcc1c292801ee5e4062b"
-
-[[FileDigestGroup]]
 package = "low-memory-monitor"
 type = "dbus"
 note = "a system wide daemon monitoring low memory situations and sending out signals"
