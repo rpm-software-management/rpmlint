@@ -834,15 +834,6 @@ digester = "xml"
 hash = "7d299bd3ac64cd7fdd4cd39c6707a7e86e330b1d8cf7b7474bb10d6eb9be7316"
 
 [[FileDigestGroup]]
-package = "pam_dbus"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList - Take care to never enable/integrate this by default (see bsc comments)"
-bug = "bsc#1039709"
-nodigests = [
-    "/etc/dbus-1/system.d/pam_dbus.conf"
-]
-
-[[FileDigestGroup]]
 package = "tpm2.0-abrmd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"

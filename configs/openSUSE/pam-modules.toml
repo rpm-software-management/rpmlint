@@ -431,15 +431,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_dbus"
-type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1039709"
-nodigests = [
-    "glob:*/security/pam_dbus.so",
-]
-
-[[FileDigestGroup]]
 package = "google-guest-oslogin"
 type = "pam"
 note = "authorization and management of users based on the Google cloud metadata instance service"
