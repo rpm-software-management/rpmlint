@@ -422,21 +422,12 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-packages = ["pam_kwallet", "pam_kwallet6"]
+packages = ["pam_kwallet6"]
 type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
+note = "unlocks the kwallet during the session phase of PAM login"
 bugs = ["bsc#993806", "bsc#1217183"]
 nodigests = [
     "glob:*/security/pam_kwallet5.so",
-]
-
-[[FileDigestGroup]]
-package = "pam_dbus"
-type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1039709"
-nodigests = [
-    "glob:*/security/pam_dbus.so",
 ]
 
 [[FileDigestGroup]]
