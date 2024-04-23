@@ -164,15 +164,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "plasma5-desktop"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service",
-    "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf",
-]
-
-[[FileDigestGroup]]
 package  = "plasma6-desktop"
 type     = "dbus"
 note     = "helper for setting time, date, ntp, timezone"
@@ -187,16 +178,6 @@ digester = "shell"
 hash     = "727328d0cf3839edcee6a95bebd7593df539fb36799839d3c574b2cde96aaebd"
 
 [[FileDigestGroup]]
-package = "plasma5-workspace"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/services/org.kde.fontinst.service",
-    "/usr/share/dbus-1/system-services/org.kde.fontinst.service",
-    "/usr/share/dbus-1/system.d/org.kde.fontinst.conf",
-]
-
-[[FileDigestGroup]]
 package  = "plasma6-workspace"
 note     = "supports managing system fonts - this is a high risk legacy D-Bus interface"
 bug      = "bsc#1217186"
@@ -209,15 +190,6 @@ hash     = "50af031d691c490b93422de45d78e836c306c411a36a56d87cbcdcc629147103"
 path     = "/usr/share/dbus-1/system.d/org.kde.fontinst.conf"
 digester = "xml"
 hash     = "e998cd9a4da176bc8b521e944556f14b4a993fb405fb88871499b2dd976ad5b7"
-
-[[FileDigestGroup]]
-package = "libksysguard5-plugins"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.ksysguard.processlisthelper.service",
-    "/usr/share/dbus-1/system.d/org.kde.ksysguard.processlisthelper.conf",
-]
 
 [[FileDigestGroup]]
 package  = "libksysguard6-plugins"
@@ -371,16 +343,6 @@ note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#656222"
 nodigests = [
     "/usr/share/dbus-1/system.d/nm-strongswan-service.conf",
-]
-
-[[FileDigestGroup]]
-package = "powerdevil5"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#672145"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.powerdevil.backlighthelper.service",
-    "/usr/share/dbus-1/system.d/org.kde.powerdevil.backlighthelper.conf",
 ]
 
 [[FileDigestGroup]]
@@ -617,16 +579,6 @@ hash = "752a4b3ef1d1e3a7da380720735444c8eac526452457d9d2bde816e0c17661d0"
 digester = "xml"
 
 [[FileDigestGroup]]
-package = "kwalletmanager5"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1033296"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmkwallet5.conf",
-    "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmkwallet5.service",
-]
-
-[[FileDigestGroup]]
 package = "neard"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
@@ -773,16 +725,6 @@ bug = "bsc#917781"
 nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf",
     "/usr/share/dbus-1/system-services/org.freedesktop.resolve1.service",
-]
-
-[[FileDigestGroup]]
-package = "powerdevil5"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1019748"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.powerdevil.discretegpuhelper.conf",
-    "/usr/share/dbus-1/system-services/org.kde.powerdevil.discretegpuhelper.service",
 ]
 
 [[FileDigestGroup]]
@@ -1081,26 +1023,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "powerdevil5"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1176474"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.powerdevil.chargethresholdhelper.service",
-    "/usr/share/dbus-1/system.d/org.kde.powerdevil.chargethresholdhelper.conf",
-]
-
-[[FileDigestGroup]]
-package = "plasma5-disks"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1176742"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.kded.smart.service",
-    "/usr/share/dbus-1/system.d/org.kde.kded.smart.conf",
-]
-
-[[FileDigestGroup]]
 package  = "plasma6-disks"
 type     = "dbus"
 note     = "allows to invoke smartctl on block devices"
@@ -1364,20 +1286,6 @@ hash = "c517848d4b267f62c6004517e8bcd4160dceed7d4ed74e134f7531c0bb6f2ff1"
 path = "/usr/share/dbus-1/system-services/org.usbguard1.service"
 digester = "shell"
 hash = "3c2924c9228acdb0140639f5df6eb2d1bffb3cedb85a695e319fee5777dada00"
-
-[[FileDigestGroup]]
-package = "kinfocenter5"
-type = "dbus"
-note = "KDE utility that provides information about the user's system."
-bug = "bsc#1199735"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.kde.kinfocenter.dmidecode.service"
-digester = "shell"
-hash = "746f98ec0b4d3ad3fbf71004a55be1f56a74d37a92cb881c7fe266860a1b82ef"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.kde.kinfocenter.dmidecode.conf"
-digester = "xml"
-hash = "20bdf679561f1bc1df39cda8365be3d876a04c4b6d38d9223c6a70ae1f607fc1"
 
 [[FileDigestGroup]]
 package  = "kinfocenter6"
