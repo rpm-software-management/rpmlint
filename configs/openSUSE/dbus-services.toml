@@ -844,15 +844,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "nfs-ganesha"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#997880"
-nodigests = [
-    "/etc/dbus-1/system.d/org.ganesha.nfsd.conf",
-]
-
-[[FileDigestGroup]]
 package = "NetworkManager-l2tp"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
