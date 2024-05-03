@@ -570,6 +570,10 @@ class FilesCheck(AbstractCheck):
 
         self._check_file_crond(pkg, fname, pkgfile)
 
+        # files with all permissions bits as zero
+        # https://github.com/rpm-software-management/rpmlint/issues/878
+        self._check_file_zero_perms(pkg, fname, pkgfile)
+
     def _check_file_manpage(self, pkg, fname):
         """
         Check if the the manual page is compressed with the compression method
@@ -628,6 +632,12 @@ class FilesCheck(AbstractCheck):
 
         if stat.S_IWGRP & mode or stat.S_IWOTH & mode:
             self.output.add_info('E', pkg, 'non-owner-writeable-only-crontab-file', fname)
+
+    def _check_file_zero_perms(self, pkg, fname, pkgfile):
+        mode = pkgfile.mode
+        perm = mode & 0o7777
+        if not perm:
+            self.output.add_info('W', pkg, 'zero-perms', fname, '%o' % perm)
 
     def _check_file_unexpandaed_macro(self, pkg, fname):
         for match in self.macro_regex.findall(fname):
