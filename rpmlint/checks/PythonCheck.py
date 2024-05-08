@@ -1,3 +1,4 @@
+from importlib import metadata
 from pathlib import Path
 import platform
 import re
@@ -19,7 +20,7 @@ ERRS = {
     'src': 'python-src-in-site-packages',
 }
 
-SITELIB_RE = '/usr/lib[^/]*/python[^/]*/site-packages'
+SITELIB_RE = '/usr/lib[^/]*/python([^/]*)/site-packages'
 
 # Paths that shouldn't be in any packages, ever, because they clobber global
 # name space.
@@ -51,14 +52,16 @@ class PythonCheck(AbstractFilesCheck):
 
     def check_file(self, pkg, filename):
         # egg-info format
-        if filename.endswith('egg-info/requires.txt'):
-            self._check_requires_txt(pkg, filename)
+        is_egginfo = filename.endswith('egg-info/requires.txt')
         # dist-info format
-        if filename.endswith('dist-info/METADATA'):
-            self._check_requires_metadata(pkg, filename)
+        is_distinfo = filename.endswith('dist-info/METADATA')
+        if is_egginfo or is_distinfo:
+            self._check_requires(pkg, filename)
+            return
 
         if EGG_INFO_RE.match(filename):
             self._check_egginfo(pkg, filename)
+            return
 
         for path_re, key in WARN_PATHS:
             if path_re.match(filename):
@@ -104,59 +107,30 @@ class PythonCheck(AbstractFilesCheck):
         if filepath.is_file():
             self.output.add_info('E', pkg, ERRS['egg-distutils'], filename)
 
-    def _check_requires_txt(self, pkg, filename):
+    def _check_requires(self, pkg, filename):
         """
         Look for all requirements defined in the python package and
         compare with the requirements defined in the rpm package
         """
 
         filepath = Path(pkg.dir_name() or '/', filename.lstrip('/'))
+        d = metadata.PathDistribution.at(filepath.parent)
+        if not d.requires:
+            return
+
         requirements = []
-        with filepath.open() as f:
-            for requirement in f.readlines():
-                # Ignore sections, just check for default requirements
-                if requirement.startswith('['):
-                    break
+        for requirement in d.requires:
+            # Ignore broken requirements
+            try:
+                req = Requirement(requirement)
+            except InvalidRequirement:
+                continue
 
-                # Ignore broken requirements
-                try:
-                    req = Requirement(requirement)
-                except InvalidRequirement:
-                    continue
+            requirements.append(req)
 
-                requirements.append(req)
+        self._check_requirements(pkg, requirements, d)
 
-        self._check_requirements(pkg, requirements)
-
-    def _check_requires_metadata(self, pkg, filename):
-        """
-        Look for all requirements defined in the python package and
-        compare with the requirements defined in the rpm package
-        """
-
-        regex = re.compile(r'^Requires-Dist: (?P<req>.*)$', re.IGNORECASE)
-
-        filepath = Path(pkg.dir_name() or '/', filename.lstrip('/'))
-        requirements = []
-        with filepath.open() as f:
-            for requirement in f.readlines():
-                match = regex.match(requirement)
-                if not match:
-                    continue
-
-                requirement = match.group('req')
-
-                # Ignore broken requirements
-                try:
-                    req = Requirement(requirement)
-                except InvalidRequirement:
-                    continue
-
-                requirements.append(req)
-
-        self._check_requirements(pkg, requirements)
-
-    def _check_requirements(self, pkg, requirements):
+    def _check_requirements(self, pkg, requirements, distribution):
         """
         Check mismatch between the list of requirements and the rpm
         declared requires.
@@ -175,6 +149,11 @@ class PythonCheck(AbstractFilesCheck):
                 env['python_version'] = pyv
                 break
 
+        # python_version from distribution path
+        python_path = re.findall(SITELIB_RE, str(distribution._path))
+        if python_path:
+            env['python_version'] = python_path[0]
+
         # Check for missing requirements
         for req in requirements:
             if req.marker:
@@ -188,7 +167,7 @@ class PythonCheck(AbstractFilesCheck):
             self._check_require(pkg, req)
 
         # Check for python requirement not needed
-        self._check_leftover_requirements(pkg, requirements)
+        self._check_leftover_requirements(pkg, requirements, env)
 
     def _check_require(self, pkg, requirement):
         """
@@ -222,7 +201,7 @@ class PythonCheck(AbstractFilesCheck):
         self.output.add_info('W', pkg, 'python-missing-require', requirement.name)
         return False
 
-    def _check_leftover_requirements(self, pkg, requirements):
+    def _check_leftover_requirements(self, pkg, requirements, env):
         """
         Look for python-foo requirements in the rpm package that are
         not in the list of requirements of this package.
@@ -231,6 +210,9 @@ class PythonCheck(AbstractFilesCheck):
         pythonpac = re.compile(r'^python\d*-(?P<name>.+)$')
         reqs = set()
         for i in requirements:
+            # Ignore not env requirements
+            if i.marker and not i.marker.evaluate(environment=env):
+                continue
             for n in self._module_names(i.name, extras=i.extras):
                 reqs.add(n.lower())
 
