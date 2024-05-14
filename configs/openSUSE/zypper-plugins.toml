@@ -56,7 +56,7 @@ bug = "bsc#1204314"
 [[FileDigestGroup.digests]]
 path = "/usr/lib/zypp/plugins/commit/permissions.py"
 digester = "shell"
-hash = "db141ad0e17dd6c0b34a671159f95357914693c3ab5e23f64f3724f713bb7c5d"
+hash = "4bf79850d3c77363f7164647ec4a00d6226a67a8093ae3388a3dc5617ea65452"
 
 [[FileDigestGroup]]
 package = "snapper-zypp-plugin"
