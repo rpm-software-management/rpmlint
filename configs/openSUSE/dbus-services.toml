@@ -1336,3 +1336,17 @@ hash     = "bd2c589d0cb083d7b8a7696b98e0a344b2501ecd2d91a7fe447028cb47f75210"
 path     = "/usr/share/dbus-1/system-services/org.rpm.dnf.v0.service"
 digester = "shell"
 hash     = "8dff187bd14e516fd976731fb4ab3996bb92b36dfa944733655641a6aec215e1"
+
+[[FileDigestGroup]]
+package  = "gnome-remote-desktop"
+note     = "system wide remote desktop access to the display manager"
+bug      = "bsc#1222159"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.gnome.RemoteDesktop.conf"
+digester = "xml"
+hash     = "5ed8492b7b77bf77beba04b5eb989a028cc90ac193eb598b102189b8374a9c5d"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.service"
+digester = "shell"
+hash     = "1053fce12e03e219ff4518c8498b3ce1983597961afcefa93be25005414a50d8"
