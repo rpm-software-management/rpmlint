@@ -206,3 +206,13 @@ bug = "bsc#1217915"
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/40-gamemode.rules"
 hash = "9e12a279a21d11c92a41ccd818edcb9b7c89a162984a6e1ca5609b9bbcbbf989"
+
+[[FileDigestGroup]]
+package  = "gnome-remote-desktop"
+note     = "allows the g-r-d system user to enable/disable itself"
+bug      = "bsc#1222159"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
+digester = "default"
+hash     = "559f983aa50bbea8f4927fa96dc06a4e0f781617495339155b2bd4d077ec4607"
