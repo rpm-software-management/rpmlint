@@ -2,7 +2,8 @@ import pytest
 from rpmlint.checks.TmpFilesCheck import TmpFilesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG, get_tested_package, get_tested_mock_package
+from mockdata.mock_tmp_files import (TMPFILES,TMPFILES2,TMPFILES3)
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +14,10 @@ def tmpfilescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/tempfiled'])
-def test_tmpfiles(tmp_path, package, tmpfilescheck):
+@pytest.mark.parametrize('package', [TMPFILES])
+def test_tmpfiles(package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation ' not in out
@@ -25,10 +26,10 @@ def test_tmpfiles(tmp_path, package, tmpfilescheck):
     assert 'W: tmpfile-not-regular-file /usr/lib/tmpfiles.d/symlink.conf' in out
 
 
-@pytest.mark.parametrize('package', ['binary/systemd-tmpfiles'])
-def test_tmpfiles2(tmp_path, package, tmpfilescheck):
+@pytest.mark.parametrize('package', [TMPFILES2])
+def test_tmpfiles2(package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation /usr/lib/tmpfiles.d/systemd-tmpfiles.conf' in out
@@ -37,10 +38,10 @@ def test_tmpfiles2(tmp_path, package, tmpfilescheck):
     assert 'W: tmpfile-not-regular-file' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/systemd-tmpfiles_correct'])
-def test_tmpfiles_correct(tmp_path, package, tmpfilescheck):
+@pytest.mark.parametrize('package', [TMPFILES3])
+def test_tmpfiles_correct(package, tmpfilescheck):
     output, test = tmpfilescheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
 
     assert 'W: pre-with-tmpfile-creation' not in out
