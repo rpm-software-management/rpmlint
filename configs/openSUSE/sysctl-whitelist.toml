@@ -29,6 +29,16 @@ digester = "shell"
 hash = "7642699dc64ccba77154ede500b8657989cbe0e82c67753a3df8c334efa0a8f8"
 
 [[FileDigestGroup]]
+package = "valkey"
+type = "sysctl"
+note = "changes maximum number of socket connections and overcommit_memory behaviour"
+bug = "bsc#1226083"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/00-valkey.conf"
+digester = "shell"
+hash = "7642699dc64ccba77154ede500b8657989cbe0e82c67753a3df8c334efa0a8f8"
+
+[[FileDigestGroup]]
 package = "owncloud-client"
 type = "sysctl"
 note = "increases inotify max user watches"
