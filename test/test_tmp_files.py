@@ -2,7 +2,7 @@ import pytest
 from rpmlint.checks.TmpFilesCheck import TmpFilesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package, get_tested_mock_package
+from Testing import CONFIG
 from mockdata.mock_tmp_files import (TMPFILES,TMPFILES2,TMPFILES3)
 
 
