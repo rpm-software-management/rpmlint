@@ -354,8 +354,33 @@ def test_files_without_perms(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert re.findall('W: zero-perms .*pipewire ', out)
-    assert re.findall('W: zero-perms .*ghost_file ', out)
+    assert re.findall('W: zero-perms-ghost .*ghost_file', out)
     assert re.findall('W: zero-perms .*normal_file ', out)
     assert not re.findall('W: zero-perms .*normal_file_read ', out)
     assert not re.findall('W: zero-perms .*dir_read ', out)
-    assert not re.findall('W: zero-perms .*ghost_file_read ', out)
+    assert not re.findall('W: zero-perms-ghost .*ghost_file_read', out)
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        header={'requires': []},
+        files={
+            '/run/netconfig/resolv.conf': {'metadata': {'mode': 0o000, 'flags': rpm.RPMFILE_GHOST}},
+            '/run/netconfig/yp.conf': {'metadata': {'mode': 0o644, 'flags': rpm.RPMFILE_GHOST}},
+            '/run/netconfig': {'is_dir': True, 'metadata': {'mode': 0o000, 'flags': rpm.RPMFILE_GHOST | stat.S_IFDIR}},
+            '/usr/lib/tmpfiles.d/netconfig.conf': {
+                'content': """
+d /run/netconfig 0755 root group -
+f /run/netconfig/resolv.conf 0644 root root -
+f /run/netconfig/yp.conf 0644 root root -
+"""
+            },
+        },
+    ),
+])
+def test_files_without_perms_tmpfiles(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0644,root,root\) .*resolv.conf"', out)
+    assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0755,root,group\) /run/netconfig"', out)
+    assert not re.findall('W: zero-perms.*yp.conf ', out)
