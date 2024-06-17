@@ -336,6 +336,7 @@ def find_perm_in_tmpfiles(pkg, fname):
     perms = '0644'
     user = 'root'
     group = 'root'
+    fname = os.path.realpath(fname)
 
     for k, v in pkg.files.items():
         if 'tmpfiles.d' not in k:
