@@ -758,12 +758,16 @@ nodigests = [
 [[FileDigestGroup]]
 package = "backintime-qt"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#1007723", "bsc#1032717"]
-nodigests = [
-    "/etc/dbus-1/system.d/net.launchpad.backintime.serviceHelper.conf",
-    "/usr/share/dbus-1/system-services/net.launchpad.backintime.serviceHelper.service",
-]
+note = "manages udev rules for removable devices, allowing to automatically run backups once inserted"
+bugs = ["bsc#1007723", "bsc#1032717", "bsc#1226446"]
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/net.launchpad.backintime.serviceHelper.conf"
+digester = "xml"
+hash     = "3dc2c6d8d116565307721dc1a5dc276e6a287ef4c95ee70c991f4ce452161556"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/net.launchpad.backintime.serviceHelper.service"
+digester = "shell"
+hash     = "0307c5d349fc33499c49b10eab1a76ffb2427955a5982525242208c368e63d6a"
 
 [[FileDigestGroup]]
 package = "switcheroo-control"
