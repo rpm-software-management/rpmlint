@@ -1354,3 +1354,17 @@ hash     = "5ed8492b7b77bf77beba04b5eb989a028cc90ac193eb598b102189b8374a9c5d"
 path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.service"
 digester = "shell"
 hash     = "1053fce12e03e219ff4518c8498b3ce1983597961afcefa93be25005414a50d8"
+
+[[FileDigestGroup]]
+package  = "kdeplasma6-addons"
+note     = "A small helper that allows to change LED colors via /sys/class/led"
+bug      = "bsc#1226306"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kameleonhelper.conf"
+digester = "xml"
+hash     = "f9c8290a4e53a251b5405f0a04676b222866c9d0463e0d5e16d020657ec335cb"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kameleonhelper.service"
+digester = "shell"
+hash     = "85e17072d140148cf4cb4186389f5dd6a24c56fbae76c5392504b9062560e0f6"
