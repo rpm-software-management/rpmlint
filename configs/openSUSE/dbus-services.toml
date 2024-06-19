@@ -1096,7 +1096,7 @@ bugs = ["bsc#1185285", "bsc#1213692", "bsc#1219916"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf"
 digester = "xml"
-hash = "0bdd8a388268b3c8d187433b2192ca1b682184881d4b4cb4056a81b757c5ab04"
+hash = "8bfb27085d0f465591b56f17b33c0f9100b917a0a592fe662eed52b039ac6737"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.home1.service"
 digester = "shell"
