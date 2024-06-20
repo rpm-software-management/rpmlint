@@ -71,10 +71,16 @@ hash = "1078762a54fe47dec7bec852c65026a31ae9cb4dc6af21c1e8bcf23a3888d317"
 path = "/usr/lib/sysctl.d/51-network.conf"
 digester = "shell"
 hash = "4292c83e211bc30c928712a25708edf1cbeb94cf39d4d17b6594ad5559eef2e0"
+
+[[FileDigestGroup]]
+package  = "aaa_base-yama-enable-ptrace"
+note     = "sub-package to opt-out of the YAMA ptrace restrictions"
+bug      = "bsc#1226460"
+type     = "sysctl"
 [[FileDigestGroup.digests]]
-path = "/usr/lib/sysctl.d/52-yama.conf"
+path     = "/usr/lib/sysctl.d/52-yama.conf"
 digester = "shell"
-hash = "f801b862fe65a66ff56283254946e86016212977dd8583ac65d1a650b94131a8"
+hash     = "e874c084daaf0035d29687ec65275ad5b429ca312b72ef7f6362d2fd9d5bcc46"
 
 [[FileDigestGroup]]
 package = "raspberrypi-firmware"
