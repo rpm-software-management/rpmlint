@@ -62,11 +62,11 @@ hash = "167ec7922affa2b784540a0d755f02a270cd5d816aea402db2e6489cee293bad"
 package = "aaa_base"
 type = "sysctl"
 note = "some base hardenings of networking, (sym)link protection etc."
-bugs = ["bsc#1174722", "bsc#1219656"]
+bugs = ["bsc#1174722", "bsc#1219656", "bsc#1226464"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-default.conf"
 digester = "shell"
-hash = "83d76eec651d08ddf758989962ad62084885440d83b4ea0355bc838e7cf6eecc"
+hash = "1078762a54fe47dec7bec852c65026a31ae9cb4dc6af21c1e8bcf23a3888d317"
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/51-network.conf"
 digester = "shell"
