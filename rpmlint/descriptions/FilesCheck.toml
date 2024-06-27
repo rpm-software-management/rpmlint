@@ -409,3 +409,17 @@ A file in /usr/bin is a link to a script in a different place with a shebang.
 rpm won't be able to inject the needed interpreter as dependency, so it should
 be done manually.
 """
+
+zero-perms="""
+Your package contains a file with no permissions. This is usually an error
+because the file won't be accessible by any user. You should check the file
+permissions and ensure that are correct or fix during in the %install section.
+"""
+
+zero-perms-ghost="""
+Your package contains a file with no permissions. This is usually an error
+because the file won't be accessible by any user. You should check the file
+permissions and ensure that are correct or fix it using "%attr" macro in %files
+section.
+http://ftp.rpm.org/max-rpm/s1-rpm-anywhere-specifying-file-attributes.html
+"""

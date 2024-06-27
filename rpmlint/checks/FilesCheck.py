@@ -326,6 +326,37 @@ def script_interpreter(chunk):
         if res and res.start() == 0 else (None, '')
 
 
+def find_perm_in_tmpfiles(pkg, fname):
+    """
+    Look for file path in all tmpdfiles.d file declared in this pkg and return
+    the permission column.
+    """
+
+    tmpd = []
+    perms = '0644'
+    user = 'root'
+    group = 'root'
+    fname = os.path.realpath(fname)
+
+    for k, v in pkg.files.items():
+        if 'tmpfiles.d' not in k:
+            continue
+        if not os.path.exists(v.path):
+            continue
+        with open(v.path) as f:
+            tmpd += f.readlines()
+
+    for line in tmpd:
+        if f' {fname} ' not in line:
+            continue
+        try:
+            _t, _p, perms, user, group, *_rest = line.split()
+        except IndexError:
+            continue
+
+    return perms, user, group
+
+
 class FilesCheck(AbstractCheck):
     man_regex = re.compile(r'/man(?:\d[px]?|n)/')
     info_regex = re.compile(r'(/usr/share|/usr)/info/')
@@ -570,6 +601,10 @@ class FilesCheck(AbstractCheck):
 
         self._check_file_crond(pkg, fname, pkgfile)
 
+        # files with all permissions bits as zero
+        # https://github.com/rpm-software-management/rpmlint/issues/878
+        self._check_file_zero_perms(pkg, fname, pkgfile)
+
     def _check_file_manpage(self, pkg, fname):
         """
         Check if the the manual page is compressed with the compression method
@@ -628,6 +663,18 @@ class FilesCheck(AbstractCheck):
 
         if stat.S_IWGRP & mode or stat.S_IWOTH & mode:
             self.output.add_info('E', pkg, 'non-owner-writeable-only-crontab-file', fname)
+
+    def _check_file_zero_perms(self, pkg, fname, pkgfile):
+        mode = pkgfile.mode
+        perm = mode & 0o7777
+        if not perm:
+            if pkgfile.is_ghost:
+                perms, user, group = find_perm_in_tmpfiles(pkg, pkgfile.name)
+                suggestion = f'Suggestion: "%ghost %attr({perms},{user},{group}) {pkgfile.name}"'
+                # Suggest the attrs if there's a tmpfiles.d
+                self.output.add_info('W', pkg, 'zero-perms-ghost', suggestion)
+            else:
+                self.output.add_info('W', pkg, 'zero-perms', fname, '%o' % perm)
 
     def _check_file_unexpandaed_macro(self, pkg, fname):
         for match in self.macro_regex.findall(fname):

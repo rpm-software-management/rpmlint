@@ -1,6 +1,8 @@
+import re
 import stat
 
 import pytest
+import rpm
 from rpmlint.checks.FilesCheck import FilesCheck
 from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
@@ -333,3 +335,52 @@ def test_directory_without_x_permission2(tmp_path, package, filescheck):
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'E: non-standard-dir-perm' in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        header={'requires': []},
+        files={
+            '/var/lib/pipewire': {'is_dir': True, 'metadata': {'mode': 0o000 | stat.S_IFDIR}},
+            '/var/lib/dir_read': {'is_dir': True, 'metadata': {'mode': 0o755 | stat.S_IFDIR}},
+            '/var/lib/pipewire/ghost_file': {'metadata': {'mode': 0o000, 'flags': rpm.RPMFILE_GHOST}},
+            '/var/lib/pipewire/ghost_file_read': {'metadata': {'mode': 0o644, 'flags': rpm.RPMFILE_GHOST}},
+            '/var/lib/pipewire/normal_file': {'metadata': {'mode': 0o000}},
+            '/var/lib/pipewire/normal_file_read': {'metadata': {'mode': 0o644}},
+        },
+    ),
+])
+def test_files_without_perms(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert re.findall('W: zero-perms .*pipewire ', out)
+    assert re.findall('W: zero-perms-ghost .*ghost_file', out)
+    assert re.findall('W: zero-perms .*normal_file ', out)
+    assert not re.findall('W: zero-perms .*normal_file_read ', out)
+    assert not re.findall('W: zero-perms .*dir_read ', out)
+    assert not re.findall('W: zero-perms-ghost .*ghost_file_read', out)
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        header={'requires': []},
+        files={
+            '/run/netconfig/resolv.conf': {'metadata': {'mode': 0o000, 'flags': rpm.RPMFILE_GHOST}},
+            '/run/netconfig/yp.conf': {'metadata': {'mode': 0o644, 'flags': rpm.RPMFILE_GHOST}},
+            '/run/netconfig': {'is_dir': True, 'metadata': {'mode': 0o000, 'flags': rpm.RPMFILE_GHOST | stat.S_IFDIR}},
+            '/usr/lib/tmpfiles.d/netconfig.conf': {
+                'content': """
+d /run/netconfig 0755 root group -
+f /run/netconfig/resolv.conf 0644 root root -
+f /run/netconfig/yp.conf 0644 root root -
+"""
+            },
+        },
+    ),
+])
+def test_files_without_perms_tmpfiles(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0644,root,root\) .*resolv.conf"', out)
+    assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0755,root,group\) /run/netconfig"', out)
+    assert not re.findall('W: zero-perms.*yp.conf ', out)
