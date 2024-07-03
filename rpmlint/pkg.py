@@ -846,6 +846,7 @@ class FakePkg(AbstractPkg):
 
         if attrs.get('is_dir', False):
             self.add_dir(path, metadata=metadata)
+            return
 
         content = ''
         if 'content-path' in attrs:
@@ -880,6 +881,10 @@ class FakePkg(AbstractPkg):
     def add_dir(self, path, metadata=None):
         pkgdir = PkgFile(path)
         pkgdir.magic = 'directory'
+
+        path = os.path.join(self.dir_name(), path.lstrip('/'))
+        os.makedirs(Path(path), exist_ok=True)
+
         pkgdir.path = path
         self.files[path] = pkgdir
 

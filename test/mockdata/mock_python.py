@@ -273,3 +273,17 @@ PythonSinglePYCMockPackage = get_tested_mock_package(
         '/usr/lib/python3.9/site-packages/blinker/__pycache__/_utilities.cpython-39.pyc',
     ]
 )
+
+
+IPythonMissingRequirePackage = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/usr/lib/python3.12/site-packages/ipython-8.14.0-py3.12.egg-info/requires.txt': {
+            'content-path': 'files/ipython-requires.txt',
+        },
+    },
+    header={'requires': [
+        'python-leftover',
+        'python-no-leftover',
+    ]},
+)

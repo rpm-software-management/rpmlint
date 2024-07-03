@@ -1,4 +1,5 @@
 from mockdata.mock_python import (
+    IPythonMissingRequirePackage,
     PythonDocFolderPackage,
     PythonDocModulePackage,
     PythonEggInfoFileackage,
@@ -224,3 +225,34 @@ def test_python_sphinx_doctrees_leftover_nowarn(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: python-sphinx-doctrees-leftover' not in out
+
+
+@pytest.mark.parametrize('package', [IPythonMissingRequirePackage])
+def test_python_dependencies_ipython(package, test, output):
+    test.check(package)
+    out = output.print_results(output.results)
+
+    requirements = [
+        'backcall',
+        'decorator',
+        'jedi',
+        'matplotlib-inline',
+        'pickleshare',
+        'prompt_toolkit',
+        'pygments',
+        'stack_data',
+        'traitlets',
+    ]
+
+    for req in requirements:
+        assert f'W: python-missing-require {req}' in out
+
+    # typing_extensions is in section [:python_version < "3.10"]
+    assert 'W: python-missing-require typing_extensions' not in out
+
+    # req312 is in section [:python_version > "3.11"]
+    assert 'W: python-missing-require req312' in out
+
+    # leftover is in section [:python_version < "3.10"]
+    assert 'W: python-leftover-require python-leftover' in out
+    assert 'W: python-leftover-require python-no-leftover' not in out
