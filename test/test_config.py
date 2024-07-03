@@ -40,7 +40,7 @@ def test_custom_config(capsys):
 def test_broken_config(capsys):
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         Config(TEST_BROKEN)
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == 4
 
 
