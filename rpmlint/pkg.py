@@ -494,6 +494,14 @@ class AbstractPkg:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cleanup()
 
+    def read_with_mmap(self, filename):
+        """Mmap a file, return it's content decoded."""
+        try:
+            with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
+                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
+        except Exception:
+            return ''
+
 
 class Pkg(AbstractPkg):
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
@@ -629,14 +637,6 @@ class Pkg(AbstractPkg):
             return data.count('\n', 0, match.start()) + 1
         else:
             return None
-
-    def read_with_mmap(self, filename):
-        """Mmap a file, return it's content decoded."""
-        try:
-            with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
-                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
-        except Exception:
-            return ''
 
     def langtag(self, tag, lang):
         """Get value of tag in the given language."""
