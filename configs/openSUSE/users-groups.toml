@@ -1,5 +1,6 @@
 StandardGroups = [
     'aegis',
+    'alloy',
     'antivir',
     'arangodb',
     'at',
@@ -229,6 +230,7 @@ StandardGroups = [
 
 StandardUsers = [
     'aegis',
+    'alloy',
     'amanda',
     'aodh',
     'arangodb',
