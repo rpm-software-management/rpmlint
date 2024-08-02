@@ -1,7 +1,7 @@
 %{!?python3: %global python3 %{__python3}}
 
 Name:           rpmlint
-Version:        2.6.0
+Version:        2.6.1
 Release:        0%{?dist}
 Summary:        Tool for checking common errors in RPM packages
 
