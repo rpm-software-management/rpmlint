@@ -341,7 +341,7 @@ def find_perm_in_tmpfiles(pkg, fname):
     for k, v in pkg.files.items():
         if 'tmpfiles.d' not in k:
             continue
-        if not os.path.exists(v.path):
+        if not os.path.exists(v.path) or os.path.isdir(v.path):
             continue
         with open(v.path) as f:
             tmpd += f.readlines()
