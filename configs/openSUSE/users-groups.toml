@@ -218,6 +218,7 @@ StandardGroups = [
     'woodpecker',
     'www',
     'xok',
+    'xpra',
     'xrootd',
     'xymon',
     'zabbix',
