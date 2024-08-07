@@ -877,14 +877,15 @@ class FakePkg(AbstractPkg):
                 self._mock_file(path, file)
 
     def add_dir(self, path, metadata=None):
-        pkgdir = PkgFile(path)
+        name = path
+        pkgdir = PkgFile(name)
         pkgdir.magic = 'directory'
 
         path = os.path.join(self.dir_name(), path.lstrip('/'))
         os.makedirs(Path(path), exist_ok=True)
 
         pkgdir.path = path
-        self.files[path] = pkgdir
+        self.files[name] = pkgdir
 
         if metadata:
             for k, v in metadata.items():
