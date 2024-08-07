@@ -1,0 +1,6 @@
+Name: Tasque
+Description: Simple Task Management
+Version: 0.1
+
+Requires: 
+Libs: -r:/usr/lib/tasque/Tasque.exe

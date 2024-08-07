@@ -1,0 +1,5 @@
+
+[D-BUS Service]
+Name=org.gnome.Tasque
+Exec=/usr/bin/tasque
+

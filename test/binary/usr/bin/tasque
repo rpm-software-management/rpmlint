@@ -1,0 +1,29 @@
+#!/bin/bash
+
+prefix="/usr"
+exec_prefix="/usr/bin"
+libdir="/usr/lib"
+pkglibdir="/usr/lib/tasque"
+
+cd ${pkglibdir}
+
+for arg in $*; do
+	case "x--debug" in ("x$arg")
+	    TASQUE_DEBUG=$arg
+	esac
+
+	case "x--trace=" in ("x${arg:0:8}")
+	    TASQUE_TRACE=$arg
+	esac
+
+	case "x--profile=" in ("x${arg:0:10}")
+	    TASQUE_PROFILE=$arg
+	esac
+done
+
+if [ -n "$TASQUE_DEBUG" -o -n "$TASQUE_TRACE" -o -n "$TASQUE_PROFILE" -o -n "$MONO_EXTRA_ARGS" ]; then
+	MONO_OPTIONS="$TASQUE_DEBUG $TASQUE_TRACE $TASQUE_PROFILE $MONO_EXTRA_ARGS"
+	echo "** Running Mono with $MONO_OPTIONS **"
+fi
+
+exec -a "Tasque" mono $MONO_OPTIONS "Tasque.exe" "$@"
