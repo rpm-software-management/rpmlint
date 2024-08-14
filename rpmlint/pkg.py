@@ -885,6 +885,9 @@ class FakePkg(AbstractPkg):
         os.makedirs(Path(path), exist_ok=True)
 
         pkgdir.path = path
+        pkgdir.mode = stat.S_IFDIR | 0o0755
+        pkgdir.user = 'root'
+        pkgdir.group = 'root'
         self.files[name] = pkgdir
 
         if metadata:
