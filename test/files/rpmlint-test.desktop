@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=rpmlint-test
+Name[de]=rpmlint-test umlaut הצü 
+Exec=rpmlint-test file.file
+Icon=chameleon_v_baliku
+Type=Application
+GenericName=rpmlint testcase
+Categories=Game;Amusement;

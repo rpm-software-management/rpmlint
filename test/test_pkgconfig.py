@@ -1,8 +1,9 @@
+from mockdata.mock_pkgconfig import PKGCONFIG, PKGCONFIG2
 import pytest
 from rpmlint.checks.PkgConfigCheck import PkgConfigCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,20 +14,20 @@ def pkgconfigcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/pc'])
-def test_pkg_config(tmp_path, package, pkgconfigcheck):
+@pytest.mark.parametrize('package', [PKGCONFIG])
+def test_pkg_config(package, pkgconfigcheck):
     output, test = pkgconfigcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: invalid-pkgconfig-file /tmp/pkgconfig/xcb.pc' in out
     assert 'E: pkgconfig-invalid-libs-dir /tmp/pkgconfig/xcb.pc Libs: -L/usr/lib' in out
     assert 'E: double-slash-in-pkgconfig-path /tmp/pkgconfig/xcb.pc includedir=/usr/include//xyz' in out
 
 
-@pytest.mark.parametrize('package', ['binary/libreiserfscore-devel'])
-def test_pkg_config_correct(tmp_path, package, pkgconfigcheck):
+@pytest.mark.parametrize('package', [PKGCONFIG2])
+def test_pkg_config_correct(package, pkgconfigcheck):
     output, test = pkgconfigcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: invalid-pkgconfig-file' not in out
     assert 'E: pkgconfig-invalid-libs-dir' not in out
