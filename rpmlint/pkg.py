@@ -494,6 +494,17 @@ class AbstractPkg:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cleanup()
 
+    def check_versioned_dep(self, name, version):
+        # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
+        name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
+        for d in self.requires + self.prereq:
+            if name_re.match(d[0]):
+                if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
+                        or d[2][1] != version:
+                    return False
+                return True
+        return False
+
 
 class Pkg(AbstractPkg):
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
@@ -714,17 +725,6 @@ class Pkg(AbstractPkg):
             linkpath = os.path.normpath(linkpath)
             result = self.files.get(linkpath)
         return result
-
-    def check_versioned_dep(self, name, version):
-        # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
-        name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
-        for d in self.requires + self.prereq:
-            if name_re.match(d[0]):
-                if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
-                        or d[2][1] != version:
-                    return False
-                return True
-        return False
 
 
 def get_installed_pkgs(name):
