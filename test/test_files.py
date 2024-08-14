@@ -329,14 +329,6 @@ def test_directory_without_x_permission(package, output, test):
     assert 'E: non-standard-dir-perm' in out
 
 
-@pytest.mark.parametrize('package', ['binary/freeradius-server'])
-def test_directory_without_x_permission2(tmp_path, package, filescheck):
-    output, test = filescheck
-    test.check(get_tested_package(package, tmp_path))
-    out = output.print_results(output.results)
-    assert 'E: non-standard-dir-perm' in out
-
-
 @pytest.mark.parametrize('package', [
     get_tested_mock_package(
         header={'requires': []},
