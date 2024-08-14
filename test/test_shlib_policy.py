@@ -1,3 +1,4 @@
+import stat
 import pytest
 from rpmlint.checks.SharedLibraryPolicyCheck import SharedLibraryPolicyCheck
 from rpmlint.filter import Filter
@@ -73,9 +74,9 @@ def test_shlib_policy_missing_suffix(package, slpcheck):
     name='libslp1234',
     files={
         '/usr/lib64/hello': {'is_dir': True},
-        '/usr/lib64/hello/libhello2.so': {},
-        '/usr/lib64/libhello.so': {},
-        '/usr/lib64/libhello2.so': {}
+        '/usr/lib64/hello/libhello2.so': {'content-path': 'files/libhello2.so'},
+        '/usr/lib64/libhello.so': {'content-path': 'files/libhello2.so'},
+        '/usr/lib64/libhello2.so': {'content-path': 'files/libhello2.so'}
     },
     header={
         'requires': [
