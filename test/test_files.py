@@ -205,18 +205,15 @@ def test_pyc_mtime_from_chunk(version, mtime):
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
     files={
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64': {'is_dir': True},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/LICENSE': {
-            'content': '',
-            'metadata': {'mode': 0o644}},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/errors.c': {'metadata': {'mode': 0o644}},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/errors.h': {'metadata': {'mode': 0o644}},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/main.c': {'metadata': {'mode': 0o644}},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/netmask.c': {'metadata': {'mode': 0o644}},
-        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/netmask.h': {'metadata': {'mode': 0o644}},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64': {'is_dir': True, 'metadata': {'mode': 0o755, 'user': 'root', 'group': 'root'}},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/errors.c': {'metadata': {'mode': 0o644 | stat.S_IFREG}, 'content-path': 'files/netmask/errors.c'},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/errors.h': {'metadata': {'mode': 0o644 | stat.S_IFREG}, 'content-path': 'files/netmask/errors.h'},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/main.c': {'metadata': {'mode': 0o644 | stat.S_IFREG}, 'content-path': 'files/netmask/main.c'},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/netmask.c': {'metadata': {'mode': 0o644 | stat.S_IFREG}, 'content-path': 'files/netmask/netmask.c'},
+        '/usr/src/debug/netmask-2.4.3-5.fc27.x86_64/netmask.h': {'metadata': {'mode': 0o644 | stat.S_IFREG}, 'content-path': 'files/netmask/netmask.h'},
     },
+    name='netmask-debugsource',
     header={
-        'name': 'netmask',
         'version': '2.4.3',
         'release': '5.fc27',
         'requires': [
@@ -232,9 +229,9 @@ def test_devel_files(package, filescheck):
     test.check(package)
     assert len(output.results) == 5
     out = output.print_results(output.results)
-    assert 'devel-file-in-non-devel-package' not in out
-   # assert 'incorrect-fsf-address' in out
+    assert 'incorrect-fsf-address' in out
     assert 'no-documentation' in out
+    assert 'devel-file-in-non-devel-package' not in out
 
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
@@ -336,7 +333,7 @@ def test_sphinx_inv_files(package, filescheck):
         '/usr/share/doc/perl-foo/MANIFEST': {},
         '/~backup.rej': {}
     },
-    header={ 
+    header={
         'requires': [
             'rpmlib(CompressedFileNames) <= 3.0.4-1',
             'rpmlib(FileDigests) <= 4.6.0-1',
