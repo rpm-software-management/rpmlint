@@ -1,5 +1,7 @@
 import pytest
 import rpm
+import subprocess
+import unittest.mock as mock
 from rpmlint.pkg import parse_deps, rangeCompare
 
 from Testing import get_tested_package
@@ -25,5 +27,12 @@ def test_range_compare():
 
 
 @pytest.mark.parametrize('package', ['binary/python311-pytest-xprocess'])
-def test_extract(package, tmp_path):
-    get_tested_package(package, tmp_path)
+def test_extract_fail(package, tmp_path):
+    with mock.patch("shutil.which") as mock_which:
+        mock_which.return_value = None
+        # the package cannot be extracted using rpm2cpio because it contains a directory without 'x' permission
+        with pytest.raises(subprocess.CalledProcessError) as exc:
+            get_tested_package(package, tmp_path)
+        mock_which.assert_called_once_with("rpm2archive")
+        # check that it was rpm2cpio what failed
+        assert exc.match(r"rpm2cpio .*")
