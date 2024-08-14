@@ -15,14 +15,9 @@ def slpcheck():
 
 
 @pytest.mark.parametrize('package', [get_tested_mock_package(
-    name='libtest',
+    name='libtest1',
     files={
-        '/usr/lib64/libtest.so.1x': {
-            'metadata': {
-                'mode': 0o755,
-                'magic': 'ELF 64-bit LSB shared object, x86-64, version 1'},
-            'content': ''
-        }
+        '/usr/lib64/libtest.so.1.5.0': {'content-path': 'files/libtest.so.1.5.0'}
     },
     header={
         'requires': [
@@ -48,8 +43,8 @@ def test_shlib_policy_wrong_name(package, slpcheck):
     files={
         '/usr/lib64/hello': {'is_dir': True},
         '/usr/lib64/hello/libhello2.so': {},
-        '/usr/lib64/libhello.so': {},
-        '/usr/lib64/libhello2.so': {}
+        '/usr/lib64/libhello.so': {'content-path': 'files/libhello.so'},
+        '/usr/lib64/libhello2.so': {'content-path': 'files/libhello2.so'}
     },
     header={
         'requires': [
