@@ -1,4 +1,5 @@
 StandardGroups = [
+    '3proxy',
     'aegis',
     'alloy',
     'antivir',
@@ -230,6 +231,7 @@ StandardGroups = [
 ]
 
 StandardUsers = [
+    '3proxy',
     'aegis',
     'alloy',
     'amanda',
