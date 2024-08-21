@@ -375,6 +375,8 @@ f /run/netconfig/resolv.conf 0644 root root -
 f /run/netconfig/yp.conf 0644 root root -
 """
             },
+            '/etc/tmpfiles.d': {'is_dir': True},
+            '/etc/tmpfiles.d/binary.zip': {'content': b'\xa0\x1b'},
         },
     ),
 ])
