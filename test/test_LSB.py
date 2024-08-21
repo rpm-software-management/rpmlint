@@ -1,8 +1,9 @@
+from mockdata.mock_LSB import LSB
 import pytest
 from rpmlint.checks.LSBCheck import LSBCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,13 +14,13 @@ def lsbcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/fPing'])
-def test_LSB_compliance(tmp_path, package, lsbcheck):
+@pytest.mark.parametrize('package', [LSB])
+def test_LSB_compliance(package, lsbcheck):
     """
     Check that the package name, version and release number are LSB compliant.
     """
     output, test = lsbcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
 
     # Check invalid package name

@@ -1,8 +1,9 @@
+from mockdata.mock_build_root import BUILDROOT
 import pytest
 from rpmlint.checks.BuildRootAndDateCheck import BuildRootAndDateCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +14,10 @@ def buildrootcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/buildroot'])
-def test_build_root(tmp_path, package, buildrootcheck):
+@pytest.mark.parametrize('package', [BUILDROOT])
+def test_build_root(package, buildrootcheck):
     output, test = buildrootcheck
     test.prepare_regex('/home/marxin/rpmbuild/BUILDROOT/%{NAME}-%{VERSION}-%{RELEASE}.x86_64')
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: file-contains-buildroot /bin/trace' in out

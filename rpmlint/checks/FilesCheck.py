@@ -339,12 +339,18 @@ def find_perm_in_tmpfiles(pkg, fname):
     fname = os.path.realpath(fname)
 
     for k, v in pkg.files.items():
-        if 'tmpfiles.d' not in k:
+        if 'tmpfiles.d' not in k or not k.endswith('.conf'):
             continue
-        if not os.path.exists(v.path):
+        if not os.path.exists(v.path) or os.path.isdir(v.path):
             continue
+
         with open(v.path) as f:
-            tmpd += f.readlines()
+            try:
+                tmpd += f.readlines()
+            except ValueError:
+                # Can't read this file, so we are not trying to read definition
+                # from there
+                pass
 
     for line in tmpd:
         if f' {fname} ' not in line:
