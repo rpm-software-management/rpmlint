@@ -1,5 +1,4 @@
 StandardGroups = [
-    '3proxy',
     'aegis',
     'alloy',
     'antivir',
@@ -152,6 +151,7 @@ StandardGroups = [
     'privoxy',
     'prometheus',
     'prosody',
+    'proxy',
     'ptokax',
     'public',
     'pulse',
@@ -231,7 +231,6 @@ StandardGroups = [
 ]
 
 StandardUsers = [
-    '3proxy',
     'aegis',
     'alloy',
     'amanda',
@@ -393,6 +392,7 @@ StandardUsers = [
     'privoxy',
     'prometheus',
     'prosody',
+    'proxy',
     'ptokax',
     'pulse',
     'puppet',
