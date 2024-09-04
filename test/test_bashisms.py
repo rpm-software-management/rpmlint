@@ -1,8 +1,9 @@
+from mockdata.mock_bashisms import BASHISMS
 import pytest
 from rpmlint.checks.BashismsCheck import BashismsCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package, HAS_CHECKBASHISMS, HAS_DASH
+from Testing import CONFIG, HAS_CHECKBASHISMS, HAS_DASH
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -15,10 +16,10 @@ def bashismscheck():
 
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
-@pytest.mark.parametrize('package', ['binary/bashisms'])
-def test_bashisms(tmp_path, package, bashismscheck):
+@pytest.mark.parametrize('package', [BASHISMS])
+def test_bashisms(package, bashismscheck):
     output, test = bashismscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: potential-bashisms /bin/script1' in out
     assert 'W: bin-sh-syntax-error /bin/script2' in out
@@ -26,10 +27,10 @@ def test_bashisms(tmp_path, package, bashismscheck):
 
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
-@pytest.mark.parametrize('package', ['binary/bashisms'])
-def test_bashisms_error(tmp_path, package, bashismscheck):
+@pytest.mark.parametrize('package', [BASHISMS])
+def test_bashisms_error(package, bashismscheck):
     output, test = bashismscheck
-    package = get_tested_package(package, tmp_path)
     package.dirname = 'I-do-not-exist-for-sure'
+
     with pytest.raises(FileNotFoundError):
         test.check(package)
