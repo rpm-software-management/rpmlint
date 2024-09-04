@@ -339,7 +339,7 @@ def test_header_information(capsys):
 @pytest.mark.no_cover
 def test_run_full_rpm(capsys, packages, configs):
     # the package cannot be extracted using rpm2cpio because it contains a directory without 'x' permission
-    packages.remove(Path("test/binary/python311-pytest-xprocess-0.23.0-2.4.noarch.rpm"))
+    packages.remove(Path('test/binary/python311-pytest-xprocess-0.23.0-2.4.noarch.rpm'))
 
     number_of_pkgs = len(packages)
     additional_options = {
