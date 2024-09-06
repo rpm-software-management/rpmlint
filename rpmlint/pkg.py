@@ -621,7 +621,7 @@ class Pkg(AbstractPkg):
                         subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIRONMENT,
                                                 stderr=stderr, stdin=rpm_data)
                 else:
-                    command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
+                    command_str = f'rpm2cpio {quote(str(filename))} | cpio -id && chmod -R +rX .'
                     subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIRONMENT, stderr=stderr)
             self.extracted = True
         return dirname
