@@ -996,15 +996,15 @@ nodigests = [
 package = "sssd-dbus"
 type = "dbus"
 note = "sssd responder 'infopipe' service; D-Bus interface towards sssd"
-bugs = ["bsc#1157663", "bsc#1106600", "bsc#1207586"]
+bugs = ["bsc#1157663", "bsc#1106600", "bsc#1207586", "bsc#1230051"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.sssd.infopipe.service"
 digester = "shell"
-hash = "a2631eb70e5cdc8392c97e19924dc9aca4ddcf4b38a44ada079dbfd5f3b5c873"
+hash = "c966cc2c04a17dea3824fcb280db81a7792bfb8712946169a5dac406560cf473"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.sssd.infopipe.conf"
 digester = "xml"
-hash = "d9304d507aced6bfd7f14eb5dcc93689ccf2a8b61d346718677fcd97a8b67feb"
+hash = "da20106ae5dd2219a6a1cbd3c21734e34a15c8f3b90a7f78a3bf714b0417752c"
 
 [[FileDigestGroup]]
 package = "oddjob"

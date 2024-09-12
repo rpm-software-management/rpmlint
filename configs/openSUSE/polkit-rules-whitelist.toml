@@ -216,3 +216,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
 digester = "default"
 hash     = "559f983aa50bbea8f4927fa96dc06a4e0f781617495339155b2bd4d077ec4607"
+
+[[FileDigestGroup]]
+package  = "sssd-polkit-rules"
+note     = "allows the unprivileged 'sssd' user to access smartcards via pcsc"
+bug      = "bsc#1230051"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/sssd-pcsc.rules"
+digester = "default"
+hash     = "aa07dbae7abe641bcaec03c5b04da0695a4a49f2d01e486b4c5de61819ebcb70"
