@@ -992,6 +992,21 @@ nodigests = [
     "/usr/share/dbus-1/system.d/org.freedesktop.portable1.conf",
 ]
 
+# TEMPORARY ENTRY FOR THE OLD VERSION. Remove after next major release.
+[[FileDigestGroup]]
+package = "sssd-dbus"
+type = "dbus"
+note = "sssd responder 'infopipe' service; D-Bus interface towards sssd"
+bugs = ["bsc#1157663", "bsc#1106600", "bsc#1207586", "bsc#1230051"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.sssd.infopipe.service"
+digester = "shell"
+hash = "a2631eb70e5cdc8392c97e19924dc9aca4ddcf4b38a44ada079dbfd5f3b5c873"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.sssd.infopipe.conf"
+digester = "xml"
+hash = "d9304d507aced6bfd7f14eb5dcc93689ccf2a8b61d346718677fcd97a8b67feb"
+
 [[FileDigestGroup]]
 package = "sssd-dbus"
 type = "dbus"
