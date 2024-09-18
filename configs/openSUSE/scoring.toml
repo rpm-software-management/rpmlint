@@ -98,3 +98,4 @@ missing-hash-section = 10000
 zypperplugin-file-digest-mismatch = 10
 zypperplugin-file-ghost = 10
 zypperplugin-file-unauthorized = 10
+patch-macro-old-format = 10000
