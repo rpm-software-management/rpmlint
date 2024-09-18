@@ -387,6 +387,7 @@ def test_default_digester():
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
+@pytest.mark.skipif(os.getuid() != 0, reason='Root can extract this package, so nothing to check')
 def test_pam_modules(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam.config')
     test.check(get_tested_package(package, tmp_path))
@@ -395,6 +396,7 @@ def test_pam_modules(tmp_path, package, digestcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
+@pytest.mark.skipif(os.getuid() != 0, reason='Root can extract this package, so nothing to check')
 def test_pam_includeonly_nonexistent(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam1.config')
     test.check(get_tested_package(package, tmp_path))
@@ -403,6 +405,7 @@ def test_pam_includeonly_nonexistent(tmp_path, package, digestcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
+@pytest.mark.skipif(os.getuid() != 0, reason='Root can extract this package, so nothing to check')
 def test_pam_includeonly_existent(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam2.config')
     test.check(get_tested_package(package, tmp_path))
@@ -411,6 +414,7 @@ def test_pam_includeonly_existent(tmp_path, package, digestcheck):
 
 
 @pytest.mark.parametrize('package', ['binary/pam-module'])
+@pytest.mark.skipif(os.getuid() != 0, reason='Root can extract this package, so nothing to check')
 def test_pam(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam3.config')
     test.check(get_tested_package(package, tmp_path))
