@@ -318,13 +318,15 @@ paths = [
 [SystemdTmpfilesWhitelist]
 
 [Descriptions]
-non-standard-uid = '''A file in this package is owned by an unregistered user id.
-To register the user, please make a pull request to the rpmlint config file
-configs/openSUSE/users-groups.toml in the rpmlint repository.
+non-standard-uid = '''A file in this package is owned by an unregistered user
+id.  To register the user, please make a pull request to the rpmlint config
+file configs/openSUSE/users-groups.toml in the opensuse branch of the rpmlint
+repository.
 '''
-non-standard-gid = '''A file in this package is owned by an unregistered group id.
-To register the group, please make a pull request to the rpmlint config file
-configs/openSUSE/users-groups.toml in the rpmlint repository.
+non-standard-gid = '''A file in this package is owned by an unregistered group
+id.  To register the group, please make a pull request to the rpmlint config
+file configs/openSUSE/users-groups.toml in the opensuse branch of the rpmlint
+repository.
 '''
 no-changelogname-tag = '''There is no changelog. Please insert a '%changelog' section heading in your
 spec file and prepare your changes file using e.g. the 'osc vc' command.'''
