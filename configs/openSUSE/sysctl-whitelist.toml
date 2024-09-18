@@ -175,3 +175,13 @@ bugs = ["bsc#1174722", "bsc#1209363", "bsc#1210951", "bsc#1215542", "bsc#1219168
 path = "/usr/lib/sysctl.d/90-kubeadm.conf"
 digester = "shell"
 hash = "43e95061f764465452c91708145e6d5948ab0e4750ed9ce98b59e1a1f223f45a"
+
+[[FileDigestGroup]]
+package = "traefik"
+type = "sysctl"
+note = "increases the maximum network socket buffer size"
+bug = "bsc#1230555"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/90-traefik.conf"
+digester = "shell"
+hash = "fa6168516d46bc00f6d0cccc4470fa0e2beea74396490d3466b1640f8e312bd2"
