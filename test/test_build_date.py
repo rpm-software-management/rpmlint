@@ -1,6 +1,7 @@
 import re
 
-from mockdata.mock_build_date import BUILDDATE, BUILDDATE2
+from mockdata.mock_build_date import BuildDatePackage
+from mockdata.mock_bashisms import BashismsPackage
 import pytest
 from rpmlint.checks.BuildRootAndDateCheck import BuildRootAndDateCheck
 from rpmlint.filter import Filter
@@ -16,7 +17,7 @@ def builddatecheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [BUILDDATE])
+@pytest.mark.parametrize('package', [BuildDatePackage])
 def test_build_date_time(package, builddatecheck):
     output, test = builddatecheck
     test.istoday = re.compile('Jan  1 2019')
@@ -26,7 +27,7 @@ def test_build_date_time(package, builddatecheck):
     assert 'E: file-contains-current-date /bin/with-date' in out
 
 
-@pytest.mark.parametrize('package', [BUILDDATE2])
+@pytest.mark.parametrize('package', [BashismsPackage])
 def test_build_date_time_correct(package, builddatecheck):
     output, test = builddatecheck
     test.istoday = re.compile('Jan  1 2019')
