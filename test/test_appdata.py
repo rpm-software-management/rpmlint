@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from mockdata.mock_appdata import APPDATA, APPDATA2
+from mockdata.mock_appdata import AppDataPackage
 import pytest
 from rpmlint.checks.AppDataCheck import AppDataCheck
 from rpmlint.filter import Filter
@@ -17,7 +17,7 @@ def appdatacheck():
 
 
 @pytest.mark.skipif(not HAS_APPSTREAM_GLIB, reason='Optional dependency appstream-glib not installed')
-@pytest.mark.parametrize('package', [APPDATA])
+@pytest.mark.parametrize('package', [AppDataPackage])
 def test_appdata_fail(package, appdatacheck):
     output, test = appdatacheck
     test.check(package)
@@ -27,7 +27,7 @@ def test_appdata_fail(package, appdatacheck):
     assert 'invalid-appdata-file' in out
 
 
-@pytest.mark.parametrize('package', [APPDATA2])
+@pytest.mark.parametrize('package', [AppDataPackage])
 @patch('rpmlint.checks.AppDataCheck.AppDataCheck.cmd', 'command-really-not-found')
 def test_appdata_fail_no_checker(package, appdatacheck):
     output, test = appdatacheck
