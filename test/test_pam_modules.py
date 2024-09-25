@@ -1,4 +1,4 @@
-from mockdata.mock_pam_modules import PAMMODULES
+from mockdata.mock_pam_modules import PAMModulePackage
 import pytest
 from rpmlint.checks.PAMModulesCheck import PAMModulesCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def pammodulecheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [PAMMODULES])
+@pytest.mark.parametrize('package', [PAMModulePackage])
 def test_pam_modules(package, pammodulecheck):
     output, test = pammodulecheck
     test.check(package)
