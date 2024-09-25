@@ -60,15 +60,12 @@ class DocCheck(AbstractCheck):
         core_reqs = {}  # dependencies of non-doc files
         doc_reqs = {}   # dependencies of doc files
 
-        for dep in rpm.ds(pkg.header, 'requires'):
-            # skip deps which were found by find-requires
-            if dep.Flags() & rpm.RPMSENSE_FIND_REQUIRES != 0:
-                continue
-            core_reqs[dep.N()] = []
+        for dep in pkg.get_core_reqs():
+            core_reqs[dep] = []
 
         # register things which are provided by the package
-        for i in pkg.header[rpm.RPMTAG_PROVIDES]:
-            core_reqs[byte_to_string(i)] = []
+        for i in pkg.provides:
+            core_reqs[i] = []
         for i in files:
             core_reqs[i] = []
 
