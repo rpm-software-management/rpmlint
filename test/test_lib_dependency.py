@@ -1,4 +1,4 @@
-from mockdata.mock_lib_dependency import LIBDEPENDENCY, LIBDEPENDENCY2
+from mockdata.mock_files import Shlib2DevelPackage
 import pytest
 from rpmlint.checks.LibraryDependencyCheck import LibraryDependencyCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def libdependencycheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [LIBDEPENDENCY])
+@pytest.mark.parametrize('package', [Shlib2DevelPackage])
 def test_shlib2_devel(package, libdependencycheck):
     output, test = libdependencycheck
     test.check(package)
@@ -22,13 +22,3 @@ def test_shlib2_devel(package, libdependencycheck):
     out = output.print_results(output.results)
     print(out)
     assert 'E: no-library-dependency-for /usr/lib/libfoo.so.1' in out
-
-
-# TODO: Check out this test. It seems to do nothing
-@pytest.mark.parametrize('package', [LIBDEPENDENCY2])
-def test_missing_depency_on(package, libdependencycheck):
-    output, test = libdependencycheck
-    test.check(package)
-    test.after_checks()
-    out = output.print_results(output.results)
-    assert 'W: missing-dependency-on' not in out
