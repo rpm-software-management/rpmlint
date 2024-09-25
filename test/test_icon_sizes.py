@@ -1,4 +1,4 @@
-from mockdata.mock_icon_sizes import ICONSIZES
+from mockdata.mock_icon_sizes import WrongIconSizePackage
 import pytest
 from rpmlint.checks.IconSizesCheck import IconSizesCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def iconsizescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [ICONSIZES])
+@pytest.mark.parametrize('package', [WrongIconSizePackage])
 def test_icon_sizes(package, iconsizescheck):
     output, test = iconsizescheck
     test.check(package)
