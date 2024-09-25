@@ -1,4 +1,4 @@
-from mockdata.mock_FHS import FHS
+from mockdata.mock_FHS import NoFHSPackage
 import pytest
 from rpmlint.checks.FHSCheck import FHSCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def fhscheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [FHS])
+@pytest.mark.parametrize('package', [NoFHSPackage])
 def test_FHS_compliance(package, fhscheck):
     """
     Check that the directories are not FHS compliant.
