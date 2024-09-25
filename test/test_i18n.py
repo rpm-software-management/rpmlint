@@ -1,4 +1,4 @@
-from mockdata.mock_i18n import I18N, I18N2, I18N3, I18N4, I18N5, I18N6, I18N7, I18N8
+from mockdata.mock_i18n import InvalidI18NPackage, I18NPackage
 import pytest
 from rpmlint.checks.I18NCheck import I18NCheck
 from rpmlint.filter import Filter
@@ -26,14 +26,16 @@ def test(i18ncheck):
     yield test
 
 
-@pytest.mark.parametrize('package', [I18N, I18N2, I18N3])
+@pytest.mark.parametrize('package', [InvalidI18NPackage])
 def test_i18n_invalid_lang(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
-    assert 'E: invalid-lc-messages-dir' in out
+    assert 'E: invalid-lc-messages-dir /usr/share/locale/xx_ES/LC_MESSAGES/goodvibes.mo' in out
+    assert 'E: invalid-lc-messages-dir /usr/share/locale/es_XX/LC_MESSAGES/goodvibes.mo' in out
+    assert 'E: invalid-lc-messages-dir /usr/share/locale/xx/LC_MESSAGES/goodvibes.mo' in out
 
 
-@pytest.mark.parametrize('package', [I18N4, I18N5, I18N6, I18N7, I18N8])
+@pytest.mark.parametrize('package', [I18NPackage])
 def test_i18n_valid_lang(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
