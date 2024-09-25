@@ -883,6 +883,7 @@ class FakePkg(AbstractPkg):
 
         path = os.path.join(self.dir_name(), path.lstrip('/'))
         os.makedirs(Path(path), exist_ok=True)
+        pkgdir.inode = os.stat(Path(path)).st_ino
 
         pkgdir.path = path
         self.files[name] = pkgdir
