@@ -1,4 +1,4 @@
-from mockdata.mock_sysvinitonsystemd import SYSVINITONSYSTEMD, SYSVINITONSYSTEMD2
+from mockdata.mock_sysvinitonsystemd import InitPackage, RcLinksPackage
 import pytest
 from rpmlint.checks.SysVInitOnSystemdCheck import SysVInitOnSystemdCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def sysvcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [SYSVINITONSYSTEMD])
+@pytest.mark.parametrize('package', [InitPackage])
 def test_sysv_init_on_systemd_check(package, sysvcheck):
     output, test = sysvcheck
     test.check(package)
@@ -24,7 +24,7 @@ def test_sysv_init_on_systemd_check(package, sysvcheck):
     assert 'E: deprecated-boot-script boot.script' in out
 
 
-@pytest.mark.parametrize('package', [SYSVINITONSYSTEMD2])
+@pytest.mark.parametrize('package', [RcLinksPackage])
 def test_overshadowing_of_initscript(package, sysvcheck):
     output, test = sysvcheck
     test.check(package)
