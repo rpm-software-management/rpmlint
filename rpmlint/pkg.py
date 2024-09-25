@@ -522,6 +522,15 @@ class AbstractPkg:
         else:
             return None
 
+    def grep(self, regex, filename):
+        """Grep regex from a file, return first matching line number (starting with 1)."""
+        data = self.read_with_mmap(filename)
+        match = regex.search(data)
+        if match:
+            return data.count('\n', 0, match.start()) + 1
+        else:
+            return None
+
 
 class Pkg(AbstractPkg):
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')

@@ -1,5 +1,6 @@
 from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage
 import pytest
+from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
 
