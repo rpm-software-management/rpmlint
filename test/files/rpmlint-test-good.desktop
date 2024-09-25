@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=rpmlint-test
+Name[de]=rpmlint-test umlaut äöü 
+Name[x-test]=xxrpmlint-testxx
+MimeType=application/x-rpm;
+Exec=rpmlint-test file.file
+Icon=chameleon_v_balíku
+Type=Application
+InitialPreference=5
+NoDisplay=false
+GenericName=rpmlint testcase
+GenericName[x-test]=xxrpmlint testcasexx
+Categories=System;PackageManager;
+Keywords=software;package;
+Keywords[x-test]=xxsoftwarexx;xxpackagexx;
