@@ -728,6 +728,21 @@ class Pkg(AbstractPkg):
             result = self.files.get(linkpath)
         return result
 
+    def get_core_reqs(self):
+        """
+        Return the list of dependencies that are not found by find-requires
+        withouth the flag RPM
+        """
+        core_reqs = []
+
+        for dep in rpm.ds(self.header, 'requires'):
+            # skip deps which were found by find-requires
+            if dep.Flags() & rpm.RPMSENSE_FIND_REQUIRES != 0:
+                continue
+            core_reqs.append(dep.N())
+
+        return core_reqs
+
 
 def get_installed_pkgs(name):
     """Get list of installed package objects by name."""
@@ -1006,6 +1021,10 @@ class FakePkg(AbstractPkg):
     def cleanup(self):
         if self.dirname:
             self.__tmpdir.cleanup()
+
+    def get_core_reqs(self):
+        core_reqs = []
+        return core_reqs
 
     # access the tags like an array
     def __getitem__(self, key):
