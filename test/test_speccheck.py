@@ -1234,3 +1234,21 @@ def test_special_comments(package, output, test):
     out = output.print_results(output.results)
     assert 'W: macro-in-comment %configure' in out
     assert 'W: macro-in-comment %{name}' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_spec_package('spec/hpx'),
+])
+def test_libmpi_compat_ok(package, output, test):
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert 'W: libmpi-req-compat' not in out
+
+
+@pytest.mark.parametrize('package', [
+    get_tested_spec_package('spec/gromacs'),
+])
+def test_libmpi_compat_nok(package, output, test):
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert 'W: libmpi-req-compat' in out
