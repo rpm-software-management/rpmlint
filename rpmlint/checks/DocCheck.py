@@ -1,9 +1,7 @@
 from pathlib import Path
 import stat
 
-import rpm
 from rpmlint.checks.AbstractCheck import AbstractCheck
-from rpmlint.helpers import byte_to_string
 
 
 class DocCheck(AbstractCheck):

@@ -1,7 +1,7 @@
 import re
 
-from mockdata.mock_build_date import BuildDatePackage
 from mockdata.mock_bashisms import BashismsPackage
+from mockdata.mock_build_date import BuildDatePackage
 import pytest
 from rpmlint.checks.BuildRootAndDateCheck import BuildRootAndDateCheck
 from rpmlint.filter import Filter

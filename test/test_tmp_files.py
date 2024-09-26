@@ -1,7 +1,7 @@
 from mockdata.mock_tmp_files import (
-    TempfiledPackage,
-    SystemdTempfilesPackage,
     SystemdTempfilesOkPackage,
+    SystemdTempfilesPackage,
+    TempfiledPackage,
 )
 import pytest
 from rpmlint.checks.TmpFilesCheck import TmpFilesCheck

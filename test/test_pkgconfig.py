@@ -1,4 +1,4 @@
-from mockdata.mock_pkgconfig import PCPackage, LibReiserFSCoreDevelPackage
+from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage, PCPackage
 import pytest
 from rpmlint.checks.PkgConfigCheck import PkgConfigCheck
 from rpmlint.filter import Filter

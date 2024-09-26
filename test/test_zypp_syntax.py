@@ -1,6 +1,6 @@
 from mockdata.mock_zypp_syntax import (
-    SyntaxPackageandPackage,
     SyntaxAndPackage,
+    SyntaxPackageandPackage,
 )
 import pytest
 from rpmlint.checks.ZyppSyntaxCheck import ZyppSyntaxCheck

@@ -1,9 +1,9 @@
 from mockdata.mock_menuxdg import (
-    MenuXDGInvalidPackage,
     MenuXDGBadBinPackage,
     MenuXDGBadDupPackage,
     MenuXDGBadSecPackage,
     MenuXDGBadUTF8Package,
+    MenuXDGInvalidPackage,
     MenuXDGPackage,
 )
 import pytest

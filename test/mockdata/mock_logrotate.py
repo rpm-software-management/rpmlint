@@ -1,7 +1,5 @@
 import stat
 
-from rpm import RPMFILE_CONFIG, RPMFILE_NOREPLACE
-
 from Testing import get_tested_mock_package
 
 
