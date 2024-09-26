@@ -1,5 +1,7 @@
 import stat
+
 import rpm
+
 from Testing import get_tested_mock_package
 
 

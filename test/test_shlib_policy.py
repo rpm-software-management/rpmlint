@@ -1,6 +1,6 @@
 from mockdata.mock_shlib_policy import (
-    LibslpMissingSuffixPackage,
     Libslp1234Package,
+    LibslpMissingSuffixPackage,
     Libtest1Package,
 )
 import pytest

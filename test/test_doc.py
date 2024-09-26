@@ -1,13 +1,13 @@
-import pytest
 from mockdata.mock_doc import (
-    MyDocPackage,
     DocFileDependencyPackage,
     InstallFileInDocPackage,
+    MyDocPackage,
 )
+import pytest
 from rpmlint.checks.DocCheck import DocCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)

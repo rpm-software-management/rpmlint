@@ -1,9 +1,9 @@
-import pytest
 from mockdata.mock_logrotate import LogrotatePackage
+import pytest
 from rpmlint.checks.LogrotateCheck import LogrotateCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)

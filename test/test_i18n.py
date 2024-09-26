@@ -1,4 +1,4 @@
-from mockdata.mock_i18n import InvalidI18NPackage, I18NPackage
+from mockdata.mock_i18n import I18NPackage, InvalidI18NPackage
 import pytest
 from rpmlint.checks.I18NCheck import I18NCheck
 from rpmlint.filter import Filter
