@@ -964,7 +964,7 @@ class FakePkg(AbstractPkg):
                 tagname = k[:-1].upper()
                 for i in v:
                     name, flags, version = parse_deps(i)[0]
-                    version = f'{version[0]}:{version[1]}-{version[2]}'
+                    version = versionToString(version)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)
