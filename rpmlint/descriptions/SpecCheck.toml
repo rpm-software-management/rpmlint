@@ -216,3 +216,7 @@ file path like:
 %{python_sitelib}/packagename
 %{python_sitelib}/packagename-%{version}*-info
 """
+
+suse-update-desktop-file-deprecated="""
+The usage of %suse_update_desktop_file is deprecated and should not be used.
+"""

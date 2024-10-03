@@ -1222,3 +1222,16 @@ def test_special_comments(package, output, test):
     out = output.print_results(output.results)
     assert 'W: macro-in-comment %configure' in out
     assert 'W: macro-in-comment %{name}' not in out
+
+
+@pytest.mark.parametrize('spec,expected', [
+    ('spec/gimp', True),
+    ('spec/libcanberra', True),
+    ('spec/MacroInComment', False),
+    ('spec/ghc', False),
+])
+def test_deprecated_suse_update_desktop_files(spec, expected, output, test):
+    package = get_tested_spec_package(spec)
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert ('W: suse-update-desktop-file-deprecated' in out) == expected
