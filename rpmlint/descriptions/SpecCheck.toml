@@ -225,3 +225,6 @@ invalid-suse-version-check="""
 The specfile contains a comparison of %suse_version against a suse release
 that does not exist. Please double check.
 """
+suse-update-desktop-file-deprecated="""
+The usage of %suse_update_desktop_file is deprecated and should not be used.
+"""

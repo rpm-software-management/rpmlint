@@ -85,6 +85,10 @@ python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 
+# %suse_update_desktop_file deprecation
+# https://lists.opensuse.org/archives/list/packaging@lists.opensuse.org/message/TF4QO7ECOSEDHBFI5YDEA3OF4RNSI7D7/
+suse_update_desktop_file_regex = re.compile(r'^BuildRequires:\s*update-desktop-files', re.IGNORECASE)
+
 UNICODE_NBSP = '\xa0'
 
 
@@ -698,6 +702,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_package_conflicts(line)
 
         self._checkline_forbidden_controlchars(line)
+        self._check_suse_update_desktop_file(line)
 
     def _checkline_changelog(self, line):
         if self.current_section == 'changelog':
@@ -802,3 +807,13 @@ class SpecCheck(AbstractCheck):
         # https://github.com/rpm-software-management/rpmlint/issues/1067
         if Pkg.has_forbidden_controlchars(line):
             self.output.add_info('W', self.pkg, 'forbidden-controlchar-found')
+
+    def _check_suse_update_desktop_file(self, line):
+        """
+        Test if update-desktop-files is in BuildRequires. The usage of
+        %suse_update_desktop_file is deprecated now.
+        """
+        if suse_update_desktop_file_regex.match(line):
+            self.output.add_info('W', self.pkg,
+                                 'suse-update-desktop-file-deprecated',
+                                 '%suse_update_desktop_file is deprecated')
