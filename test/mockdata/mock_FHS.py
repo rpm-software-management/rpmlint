@@ -1,7 +1,7 @@
 from Testing import get_tested_mock_package
 
-FHS = get_tested_mock_package(
-files={
-'/usr/dummy': {'content': ''},
-'/var/dummy': {'content': ''},
-'/var/local': {'content': ''}})
+
+NoFHSPackage = get_tested_mock_package(
+    lazyload=True,
+    files=['/usr/dummy', '/var/dummy', '/var/local'],
+)

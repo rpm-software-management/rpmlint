@@ -78,5 +78,6 @@ rpmlint = ["configdefaults.toml"]
 "rpmlint.descriptions" = ["*.toml"]
 
 [tool.ruff]
+exclude = ["test/files"]
 
 lint.ignore = ["E501"]

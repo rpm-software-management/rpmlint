@@ -1,4 +1,4 @@
-from mockdata.mock_build_root import BUILDROOT
+from mockdata.mock_build_root import BuildrootPackage
 import pytest
 from rpmlint.checks.BuildRootAndDateCheck import BuildRootAndDateCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def buildrootcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [BUILDROOT])
+@pytest.mark.parametrize('package', [BuildrootPackage])
 def test_build_root(package, buildrootcheck):
     output, test = buildrootcheck
     test.prepare_regex('/home/marxin/rpmbuild/BUILDROOT/%{NAME}-%{VERSION}-%{RELEASE}.x86_64')

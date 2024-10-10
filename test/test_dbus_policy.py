@@ -1,4 +1,4 @@
-from mockdata.mock_dbus_policy import DBUSPOLICY
+from mockdata.mock_dbus_policy import DbusRulePackage
 import pytest
 from rpmlint.checks.DBusPolicyCheck import DBusPolicyCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def dbuspolicycheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [DBUSPOLICY])
+@pytest.mark.parametrize('package', [DbusRulePackage])
 def test_dbus_policy(package, dbuspolicycheck):
     output, test = dbuspolicycheck
     test.check(package)

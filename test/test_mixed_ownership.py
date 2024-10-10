@@ -1,4 +1,4 @@
-from mockdata.mock_mixed_ownership import MixedOwnership
+from mockdata.mock_mixed_ownership import MixedOwnershipPackage
 import pytest
 from rpmlint.checks.MixedOwnershipCheck import MixedOwnershipCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def mixedownershipcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [MixedOwnership])
+@pytest.mark.parametrize('package', [MixedOwnershipPackage])
 def test_mixed_ownership(package, mixedownershipcheck):
     output, test = mixedownershipcheck
     test.check(package)

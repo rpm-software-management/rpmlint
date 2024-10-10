@@ -1,19 +1,7 @@
 from Testing import get_tested_mock_package
 
 
-SYSVINITONSYSTEMD = get_tested_mock_package(
-files={
-'/etc/init.d/boot.script': {'content': ''},
-'/etc/init.d/weekly.script': {'content': ''}
-},
-header={
-'requires': ['insserv']
-})
-
-
-SYSVINITONSYSTEMD2 = get_tested_mock_package(
-files={
-'/etc/init.d/bar': {'content': """
+BAR_INITRD = """
 #! /bin/bash
 
 ### BEGIN INIT INFO
@@ -44,8 +32,25 @@ case "$1" in
 esac
 
 exit 0
-"""},
-'/usr/lib/systemd/system/bar.service': {},
-'/usr/lib/systemd/system/foo.service': {}},
-header={
-'requires': ['insserv']})
+"""
+
+
+InitPackage = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/init.d/boot.script': {'content': ''},
+        '/etc/init.d/weekly.script': {'content': ''},
+    },
+    header={'requires': ['insserv']},
+)
+
+
+RcLinksPackage = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/init.d/bar': {'content': BAR_INITRD},
+        '/usr/lib/systemd/system/bar.service': {},
+        '/usr/lib/systemd/system/foo.service': {},
+    },
+    header={'requires': ['insserv']},
+)

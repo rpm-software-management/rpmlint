@@ -1,4 +1,4 @@
-from mockdata.mock_pkgconfig import PKGCONFIG, PKGCONFIG2
+from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage, PCPackage
 import pytest
 from rpmlint.checks.PkgConfigCheck import PkgConfigCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def pkgconfigcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [PKGCONFIG])
+@pytest.mark.parametrize('package', [PCPackage])
 def test_pkg_config(package, pkgconfigcheck):
     output, test = pkgconfigcheck
     test.check(package)
@@ -24,7 +24,7 @@ def test_pkg_config(package, pkgconfigcheck):
     assert 'E: double-slash-in-pkgconfig-path /tmp/pkgconfig/xcb.pc includedir=/usr/include//xyz' in out
 
 
-@pytest.mark.parametrize('package', [PKGCONFIG2])
+@pytest.mark.parametrize('package', [LibReiserFSCoreDevelPackage])
 def test_pkg_config_correct(package, pkgconfigcheck):
     output, test = pkgconfigcheck
     test.check(package)

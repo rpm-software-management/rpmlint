@@ -1,4 +1,4 @@
-from mockdata.mock_bashisms import BASHISMS
+from mockdata.mock_bashisms import BashismsPackage
 import pytest
 from rpmlint.checks.BashismsCheck import BashismsCheck
 from rpmlint.filter import Filter
@@ -16,7 +16,7 @@ def bashismscheck():
 
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
-@pytest.mark.parametrize('package', [BASHISMS])
+@pytest.mark.parametrize('package', [BashismsPackage])
 def test_bashisms(package, bashismscheck):
     output, test = bashismscheck
     test.check(package)
@@ -27,7 +27,7 @@ def test_bashisms(package, bashismscheck):
 
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
-@pytest.mark.parametrize('package', [BASHISMS])
+@pytest.mark.parametrize('package', [BashismsPackage])
 def test_bashisms_error(package, bashismscheck):
     output, test = bashismscheck
     package.dirname = 'I-do-not-exist-for-sure'

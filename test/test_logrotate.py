@@ -1,8 +1,9 @@
+from mockdata.mock_logrotate import LogrotatePackage
 import pytest
 from rpmlint.checks.LogrotateCheck import LogrotateCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +14,10 @@ def logrotatecheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/logrotate'])
-def test_logrotate(tmp_path, package, logrotatecheck):
+@pytest.mark.parametrize('package', [LogrotatePackage])
+def test_logrotate(package, logrotatecheck):
     output, test = logrotatecheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: logrotate-log-dir-not-packaged /var/log/myapp' in out
     assert 'E: logrotate-duplicate /var/log/myapp' in out

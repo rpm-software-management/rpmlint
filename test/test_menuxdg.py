@@ -1,4 +1,11 @@
-from mockdata.mock_menuxdg import MENUXDG, MENUXDG1, MENUXDG2, MENUXDG3, MENUXDG4, MENUXDG5
+from mockdata.mock_menuxdg import (
+    MenuXDGBadBinPackage,
+    MenuXDGBadDupPackage,
+    MenuXDGBadSecPackage,
+    MenuXDGBadUTF8Package,
+    MenuXDGInvalidPackage,
+    MenuXDGPackage,
+)
 import pytest
 from rpmlint.checks.MenuXDGCheck import MenuXDGCheck
 from rpmlint.filter import Filter
@@ -15,7 +22,7 @@ def menuxdgcheck():
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG])
+@pytest.mark.parametrize('package', [MenuXDGInvalidPackage])
 def test_raises_parse_error(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)
@@ -27,7 +34,7 @@ def test_raises_parse_error(package, menuxdgcheck):
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG1])
+@pytest.mark.parametrize('package', [MenuXDGBadBinPackage])
 def test_without_binary(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)
@@ -36,7 +43,7 @@ def test_without_binary(package, menuxdgcheck):
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG2])
+@pytest.mark.parametrize('package', [MenuXDGBadDupPackage])
 def test_duplicate(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)
@@ -46,7 +53,7 @@ def test_duplicate(package, menuxdgcheck):
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG3])
+@pytest.mark.parametrize('package', [MenuXDGBadSecPackage])
 def test_missing_header(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)
@@ -56,7 +63,7 @@ def test_missing_header(package, menuxdgcheck):
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG4])
+@pytest.mark.parametrize('package', [MenuXDGBadUTF8Package])
 def test_bad_unicode(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)
@@ -65,7 +72,7 @@ def test_bad_unicode(package, menuxdgcheck):
 
 
 @pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
-@pytest.mark.parametrize('package', [MENUXDG5])
+@pytest.mark.parametrize('package', [MenuXDGPackage])
 def test_good(package, menuxdgcheck):
     output, test = menuxdgcheck
     test.check(package)

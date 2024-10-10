@@ -29,15 +29,12 @@ def test_range_compare():
 
 
 @pytest.mark.parametrize('package', ['binary/python311-pytest-xprocess'])
+@pytest.mark.skipif(os.getuid() == 0, reason='Root has full permission')
 def test_extract_fail(package, tmp_path):
     """
     Check that rpm2cpio fails to extract this package because it has no
     permissions to some files.
     """
-
-    # Root can extract the package, so nothing to check
-    if os.getuid() == 0:
-        return
 
     with mock.patch('shutil.which') as mock_which:
         mock_which.return_value = None

@@ -1,6 +1,7 @@
 from Testing import get_tested_mock_package
 
-ERLANG = get_tested_mock_package(
+ErlangPackage = get_tested_mock_package(
+    lazyload=True,
     files={
         '/usr/lib/erlang/m-no-CInf.beam': {
             'content-path': 'files/m-no-CInf.beam',
@@ -16,6 +17,7 @@ ERLANG = get_tested_mock_package(
             'rpmlib(CompressedFileNames) <= 3.0.4-1',
             'rpmlib(FileDigests) <= 4.6.0-1',
             'rpmlib(PayloadFilesHavePrefix) <= 4.0-1',
-            'rpmlib(PayloadIsZstd) <= 5.4.18-1'],
+            'rpmlib(PayloadIsZstd) <= 5.4.18-1',
+        ],
     },
 )

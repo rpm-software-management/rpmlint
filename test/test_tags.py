@@ -1,3 +1,12 @@
+from mockdata.mock_tags import (
+    FooDevelPackage,
+    FuseCommonPackage,
+    InvalidExceptionPackage,
+    MissingProvidesPackage,
+    SelfPackage,
+    UnexpandedMacroPackage,
+    ValidExceptionPackage,
+)
 import pytest
 from rpmlint.checks.TagsCheck import TagsCheck
 from rpmlint.filter import Filter
@@ -28,10 +37,10 @@ def test(tagscheck):
     yield test
 
 
-@pytest.mark.parametrize('package', ['binary/unexpanded1'])
-def test_unexpanded_macros(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [UnexpandedMacroPackage])
+def test_unexpanded_macros(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'unexpanded-macro Recommends' in out
     assert 'unexpanded-macro Provides' in out
@@ -41,53 +50,53 @@ def test_unexpanded_macros(tmp_path, package, tagscheck):
     assert 'unexpanded-macro Enhances' in out
 
 
-@pytest.mark.parametrize('package', ['binary/self'])
-def test_self_provides(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [SelfPackage])
+def test_self_provides(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: useless-provides self' in out
 
 
-@pytest.mark.parametrize('package', ['binary/fuse-common'])
-def test_useless_provides_only_versions(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [FuseCommonPackage])
+def test_useless_provides_only_versions(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
-    assert 'E: useless-provides self' not in out
+    assert 'E: useless-provides fuse-common' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/foo-devel'])
-def test_development_package(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [FooDevelPackage])
+def test_development_package(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: devel-package-with-non-devel-group Games' in out
 
 
-@pytest.mark.parametrize('package', ['binary/missingprovides'])
-def test_missing_provides(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [MissingProvidesPackage])
+def test_missing_provides(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: no-pkg-config-provides' in out
 
 
-@pytest.mark.parametrize('package', ['binary/invalid-exception'])
-def test_invalid_license_exception(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidExceptionPackage])
+def test_invalid_license_exception(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: invalid-license-exception sparta' in out
 
 
-@pytest.mark.parametrize('package', ['binary/valid-exception'])
+@pytest.mark.parametrize('package', [ValidExceptionPackage])
 def test_valid_license_exception(tmp_path, package, tagscheck):
     CONFIG.info = True
     CONFIG.configuration['ValidLicenseExceptions'] = ['389-exception']
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: invalid-license-exception' not in out
 
