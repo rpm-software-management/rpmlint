@@ -1370,16 +1370,20 @@ hash     = "8dff187bd14e516fd976731fb4ab3996bb92b36dfa944733655641a6aec215e1"
 [[FileDigestGroup]]
 package  = "gnome-remote-desktop"
 note     = "system wide remote desktop access to the display manager"
-bug      = "bsc#1222159"
+bugs     = ["bsc#1222159", "bsc#1230406"]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.gnome.RemoteDesktop.conf"
 digester = "xml"
-hash     = "5ed8492b7b77bf77beba04b5eb989a028cc90ac193eb598b102189b8374a9c5d"
+hash     = "d28ae537328593ac6462af9ec6bab63c49f9a6851190e7a4f13fe8dd48fd88b6"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.service"
 digester = "shell"
 hash     = "1053fce12e03e219ff4518c8498b3ce1983597961afcefa93be25005414a50d8"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.Configuration.service"
+digester = "shell"
+hash     = "ecc8ae6fe29a9ddc6c1f598c8558245b16d8280cd99caecc3ab268c428e1f8ff"
 
 [[FileDigestGroup]]
 package  = "kdeplasma6-addons"
