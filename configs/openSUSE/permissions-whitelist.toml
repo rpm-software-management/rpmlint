@@ -58,3 +58,11 @@ hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
 path = "/etc/permissions.d/texlive.texlive"
 hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
 
+[[FileDigestGroup]]
+package  = "libcgroup-tools"
+note     = "this is for a setgid binary 'cgexec', running with 'cgred' group privs"
+bug      = "bsc#1231381"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/libcgroup"
+hash     = "6d3a669b10b2449484dcad1c6d932f5897666bcbeef2a45d9608ef63a1e43188"
