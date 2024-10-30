@@ -12,6 +12,7 @@ from mockdata.mock_files import (
     ManPagesPackage,
     ManualPagesPackage,
     NetmaskDebugsourcePackage,
+    NonReadableGhostPackage,
     Python3PowerBrokenPackage,
     Python3PowerPackage,
     PythonShebangLinkOkPackage,
@@ -324,3 +325,11 @@ def test_files_without_perms_tmpfiles(package, output, test):
     assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0644,root,root\) .*resolv.conf"', out)
     assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0755,root,group\) /run/netconfig"', out)
     assert not re.findall('W: zero-perms.*yp.conf ', out)
+
+
+# https://github.com/rpm-software-management/rpmlint/issues/1287
+@pytest.mark.parametrize('package', [NonReadableGhostPackage])
+def test_non_readable_ghost_files(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: non-readable /boohoo 0' not in out
