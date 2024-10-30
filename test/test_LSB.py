@@ -1,4 +1,4 @@
-from mockdata.mock_LSB import LSB
+from mockdata.mock_LSB import NonLSBCompliancePackage
 import pytest
 from rpmlint.checks.LSBCheck import LSBCheck
 from rpmlint.filter import Filter
@@ -14,7 +14,7 @@ def lsbcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [LSB])
+@pytest.mark.parametrize('package', [NonLSBCompliancePackage])
 def test_LSB_compliance(package, lsbcheck):
     """
     Check that the package name, version and release number are LSB compliant.

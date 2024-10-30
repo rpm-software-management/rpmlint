@@ -1,6 +1,6 @@
 from importlib.metadata import distribution
 
-from mockdata.mock_erlang import ERLANG
+from mockdata.mock_erlang import ErlangPackage
 from packaging.version import parse
 import pytest
 from rpmlint.checks.ErlangCheck import ErlangCheck
@@ -18,7 +18,7 @@ def erlangcheck():
 
 
 @pytest.mark.skipif(parse(distribution('pybeam').version) < parse('0.7'), reason='pybeam >= 0.7 required')
-@pytest.mark.parametrize('package', [ERLANG])
+@pytest.mark.parametrize('package', [ErlangPackage])
 def test_erlang(package, erlangcheck):
     output, test = erlangcheck
     test.check(package)

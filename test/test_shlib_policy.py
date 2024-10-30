@@ -1,4 +1,8 @@
-from mockdata.mock_shlib_policy import SHLIBPOLICY, SHLIBPOLICY2, SHLIBPOLICY3
+from mockdata.mock_shlib_policy import (
+    Libslp1234Package,
+    LibslpMissingSuffixPackage,
+    Libtest1Package,
+)
 import pytest
 from rpmlint.checks.SharedLibraryPolicyCheck import SharedLibraryPolicyCheck
 from rpmlint.filter import Filter
@@ -14,7 +18,7 @@ def slpcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [SHLIBPOLICY])
+@pytest.mark.parametrize('package', [Libtest1Package])
 def test_shlib_policy_wrong_name(package, slpcheck):
     output, test = slpcheck
     test.check(package)
@@ -22,7 +26,7 @@ def test_shlib_policy_wrong_name(package, slpcheck):
     assert 'W: shlib-unversioned-lib libtest.so.1x' in out
 
 
-@pytest.mark.parametrize('package', [SHLIBPOLICY2])
+@pytest.mark.parametrize('package', [LibslpMissingSuffixPackage])
 def test_shlib_policy_missing_suffix(package, slpcheck):
     output, test = slpcheck
     test.check(package)
@@ -30,7 +34,7 @@ def test_shlib_policy_missing_suffix(package, slpcheck):
     assert 'E: shlib-policy-excessive-dependency libsparta.so.2' in out
 
 
-@pytest.mark.parametrize('package', [SHLIBPOLICY3])
+@pytest.mark.parametrize('package', [Libslp1234Package])
 def test_shlib_policy_errors(package, slpcheck):
     output, test = slpcheck
     test.check(package)
