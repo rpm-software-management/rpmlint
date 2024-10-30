@@ -374,3 +374,19 @@ f /run/netconfig/yp.conf 0644 root root -
         },
     },
 )
+
+
+# Package with just a ghost file that doesn't exists in rpmroot during build so
+# it has no permissions
+NonReadableGhostPackage = get_tested_mock_package(
+    lazyload=True,
+    header={'requires': []},
+    files={
+        '/boohoo': {
+            'metadata': {
+                'mode': 0o000 | stat.S_IFREG,
+                'flags': rpm.RPMFILE_GHOST,
+            },
+        },
+    },
+)
