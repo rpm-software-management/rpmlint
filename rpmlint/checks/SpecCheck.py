@@ -801,6 +801,10 @@ class SpecCheck(AbstractCheck):
         %suse_update_desktop_file is deprecated now.
         """
         if suse_update_desktop_file_regex.match(line):
+            # Don't show the message for yast, there's no migration path yet.
+            if 'yast' in self.pkg.name.lower():
+                return
+
             self.output.add_info('W', self.pkg,
                                  'suse-update-desktop-file-deprecated',
                                  '%suse_update_desktop_file is deprecated')
