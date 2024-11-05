@@ -1,10 +1,12 @@
 import os
+import stat
 
 import pytest
 from rpmlint.checks.SUIDPermissionsCheck import SUIDPermissionsCheck
 from rpmlint.filter import Filter
 
 import Testing
+from Testing import get_tested_mock_package
 from Testing import get_tested_package, get_tested_path
 
 
@@ -132,3 +134,44 @@ def test_permissions_d(tmp_path, package, permissions_check):
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
     assert 'sendmail.x86_64: E: permissions-file-setuid-bit /usr/sbin/sendmail is packaged with setuid/setgid bits (02555)' not in out
+
+
+# https://github.com/rpm-software-management/rpmlint/issues/1292
+PERMCTL_PKG = get_tested_mock_package(
+    lazyload=True,
+    name='permctl',
+    files={
+        '/var/lib/perms/test': {
+            'is_dir': True,
+            'metadata': {
+                'mode': 0o640 | stat.S_IFDIR | stat.S_ISUID,
+                'user': 'root',
+                'group': 'root',
+            },
+        },
+    },
+    header={
+        'POSTIN': """
+  if [ -x /usr/bin/permctl ]; then \
+    /usr/bin/permctl -n --set --system /var/lib/perms/test || : \
+  fi \
+""",
+    },
+)
+CHKSTAT_PKG = PERMCTL_PKG.clone(
+    header={
+        'POSTIN': """
+  if [ -x /usr/bin/chkstat ]; then \
+    /usr/bin/chkstat -n --set --system /var/lib/perms/test || : \
+  fi \
+""",
+    },
+)
+
+
+@pytest.mark.parametrize('package', [PERMCTL_PKG, CHKSTAT_PKG])
+def test_permissions_permctl(package, permissions_check):
+    output, test = permissions_check
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'permissions-missing-postin' not in out

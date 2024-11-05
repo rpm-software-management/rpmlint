@@ -1,4 +1,5 @@
 import os
+import re
 import stat
 
 import rpm
@@ -59,7 +60,7 @@ class SUIDPermissionsCheck(AbstractCheck):
 
         if script:
             for line in script.split('\n'):
-                if 'chkstat -n' in line and path in line:
+                if re.search(fr'(chkstat|permctl) -n .* {path}', line):
                     found = True
                     break
 
