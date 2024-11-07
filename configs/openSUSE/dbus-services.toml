@@ -433,10 +433,20 @@ hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 [[FileDigestGroup]]
 package = "sddm"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
+note = "D-Bus control interface for the display manager, mostly no-ops"
 bugs = ["boo#897788", "bsc#1206348"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/sddm_org.freedesktop.DisplayManager.conf"
+digester = "xml"
+hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
+
+[[FileDigestGroup]]
+package = "sddm-kalpa"
+type = "dbus"
+note = "see sddm above: same code-base, just a different packaging"
+bugs = ["bsc#1232647"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/sddm_org.freedesktop.DisplayManager-sddm.conf"
 digester = "xml"
 hash = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
 
