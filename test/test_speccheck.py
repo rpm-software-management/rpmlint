@@ -1229,6 +1229,7 @@ def test_special_comments(package, output, test):
     ('spec/libcanberra', True),
     ('spec/MacroInComment', False),
     ('spec/ghc', False),
+    ('spec/yast2-installation', False),
 ])
 def test_deprecated_suse_update_desktop_files(spec, expected, output, test):
     package = get_tested_spec_package(spec)

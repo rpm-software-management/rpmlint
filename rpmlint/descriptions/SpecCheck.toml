@@ -218,5 +218,7 @@ file path like:
 """
 
 suse-update-desktop-file-deprecated="""
-The usage of %suse_update_desktop_file is deprecated and should not be used.
+The usage of %suse_update_desktop_file is deprecated and changes
+should be migrated to the upstream.
+Please check the build log for details.
 """
