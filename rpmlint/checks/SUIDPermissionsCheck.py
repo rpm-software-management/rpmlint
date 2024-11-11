@@ -60,7 +60,8 @@ class SUIDPermissionsCheck(AbstractCheck):
 
         if script:
             for line in script.split('\n'):
-                if re.search(fr'(chkstat|permctl) -n .* {path}', line):
+                escaped = re.escape(path)
+                if re.search(fr'(chkstat|permctl) -n .* {escaped}', line):
                     found = True
                     break
 
