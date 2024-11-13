@@ -1,4 +1,7 @@
-from mockdata.mock_zypp_syntax import (ZYPPSYNTAX, ZYPPSYNTAX2)
+from mockdata.mock_zypp_syntax import (
+    SyntaxAndPackage,
+    SyntaxPackageandPackage,
+)
 import pytest
 from rpmlint.checks.ZyppSyntaxCheck import ZyppSyntaxCheck
 from rpmlint.filter import Filter
@@ -26,7 +29,7 @@ def test(zyppsyntaxcheck):
     yield test
 
 
-@pytest.mark.parametrize('package', [ZYPPSYNTAX])
+@pytest.mark.parametrize('package', [SyntaxPackageandPackage])
 def test_packageand(package, test, output):
     test.check(package)
     out = output.print_results(output.results)
@@ -37,7 +40,7 @@ def test_packageand(package, test, output):
     assert 'suse-zypp-otherproviders otherproviders(yast2_theme)' in out
 
 
-@pytest.mark.parametrize('package', [ZYPPSYNTAX2])
+@pytest.mark.parametrize('package', [SyntaxAndPackage])
 def test_packageand_ok(package, test, output):
     test.check(package)
     out = output.print_results(output.results)

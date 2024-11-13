@@ -1,4 +1,8 @@
-from mockdata.mock_tmp_files import (TMPFILES, TMPFILES2, TMPFILES3)
+from mockdata.mock_tmp_files import (
+    SystemdTempfilesOkPackage,
+    SystemdTempfilesPackage,
+    TempfiledPackage,
+)
 import pytest
 from rpmlint.checks.TmpFilesCheck import TmpFilesCheck
 from rpmlint.filter import Filter
@@ -14,7 +18,7 @@ def tmpfilescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [TMPFILES])
+@pytest.mark.parametrize('package', [TempfiledPackage])
 def test_tmpfiles(package, tmpfilescheck):
     output, test = tmpfilescheck
     test.check(package)
@@ -26,7 +30,7 @@ def test_tmpfiles(package, tmpfilescheck):
     assert 'W: tmpfile-not-regular-file /usr/lib/tmpfiles.d/symlink.conf' in out
 
 
-@pytest.mark.parametrize('package', [TMPFILES2])
+@pytest.mark.parametrize('package', [SystemdTempfilesPackage])
 def test_tmpfiles2(package, tmpfilescheck):
     output, test = tmpfilescheck
     test.check(package)
@@ -38,7 +42,7 @@ def test_tmpfiles2(package, tmpfilescheck):
     assert 'W: tmpfile-not-regular-file' not in out
 
 
-@pytest.mark.parametrize('package', [TMPFILES3])
+@pytest.mark.parametrize('package', [SystemdTempfilesOkPackage])
 def test_tmpfiles_correct(package, tmpfilescheck):
     output, test = tmpfilescheck
     test.check(package)

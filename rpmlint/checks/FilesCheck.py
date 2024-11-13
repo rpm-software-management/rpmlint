@@ -1179,6 +1179,11 @@ class FilesCheck(AbstractCheck):
             self.output.add_info('W', pkg, 'devel-file-in-non-devel-package', fname)
 
     def _check_file_normal_file_non_readable(self, pkg, fname, pkgfile):
+        # Do not check permissions for ghosts files
+        # https://github.com/rpm-software-management/rpmlint/issues/1287
+        if pkgfile.is_ghost:
+            return
+
         mode = pkgfile.mode
         perm = mode & 0o7777
         if mode & 0o444 != 0o444 and perm & 0o7000 == 0:

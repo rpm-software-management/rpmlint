@@ -1,27 +1,29 @@
 import re
 
 from mockdata.mock_files import (
-    FILES,
-    FILES10,
-    FILES11,
-    FILES12,
-    FILES13,
-    FILES14,
-    FILES15,
-    FILES16,
-    FILES17,
-    FILES18,
-    FILES19,
-    FILES2,
-    FILES20,
-    FILES21,
-    FILES3,
-    FILES4,
-    FILES5,
-    FILES6,
-    FILES7,
-    FILES8,
-    FILES9
+    DevelopmentPackage,
+    DirectoryWithoutXPerm2Package,
+    DirectoryWithoutXPermPackage,
+    FileChecksPackage,
+    FilesWithoutPermsPackage,
+    FilesWithoutPermsTmpfilesPackage,
+    FileZeroLengthPackage,
+    MakefileJunkPackage,
+    ManPagesPackage,
+    ManualPagesPackage,
+    NetmaskDebugsourcePackage,
+    NonReadableGhostPackage,
+    Python3PowerBrokenPackage,
+    Python3PowerPackage,
+    PythonShebangLinkOkPackage,
+    PythonShebangLinkPackage,
+    RustFilesPackage,
+    Shlib1Package,
+    Shlib2DevelPackage,
+    SphinxInvPackage,
+    TclPackage,
+    TestDocumentationPackage,
+    UnexpandedMacroFilesPackage,
 )
 import pytest
 from rpmlint.checks.FilesCheck import FilesCheck
@@ -76,7 +78,7 @@ def chunk_from_pyc(version, size=16):
         return f.read(size)
 
 
-@pytest.mark.parametrize('package', [FILES])
+@pytest.mark.parametrize('package', [UnexpandedMacroFilesPackage])
 def test_unexpanded_macros(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -84,16 +86,18 @@ def test_unexpanded_macros(package, filescheck):
     assert 'unexpanded-macro' in out
 
 
-@pytest.mark.parametrize('package', [FILES2])
-def test_python_bytecode_magic(package, filescheck):
+@pytest.mark.parametrize('package,result', [
+    (Python3PowerPackage, False),
+    (Python3PowerBrokenPackage, True),
+])
+def test_python_bytecode_magic(package, result, filescheck):
     output, test = filescheck
     test.check(package)
-    assert not output.results
     out = output.print_results(output.results)
-    assert 'python-bytecode-wrong-magic-value' not in out
+    assert ('python-bytecode-wrong-magic-value' in out) == result
 
 
-@pytest.mark.parametrize('package', [FILES3])
+@pytest.mark.parametrize('package', [TestDocumentationPackage])
 def test_file_not_utf8_for_compression_algorithms(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -115,7 +119,7 @@ def test_pyc_mtime_from_chunk(version, mtime):
     assert pyc_mtime_from_chunk(chunk) == mtime
 
 
-@pytest.mark.parametrize('package', [FILES4])
+@pytest.mark.parametrize('package', [NetmaskDebugsourcePackage])
 def test_devel_files(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -126,7 +130,7 @@ def test_devel_files(package, filescheck):
     assert 'no-documentation' in out
 
 
-@pytest.mark.parametrize('package', [FILES5])
+@pytest.mark.parametrize('package', [MakefileJunkPackage])
 def test_makefile_junk(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -135,14 +139,14 @@ def test_makefile_junk(package, filescheck):
     assert out.count('W: makefile-junk') == 1
 
 
-@pytest.mark.parametrize('package', [FILES6])
+@pytest.mark.parametrize('package', [SphinxInvPackage])
 def test_sphinx_inv_files(package, filescheck):
     output, test = filescheck
     test.check(package)
     assert not len(output.results)
 
 
-@pytest.mark.parametrize('package', [FILES7])
+@pytest.mark.parametrize('package', [FileChecksPackage])
 def test_invalid_package(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -160,7 +164,7 @@ def test_invalid_package(package, filescheck):
     assert 'E: info-dir-file /usr/info/dir' in out
 
 
-@pytest.mark.parametrize('package', [FILES8])
+@pytest.mark.parametrize('package', [TclPackage])
 def test_tcl_package(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -205,7 +209,7 @@ def test_lib_regex():
          '/usr/lib64/rsocket/binary',))
 
 
-@pytest.mark.parametrize('package', [FILES9])
+@pytest.mark.parametrize('package', [RustFilesPackage])
 def test_rust_files(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -214,8 +218,8 @@ def test_rust_files(package, filescheck):
     assert 'E: wrong-script-interpreter /etc/bar.rs' not in out
 
 
-@pytest.mark.parametrize('package', [FILES10])
-def test_distribution_tags(package, filescheck):
+@pytest.mark.parametrize('package', [ManPagesPackage])
+def test_manpages(package, filescheck):
     output, test = filescheck
     test.check(package)
     out = output.print_results(output.results)
@@ -224,7 +228,7 @@ def test_distribution_tags(package, filescheck):
     assert 'This manual page is not compressed with the bz2 compression' in out
 
 
-@pytest.mark.parametrize('package', [FILES11])
+@pytest.mark.parametrize('package', [DevelopmentPackage])
 def test_provides_devel(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -232,47 +236,46 @@ def test_provides_devel(package, filescheck):
     assert 'E: non-devel-file-in-devel-package /usr/x.typelib' in out
 
 
-@pytest.mark.parametrize('package', [FILES12])
-def test_shlib1(package, filescheck):
+@pytest.mark.parametrize('package,is_devel', [
+    (Shlib1Package, False),
+    (Shlib2DevelPackage, True),
+])
+def test_shlib(package, is_devel, filescheck):
     output, test = filescheck
     test.check(package)
     out = output.print_results(output.results)
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
-    assert 'devel-file-in-non-devel-package' in out
+    if is_devel:
+        assert ('non-devel-file-in-devel-package' in out)
+    else:
+        assert ('devel-file-in-non-devel-package' in out)
 
 
-@pytest.mark.parametrize('package', [FILES13])
-def test_shlib2_devel(package, filescheck):
+@pytest.mark.parametrize('package, files', [
+    (FileZeroLengthPackage, [
+        ('/usr/lib/emptyfile', True),
+        ('/usr/lib/nonemptyfile', False),
+        ('/etc/security/console.apps', False),
+        ('/etc/security/console.apps/myapp', False),
+        ('/usr/lib/.nosearch', False),
+        ('/etc/share/doc/packages/file-zero-length/dummydoc', False),
+        ('/usr/lib/python/__init__.py', False),
+        ('/usr/lib/python/py.typed', False),
+        ('/usr/lib/python/pypackagefromwheel-0.0.0.dist-info/REQUESTED', False),
+        ('/usr/lib/ruby/gem.build_complete', False),
+    ]),
+])
+def test_zero_length_ignore(package, files, filescheck):
     output, test = filescheck
     test.check(package)
     out = output.print_results(output.results)
-    assert 'library-without-ldconfig-postin' in out
-    assert 'library-without-ldconfig-postun' in out
-    assert 'non-devel-file-in-devel-package' in out
+    for filename, show in files:
+        assert filename in package.files
+        assert (f'zero-length {filename}' in out) == show
 
 
-@pytest.mark.parametrize('package', [FILES14])
-@pytest.mark.parametrize(
-    'filename, show',
-    [('/usr/lib/emptyfile', True),
-     ('/usr/lib/nonemptyfile', False),
-     ('/etc/security/console.apps', False),
-     ('/usr/lib/.nosearch', False),
-     ('/usr/lib/python/__init__.py', False),
-     ('/usr/lib/python/py.typed', False),
-     ('/usr/lib/python/pypackagefromwheel-0.0.0.dist-info/REQUESTED', False),
-     ('/usr/lib/ruby/gem.build_complete', False)])
-def test_zero_length_ignore(package, filescheck, filename, show):
-    output, test = filescheck
-    pkg = package
-    test.check(pkg)
-    out = output.print_results(output.results)
-    assert filename in pkg.files
-    assert (f'zero-length {filename}' in out) == show
-
-
-@pytest.mark.parametrize('package', [FILES15])
+@pytest.mark.parametrize('package', [ManualPagesPackage])
 def test_manual_pages(package, filescheck):
     output, test = filescheck
     test.check(package)
@@ -280,39 +283,30 @@ def test_manual_pages(package, filescheck):
     assert 'E: manual-page-in-subfolder /usr/share/man/man3/foo/bar/baz.3.gz' in out
     assert 'W: manpage-not-compressed bz2 /usr/share/man/man1/test.1.zst' in out
     assert 'E: bad-manual-page-folder /usr/share/man/man0p/foo.3.gz expected folder: man3' in out
-    assert 'bad-manual-page-folder /usr/share/man/man3/some.3pm.gz' not in out
+    assert 'E: bad-manual-page-folder /usr/share/man/man3/some.3pm.gz' not in out
 
 
-@pytest.mark.parametrize('package', [FILES16])
-def test_shebang(package, output, test):
+@pytest.mark.parametrize('package,is_ok', [
+    (PythonShebangLinkPackage, False),
+    (PythonShebangLinkOkPackage, True),
+])
+def test_shebang(package, is_ok, output, test):
     test.check(package)
     out = output.print_results(output.results)
-    assert 'W: symlink-to-binary-with-shebang /usr/bin/testlink' in out
+    assert ('W: symlink-to-binary-with-shebang /usr/bin/testlink' not in out) == is_ok
 
 
-@pytest.mark.parametrize('package', [FILES17])
-def test_shebang_ok(package, output, test):
+@pytest.mark.parametrize('package, is_ok', [
+    (DirectoryWithoutXPermPackage, False),
+    (DirectoryWithoutXPerm2Package, False),
+])
+def test_directory_without_x_permission(package, is_ok, output, test):
     test.check(package)
     out = output.print_results(output.results)
-    assert 'W: symlink-to-binary-with-shebang /usr/bin/testlink' not in out
+    assert ('E: non-standard-dir-perm' not in out) == is_ok
 
 
-@pytest.mark.parametrize('package', [FILES18])
-def test_directory_without_x_permission(package, output, test):
-    test.check(package)
-    out = output.print_results(output.results)
-    assert 'E: non-standard-dir-perm' in out
-
-
-@pytest.mark.parametrize('package', [FILES19])
-def test_directory_without_x_permission2(package, filescheck):
-    output, test = filescheck
-    test.check(package)
-    out = output.print_results(output.results)
-    assert 'E: non-standard-dir-perm' in out
-
-
-@pytest.mark.parametrize('package', [FILES20])
+@pytest.mark.parametrize('package', [FilesWithoutPermsPackage])
 def test_files_without_perms(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
@@ -324,10 +318,18 @@ def test_files_without_perms(package, output, test):
     assert not re.findall('W: zero-perms-ghost .*ghost_file_read', out)
 
 
-@pytest.mark.parametrize('package', [FILES21])
+@pytest.mark.parametrize('package', [FilesWithoutPermsTmpfilesPackage])
 def test_files_without_perms_tmpfiles(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0644,root,root\) .*resolv.conf"', out)
     assert re.findall(r'W: zero-perms-ghost .*"%ghost %attr\(0755,root,group\) /run/netconfig"', out)
     assert not re.findall('W: zero-perms.*yp.conf ', out)
+
+
+# https://github.com/rpm-software-management/rpmlint/issues/1287
+@pytest.mark.parametrize('package', [NonReadableGhostPackage])
+def test_non_readable_ghost_files(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: non-readable /boohoo 0' not in out
