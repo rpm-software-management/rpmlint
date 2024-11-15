@@ -209,7 +209,7 @@ digester = "default"
 hash     = "c752f8f6c304404e256fbd3f4bbb04d0ec42408f311454268b667597cb1c8265"
 
 [[FileDigestGroup]]
-package  = "sssd-polkit-rules"
+package  = "sssd"
 note     = "allows the unprivileged 'sssd' user to access smartcards via pcsc"
 bug      = "bsc#1230051"
 type     = "polkit"
