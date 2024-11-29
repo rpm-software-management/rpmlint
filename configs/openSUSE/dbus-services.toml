@@ -579,6 +579,20 @@ hash = "752a4b3ef1d1e3a7da380720735444c8eac526452457d9d2bde816e0c17661d0"
 digester = "xml"
 
 [[FileDigestGroup]]
+package  = "tuned-ppd"
+note     = "power-profile-daemon drop-in replacement"
+bug      = "bsc#1232412"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service"
+digester = "shell"
+hash     = "a32051432a8c942cfab0593086989ef7579521f5a9e3374c4661c753167a5ba5"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/net.hadess.PowerProfiles.conf"
+digester = "xml"
+hash     = "3c9b773133201b3ecc7469dd9bc93253a992045e5cee5447def1d99f5b1e6ed5"
+
+[[FileDigestGroup]]
 package = "neard"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
