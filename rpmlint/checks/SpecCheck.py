@@ -713,7 +713,7 @@ class SpecCheck(AbstractCheck):
                                      '%%changelog: %s' % deptoken)
             for match in self.macro_regex.findall(line):
                 res = re.match('%+', match)
-                if len(res.group(0)) % 2 and match != '%autochangelog':
+                if len(res.group(0)) % 2 and match != '%autochangelog' and match != '%{autochangelog}':
                     self.output.add_info('W', self.pkg, 'macro-in-%changelog', match)
         else:
             if not self.depscript_override:
