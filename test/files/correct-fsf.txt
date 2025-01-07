@@ -1,0 +1,179 @@
+# Copyright (c) 2024, Oracle and/or its affiliates.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License, version 2.0, as
+# published by the Free Software Foundation.
+#
+# This program is designed to work with certain software (including
+# but not limited to OpenSSL) that is licensed under separate terms,
+# as designated in a particular file or component or in included license
+# documentation. The authors of MySQL hereby grant you an
+# additional permission to link the program and your derivative works
+# with the separately licensed software that they have either included with
+# the program or referenced in the documentation.
+#
+# Without limiting anything contained in the foregoing, this file,
+# which is part of MySQL Connector/Python, is also subject to the
+# Universal FOSS Exception, version 1.0, a copy of which can be found at
+# http://oss.oracle.com/licenses/universal-foss-exception.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License, version 2.0, for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+"""
+Script to generate `tls_ciphers.py` given the OSSA CRB TLS Ciphersuites JSON file.
+
+This script produces `tls_ciphers.py` given the OSSA CRB TLS Ciphersuites
+JSON file. It's up to the developer to decide where or when this program
+will be executed.
+
+The program expects you to provide two command-line arguments:
+
+--src: Absolute path to the OSSA CRB TLS Ciphersuites JSON file.
+--dst: Absolute path to the folder location where `tls_ciphers.py` must be placed.
+
+You cannot change the name of the produced file, however, you can control the
+location where it should be placed.
+
+Use case example: Near the push freeze date of each release, the developer
+produces an updated `tls_ciphers.py` based on the latest version of the
+OSSA CRB TLS Ciphersuites file.
+"""
+
+import json
+import os
+import pathlib
+
+from argparse import ArgumentParser, Namespace
+from typing import Any, Dict
+
+HEADER = """{0}
+
+# Generated from the OSSA cipher list
+# version: {1}
+# date: {2}\n
+from typing import Dict, List\n\n
+APPROVED_TLS_VERSIONS: List[str] = ["TLSv1.2", "TLSv1.3"]
+{3}
+
+DEPRECATED_TLS_VERSIONS: List[str] = []
+{4}
+
+UNACCEPTABLE_TLS_VERSIONS: List[str] = ["TLSv1", "TLSv1.0", "TLSv1.1"]
+{5}
+
+"""
+
+LINE_NEW_CATEGORY = """{0}: Dict[str, Dict[str, str]] = """
+
+
+# Helper to setup command-line argument parser
+def setup_cmd_parser() -> Namespace:
+    parser = ArgumentParser(
+        description="Script to autogenerate tls_ciphers.py. "
+        "given the OSSA CRB TLS Ciphersuites json file."
+    )
+    parser.add_argument(
+        "--src",
+        nargs="?",
+        help="Absolute path to the OSSA CRB TLS Ciphersuites json file.",
+        required=True,
+        metavar="ossa_cipher_json_file_src",
+    )
+    parser.add_argument(
+        "--dst",
+        nargs="?",
+        help="Absolute path to the folder location where tls_ciphers.py must be dumped.",
+        required=True,
+        metavar="tls_ciphers_python_file_dst",
+    )
+    return parser.parse_args()
+
+
+def get_category_by_tls_version(
+    ossa_cipher_data: Dict[str, Any], category: str, tls_version: str
+) -> Dict[str, str]:
+    return {
+        category_data["iana_cipher_name"]: category_data["openssl_cipher_name"]
+        for category_data in ossa_cipher_data[category]
+        if tls_version in category_data["tls_protocol"]
+    }
+
+
+def main(src_file_location: pathlib.Path, dst_ciphers_file: pathlib.Path) -> None:
+    ossa_cipher = json.load(open(src_file_location))
+
+    categories = {
+        cat: {}
+        for cat in [
+            "mandatory_tls_ciphersuites",
+            "approved_tls_ciphersuites",
+            "deprecated_tls_ciphersuites",
+            "unacceptable_tls_ciphersuites",
+        ]
+    }
+    tls_versions = ["TLSv1.2", "TLSv1.3"]
+
+    for cat in categories:
+        for tls_version in tls_versions:
+            categories[cat][tls_version] = get_category_by_tls_version(
+                ossa_cipher_data=ossa_cipher, category=cat, tls_version=tls_version
+            )
+
+    with open(dst_ciphers_file, mode="w") as f:
+        f.write(
+            HEADER.format(
+                '"""TLS ciphersuites and versions."""',
+                ossa_cipher["metadata"][0]["version"],
+                ossa_cipher["metadata"][0]["date"],
+                '"""Approved TLS versions."""',
+                '"""Deprecated TLS versions."""',
+                '"""Unacceptable TLS versions."""',
+            )
+        )
+        for i, cat in enumerate(categories):
+            f.write(LINE_NEW_CATEGORY.format(cat.upper()))
+            json.dump(categories[cat], f, indent=4)
+            f.write(
+                '\n"""Access dictionary by TLS version that translates from cipher '
+                'suites IANI (key)\n to OpenSSL name (value)."""'
+            )
+            f.write("\n" if i + 1 == len(categories) else "\n\n")
+
+
+if __name__ == "__main__":
+    ossa_cipher_file_src = vars(setup_cmd_parser()).get("src")
+    tls_ciphers_file_dst = vars(setup_cmd_parser()).get("dst")
+
+    if not ossa_cipher_file_src:
+        raise RuntimeError(
+            "No src file was provided. Please provide the absolute path to "
+            "the OSSA CRB TLS Ciphersuites file. "
+            "Use --help option for argument details."
+        )
+    if not tls_ciphers_file_dst:
+        raise RuntimeError(
+            "No dst file was provided. Please provide the absolute path to "
+            "the folder location where tls_ciphers.py must be dumped. "
+            "Use --help option for argument details."
+        )
+
+    src_file_location = pathlib.Path(ossa_cipher_file_src)
+    dst_ciphers_file = pathlib.Path(tls_ciphers_file_dst)
+
+    for p in [src_file_location, dst_ciphers_file]:
+        if not os.path.exists(p):
+            raise FileNotFoundError(f"File {p} does not exists.")
+
+    if src_file_location.suffix != ".json":
+        raise RuntimeError(f"File {src_file_location} must be a json file.")
+
+    if not os.path.isdir(dst_ciphers_file):
+        raise RuntimeError(f"File {dst_ciphers_file} must be a folder location.")
+
+    main(src_file_location, pathlib.Path(dst_ciphers_file, "tls_ciphers.py"))
