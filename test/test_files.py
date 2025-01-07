@@ -8,6 +8,7 @@ from mockdata.mock_files import (
     FilesWithoutPermsPackage,
     FilesWithoutPermsTmpfilesPackage,
     FileZeroLengthPackage,
+    IncorrectFSFAddress,
     MakefileJunkPackage,
     ManPagesPackage,
     ManualPagesPackage,
@@ -128,6 +129,15 @@ def test_devel_files(package, filescheck):
     assert 'devel-file-in-non-devel-package' not in out
     assert 'incorrect-fsf-address' in out
     assert 'no-documentation' in out
+
+
+@pytest.mark.parametrize('package', [IncorrectFSFAddress])
+def test_incorrect_fsf_address(package, filescheck):
+    output, test = filescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'incorrect-fsf-address /usr/incorrect-fsf.txt' in out
+    assert 'incorrect-fsf-address /usr/correct-fsf.txt' not in out
 
 
 @pytest.mark.parametrize('package', [MakefileJunkPackage])

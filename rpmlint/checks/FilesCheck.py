@@ -207,7 +207,7 @@ non_readable_regexs = (re.compile(r'^/var/log/'),
 man_base_regex = re.compile(r'^/usr(?:/share)?/man(?:/overrides)?/man(?P<category>[^/]+)/(?P<filename>((?P<binary>[^.]+)\..+))')
 
 fsf_license_regex = re.compile(br'(GNU((\s+(Library|Lesser|Affero))?(\s+General)?\s+Public|\s+Free\s+Documentation)\s+Licen[cs]e|(GP|FD)L)', re.IGNORECASE)
-fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|02139)', re.IGNORECASE)
+fsf_wrong_address_regex = re.compile(br'(675\s+Mass\s+Ave|59\s+Temple\s+Place|02139|51\s+Franklin\s+St)', re.IGNORECASE)
 
 scalable_icon_regex = re.compile(r'^/usr(?:/local)?/share/icons/.*/scalable/')
 tcl_regex = re.compile(r'^/usr/lib(64)?/([^/]+/)?pkgIndex\.tcl')
@@ -418,7 +418,7 @@ class FilesCheck(AbstractCheck):
                                              """A file in the package is located in %s. It's not permitted
         for packages to install files in this directory.""" % i})
 
-    def peek(self, filename, pkg, length=1024):
+    def peek(self, filename, pkg, length=2048):
         """
         Peek into a file, return a chunk from its beginning and a flag if it
         seems to be a text file.

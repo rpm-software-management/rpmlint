@@ -119,6 +119,26 @@ NetmaskDebugsourcePackage = get_tested_mock_package(
     }
 )
 
+
+IncorrectFSFAddress = get_tested_mock_package(
+    lazyload=True,
+    name='incorrectfsf',
+    files={
+        '/usr/incorrect-fsf.txt': {
+            'content-path': 'files/incorrect-fsf.txt',
+        },
+        '/usr/correct-fsf.txt': {
+            'content-path': 'files/correct-fsf.txt',
+        },
+    },
+    header={
+        'version': '2.4.3',
+        'release': '5.fc27',
+        'requires': [],
+    },
+)
+
+
 MakefileJunkPackage = get_tested_mock_package(
     lazyload=True,
     files={
