@@ -91,3 +91,13 @@ hash     = "b2842a4ea14b23d188b32e786f5e2d304270eeb9df2de81d3be47d56d12b5427"
 path     = "/usr/share/permissions/permissions.d/shadow.paranoid"
 digester = "shell"
 hash     = "376852944deadff2ed60413d61806f9fc791d33b0913bb301ecc4b43de70338c"
+
+[[FileDigestGroup]]
+package  = "sssd"
+note     = "sssd authentication services, this sets up capabilities for helper programs. For upstream this is only for hardening, not tight user separation."
+bug      = "bsc#1233131"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/sssd"
+digester = "shell"
+hash     = "c90615240af575b857e264caa1bd56282a74c68ab1f53a411b56d6747a8a0df6"
