@@ -66,3 +66,13 @@ type     = "permissions"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/permissions/permissions.d/libcgroup"
 hash     = "6d3a669b10b2449484dcad1c6d932f5897666bcbeef2a45d9608ef63a1e43188"
+
+[[FileDigestGroup]]
+package  = "sssd"
+note     = "sssd authentication services, this sets up capabilities for helper programs. For upstream this is only for hardening, not tight user separation."
+bug      = "bsc#1233131"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/sssd"
+digester = "shell"
+hash     = "c90615240af575b857e264caa1bd56282a74c68ab1f53a411b56d6747a8a0df6"
