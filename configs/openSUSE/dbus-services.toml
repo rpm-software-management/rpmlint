@@ -580,8 +580,8 @@ digester = "xml"
 
 [[FileDigestGroup]]
 package  = "tuned-ppd"
-note     = "power-profile-daemon drop-in replacement"
-bug      = "bsc#1232412"
+note     = "power-profile-daemon drop-in replacement & backward compatible names"
+bugs     = ["bsc#1232412", "bsc#1236029"]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/net.hadess.PowerProfiles.service"
@@ -591,6 +591,14 @@ hash     = "a32051432a8c942cfab0593086989ef7579521f5a9e3374c4661c753167a5ba5"
 path     = "/usr/share/dbus-1/system.d/net.hadess.PowerProfiles.conf"
 digester = "xml"
 hash     = "3c9b773133201b3ecc7469dd9bc93253a992045e5cee5447def1d99f5b1e6ed5"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.freedesktop.UPower.PowerProfiles.service"
+digester = "shell"
+hash     = "b8c431155d79899b29b624006131ebea339da0a9dbb8654636eb051343f3d2a2"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.UPower.PowerProfiles.conf"
+digester = "xml"
+hash     = "a1b1dda54405102f4a297c836a32a0843dcca50e09b0ac995fa61f0e24977f15"
 
 [[FileDigestGroup]]
 package = "neard"
