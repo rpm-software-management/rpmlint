@@ -95,14 +95,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "scmon"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/com.novell.Pkcs11Monitor.conf",
-]
-
-[[FileDigestGroup]]
 packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
