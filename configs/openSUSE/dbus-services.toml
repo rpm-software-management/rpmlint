@@ -95,14 +95,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "scmon"
-type = "dbus"
-note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/com.novell.Pkcs11Monitor.conf",
-]
-
-[[FileDigestGroup]]
 packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
@@ -863,16 +855,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "kcm_sddm"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1065563"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmsddm.conf",
-    "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmsddm.service",
-]
-
-[[FileDigestGroup]]
 package  = "sddm-kcm6"
 note     = "display manager API e.g. for setting up themes"
 bug      = "bsc#1217188"
@@ -1422,10 +1404,6 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/org.gnome.RemoteDesktop.conf"
 digester = "xml"
 hash     = "d28ae537328593ac6462af9ec6bab63c49f9a6851190e7a4f13fe8dd48fd88b6"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.service"
-digester = "shell"
-hash     = "1053fce12e03e219ff4518c8498b3ce1983597961afcefa93be25005414a50d8"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.Configuration.service"
 digester = "shell"
