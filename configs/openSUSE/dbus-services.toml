@@ -847,16 +847,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "kcm_sddm"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1065563"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmsddm.conf",
-    "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmsddm.service",
-]
-
-[[FileDigestGroup]]
 package  = "sddm-kcm6"
 note     = "display manager API e.g. for setting up themes"
 bug      = "bsc#1217188"
