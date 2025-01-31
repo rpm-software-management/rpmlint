@@ -708,6 +708,7 @@ class TagsCheck(AbstractCheck):
             Output info to STDOUT
         """
 
+        # Check if a package contains forbidden-controlchar in Requires: tag.
         for tagname, items in (
                 ('Provides', pkg.provides),
                 ('Conflicts', pkg.conflicts),
@@ -715,7 +716,8 @@ class TagsCheck(AbstractCheck):
                 ('Supplements', pkg.supplements),
                 ('Suggests', pkg.suggests),
                 ('Enhances', pkg.enhances),
-                ('Recommends', pkg.recommends)):
+                ('Recommends', pkg.recommends),
+                ('Requires', pkg.requires)):
             for item in items:
                 dep = Pkg.has_forbidden_controlchars(item)
                 if dep:
@@ -725,15 +727,6 @@ class TagsCheck(AbstractCheck):
                                          f'{tagname}: {dep}')
                 value = Pkg.formatRequire(*item)
                 self._unexpanded_macros(pkg, f'{tagname} {value}', value)
-
-            # Check if a package contains forbidden-controlchar in Requires: tag.
-            for pkg_token in (pkg.requires):
-                dep = Pkg.has_forbidden_controlchars(pkg_token)
-                if dep:
-                    self.output.add_info('E',
-                                         pkg,
-                                         'forbidden-controlchar-found',
-                                         f'Requires: {dep}')
 
     def _check_self_obsoletion(self, pkg):
         """Trigger check self-obsoletion
