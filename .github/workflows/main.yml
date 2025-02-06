@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, opensuse]
+    branches: [main, opensuse, 'opensuse-slfo-*']
   pull_request:
-    branches: [main, opensuse]
+    branches: [main, opensuse, 'opensuse-slfo-*']
 
 jobs:
   CI:
