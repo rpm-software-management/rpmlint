@@ -715,12 +715,12 @@ hash = "ee724388f3ea73402b1ceb753d77a19636cf14b74c2a79bf5581ae4067aa49b5"
 [[FileDigestGroup]]
 package = "iio-sensor-proxy"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#939191", "bsc#1204055"]
+note = "D-Bus interface for access to sensor information like GPS"
+bugs = ["bsc#939191", "bsc#1204055", "bsc#1236290"]
 [[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/net.hadess.SensorProxy.conf"
+path     = "/usr/share/dbus-1/system.d/net.hadess.SensorProxy.conf"
 digester = "xml"
-hash = "4695ec7205d52d47595db7a1cab533ed216d3e8913ecc0ad81bf74ec3388b1ad"
+hash     = "b75b8be59e6900c34977acc97a8e17ca4f4cb56ad6384027cd61b4bcd74c0c54"
 
 [[FileDigestGroup]]
 package = "tcmu-runner"
