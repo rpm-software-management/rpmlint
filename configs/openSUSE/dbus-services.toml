@@ -1417,3 +1417,13 @@ type     = "dbus"
 path     = "/etc/dbus-1/system.d/org.supergfxctl.Daemon.conf"
 digester = "xml"
 hash     = "d4a21d0d2669b1ea83af769529d9a1d35f661369b5dfedb929ad677cc65fce5f"
+
+[[FileDigestGroup]]
+package  = "timekpr-next"
+note     = "screen time management application"
+bug      = "bsc#1234134"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/timekpr.conf"
+digester = "xml"
+hash     = "37117f57a599e1d0b8f565e493b6dc1c152683ea6d9fa8183e7f592143713934"
