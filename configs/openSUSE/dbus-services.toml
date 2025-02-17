@@ -1143,6 +1143,20 @@ digester = "shell"
 hash = "20dbcf394e1f6cf471c4a397311eb81e364094915e8766c9811408918f3eeaa2"
 
 [[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "update management of operating system assets like containers"
+bug      = "bsc#1237106"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.sysupdate1.conf"
+digester = "xml"
+hash     = "92233ffa14abcd0b21710963d67ce86f4ea4acd3efa52474d386800b3cc7646c"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.freedesktop.sysupdate1.service"
+digester = "shell"
+hash     = "4a701606779f994b80610d017eb798b51375f61f9a1b36549620a30dd0bc70f9"
+
+[[FileDigestGroup]]
 package = "oddjob-gpupdate"
 type = "dbus"
 note = "helper that calls samba-gpupdate"
