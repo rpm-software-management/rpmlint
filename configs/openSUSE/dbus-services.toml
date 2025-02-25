@@ -1441,3 +1441,17 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/timekpr.conf"
 digester = "xml"
 hash     = "37117f57a599e1d0b8f565e493b6dc1c152683ea6d9fa8183e7f592143713934"
+
+[[FileDigestGroup]]
+package  = "kio-admin"
+note     = "privileged file operations helper for KDE (e.g. used in Dolphin)"
+bug      = "bsc#1229913"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kio.admin.conf"
+digester = "xml"
+hash     = "27fe3098931a301fcbe871e319f8fd6e50138447dec1080935151c41b29703c9"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kio.admin.service"
+digester = "shell"
+hash     = "ce9ed24db3c3654551bada756eb9aac5a58358364b41827b8154d0f73d6dc506"
