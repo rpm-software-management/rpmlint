@@ -81,7 +81,7 @@ class SUIDPermissionsCheck(AbstractCheck):
             found = False
             if script:
                 for line in script.split('\n'):
-                    if '/chkstat' in line and path in line:
+                    if re.search(fr'(chkstat|permctl) -n .* {path}', line):
                         found = True
                         break
 
