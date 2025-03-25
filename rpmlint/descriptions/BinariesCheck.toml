@@ -127,7 +127,7 @@ This executable calls mktemp. As advised by the manpage (mktemp(3)), this
 function should be avoided.
 """
 unstripped-binary-or-object="""
-This executable should be stripped from debugging symbols, in order to take
+This executable should be stripped of debugging symbols, in order to take
 less space and be loaded faster. This is usually done automatically at
 buildtime by rpm.
 """
