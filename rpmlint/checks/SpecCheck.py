@@ -320,8 +320,12 @@ class SpecCheck(AbstractCheck):
 
             for line in outcmd.stderr.splitlines():
                 line = line.strip()
+                if not line:
+                    continue
                 if line and 'warning:' not in line:
                     self.output.add_info('E', pkg, 'specfile-error', line)
+                else:
+                    self.output.add_info('W', pkg, 'specfile-warning', line)
         except UnicodeDecodeError as e:
             self.output.add_info('E', pkg, 'specfile-error', str(e))
 

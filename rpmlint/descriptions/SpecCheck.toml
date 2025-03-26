@@ -182,6 +182,10 @@ specfile-error="""
 This error occurred when rpmlint used rpm to query the specfile. The error
 is output by rpm and the message should contain more information.
 """
+specfile-warning="""
+This warning occurred when rpmlint used rpm to query the specfile. The error
+is output by rpm and the message should contain more information.
+"""
 comparison-operator-in-deptoken="""
 This dependency token contains a comparison operator (<, > or =).  This is
 usually not intended and may be caused by missing whitespace between the

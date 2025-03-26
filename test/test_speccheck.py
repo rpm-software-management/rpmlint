@@ -1253,3 +1253,12 @@ def test_deprecated_suse_update_desktop_files(spec, expected, output, test):
     test.check_spec(package)
     out = output.print_results(output.results)
     assert ('W: suse-update-desktop-file-deprecated' in out) == expected
+
+
+@pytest.mark.parametrize('spec', ['spec/bogus-date'])
+def test_bogus_date_in_changelog(spec, output, test):
+    package = get_tested_spec_package(spec)
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert 'warning: bogus date in %changelog' in out
+    assert 'W: specfile-warning warning: bogus date in %changelog' in out
