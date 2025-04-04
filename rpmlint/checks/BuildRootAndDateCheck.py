@@ -22,7 +22,7 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
     def prepare_regex(self, buildroot):
         for m in ('name', 'version', 'release', 'NAME', 'VERSION', 'RELEASE'):
             buildroot = buildroot.replace('%%{%s}' % (m), r'[\w\!-\.]{1,20}')
-        self.build_root_re = re.compile(buildroot)
+        self.lookslikebuildroot = re.compile(buildroot)
 
     def check_file(self, pkg, filename):
         if filename.startswith('/usr/lib/debug') or pkg.is_source or \
@@ -35,5 +35,5 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
                 self.output.add_info('E', pkg, 'file-contains-date-and-time', filename)
             else:
                 self.output.add_info('E', pkg, 'file-contains-current-date', filename)
-        if self.build_root_re.search(data):
+        if self.lookslikebuildroot.search(data):
             self.output.add_info('E', pkg, 'file-contains-buildroot', filename)
