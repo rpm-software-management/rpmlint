@@ -17,7 +17,7 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
         super().__init__(config, output, r'.*')
         self.looksliketime = re.compile('(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])')
         self.istoday = re.compile(time.strftime('%b %e %Y'))
-        self.prepare_regex(rpm.expandMacro('%{?buildroot}') or '^/.*/BUILDROOT/')
+        self.prepare_regex(rpm.expandMacro('%{?buildroot}') or '/.{1,40}/BUILDROOT/')
 
     def prepare_regex(self, buildroot):
         for m in ('name', 'version', 'release', 'NAME', 'VERSION', 'RELEASE'):
