@@ -67,6 +67,8 @@ provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
 conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
 
+declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
+
 compop_regex = re.compile(r'[<>=]')
 
 setup_regex = re.compile(r'%setup\b')  # intentionally no whitespace before!
@@ -84,6 +86,10 @@ tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
+
+# %suse_update_desktop_file deprecation
+# https://lists.opensuse.org/archives/list/packaging@lists.opensuse.org/message/TF4QO7ECOSEDHBFI5YDEA3OF4RNSI7D7/
+suse_update_desktop_file_regex = re.compile(r'^BuildRequires:\s*update-desktop-files', re.IGNORECASE)
 
 UNICODE_NBSP = '\xa0'
 
@@ -141,6 +147,7 @@ class SpecCheck(AbstractCheck):
         self.indent_spaces = 0
         self.indent_tabs = 0
         self.section = {}
+        self.declarative = False
 
         self.current_section = 'package'
         # None == main package
@@ -196,7 +203,10 @@ class SpecCheck(AbstractCheck):
 
         # Run checks for whole package
         self._check_no_buildroot_tag(pkg, self.buildroot)
-        self._check_no_s_section(pkg, self.section)
+
+        if not self.declarative:
+            self._check_no_s_section(pkg, self.section)
+
         self._check_superfluous_clean_section(pkg, self.section)
         self._check_more_than_one_changelog_section(pkg, self.section)
         self._check_lib_package_without_mklibname(pkg, self.is_lib_pkg, self.mklibname)
@@ -359,6 +369,7 @@ class SpecCheck(AbstractCheck):
         Run check methods for this line.
         """
 
+        self._checkline_declarative(line)
         self._checkline_break_space(line)
         if self._checkline_section(line):
             return
@@ -396,6 +407,12 @@ class SpecCheck(AbstractCheck):
             self.if_depth = self.if_depth - 1
 
     # line checks methods
+
+    def _checkline_declarative(self, line):
+        # Do not override if we found the regex in previous lines
+        if self.declarative:
+            return
+        self.declarative = bool(declarative_regex.search(line))
 
     def _checkline_break_space(self, line):
         char = line.find(UNICODE_NBSP)
@@ -698,6 +715,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_package_conflicts(line)
 
         self._checkline_forbidden_controlchars(line)
+        self._check_suse_update_desktop_file(line)
 
     def _checkline_changelog(self, line):
         if self.current_section == 'changelog':
@@ -708,7 +726,7 @@ class SpecCheck(AbstractCheck):
                                      '%%changelog: %s' % deptoken)
             for match in self.macro_regex.findall(line):
                 res = re.match('%+', match)
-                if len(res.group(0)) % 2 and match != '%autochangelog':
+                if len(res.group(0)) % 2 and match != '%autochangelog' and match != '%{autochangelog}':
                     self.output.add_info('W', self.pkg, 'macro-in-%changelog', match)
         else:
             if not self.depscript_override:
@@ -802,3 +820,17 @@ class SpecCheck(AbstractCheck):
         # https://github.com/rpm-software-management/rpmlint/issues/1067
         if Pkg.has_forbidden_controlchars(line):
             self.output.add_info('W', self.pkg, 'forbidden-controlchar-found')
+
+    def _check_suse_update_desktop_file(self, line):
+        """
+        Test if update-desktop-files is in BuildRequires. The usage of
+        %suse_update_desktop_file is deprecated now.
+        """
+        if suse_update_desktop_file_regex.match(line):
+            # Don't show the message for yast, there's no migration path yet.
+            if 'yast' in self.pkg.name.lower():
+                return
+
+            self.output.add_info('W', self.pkg,
+                                 'suse-update-desktop-file-deprecated',
+                                 '%suse_update_desktop_file is deprecated')

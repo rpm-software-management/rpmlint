@@ -50,6 +50,35 @@ def test_systemd_service_without_service_macro(tmp_path, package, systemdinstall
         files=['/usr/lib/systemd/system/greetd.service'],
         header={},
     ), True),
+    (get_tested_mock_package(
+        name='MirrorCache',
+        files=[
+            '/usr/lib/systemd/system/mirrorcache-backstage-hashes.service',
+            '/usr/lib/systemd/system/mirrorcache-backstage.service',
+            '/usr/lib/systemd/system/mirrorcache-hypnotoad.service',
+            '/usr/lib/systemd/system/mirrorcache-subtree.service',
+            '/usr/lib/systemd/system/mirrorcache.service',
+        ],
+        header={
+            'PREUN': '/usr/lib/systemd/systemd-update-helper remove-system-units mirrorcache.service mirrorcache-backstage.service mirrorcache-backstage-hashes.service mirrorcache-subtree.service mirrorcache-hypnotoad.service',
+            'PREIN': '/usr/lib/systemd/systemd-update-helper mark-install-system-units mirrorcache.service mirrorcache-backstage.service mirrorcache-backstage-hashes.service mirrorcache-subtree.service mirrorcache-hypnotoad.service',
+            'POSTIN': '/usr/lib/systemd/systemd-update-helper install-system-units mirrorcache.service mirrorcache-backstage.service mirrorcache-backstage-hashes.service mirrorcache-subtree.service mirrorcache-hypnotoad.service',
+            'POSTUN': """
+if [ $1 -ge 1 ] && [ -x /usr/lib/systemd/systemd-update-helper ]; then
+    # Package upgrade, not uninstall
+    DISABLE_RESTART_ON_UPDATE=no
+    [ -e /etc/sysconfig/services ] && . /etc/sysconfig/services || :
+    case "$DISABLE_RESTART_ON_UPDATE" in
+        yes|1)  ;;
+        *)    /usr/lib/systemd/systemd-update-helper mark-restart-system-units mirrorcache.service mirrorcache-backstage.service mirrorcache-backstage-hashes.service mirrorcache-subtree.service || :
+    esac
+fi
+
+:
+
+""",
+        },
+    ), False),
 ])
 def test_systemd_service_without_service_macro2(package, error, systemdinstallcheck):
     output, test = systemdinstallcheck

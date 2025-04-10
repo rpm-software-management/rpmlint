@@ -1,8 +1,9 @@
+from mockdata.mock_pam_modules import PAMModulePackage
 import pytest
 from rpmlint.checks.PAMModulesCheck import PAMModulesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,9 +14,9 @@ def pammodulecheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/pam-module'])
-def test_pam_modules(tmp_path, package, pammodulecheck):
+@pytest.mark.parametrize('package', [PAMModulePackage])
+def test_pam_modules(package, pammodulecheck):
     output, test = pammodulecheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: pam-unauthorized-module pam-module.so' in out

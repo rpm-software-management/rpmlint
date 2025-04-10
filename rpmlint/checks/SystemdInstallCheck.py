@@ -49,7 +49,8 @@ class SystemdInstallCheck(AbstractCheck):
                         break
 
                 # accept %service_del_postun_without_restart() macro
-                if not processed['postun'] and ':' == postun.strip():
+                postun_without_restart = ':' in (i.strip() for i in postun.split('\n'))
+                if not processed['postun'] and postun_without_restart:
                     processed['postun'] = True
 
                 basename = Path(fname).name

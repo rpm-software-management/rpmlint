@@ -83,7 +83,7 @@ class LazyMock:
                                                      self._lazy_name)
         return self._lazy_pkg
 
-    def clone(self, files=None, header=None, name=None):
+    def clone(self, files=None, header=None, name=None, extend=False):
         """
         Copies this LazyMock modifying some properties
         """
@@ -92,6 +92,8 @@ class LazyMock:
             files = self._lazy_files
         if header is None:
             header = self._lazy_header
+        elif extend:
+            header = self._lazy_header | header
         if name is None:
             name = self._lazy_name
 

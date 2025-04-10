@@ -1,4 +1,8 @@
-from mockdata.mock_config_files import (CONFIGFILES, CONFIGFILES2, CONFIGFILES3)
+from mockdata.mock_config_files import (
+    ConfigFilesBrokenPackage,
+    ConfigFilesOkPackage,
+)
+from mockdata.mock_logrotate import LogrotatePackage
 import pytest
 from rpmlint.checks.ConfigFilesCheck import ConfigFilesCheck
 from rpmlint.filter import Filter
@@ -14,7 +18,7 @@ def configfilescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', [CONFIGFILES])
+@pytest.mark.parametrize('package', [ConfigFilesBrokenPackage])
 def test_config_files1(package, configfilescheck):
     output, test = configfilescheck
     test.check(package)
@@ -25,7 +29,7 @@ def test_config_files1(package, configfilescheck):
     assert 'conffile-without-noreplace-flag /usr/share/conffile3' in out
 
 
-@pytest.mark.parametrize('package', [CONFIGFILES2, CONFIGFILES3])
+@pytest.mark.parametrize('package', [LogrotatePackage, ConfigFilesOkPackage])
 def test_config_files_correct1(package, configfilescheck):
     output, test = configfilescheck
     test.check(package)

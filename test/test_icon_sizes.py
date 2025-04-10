@@ -1,8 +1,9 @@
+from mockdata.mock_icon_sizes import WrongIconSizePackage
 import pytest
 from rpmlint.checks.IconSizesCheck import IconSizesCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,9 +14,9 @@ def iconsizescheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/tasque'])
-def test_icon_sizes(tmp_path, package, iconsizescheck):
+@pytest.mark.parametrize('package', [WrongIconSizePackage])
+def test_icon_sizes(package, iconsizescheck):
     output, test = iconsizescheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: wrong-icon-size /usr/share/tasque/icons/hicolor/16x16/status/tasque-note.png expected: 16x16 actual: 22x22' in out

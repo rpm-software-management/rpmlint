@@ -1,8 +1,9 @@
+from mockdata.mock_dbus_policy import DbusRulePackage
 import pytest
 from rpmlint.checks.DBusPolicyCheck import DBusPolicyCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +14,10 @@ def dbuspolicycheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/dbusrule'])
-def test_dbus_policy(tmp_path, package, dbuspolicycheck):
+@pytest.mark.parametrize('package', [DbusRulePackage])
+def test_dbus_policy(package, dbuspolicycheck):
     output, test = dbuspolicycheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: dbus-parsing-exception raised an exception: no element found: line 1, column 0 /etc/dbus-1/system.d/noxml.conf' in out
     assert 'E: dbus-policy-allow-without-destination <allow send_interface="org.freedesktop.NetworkManager.PPP"/>' in out

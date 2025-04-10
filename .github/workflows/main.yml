@@ -117,7 +117,7 @@ jobs:
       - run: pytest
       - run: flake8
       - run: /github/home/.local/bin/ruff check .
-      - run: find . -name '*.py' | xargs /github/home/.local/bin/pyupgrade --py38-plus
+      - run: find . -not -path "./test/files/*" -name '*.py' | xargs /github/home/.local/bin/pyupgrade --py38-plus
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
       - run: python3 test/dump_stats.py profile.stats
       - name: Collect the coveralls report

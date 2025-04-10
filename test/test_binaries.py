@@ -1,3 +1,4 @@
+from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
 from rpmlint.filter import Filter
@@ -31,10 +32,10 @@ def test_waived_forbidden_c_calls(tmp_path, package, binariescheck):
     assert 'crypto-policy-non-compliance' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/libreiserfscore-devel'])
-def test_lto_bytecode(tmp_path, package, binariescheck):
+@pytest.mark.parametrize('package', [LibReiserFSCoreDevelPackage])
+def test_lto_bytecode(package, binariescheck):
     output, test = binariescheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'lto-bytecode' in out
 

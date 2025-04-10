@@ -1,8 +1,13 @@
+from mockdata.mock_shlib_policy import (
+    Libslp1234Package,
+    LibslpMissingSuffixPackage,
+    Libtest1Package,
+)
 import pytest
 from rpmlint.checks.SharedLibraryPolicyCheck import SharedLibraryPolicyCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,25 +18,25 @@ def slpcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/libtest1'])
-def test_shlib_policy_wrong_name(tmp_path, package, slpcheck):
+@pytest.mark.parametrize('package', [Libtest1Package])
+def test_shlib_policy_wrong_name(package, slpcheck):
     output, test = slpcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: shlib-unversioned-lib libtest.so.1x' in out
 
 
-@pytest.mark.parametrize('package', ['binary/libslp-missing-suffix'])
-def test_shlib_policy_missing_suffix(tmp_path, package, slpcheck):
+@pytest.mark.parametrize('package', [LibslpMissingSuffixPackage])
+def test_shlib_policy_missing_suffix(package, slpcheck):
     output, test = slpcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: shlib-policy-excessive-dependency libsparta.so.2' in out
 
 
-@pytest.mark.parametrize('package', ['binary/libslp1234'])
-def test_shlib_policy_errors(tmp_path, package, slpcheck):
+@pytest.mark.parametrize('package', [Libslp1234Package])
+def test_shlib_policy_errors(package, slpcheck):
     output, test = slpcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: shlib-fixed-dependency libsparta.so.2 = 1.23' in out
