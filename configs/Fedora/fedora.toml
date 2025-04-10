@@ -207,8 +207,8 @@ Filters = [
 #
 ## An issue with OBS, works with autobuild
     ' no-packager-tag',
-#    ' unversioned-explicit-provides ',
-#    ' unversioned-explicit-obsoletes ',
+    ' unversioned-explicit-provides ',
+    ' unversioned-explicit-obsoletes ',
 #    ' service-default-enabled ',
 #    ' non-standard-dir-perm ',
 #    ' conffile-without-noreplace-flag ',
