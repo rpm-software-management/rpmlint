@@ -1272,7 +1272,7 @@ class FilesCheck(AbstractCheck):
                 if not srcfile:
                     self.output.add_info('W', pkg, 'python-bytecode-without-source', fname)
                 elif (pyc_timestamp is not None and
-                      pyc_timestamp != srcfile.mtime):
+                      pyc_timestamp < srcfile.mtime):
                     cts = datetime.fromtimestamp(
                         pyc_timestamp).isoformat()
                     sts = datetime.fromtimestamp(

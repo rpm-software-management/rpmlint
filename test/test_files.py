@@ -16,6 +16,8 @@ from mockdata.mock_files import (
     NonReadableGhostPackage,
     Python3PowerBrokenPackage,
     Python3PowerPackage,
+    PythonInconsistentMtime,
+    PythonInconsistentMtimeOk,
     PythonShebangLinkOkPackage,
     PythonShebangLinkPackage,
     RustFilesPackage,
@@ -343,3 +345,17 @@ def test_non_readable_ghost_files(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert 'E: non-readable /boohoo 0' not in out
+
+
+@pytest.mark.parametrize('package', [PythonInconsistentMtime])
+def test_python_inconsistent_mtime(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: python-bytecode-inconsistent-mtime' in out
+
+
+@pytest.mark.parametrize('package', [PythonInconsistentMtimeOk])
+def test_python_inconsistent_mtime_ok(package, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: python-bytecode-inconsistent-mtime' not in out

@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import stat
 
 import rpm
@@ -407,6 +408,50 @@ NonReadableGhostPackage = get_tested_mock_package(
                 'mode': 0o000 | stat.S_IFREG,
                 'flags': rpm.RPMFILE_GHOST,
             },
+        },
+    },
+)
+
+
+# source file mtime is greater than .pyc header
+PythonInconsistentMtime = get_tested_mock_package(
+    name='python311-setuptools',
+    lazyload=True,
+    header={'requires': []},
+    files={
+        '/usr/lib/python311/site-packages/setuptools/__init__.py': {
+            'content-path': 'files/python-setuptools/__init__.py',
+            'metadata': {'mtime': datetime(2025, 4, 10, 6, 12, 50, tzinfo=timezone.utc).timestamp()},
+        },
+        # pyc mtime is 2025-04-10 06:12:48
+        '/usr/lib/python311/site-packages/setuptools/__pycache__/__init__.cpython-311.pyc': {
+            'content-path': 'files/python-setuptools/__init__.cpython-311.pyc',
+        },
+        # pyc mtime is 2025-04-10 06:12:48
+        '/usr/lib/python311/site-packages/setuptools/__pycache__/__init__.cpython-311.opt-1.pyc': {
+            'content-path': 'files/python-setuptools/__init__.cpython-311.opt-1.pyc',
+        },
+    },
+)
+
+
+# source file mtime is smaller than .pyc header
+PythonInconsistentMtimeOk = get_tested_mock_package(
+    name='python311-setuptools',
+    lazyload=True,
+    header={'requires': []},
+    files={
+        '/usr/lib/python311/site-packages/setuptools/__init__.py': {
+            'content-path': 'files/python-setuptools/__init__.py',
+            'metadata': {'mtime': datetime(2025, 4, 10, 6, 12, 40, tzinfo=timezone.utc).timestamp()},
+        },
+        # pyc mtime is 2025-04-10 06:12:48
+        '/usr/lib/python311/site-packages/setuptools/__pycache__/__init__.cpython-311.pyc': {
+            'content-path': 'files/python-setuptools/__init__.cpython-311.pyc',
+        },
+        # pyc mtime is 2025-04-10 06:12:48
+        '/usr/lib/python311/site-packages/setuptools/__pycache__/__init__.cpython-311.opt-1.pyc': {
+            'content-path': 'files/python-setuptools/__init__.cpython-311.opt-1.pyc',
         },
     },
 )
