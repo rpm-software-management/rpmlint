@@ -149,8 +149,7 @@ class TagsCheck(AbstractCheck):
         description = byte_to_string(description)
         self._unexpanded_macros(pkg, '%%description -l %s' % lang, description)
         if self.spellcheck:
-            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
-            typos = self.spellchecker.spell_check(description, '%description -l {}', lang, pkgname, ignored_words)
+            typos = self.spellchecker.spell_check(description, '%description -l {}', lang, pkg.name, ignored_words)
             for typo in typos.items():
                 self.output.add_info('E', pkg, 'spelling-error', typo)
         for i in description.splitlines():
@@ -172,8 +171,7 @@ class TagsCheck(AbstractCheck):
         summary = byte_to_string(summary)
         self._unexpanded_macros(pkg, 'Summary(%s)' % lang, summary)
         if self.spellcheck:
-            pkgname = byte_to_string(pkg.header[rpm.RPMTAG_NAME])
-            typos = self.spellchecker.spell_check(summary, 'Summary({})', lang, pkgname, ignored_words)
+            typos = self.spellchecker.spell_check(summary, 'Summary({})', lang, pkg.name, ignored_words)
             for typo in typos.items():
                 self.output.add_info('E', pkg, 'spelling-error', typo)
         if any(nl in summary for nl in ('\n', '\r')):

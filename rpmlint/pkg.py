@@ -494,6 +494,34 @@ class AbstractPkg:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.cleanup()
 
+    def read_with_mmap(self, filename):
+        """Mmap a file, return it's content decoded."""
+        try:
+            with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
+                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
+        except Exception:
+            return ''
+
+    def check_versioned_dep(self, name, version):
+        # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
+        name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
+        for d in self.requires + self.prereq:
+            if name_re.match(d[0]):
+                if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
+                        or d[2][1] != version:
+                    return False
+                return True
+        return False
+
+    def grep(self, regex, filename):
+        """Grep regex from a file, return first matching line number (starting with 1)."""
+        data = self.read_with_mmap(filename)
+        match = regex.search(data)
+        if match:
+            return data.count('\n', 0, match.start()) + 1
+        else:
+            return None
+
 
 class Pkg(AbstractPkg):
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
@@ -604,7 +632,7 @@ class Pkg(AbstractPkg):
                         subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIRONMENT,
                                                 stderr=stderr, stdin=rpm_data)
                 else:
-                    command_str = f'rpm2cpio {quote(str(filename))} | cpio -id ; chmod -R +rX .'
+                    command_str = f'rpm2cpio {quote(str(filename))} | cpio -id && chmod -R +rX .'
                     subprocess.check_output(command_str, shell=True, env=ENGLISH_ENVIRONMENT, stderr=stderr)
             self.extracted = True
         return dirname
@@ -622,23 +650,6 @@ class Pkg(AbstractPkg):
     def cleanup(self):
         if self.extracted and self.dirname:
             self.__tmpdir.cleanup()
-
-    def grep(self, regex, filename):
-        """Grep regex from a file, return first matching line number (starting with 1)."""
-        data = self.read_with_mmap(filename)
-        match = regex.search(data)
-        if match:
-            return data.count('\n', 0, match.start()) + 1
-        else:
-            return None
-
-    def read_with_mmap(self, filename):
-        """Mmap a file, return it's content decoded."""
-        try:
-            with open(Path(self.dir_name() or '/', filename.lstrip('/'))) as in_file:
-                return mmap.mmap(in_file.fileno(), 0, mmap.MAP_SHARED, mmap.PROT_READ).read().decode()
-        except Exception:
-            return ''
 
     def langtag(self, tag, lang):
         """Get value of tag in the given language."""
@@ -717,16 +728,20 @@ class Pkg(AbstractPkg):
             result = self.files.get(linkpath)
         return result
 
-    def check_versioned_dep(self, name, version):
-        # try to match name%_isa as well (e.g. 'foo(x86-64)', 'foo(x86-32)')
-        name_re = re.compile(r'^%s(\(\w+-\d+\))?$' % re.escape(name))
-        for d in self.requires + self.prereq:
-            if name_re.match(d[0]):
-                if d[1] & rpm.RPMSENSE_EQUAL != rpm.RPMSENSE_EQUAL \
-                        or d[2][1] != version:
-                    return False
-                return True
-        return False
+    def get_core_reqs(self):
+        """
+        Return the list of dependencies that are not found by find-requires
+        withouth the flag RPM
+        """
+        core_reqs = []
+
+        for dep in rpm.ds(self.header, 'requires'):
+            # skip deps which were found by find-requires
+            if dep.Flags() & rpm.RPMSENSE_FIND_REQUIRES != 0:
+                continue
+            core_reqs.append(dep.N())
+
+        return core_reqs
 
 
 def get_installed_pkgs(name):
@@ -879,14 +894,16 @@ class FakePkg(AbstractPkg):
                 self._mock_file(path, file)
 
     def add_dir(self, path, metadata=None):
-        pkgdir = PkgFile(path)
+        name = path
+        pkgdir = PkgFile(name)
         pkgdir.magic = 'directory'
 
         path = os.path.join(self.dir_name(), path.lstrip('/'))
         os.makedirs(Path(path), exist_ok=True)
+        pkgdir.inode = os.stat(Path(path)).st_ino
 
         pkgdir.path = path
-        self.files[path] = pkgdir
+        self.files[name] = pkgdir
 
         if metadata:
             for k, v in metadata.items():
@@ -947,7 +964,7 @@ class FakePkg(AbstractPkg):
                 tagname = k[:-1].upper()
                 for i in v:
                     name, flags, version = parse_deps(i)[0]
-                    version = f'{version[0]}:{version[1]}-{version[2]}'
+                    version = versionToString(version)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)
@@ -1004,6 +1021,10 @@ class FakePkg(AbstractPkg):
     def cleanup(self):
         if self.dirname:
             self.__tmpdir.cleanup()
+
+    def get_core_reqs(self):
+        core_reqs = []
+        return core_reqs
 
     # access the tags like an array
     def __getitem__(self, key):

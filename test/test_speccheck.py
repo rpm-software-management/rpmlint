@@ -899,6 +899,23 @@ def test_check_no_essential_section(package, speccheck):
     assert 'W: no-%check-section' in out
 
 
+@pytest.mark.parametrize('package', ['spec/libspelling'])
+def test_check_no_essential_section_declarative(package, speccheck):
+    """Test for declarative build check
+    Test if specfile does not have essential section tag but uses declarative
+    build.
+    https://github.com/rpm-software-management/rpmlint/issues/1311
+    """
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: no-%prep-section' not in out
+    assert 'W: no-%install-section' not in out
+    assert 'W: no-%build-section' not in out
+    assert 'W: no-%check-section' not in out
+
+
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
 def test_check_no_essential_section_not_applied(package, speccheck):
     """Test for no-%%%s-section check
@@ -1234,3 +1251,17 @@ def test_special_comments(package, output, test):
     out = output.print_results(output.results)
     assert 'W: macro-in-comment %configure' in out
     assert 'W: macro-in-comment %{name}' not in out
+
+
+@pytest.mark.parametrize('spec,expected', [
+    ('spec/gimp', True),
+    ('spec/libcanberra', True),
+    ('spec/MacroInComment', False),
+    ('spec/ghc', False),
+    ('spec/yast2-installation', False),
+])
+def test_deprecated_suse_update_desktop_files(spec, expected, output, test):
+    package = get_tested_spec_package(spec)
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert ('W: suse-update-desktop-file-deprecated' in out) == expected

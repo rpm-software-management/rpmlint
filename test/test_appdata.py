@@ -1,10 +1,11 @@
 from unittest.mock import patch
 
+from mockdata.mock_appdata import AppDataPackage
 import pytest
 from rpmlint.checks.AppDataCheck import AppDataCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package, HAS_APPSTREAM_GLIB
+from Testing import CONFIG, HAS_APPSTREAM_GLIB
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -16,21 +17,21 @@ def appdatacheck():
 
 
 @pytest.mark.skipif(not HAS_APPSTREAM_GLIB, reason='Optional dependency appstream-glib not installed')
-@pytest.mark.parametrize('package', ['binary/appdata'])
-def test_appdata_fail(tmp_path, package, appdatacheck):
+@pytest.mark.parametrize('package', [AppDataPackage])
+def test_appdata_fail(package, appdatacheck):
     output, test = appdatacheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # there are two borked packages
     assert len(output.results) == 2
     assert 'invalid-appdata-file' in out
 
 
-@pytest.mark.parametrize('package', ['binary/appdata'])
+@pytest.mark.parametrize('package', [AppDataPackage])
 @patch('rpmlint.checks.AppDataCheck.AppDataCheck.cmd', 'command-really-not-found')
-def test_appdata_fail_no_checker(tmp_path, package, appdatacheck):
+def test_appdata_fail_no_checker(package, appdatacheck):
     output, test = appdatacheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # there is just one borked file as the other is invalid content
     # but valid xml
