@@ -1220,6 +1220,22 @@ def test_python_sitelib(package, speccheck):
 
 
 @pytest.mark.parametrize('package', [
+    'spec/shared-bindir-glob-in-files',
+    'spec/shared-datadir-glob-in-files',
+    'spec/shared-docdir-glob-in-files',
+    'spec/shared-includedir-glob-in-files',
+    'spec/shared-mandir-glob-in-files',
+])
+def test_shared_dir_glob(package, speccheck):
+    """Test if %{_bindir}/*, etc. is present in %files section."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: shared-dir-glob-in-files' in out
+
+
+@pytest.mark.parametrize('package', [
     'spec/null-char-last',
     'spec/null-char-first',
 ])

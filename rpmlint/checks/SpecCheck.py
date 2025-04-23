@@ -86,6 +86,8 @@ python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 
+shared_dir_glob_regex = re.compile(r'^[^#]*%{_(?:bin|data|doc|include|man)dir}/\*\s*$')
+
 # %suse_update_desktop_file deprecation
 # https://lists.opensuse.org/archives/list/packaging@lists.opensuse.org/message/TF4QO7ECOSEDHBFI5YDEA3OF4RNSI7D7/
 suse_update_desktop_file_regex = re.compile(r'^BuildRequires:\s*update-desktop-files', re.IGNORECASE)
@@ -393,6 +395,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_python_setup_test(line)
         self._checkline_python_module_def(line)
         self._checkline_python_sitelib_glob(line)
+        self._checkline_shared_dir_glob(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -804,6 +807,15 @@ class SpecCheck(AbstractCheck):
 
         if python_sitelib_glob_regex.match(line):
             self.output.add_info('W', self.pkg, 'python-sitelib-glob-in-files',
+                                 line[:-1])
+
+    def _checkline_shared_dir_glob(self, line):
+        """Test if %{_bindir}/*, etc. is present in %files section."""
+        if self.current_section != 'files':
+            return
+
+        if shared_dir_glob_regex.match(line):
+            self.output.add_info('W', self.pkg, 'shared-dir-glob-in-files',
                                  line[:-1])
 
     def _checkline_forbidden_controlchars(self, line):

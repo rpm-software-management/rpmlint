@@ -220,6 +220,13 @@ file path like:
 %{python_sitelib}/packagename
 %{python_sitelib}/packagename-%{version}*-info
 """
+shared-dir-glob-in-files="""
+The %files section contains "%{_bindir}/*", "%{_datadir}/*", "%{_docdir}/*",
+"%{_includedir}/*" or "%{_mandir}/*".  These can lead to packagers not noticing
+when upstream adds new and possibly conflicting files in these directories.
+Therefore, files in these directories should be explicitely listed like
+"%{_bindir}/foobar" or "%{_includedir}/foobar.h".
+"""
 
 suse-update-desktop-file-deprecated="""
 The usage of %suse_update_desktop_file is deprecated and changes
