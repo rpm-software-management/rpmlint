@@ -229,6 +229,13 @@ invalid-suse-version-check="""
 The specfile contains a comparison of %suse_version against a suse release
 that does not exist. Please double check.
 """
+shared-dir-glob-in-files="""
+The %files section contains "%{_bindir}/*", "%{_datadir}/*", "%{_docdir}/*",
+"%{_includedir}/*" or "%{_mandir}/*".  These can lead to packagers not noticing
+when upstream adds new and possibly conflicting files in these directories.
+Therefore, files in these directories should be explicitely listed like
+"%{_bindir}/foobar" or "%{_includedir}/foobar.h".
+"""
 suse-update-desktop-file-deprecated="""
 The usage of %suse_update_desktop_file is deprecated and changes
 should be migrated to the upstream.
