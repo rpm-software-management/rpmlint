@@ -660,14 +660,18 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd-network"
+package = "systemd-networkd"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#918799"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.network1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.network1.service",
-]
+note = "this is a legacy whitelisting, the code has not been reviewed yet"
+bugs = ["bsc#918799", "bsc#1242056"]
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.network1.conf"
+digester = "xml"
+hash     = "0dc908d25974ae44a6526a5eb51e0f6e5d5fff7e8fc91c01bec1c51042e3d69f"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.network1.service"
+digester = "shell"
+hash = "c5050801bc59bbfed19b913fdcfed0ae84f843de6c8fec5801265c11438d7b04"
 
 [[FileDigestGroup]]
 package = "realmd"
@@ -753,14 +757,18 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "systemd-network"
+package = "systemd-resolved"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList; systemd resolver, but dont add automatically to nsswitch.conf!"
-bug = "bsc#917781"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.resolve1.service",
-]
+note = "This is a legacy whitelisting, the code has not been reviewed yet. Don't add it automatically to nsswitch.conf!"
+bugs = ["bsc#917781", "bsc#1242056"]
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.resolve1.conf"
+digester = "xml"
+hash     = "c47254830a002ad52889a0b19c9410c02c96cbd6931bc7bab510d56c58e7fc7c"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.resolve1.service"
+digester = "shell"
+hash = "9bd3adcbd2c5466b58de3dc0c68f10fc0e1d115d1c3dbd379ad6ee502db6bde8"
 
 [[FileDigestGroup]]
 package = "rebootmgr"
