@@ -914,6 +914,7 @@ def test_check_no_essential_section_declarative(package, speccheck):
     assert 'W: no-%install-section' not in out
     assert 'W: no-%build-section' not in out
     assert 'W: no-%check-section' not in out
+    assert 'W: patch-not-applied' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
