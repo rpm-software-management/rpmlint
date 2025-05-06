@@ -417,6 +417,9 @@ class SpecCheck(AbstractCheck):
         if self.declarative:
             return
         self.declarative = bool(declarative_regex.search(line))
+        if self.declarative:
+            # we assume implicit %prep
+            self.patches_auto_applied = True
 
     def _checkline_break_space(self, line):
         char = line.find(UNICODE_NBSP)
