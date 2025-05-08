@@ -84,6 +84,7 @@ pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
+python_setup_install_regex = re.compile(r'^[^#]*(setup.py install|%\{?python\d*_install)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 
@@ -396,6 +397,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_valid_groups(line)
         self._checkline_macros_in_comments(line)
         self._checkline_python_setup_test(line)
+        self._checkline_python_setup_install(line)
         self._checkline_python_module_def(line)
         self._checkline_python_sitelib_glob(line)
         self._checkline_shared_dir_glob(line)
@@ -806,6 +808,11 @@ class SpecCheck(AbstractCheck):
         # Test if the "python setup.py test" deprecated subcommand is used
         if self.current_section == 'check' and python_setup_test_regex.search(line):
             self.output.add_info('W', self.pkg, 'python-setup-test', line[:-1])
+
+    def _checkline_python_setup_install(self, line):
+        # Test if the "python setup.py install" deprecated subcommand is used
+        if self.current_section == 'install' and python_setup_install_regex.search(line):
+            self.output.add_info('W', self.pkg, 'python-setup-install', line[:-1])
 
     def _checkline_python_module_def(self, line):
         """
