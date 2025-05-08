@@ -1172,7 +1172,7 @@ def test_python_setup_test(package, speccheck):
 
 @pytest.mark.parametrize('package,lines', [
     ('spec/python-setup-install', ['setup.py install']),
-    ('spec/python-setup-python_install', ['python_install', 'python3_install', 'python312_install']),
+    ('spec/python-setup-python_install', ['python_install', 'python3_install', 'python312_install', 'py3_install']),
 ])
 def test_python_setup_install(package, lines, speccheck):
     """Test if specfile has deprecated use of 'setup.py install'."""
