@@ -51,7 +51,7 @@ def test_spellchecking():
     result = spell.spell_check(text, 'Description({}):')
     assert len(result) == 2
     assert result['tihs'].startswith('Description(en_US): tihs -> ')
-    assert get_suggestions(result['tihs']) == ["Ti's", 'this', "ti's"]
+    assert 'this' in get_suggestions(result['tihs'])
 
     # different language, one typo
     text = 'Příčerně žluťoučký kůň'

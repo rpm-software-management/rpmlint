@@ -1170,6 +1170,21 @@ def test_python_setup_test(package, speccheck):
     assert 'W: python-setup-test' in out
 
 
+@pytest.mark.parametrize('package,lines', [
+    ('spec/python-setup-install', ['setup.py install']),
+    ('spec/python-setup-python_install', ['python_install', 'python3_install', 'python312_install']),
+])
+def test_python_setup_install(package, lines, speccheck):
+    """Test if specfile has deprecated use of 'setup.py install'."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-setup-install' in out
+    for line in lines:
+        assert line in out
+
+
 @pytest.mark.parametrize('package', ['spec/python-module-def'])
 def test_python_module_definition(package, speccheck):
     """Test if python_module macro is defined in the spec file."""
