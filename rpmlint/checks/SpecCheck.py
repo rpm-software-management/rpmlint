@@ -84,7 +84,7 @@ pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
-python_setup_install_regex = re.compile(r'^[^#]*(setup.py install|%\{?python\d*_install)')
+python_setup_install_regex = re.compile(r'^[^#]*(setup.py install|%\{?py(thon)?\d*_install)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
 

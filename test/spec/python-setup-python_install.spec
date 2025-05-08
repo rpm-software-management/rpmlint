@@ -21,6 +21,8 @@ A test specfile with python setup.py test that is deprecated.
 %python_install
 %python3_install
 %python312_install
+# old fedora version
+%py3_install
 
 %check
 
