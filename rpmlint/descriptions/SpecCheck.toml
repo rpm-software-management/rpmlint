@@ -207,6 +207,10 @@ python-setup-test="""
 The python setup.py test subcommand is deprecated and should be replaced with a
 modern testing tool like %pytest or %pyunittest discover -v.
 """
+python-setup-install="""
+The python setup.py install subcommand is deprecated and should be replaced with
+macros %pyproject_wheel, %pyproject_install or with "pip"
+"""
 python-module-def="""
 The spec file contains a conditional definition of python_module macro, this
 macro is present in recent versions of python-rpm-macros.
