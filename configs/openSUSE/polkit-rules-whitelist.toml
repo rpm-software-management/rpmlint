@@ -53,30 +53,11 @@ bug = "bsc#1215652"
 path = "/usr/share/polkit-1/rules.d/51-wheel.rules"
 hash = "6fa951c8cb81606a10bd82e6ef8e260e98cc84e68e9a49310a8a670889e31b4d"
 
-
 [[FileDigestGroup]]
-package = "systemd"
+package = "systemd-networkd"
 type = "polkit"
 note = "allows systemd-networkd to set hostname and timezone from DHCP information"
-bug = "bsc#1125438"
-[[FileDigestGroup.digests]]
-path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules"
-hash = "bf10f0b71878f90516b89d205a7fb2f8363cec6614ec717da88c2acf49c276a5"
-
-[[FileDigestGroup]]
-package = "systemd-network"
-type = "polkit"
-note = "allows systemd-networkd to set hostname and timezone from DHCP information"
-bug = "bsc#1125438"
-[[FileDigestGroup.digests]]
-path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules"
-hash = "bf10f0b71878f90516b89d205a7fb2f8363cec6614ec717da88c2acf49c276a5"
-
-[[FileDigestGroup]]
-package = "systemd-network"
-type = "polkit"
-note = "minor non-functional incremental change"
-bug = "bsc#1185469"
+bugs = ["bsc#1125438", "bsc#1185469", "bsc#1242056"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules"
 hash = "f199e386a9297858331b00df07ed0b0ee5fcf4bea67f6c0bccc8a92b7e310bbd"
