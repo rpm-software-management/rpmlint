@@ -84,8 +84,11 @@ pkgname_regex = re.compile(r'\s+(?:-n\s+)?(\S+)')
 tarball_regex = re.compile(r'\.(?:t(?:ar|[glx]z|bz2?)|zip)\b', re.IGNORECASE)
 
 python_setup_test_regex = re.compile(r'^[^#]*(setup.py test)')
+python_setup_install_regex = re.compile(r'^[^#]*(setup.py install|%\{?py(thon)?\d*_install)')
 python_module_def_regex = re.compile(r'^[^#]*%{\?!python_module:%define python_module()')
 python_sitelib_glob_regex = re.compile(r'^[^#]*%{python_site(lib|arch)}/\*\s*$')
+
+shared_dir_glob_regex = re.compile(r'^[^#]*%{_(?:bin|data|doc|include|man)dir}/\*\s*$')
 
 # %suse_update_desktop_file deprecation
 # https://lists.opensuse.org/archives/list/packaging@lists.opensuse.org/message/TF4QO7ECOSEDHBFI5YDEA3OF4RNSI7D7/
@@ -323,8 +326,12 @@ class SpecCheck(AbstractCheck):
 
             for line in outcmd.stderr.splitlines():
                 line = line.strip()
+                if not line:
+                    continue
                 if line and 'warning:' not in line:
                     self.output.add_info('E', pkg, 'specfile-error', line)
+                else:
+                    self.output.add_info('W', pkg, 'specfile-warning', line)
         except UnicodeDecodeError as e:
             self.output.add_info('E', pkg, 'specfile-error', str(e))
 
@@ -390,8 +397,10 @@ class SpecCheck(AbstractCheck):
         self._checkline_valid_groups(line)
         self._checkline_macros_in_comments(line)
         self._checkline_python_setup_test(line)
+        self._checkline_python_setup_install(line)
         self._checkline_python_module_def(line)
         self._checkline_python_sitelib_glob(line)
+        self._checkline_shared_dir_glob(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -413,6 +422,9 @@ class SpecCheck(AbstractCheck):
         if self.declarative:
             return
         self.declarative = bool(declarative_regex.search(line))
+        if self.declarative:
+            # we assume implicit %prep
+            self.patches_auto_applied = True
 
     def _checkline_break_space(self, line):
         char = line.find(UNICODE_NBSP)
@@ -797,6 +809,11 @@ class SpecCheck(AbstractCheck):
         if self.current_section == 'check' and python_setup_test_regex.search(line):
             self.output.add_info('W', self.pkg, 'python-setup-test', line[:-1])
 
+    def _checkline_python_setup_install(self, line):
+        # Test if the "python setup.py install" deprecated subcommand is used
+        if self.current_section == 'install' and python_setup_install_regex.search(line):
+            self.output.add_info('W', self.pkg, 'python-setup-install', line[:-1])
+
     def _checkline_python_module_def(self, line):
         """
         Test if the "python_module" macro is defined in the spec file
@@ -813,6 +830,15 @@ class SpecCheck(AbstractCheck):
 
         if python_sitelib_glob_regex.match(line):
             self.output.add_info('W', self.pkg, 'python-sitelib-glob-in-files',
+                                 line[:-1])
+
+    def _checkline_shared_dir_glob(self, line):
+        """Test if %{_bindir}/*, etc. is present in %files section."""
+        if self.current_section != 'files':
+            return
+
+        if shared_dir_glob_regex.match(line):
+            self.output.add_info('W', self.pkg, 'shared-dir-glob-in-files',
                                  line[:-1])
 
     def _checkline_forbidden_controlchars(self, line):
