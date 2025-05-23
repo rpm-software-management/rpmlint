@@ -66,3 +66,13 @@ type     = "permissions"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/permissions/permissions.d/libcgroup"
 hash     = "6d3a669b10b2449484dcad1c6d932f5897666bcbeef2a45d9608ef63a1e43188"
+
+[[FileDigestGroup]]
+package  = "exim"
+note     = "Permissions for the spool directory"
+bug      = "bsc#1240755"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/etc/permissions.d/exim"
+digester = "shell"
+hash     = "bcc22a994f7bbb3aea193ab77ef49a57bf171bafce9f55e4bc1b02e16e7e308f"
