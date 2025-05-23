@@ -76,3 +76,13 @@ type     = "permissions"
 path     = "/usr/share/permissions/permissions.d/sssd"
 digester = "shell"
 hash     = "c90615240af575b857e264caa1bd56282a74c68ab1f53a411b56d6747a8a0df6"
+
+[[FileDigestGroup]]
+package  = "exim"
+note     = "Permissions for the spool directory"
+bug      = "bsc#1240755"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/etc/permissions.d/exim"
+digester = "shell"
+hash     = "bcc22a994f7bbb3aea193ab77ef49a57bf171bafce9f55e4bc1b02e16e7e308f"
