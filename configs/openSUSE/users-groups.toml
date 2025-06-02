@@ -131,6 +131,7 @@ StandardGroups = [
     '_openqa-worker',
     'oinstall',
     'openbao',
+    'opencloud-server',
     'opensearch',
     'openvswitch',
     'orthanc',
