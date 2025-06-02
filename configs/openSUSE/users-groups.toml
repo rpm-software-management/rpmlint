@@ -373,6 +373,7 @@ StandardUsers = [
     'ntp',
     'octavia',
     'openbao',
+    'opencloud-server',
     'opensearch',
     'openvswitch',
     'oracle',
