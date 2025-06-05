@@ -52,11 +52,11 @@ hash = "e70681a232f129648465d4aa036f37e3da8dcbfa611b1380baa5bd98030c6b61"
 package = "systemd"
 type = "sysctl"
 note = "sets core pattern, core pipe limit and suid_dumpable"
-bugs = ["bsc#1174722", "bsc#1226865"]
+bugs = ["bsc#1174722", "bsc#1226865", "bsc#1243959"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-coredump.conf"
 digester = "shell"
-hash = "167ec7922affa2b784540a0d755f02a270cd5d816aea402db2e6489cee293bad"
+hash = "54f2f502708e2b70ac5b6994b4162641fcdee4b834d8eba928d066e4795c4f04"
 
 [[FileDigestGroup]]
 package = "aaa_base"
