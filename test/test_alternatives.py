@@ -1,3 +1,4 @@
+from mockdata.mock_alternatives import AlternativeConfFolder
 import pytest
 from rpmlint.checks.AlternativesCheck import AlternativesCheck
 from rpmlint.filter import Filter
@@ -84,4 +85,15 @@ def test_libalternative_borked(tmp_path, package, alternativescheck):
     assert 'E: libalternatives-directory-not-exist' in out
     assert 'E: empty-libalternatives-directory' in out
     assert 'W: man-entry-value-not-found' in out
+    assert 'W: binary-entry-value-not-found' in out
+
+
+@pytest.mark.parametrize('package', [AlternativeConfFolder])
+def test_alternative_conf_folder(package, alternativescheck):
+    output, test = alternativescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: libalternatives-conf-not-found' not in out
+    assert 'W: wrong-tag-found' in out
+    assert 'E: wrong-entry-format' in out
     assert 'W: binary-entry-value-not-found' in out
