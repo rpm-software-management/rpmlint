@@ -1463,3 +1463,13 @@ hash     = "27fe3098931a301fcbe871e319f8fd6e50138447dec1080935151c41b29703c9"
 path     = "/usr/share/dbus-1/system-services/org.kde.kio.admin.service"
 digester = "shell"
 hash     = "ce9ed24db3c3654551bada756eb9aac5a58358364b41827b8154d0f73d6dc506"
+
+[[FileDigestGroup]]
+package  = "libgpiod"
+note     = "GPIO character device management daemon"
+bug      = "bsc#1244702"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/etc/dbus-1/system.d/io.gpiod1.conf"
+digester = "xml"
+hash     = "4a620749a1b62fb229cd564e2ddafdd59e0302702c57ad7ac76ec5f56429f48b"
