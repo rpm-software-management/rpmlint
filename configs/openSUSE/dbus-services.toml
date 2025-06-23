@@ -1465,7 +1465,7 @@ digester = "shell"
 hash     = "ce9ed24db3c3654551bada756eb9aac5a58358364b41827b8154d0f73d6dc506"
 
 [[FileDigestGroup]]
-package  = "libgpiod"
+package  = "libgpiod-manager"
 note     = "GPIO character device management daemon"
 bug      = "bsc#1244702"
 type     = "dbus"
