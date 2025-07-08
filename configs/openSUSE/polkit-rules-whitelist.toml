@@ -209,6 +209,16 @@ digester = "default"
 hash     = "aa07dbae7abe641bcaec03c5b04da0695a4a49f2d01e486b4c5de61819ebcb70"
 
 [[FileDigestGroup]]
+package  = "sssd"
+note     = "This allows the sssd service user to invoke two realmd methods for realm refresh/discovery."
+bug      = "bsc#1245697"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/sssd-realmd.rules"
+digester = "default"
+hash     = "fb2bcf81da84890c74de32b1f4dd6d829058a43bbef9ae7862b92372efe4ddc0"
+
+[[FileDigestGroup]]
 package  = "gdm"
 note     = "allows the display manager to add WiFi connections via NetworkManager"
 bug      = "bsc#1239719"
