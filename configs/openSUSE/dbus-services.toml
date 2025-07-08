@@ -1414,6 +1414,16 @@ digester = "shell"
 hash     = "85e17072d140148cf4cb4186389f5dd6a24c56fbae76c5392504b9062560e0f6"
 
 [[FileDigestGroup]]
+package  = "supergfxctl"
+note     = "nvidia hybrid GPU settings daemon"
+bugs     = ["bsc#1232776", "bsc#1246107"]
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/etc/dbus-1/system.d/org.supergfxctl.Daemon.conf"
+digester = "xml"
+hash     = "d4a21d0d2669b1ea83af769529d9a1d35f661369b5dfedb929ad677cc65fce5f"
+
+[[FileDigestGroup]]
 package  = "kio-admin"
 note     = "privileged file operations helper for KDE (e.g. used in Dolphin)"
 bug      = "bsc#1229913"
