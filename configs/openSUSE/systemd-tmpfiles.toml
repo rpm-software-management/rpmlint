@@ -109,9 +109,10 @@ entries = [
 
 [[SystemdTmpfilesWhitelist]]
 package = "nix"
-bug = "bsc#1243206"
-note = "The Nix package manager maintains a UNIX domain socket in this non-standard location"
+bugs = ["bsc#1243206", "bsc#1246162"]
+note = "The Nix package manager maintains a UNIX domain socket and directory structure in this non-standard location"
 path = "/usr/lib/tmpfiles.d/nix-daemon.conf"
 entries = [
-    "d /nix/var/nix/daemon-socket 0755 root root - -"
+    "d /nix/var/nix/daemon-socket 0755 root root - -",
+    "d /nix/var/nix/builds        0755 root root 7d -"
 ]
