@@ -566,3 +566,12 @@ bug = "bsc#1215355"
 nodigests = [
     "glob:*/security/pam_himmelblau.so",
 ]
+
+[[FileDigestGroup]]
+package  = "libcgroup-pam"
+note     = "session PAM module that places the login process into a cgroup according to configuration"
+bug      = "bsc#1231381"
+type     = "pam"
+nodigests = [
+    "glob:*/security/pam_cgroup.so",
+]
