@@ -82,6 +82,7 @@ class Lint:
         if self.options['explain']:
             self.print_explanation(self.options['explain'], self.config)
             return retcode
+
         # if there are installed arguments just load them up as extra
         # items to the rpmfile option
         if self.options['installed']:
@@ -240,8 +241,10 @@ class Lint:
         print('')
 
     def validate_installed_packages(self, packages):
+        # Do not run post checks if there are also plain rpm/spec files to validate
+        run_post_checks = not bool(self.options['rpmfile'])
         for pkg in packages:
-            self.run_checks(pkg, pkg == packages[-1])
+            self.run_checks(pkg, run_post_checks and pkg == packages[-1])
             self.reset_checks()
 
     def validate_files(self, files):
