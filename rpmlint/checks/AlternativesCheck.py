@@ -22,7 +22,7 @@ class AlternativesCheck(AbstractCheck):
       Requires(post) and Requires(postun) must depend on update-alternatives
     """
     # Regex to match anything that can be in requires for update-alternatives
-    re_requirement = re.compile(r'^(/usr/sbin/|%{?_sbindir}?/)?update-alternatives$')
+    re_requirement = re.compile(r'^(/usr/s?bin/|%{?_s?bindir}?/)?update-alternatives$')
     re_install = re.compile(r'--install\s+(?P<link>\S+)\s+(?P<name>\S+)\s+(\S+)\s+(\S+)')
     re_slave = re.compile(r'--slave\s+(?P<link>\S+)\s+(\S+)\s+(\S+)')
     command = 'update-alternatives'
