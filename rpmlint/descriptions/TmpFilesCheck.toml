@@ -2,11 +2,6 @@ pre-with-tmpfile-creation="""
 %pre section contains %tmpfiles_create macro that should be in the
 %post section instead.
 """
-post-without-tmpfile-creation="""
-Please use the %tmpfiles_create macro in %post for each of your
-tmpfiles.d files if you expect this file or directory to be
-available after package installation (and before reboot).
-"""
 tmpfile-not-regular-file="""
 Files in tmpfiles.d need to be regular files.
 """
