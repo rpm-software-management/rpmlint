@@ -30,7 +30,6 @@ class TmpFilesCheck(AbstractCheck):
                 continue
 
             self._check_pre_tmpfile(fname, pkg)
-            self._check_post_tmpfile(fname, pkg)
             self._check_tmpfile_in_filelist(pkgfile, pkg)
 
     def _check_pre_tmpfile(self, fname, pkg):
@@ -48,22 +47,6 @@ class TmpFilesCheck(AbstractCheck):
 
         if pre and tmpfiles_regex.search(pre):
             self.output.add_info('W', pkg, 'pre-with-tmpfile-creation', fname)
-
-    def _check_post_tmpfile(self, fname, pkg):
-        """
-        Check if the %post section contains 'systemd-tmpfiles --create' call.
-
-        Print a warning if there is no such call in the %post section.
-        """
-        post = pkg[rpm.RPMTAG_POSTIN]
-
-        basename = Path(fname).name
-        tmpfiles_regex = re.compile(r'systemd-tmpfiles --create .*%s'
-                                    % re.escape(basename))
-
-        if post and tmpfiles_regex.search(post):
-            return
-        self.output.add_info('W', pkg, 'post-without-tmpfile-creation', fname)
 
     def _check_tmpfile_in_filelist(self, pkgfile, pkg):
         """
