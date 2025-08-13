@@ -392,10 +392,7 @@ def test_run_full_specs(capsys, packages, configs):
 @pytest.mark.no_cover
 def test_run_full_directory(capsys, packages):
     assert packages.is_dir()
-    file_list = []
-    for item in packages.iterdir():
-        if item.is_file():
-            file_list.append(item)
+    file_list = [item for item in packages.iterdir() if item.is_file()]
     number_of_pkgs = len(file_list)
     additional_options = {
         'rpmfile': [packages],
