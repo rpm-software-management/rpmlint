@@ -89,14 +89,13 @@ def compression_algorithm(fname):
     fname = str(fname)
     if gzip_regex.search(fname):
         return gzip
-    elif bz2_regex.search(fname):
+    if bz2_regex.search(fname):
         return bz2
-    elif xz_regex.search(fname):
+    if xz_regex.search(fname):
         return lzma
-    elif zst_regex.search(fname):
+    if zst_regex.search(fname):
         return zstd
-    else:
-        return None
+    return None
 
 
 def is_utf8(fname):
@@ -528,8 +527,7 @@ class AbstractPkg:
         match = regex.search(data)
         if match:
             return data.count('\n', 0, match.start()) + 1
-        else:
-            return None
+        return None
 
 
 class Pkg(AbstractPkg):
@@ -598,20 +596,19 @@ class Pkg(AbstractPkg):
             val = []
         if val == []:
             return None
-        else:
-            # Note that text tags we want to try decoding for real in TagsCheck
-            # such as summary, description and changelog are not here.
-            if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
-                       rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
-                       rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
-                       rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM,
-                       rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
-            or key in (x[0] for x in SCRIPT_TAGS) \
-            or key in (x[1] for x in SCRIPT_TAGS):
-                val = byte_to_string(val)
-                if key == rpm.RPMTAG_GROUP and val == 'Unspecified':
-                    val = None
-            return val
+        # Note that text tags we want to try decoding for real in TagsCheck
+        # such as summary, description and changelog are not here.
+        if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
+                   rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
+                   rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
+                   rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM,
+                   rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
+        or key in (x[0] for x in SCRIPT_TAGS) \
+        or key in (x[1] for x in SCRIPT_TAGS):
+            val = byte_to_string(val)
+            if key == rpm.RPMTAG_GROUP and val == 'Unspecified':
+                val = None
+        return val
 
     # return the name of the directory where the package is extracted
     def dir_name(self):
