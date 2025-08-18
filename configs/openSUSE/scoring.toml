@@ -101,3 +101,7 @@ zypperplugin-file-ghost = 10
 zypperplugin-file-unauthorized = 10
 # TODO: raise to 10,000 after we surveyed affected packages
 logrotate-user-writable-log-dir = 100
+
+# Set to 10000 once affected packages have been updated
+# for atomic update compatibility
+dir-or-file-outside-snapshot = 100
