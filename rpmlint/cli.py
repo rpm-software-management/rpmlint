@@ -99,7 +99,7 @@ def process_lint_args(argv):
     # make sure rpmlintrc exists
     if options.rpmlintrc and not options.rpmlintrc.exists():
         print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
-        exit(2)
+        sys.exit(2)
     # validate all the rpmlfile options to be either file or folder
     f_path = set()
     invalid_path = False
@@ -120,7 +120,7 @@ def process_lint_args(argv):
         f_path.update(p_path)
 
     if invalid_path:
-        exit(2)
+        sys.exit(2)
     # convert options to dict
     options_dict = vars(options)
     # use computed rpmfile
@@ -149,7 +149,7 @@ def _validate_conf_location(string):
     if not path.exists():
         print_warning(
             f"File or dir with user specified configuration '{string}' does not exist")
-        exit(2)
+        sys.exit(2)
 
     if path.is_dir():
         config_paths.extend(path.glob('*.toml'))
