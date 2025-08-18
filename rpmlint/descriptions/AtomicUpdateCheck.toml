@@ -1,0 +1,9 @@
+dir-or-file-outside-snapshot="""
+The package contains files outside the snapshot, e.g. outside /etc and /usr
+or inside /usr/local.
+"""
+ghost-outside-snapshot="""
+The package contains ghosts outside the snapshot, e.g. outside /etc and /usr
+or inside /usr/local. This might become an issue upon removal of this
+package, but not during installation.
+"""

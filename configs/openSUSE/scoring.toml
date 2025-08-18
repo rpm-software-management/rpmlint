@@ -98,3 +98,7 @@ missing-hash-section = 10000
 zypperplugin-file-digest-mismatch = 10
 zypperplugin-file-ghost = 10
 zypperplugin-file-unauthorized = 10
+
+# Set to 10000 once affected packages have been updated
+# for atomic update compatibility
+dir-or-file-outside-snapshot = 100
