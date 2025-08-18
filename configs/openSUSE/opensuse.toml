@@ -6,6 +6,10 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
 
+# Set to true to issue a warning for ghost entries outside snapshots
+# when checking for atomic update compatibility
+AtomicCheckGhosts = false
+
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
     "BashismsCheck",
@@ -13,11 +17,31 @@ Checks = [
     "TmpFilesCheck",
     "SysVInitOnSystemdCheck",
     "SharedLibraryPolicyCheck",
+    "AtomicUpdateCheck",
 ]
 
 # List of directory prefixes that are not allowed in packages
 DisallowedDirs = [
     "/etc/NetworkManager/dispatcher.d",
+]
+
+# Only these directories may be used by packages compatible with
+# atomic updates
+AtomicAllowedDirs = [
+    "/etc/",
+    "/usr/",
+    "/bin/",
+    "/lib/",
+    "/lib64/",
+    "/sbin/",
+    "/boot/",
+]
+
+# List of subdirectories which are disallowed for atomic updates
+# despite being within otherwise allowed directories
+AtomicDisallowedSubdirs = [
+    "/usr/local/",
+    "/boot/efi/",
 ]
 
 FilterErrorTitles = [
@@ -73,6 +97,7 @@ Filters = [
     '^filesystem\..*: dir-or-file-in-tmp',
     '^filesystem\..*: dir-or-file-in-mnt',
     '^filesystem\..*: dir-or-file-in-home',
+    '^filesystem\..*: dir-or-file-outside-snapshot',
     '^filesystem\..*: hidden-file-or-dir /root/.gnupg',
     '^filesystem\..*: hidden-file-or-dir /root/.gnupg',
     '^filesystem\..*: hidden-file-or-dir /etc/skel/.config',
