@@ -745,7 +745,6 @@ class Pkg(AbstractPkg):
 def get_installed_pkgs(name):
     """Get list of installed package objects by name."""
 
-    pkgs = []
     ts = rpm.TransactionSet()
     if re.search(r'[?*]|\[.+\]', name):
         mi = ts.dbMatch()
@@ -753,10 +752,7 @@ def get_installed_pkgs(name):
     else:
         mi = ts.dbMatch('name', name)
 
-    for hdr in mi:
-        pkgs.append(InstalledPkg(name, hdr))
-
-    return pkgs
+    return [InstalledPkg(name, hdr) for hdr in mi]
 
 
 # Class to provide an API to an installed package
