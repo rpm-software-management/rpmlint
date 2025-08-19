@@ -273,8 +273,7 @@ class Lint:
             print_warning(f'(none): E: fatal error while reading {pname}: {e}')
             if self.config.info:
                 raise e
-            else:
-                sys.exit(3)
+            sys.exit(3)
 
     def run_checks(self, pkg, is_last):
         spec_checks = isinstance(pkg, FakePkg)
