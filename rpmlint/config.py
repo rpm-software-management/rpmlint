@@ -121,10 +121,9 @@ class Config:
         """
         if config_file == self.config_defaults:
             return 0
-        elif not self._is_override_config(config_file):
+        if not self._is_override_config(config_file):
             return 1
-        else:
-            return 2
+        return 2
 
     def load_config(self, config=None):
         """
