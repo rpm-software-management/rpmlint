@@ -409,18 +409,18 @@ class AbstractPkg:
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
                     prereq=None):
-        names = header[nametag]
-        flags = header[flagstag]
         versions = header[versiontag]
 
         if versions:
-            for loop in range(len(versions)):
-                name = byte_to_string(names[loop])
-                evr = stringToVersion(byte_to_string(versions[loop]))
-                if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
+            names = header[nametag]
+            flags = header[flagstag]
+            for version, name_bytes, flag in zip(versions, names, flags):
+                name = byte_to_string(name_bytes)
+                evr = stringToVersion(byte_to_string(version))
+                if prereq is not None and flag & PREREQ_FLAG:
+                    prereq.append((name, flag & (~PREREQ_FLAG), evr))
                 else:
-                    xs.append(DepInfo(name, flags[loop], evr))
+                    xs.append(DepInfo(name, flag, evr))
         return xs, prereq
 
     def _gather_dep_info(self):
