@@ -771,15 +771,6 @@ digester = "shell"
 hash = "9bd3adcbd2c5466b58de3dc0c68f10fc0e1d115d1c3dbd379ad6ee502db6bde8"
 
 [[FileDigestGroup]]
-package = "rebootmgr"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1019644"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.opensuse.RebootMgr.conf",
-]
-
-[[FileDigestGroup]]
 package = "blueman"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
