@@ -297,14 +297,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_csync"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "glob:*/security/pam_csync.so",
-]
-
-[[FileDigestGroup]]
 package = "pam_chroot"
 type = "pam"
 note = "legacy: not audited"
