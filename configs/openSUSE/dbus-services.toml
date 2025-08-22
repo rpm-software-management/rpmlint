@@ -1323,19 +1323,23 @@ path = "/usr/share/dbus-1/system.d/org.selinux.conf"
 digester = "xml"
 hash = "0ec37dac1d4ff66ca0ff3aec940c28ad9468e70f7376571dcaf311c58ef66927"
 
-[[FileDigestGroup]]
-package = "passim"
-type = "dbus"
-note = "caching of public files in local networks"
-bug = "bsc#1216434"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.Passim.service"
-digester = "shell"
-hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
-digester = "xml"
-hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
+# Passim never reached Factory, the entry was sitting here for nearly two
+# years, unused. Keep it commented-out for now, should we need to reinstate it
+# at a later time.
+#
+#[[FileDigestGroup]]
+#package = "passim"
+#type = "dbus"
+#note = "caching of public files in local networks"
+#bug = "bsc#1216434"
+#[[FileDigestGroup.digests]]
+#path = "/usr/share/dbus-1/system-services/org.freedesktop.Passim.service"
+#digester = "shell"
+#hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
+#[[FileDigestGroup.digests]]
+#path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
+#digester = "xml"
+#hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
 
 [[FileDigestGroup]]
 package  = "drkonqi6"
