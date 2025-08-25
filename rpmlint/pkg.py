@@ -876,7 +876,7 @@ class FakePkg(AbstractPkg):
         """
 
         # files can be just a list
-        if isinstance(files, list) or isinstance(files, tuple):
+        if isinstance(files, (list, tuple)):
             for path in files:
                 self._mock_file(path, {})
         # list of files with attributes and content
