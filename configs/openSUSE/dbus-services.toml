@@ -771,15 +771,6 @@ digester = "shell"
 hash = "9bd3adcbd2c5466b58de3dc0c68f10fc0e1d115d1c3dbd379ad6ee502db6bde8"
 
 [[FileDigestGroup]]
-package = "rebootmgr"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1019644"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.opensuse.RebootMgr.conf",
-]
-
-[[FileDigestGroup]]
 package = "blueman"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
@@ -1186,34 +1177,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "deepin-api"
-type = "dbus"
-note = "compatibility entry for the time being until the rename from bsc#1211376 comes into effect"
-bugs = ["bsc#1070943", "bsc#1214101"]
-nodigests = [
-    "/usr/share/dbus-1/system-services/com.deepin.api.Device.service",
-    "/usr/share/dbus-1/system.d/com.deepin.api.Device.conf",
-    "/usr/share/dbus-1/system-services/com.deepin.api.LocaleHelper.service",
-    "/usr/share/dbus-1/system.d/com.deepin.api.LocaleHelper.conf",
-    "/usr/share/dbus-1/system-services/com.deepin.api.SoundThemePlayer.service",
-    "/usr/share/dbus-1/system.d/com.deepin.api.SoundThemePlayer.conf"
-]
-
-[[FileDigestGroup]]
-package = "deepin-system-monitor"
-type = "dbus"
-note = "a system monitor for the DDE"
-bugs = ["bsc#1230018"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.deepin.SystemMonitorSystemServer.conf"
-digester = "xml"
-hash = "910464704ef1645092e83911aa4d4650a14f4421a770594da42d2f4c3c4626e0"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.deepin.SystemMonitorSystemServer.service"
-digester = "shell"
-hash = "ff69b41130cbec4d2682f3c9ff31c8fc7f1a16271a8f5fbfff003030f116f85a"
-
-[[FileDigestGroup]]
 package = "low-memory-monitor"
 type = "dbus"
 note = "a system wide daemon monitoring low memory situations and sending out signals"
@@ -1360,19 +1323,23 @@ path = "/usr/share/dbus-1/system.d/org.selinux.conf"
 digester = "xml"
 hash = "0ec37dac1d4ff66ca0ff3aec940c28ad9468e70f7376571dcaf311c58ef66927"
 
-[[FileDigestGroup]]
-package = "passim"
-type = "dbus"
-note = "caching of public files in local networks"
-bug = "bsc#1216434"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.Passim.service"
-digester = "shell"
-hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
-digester = "xml"
-hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
+# Passim never reached Factory, the entry was sitting here for nearly two
+# years, unused. Keep it commented-out for now, should we need to reinstate it
+# at a later time.
+#
+#[[FileDigestGroup]]
+#package = "passim"
+#type = "dbus"
+#note = "caching of public files in local networks"
+#bug = "bsc#1216434"
+#[[FileDigestGroup.digests]]
+#path = "/usr/share/dbus-1/system-services/org.freedesktop.Passim.service"
+#digester = "shell"
+#hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
+#[[FileDigestGroup.digests]]
+#path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
+#digester = "xml"
+#hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
 
 [[FileDigestGroup]]
 package  = "drkonqi6"
