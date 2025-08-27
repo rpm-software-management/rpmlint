@@ -260,7 +260,7 @@ class Lint:
 
     def validate_file(self, pname, is_last):
         try:
-            if pname.suffix == '.rpm' or pname.suffix == '.spm':
+            if pname.suffix in ('.rpm', '.spm'):
                 with Pkg(pname, self.config.configuration['ExtractDir'],
                          verbose=self.config.info) as pkg:
                     for k, v in pkg.timers.items():
