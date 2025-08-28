@@ -180,8 +180,7 @@ def lint():
     # TODO: remove once OBS integration is done
     options = process_lint_args(sys.argv[1:] + ['--permissive'])
 
-    lint = Lint(options)
-    sys.exit(lint.run())
+    sys.exit(Lint(options).run())
 
 
 def diff():

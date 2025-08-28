@@ -385,26 +385,26 @@ class AbstractPkg:
         pass
 
     def _calc_magic(self, pkgfile):
-        magic = pkgfile.magic
-        if not magic:
+        magic_description = pkgfile.magic
+        if not magic_description:
             if stat.S_ISDIR(pkgfile.mode):
-                magic = 'directory'
+                magic_description = 'directory'
             elif stat.S_ISLNK(pkgfile.mode):
-                magic = "symbolic link to `%s'" % pkgfile.linkto
+                magic_description = "symbolic link to `%s'" % pkgfile.linkto
             elif not pkgfile.size:
-                magic = 'empty'
-        if not magic and not pkgfile.is_ghost and has_magic:
+                magic_description = 'empty'
+        if not magic_description and not pkgfile.is_ghost and has_magic:
             start = time.monotonic()
-            magic = get_magic(pkgfile.path)
+            magic_description = get_magic(pkgfile.path)
             self.timers['libmagic'] += time.monotonic() - start
-        if magic is None or Pkg._magic_from_compressed_re.search(magic):
+        if magic_description is None or Pkg._magic_from_compressed_re.search(magic_description):
             # Discard magic from inside compressed files ('file -z')
             # until PkgFile gets decompression support.  We may get
             # such magic strings from package headers already now;
             # for example Fedora's rpmbuild as of F-11's 4.7.1 is
             # patched so it generates them.
-            magic = ''
-        return magic
+            magic_description = ''
+        return magic_description
 
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
