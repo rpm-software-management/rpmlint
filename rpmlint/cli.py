@@ -172,8 +172,7 @@ def lint():
     """
     options = process_lint_args(sys.argv[1:])
 
-    lint = Lint(options)
-    sys.exit(lint.run())
+    sys.exit(Lint(options).run())
 
 
 def diff():
