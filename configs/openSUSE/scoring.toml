@@ -99,8 +99,7 @@ missing-hash-section = 10000
 zypperplugin-file-digest-mismatch = 10
 zypperplugin-file-ghost = 10
 zypperplugin-file-unauthorized = 10
-# TODO: raise to 10,000 after we surveyed affected packages
-logrotate-user-writable-log-dir = 100
+logrotate-user-writable-log-dir = 10000
 
 # Set to 10000 once affected packages have been updated
 # for atomic update compatibility
