@@ -153,7 +153,7 @@ def test_makefile_junk(package, filescheck):
 def test_sphinx_inv_files(package, filescheck):
     output, test = filescheck
     test.check(package)
-    assert not len(output.results)
+    assert not output.results
 
 
 @pytest.mark.parametrize('package', [FileChecksPackage])
