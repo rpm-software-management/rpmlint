@@ -257,9 +257,9 @@ def test_shlib(package, is_devel, filescheck):
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
     if is_devel:
-        assert ('non-devel-file-in-devel-package' in out)
+        assert 'non-devel-file-in-devel-package' in out
     else:
-        assert ('devel-file-in-non-devel-package' in out)
+        assert 'devel-file-in-non-devel-package' in out
 
 
 @pytest.mark.parametrize('package, files', [
