@@ -84,6 +84,17 @@ path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
 hash     = "127c6446350030991bd98c583eab96d7a5ff4b9301faa8e88bc7928c48dba0a8"
 
+# TODO: merge with entry above once GNOME 49 enters Factory
+[[FileDigestGroup]]
+package  = "gdm"
+note     = "GNOME 49 beta changes to entry above"
+bug      = "bsc#1248881"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/gdm.conf"
+digester = "xml"
+hash     = "cf4cb93af82aacc9b4a0fc600c602af5089e001df10282a35287b6f27199f7ea"
+
 [[FileDigestGroup]]
 package = "udisks2"
 type = "dbus"

@@ -107,6 +107,17 @@ bug = "bsc#1192542"
 path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
 hash = "e8d930c2f4ef56727ab4e64ebe21c98e3ab7aaf3a4079d15ddc6acf324a5a412"
 
+# TODO: merge the three GIS entries once GNOME49 enters Factory
+[[FileDigestGroup]]
+package  = "gnome-initial-setup"
+note     = "GNOME49 Beta changes"
+bug      = "bsc#1249067"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
+digester = "default"
+hash     = "6241e147d107fbc2f786b7149c26abb75185cf9db5d921401e310f78f4e8bced"
+
 [[FileDigestGroup]]
 package = "libvirt-dbus"
 type = "polkit"
@@ -198,6 +209,17 @@ path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
 digester = "default"
 hash     = "559f983aa50bbea8f4927fa96dc06a4e0f781617495339155b2bd4d077ec4607"
 
+# TODO: merge with entry above once GNOME 49 enters Factory
+[[FileDigestGroup]]
+package  = "gnome-remote-desktop"
+note     = "GNOME49 beta changes"
+bug      = "bsc#1248979"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
+digester = "default"
+hash     = "4cbe3c8b9fac5eb9d5eb7a32b7f0e57bdbcf460fde7bc1994d3746ad46a8a446"
+
 [[FileDigestGroup]]
 package  = "sssd"
 note     = "allows the unprivileged 'sssd' user to access smartcards via pcsc"
@@ -227,3 +249,14 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
 digester = "default"
 hash     = "c752f8f6c304404e256fbd3f4bbb04d0ec42408f311454268b667597cb1c8265"
+
+# TODO: merge with entry above once GNOME 49 enters Factory
+[[FileDigestGroup]]
+package  = "gdm"
+note     = "GNOME 49 beta changes to entry above"
+bug      = "bsc#1248881"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
+digester = "default"
+hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
