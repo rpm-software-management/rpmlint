@@ -89,14 +89,13 @@ def compression_algorithm(fname):
     fname = str(fname)
     if gzip_regex.search(fname):
         return gzip
-    elif bz2_regex.search(fname):
+    if bz2_regex.search(fname):
         return bz2
-    elif xz_regex.search(fname):
+    if xz_regex.search(fname):
         return lzma
-    elif zst_regex.search(fname):
+    if zst_regex.search(fname):
         return zstd
-    else:
-        return None
+    return None
 
 
 def is_utf8(fname):
@@ -386,42 +385,42 @@ class AbstractPkg:
         pass
 
     def _calc_magic(self, pkgfile):
-        magic = pkgfile.magic
-        if not magic:
+        magic_description = pkgfile.magic
+        if not magic_description:
             if stat.S_ISDIR(pkgfile.mode):
-                magic = 'directory'
+                magic_description = 'directory'
             elif stat.S_ISLNK(pkgfile.mode):
-                magic = "symbolic link to `%s'" % pkgfile.linkto
+                magic_description = "symbolic link to `%s'" % pkgfile.linkto
             elif not pkgfile.size:
-                magic = 'empty'
-        if not magic and not pkgfile.is_ghost and has_magic:
+                magic_description = 'empty'
+        if not magic_description and not pkgfile.is_ghost and has_magic:
             start = time.monotonic()
-            magic = get_magic(pkgfile.path)
+            magic_description = get_magic(pkgfile.path)
             self.timers['libmagic'] += time.monotonic() - start
-        if magic is None or Pkg._magic_from_compressed_re.search(magic):
+        if magic_description is None or Pkg._magic_from_compressed_re.search(magic_description):
             # Discard magic from inside compressed files ('file -z')
             # until PkgFile gets decompression support.  We may get
             # such magic strings from package headers already now;
             # for example Fedora's rpmbuild as of F-11's 4.7.1 is
             # patched so it generates them.
-            magic = ''
-        return magic
+            magic_description = ''
+        return magic_description
 
     # internal function to gather dependency info used by the above ones
     def _gather_aux(self, header, xs, nametag, flagstag, versiontag,
                     prereq=None):
-        names = header[nametag]
-        flags = header[flagstag]
         versions = header[versiontag]
 
         if versions:
-            for loop in range(len(versions)):
-                name = byte_to_string(names[loop])
-                evr = stringToVersion(byte_to_string(versions[loop]))
-                if prereq is not None and flags[loop] & PREREQ_FLAG:
-                    prereq.append((name, flags[loop] & (~PREREQ_FLAG), evr))
+            names = header[nametag]
+            flags = header[flagstag]
+            for version, name_bytes, flag in zip(versions, names, flags):
+                name = byte_to_string(name_bytes)
+                evr = stringToVersion(byte_to_string(version))
+                if prereq is not None and flag & PREREQ_FLAG:
+                    prereq.append((name, flag & (~PREREQ_FLAG), evr))
                 else:
-                    xs.append(DepInfo(name, flags[loop], evr))
+                    xs.append(DepInfo(name, flag, evr))
         return xs, prereq
 
     def _gather_dep_info(self):
@@ -519,8 +518,7 @@ class AbstractPkg:
         match = regex.search(data)
         if match:
             return data.count('\n', 0, match.start()) + 1
-        else:
-            return None
+        return None
 
 
 class Pkg(AbstractPkg):
@@ -589,20 +587,19 @@ class Pkg(AbstractPkg):
             val = []
         if val == []:
             return None
-        else:
-            # Note that text tags we want to try decoding for real in TagsCheck
-            # such as summary, description and changelog are not here.
-            if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
-                       rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
-                       rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
-                       rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM,
-                       rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
-            or key in (x[0] for x in SCRIPT_TAGS) \
-            or key in (x[1] for x in SCRIPT_TAGS):
-                val = byte_to_string(val)
-                if key == rpm.RPMTAG_GROUP and val == 'Unspecified':
-                    val = None
-            return val
+        # Note that text tags we want to try decoding for real in TagsCheck
+        # such as summary, description and changelog are not here.
+        if key in (rpm.RPMTAG_NAME, rpm.RPMTAG_VERSION, rpm.RPMTAG_RELEASE,
+                   rpm.RPMTAG_ARCH, rpm.RPMTAG_GROUP, rpm.RPMTAG_BUILDHOST,
+                   rpm.RPMTAG_LICENSE, rpm.RPMTAG_HEADERI18NTABLE,
+                   rpm.RPMTAG_PACKAGER, rpm.RPMTAG_SOURCERPM,
+                   rpm.RPMTAG_DISTRIBUTION, rpm.RPMTAG_VENDOR) \
+        or key in (x[0] for x in SCRIPT_TAGS) \
+        or key in (x[1] for x in SCRIPT_TAGS):
+            val = byte_to_string(val)
+            if key == rpm.RPMTAG_GROUP and val == 'Unspecified':
+                val = None
+        return val
 
     # return the name of the directory where the package is extracted
     def dir_name(self):
@@ -747,7 +744,6 @@ class Pkg(AbstractPkg):
 def get_installed_pkgs(name):
     """Get list of installed package objects by name."""
 
-    pkgs = []
     ts = rpm.TransactionSet()
     if re.search(r'[?*]|\[.+\]', name):
         mi = ts.dbMatch()
@@ -755,10 +751,7 @@ def get_installed_pkgs(name):
     else:
         mi = ts.dbMatch('name', name)
 
-    for hdr in mi:
-        pkgs.append(InstalledPkg(name, hdr))
-
-    return pkgs
+    return [InstalledPkg(name, hdr) for hdr in mi]
 
 
 # Class to provide an API to an installed package
@@ -885,7 +878,7 @@ class FakePkg(AbstractPkg):
         """
 
         # files can be just a list
-        if isinstance(files, list) or isinstance(files, tuple):
+        if isinstance(files, (list, tuple)):
             for path in files:
                 self._mock_file(path, {})
         # list of files with attributes and content

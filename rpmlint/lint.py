@@ -82,6 +82,7 @@ class Lint:
         if self.options['explain']:
             self.print_explanation(self.options['explain'], self.config)
             return retcode
+
         # if there are installed arguments just load them up as extra
         # items to the rpmfile option
         if self.options['installed']:
@@ -240,8 +241,10 @@ class Lint:
         print('')
 
     def validate_installed_packages(self, packages):
+        # Do not run post checks if there are also plain rpm/spec files to validate
+        run_post_checks = not bool(self.options['rpmfile'])
         for pkg in packages:
-            self.run_checks(pkg, pkg == packages[-1])
+            self.run_checks(pkg, run_post_checks and pkg == packages[-1])
             self.reset_checks()
 
     def validate_files(self, files):
@@ -275,7 +278,7 @@ class Lint:
 
     def validate_file(self, pname, is_last):
         try:
-            if pname.suffix == '.rpm' or pname.suffix == '.spm':
+            if pname.suffix in ('.rpm', '.spm'):
                 with Pkg(pname, self.config.configuration['ExtractDir'],
                          verbose=self.config.info) as pkg:
                     for k, v in pkg.timers.items():
@@ -288,8 +291,7 @@ class Lint:
             print_warning(f'(none): E: fatal error while reading {pname}: {e}')
             if self.config.info:
                 raise e
-            else:
-                sys.exit(3)
+            sys.exit(3)
 
     def run_checks(self, pkg, is_last):
         spec_checks = isinstance(pkg, FakePkg)
