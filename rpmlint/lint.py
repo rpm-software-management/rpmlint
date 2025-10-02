@@ -200,6 +200,7 @@ class Lint:
         Load rpmlintrc from argument or load up from folder
         """
         if not self.options['rpmlintrc']:
+            self.options['rpmlintrc'] = []
             # Skip auto-loading when running under PYTEST
             if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
                 # first load SUSE-specific locations
@@ -217,8 +218,10 @@ class Lint:
         if len(self.options['rpmlintrc']) > 1:
             # multiple rpmlintrcs are highly undesirable
             print_warning('There are multiple items to be loaded: {}.'.format(' '.join(map(str, self.options['rpmlintrc']))))
-        for rcfile in self.options['rpmlintrc']:
-            self.config.load_rpmlintrc(rcfile)
+
+        if self.options['rpmlintrc']:
+            for rcfile in self.options['rpmlintrc']:
+                self.config.load_rpmlintrc(rcfile)
 
     def _print_header(self):
         """
