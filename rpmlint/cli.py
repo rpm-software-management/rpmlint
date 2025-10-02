@@ -100,7 +100,7 @@ def process_lint_args(argv):
     if options.rpmlintrc and not options.rpmlintrc.exists():
         print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
         sys.exit(2)
-    # validate all the rpmlfile options to be either file or folder
+    # validate all the rpmfile options to be either file or folder
     f_path = set()
     invalid_path = False
     for item in options.rpmfile:
