@@ -78,18 +78,7 @@ hash     = "6c74cd8824a587ccd281886c655718dfecd1da530bb823e6625be4a22c5a09e6"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466"]
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/gdm.conf"
-digester = "xml"
-hash     = "127c6446350030991bd98c583eab96d7a5ff4b9301faa8e88bc7928c48dba0a8"
-
-# TODO: merge with entry above once GNOME 49 enters Factory
-[[FileDigestGroup]]
-package  = "gdm"
-note     = "GNOME 49 beta changes to entry above"
-bug      = "bsc#1248881"
-type     = "dbus"
+bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
