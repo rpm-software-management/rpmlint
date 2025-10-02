@@ -106,7 +106,7 @@ def process_lint_args(argv):
         options.rpmlintrc = [options.rpmlintrc]
     else:
         options.rpmlintrc = []
-    # validate all the rpmlfile options to be either file or folder
+    # validate all the rpmfile options to be either file or folder
     f_path = set()
     invalid_path = False
     for item in options.rpmfile:
