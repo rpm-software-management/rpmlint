@@ -227,3 +227,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
 digester = "default"
 hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "This is just an example file that will not be active by default"
+bug      = "bsc#1250844"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/10-systemd-logind-root-ignore-inhibitors.rules.example"
+digester = "default"
+hash     = "0dcb4cdb6a4b43f23c4dc798e729ab605c3c0c470fe1c90f2db6351e4ae47418"
