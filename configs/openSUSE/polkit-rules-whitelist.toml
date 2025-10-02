@@ -102,21 +102,10 @@ hash = "6daefe0a835dc1b34513302f393e98089c137602823f41fd0c3dd984c40902d8"
 package = "gnome-initial-setup"
 type = "polkit"
 note = "Follow-up whitelisting, upstream added org.fedoraproject.thirdparty.* to the rules"
-bug = "bsc#1192542"
+bugs  = ["bsc#1192542", "bsc#1249067"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
-hash = "e8d930c2f4ef56727ab4e64ebe21c98e3ab7aaf3a4079d15ddc6acf324a5a412"
-
-# TODO: merge the three GIS entries once GNOME49 enters Factory
-[[FileDigestGroup]]
-package  = "gnome-initial-setup"
-note     = "GNOME49 Beta changes"
-bug      = "bsc#1249067"
-type     = "polkit"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
-digester = "default"
-hash     = "6241e147d107fbc2f786b7149c26abb75185cf9db5d921401e310f78f4e8bced"
+hash = "6241e147d107fbc2f786b7149c26abb75185cf9db5d921401e310f78f4e8bced"
 
 [[FileDigestGroup]]
 package = "libvirt-dbus"
@@ -202,18 +191,7 @@ hash = "9e12a279a21d11c92a41ccd818edcb9b7c89a162984a6e1ca5609b9bbcbbf989"
 [[FileDigestGroup]]
 package  = "gnome-remote-desktop"
 note     = "allows the g-r-d system user to enable/disable itself"
-bug      = "bsc#1222159"
-type     = "polkit"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
-digester = "default"
-hash     = "559f983aa50bbea8f4927fa96dc06a4e0f781617495339155b2bd4d077ec4607"
-
-# TODO: merge with entry above once GNOME 49 enters Factory
-[[FileDigestGroup]]
-package  = "gnome-remote-desktop"
-note     = "GNOME49 beta changes"
-bug      = "bsc#1248979"
+bugs     = ["bsc#1222159", "bsc#1248979"]
 type     = "polkit"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
@@ -243,20 +221,19 @@ hash     = "fb2bcf81da84890c74de32b1f4dd6d829058a43bbef9ae7862b92372efe4ddc0"
 [[FileDigestGroup]]
 package  = "gdm"
 note     = "allows the display manager to add WiFi connections via NetworkManager"
-bug      = "bsc#1239719"
-type     = "polkit"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
-digester = "default"
-hash     = "c752f8f6c304404e256fbd3f4bbb04d0ec42408f311454268b667597cb1c8265"
-
-# TODO: merge with entry above once GNOME 49 enters Factory
-[[FileDigestGroup]]
-package  = "gdm"
-note     = "GNOME 49 beta changes to entry above"
-bug      = "bsc#1248881"
+bugs     = ["bsc#1239719","bsc#1248881"]
 type     = "polkit"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
 digester = "default"
 hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "This is just an example file that will not be active by default"
+bug      = "bsc#1250844"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/10-systemd-logind-root-ignore-inhibitors.rules.example"
+digester = "default"
+hash     = "0dcb4cdb6a4b43f23c4dc798e729ab605c3c0c470fe1c90f2db6351e4ae47418"
