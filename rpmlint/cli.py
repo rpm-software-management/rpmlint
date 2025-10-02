@@ -75,7 +75,7 @@ def process_lint_args(argv):
     parser.add_argument('-V', '--version', action='version', version=__version__, help='show package version and exit')
     parser.add_argument('-c', '--config', type=_validate_conf_location, help='load up additional configuration data from specified path (file or directory with *.toml files)')
     parser.add_argument('-e', '--explain', nargs='+', default='', help='provide detailed explanation for one specific message id')
-    parser.add_argument('-r', '--rpmlintrc', '--file', type=_is_file_path, help='load up specified rpmlintrc file')
+    parser.add_argument('-r', '--rpmlintrc', '--file', action='append', type=_is_file_path, help='load up specified rpmlintrc file (may be repeated)')
     parser.add_argument('-v', '--verbose', '--info', action='store_true', help='provide detailed explanations where available')
     parser.add_argument('-p', '--print-config', action='store_true', help='print the settings that are in effect when using the rpmlint')
     parser.add_argument('-i', '--installed', nargs='+', default='', help='installed packages to be validated by rpmlint')
@@ -97,8 +97,10 @@ def process_lint_args(argv):
     options = parser.parse_args(args=argv)
 
     # make sure rpmlintrc exists
-    if options.rpmlintrc and not options.rpmlintrc.exists():
-        print_warning(f"User specified rpmlintrc '{options.rpmlintrc}' does not exist")
+    if options.rpmlintrc and not all([rpmlintrc.exists()
+                                      for rpmlintrc
+                                      in options.rpmlintrc]):
+        print_warning(f"Not all user specified rpmlintrc '{options.rpmlintrc}' exist")
         sys.exit(2)
     # validate all the rpmfile options to be either file or folder
     f_path = set()
