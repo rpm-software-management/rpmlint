@@ -1,3 +1,4 @@
+import stat
 from mockdata.mock_pkgconfig import LibReiserFSCoreDevelPackage
 import pytest
 from rpmlint.checks.BinariesCheck import BinariesCheck
@@ -281,6 +282,26 @@ def test_shared_library2(tmp_path, package, binariescheck):
     assert 'E: invalid-ldconfig-symlink' not in out
     # the soname is set
     assert 'W: no-soname' not in out
+
+
+# shlib-policy-name-error test package
+@pytest.mark.parametrize('package', [
+    get_tested_mock_package(
+        name='libClipper2_1',
+        lazyload=True,
+        files={
+            '/usr/lib64/libClipper2.so.1.5.4': {'content-path': 'files/libClipper2.so.1.5.4', 'create_dirs': True, 'metadata': {'mode': 0o755 | stat.S_IFREG}},
+            '/usr/lib64/libClipper2.so.1': {'linkto': 'libClipper2.so.1.5.4'},
+        },
+        header={'requires': []},
+    ),
+])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
+def test_shared_library3(package, binariescheck):
+    output, test = binariescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'E: shlib-policy-name-error' in out
 
 
 # invalid-ldconfig-symlink test package
