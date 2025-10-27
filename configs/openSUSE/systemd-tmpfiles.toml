@@ -116,3 +116,12 @@ entries = [
     "d /nix/var/nix/daemon-socket 0755 root root - -",
     "d /nix/var/nix/builds        0755 root root 7d -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "samba-client"
+bugs = ["bsc#1251267"]
+note = "Used as Samba printer spool. A non-default location to help dealing with SELinux."
+path = "/usr/lib/tmpfiles.d/samba.conf"
+entries = [
+    "d /var/samba/spool 1777 root root"
+]
