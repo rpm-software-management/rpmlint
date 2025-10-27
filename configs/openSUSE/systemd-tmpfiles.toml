@@ -208,3 +208,12 @@ path = "/usr/lib/tmpfiles.d/postfix.conf"
 entries = [
     "d /var/spool/mail 1777 root root - -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "samba-client"
+bugs = ["bsc#1251267"]
+note = "Used as Samba printer spool. A non-default location to help dealing with SELinux."
+path = "/usr/lib/tmpfiles.d/samba.conf"
+entries = [
+    "d /var/samba/spool 1777 root root"
+]
