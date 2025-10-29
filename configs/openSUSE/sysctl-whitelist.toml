@@ -185,3 +185,13 @@ bug = "bsc#1230555"
 path = "/usr/lib/sysctl.d/90-traefik.conf"
 digester = "shell"
 hash = "fa6168516d46bc00f6d0cccc4470fa0e2beea74396490d3466b1640f8e312bd2"
+
+[[FileDigestGroup]]
+package  = "health-checker"
+note     = "helper which checks system health after updates with potential rollback; sets kernel reboot timeout after panic"
+bug      = "bsc#1252778"
+type     = "sysctl"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/sysctl.d/health-checker.conf"
+digester = "shell"
+hash     = "40838811f1f8ec4f4b19ce8f049f63ab616f92a1d0a8190e29d0bbf6fe43e66a"
