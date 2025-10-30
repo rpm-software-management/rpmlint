@@ -66,7 +66,7 @@ bugs = ["bsc#1174722", "bsc#1219656", "bsc#1226464", "bsc#1228731"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-default.conf"
 digester = "shell"
-hash = "83d76eec651d08ddf758989962ad62084885440d83b4ea0355bc838e7cf6eecc"
+hash = "c440fe069ee0bdfa77e5c3c594b473aa379788717e1ac55bb4cc5dc74812dc0e"
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-pid-max.conf"
 digester = "shell"
