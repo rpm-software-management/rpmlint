@@ -100,3 +100,7 @@ zypperplugin-file-ghost = 10
 zypperplugin-file-unauthorized = 10
 patch-macro-old-format = 10000
 logrotate-user-writable-log-dir = 10000
+
+# Set to 10000 once affected packages have been updated
+# for atomic update compatibility
+dir-or-file-outside-snapshot = 100
