@@ -76,6 +76,27 @@ path = "/usr/lib/sysctl.d/51-network.conf"
 digester = "shell"
 hash = "4292c83e211bc30c928712a25708edf1cbeb94cf39d4d17b6594ad5559eef2e0"
 
+# Support the old aaa_base sysctl whitelisting until the changes in
+# SR#1314569 can be merged without breaking other packages in Factory.
+# TODO: drop this and keep the previous FileDigestGroup
+[[FileDigestGroup]]
+package = "aaa_base"
+type = "sysctl"
+note = "some base hardenings of networking, (sym)link protection etc."
+bugs = ["bsc#1174722", "bsc#1219656", "bsc#1226464", "bsc#1228731"]
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/50-default.conf"
+digester = "shell"
+hash = "83d76eec651d08ddf758989962ad62084885440d83b4ea0355bc838e7cf6eecc"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/50-pid-max.conf"
+digester = "shell"
+hash = "dd590458104d1bc68b9233e018575925d3c14e667217cfb69a410cbdf4cde9a7"
+[[FileDigestGroup.digests]]
+path = "/usr/lib/sysctl.d/51-network.conf"
+digester = "shell"
+hash = "4292c83e211bc30c928712a25708edf1cbeb94cf39d4d17b6594ad5559eef2e0"
+
 [[FileDigestGroup]]
 package  = "aaa_base-yama-enable-ptrace"
 note     = "sub-package to opt-out of the YAMA ptrace restrictions"
