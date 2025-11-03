@@ -104,4 +104,4 @@ logrotate-user-writable-log-dir = 100
 
 # Set to 10000 once affected packages have been updated
 # for atomic update compatibility
-dir-or-file-outside-snapshot = 100
+dir-or-file-outside-snapshot = 0
