@@ -229,7 +229,7 @@ digester = "default"
 hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
 
 [[FileDigestGroup]]
-package  = "systemd"
+packages  = ["systemd", "systemd-mini"]
 note     = "This is just an example file that will not be active by default"
 bug      = "bsc#1250844"
 type     = "polkit"
