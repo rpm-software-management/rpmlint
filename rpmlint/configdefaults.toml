@@ -20,6 +20,7 @@ Checks = [
     "MixedOwnershipCheck",
     "PkgConfigCheck",
     "PostCheck",
+    "ProductCheck",
     "PythonCheck",
     "SignatureCheck",
     "SourceCheck",
