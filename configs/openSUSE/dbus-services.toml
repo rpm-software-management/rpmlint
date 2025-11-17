@@ -1455,3 +1455,17 @@ type     = "dbus"
 path     = "/etc/dbus-1/system.d/io.gpiod1.conf"
 digester = "xml"
 hash     = "4a620749a1b62fb229cd564e2ddafdd59e0302702c57ad7ac76ec5f56429f48b"
+
+[[FileDigestGroup]]
+package  = "lightdm-kde-greeter"
+note     = "Kauth based helper to change greeter theme settings"
+bug      = "bsc#1249146"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmlightdm.conf"
+digester = "xml"
+hash     = "52b1225776a47ee94309f6a65ed093bf64f881cc7ee4030db4f94b6a6a2140e1"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmlightdm.service"
+digester = "shell"
+hash     = "46b2c1eb03b24c073f228f4c6ebc1c7a71e899a3a131dfc415a91b330f2809b9"
