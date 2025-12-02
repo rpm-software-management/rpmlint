@@ -100,3 +100,13 @@ hash     = "b9235a656a3bd124f18113976f491f3018d45de68d93da830b4b19bbdd8a2dcb"
 path     = "/etc/permissions.d/snapd.paranoid"
 digester = "shell"
 hash     = "3d57053a143f2828783d2c835ddfb0af85db16cfde1a088fe2db8a161d5b053c"
+
+[[FileDigestGroup]]
+package  = "account-utils"
+note     = "Disables setuid bits for shadow utilities, which are replaced by this package. In the long run there should be a drop-in file for shadow instead."
+bug      = "bsc#1254218"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/account-utils"
+digester = "shell"
+hash     = "3d993065d4bf90ae94a32959c391a656ad3a1125faeecfeacaec866c6bf046af"
