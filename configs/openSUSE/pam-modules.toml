@@ -567,3 +567,13 @@ type     = "pam"
 nodigests = [
     "glob:*/security/pam_cgroup.so",
 ]
+
+[[FileDigestGroup]]
+package  = "account-utils"
+note     = "pam_unix replacement for use in environments with `no_new_privs` everywhere"
+bug      = "bsc#1254218"
+type     = "pam"
+nodigests = [
+    "global:*/security/pam_debuginfo.so",
+    "global:*/security/pam_unix_ng.so"
+]
