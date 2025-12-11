@@ -1469,3 +1469,17 @@ hash     = "52b1225776a47ee94309f6a65ed093bf64f881cc7ee4030db4f94b6a6a2140e1"
 path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmlightdm.service"
 digester = "shell"
 hash     = "46b2c1eb03b24c073f228f4c6ebc1c7a71e899a3a131dfc415a91b330f2809b9"
+
+[[FileDigestGroup]]
+package  = "smb4k"
+note     = "helper for unprivileged mountingof Samba/CIFS network shares"
+bug      = "bsc#1249004"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.smb4k.mounthelper.service"
+digester = "shell"
+hash     = "91b532cb7675218944e9f77705c7bcaaec73ea11fa6e770e0a39dfaab350832b"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.smb4k.mounthelper.conf"
+digester = "xml"
+hash     = "c67705447819baeede72d3f1efd4f1df22f86b5916af1cdf64e542630821539e"
