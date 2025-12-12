@@ -110,3 +110,17 @@ type     = "permissions"
 path     = "/usr/share/permissions/permissions.d/account-utils"
 digester = "shell"
 hash     = "3d993065d4bf90ae94a32959c391a656ad3a1125faeecfeacaec866c6bf046af"
+
+[[FileDigestGroup]]
+package  = "shadow-pw-mgmt"
+note     = "account management utilities setuid-root bits and capabilities"
+bug      = "bsc#1254844"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/shadow"
+digester = "shell"
+hash     = "b2842a4ea14b23d188b32e786f5e2d304270eeb9df2de81d3be47d56d12b5427"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/shadow.paranoid"
+digester = "shell"
+hash     = "376852944deadff2ed60413d61806f9fc791d33b0913bb301ecc4b43de70338c"
