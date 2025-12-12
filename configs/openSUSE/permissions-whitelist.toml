@@ -77,3 +77,17 @@ type     = "permissions"
 path     = "/etc/permissions.d/exim"
 digester = "shell"
 hash     = "bcc22a994f7bbb3aea193ab77ef49a57bf171bafce9f55e4bc1b02e16e7e308f"
+
+[[FileDigestGroup]]
+package  = "shadow-pw-mgmt"
+note     = "account management utilities setuid-root bits and capabilities"
+bug      = "bsc#1254844"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/shadow"
+digester = "shell"
+hash     = "b2842a4ea14b23d188b32e786f5e2d304270eeb9df2de81d3be47d56d12b5427"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/permissions/permissions.d/shadow.paranoid"
+digester = "shell"
+hash     = "376852944deadff2ed60413d61806f9fc791d33b0913bb301ecc4b43de70338c"
