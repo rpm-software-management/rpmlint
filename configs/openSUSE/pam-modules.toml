@@ -574,6 +574,6 @@ note     = "pam_unix replacement for use in environments with `no_new_privs` eve
 bug      = "bsc#1254218"
 type     = "pam"
 nodigests = [
-    "global:*/security/pam_debuginfo.so",
-    "global:*/security/pam_unix_ng.so"
+    "glob:*/security/pam_debuginfo.so",
+    "glob:*/security/pam_unix_ng.so"
 ]
