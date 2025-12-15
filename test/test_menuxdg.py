@@ -1,7 +1,7 @@
 from mockdata.mock_menuxdg import (
     MenuXDGBadBinPackage,
-    MenuXDGBadDupPackage,
     MenuXDGBadDup2Package,
+    MenuXDGBadDupPackage,
     MenuXDGBadSecPackage,
     MenuXDGBadUTF8Package,
     MenuXDGInvalidPackage,
