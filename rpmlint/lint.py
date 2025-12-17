@@ -215,9 +215,9 @@ class Lint:
                     pkg = pkg.parent
                 self.options['rpmlintrc'] += self._find_rpmlintrc_files(pkg)
 
-        if len(self.options['rpmlintrc']) > 1:
-            # multiple rpmlintrcs are highly undesirable
-            print_warning('There are multiple items to be loaded: {}.'.format(' '.join(map(str, self.options['rpmlintrc']))))
+            if len(self.options['rpmlintrc']) > 1:
+                # multiple rpmlintrcs are highly undesirable
+                print_warning('There are multiple items to be loaded: {}.'.format(' '.join(map(str, self.options['rpmlintrc']))))
 
         if self.options['rpmlintrc']:
             for rcfile in self.options['rpmlintrc']:
