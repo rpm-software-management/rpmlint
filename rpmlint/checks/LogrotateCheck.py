@@ -15,7 +15,7 @@ class LogrotateCheck(AbstractCheck):
             if f in pkg.ghost_files:
                 continue
 
-            if f.startswith('/etc/logrotate.d/'):
+            if f.startswith('/etc/logrotate.d/') or f.startswith('/usr/etc/logrotate.d/'):
                 try:
                     for n, o in self.parselogrotateconf(pkg.dir_name(), f).items():
                         if n in dirs and dirs[n] != o:

@@ -1,11 +1,12 @@
 from pathlib import PosixPath
+from unittest.mock import Mock
 
 import pytest
 from rpmlint.cli import process_lint_args
 from rpmlint.config import Config
 from rpmlint.lint import Lint
 
-from Testing import HAS_CHECKBASHISMS, HAS_DASH
+from Testing import HAS_CHECKBASHISMS, HAS_DASH, HAS_RPMDB
 
 
 @pytest.mark.parametrize('test_arguments', [['-c', 'rpmlint/configs/thisdoesntexist.toml']])
@@ -91,3 +92,18 @@ def test_reset_check():
     lint.run()
     out = lint.output.print_results(lint.output.results, lint.config)
     assert 'more-than-one-%changelog-section' not in out
+
+
+@pytest.mark.skipif(not HAS_RPMDB, reason='No RPM database present')
+@pytest.mark.parametrize('args', [
+    ['test/spec/SpecCheck2.spec', 'test/spec/SpecCheck3.spec'],
+    ['-i', 'rpm', 'glibc'],
+    ['test/spec/SpecCheck2.spec', '-i', 'rpm'],
+    ['test/spec/SpecCheck2.spec', 'test/spec/SpecCheck3.spec', '-i', 'rpm', 'glibc'],
+])
+def test_validate_filters(args):
+    options = process_lint_args(args)
+    lint = Lint(options)
+    lint.output.validate_filters = Mock(wraps=lint.output.validate_filters)
+    lint.run()
+    lint.output.validate_filters.assert_called_once()

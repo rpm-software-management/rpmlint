@@ -22,7 +22,7 @@ class AlternativesCheck(AbstractCheck):
       Requires(post) and Requires(postun) must depend on update-alternatives
     """
     # Regex to match anything that can be in requires for update-alternatives
-    re_requirement = re.compile(r'^(/usr/sbin/|%{?_sbindir}?/)?update-alternatives$')
+    re_requirement = re.compile(r'^(/usr/s?bin/|%{?_s?bindir}?/)?update-alternatives$')
     re_install = re.compile(r'--install\s+(?P<link>\S+)\s+(?P<name>\S+)\s+(\S+)\s+(\S+)')
     re_slave = re.compile(r'--slave\s+(?P<link>\S+)\s+(\S+)\s+(\S+)')
     command = 'update-alternatives'
@@ -220,52 +220,56 @@ class AlternativesCheck(AbstractCheck):
         Checking content of all /usr/share/libalternatives/*/*.conf files
         """
         for f, pkgfile in pkg.files.items():
-            if re.search('^/usr/share/libalternatives/.*conf$', f):
-                filename = Path(pkg.dirname + f)
-                if not filename.exists():
-                    if pkgfile.is_ghost:
-                        self.output.add_info('I', pkg, 'libalternatives-conf-not-found', f)
-                    else:
-                        self.output.add_info('E', pkg, 'libalternatives-conf-not-found', f)
-                    continue
-                bin_found = False
-                man_found = False
-                with open(filename) as read_obj:
-                    # Read all lines in the file one by one. E.g:
-                    #
-                    # binary=/usr/bin/jupyter-3.8
-                    # man=jupyter-3.8.1
-                    # group=jupyter, jupyter-migrate, jupyter-troubleshoot
-                    #
-                    for line_nr, line in enumerate(read_obj):
-                        line_array = [x.strip() for x in line.split('=')]
-                        line_nr_str = f'Line: {line_nr}'
-                        if len(line_array) != 2:   # empty values are valid
-                            self.output.add_info('E', pkg, 'wrong-entry-format', f, line_nr_str)
+            if not re.search(r'^/usr/share/libalternatives/[^/]+/.*\.conf$', f):
+                continue
 
-                        key, value = line_array
-                        if key == 'binary':
-                            if bin_found:
-                                self.output.add_info('E', pkg, 'multiple-entries', f, line_nr_str)
-                                continue
+            filename = Path(pkg.dirname + f)
+            if not filename.exists():
+                if pkgfile.is_ghost:
+                    self.output.add_info('I', pkg, 'libalternatives-conf-not-found', f)
+                else:
+                    self.output.add_info('E', pkg, 'libalternatives-conf-not-found', f)
+                continue
+
+            bin_found = False
+            man_found = False
+            with open(filename) as read_obj:
+                # Read all lines in the file one by one. E.g:
+                #
+                # binary=/usr/bin/jupyter-3.8
+                # man=jupyter-3.8.1
+                # group=jupyter, jupyter-migrate, jupyter-troubleshoot
+                #
+                for line_nr, line in enumerate(read_obj):
+                    line_array = [x.strip() for x in line.split('=')]
+                    line_nr_str = f'Line: {line_nr}'
+                    if len(line_array) != 2:   # empty values are valid
+                        self.output.add_info('E', pkg, 'wrong-entry-format', f, line_nr_str)
+                        continue
+
+                    key, value = line_array
+                    if key == 'binary':
+                        if bin_found:
+                            self.output.add_info('E', pkg, 'multiple-entries', f, line_nr_str)
+                            continue
+                        for path in pkg.files:
+                            if 'bin/' in path and path.endswith(value):
+                                bin_found = True
+                        if not bin_found:
+                            self.output.add_info('W', pkg, 'binary-entry-value-not-found', f, line_nr_str)
+                    elif key == 'man':
+                        if man_found:
+                            self.output.add_info('E', pkg, 'double-entries', f, line_nr_str)
+                            continue
+                        mans = value.split(',')
+                        for man in mans:
+                            man_found = False
                             for path in pkg.files:
-                                if 'bin/' in path and path.endswith(value):
-                                    bin_found = True
-                            if not bin_found:
-                                self.output.add_info('W', pkg, 'binary-entry-value-not-found', f, line_nr_str)
-                        elif key == 'man':
-                            if man_found:
-                                self.output.add_info('E', pkg, 'double-entries', f, line_nr_str)
-                                continue
-                            mans = value.split(',')
-                            for man in mans:
-                                man_found = False
-                                for path in pkg.files:
-                                    if path.startswith('/usr/share/man/') and man.strip() in path:
-                                        man_found = True
-                                if not man_found:
-                                    self.output.add_info('W', pkg, 'man-entry-value-not-found', f, line_nr_str)
-                        elif key != 'group' and key != 'options':
-                            self.output.add_info('W', pkg, 'wrong-tag-found', f, line_nr_str)
-                    if not bin_found:
-                        self.output.add_info('W', pkg, 'wrong-or-missed-binary-entry', f)
+                                if path.startswith('/usr/share/man/') and man.strip() in path:
+                                    man_found = True
+                            if not man_found:
+                                self.output.add_info('W', pkg, 'man-entry-value-not-found', f, line_nr_str)
+                    elif key != 'group' and key != 'options':
+                        self.output.add_info('W', pkg, 'wrong-tag-found', f, line_nr_str)
+                if not bin_found:
+                    self.output.add_info('W', pkg, 'wrong-or-missed-binary-entry', f)

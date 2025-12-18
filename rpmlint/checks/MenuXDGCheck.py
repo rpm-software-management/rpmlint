@@ -70,10 +70,10 @@ class MenuXDGCheck(AbstractFilesCheck):
             self.output.add_info('E', pkg, 'desktopfile-missing-header', filename)
         elif (isinstance(e, cfgparser.DuplicateSectionError)):
             self.output.add_info('E', pkg, 'desktopfile-duplicate-section', filename,
-                                 '[{e.section}]')
+                                 f'[{e.section}]')
         elif (isinstance(e, cfgparser.DuplicateOptionError)):
             self.output.add_info('E', pkg, 'desktopfile-duplicate-option', filename,
-                                 '[{e.section}]/{e.option}')
+                                 f'[{e.section}]/{e.option}')
         else:
             self.output.add_info('E', pkg, 'invalid-desktopfile', filename,
                                  e.message.partition(':')[0])

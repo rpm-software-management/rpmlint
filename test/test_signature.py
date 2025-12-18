@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from rpmlint.checks.SignatureCheck import SignatureCheck
 from rpmlint.filter import Filter
@@ -31,7 +33,8 @@ def test_unknown_key(tmp_path, package, signaturecheck):
     output, test = signaturecheck
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
-    assert 'E: unknown-key 31fdc502' in out
+    # https://github.com/rpm-software-management/rpm/issues/2403
+    assert re.search(r'E: unknown-key (84944291)?31fdc502\b', out)
     assert 'E: no-signature' not in out
     assert 'E: invalid-signature' not in out
 

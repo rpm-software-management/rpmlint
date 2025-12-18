@@ -70,8 +70,7 @@ def is_valid_lang(lang):
 
 class I18NCheck(AbstractCheck):
     def check_binary(self, pkg):
-        files = list(pkg.files.keys())
-        files.sort()
+        files = sorted(pkg.files.keys())
         locales = []                      # list of locales for this packages
         webapp = False
 

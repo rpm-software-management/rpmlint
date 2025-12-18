@@ -30,6 +30,17 @@ GenericName=rpmlint testcase
 Categories=Game;Amusement;
 """
 
+BADDUP2 = """
+[Desktop Entry]
+Name=rpmlint-test
+Name=name duplicate
+Exec=rpmlint-test file.file
+Icon=chameleon_v_balíku
+Type=Application
+GenericName=rpmlint testcase
+Categories=Game;Amusement;
+"""
+
 
 BADSEC = """
 Name=rpmlint-test
@@ -57,6 +68,12 @@ MenuXDGBadBinPackage = get_tested_mock_package(
 MenuXDGBadDupPackage = get_tested_mock_package(
     lazyload=True,
     files={'/usr/share/applications/rpmlint-test.desktop': {'content': BADDUP}},
+)
+
+
+MenuXDGBadDup2Package = get_tested_mock_package(
+    lazyload=True,
+    files={'/usr/share/applications/rpmlint-test.desktop': {'content': BADDUP2}},
 )
 
 

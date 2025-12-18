@@ -144,7 +144,6 @@ STANDARD_DIRS = (
     '/var/opt',
     '/var/preserve',
     '/var/spool',
-    '/var/spool/mail',
     '/var/tmp',
 )
 

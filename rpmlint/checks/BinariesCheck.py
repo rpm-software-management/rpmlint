@@ -147,7 +147,7 @@ class BinariesCheck(AbstractCheck):
 
         We suppose that the package is arch dependent.
         """
-        if bin_name.startswith('/etc/'):
+        if bin_name.startswith('/etc/') or bin_name.startswith('/usr/etc/'):
             self.output.add_info('E', pkg, 'binary-in-etc', bin_name)
 
     def _check_unstripped_binary(self, bin_name, pkg, pkgfile):

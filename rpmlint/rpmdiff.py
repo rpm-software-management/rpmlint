@@ -78,8 +78,7 @@ class Rpmdiff:
         # compare the files
         old_files_dict = self.__fileIteratorToDict(rpm.files(old))
         new_files_dict = self.__fileIteratorToDict(rpm.files(new))
-        files = list(set(chain(iter(old_files_dict), iter(new_files_dict))))
-        files.sort()
+        files = sorted(set(chain(iter(old_files_dict), iter(new_files_dict))))
 
         for f in files:
             if self._excluded(f):

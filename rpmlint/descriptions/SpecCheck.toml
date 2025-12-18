@@ -182,6 +182,10 @@ specfile-error="""
 This error occurred when rpmlint used rpm to query the specfile. The error
 is output by rpm and the message should contain more information.
 """
+specfile-warning="""
+This warning occurred when rpmlint used rpm to query the specfile. The error
+is output by rpm and the message should contain more information.
+"""
 comparison-operator-in-deptoken="""
 This dependency token contains a comparison operator (<, > or =).  This is
 usually not intended and may be caused by missing whitespace between the
@@ -202,6 +206,10 @@ upstream.
 python-setup-test="""
 The python setup.py test subcommand is deprecated and should be replaced with a
 modern testing tool like %pytest or %pyunittest discover -v.
+"""
+python-setup-install="""
+The python setup.py install subcommand is deprecated and should be replaced with
+macros %pyproject_wheel, %pyproject_install or with "pip"
 """
 python-module-def="""
 The spec file contains a conditional definition of python_module macro, this
@@ -224,6 +232,13 @@ spec file to make it more readable.
 invalid-suse-version-check="""
 The specfile contains a comparison of %suse_version against a suse release
 that does not exist. Please double check.
+"""
+shared-dir-glob-in-files="""
+The %files section contains "%{_bindir}/*", "%{_datadir}/*", "%{_docdir}/*",
+"%{_includedir}/*" or "%{_mandir}/*".  These can lead to packagers not noticing
+when upstream adds new and possibly conflicting files in these directories.
+Therefore, files in these directories should be explicitely listed like
+"%{_bindir}/foobar" or "%{_includedir}/foobar.h".
 """
 suse-update-desktop-file-deprecated="""
 The usage of %suse_update_desktop_file is deprecated and changes

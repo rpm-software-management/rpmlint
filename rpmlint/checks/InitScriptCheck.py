@@ -42,8 +42,7 @@ def shell_var_value(var, script):
         if res2 and res2.group(2) == var:  # infinite loop
             return None
         return substitute_shell_vars(res.group(1), script)
-    else:
-        return None
+    return None
 
 
 def substitute_shell_vars(val, script):
@@ -54,8 +53,7 @@ def substitute_shell_vars(val, script):
             value = ''
         return res.group(1) + value + \
             substitute_shell_vars(res.group(3), script)
-    else:
-        return val
+    return val
 
 
 class InitScriptCheck(AbstractCheck):

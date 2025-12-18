@@ -36,6 +36,9 @@ Filters = []
 BlockedFilters = []
 # Treshold where we should error out, by default single error is enough
 BadnessThreshold = -1
+# Set to true to issue a warning for ghost entries outside snapshots
+# when checking for atomic update compatibility
+AtomicCheckGhosts = false
 # When checking that various files that should be compressed are
 # indeed compressed, look for this filename extension
 CompressExtension = "bz2"
@@ -213,6 +216,26 @@ DisallowedDirs = [
     "/var/run",
     "/var/tmp",
 ]
+
+# Only these directories may be used by packages compatible with
+# atomic updates
+AtomicAllowedDirs = [
+    "/etc/",
+    "/usr/",
+    "/bin/",
+    "/lib/",
+    "/lib64/",
+    "/sbin/",
+    "/boot/",
+]
+
+# List of subdirectories which are disallowed for atomic updates
+# despite being within otherwise allowed directories
+AtomicDisallowedSubdirs = [
+    "/usr/local/",
+    "/boot/efi/",
+]
+
 # Standard OS groups
 StandardGroups = [
     "root",
