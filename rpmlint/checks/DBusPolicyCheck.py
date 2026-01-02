@@ -47,6 +47,20 @@ class DBusPolicyCheck(AbstractCheck):
                     allow.hasAttribute('receive_interface')):
                 self.output.add_info('W', pkg, 'dbus-policy-allow-receive', allow.toxml(), f)
 
+            # to prevent bugs like bsc#1220215, scan for any attributes like
+            # send_destination="*" and reject them
+
+            for key, val in allow.attributes.items():
+                # Inspect all attributes starting with 'send_', there's quite
+                # a lot of them and most support an asterisk as value.
+                #
+                # In theory there could be valid use cases when this is not in
+                # context="default" but restricted to some specific, powerful
+                # user account or group, but at the moment no such example is
+                # known.
+                if key.startswith('send_') and val == '*':
+                    self.output.add_info('E', pkg, 'dbus-policy-allow-wildcard', allow.toxml(), f)
+
         return send_policy_seen
 
     def _check_deny_policy_element(self, pkg, f, policy):
