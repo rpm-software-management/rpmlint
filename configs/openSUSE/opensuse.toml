@@ -266,6 +266,7 @@ BlockedFilters = [
     "dbus-file-ghost",
     "dbus-file-unauthorized",
     "dbus-file-symlink",
+    "dbus-policy-allow-wildcard",
     "device-mismatched-attrs",
     "device-unauthorized-file",
     "non-position-independent-executable",
