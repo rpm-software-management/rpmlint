@@ -8,6 +8,7 @@ dbus-file-ghost = 10000
 dbus-file-parse-error = 10000
 dbus-file-unauthorized = 10000
 dbus-file-symlink = 10000
+dbus-policy-allow-wildcard = 10000
 device-mismatched-attrs = 10000
 device-unauthorized-file = 10000
 invalid-license = 100000

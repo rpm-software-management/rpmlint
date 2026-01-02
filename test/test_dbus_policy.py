@@ -24,3 +24,4 @@ def test_dbus_policy(package, dbuspolicycheck):
     assert 'W: dbus-policy-allow-receive <allow receive_sender="foo"/>' in out
     assert 'E: dbus-policy-deny-without-destination <deny send_interface="org.freedesktop.NetworkManager.Settings" send_member="ReloadConnections"/>' in out
     assert 'E: dbus-policy-missing-allow /etc/dbus-1/system.d/org.freedesktop.NetworkManager2.conf' in out
+    assert 'E: dbus-policy-allow-wildcard <allow send_destination="*"/> /etc/dbus-1/system.d/org.freedesktop.NetworkManager.conf' in out
