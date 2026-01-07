@@ -19,20 +19,20 @@ package = "postfix"
 type = "permissions"
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/postfix"
-hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
+hash = "6f2e5d01189c05662083125ae3addab8b7273f6a57eae8369bc34b08a9a1d638"
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/postfix.paranoid"
-hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
+hash = "54d194477fc688076940c93bfd201680b5cc0fd6079bba10bd0101fb986a2231"
 
 [[FileDigestGroup]]
 package = "postfix-bdb"
 type = "permissions"
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/postfix"
-hash = "6233f37dc93ae05d476bbeb03ffa6de4d006893a9d5c91d38afb66506d224e9d"
+hash = "6f2e5d01189c05662083125ae3addab8b7273f6a57eae8369bc34b08a9a1d638"
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/postfix.paranoid"
-hash = "d5e51380e7ec868a42d336c868fc012ab95cac771d95361504cc6040b8d86221"
+hash = "54d194477fc688076940c93bfd201680b5cc0fd6079bba10bd0101fb986a2231"
 
 [[FileDigestGroup]]
 package = "sendmail"
