@@ -1483,3 +1483,23 @@ hash     = "91b532cb7675218944e9f77705c7bcaaec73ea11fa6e770e0a39dfaab350832b"
 path     = "/usr/share/dbus-1/system.d/org.kde.smb4k.mounthelper.conf"
 digester = "xml"
 hash     = "c67705447819baeede72d3f1efd4f1df22f86b5916af1cdf64e542630821539e"
+
+[[FileDigestGroup]]
+package  = "foomuuri"
+note     = "Firewall management via D-Bus"
+bug      = "bsc#1254385"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/fi.foobar.Foomuuri1.conf"
+digester = "xml"
+hash     = "f94635f00f0cc1c8622a9a36677e91736fe37221d7a9ab05484ac238e16790aa"
+
+[[FileDigestGroup]]
+package  = "foomuuri-firewalld"
+note     = "Firewall management via D-Bus (firewalld drop-in)"
+bug      = "bsc#1254385"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/fi.foobar.Foomuuri-FirewallD.conf"
+digester = "xml"
+hash     = "a4d61b04ab65225d2e11f60a3fcaf2705ae9ce9dcea9c5d814d7be6724403250"
