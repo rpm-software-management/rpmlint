@@ -125,3 +125,13 @@ path = "/usr/lib/tmpfiles.d/samba.conf"
 entries = [
     "d /var/samba/spool 1777 root root"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "aaa_base-extras"
+bugs = ["bsc#1255794"]
+note = "Regular directories in /var/adm/backup"
+path = "/usr/lib/tmpfiles.d/adm-backup.conf"
+entries = [
+    "d /var/adm/backup/rpmdb 0755 root root -",
+    "d /var/adm/backup/sysconfig 0755 root root -"
+]
