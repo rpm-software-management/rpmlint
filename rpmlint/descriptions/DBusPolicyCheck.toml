@@ -13,3 +13,8 @@ will not work with a dbus that uses deny as default policy"""
 dbus-parsing-exception="""
 A python exception was raised which prevents further analysis
 of the DBus rule file."""
+dbus-policy-allow-wildcard="""
+'allow' directives with wildcard send_<category>="*" attributes are not
+allowed, since they affect the complete system bus, not only a specific
+service. Use a more specific setting like
+send_destination="org.freedesktop.Accounts"."""
