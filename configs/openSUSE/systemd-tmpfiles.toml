@@ -135,3 +135,12 @@ entries = [
     "d /var/adm/backup/rpmdb 0755 root root -",
     "d /var/adm/backup/sysconfig 0755 root root -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "dracut-tools"
+bugs = ["bsc#1256380"]
+note = "Regular directory in /boot/dracut"
+path = "/usr/lib/tmpfiles.d/dracut.conf"
+entries = [
+    "D  /boot/dracut  - - - -"
+]
