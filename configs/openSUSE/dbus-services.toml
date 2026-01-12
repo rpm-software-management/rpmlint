@@ -1503,3 +1503,13 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/fi.foobar.Foomuuri-FirewallD.conf"
 digester = "xml"
 hash     = "a4d61b04ab65225d2e11f60a3fcaf2705ae9ce9dcea9c5d814d7be6724403250"
+
+[[FileDigestGroup]]
+package  = "snapd"
+note     = "Allow snap packages to install D-Bus services"
+bug      = "bsc#1256175"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/snapd.system-services.conf"
+digester = "xml"
+hash     = "ae58e6ec3228e41fe65b2ffdb27908610b11ba501a18f7bf1dff07e639053f46"
