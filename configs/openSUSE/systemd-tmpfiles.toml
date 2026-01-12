@@ -106,3 +106,12 @@ entries = [
 	"d /run/gromox 0775 gromox gromox",
 	"d /var/tmp/gromox-fpm 0770 gromox gromox 1d"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "sendmail"
+bugs = ["bsc#1256160"]
+note = "Spool directory with mode 1777"
+path = "/usr/lib/tmpfiles.d/sendmail.conf"
+entries = [
+    "d /var/spool/mail                      1777 root root -"
+]
