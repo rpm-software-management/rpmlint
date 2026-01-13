@@ -1446,3 +1446,17 @@ type     = "dbus"
 path     = "/etc/dbus-1/system.d/io.gpiod1.conf"
 digester = "xml"
 hash     = "4a620749a1b62fb229cd564e2ddafdd59e0302702c57ad7ac76ec5f56429f48b"
+
+[[FileDigestGroup]]
+package  = "bootkitd"
+note     = "D-Bus service only accessible to root for editing grub2 bootloader config"
+bug      = "bsc#1256421"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.opensuse.bootkit.service"
+digester = "shell"
+hash     = "ae790fff12a3ff5493ce5679f8bb801faecc25854efb54fbd1b3f4428ff1eade"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.opensuse.bootkit.conf"
+digester = "xml"
+hash     = "f70ed1e0cd4b240f5dedd1d99df15af8ed1e0ef2c90132282f78822da3f880cf"
