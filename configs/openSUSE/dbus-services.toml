@@ -1513,3 +1513,17 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/snapd.system-services.conf"
 digester = "xml"
 hash     = "ae58e6ec3228e41fe65b2ffdb27908610b11ba501a18f7bf1dff07e639053f46"
+
+[[FileDigestGroup]]
+package  = "bootkitd"
+note     = "D-Bus service only accessible to root for editing grub2 bootloader config"
+bug      = "bsc#1256421"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.opensuse.bootkit.service"
+digester = "shell"
+hash     = "ae790fff12a3ff5493ce5679f8bb801faecc25854efb54fbd1b3f4428ff1eade"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.opensuse.bootkit.conf"
+digester = "xml"
+hash     = "f70ed1e0cd4b240f5dedd1d99df15af8ed1e0ef2c90132282f78822da3f880cf"
