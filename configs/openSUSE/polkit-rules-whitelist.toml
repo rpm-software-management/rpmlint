@@ -237,3 +237,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/10-systemd-logind-root-ignore-inhibitors.rules.example"
 digester = "default"
 hash     = "0dcb4cdb6a4b43f23c4dc798e729ab605c3c0c470fe1c90f2db6351e4ae47418"
+
+[[FileDigestGroup]]
+packages = ["systemd", "systemd-mini"]
+note     = "Allows shells started via `run0 --empower` to run any Polkit action without authentication"
+bug      = "bsc#1255368"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/empower.rules"
+digester = "default"
+hash     = "d9a62ab1ec477a4be1657769dfd194c75d1a07a4357e7717aa19ad5c07c3fc26"
