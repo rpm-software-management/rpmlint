@@ -100,20 +100,15 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#641924"
 nodigests = [
-    "/usr/share/dbus-1/services/org.freedesktop.systemd1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.hostname1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf",
     "/usr/share/dbus-1/system.d/org.freedesktop.login1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.login1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.login1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.timedate1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.timedate1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf",
-    "/usr/lib/systemd/system/dbus-org.freedesktop.locale1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.locale1.service",
 ]
 
@@ -151,7 +146,6 @@ package = "wpa_supplicant"
 type = "dbus"
 note = "legacy: not audited"
 nodigests = [
-    "/usr/lib/systemd/system/dbus-fi.epitest.hostap.WPASupplicant.service",
     "/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service",
 ]
 
@@ -161,7 +155,6 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bugs = ["bsc#681116", "bsc#1200342"]
 nodigests = [
-    "/usr/lib/systemd/system/dbus-fi.w1.wpa_supplicant1.service",
     "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service",
     "/usr/share/dbus-1/system.d/wpa_supplicant.conf",
 ]
@@ -531,7 +524,6 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bugs = ["bsc#828207", "bsc#1192033"]
 nodigests = [
-    "/usr/lib/systemd/system/dbus-org.freedesktop.machine1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf",
 ]
@@ -542,7 +534,6 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#964935"
 nodigests = [
-    "/usr/lib/systemd/system/dbus-org.freedesktop.import1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.import1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.import1.conf",
 ]
@@ -1011,7 +1002,6 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "boo#1145639"
 nodigests = [
-    "/usr/lib/systemd/system/dbus-org.freedesktop.portable1.service",
     "/usr/share/dbus-1/system-services/org.freedesktop.portable1.service",
     "/usr/share/dbus-1/system.d/org.freedesktop.portable1.conf",
 ]
@@ -1045,7 +1035,6 @@ type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1173093"
 nodigests = [
-    "/usr/share/dbus-1/services/org.libvirt.service",
     "/usr/share/dbus-1/system-services/org.libvirt.service",
     "/usr/share/dbus-1/system.d/org.libvirt.conf",
 ]
