@@ -34,10 +34,14 @@ digester = "xml"
 package = "upower"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.UPower.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.UPower.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.UPower.service"
+digester = "shell"
+hash = "05235813e7d8cde6c9e6f9a4c0c1f9b514fc67a344a76c3325290ff28623f5fb"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.UPower.conf"
+digester = "xml"
+hash = "73bda825eff2f296e0a7a9731f60892d54c53a066c4f7eeddcbd69af2cba2ce2"
 
 [[FileDigestGroup]]
 package = "PackageKit"
@@ -89,28 +93,60 @@ package = "udisks2"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#742751"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.UDisks2.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.UDisks2.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.UDisks2.service"
+digester = "shell"
+hash = "dec4c90801858db84388b1a0290d83af306a7ba822f614bb3a10fa9fe9709408"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.UDisks2.conf"
+digester = "xml"
+hash = "610b7e9a59c724100f907184dbf009846ebbd22b40326675a1bad481c685776d"
 
 [[FileDigestGroup]]
 packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#641924"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf",
-    "/usr/share/dbus-1/system.d/org.freedesktop.login1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.login1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.timedate1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.locale1.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service"
+digester = "shell"
+hash = "78e857a4bab8d98b5c2b51532721da8468e69a19ed39cb05bbbfcfa0e6b5482c"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf"
+digester = "xml"
+hash = "4e47906ff72ae23653dbe42bae7b7d0993f4e8d0cca007305929fbf37aa5b4d0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service"
+digester = "shell"
+hash = "4a71245aee9271bd799986068fc10dcf8ce947e9d805f9d36d78afc98d89f9ff"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.hostname1.conf"
+digester = "xml"
+hash = "0f7acce75537038da343267ce42b3d3e149acf5ace347c9c1e1283c058a6856d"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.login1.conf"
+digester = "xml"
+hash = "696228908a84b847c7d87ec6edd59f28e883e5ddb26e2aba0bc80f7b22692eea"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.login1.service"
+digester = "shell"
+hash = "7f767528b2429c4808cfe59ffade85b273a9dc7ce7bbf95da0944d0bd8b8cbe0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.timedate1.conf"
+digester = "xml"
+hash = "aa1cf5b246c699689f042b213b216287531c88dd1eb439899049d18ae17bdecc"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.timedate1.service"
+digester = "shell"
+hash = "fc8a347caf22417b9d322b46667d41005789fa3b143babf26dfc19ff242401cd"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.locale1.conf"
+digester = "xml"
+hash = "1b6b560ca97885664082bc0692557ff9ac31a1042120d35bfa4cca691c00bbf3"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.locale1.service"
+digester = "shell"
+hash = "7efe10e36cb88260293fc66232b5a8de7b9bcf38d8af40159604b60ee218c396"
 
 [[FileDigestGroup]]
 package = "system-config-printer-applet"
@@ -136,28 +172,37 @@ hash = "fb49f423c6f0c6c461d4052ee8245a637933fdb6d057fc5e2f9599d33fbc62c8"
 package = "rtkit"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.RealtimeKit1.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf"
+digester = "xml"
+hash = "326a2e088aead145cd581c94dec2d7c64510e84c2f877e0a50ceea168cc6c9af"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.RealtimeKit1.service"
+digester = "shell"
+hash = "8a90ad6824da4bc87d770b552f83212e47b8343afb0dccee828ba3e63b099267"
 
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service"
+digester = "shell"
+hash = "601ce02347339b2fdfde893754f864b0318adf0dd39e352d39068b4b89c6e1d0"
 
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bugs = ["bsc#681116", "bsc#1200342"]
-nodigests = [
-    "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service",
-    "/usr/share/dbus-1/system.d/wpa_supplicant.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service"
+digester = "shell"
+hash = "cca1385e218f35305bf4c4f9982b90cf7e1bbe013f0404977b464d2034bcd3ce"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/wpa_supplicant.conf"
+digester = "xml"
+hash = "2986f210d55588e8c556e3b81e9eeee94668ebb2be6024fb68f8a2f4fcae8469"
 
 [[FileDigestGroup]]
 package  = "plasma6-desktop"
@@ -229,37 +274,47 @@ hash = "de571101f4b9e23b1d2c28434cf047be0ab6bf00876c9267998531a645083dca"
 package = "hp-drive-guard"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/hp-drive-guard-dbus.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/hp-drive-guard-dbus.conf"
+digester = "xml"
+hash = "0a40412a45af1c17710c82dd800d57f3c9b0a2515bb21fbcebe10065603e5d31"
 
 [[FileDigestGroup]]
 package = "NetworkManager"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system.d/nm-dispatcher.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.nm_dispatcher.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-dispatcher.conf"
+digester = "xml"
+hash = "540310497cbfaca7dff478599852c4423b9ae708ef86a1bd489c3f1def41f540"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.nm_dispatcher.service"
+digester = "shell"
+hash = "15b426ade96ee8abca53b614cb8837ea7ca4cc0a85cf6fe53f54275835af040a"
 
 [[FileDigestGroup]]
 package = "NetworkManager"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#747780"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.NetworkManager.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.NetworkManager.conf"
+digester = "xml"
+hash = "7e39fec66d71fd41f678eea57f0b566a4347a341f9ced852d0b3215e8b5dd82e"
 
 [[FileDigestGroup]]
 package = "NetworkManager"
 type = "dbus"
 note = "privilege separation helper that does not provide a public API"
 bug = "bsc#1194799"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.nm_priv_helper.service",
-    "/usr/share/dbus-1/system.d/nm-priv-helper.conf"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.nm_priv_helper.service"
+digester = "shell"
+hash = "77bc536d4f275958c639943415524ef88557e42efe7bdf4f4363fe6284eb1a18"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-priv-helper.conf"
+digester = "xml"
+hash = "7a257ae283efe2d6c592b13e2ab6541b8bc364be7866555700f8f550601f6687"
 
 [[FileDigestGroup]]
 package = "bluez"
@@ -280,34 +335,41 @@ package = "dnsmasq"
 type = "dbus"
 note = "legacy: not audited"
 bugs = ['bsc#1200344']
-nodigests = [
-    "/usr/share/dbus-1/system.d/dnsmasq.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/dnsmasq.conf"
+digester = "xml"
+hash = "fd11a07ea9c17044bf65228cd75d370e2e238918f4c65d30f741b759a28d27e1"
 
 [[FileDigestGroup]]
 package = "pommed"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/etc/dbus-1/system.d/pommed.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/pommed.conf"
+digester = "xml"
+hash = "ad72dcb38001ef4a0dd0efa2c928e1412a7cde755a3b9dbabe5988faf729ee70"
 
 [[FileDigestGroup]]
 package = "NetworkManager-openvpn"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system.d/nm-openvpn-service.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-openvpn-service.conf"
+digester = "xml"
+hash = "f3dcac35db448c916b853178dc71dc04a587012d4af0d28b44d599440d7c39b9"
 
 [[FileDigestGroup]]
 package = "polkit"
 type = "dbus"
 note = "legacy: not audited"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.PolicyKit1.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf"
+digester = "xml"
+hash = "7600c5ce32dfef17110fe2965c420bc14823e986427ff3e1e61aa5fca439bbdf"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.PolicyKit1.service"
+digester = "shell"
+hash = "507a25e9cd2ba0d4a80c6fe3ea8b753f57e56d4937f243a4bc9184d8ed73afd7"
 
 [[FileDigestGroup]]
 package = "cups-pk-helper"
@@ -337,9 +399,10 @@ package = "strongswan-nm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#656222"
-nodigests = [
-    "/usr/share/dbus-1/system.d/nm-strongswan-service.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-strongswan-service.conf"
+digester = "xml"
+hash = "4cb9e7e7db1e1dd90aeb008e8b06f4c96006bdef5f41a19600a6f4a15e3efcae"
 
 [[FileDigestGroup]]
 package  = "powerdevil6"
@@ -376,10 +439,14 @@ package = "urfkill"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#688328"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.URfkill.service",
-    "/etc/dbus-1/system.d/org.freedesktop.URfkill.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.URfkill.service"
+digester = "shell"
+hash = "1328e8a41d78813228cc583a3adfebb8d11450ff27e4bae49f3621214741c7b7"
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.freedesktop.URfkill.conf"
+digester = "xml"
+hash = "c2ccd54749385053c1eaf38e869d21f3cff79f6bfc52182fe138e54d71542184"
 
 [[FileDigestGroup]]
 package = "accountsservice"
@@ -400,10 +467,14 @@ package = "colord"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#698250"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.ColorManager.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.ColorManager.service"
+digester = "shell"
+hash = "53adadfd1e0a6cda0fd4d146c15826cc91caa1a3ededdf223690b61f3e807e87"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf"
+digester = "xml"
+hash = "31f81fc3c3498c40a33096b9e02eb6a5ac7fd5d0d0cd4b084b234728d39b2083"
 
 [[FileDigestGroup]]
 package = "lightdm"
@@ -460,10 +531,14 @@ package = "snapper"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#759391"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.opensuse.Snapper.conf",
-    "/usr/share/dbus-1/system-services/org.opensuse.Snapper.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Snapper.conf"
+digester = "xml"
+hash = "92f3eb0aace7ebcc0296c96ea5139296bb194a1b241e268a1c06c4b457e7a26b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.Snapper.service"
+digester = "shell"
+hash = "807a7dd5c77d002045a216a4368ea21bcb789224d279e4ce6cf8a2e84a9d1656"
 
 [[FileDigestGroup]]
 package = "autofs"
@@ -490,53 +565,82 @@ package = "ModemManager"
 type = "dbus"
 note = "Mobile broadband modem control via D-Bus service, vast and complex interface"
 bugs = ["bsc#798273", "bsc#1196170"]
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.ModemManager1.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.ModemManager1.conf"
+digester = "xml"
+hash = "e6b63c4c2e4bc0307c54b785e197bb1adea9a3acb8fa2873a81827fbc556957d"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service"
+digester = "shell"
+hash = "57a812c8dd01b277137d2e862521e4181fd36e6c34d9d33c2ddeb5ae7ef7dc43"
 
 [[FileDigestGroup]]
 package = "fprintd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#792095"
-nodigests = [
-    "/usr/share/dbus-1/system-services/net.reactivated.Fprint.service",
-    "/usr/share/dbus-1/system.d/net.reactivated.Fprint.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/net.reactivated.Fprint.service"
+digester = "shell"
+hash = "6fa36c7cb928689c3f40e2990a05daab0c25a0395e4a3d05400a4aa0cfe42b2c"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/net.reactivated.Fprint.conf"
+digester = "xml"
+hash = "cffd08b120ee1a415a3e3924fe23759b8dcbd86bb693381c9e37d7bec83277ff"
 
 [[FileDigestGroup]]
 package = "wicked"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#783932"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.opensuse.Network.conf",
-    "/usr/share/dbus-1/system.d/org.opensuse.Network.AUTO4.conf",
-    "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP6.conf",
-    "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP4.conf",
-    "/usr/share/dbus-1/system.d/org.opensuse.Network.Nanny.conf"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Network.conf"
+digester = "xml"
+hash = "7948e0475edb0e086d5b02e55314cc1aca0a8e1c6f26da243e49071779bf9ac4"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Network.AUTO4.conf"
+digester = "xml"
+hash = "73fc485d53a18721d03e4bbeb7ea30488532e64d545e523d508b26e6a993ba3d"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP6.conf"
+digester = "xml"
+hash = "088f6a05722a1060d818cdf53b51ad7c71473b51ac119072499a7fe6d95017fe"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Network.DHCP4.conf"
+digester = "xml"
+hash = "1b8dbd3b7d5a3b05307fb609e7e2b78442faef2150db49c42926061c03896295"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.Network.Nanny.conf"
+digester = "xml"
+hash = "c8784129137498425fb70ddd5d2efe24723b522794ea942ab9d0dd463bd65d58"
 
 [[FileDigestGroup]]
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bugs = ["bsc#828207", "bsc#1192033"]
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service"
+digester = "shell"
+hash = "049c2e5c14f53c6d34f1c033b7bf1a14566d4380143920090c076a8ce6348e5b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf"
+digester = "xml"
+hash = "94aaa9e5e10d300b65265c206e1cef0a10255ba6f58335591a9d763b7966dc50"
 
 [[FileDigestGroup]]
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#964935"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.import1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.import1.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.import1.service"
+digester = "shell"
+hash = "7abbbe8d99e3134d7cb0e93f657671f80ab430cf06259a1bb07d0de0142e7e6f"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.import1.conf"
+digester = "xml"
+hash = "9c6f8a5703892843b4b9386ad5ce2ba264e35cf98e5af3d6b032df55bb2d4b0c"
 
 [[FileDigestGroup]]
 package = "geoclue2"
@@ -567,10 +671,14 @@ package = "mate-settings-daemon"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#831404"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.mate.SettingsDaemon.DateTimeMechanism.service",
-    "/usr/share/dbus-1/system.d/org.mate.SettingsDaemon.DateTimeMechanism.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.mate.SettingsDaemon.DateTimeMechanism.service"
+digester = "shell"
+hash = "2001594d08a2f7bb0fdbef964f39724b39e3d436a544c0985ada6094ccc270ac"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.mate.SettingsDaemon.DateTimeMechanism.conf"
+digester = "xml"
+hash = "5fb3ffd668d605d58a10de0ef73996d8ab6ef6a88c78abc290a13242896d14f0"
 
 [[FileDigestGroup]]
 package = "tuned"
@@ -609,27 +717,30 @@ package = "neard"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#837978"
-nodigests = [
-    "/etc/dbus-1/system.d/org.neard.conf"
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.neard.conf"
+digester = "xml"
+hash = "e51c6f6bb1d0532d57e4d2e38dae4f66b974ae5d3eea2e6ca80d107c5a677d4f"
 
 [[FileDigestGroup]]
 package = "ofono"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#862354"
-nodigests = [
-    "/etc/dbus-1/system.d/ofono.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/ofono.conf"
+digester = "xml"
+hash = "4bdbb0322336bcedc73d4397b8f5c661441a81d27ab7b2a78e0f8526ba7461c3"
 
 [[FileDigestGroup]]
 package = "libKF5Auth5"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#864716"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.kf5auth.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.kf5auth.conf"
+digester = "xml"
+hash = "20b33f2399a0fd199daf57002021c4a8465ff729168762d44d3e752be6b155d5"
 
 [[FileDigestGroup]]
 package  = "kf6-kauth"
@@ -646,9 +757,10 @@ package = "firewalld"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#907625"
-nodigests = [
-    "/usr/share/dbus-1/system.d/FirewallD.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/FirewallD.conf"
+digester = "xml"
+hash = "a4d61b04ab65225d2e11f60a3fcaf2705ae9ce9dcea9c5d814d7be6724403250"
 
 [[FileDigestGroup]]
 package = "systemd-networkd"
@@ -669,29 +781,38 @@ package = "realmd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#916766"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.realmd.service",
-    "/etc/dbus-1/system.d/org.freedesktop.realmd.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.realmd.service"
+digester = "shell"
+hash = "b974b8b536d8bd8845d289c3726cd054dcea07325c64a4a7279e75bded9be806"
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.freedesktop.realmd.conf"
+digester = "xml"
+hash = "0cd1bafc74df7e335d4d4d9a2425adc615b2fc4cfde427473f40c31272fed927"
 
 [[FileDigestGroup]]
 package = "libteam-tools"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#941993"
-nodigests = [
-    "/etc/dbus-1/system.d/org.libteam.teamd.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.libteam.teamd.conf"
+digester = "xml"
+hash = "e08b83abe569cd4411facf60f6d9a5b64ba00ce0de4a6de9873b2183279d79c3"
 
 [[FileDigestGroup]]
 package = "cinnamon-settings-daemon"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#951830"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.cinnamon.SettingsDaemon.DateTimeMechanism.conf",
-    "/usr/share/dbus-1/system-services/org.cinnamon.SettingsDaemon.DateTimeMechanism.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.cinnamon.SettingsDaemon.DateTimeMechanism.conf"
+digester = "xml"
+hash = "3b2002bd488977584fb853716e18c34813b8cbe8f2a2fa0eb0f991fe7bd1bf5b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.cinnamon.SettingsDaemon.DateTimeMechanism.service"
+digester = "shell"
+hash = "3da8a727b2f15ec79f9efa1e97b781733d81b8a209c4b0e6d6396e6d95340340"
 
 [[FileDigestGroup]]
 package = "thermald"
@@ -722,30 +843,42 @@ package = "tcmu-runner"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList - TEMPORARY APPROVAL ONLY (meissner 20160519)"
 bug = "bsc#978903"
-nodigests = [
-    "/etc/dbus-1/system.d/tcmu-runner.conf",
-    "/usr/share/dbus-1/system-services/org.kernel.TCMUService1.service",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/tcmu-runner.conf"
+digester = "xml"
+hash = "9cc9c78392e84b363b02746641a998856e6d756536df8672b06403ff99a44ca2"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kernel.TCMUService1.service"
+digester = "shell"
+hash = "2fdeeb900e792f628bb04e41f2e0ade15db1ab7154178b687d703e61a1fab1d5"
 
 [[FileDigestGroup]]
 package = "sysprof"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1151418"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.gnome.Sysprof3.conf",
-    "/usr/share/dbus-1/system-services/org.gnome.Sysprof3.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.gnome.Sysprof3.conf"
+digester = "xml"
+hash = "c55aaa17fc5918c582d0749fe314de85c9d80c8c05aca1e79d17f643088b7ddf"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.gnome.Sysprof3.service"
+digester = "shell"
+hash = "47876ba617b521b9584f4a8f65263583d9391a90b603798a0522abdacb295996"
 
 [[FileDigestGroup]]
 package = "flatpak"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#984817"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.Flatpak.SystemHelper.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.Flatpak.SystemHelper.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.Flatpak.SystemHelper.service"
+digester = "shell"
+hash = "30deab4f2ffef2923fda04724f4aefc13c8bba5713db79548e83a27ed8968b55"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.Flatpak.SystemHelper.conf"
+digester = "xml"
+hash = "2f10fedd57fe0c5da8a9e4eee9829f48ba22d95db2086f469bb3c12e6704d8af"
 
 [[FileDigestGroup]]
 package = "systemd-resolved"
@@ -766,19 +899,24 @@ package = "blueman"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#987141"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.blueman.Mechanism.conf",
-    "/usr/share/dbus-1/system-services/org.blueman.Mechanism.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.blueman.Mechanism.conf"
+digester = "xml"
+hash = "16cf767a65c533d808102b1e7b96c5fa08faedab1b97fce60f96c8e66ee01ec7"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.blueman.Mechanism.service"
+digester = "shell"
+hash = "0a95673bba6d816d8b4bf26c006b18ebdc6fb7f77972c20856e934e4305eeb9a"
 
 [[FileDigestGroup]]
 package = "os-autoinst-openvswitch"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1032649"
-nodigests = [
-    "/etc/dbus-1/system.d/org.opensuse.os_autoinst.switch.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.opensuse.os_autoinst.switch.conf"
+digester = "xml"
+hash = "98f5c613a636464106ceb9705531be5b33b168d7eca9f4e904b4beea1e739339"
 
 [[FileDigestGroup]]
 package = "backintime-qt"
@@ -809,40 +947,56 @@ package = "tpm2.0-abrmd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1049694"
-nodigests = [
-    "/usr/share/dbus-1/system.d/tpm2-abrmd.conf",
-    "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/tpm2-abrmd.conf"
+digester = "xml"
+hash = "7da3c3cab19a38b812f6b222fe31d3aed9e4bd1abbd9f8bdaca078316d58bb60"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/com.intel.tss2.Tabrmd.service"
+digester = "shell"
+hash = "efd64e20ed459cb48c4203b6854898047050c3f4bc85c29a7594548867d0009e"
 
 [[FileDigestGroup]]
 package = "NetworkManager-l2tp"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#846337"
-nodigests = [
-    "/usr/share/dbus-1/system.d/nm-l2tp-service.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/nm-l2tp-service.conf"
+digester = "xml"
+hash = "4255cca3dfb3868d19a653d6c504c50900ad4d608c81ffad5edeee480e8c4e33"
 
 [[FileDigestGroup]]
 package = "fwupd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#932807"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.fwupd.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.fwupd.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.fwupd.conf"
+digester = "xml"
+hash = "2a08bd38f66e38e9a73f93b772ddf6778313b55b1354de7f4e2d5bec81261a65"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.fwupd.service"
+digester = "shell"
+hash = "29e44e682ec5e7841491174bf25d44304b37d11f03abac14e7a21d0a2efbbc0c"
 
 [[FileDigestGroup]]
 package = "connman"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1057697"
-nodigests = [
-    "/usr/share/dbus-1/system.d/connman.conf",
-    "/usr/share/dbus-1/system.d/connman-vpn-dbus.conf",
-    "/usr/share/dbus-1/system-services/net.connman.vpn.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/connman.conf"
+digester = "xml"
+hash = "6c3e7451481dec0b69e05319dc059075a6bde4097bf9d427f5284dec5443e24a"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/connman-vpn-dbus.conf"
+digester = "xml"
+hash = "b4e9f0ec5243c8467b605bed724808d34f71cfe4374ada61db7fc2d7e45803f0"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/net.connman.vpn.service"
+digester = "shell"
+hash = "4947e1ef42d8e163a72c93f3e93b77312503e5e405c9d767150362edda170982"
 
 [[FileDigestGroup]]
 package  = "sddm-kcm6"
@@ -863,19 +1017,24 @@ package = "usbauth"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1066877"
-nodigests = [
-    "/etc/dbus-1/system.d/org.opensuse.usbauth.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.opensuse.usbauth.conf"
+digester = "xml"
+hash = "135eeb46e6fcb0ec3460df1aa9977300f0bdb089c36d388d2f7d2e0f98460e9f"
 
 [[FileDigestGroup]]
 package = "kalarm"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1087714"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.kde.kalarm.rtcwake.conf",
-    "/usr/share/dbus-1/system-services/org.kde.kalarm.rtcwake.service",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.kalarm.rtcwake.conf"
+digester = "xml"
+hash = "bb77479a0c6dfc77e0ff6cdcaaadcab2a35d19836be3738480420e0cb5f61f67"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kde.kalarm.rtcwake.service"
+digester = "shell"
+hash = "281c1713e62862a38bba089c1abc6c050c5dc9d5dc20b383faaeb7bee691674e"
 
 [[FileDigestGroup]]
 package = "NetworkManager-libreswan"
@@ -892,38 +1051,48 @@ package = "ratbagd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1076467"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.ratbag1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.ratbag1.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.ratbag1.service"
+digester = "shell"
+hash = "5080e64e0c047e973c85792d70d0392547033cfc06406b1fb60f647173d99cb4"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.ratbag1.conf"
+digester = "xml"
+hash = "f91a9e31a69ce80823b9e89af98beca30625a5251f4a01316c95418047576dca"
 
 [[FileDigestGroup]]
 package = "xpra"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1102836"
-nodigests = [
-    "/etc/dbus-1/system.d/xpra.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/xpra.conf"
+digester = "xml"
+hash = "fa7460b998ff287fd411f209f854991c29dba0c32a01b39f0a43ec0fdbc2d027"
 
 [[FileDigestGroup]]
 package = "iwd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1108037"
-nodigests = [
-    "/usr/share/dbus-1/system-services/net.connman.iwd.service",
-    "/usr/share/dbus-1/system.d/iwd-dbus.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/net.connman.iwd.service"
+digester = "shell"
+hash = "8b6356439f6e6b29d5543aa1f6b15f38781c9b7dd38c89fdd58f9ffee2b18006"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/iwd-dbus.conf"
+digester = "xml"
+hash = "ed28e2c31bb8c89736c46374491f8c470ad5c73b961d1b5f71aef4ad134e492e"
 
 [[FileDigestGroup]]
 package = "connman-nmcompat"
 type = "dbus"
 bug = "bsc#1192827"
 note = "thin NetworkManager compatibility interface"
-nodigests = [
-    "/usr/share/dbus-1/system.d/connman-nmcompat.conf"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/connman-nmcompat.conf"
+digester = "xml"
+hash = "1c742b460f417905598052dd7d5233165cfdc634175f3fee5beff772850dd6d7"
 
 [[FileDigestGroup]]
 package = "NetworkManager-fortisslvpn"
@@ -968,19 +1137,24 @@ package = "keepalived"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1015141"
-nodigests = [
-    "/etc/dbus-1/system.d/org.keepalived.Vrrp1.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/org.keepalived.Vrrp1.conf"
+digester = "xml"
+hash = "d6c62de9278ac8890166387e17e96cc6d950f2f9c2c9e5ca80859e1fb3f087ea"
 
 [[FileDigestGroup]]
 package = "bolt"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1119975"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.bolt.conf",
-    "/usr/share/dbus-1/system-services/org.freedesktop.bolt.service"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.bolt.conf"
+digester = "xml"
+hash = "4506c85524f2166a5fd1e82f911c1b6d2c81594abfc052fd9231c17457984a45"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.bolt.service"
+digester = "shell"
+hash = "140083066a0c9493a1338175a8bbb6c34046c77ce234d440038438adad1c5b91"
 
 [[FileDigestGroup]]
 package = "certmonger"
@@ -1001,10 +1175,14 @@ package = "systemd-portable"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "boo#1145639"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.freedesktop.portable1.service",
-    "/usr/share/dbus-1/system.d/org.freedesktop.portable1.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.freedesktop.portable1.service"
+digester = "shell"
+hash = "a402b32e779063a3fd3db91b56f503c30b3295e1a4a86eb5c35a86447384564b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.portable1.conf"
+digester = "xml"
+hash = "b9daf8449e03ecb01a8315507f84309fe44a6fd1fbe28b6cd6792fd627ce8bcc"
 
 [[FileDigestGroup]]
 package = "sssd-dbus"
@@ -1025,19 +1203,24 @@ package = "oddjob"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1169494"
-nodigests = [
-    "/etc/dbus-1/system.d/oddjob.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/oddjob.conf"
+digester = "xml"
+hash = "e23a8133c9a7209db3e7bafc3687b04c7dcbf0c267551787688bb36fbdbb154e"
 
 [[FileDigestGroup]]
 package = "libvirt-dbus"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
 bug = "bsc#1173093"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.libvirt.service",
-    "/usr/share/dbus-1/system.d/org.libvirt.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.libvirt.service"
+digester = "shell"
+hash = "97c56920616b10e869016e68f8f6197cf6945daddf270eeb4294ca3e7c8340d2"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.libvirt.conf"
+digester = "xml"
+hash = "3a50caa3c4cba331f7f1f70eba0abbb463bc4f46638d3b393a7fb22d5996fe7c"
 
 [[FileDigestGroup]]
 package  = "plasma6-disks"
@@ -1058,10 +1241,14 @@ package = "kdenetwork-filesharing"
 type = "dbus"
 note = "Samba configuration helper"
 bug = "bsc#1175633"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.filesharing.samba.service",
-    "/usr/share/dbus-1/system.d/org.kde.filesharing.samba.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kde.filesharing.samba.service"
+digester = "shell"
+hash = "dbedfdc18eb312a39f5e6ca905701f729bebde2f18a4362d59944b636883c6bc"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.kde.filesharing.samba.conf"
+digester = "xml"
+hash = "b1c704c0efb5a029a365fdaba7c4c5284b60ba788ed2bae9ef530548b2eece5f"
 
 [[FileDigestGroup]]
 package = "kdiskmark"
@@ -1167,27 +1354,30 @@ package = "oddjob-gpupdate"
 type = "dbus"
 note = "helper that calls samba-gpupdate"
 bug = "bsc#1188680"
-nodigests = [
-    "/etc/dbus-1/system.d/oddjob-gpupdate.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/oddjob-gpupdate.conf"
+digester = "xml"
+hash = "fa2b4d8380f1a3a37b3771c10d7b38a6f5fb976ae1af9e91dfff01cc656d1c9e"
 
 [[FileDigestGroup]]
 package = "oddjob-mkhomedir"
 type = "dbus"
 note = "oddjob example that creates user's home directories upon first login"
 bug = "bsc#1169494"
-nodigests = [
-    "/etc/dbus-1/system.d/oddjob-mkhomedir.conf",
-]
+[[FileDigestGroup.digests]]
+path = "/etc/dbus-1/system.d/oddjob-mkhomedir.conf"
+digester = "xml"
+hash = "35f83685500c15e581b7738d33207565c5e48f93607be20d650da2d51fa0ebf0"
 
 [[FileDigestGroup]]
 package = "low-memory-monitor"
 type = "dbus"
 note = "a system wide daemon monitoring low memory situations and sending out signals"
 bug = "bsc#1189899"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.freedesktop.LowMemoryMonitor.conf"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.freedesktop.LowMemoryMonitor.conf"
+digester = "xml"
+hash = "39b875d91e5718c4cba082848e3e8dcfcfbdc5f672a4aee914c39ef65590f6bd"
 
 [[FileDigestGroup]]
 package = "power-profiles-daemon"
@@ -1215,24 +1405,44 @@ hash = "a1b1dda54405102f4a297c836a32a0843dcca50e09b0ac995fa61f0e24977f15"
 package = "setroubleshoot-server"
 type = "dbus"
 bug = "bsc#1186344"
-nodigests = [
-    "/usr/share/dbus-1/system.d/org.fedoraproject.Setroubleshootd.conf",
-    "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootFixit.conf",
-    "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootPrivileged.conf",
-    "/usr/share/dbus-1/system-services/org.fedoraproject.Setroubleshootd.service",
-    "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootFixit.service",
-    "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootPrivileged.service"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.fedoraproject.Setroubleshootd.conf"
+digester = "xml"
+hash = "4b1dd071a819fe2a7def1123a48d38c6ae570e5c6ecac6be64d5bc61cfc6ef21"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootFixit.conf"
+digester = "xml"
+hash = "4af6d3bc136253b931ad21cbff0137eab6db50651ae18b0cadc9d41858f2746b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.fedoraproject.SetroubleshootPrivileged.conf"
+digester = "xml"
+hash = "66c999c413e3215be4a07b65f36a2eda60dd106cc9485a7570ed8649b926268b"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.fedoraproject.Setroubleshootd.service"
+digester = "shell"
+hash = "727242523b6bb41e08b0a5f12d35e3f40554e396d040cf66e0ed93c3dc7d0a09"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootFixit.service"
+digester = "shell"
+hash = "6a0b7caf34f6be639a5a4835bd458e69775601e7d4cea1b7b655b8d10a8b4c05"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.fedoraproject.SetroubleshootPrivileged.service"
+digester = "shell"
+hash = "c848d09e47e35df391baebbd7bd463fda7a68479e7b085a16892c97ddd0de3c1"
 
 [[FileDigestGroup]]
 package = "kcron"
 type = "dbus"
 note = "a privilege separation helper to modify system crontab"
 bug = "bsc#1193945"
-nodigests = [
-    "/usr/share/dbus-1/system.d/local.kcron.crontab.conf",
-    "/usr/share/dbus-1/system-services/local.kcron.crontab.service"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/local.kcron.crontab.conf"
+digester = "xml"
+hash = "c080f1e8ab8612f6a771a7341659bb9180f081e805689ed97a0e7e1ed000088e"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/local.kcron.crontab.service"
+digester = "shell"
+hash = "fa65ae25c9eb99b8e3d338383a24e3675fa4388e878e1ec78ec9e3c6c90602e7"
 
 [[FileDigestGroup]]
 package = "tukitd"
@@ -1267,9 +1477,10 @@ package = "kpmcore"
 type = "dbus"
 note = "Helper for (re)partitioning block devices"
 bug = "bsc#1178848"
-nodigests = [
-    "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service"
-]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.kde.kpmcore.helperinterface.service"
+digester = "shell"
+hash = "d6fd84c6b7498bb868bc37e3f5fe6ec969e01b746f45d90ca30998c6c32befea"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.kde.kpmcore.helperinterface.conf"
 digester = "xml"
