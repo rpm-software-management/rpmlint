@@ -50,9 +50,7 @@ class AbstractFilesCheck(AbstractCheck):
             # start with the biggest files first
             filenames = sorted(filenames, key=lambda x: pkg.files[x].size, reverse=True)
             with concurrent.futures.ThreadPoolExecutor() as executor:
-                futures = []
-                for filename in filenames:
-                    futures.append(executor.submit(self.check_file, pkg, filename))
+                futures = [executor.submit(self.check_file, pkg, filename) for filename in filenames]
                 concurrent.futures.wait(futures)
                 for future in futures:
                     err = future.exception()

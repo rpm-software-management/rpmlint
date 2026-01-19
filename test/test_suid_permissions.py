@@ -156,11 +156,21 @@ PERMCTL_PKG = get_tested_mock_package(
     /usr/bin/permctl -n --set --system /var/lib/perms/test || : \
   fi \
 """,
+        'VERIFYSCRIPT': """
+  if [ -x /usr/bin/permctl ]; then \
+    /usr/bin/permctl -n --set --system /var/lib/perms/test || : \
+  fi \
+""",
     },
 )
 CHKSTAT_PKG = PERMCTL_PKG.clone(
     header={
         'POSTIN': """
+  if [ -x /usr/bin/chkstat ]; then \
+    /usr/bin/chkstat -n --set --system /var/lib/perms/test || : \
+  fi \
+""",
+        'VERIFYSCRIPT': """
   if [ -x /usr/bin/chkstat ]; then \
     /usr/bin/chkstat -n --set --system /var/lib/perms/test || : \
   fi \
@@ -175,3 +185,4 @@ def test_permissions_permctl(package, permissions_check):
     test.check(package)
     out = output.print_results(output.results)
     assert 'permissions-missing-postin' not in out
+    assert 'permissions-missing-verifyscript' not in out

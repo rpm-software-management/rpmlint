@@ -153,7 +153,7 @@ def test_makefile_junk(package, filescheck):
 def test_sphinx_inv_files(package, filescheck):
     output, test = filescheck
     test.check(package)
-    assert not len(output.results)
+    assert not output.results
 
 
 @pytest.mark.parametrize('package', [FileChecksPackage])
@@ -257,9 +257,9 @@ def test_shlib(package, is_devel, filescheck):
     assert 'library-without-ldconfig-postin' in out
     assert 'library-without-ldconfig-postun' in out
     if is_devel:
-        assert ('non-devel-file-in-devel-package' in out)
+        assert 'non-devel-file-in-devel-package' in out
     else:
-        assert ('devel-file-in-non-devel-package' in out)
+        assert 'devel-file-in-non-devel-package' in out
 
 
 @pytest.mark.parametrize('package, files', [

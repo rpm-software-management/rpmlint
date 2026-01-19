@@ -914,6 +914,7 @@ def test_check_no_essential_section_declarative(package, speccheck):
     assert 'W: no-%install-section' not in out
     assert 'W: no-%build-section' not in out
     assert 'W: no-%check-section' not in out
+    assert 'W: patch-not-applied' not in out
 
 
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
@@ -1169,6 +1170,21 @@ def test_python_setup_test(package, speccheck):
     assert 'W: python-setup-test' in out
 
 
+@pytest.mark.parametrize('package,lines', [
+    ('spec/python-setup-install', ['setup.py install']),
+    ('spec/python-setup-python_install', ['python_install', 'python3_install', 'python312_install', 'py3_install']),
+])
+def test_python_setup_install(package, lines, speccheck):
+    """Test if specfile has deprecated use of 'setup.py install'."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: python-setup-install' in out
+    for line in lines:
+        assert line in out
+
+
 @pytest.mark.parametrize('package', ['spec/python-module-def'])
 def test_python_module_definition(package, speccheck):
     """Test if python_module macro is defined in the spec file."""
@@ -1232,6 +1248,22 @@ def test_suse_version(package, speccheck):
 
 
 @pytest.mark.parametrize('package', [
+    'spec/shared-bindir-glob-in-files',
+    'spec/shared-datadir-glob-in-files',
+    'spec/shared-docdir-glob-in-files',
+    'spec/shared-includedir-glob-in-files',
+    'spec/shared-mandir-glob-in-files',
+])
+def test_shared_dir_glob(package, speccheck):
+    """Test if %{_bindir}/*, etc. is present in %files section."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: shared-dir-glob-in-files' in out
+
+
+@pytest.mark.parametrize('package', [
     'spec/null-char-last',
     'spec/null-char-first',
 ])
@@ -1265,3 +1297,12 @@ def test_deprecated_suse_update_desktop_files(spec, expected, output, test):
     test.check_spec(package)
     out = output.print_results(output.results)
     assert ('W: suse-update-desktop-file-deprecated' in out) == expected
+
+
+@pytest.mark.parametrize('spec', ['spec/bogus-date'])
+def test_bogus_date_in_changelog(spec, output, test):
+    package = get_tested_spec_package(spec)
+    test.check_spec(package)
+    out = output.print_results(output.results)
+    assert 'warning: bogus date in %changelog' in out
+    assert 'W: specfile-warning warning: bogus date in %changelog' in out

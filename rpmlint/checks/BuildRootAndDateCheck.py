@@ -17,12 +17,18 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
         super().__init__(config, output, r'.*')
         self.looksliketime = re.compile('(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])')
         self.istoday = re.compile(time.strftime('%b %e %Y'))
-        self.prepare_regex(rpm.expandMacro('%{?buildroot}') or '^/.*/BUILDROOT/')
+        # in rpm 4.20 the expandMacro will return an empty string and so we run
+        # into the "or" case.
+        # return a string that is modelled after the actual path that rpm 4.20
+        # is using so we can actually match what the rpm 4.20 path will be and
+        # not just any random string in a file that references buildroot.
+        # https://github.com/rpm-software-management/rpm/blob/rpm-4.20.1-release/build/parsePreamble.c#L1290
+        self.prepare_regex(rpm.expandMacro('%{?buildroot}') or '/%{NAME}-%{VERSION}-build/BUILDROOT/')
 
     def prepare_regex(self, buildroot):
         for m in ('name', 'version', 'release', 'NAME', 'VERSION', 'RELEASE'):
             buildroot = buildroot.replace('%%{%s}' % (m), r'[\w\!-\.]{1,20}')
-        self.build_root_re = re.compile(buildroot)
+        self.lookslikebuildroot = re.compile(buildroot)
 
     def check_file(self, pkg, filename):
         if filename.startswith('/usr/lib/debug') or pkg.is_source or \
@@ -35,5 +41,5 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
                 self.output.add_info('E', pkg, 'file-contains-date-and-time', filename)
             else:
                 self.output.add_info('E', pkg, 'file-contains-current-date', filename)
-        if self.build_root_re.search(data):
+        if self.lookslikebuildroot.search(data):
             self.output.add_info('E', pkg, 'file-contains-buildroot', filename)

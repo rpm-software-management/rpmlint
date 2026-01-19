@@ -6,6 +6,10 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
 
+# Set to true to issue a warning for ghost entries outside snapshots
+# when checking for atomic update compatibility
+AtomicCheckGhosts = false
+
 # Enabled checks for the rpmlint to be run (besides the default set)
 Checks = [
     "BashismsCheck",
@@ -24,11 +28,31 @@ Checks = [
     "SystemdTmpfilesCheck",
     "SUIDPermissionsCheck",
     "WorldWritableCheck",
+    "AtomicUpdateCheck",
 ]
 
 # List of directory prefixes that are not allowed in packages
 DisallowedDirs = [
     "/etc/NetworkManager/dispatcher.d",
+]
+
+# Only these directories may be used by packages compatible with
+# atomic updates
+AtomicAllowedDirs = [
+    "/etc/",
+    "/usr/",
+    "/bin/",
+    "/lib/",
+    "/lib64/",
+    "/sbin/",
+    "/boot/",
+]
+
+# List of subdirectories which are disallowed for atomic updates
+# despite being within otherwise allowed directories
+AtomicDisallowedSubdirs = [
+    "/usr/local/",
+    "/boot/efi/",
 ]
 
 FilterErrorTitles = [
@@ -83,6 +107,7 @@ Filters = [
     '^filesystem\..*: dir-or-file-in-tmp',
     '^filesystem\..*: dir-or-file-in-mnt',
     '^filesystem\..*: dir-or-file-in-home',
+    '^filesystem\..*: dir-or-file-outside-snapshot',
     '^filesystem\..*: hidden-file-or-dir /root/.gnupg',
     '^filesystem\..*: hidden-file-or-dir /root/.gnupg',
     '^filesystem\..*: hidden-file-or-dir /etc/skel/.config',
@@ -270,6 +295,14 @@ BlockedFilters = [
     "polkit-untracked-privilege",
     "polkit-user-privilege",
     "polkit-xml-exception",
+    "sudoers-file-digest-mismatch",
+    "sudoers-file-ghost",
+    "sudoers-file-symlink",
+    "sudoers-file-unauthorized",
+    "sysctl-file-digest-mismatch",
+    "sysctl-file-ghost",
+    "sysctl-file-symlink",
+    "sysctl-file-unauthorized",
     "systemd-tmpfile-ghost",
     "systemd-tmpfile-symlink",
     "systemd-tmpfile-parse-error",
@@ -318,13 +351,15 @@ paths = [
 [SystemdTmpfilesWhitelist]
 
 [Descriptions]
-non-standard-uid = '''A file in this package is owned by an unregistered user id.
-To register the user, please make a pull request to the rpmlint config file
-configs/openSUSE/users-groups.toml in the rpmlint repository.
+non-standard-uid = '''A file in this package is owned by an unregistered user
+id.  To register the user, please make a pull request to the rpmlint config
+file configs/openSUSE/users-groups.toml in the opensuse branch of the rpmlint
+repository.
 '''
-non-standard-gid = '''A file in this package is owned by an unregistered group id.
-To register the group, please make a pull request to the rpmlint config file
-configs/openSUSE/users-groups.toml in the rpmlint repository.
+non-standard-gid = '''A file in this package is owned by an unregistered group
+id.  To register the group, please make a pull request to the rpmlint config
+file configs/openSUSE/users-groups.toml in the opensuse branch of the rpmlint
+repository.
 '''
 no-changelogname-tag = '''There is no changelog. Please insert a '%changelog' section heading in your
 spec file and prepare your changes file using e.g. the 'osc vc' command.'''

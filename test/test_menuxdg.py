@@ -1,5 +1,6 @@
 from mockdata.mock_menuxdg import (
     MenuXDGBadBinPackage,
+    MenuXDGBadDup2Package,
     MenuXDGBadDupPackage,
     MenuXDGBadSecPackage,
     MenuXDGBadUTF8Package,
@@ -49,6 +50,19 @@ def test_duplicate(package, menuxdgcheck):
     test.check(package)
     out = output.print_results(output.results)
     assert 'desktopfile-duplicate-section' in out
+    assert '[{e.section}]' not in out
+    assert 'invalid-desktopfile' in out
+
+
+@pytest.mark.skipif(not HAS_DESKTOP_FILE_UTILS, reason='Optional dependency desktop-file-utils not installed')
+@pytest.mark.parametrize('package', [MenuXDGBadDup2Package])
+def test_duplicate_option(package, menuxdgcheck):
+    output, test = menuxdgcheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'desktopfile-duplicate-option' in out
+    assert '[{e.section}]' not in out
+    assert '{e.option}' not in out
     assert 'invalid-desktopfile' in out
 
 
