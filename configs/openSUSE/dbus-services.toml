@@ -1749,3 +1749,13 @@ hash     = "865182ed82bfea6ad3bf118b7fb9d2c2fcfc0ddb0568d238c0b15b355348eeb5"
 path     = "/usr/share/dbus-1/system.d/org.freedesktop.UPower.PowerProfiles.conf"
 digester = "xml"
 hash     = "a1b1dda54405102f4a297c836a32a0843dcca50e09b0ac995fa61f0e24977f15"
+
+[[FileDigestGroup]]
+package  = "inputplumber"
+note     = "Allows control over virtual input devices"
+bug      = "bsc#1249149"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.shadowblip.InputPlumber.conf"
+digester = "xml"
+hash     = "37b05cfeb384fe7f696d7a090153eb464dbc02917f721c01241d655f43a433bb"
