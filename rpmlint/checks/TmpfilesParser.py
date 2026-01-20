@@ -1,6 +1,3 @@
-import shlex
-
-
 # NOTE: for 'C' the table in the man page does not list permissions
 # support but actually they *are* supported.
 TYPES_WITH_PERMS = (
@@ -36,9 +33,64 @@ class TmpfilesEntry:
         during parsing the tmpfiles entry."""
         return self.warnings
 
+    def _split_line(self, line):
+        """
+        Splits a config line according to the tmpfiles.d(5) man page.
+        1. The first 6 fields are separated by whitespace and may use quotes,
+           similar to how shells parse command-lines.
+        2. The last field consumes the entire remainder of the line, including
+           any trailing whitespace.
+        """
+        fields = []
+        index = 0
+        length = len(line)
+
+        line = line.lstrip()
+        for _ in range(6):
+            while index < length and line[index].isspace():
+                index += 1
+
+            if index >= length:
+                # less than 6 fields
+                break
+
+            start = index
+            in_quote = None
+
+            while index < length:
+                c = line[index]
+
+                if in_quote:
+                    if c == in_quote:
+                        in_quote = None
+                    index += 1
+                    continue
+                elif c in ("'", '"'):
+                    in_quote = c
+                    index += 1
+                    continue
+                if c.isspace():
+                    break
+                index += 1
+
+            raw_field = line[start:index]
+            fields.append(raw_field)
+
+        remainder = line[index:].lstrip()
+        if len(remainder):
+            if remainder[0] in ("'", '"'):
+                # The last field must not be quoted according to the man page.
+                # However testing with systemd-tmpfiles shows that this is not
+                # treated as an error. If this ever changes, throw an error
+                # here.
+                pass
+            fields.append(remainder)
+
+        return fields
+
     def _parse(self):
-        # each field may be quoted, so use shell like parsing to cope with that
-        fields = shlex.split(self.line)
+        fields = self._split_line(self.line)
+
         if len(fields) > 7:
             self._add_warning('Too many fields encountered')
             return

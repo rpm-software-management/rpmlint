@@ -91,6 +91,9 @@ def test_parser(tmpfilescheck):
         'c /some/path 0755 someone root - -',
         'h /some/path - - - - +C',
         'h /some/path - - - - +a',
+        "f '/quoted/field with spaces' 0777 root root - -",
+        'f "/quoted/field with spaces" 0777 root root - -',
+        'f /some/path 0777 root root -   trailing spaces  ',
     )
 
     with FakePkg('testpkg') as pkg:
