@@ -115,3 +115,49 @@ path = "/usr/lib/tmpfiles.d/sendmail.conf"
 entries = [
     "d /var/spool/mail                      1777 root root -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "texlive-filesystem"
+bugs = ["bsc#1256841"]
+note = "Various state and cache directories used by texlive"
+path = "/usr/lib/tmpfiles.d/texlive.conf"
+entries = [
+    "d /var/cache/texmf                     1755 root  root  - -",
+    "d /var/cache/texmf/fonts               3775 mktex mktex - -",
+    "d /var/cache/texmf/fonts/pk            3775 mktex mktex - -",
+    "d /var/cache/texmf/fonts/source        3775 mktex mktex - -",
+    "d /var/cache/texmf/fonts/tfm           3775 mktex mktex - -",
+    "d /var/cache/texmf/fonts/luatex-cache  3775 mktex mktex - -",
+    "f /var/cache/texmf/fonts/ls-R          0664 mktex mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
+    "d /var/lib/texmf                       1755 root  root  - -",
+    "d /var/lib/texmf/dist                  1755 root  root  - -",
+    "f /var/lib/texmf/dist/ls-R             0664 root  mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
+    "d /var/lib/texmf/fonts                 1755 root  root  - -",
+    "d /var/lib/texmf/fonts/dvipdfm         1755 root  root  - -",
+    "d /var/lib/texmf/fonts/dvips           1755 root  root  - -",
+    "d /var/lib/texmf/fonts/pdftex          1755 root  root  - -",
+    "d /var/lib/texmf/fonts/conf            1755 root  root  - -",
+    "d /var/lib/texmf/fonts/map             1755 root  root  - -",
+    "d /var/lib/texmf/main                  1755 root  root  - -",
+    "f /var/lib/texmf/main/ls-R             0664 root  mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
+    "d /var/lib/texmf/md5                   0755 root  root  - -",
+    "d /var/lib/texmf/web2c                 1755 root  root  - -",
+    "d /var/lib/texmf/web2c/aleph           1755 root  root  - -",
+    "d /var/lib/texmf/web2c/eptex           1755 root  root  - -",
+    "d /var/lib/texmf/web2c/luatex          1755 root  root  - -",
+    "d /var/lib/texmf/web2c/metafont        1755 root  root  - -",
+    "d /var/lib/texmf/web2c/pdftex          1755 root  root  - -",
+    "d /var/lib/texmf/web2c/ptex            1755 root  root  - -",
+    "d /var/lib/texmf/web2c/tex             1755 root  root  - -",
+    "d /var/lib/texmf/web2c/xetex           1755 root  root  - -",
+    "d /var/lib/texmf/web2c/hitex           1755 root  root  - -",
+    "d /var/lib/texmf/web2c/luahbtex        1755 root  root  - -",
+    "d /var/lib/texmf/web2c/luajithbtex     1755 root  root  - -",
+    "d /var/lib/texmf/web2c/luajittex       1755 root  root  - -",
+    "d /var/lib/texmf/web2c/mflua-nowin     1755 root  root  - -",
+    "d /var/lib/texmf/web2c/euptex          1755 root  root  - -",
+    "d /var/lib/texmf/web2c/uptex           1755 root  root  - -",
+    "d /var/lib/texmf/luatex-cache          0755 root  root  - -",
+    "d /var/lib/texmf/luametatex-cache      0755 root  root  - -",
+    "f /var/lib/texmf/ls-R                  0664 root  mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
+]
