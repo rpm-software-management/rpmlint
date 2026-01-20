@@ -51,6 +51,7 @@ hash = "2d5c56cdfb00ec169c182de791cf2934331159842f1849c5f2d7059f0086bd2c"
 [[FileDigestGroup]]
 package = "texlive-filesystem"
 type = "permissions"
+note = """DEPRECATED. texlive is currently migrating these directories to systemd-tmpfile. This entry can be deleted once the new setup is complete. See also: bsc#1256841 but double-check, even if that bug is closed."""
 [[FileDigestGroup.digests]]
 path = "/etc/permissions.d/texlive"
 hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
