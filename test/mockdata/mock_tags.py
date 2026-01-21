@@ -143,3 +143,59 @@ ValidExceptionPackage = InvalidExceptionPackage.clone(
         'license': 'GPL-2.0+ WITH 389-exception',
     },
 )
+
+
+ForbiddenControlCharPackage = get_tested_mock_package(
+    lazyload=True,
+    name='xtables-addons-kmp-default',
+    files=[],
+    header={
+        'requires': [
+            'ksym(default:',
+            'ksym(default:\b)',
+            'ksym(default:HX_memmem) = 55bffe85',
+            'ksym(default:PDE_DATA) = e515007f',
+            'ksym(default:__alloc_skb) = a57f3289'
+        ],
+        'provides': [],
+        'arch': 'x86_64',
+        'name': 'xtables-addons-kmp-default',
+        'version': '0',
+        'release': '0',
+    },
+)
+
+
+ForbiddenControlCharChangelogPackage = get_tested_mock_package(
+    lazyload=True,
+    name='ruby2.6-rubygem-fast_gettext',
+    files=[],
+    header={
+        'requires': [],
+        'provides': [],
+        'arch': 'x86_64',
+        'name': 'ruby2.6-rubygem-fast_gettext',
+        'version': '0',
+        'release': '0',
+        'changelog': [
+            ['daniel.garcia@suse.com', 'Text', 1557057600],
+            ['daniel.garcia@suse.com', 'Forbiddeen character \x04 in changelog', 1557057600],
+        ],
+    },
+)
+
+
+ForbiddenControlCharAllPackage = ForbiddenControlCharPackage.clone(
+    extend=True,
+    name='SpecCheck4',
+    files=[],
+    header={
+        'requires': ['/bin/sh', 'require\x06', 'rpmlib(CompressedFileNames) <= 3.0.4-1'],
+        'provides': ['SpecCheck4 = 0.0.1-0', 'SpecCheck4(x86-64) = 0.0.1-0', 'provide\x06'],
+        'obsoletes': ['obsoletes\x06'],
+        'conflicts': ['conflicts\x06'],
+        'changelog': [
+            ['daniel.garcia@suse.com', 'changelog entry .... \x06', 1557057600],
+        ],
+    },
+)

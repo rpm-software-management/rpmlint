@@ -1,5 +1,8 @@
 from mockdata.mock_tags import (
     FooDevelPackage,
+    ForbiddenControlCharAllPackage,
+    ForbiddenControlCharChangelogPackage,
+    ForbiddenControlCharPackage,
     FuseCommonPackage,
     InvalidExceptionPackage,
     MissingProvidesPackage,
@@ -125,26 +128,26 @@ def test_valid_license_exception_begin_grouping(tmp_path, package, tagscheck):
     assert 'W: invalid-license-exception' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/xtables-addons-kmp-default'])
-def test_forbidden_controlchar_found_requires(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlCharPackage])
+def test_forbidden_controlchar_found_requires(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found Requires:' in out
 
 
-@pytest.mark.parametrize('package', ['binary/ruby2.6-rubygem-fast_gettext'])
-def test_forbidden_controlchar_found_changelog(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlCharChangelogPackage])
+def test_forbidden_controlchar_found_changelog(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found %changelog' in out
 
 
-@pytest.mark.parametrize('package', ['binary/SpecCheck4'])
-def test_forbidden_controlchar_found(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlCharAllPackage])
+def test_forbidden_controlchar_found(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found Requires:' in out
     assert 'E: forbidden-controlchar-found Provides:' in out
