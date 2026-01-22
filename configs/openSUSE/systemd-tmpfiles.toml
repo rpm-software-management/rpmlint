@@ -87,17 +87,6 @@ entries = [
 ]
 
 [[SystemdTmpfilesWhitelist]]
-package = "pcfclock"
-bug = "bsc#1150905"
-note = "static device nodes for an old school parallel-port real time clock"
-path = "/usr/lib/tmpfiles.d/pcfclock.conf"
-entries = [
-	"c /dev/pcfclock0 0444 root root - 181:0",
-	"c /dev/pcfclock1 0444 root root - 181:1",
-	"c /dev/pcfclock2 0444 root root - 181:2",
-]
-
-[[SystemdTmpfilesWhitelist]]
 package = "gromox"
 bug = "bsc#1200165"
 note = "gromox creates these two temporary directories"
