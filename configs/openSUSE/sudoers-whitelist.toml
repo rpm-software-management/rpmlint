@@ -87,3 +87,23 @@ bug = "bsc#1217706"
 path = "/usr/etc/sudoers.d/50-kalpa"
 digester = "shell"
 hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
+
+[[FileDigestGroup]]
+package = "sudo-policy-sudo-auth-self"
+type = "sudoers"
+note = "allow members of the sudo group to authenticate using their own passowrd"
+bug = "bsc#1257092"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/50-sudo-auth-self"
+digester = "shell"
+hash = "6871f243bc26ac29e1b283f30e3e58d327c0da4670ecff6591738849a5b59877"
+
+[[FileDigestGroup]]
+package = "sudo-policy-wheel-auth-self"
+type = "sudoers"
+note = "allow members of the wheel group to authenticate using their own passowrd"
+bug = "bsc#1257092"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/50-wheel-auth-self"
+digester = "shell"
+hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
