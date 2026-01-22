@@ -247,3 +247,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/empower.rules"
 digester = "default"
 hash     = "d9a62ab1ec477a4be1657769dfd194c75d1a07a4357e7717aa19ad5c07c3fc26"
+
+[[FileDigestGroup]]
+package  = "inputplumber"
+note     = "allows members of the inputplumber group to perform any InputPlumber actions"
+bug      = "bsc#1249149"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/org.shadowblip.InputPlumber.rules"
+digester = "default"
+hash     = "75efae6dcf5fecc3a73f851a09d871f768b055ad3049a40550cd81bbbd9f8640"
