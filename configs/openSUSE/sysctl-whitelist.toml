@@ -117,16 +117,6 @@ digester = "shell"
 hash = "25d4856bfebac6880d789f328381ac2c4f2280521fe166d3fbf539ab0f7d7612"
 
 [[FileDigestGroup]]
-package = "libvirt-daemon-driver-qemu"
-type = "sysctl"
-note = "allows unprivileged use of userfaultfds"
-bug = "bsc#1174722"
-[[FileDigestGroup.digests]]
-path = "/usr/lib/sysctl.d/60-qemu-postcopy-migration.conf"
-digester = "shell"
-hash = "b5872ea1291601cda9e3bc38a62dd7ed2198f791326315a7b2cf08205512735e"
-
-[[FileDigestGroup]]
 package = "389-ds"
 type = "sysctl"
 note = "changes TCP performance related settings, changes swappiness behaviour"
