@@ -107,3 +107,13 @@ bug = "bsc#1257092"
 path = "/usr/etc/sudoers.d/50-wheel-auth-self"
 digester = "shell"
 hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
+
+[[FileDigestGroup]]
+package = "servicetray"
+type = "sudoers"
+note = "allow members of the users group to invoke servicetray_systemctl"
+bug = "bsc#1257103"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/servicetray"
+digester = "shell"
+hash = "e6991727d5b08bf3f4425e88336d3f948ca0bc7ecf018f25b850c72d8f9a6638"
