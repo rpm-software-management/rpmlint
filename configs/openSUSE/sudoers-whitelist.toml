@@ -74,7 +74,7 @@ type = "sudoers"
 note = "allow wheel group members to run commands as root by entering their own password"
 bug = "bsc#1215276"
 [[FileDigestGroup.digests]]
-path = "/etc/sudoers.d/50-aeon"
+path = "/usr/etc/sudoers.d/50-aeon"
 digester = "shell"
 hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
 
@@ -84,6 +84,6 @@ type = "sudoers"
 note = "allow wheel group members to run commands as root by entering their own password"
 bug = "bsc#1217706"
 [[FileDigestGroup.digests]]
-path = "/etc/sudoers.d/50-kalpa"
+path = "/usr/etc/sudoers.d/50-kalpa"
 digester = "shell"
 hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
