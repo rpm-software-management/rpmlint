@@ -106,7 +106,7 @@ hash = "610b7e9a59c724100f907184dbf009846ebbd22b40326675a1bad481c685776d"
 packages = ["systemd", "systemd-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#641924"
+bugs = ["bsc#641924", "bsc#1257388"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.systemd1.service"
 digester = "shell"
@@ -114,7 +114,7 @@ hash = "78e857a4bab8d98b5c2b51532721da8468e69a19ed39cb05bbbfcfa0e6b5482c"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.systemd1.conf"
 digester = "xml"
-hash = "4e47906ff72ae23653dbe42bae7b7d0993f4e8d0cca007305929fbf37aa5b4d0"
+hash = "59e55b6a9633c59d762fd5b6fa00b59f1a699801bf7b46f2d8a2467f43b78bc7"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.hostname1.service"
 digester = "shell"
@@ -618,7 +618,7 @@ hash = "c8784129137498425fb70ddd5d2efe24723b522794ea942ab9d0dd463bd65d58"
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#828207", "bsc#1192033"]
+bugs = ["bsc#828207", "bsc#1192033", "bsc#1257388"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service"
 digester = "shell"
@@ -626,7 +626,7 @@ hash = "049c2e5c14f53c6d34f1c033b7bf1a14566d4380143920090c076a8ce6348e5b"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf"
 digester = "xml"
-hash = "94aaa9e5e10d300b65265c206e1cef0a10255ba6f58335591a9d763b7966dc50"
+hash = "1238b5fa20af9560a85a41dc6ea351c3dd231c35056049858e449f63595defd2"
 
 [[FileDigestGroup]]
 package = "systemd-container"
@@ -1174,7 +1174,7 @@ hash = "4e019e8d652ea80e697676b711fc063d5da965c5e20f2b5b7ae4200056a810a3"
 package = "systemd-portable"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "boo#1145639"
+bugs = ["boo#1145639", "bsc#1257388"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.portable1.service"
 digester = "shell"
@@ -1182,7 +1182,7 @@ hash = "a402b32e779063a3fd3db91b56f503c30b3295e1a4a86eb5c35a86447384564b"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.portable1.conf"
 digester = "xml"
-hash = "b9daf8449e03ecb01a8315507f84309fe44a6fd1fbe28b6cd6792fd627ce8bcc"
+hash = "131f0ce5f776739b87db0a885d14b6962888e6fcc2ee4c075a88c2964242e8d2"
 
 [[FileDigestGroup]]
 package = "sssd-dbus"
