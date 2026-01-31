@@ -297,6 +297,19 @@ def test_check_invalid_dependency(tmp_path, package, tagscheck):
     assert 'E: no-description-tag' in out
 
 
+@pytest.mark.parametrize('package', ['binary/python39-evtx'])
+def test_check_invalid_dependency_multiple(tmp_path, package, tagscheck):
+    """Test if a package has
+    invalid-dependency, when the invalid dependency is not first in the list"""
+    CONFIG.info = True
+    CONFIG.configuration['InvalidRequires'].append('/bin/sh')
+    output = Filter(CONFIG)
+    test = TagsCheck(CONFIG, output)
+    test.check(get_tested_package(package, tmp_path))
+    out = output.print_results(output.results)
+    assert 'E: invalid-dependency /bin/sh' in out
+
+
 @pytest.mark.parametrize('package', ['binary/random-exp'])
 def test_package_random_warnings(tmp_path, package, tagscheck):
     """Test if a package has check,
