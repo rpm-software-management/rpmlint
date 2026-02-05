@@ -41,6 +41,7 @@ filelist-forbidden-suseconfig = 10000
 filelist-forbidden-sysconfig = 10000
 filelist-forbidden-xorg = 10000
 filelist-forbidden-yast2 = 10000
+forbidden-controlchar-found = 10000
 kmp-missing-supplements = 10000
 wrong-script-interpreter = 490
 obsolete-insserv-requirement = 10000
