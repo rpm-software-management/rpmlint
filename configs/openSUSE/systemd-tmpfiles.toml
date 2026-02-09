@@ -188,3 +188,12 @@ entries = [
     "d /var/lib/texmf/luametatex-cache      0755 root  root  - -",
     "f /var/lib/texmf/ls-R                  0664 root  mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "libpulp-tools"
+bugs = ["bsc#1257865"]
+note = "Directory for dealing with live patches during updates"
+path = "/usr/lib/tmpfiles.d/ulp-tmp.conf"
+entries = [
+    "d /var/livepatches 0755 root root"
+]
