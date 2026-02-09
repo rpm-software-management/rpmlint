@@ -190,3 +190,12 @@ entries = [
     "d /var/google-users.d",
     "d /var/google-sudoers.d"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "libpulp-tools"
+bugs = ["bsc#1257865"]
+note = "Directory for dealing with live patches during updates"
+path = "/usr/lib/tmpfiles.d/ulp-tmp.conf"
+entries = [
+    "d /var/livepatches 0755 root root"
+]
