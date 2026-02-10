@@ -10,7 +10,7 @@ class ParseContext:
 
 
 class PermissionsEntry:
-    def __init__(self, profile, line_nr, path, owner, group, mode):
+    def __init__(self, profile, line_nr, path, owner, group, mode, packages):
         # source profile path
         self.profile = profile
         # source profile line nr
@@ -24,9 +24,23 @@ class PermissionsEntry:
         self.caps = []
         # related paths from variable expansions
         self.related_paths = []
+        self.packages = packages
+
+    def matches_pkg(self, pkg):
+        if not self.packages:
+            return True
+        return pkg in self.packages
+
+    def is_static(self):
+        # entries coming from the fixed permissions profile are considered static
+        return self.profile.endswith('/permissions')
 
     def __str__(self):
-        ret = f'{self.profile}:{self.linenr}: {self.path} {self.owner}:{self.group} {oct(self.mode)}'
+        if self.packages:
+            package = f" (:package: {','.join(self.packages)})"
+        else:
+            package = ''
+        ret = f'{self.profile}:{self.linenr}:{package} {self.path} {self.owner}:{self.group} {oct(self.mode)}'
         for cap in self.caps:
             ret += '\n+capability ' + cap
 
@@ -105,6 +119,7 @@ class PermissionsParser:
     def __init__(self, var_handler, profile_path):
         self.var_handler = var_handler
         self.entries = {}
+        self._active_packages = []
 
         with open(profile_path) as fd:
             self._parse_file(profile_path, fd)
@@ -128,7 +143,7 @@ class PermissionsParser:
             # "user:group"
             owner, group = ownership.replace('.', ':').split(':')
             mode = int(mode, 8)
-            entry = PermissionsEntry(context.label, context.line_nr, path, owner, group, mode)
+            entry = PermissionsEntry(context.label, context.line_nr, path, owner, group, mode, self._active_packages)
             expanded = self.var_handler.expand_paths(path)
 
             for p in expanded:
@@ -139,7 +154,8 @@ class PermissionsParser:
                     # this is the root node, keep the slash
                     key = '/'
                 entry_copy = copy.deepcopy(entry)
-                self.entries[key] = entry_copy
+                entry_list = self.entries.setdefault(key, [])
+                entry_list.append(entry_copy)
                 context.active_entries.append(entry_copy)
         elif line.startswith('+'):
             # capability line
@@ -154,5 +170,8 @@ class PermissionsParser:
 
             for entry in context.active_entries:
                 entry.caps = caps
+        elif line.startswith(':package:'):
+            parts = line.split()
+            self._active_packages = parts[1].split(',')
         else:
             raise Exception(f'Unexpected line encountered in {context.label}:{context.line_nr}')
