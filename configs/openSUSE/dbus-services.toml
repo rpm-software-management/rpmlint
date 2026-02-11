@@ -71,17 +71,6 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466"]
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/gdm.conf"
-digester = "xml"
-hash     = "6c74cd8824a587ccd281886c655718dfecd1da530bb823e6625be4a22c5a09e6"
-
-# TEMPORARY ENTRY. Remove as soon as possible (bsc#1230466).
-[[FileDigestGroup]]
-package  = "gdm"
-type     = "dbus"
-note     = "D-Bus interface for managing GDM sessions"
 bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
