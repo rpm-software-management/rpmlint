@@ -71,22 +71,22 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466"]
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/gdm.conf"
-digester = "xml"
-hash     = "6c74cd8824a587ccd281886c655718dfecd1da530bb823e6625be4a22c5a09e6"
-
-# TEMPORARY ENTRY. Remove as soon as possible (bsc#1230466).
-[[FileDigestGroup]]
-package  = "gdm"
-type     = "dbus"
-note     = "D-Bus interface for managing GDM sessions"
 bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
 hash     = "cf4cb93af82aacc9b4a0fc600c602af5089e001df10282a35287b6f27199f7ea"
+
+# TODO: merge with entry above once GDM 50 enters Factory
+[[FileDigestGroup]]
+package  = "gdm"
+note     = "D-Bus interface for managing GDM sessions"
+bug      = "bsc#1258025"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/gdm.conf"
+digester = "xml"
+hash     = "a46c9af0b5702e1d4cfa643b8f74ca878c3aa9cdd2d6e42d53ba160d64fc8e20"
 
 [[FileDigestGroup]]
 package = "udisks2"

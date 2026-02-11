@@ -228,6 +228,17 @@ path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
 digester = "default"
 hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
 
+# TODO: merge with entry above once GDM 50 enters Factory
+[[FileDigestGroup]]
+package  = "gdm"
+note     = "allows the display manager to add WiFi connections via NetworkManager, as well as creation of headless VNC displays"
+bug      = "bsc#1258025"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
+digester = "default"
+hash     = "134e91ed394511cda9e7aec31d95922cb4cd268314688ecd06fe4c11b1e9ae62"
+
 [[FileDigestGroup]]
 packages  = ["systemd", "systemd-mini"]
 note     = "This is just an example file that will not be active by default"
