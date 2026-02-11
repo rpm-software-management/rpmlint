@@ -77,6 +77,17 @@ path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
 hash     = "cf4cb93af82aacc9b4a0fc600c602af5089e001df10282a35287b6f27199f7ea"
 
+# TODO: merge with entry above once GDM 50 enters Factory
+[[FileDigestGroup]]
+package  = "gdm"
+note     = "D-Bus interface for managing GDM sessions"
+bug      = "bsc#1258025"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/gdm.conf"
+digester = "xml"
+hash     = "a46c9af0b5702e1d4cfa643b8f74ca878c3aa9cdd2d6e42d53ba160d64fc8e20"
+
 [[FileDigestGroup]]
 package = "udisks2"
 type = "dbus"
