@@ -12,11 +12,11 @@ jobs:
     targets:
     - fedora-rawhide-x86_64
     - fedora-rawhide-aarch64
-    - mageia-cauldron-x86_64
-    - mageia-cauldron-aarch64
-    # opensuse images are failing because dnf-plugins-core package is not working
-    #- opensuse-tumbleweed-x86_64
-    #- opensuse-tumbleweed-aarch64
+    # mageia is failing because of rpm
+    # - mageia-cauldron-x86_64
+    # - mageia-cauldron-aarch64
+    - opensuse-tumbleweed-x86_64
+    - opensuse-tumbleweed-aarch64
   trigger: pull_request
 - job: copr_build
   trigger: commit
@@ -24,11 +24,11 @@ jobs:
     targets:
     - fedora-rawhide-x86_64
     - fedora-rawhide-aarch64
-    - mageia-cauldron-x86_64
-    - mageia-cauldron-aarch64
-    # opensuse images are failing because dnf-plugins-core package is not working
-    #- opensuse-tumbleweed-x86_64
-    #- opensuse-tumbleweed-aarch64
+    # mageia is failing because of rpm
+    # - mageia-cauldron-x86_64
+    # - mageia-cauldron-aarch64
+    - opensuse-tumbleweed-x86_64
+    - opensuse-tumbleweed-aarch64
     branch: main
     project: rpm-software-management-rpmlint-mainline
     list_on_homepage: True
@@ -37,9 +37,8 @@ jobs:
   trigger: commit
   metadata:
     targets:
-    # opensuse images are failing because dnf-plugins-core package is not working
-    #- opensuse-tumbleweed-x86_64
-    #- opensuse-tumbleweed-aarch64
+    - opensuse-tumbleweed-x86_64
+    - opensuse-tumbleweed-aarch64
     branch: opensuse
     project: rpm-software-management-rpmlint-opensuse
     list_on_homepage: True

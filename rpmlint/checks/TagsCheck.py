@@ -36,7 +36,7 @@ class TagsCheck(AbstractCheck):
         super().__init__(config, output)
         self.valid_groups = config.configuration['ValidGroups']
         self.valid_licenses = config.configuration['ValidLicenses']
-        self.invalid_requires = map(re.compile, config.configuration['InvalidRequires'])
+        self.invalid_requires = list(map(re.compile, config.configuration['InvalidRequires']))
         self.packager_regex = re.compile(config.configuration['Packager'])
         self.release_ext = config.configuration['ReleaseExtension']
         self.extension_regex = self.release_ext and re.compile(self.release_ext)
