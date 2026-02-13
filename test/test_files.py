@@ -14,6 +14,7 @@ from mockdata.mock_files import (
     ManualPagesPackage,
     NetmaskDebugsourcePackage,
     NonReadableGhostPackage,
+    Pip3ManPagesPackage,
     Python3PowerBrokenPackage,
     Python3PowerPackage,
     PythonShebangLinkOkPackage,
@@ -236,6 +237,14 @@ def test_manpages(package, filescheck):
     assert 'manpage-not-compressed' in out
     assert 'no-manual-page-for-binary' not in out
     assert 'This manual page is not compressed with the bz2 compression' in out
+
+
+@pytest.mark.parametrize('package', [Pip3ManPagesPackage])
+def test_manpages_pip3(package, filescheck):
+    output, test = filescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'no-manual-page-for-binary' not in out
 
 
 @pytest.mark.parametrize('package', [DevelopmentPackage])
