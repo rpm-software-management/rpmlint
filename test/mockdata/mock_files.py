@@ -219,6 +219,18 @@ ManPagesPackage = get_tested_mock_package(
 )
 
 
+Pip3ManPagesPackage = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/usr/bin/pip3.14': {'content': '', 'metadata': {'mode': 0o755 | stat.S_IFREG}},
+        '/usr/bin/pip-3.14': {'content': '', 'metadata': {'mode': 0o755 | stat.S_IFREG}},
+        '/usr/share/man/man1/pip3.14.1.gz': {'content': 'gz'},
+        '/usr/share/man/man1/pip-3.14.1.gz': {'content': 'gz'},
+    },
+    header={'requires': []},
+)
+
+
 DevelopmentPackage = get_tested_mock_package(
     lazyload=True,
     name='my-package-devel',
