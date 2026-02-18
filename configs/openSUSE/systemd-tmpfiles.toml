@@ -199,3 +199,12 @@ path = "/usr/lib/tmpfiles.d/ulp-tmp.conf"
 entries = [
     "d /var/livepatches 0755 root root"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+packages = ["postfix", "postfix-bdb"]
+bugs = ["bsc#1258381"]
+note = "manages the spool directory for postfix"
+path = "/usr/lib/tmpfiles.d/postfix.conf"
+entries = [
+    "d /var/spool/mail 1777 root root - -"
+]
