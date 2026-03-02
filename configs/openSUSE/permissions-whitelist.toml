@@ -36,17 +36,17 @@ hash = "54d194477fc688076940c93bfd201680b5cc0fd6079bba10bd0101fb986a2231"
 
 [[FileDigestGroup]]
 package = "sendmail"
-bugs = ["bsc#1219339"]
+bugs = ["bsc#1219339", "bsc#1256160"]
 type = "permissions"
 note = """Be careful about calculating digest sums here, the sendmail package
       replaces file contents during RPM build time with architecture dependent
       values."""
 [[FileDigestGroup.digests]]
 path = "/usr/share/permissions/permissions.d/sendmail"
-hash = "e09ca5efebd0b3c123afc2364f9745f4d85c4327fa83f709bccbaa64da764486"
+hash = "544b91b15ce1dd54659a2d98a66ce945db2ca99134acb97f8a0a196612c57bb6"
 [[FileDigestGroup.digests]]
 path = "/usr/share/permissions/permissions.d/sendmail.paranoid"
-hash = "2d5c56cdfb00ec169c182de791cf2934331159842f1849c5f2d7059f0086bd2c"
+hash = "7a593f6678ab48c4eab010bb885989bd06e5a73a307575399d71a2d7c3d3f0c3"
 
 [[FileDigestGroup]]
 package = "texlive-filesystem"
