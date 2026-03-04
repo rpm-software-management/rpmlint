@@ -619,7 +619,7 @@ hash = "c8784129137498425fb70ddd5d2efe24723b522794ea942ab9d0dd463bd65d58"
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#828207", "bsc#1192033", "bsc#1257388"]
+bugs = ["bsc#828207", "bsc#1192033", "bsc#1257388", "bsc#1255368"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.machine1.service"
 digester = "shell"
@@ -627,7 +627,7 @@ hash = "049c2e5c14f53c6d34f1c033b7bf1a14566d4380143920090c076a8ce6348e5b"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf"
 digester = "xml"
-hash = "1238b5fa20af9560a85a41dc6ea351c3dd231c35056049858e449f63595defd2"
+hash = "ba1ed5dc253c52e7664fdd5a8e92016ab4d3ebacd444f9f51fcac7ea0a8e3f9b"
 
 [[FileDigestGroup]]
 package = "systemd-container"
