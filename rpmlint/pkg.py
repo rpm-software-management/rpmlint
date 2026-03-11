@@ -836,6 +836,9 @@ class FakePkg(AbstractPkg):
             self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')] = []
             self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')] = []
         self.header[rpm.RPMTAG_FILENAMES] = []
+        self.header[rpm.RPMTAG_CHANGELOGNAME] = []
+        self.header[rpm.RPMTAG_CHANGELOGTEXT] = []
+        self.header[rpm.RPMTAG_CHANGELOGTIME] = []
 
     def add_file(self, path, name):
         pkgfile = PkgFile(name)
@@ -959,6 +962,13 @@ class FakePkg(AbstractPkg):
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}VERSION')].append(version)
+                continue
+
+            if k == 'changelog':
+                for name, text, time_ in v:
+                    self.header[rpm.RPMTAG_CHANGELOGNAME].append(name)
+                    self.header[rpm.RPMTAG_CHANGELOGTEXT].append(text)
+                    self.header[rpm.RPMTAG_CHANGELOGTIME].append(time_)
                 continue
 
             key = getattr(rpm, f'RPMTAG_{k}'.upper())
