@@ -191,6 +191,13 @@ PythonFlitFedoraMockPackage = get_tested_mock_package(
 PythonIcecreamPackage = get_tested_mock_package(
     lazyload=True,
     files={
+        '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/PKG-INFO': {
+            'content': """Metadata-Version: 2.1
+Name: icecream
+Version: 2.1.3
+""",
+            'create_dirs': True
+        },
         '/usr/lib/python3.10/site-packages/icecream-2.1.3-py3.10.egg-info/requires.txt': {
             'content': """
 asttokens>=2.0.1
@@ -198,7 +205,6 @@ colorama>=0.3.9
 executing>=0.3.1
 pygments>=2.2.0
 """,
-            'create_dirs': True
         },
     },
     header={
@@ -278,6 +284,12 @@ PythonSinglePYCMockPackage = get_tested_mock_package(
 IPythonMissingRequirePackage = get_tested_mock_package(
     lazyload=True,
     files={
+        '/usr/lib/python3.12/site-packages/ipython-8.14.0-py3.12.egg-info/PKG-INFO': {
+            'content': """Metadata-Version: 2.1
+Name: ipython
+Version: 8.14.0
+""",
+        },
         '/usr/lib/python3.12/site-packages/ipython-8.14.0-py3.12.egg-info/requires.txt': {
             'content-path': 'files/ipython-requires.txt',
         },
