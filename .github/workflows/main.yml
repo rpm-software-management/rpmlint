@@ -16,11 +16,11 @@ jobs:
         container:
           - 'registry.fedoraproject.org/fedora:latest'
           - 'registry.fedoraproject.org/fedora:rawhide'
-          - 'registry.opensuse.org/opensuse/tumbleweed:latest'
+          - 'registry.opensuse.org/opensuse/leap:16.0'
         include:
           - container: 'registry.fedoraproject.org/fedora:latest'
             build-type: 'no-optional-deps'
-          - container: 'registry.opensuse.org/opensuse/tumbleweed:latest'
+          - container: 'registry.opensuse.org/opensuse/leap:16.0'
             build-type: 'no-optional-deps'
       fail-fast: false
 
@@ -41,10 +41,6 @@ jobs:
               python3-pytest-cov
               python3-pytest-xdist
               python3-flake8
-              python3-flake8-builtins
-              python3-flake8-bugbear
-              python3-flake8-import-order
-              python3-flake8-quotes
               python3-pyxdg
               python3-zstandard
               python3-tomli
@@ -63,8 +59,6 @@ jobs:
               myspell-fr_FR
               python3-pyenchant
         if: ${{ contains(matrix.container, 'opensuse') && matrix.build-type == 'normal' }}
-      - run: zypper -n install python3-flake8-comprehensions
-        if: ${{ contains(matrix.container, 'opensuse') }}
       - run: dnf --nogpgcheck --assumeyes install
               /usr/bin/cpio
               /usr/bin/bzip2
