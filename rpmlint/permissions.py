@@ -7,10 +7,11 @@ class ParseContext:
     def __init__(self, label):
         self.label = label
         self.active_entries = []
+        self.active_packages = []
 
 
 class PermissionsEntry:
-    def __init__(self, profile, line_nr, path, owner, group, mode):
+    def __init__(self, profile, line_nr, path, owner, group, mode, packages):
         # source profile path
         self.profile = profile
         # source profile line nr
@@ -24,6 +25,8 @@ class PermissionsEntry:
         self.caps = []
         # related paths from variable expansions
         self.related_paths = []
+        # optional packages
+        self.packages = []
 
     def __str__(self):
         ret = f'{self.profile}:{self.linenr}: {self.path} {self.owner}:{self.group} {oct(self.mode)}'
@@ -128,7 +131,9 @@ class PermissionsParser:
             # "user:group"
             owner, group = ownership.replace('.', ':').split(':')
             mode = int(mode, 8)
-            entry = PermissionsEntry(context.label, context.line_nr, path, owner, group, mode)
+            entry = PermissionsEntry(context.label, context.line_nr,
+                                     path, owner, group, mode,
+                                     context.active_packages)
             expanded = self.var_handler.expand_paths(path)
 
             for p in expanded:
@@ -154,5 +159,11 @@ class PermissionsParser:
 
             for entry in context.active_entries:
                 entry.caps = caps
+        elif line.startswith(':package:'):
+            packages = line[9:]
+            # Remove comment in :package: line
+            if '#' in packages:
+                packages = packages[0:packages.index('#')]
+            context.active_packages = [i.strip() for i in packages.split(',')]
         else:
             raise Exception(f'Unexpected line encountered in {context.label}:{context.line_nr}')
