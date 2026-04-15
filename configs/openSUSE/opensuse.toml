@@ -337,7 +337,7 @@ paths = [
 [[SymlinkExceptions]]
 packages = ["systemd", "systemd-mini"]
 paths = [
-    # compability symlink towards /etc/sysctl.conf for systemd-sysctl
+    # compatibility symlink towards /etc/sysctl.conf for systemd-sysctl
     "/usr/lib/sysctl.d/99-sysctl.conf"
 ]
 
