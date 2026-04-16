@@ -4,10 +4,27 @@ import stat
 import pytest
 from rpmlint.checks.SUIDPermissionsCheck import SUIDPermissionsCheck
 from rpmlint.filter import Filter
+from rpmlint.pkg import FakePkg
 
 import Testing
 from Testing import get_tested_mock_package
 from Testing import get_tested_package, get_tested_path
+
+
+class FakePermPkg(FakePkg):
+
+    def __init__(self, name, paths):
+        super().__init__(name)
+        if not isinstance(paths, list):
+            paths = [paths]
+        # we need to add some extra ingredients for the SUIDPermissionsCheck
+        # to be satisfied with a fake package.
+        script = '\n'.join([f'permctl -n  {path}' for path in paths])
+        self.add_header({
+            'POSTIN': script,
+            'VERIFYSCRIPT': script
+        })
+        self.prereq.append(['permissions'])
 
 
 def get_suid_permissions_check(config_path):
@@ -186,3 +203,26 @@ def test_permissions_permctl(package, permissions_check):
     out = output.print_results(output.results)
     assert 'permissions-missing-postin' not in out
     assert 'permissions-missing-verifyscript' not in out
+
+
+def get_fake_pkg_check():
+    output, test = get_suid_permissions_check(Testing.TEST_CONFIG[0])
+    test._parse_profile(str(get_tested_path('configs/permissions.secure')))
+    return output, test
+
+
+def test_permissions_package_coupling():
+    output, test = get_fake_pkg_check()
+
+    # check that the multi-package specification works correctly, this package
+    # should be accepted
+    with FakePermPkg('second', '/test/path/one') as pkg:
+        pkg.add_file_with_content('/test/path/one', 'stuff', perms=0o4755)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # this is an unrelated package which should actually be complained about
+    with FakePermPkg('third', '/test/path/one') as pkg:
+        pkg.add_file_with_content('/test/path/one', 'stuff', perms=0o4755)
+        test.check(pkg)
+        assert len(output.results) == 1
