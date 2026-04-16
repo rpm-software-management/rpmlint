@@ -171,7 +171,11 @@ class PermissionsParser:
             for entry in context.active_entries:
                 entry.caps = caps
         elif line.startswith(':package:'):
-            parts = line.split()
-            self._active_packages = parts[1].split(',')
+            # get rid of any trailing comment
+            line = line.split('#')[0]
+            # get rid of the :package: prefix
+            parts = line.split(None, 1)
+            # split comma-separated package names and strip each part from spaces
+            self._active_packages = [part.strip() for part in parts[1].split(',')]
         else:
             raise Exception(f'Unexpected line encountered in {context.label}:{context.line_nr}')
