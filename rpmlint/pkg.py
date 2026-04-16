@@ -904,7 +904,7 @@ class FakePkg(AbstractPkg):
 
         return pkgdir
 
-    def add_file_with_content(self, name, content, metadata=None, **flags):
+    def add_file_with_content(self, name, content, metadata=None, perms=0o644, **flags):
         """
         Add file to the FakePkg and fill the file with provided
         string content.
@@ -912,7 +912,7 @@ class FakePkg(AbstractPkg):
         path = os.path.join(self.dir_name(), name.lstrip('/'))
         pkg_file = PkgFile(name)
         pkg_file.path = path
-        pkg_file.mode = stat.S_IFREG | 0o0644
+        pkg_file.mode = stat.S_IFREG | perms
         pkg_file.user = 'root'
         pkg_file.group = 'root'
         self.files[name] = pkg_file
