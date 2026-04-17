@@ -264,6 +264,17 @@ def test_combination_nodigests_and_digests():
         assert error == 'testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:ab5ec199027247773d2d617895f49179d7b3186e, has:a6abec9ea1e13ca93d1c704758bd52f62ef16433'
 
 
+def test_partial_match():
+    # test what happens when a package has matches for one digest group and
+    # another one. this should still be rejected.
+    output, test = get_digestcheck('digests.config')
+    with FakePkg('testpkg3') as pkg:
+        pkg.add_file_with_content('/restricted/1/firstfile', 'first file here')
+        pkg.add_file_with_content('/restricted/1/secondfile', 'second file here')
+        test.check(pkg)
+        assert len(output.results) == 2
+
+
 def test_multiple_packages():
     # the first two should match, the last one shouldn't
     for pkgname in ('testpkg2', 'otherpkg', 'badpkg'):
