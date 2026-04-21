@@ -202,6 +202,9 @@ class FileDigestCheck(AbstractCheck):
         Return true if there is a check configuration that restricts the given
         path.
         """
+        if isinstance(path, str):
+            path = Path(path)
+
         node = self.restricted_paths_trie
         # Skip initial '/'
         for part in path.parts[1:]:
@@ -345,13 +348,14 @@ class FileDigestCheck(AbstractCheck):
         # must be a file which isn't matched by a name pattern.
         return None
 
-    def _check_digest(self, path, digest_info, pkg):
+    def _check_digest(self, digest_info, pkg):
         """Returns a tuple of (bool, str), where the boolean indicates whether
         the digest of the package's file matches the one recorded in the
         digest_info; the str contains the actual hash digest calculated
         from the package's file or None if no hash digest is configured or an
         error occurred."""
         algorithm = digest_info['algorithm']
+        path = digest_info['path']
         if algorithm == 'skip':
             return (True, None)
 
@@ -425,11 +429,18 @@ class FileDigestCheck(AbstractCheck):
         else:
             return False
 
-    def _check_files(self, pkg, check, restricted_paths):
-        """Check all restricted files of a given check type.
+    def _find_digest_groups(self, pkg, check):
+        ret = []
+        for group in self.digest_groups:
+            if group['type'] == check['type'] and self._matches_pkg(group, pkg):
+                ret.append(group)
+        return ret
 
-        Ensures that all files in restricted locations are whitelisted in an
-        appropriate file digest group.
+    def _check_for_unauthorized(self, pkg, check, restricted_paths):
+        """Detect and complain about files with missing whitelistings.
+
+        Returns the list of paths which are basically whitelisted (but digests
+        still need to be checked).
 
         Params:
         - check: check configuration dictionary.
@@ -438,60 +449,178 @@ class FileDigestCheck(AbstractCheck):
             '/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf'
           ]
         """
-        check_name = check["type"]
-        # Collect all digests from all groups that match the given check and package.
-        digest_infos = []
-        for group in self.digest_groups:
-            if group['type'] == check['type'] and self._matches_pkg(group, pkg):
-                digest_infos.extend(group['digests'])
+        # Collect all paths for the given check and package that are whitelisted
+        known_paths = []
+        for group in self._find_digest_groups(pkg, check):
+            paths = [info['path'] for info in group['digests']]
+            known_paths.extend(paths)
 
-        # For all files in restricted locations found in this package: check
-        # if they are whitelisted anywhere. If not, print error: file-unauthorized
-        known_paths = {info['path'] for info in digest_infos}
+        known_paths = sorted(set(known_paths))
+
+        # here the remaining paths that have whitelisting entries will be collected
+        whitelisted = []
+
         for restricted in restricted_paths:
             for known in known_paths:
                 # path is basically whitelisted somewhere, digest might still be wrong
                 if self._check_paths_match(restricted, known):
+                    whitelisted.append(restricted)
                     break
             else:
                 digest_hint = self._get_digest_hint(pkg, restricted)
+                check_name = check['type']
                 self.output.add_info('E', pkg, f'{check_name}-file-unauthorized', restricted, f'({digest_hint})')
 
-        # For all whitelisted files coupled to a digest: check if the digests in the package are correct;
-        # If not, print error: file-digest-mismatch
-        for path in known_paths:
-            # Find all digests for this path.
-            # This is necessary because there could different version of this
-            # package with same whitelisted paths and different digests
-            digests_to_check = []
-            for digest_info in digest_infos:
-                if self._check_paths_match(path, digest_info['path']):
-                    digests_to_check.append(digest_info)
+        return whitelisted
 
-            # If *any* digest with the same path matches the package's file
-            # digest of that path, then we assume the file is correctly whitelisted
-            mismatches = []
-            for digest_info in digests_to_check:
-                # Check if digest whitelist path has a matching file in our package
-                if not pkg.files.get(path):
-                    # This digest entry might not be needed anymore.
-                    continue
-                try:
-                    valid, hashsum = self._check_digest(path, digest_info, pkg)
-                except Exception as e:
-                    self.output.add_info('E', pkg, f'{check_name}-file-parse-error', path, f'failed to calculate digest: {e}')
-                    continue
-                if valid:
-                    # Valid digest found, no mismatch error will be printed for this path.
-                    mismatches = []
-                    break
-                elif hashsum:
-                    # Gather all digest mismatches for error message
-                    mismatches.append(digest_info)
+    def _check_digest_group(self, pkg, check: dict, group: dict,
+                            verified_paths: set, mismatches: dict[str, list]):
+        """Verify digests from the given digest group.
 
-            for digest_info in mismatches:
+        The caller must ensure that `group` is valid for `pkg`.
+
+        This verifies a digest group as a set of related paths: The
+        whitelisting will only be considered complete if all files in the
+        group have valid digests.
+
+        If the group matches then the validated files will be added to
+        `verified_paths`. Otherwise if digest mismatches have been found
+        then these mismatches will be recorded in the dictionary `mismatches`.
+        """
+
+        missing_files = []
+        valid_files = []
+        found_mismatch = False
+        check_name = check['type']
+        # we need to handle mismatches for paths in unrelated locations specially
+        unrelated_mismatches = {}
+
+        # check all digests of the group if they have matching files in the package
+        for digest_info in group['digests']:
+            path = digest_info['path']
+            # Check if digest whitelist path has a matching file in our package
+            if not pkg.files.get(path):
+                # This digest entry might not be needed anymore.
+                #
+                # We are tolerating that some of the listed files are no
+                # longer present as long as any existing files have valid
+                # digests.
+                #
+                # NOTE: glob patterns not supported here yet, but coupling
+                # glob patterns with digests would be weird anyway.
+                if not path.startswith('glob:'):
+                    missing_files.append(path)
+                continue
+
+            try:
+                valid, hashsum = self._check_digest(digest_info, pkg)
+            except Exception as e:
+                self.output.add_info('E', pkg, f'{check_name}-file-parse-error', path, f'failed to calculate digest: {e}')
+                continue
+
+            if valid:
+                # Valid digest found, continue with the rest of the paths in this group
+                valid_files.append(path)
+            else:
+                found_mismatch = True
+
+            if hashsum:
+                # also store the digest we encountered for later reference
+                digest_info['encountered'] = hashsum
+                # Record this digest mismatches for later error messages
+                if self._is_path_restricted(path):
+                    mismatch_list = mismatches.setdefault(path, [])
+                else:
+                    mismatch_list = unrelated_mismatches.setdefault(path, [])
+
+                mismatch_list.append(digest_info)
+
+        if valid_files and unrelated_mismatches:
+            # only store unrelated file mismatches if any actually
+            # restricted path was valid, otherwise this could create confusion
+            # and too much noise.
+            for unrelated, infos in unrelated_mismatches.items():
+                mismatch_list = mismatches.setdefault(unrelated, [])
+                mismatch_list.extend(infos)
+
+        if found_mismatch:
+            # this digest group is not fully valid for this package
+            return
+
+        for missing in missing_files:
+            self.output.add_info('W', pkg, f'{check_name}-whitelisted-file-missing', missing, 'path present in whitelist but not in package')
+
+        # the digest group was fully verified, we can add all files to the set
+        # of verified paths.
+        for file in valid_files:
+            verified_paths.add(file)
+
+    def _check_for_valid_digests(self, pkg, check, restricted_paths):
+        """Check for valid digest entries for the given restricted paths.
+
+        Ensures that all files in restricted locations are whitelisted in an
+        appropriate file digest group. `restricted_paths` need to contain
+        paths that are known to be whitelisted, but digest verification and
+        group verification is still pending.
+
+        Params:
+        - check: check configuration dictionary.
+        - restricted_paths: list of restricted and whitelisted paths found in this package e.g. [
+            '/usr/share/dbus-1/system-services/org.freedesktop.PolicyKit1.service',
+            '/usr/share/dbus-1/system.d/org.freedesktop.PolicyKit1.conf'
+          ]
+        """
+
+        # digest mismatches will be recorded here with paths as keys and a
+        # list of digest info dictionaries as values.
+        mismatches: dict[str, list] = {}
+        verified_paths = set()
+
+        for group in self._find_digest_groups(pkg, check):
+            self._check_digest_group(pkg, check, group, verified_paths, mismatches)
+
+        violations = set()
+
+        # now gather all whitelisting violations
+        for restricted in restricted_paths:
+            if restricted not in verified_paths:
+                violations.add(restricted)
+
+        # this here will collect "unrelated files", i.e. files that are not
+        # directly in a restricted path but are listed as additional files
+        # to verify in a digest group.
+        for mismatch in mismatches:
+            if mismatch not in verified_paths:
+                violations.add(mismatch)
+
+        for violation in sorted(violations):
+            mismatch_list = mismatches.get(violation, [])
+            if not mismatch_list:
+                # This can happen if a group has mixed digest-coupled and
+                # nodigest files. if the digest-coupled files fail to verify
+                # then the nodigest files also fail to verify, since they are
+                # treated as a group. No point in printing a
+                # file-digest-mismatch in this case, though.
+                continue
+
+            hashes_seen = set()
+
+            # in case multiple groups exist for the same file then we are
+            # potentially printing multiple errors with multiple expected
+            # hashes here, because we cannot really know which of the groups
+            # is supposed to be the correct / desired one.
+            for digest_info in mismatch_list:
+                # print an error for each mismatch in case we have multiple
+                # digest groups in which the path is listed.
+                path = digest_info['path']
                 alg = digest_info['algorithm']
                 expected = digest_info['hash']
+                hashsum = digest_info['encountered']
+                if hashsum in hashes_seen:
+                    # avoid printing duplicate errors
+                    continue
+                hashes_seen.add(hashsum)
+                check_name = check['type']
                 self.output.add_info('E', pkg, f'{check_name}-file-digest-mismatch', path,
                                      f'expected {alg}:{expected}, has:{hashsum}')
 
@@ -537,6 +666,7 @@ class FileDigestCheck(AbstractCheck):
         """
 
         # Find all files in this package that are placed in restricted locations.
+
         # this maps the check name to the list of paths affected by it.
         restricted_paths: dict[str, list] = {}
         for pkgfile in pkg.files.values():
@@ -563,6 +693,7 @@ class FileDigestCheck(AbstractCheck):
             check = self.known_check_types[check_name]
             # filter out duplicates and sort the list of files to achieve
             # predictable behaviour of this check
-            files = list(set(files))
-            files.sort()
-            self._check_files(pkg, check, files)
+            files = sorted(set(files))
+
+            files = self._check_for_unauthorized(pkg, check, files)
+            self._check_for_valid_digests(pkg, check, files)

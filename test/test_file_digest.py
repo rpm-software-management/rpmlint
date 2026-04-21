@@ -20,6 +20,10 @@ def get_digestcheck(config_path):
     return output, test
 
 
+def filter_missing_file_warnings(output):
+    return [line for line in output if 'whitelisted-file-missing' not in line]
+
+
 @pytest.fixture(scope='function', autouse=True)
 def digestcheck():
     return get_digestcheck(Testing.TEST_CONFIG[0])
@@ -77,9 +81,8 @@ def test_simple_mismatch():
         pkg.add_file_with_content('/other/place/suspicious.txt', 'really good stuff')
         pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         test.check(pkg)
-        assert len(output.results) == 1
-        error = output.results[0]
-        assert error.startswith('testpkg: E: somerestriction-file-digest-mismatch /alsorestricted/2/suspicious expected sha256:')
+        assert len(output.results) >= 1
+        assert any(error.startswith('testpkg: E: somerestriction-file-digest-mismatch /alsorestricted/2/suspicious expected sha256:') for error in output.results)
 
 
 def test_related_mismatch():
@@ -91,9 +94,8 @@ def test_related_mismatch():
         pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
         pkg.add_file_with_content('/related/and/also/sensitive', 'related fine stuff')
         test.check(pkg)
-        assert len(output.results) == 1
-        error = output.results[0]
-        assert error.startswith('testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:')
+        assert len(output.results) > 1
+        assert any(error.startswith('testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:') for error in output.results)
 
 
 def test_glob_support():
@@ -185,9 +187,10 @@ def test_wrong_pkg_name():
         pkg.add_file_with_content('/other/place/suspicious.txt', 'really suspicious stuff')
         pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         test.check(pkg)
-        assert len(output.results) == 2
-        assert 'otherpkg: E: somerestriction-file-unauthorized /alsorestricted/2/suspicious (sha256 file digest of resolved path /other/place/suspicious.txt default filter:a412bca55af87ea264063df10d08a40ff3b8e68106f4a48a3c4a1cacb6394c94 shell filter:26f40cba5d4f8d6ff9815a12890fb1dbc9e32771a29ccc4ecbb300475dfeb057 xml filter:<failed-to-calculate>)' in output.results
-        assert 'otherpkg: E: somerestriction-file-unauthorized /restricted/1/dangerous (sha256 file digest default filter:537b320f9c3b30276bd54b838b6e6b72e923e70dbdb126926f992d594a30256c shell filter:eb372739a52b2c1a400038e1bea1ff3e194ed2a2986d098d01fd631fb3f29c81 xml filter:<failed-to-calculate>)' in output.results
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 2
+        assert 'otherpkg: E: somerestriction-file-unauthorized /alsorestricted/2/suspicious (sha256 file digest of resolved path /other/place/suspicious.txt default filter:a412bca55af87ea264063df10d08a40ff3b8e68106f4a48a3c4a1cacb6394c94 shell filter:26f40cba5d4f8d6ff9815a12890fb1dbc9e32771a29ccc4ecbb300475dfeb057 xml filter:<failed-to-calculate>)' in results
+        assert 'otherpkg: E: somerestriction-file-unauthorized /restricted/1/dangerous (sha256 file digest default filter:537b320f9c3b30276bd54b838b6e6b72e923e70dbdb126926f992d594a30256c shell filter:eb372739a52b2c1a400038e1bea1ff3e194ed2a2986d098d01fd631fb3f29c81 xml filter:<failed-to-calculate>)' in results
 
 
 def test_unaffected_pkg():
@@ -209,7 +212,7 @@ def test_matching_nodigests():
         pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
         pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         test.check(pkg)
-        assert len(output.results) == 0
+        assert len(filter_missing_file_warnings(output.results)) == 0
 
 
 def test_missing_nodigests_entry():
@@ -223,8 +226,9 @@ def test_missing_nodigests_entry():
         pkg.add_file_with_content('/related/and/also/sensitive', 'related sensitive stuff')
         pkg.add_file_with_content('/restricted/1/evil', 'evil stuff')
         test.check(pkg)
-        assert len(output.results) == 1
-        error = output.results[0]
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 1
+        error = results[0]
         assert error == 'testpkg: E: somerestriction-file-unauthorized /restricted/1/evil (sha256 file digest default filter:f2175fc16d5a482baa71b2e77831b354afa91a5fda5ef0df59d8e87376598d4f shell filter:8336ce7a3fb22e404a767f7b7302cfc6637083fa1b4fd63fe11c2d977d65dfa2 xml filter:<failed-to-calculate>)'
 
 
@@ -254,8 +258,9 @@ def test_combination_nodigests_and_digests():
         pkg.add_file_with_content('/other/place/suspicious.txt', 'whatever')
         pkg.add_file_with_content('/related/and/also/sensitive', 'wrong content')
         test.check(pkg)
-        assert len(output.results) == 1
-        error = output.results[0]
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 1
+        error = results[0]
         assert error == 'testpkg: E: somerestriction-file-digest-mismatch /related/and/also/sensitive expected sha1:ab5ec199027247773d2d617895f49179d7b3186e, has:a6abec9ea1e13ca93d1c704758bd52f62ef16433'
 
 
@@ -282,7 +287,8 @@ def test_shell_digest_filter():
     with FakePkg('shellpkg') as pkg:
         pkg.add_file_with_content('/shell/test.sh', shell_script)
         test.check(pkg)
-        assert len(output.results) == 0
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 0
 
     # the same file with removed empty lines and whitespace should result in
     # the same digest
@@ -291,7 +297,8 @@ def test_shell_digest_filter():
         trimmed_script = '\n'.join([line.rstrip() for line in shell_script.splitlines() if line])
         pkg.add_file_with_content('/shell/test.sh', trimmed_script)
         test.check(pkg)
-        assert len(output.results) == 0
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 0
 
     # the file with changed actual code should result in a digest mismatch
     output, test = get_digestcheck('digests_filtered.config')
@@ -310,7 +317,8 @@ def test_shell_digest_filter_shebang():
     with FakePkg('shellpkg') as pkg:
         pkg.add_file_with_content('/shell/test.py', python_script)
         test.check(pkg)
-        assert len(output.results) == 0
+        results = filter_missing_file_warnings(output.results)
+        assert len(results) == 0
 
     # These shebangs should yield the same hash
     equivalent_shebangs = [
@@ -331,7 +339,8 @@ def test_shell_digest_filter_shebang():
                 '\n'.join(python_script.splitlines()[1:])
             pkg.add_file_with_content('/shell/test.py', changed_script)
             test.check(pkg)
-            assert len(output.results) == 0
+            results = filter_missing_file_warnings(output.results)
+            assert len(results) == 0
 
     for shebang in different_shebangs:
         output, test = get_digestcheck('digests_filtered.config')
