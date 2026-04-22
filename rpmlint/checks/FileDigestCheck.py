@@ -141,19 +141,17 @@ class FileDigestCheck(AbstractCheck):
         # found in self.checks
         self.known_check_types: dict[str, dict] = {}
 
-        for name, config in self.config.configuration['FileDigestLocation'].items():
+        for check_type, config in self.config.configuration['FileDigestLocation'].items():
             # convert the Location paths into Path objects
             config['Locations'] = [Path(p) for p in config['Locations']]
             # make sure these keys always exists
             config.setdefault('NamePatterns', [])
             config.setdefault('FollowSymlinks', False)
-            config['type'] = name
+            config['type'] = check_type
             self.checks.append(config)
-            self.known_check_types[name] = config
+            self.known_check_types[check_type] = config
 
         self._setup_digest_location_trie()
-        self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
-        self.symlink_exceptions = self.config.configuration.get('SymlinkExceptions', [])
 
         self.digest_cache = {}
 
@@ -162,12 +160,16 @@ class FileDigestCheck(AbstractCheck):
             self._normalize_digest_group(digest_group)
             self._sanity_check_digest_group(digest_group)
 
+        # lists of dictionaries describing symlink and ghostfile exception configuration
+        self.ghost_file_exceptions = self.config.configuration.get('GhostFilesExceptions', [])
+        self.symlink_exceptions = self.config.configuration.get('SymlinkExceptions', [])
+
         for exc in self.ghost_file_exceptions:
             self._sanity_check_package_keys('GhostFilesExceptions', exc)
         for exc in self.symlink_exceptions:
             self._sanity_check_package_keys('SymlinkExceptions', exc)
 
-    def _get_digester(self, digest_info):
+    def _get_digester(self, digest_info: dict):
         """Returns the proper digester instance for the given digest_info
         dictionary as found in a file digest group."""
         name = digest_info.get('digester', 'default')
@@ -198,10 +200,8 @@ class FileDigestCheck(AbstractCheck):
                 node[parts[-1]] = None
 
     def _is_path_restricted(self, path):
-        """
-        Return true if there is a check configuration that restricts the given
-        path.
-        """
+        """Return true if there is a check configuration that restricts the given
+        path."""
         if isinstance(path, str):
             path = Path(path)
 
@@ -218,7 +218,7 @@ class FileDigestCheck(AbstractCheck):
         # `path` is a prefix of a restricted path, but not within a restricted location
         return False
 
-    def _normalize_digest_group(self, digest_group):
+    def _normalize_digest_group(self, digest_group: dict):
         """Perform any operations on the digest_group to make it match the
         structure excepted by the rest of the checker.
 
@@ -241,30 +241,30 @@ class FileDigestCheck(AbstractCheck):
             # imply default algorithm
             digest.setdefault('algorithm', DEFAULT_DIGEST_ALG)
 
-    def _sanity_check_digest_group(self, digest_group):
+    def _sanity_check_digest_group(self, digest_group: dict):
         check_type = digest_group['type']
         if check_type not in self.known_check_types:
             raise KeyError(f'FileDigestGroup type "{check_type}" is not '
                            f'supported, known values: {self.known_check_types.keys()}')
 
-        for digest in digest_group['digests']:
+        for digest_info in digest_group['digests']:
             # verify digest algorithm
-            algorithm = digest['algorithm']
+            algorithm = digest_info['algorithm']
             if algorithm == 'skip':
                 pass
             else:
                 # this will raise on bad algorithm names
                 hashlib.new(algorithm)
 
-            if 'path' not in digest:
+            if 'path' not in digest_info:
                 raise KeyError('FileDigestCheck: missing "path" key in FileDigestGroup entry')
 
             # verify a valid digester is selected, if any
-            self._get_digester(digest)
+            self._get_digester(digest_info)
 
         self._sanity_check_package_keys('FileDigestGroup', digest_group)
 
-    def _sanity_check_package_keys(self, context, d):
+    def _sanity_check_package_keys(self, context: str, d: dict):
         """Verifies package/packages keys in the given dictionary `d`.
 
         This supports a single `package = "name"` key as well as a `packages =
@@ -300,17 +300,17 @@ class FileDigestCheck(AbstractCheck):
         else:
             return d['packages']
 
-    def _matches_pkg(self, config_dict, pkg):
-        """Checks whether the given `config_dict` applies to the given package
+    def _matches_pkg(self, pkg, config: dict):
+        """Checks whether the given `config` applies to the given package
         name.
 
-        `config_dict` can be different types of configuration dicts for
+        `config` can be different types of configuration dicts for
         file digest groups, symlink and ghost exceptions as long as it
         supports `package` / `packages` keys.
 
         This function also resolves glob patterns.
         """
-        for candidate in self._gather_packages_from_dict(config_dict):
+        for candidate in self._gather_packages_from_dict(config):
             if pkg.name == candidate:
                 return True
             elif candidate.startswith('glob:'):
@@ -348,18 +348,17 @@ class FileDigestCheck(AbstractCheck):
         # must be a file which isn't matched by a name pattern.
         return None
 
-    def _check_digest(self, digest_info, pkg):
+    def _check_digest(self, pkg, digest_info: dict):
         """Returns a tuple of (bool, str), where the boolean indicates whether
         the digest of the package's file matches the one recorded in the
         digest_info; the str contains the actual hash digest calculated
         from the package's file or None if no hash digest is configured or an
         error occurred."""
         algorithm = digest_info['algorithm']
-        path = digest_info['path']
         if algorithm == 'skip':
             return (True, None)
 
-        pkgfile = self._resolve_links(pkg, path)
+        pkgfile = self._resolve_links(pkg, digest_info['path'])
         if pkgfile is None:
             return (False, None)
 
@@ -429,14 +428,16 @@ class FileDigestCheck(AbstractCheck):
         else:
             return False
 
-    def _find_digest_groups(self, pkg, check):
+    def _find_digest_groups(self, pkg, check: dict):
+        """Return all digest group entries matching the given check type and
+        package name."""
         ret = []
         for group in self.digest_groups:
-            if group['type'] == check['type'] and self._matches_pkg(group, pkg):
+            if group['type'] == check['type'] and self._matches_pkg(pkg, group):
                 ret.append(group)
         return ret
 
-    def _check_for_unauthorized(self, pkg, check, restricted_paths):
+    def _check_for_unauthorized(self, pkg, check: dict, restricted_paths: list):
         """Detect and complain about files with missing whitelistings.
 
         Returns the list of paths which are basically whitelisted (but digests
@@ -452,8 +453,7 @@ class FileDigestCheck(AbstractCheck):
         # Collect all paths for the given check and package that are whitelisted
         known_paths = []
         for group in self._find_digest_groups(pkg, check):
-            paths = [info['path'] for info in group['digests']]
-            known_paths.extend(paths)
+            known_paths.extend(info['path'] for info in group['digests'])
 
         known_paths = sorted(set(known_paths))
 
@@ -468,8 +468,8 @@ class FileDigestCheck(AbstractCheck):
                     break
             else:
                 digest_hint = self._get_digest_hint(pkg, restricted)
-                check_name = check['type']
-                self.output.add_info('E', pkg, f'{check_name}-file-unauthorized', restricted, f'({digest_hint})')
+                check_type = check['type']
+                self.output.add_info('E', pkg, f'{check_type}-file-unauthorized', restricted, f'({digest_hint})')
 
         return whitelisted
 
@@ -491,7 +491,7 @@ class FileDigestCheck(AbstractCheck):
         missing_files = []
         valid_files = []
         found_mismatch = False
-        check_name = check['type']
+        check_type = check['type']
         # we need to handle mismatches for paths in unrelated locations specially
         unrelated_mismatches = {}
 
@@ -513,9 +513,9 @@ class FileDigestCheck(AbstractCheck):
                 continue
 
             try:
-                valid, hashsum = self._check_digest(digest_info, pkg)
+                valid, hashsum = self._check_digest(pkg, digest_info)
             except Exception as e:
-                self.output.add_info('E', pkg, f'{check_name}-file-parse-error', path, f'failed to calculate digest: {e}')
+                self.output.add_info('E', pkg, f'{check_type}-file-parse-error', path, f'failed to calculate digest: {e}')
                 continue
 
             if valid:
@@ -527,7 +527,7 @@ class FileDigestCheck(AbstractCheck):
             if hashsum:
                 # also store the digest we encountered for later reference
                 digest_info['encountered'] = hashsum
-                # Record this digest mismatches for later error messages
+                # Record this digest mismatch for later error messages
                 if self._is_path_restricted(path):
                     mismatch_list = mismatches.setdefault(path, [])
                 else:
@@ -548,14 +548,14 @@ class FileDigestCheck(AbstractCheck):
             return
 
         for missing in missing_files:
-            self.output.add_info('W', pkg, f'{check_name}-whitelisted-file-missing', missing, 'path present in whitelist but not in package')
+            self.output.add_info('W', pkg, f'{check_type}-whitelisted-file-missing', missing, 'path present in whitelist but not in package')
 
         # the digest group was fully verified, we can add all files to the set
         # of verified paths.
         for file in valid_files:
             verified_paths.add(file)
 
-    def _check_for_valid_digests(self, pkg, check, restricted_paths):
+    def _check_for_valid_digests(self, pkg, check: dict, restricted_paths: list):
         """Check for valid digest entries for the given restricted paths.
 
         Ensures that all files in restricted locations are whitelisted in an
@@ -612,7 +612,6 @@ class FileDigestCheck(AbstractCheck):
             for digest_info in mismatch_list:
                 # print an error for each mismatch in case we have multiple
                 # digest groups in which the path is listed.
-                path = digest_info['path']
                 alg = digest_info['algorithm']
                 expected = digest_info['hash']
                 hashsum = digest_info['encountered']
@@ -620,8 +619,8 @@ class FileDigestCheck(AbstractCheck):
                     # avoid printing duplicate errors
                     continue
                 hashes_seen.add(hashsum)
-                check_name = check['type']
-                self.output.add_info('E', pkg, f'{check_name}-file-digest-mismatch', path,
+                check_type = check['type']
+                self.output.add_info('E', pkg, f'{check_type}-file-digest-mismatch', digest_info['path'],
                                      f'expected {alg}:{expected}, has:{hashsum}')
 
     def _is_ghost_allowed(self, pkg, path):
@@ -633,11 +632,11 @@ class FileDigestCheck(AbstractCheck):
         maintained.
 
         Params:
-        - pkg: name of the package
+        - pkg: package information
         - path: path of the %ghost file in the package
         """
         for ghost_exception in self.ghost_file_exceptions:
-            if not self._matches_pkg(ghost_exception, pkg):
+            if not self._matches_pkg(pkg, ghost_exception):
                 continue
             if path in ghost_exception['paths']:
                 return True
@@ -652,15 +651,14 @@ class FileDigestCheck(AbstractCheck):
         maintained.
         """
         for symlink_exception in self.symlink_exceptions:
-            if not self._matches_pkg(symlink_exception, pkg):
+            if not self._matches_pkg(pkg, symlink_exception):
                 continue
             if path in symlink_exception['paths']:
                 return True
         return False
 
     def check_binary(self, pkg):
-        """
-        Entry point for digest checks. Check that all files in restricted
+        """Entry point for digest checks. Check that all files in restricted
         locations are covered by a file digest group in which all files have
         valid digests.
         """
@@ -671,26 +669,25 @@ class FileDigestCheck(AbstractCheck):
         restricted_paths: dict[str, list] = {}
         for pkgfile in pkg.files.values():
             check = self._lookup_check_for_file(pkgfile)
-            path = pkgfile.name
-
             if not check:
                 continue
 
-            check_name = check['type']
+            check_type = check['type']
 
+            path = pkgfile.name
             if path in pkg.ghost_files:
                 if not self._is_ghost_allowed(pkg, path):
-                    self.output.add_info('E', pkg, f'{check_name}-file-ghost', path)
+                    self.output.add_info('E', pkg, f'{check_type}-file-ghost', path)
             elif stat.S_ISLNK(pkgfile.mode) and not check['FollowSymlinks']:
                 if not self._is_symlink_allowed(pkg, path):
-                    self.output.add_info('E', pkg, f'{check_name}-file-symlink', path)
+                    self.output.add_info('E', pkg, f'{check_type}-file-symlink', path)
             else:
-                file_list = restricted_paths.setdefault(check_name, [])
+                file_list = restricted_paths.setdefault(check_type, [])
                 file_list.append(path)
 
         # Check all found restricted files for every check type
-        for check_name, files in restricted_paths.items():
-            check = self.known_check_types[check_name]
+        for check_type, files in restricted_paths.items():
+            check = self.known_check_types[check_type]
             # filter out duplicates and sort the list of files to achieve
             # predictable behaviour of this check
             files = sorted(set(files))
