@@ -1241,11 +1241,11 @@ hash     = "cce8e0b79baedb4dbc75ae1f4dbdfa4db626ce4161f6cc702ba85ba8bfbcc590"
 package = "kdenetwork-filesharing"
 type = "dbus"
 note = "Samba configuration helper"
-bug = "bsc#1175633"
+bugs = ["bsc#1175633", "bsc#1262258"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.kde.filesharing.samba.service"
 digester = "shell"
-hash = "dbedfdc18eb312a39f5e6ca905701f729bebde2f18a4362d59944b636883c6bc"
+hash = "ecb359991a07633f1d54503a209bfa8b0c6070cede90aee1191d5e5db3a64f0e"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.kde.filesharing.samba.conf"
 digester = "xml"
