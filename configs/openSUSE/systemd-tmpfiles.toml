@@ -215,3 +215,13 @@ path = "/usr/lib/tmpfiles.d/snapd.conf"
 entries = [
     "D! /tmp/snap-private-tmp 0700 root root -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "google-guest-oslogin"
+bugs = ["bsc#1261275"]
+note = "Google-specific drop-in directories for openSSH and sudo"
+path = "/usr/lib/tmpfiles.d/google-guest-oslogin.conf"
+entries = [
+    "d /var/google-users.d",
+    "d /var/google-sudoers.d"
+]
