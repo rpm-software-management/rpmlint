@@ -12,10 +12,11 @@ jobs:
     targets:
     - fedora-rawhide-x86_64
     - fedora-rawhide-aarch64
-    - mageia-cauldron-x86_64
-    - mageia-cauldron-aarch64
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+    # mageia is failing because of rpm
+    # - mageia-cauldron-x86_64
+    # - mageia-cauldron-aarch64
+    - opensuse-leap-16.0-x86_64
+    - opensuse-leap-16.0-aarch64
   trigger: pull_request
 - job: copr_build
   trigger: commit
@@ -23,10 +24,11 @@ jobs:
     targets:
     - fedora-rawhide-x86_64
     - fedora-rawhide-aarch64
-    - mageia-cauldron-x86_64
-    - mageia-cauldron-aarch64
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+    # mageia is failing because of rpm
+    # - mageia-cauldron-x86_64
+    # - mageia-cauldron-aarch64
+    - opensuse-leap-16.0-x86_64
+    - opensuse-leap-16.0-aarch64
     branch: main
     project: rpm-software-management-rpmlint-mainline
     list_on_homepage: True
@@ -35,8 +37,8 @@ jobs:
   trigger: commit
   metadata:
     targets:
-    - opensuse-tumbleweed-x86_64
-    - opensuse-tumbleweed-aarch64
+    - opensuse-leap-16.0-x86_64
+    - opensuse-leap-16.0-aarch64
     branch: opensuse
     project: rpm-software-management-rpmlint-opensuse
     list_on_homepage: True
