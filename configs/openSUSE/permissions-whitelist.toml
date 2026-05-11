@@ -49,17 +49,6 @@ path = "/usr/share/permissions/permissions.d/sendmail.paranoid"
 hash = "7a593f6678ab48c4eab010bb885989bd06e5a73a307575399d71a2d7c3d3f0c3"
 
 [[FileDigestGroup]]
-package = "texlive-filesystem"
-type = "permissions"
-note = """DEPRECATED. texlive is currently migrating these directories to systemd-tmpfile. This entry can be deleted once the new setup is complete. See also: bsc#1256841 but double-check, even if that bug is closed."""
-[[FileDigestGroup.digests]]
-path = "/etc/permissions.d/texlive"
-hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
-[[FileDigestGroup.digests]]
-path = "/etc/permissions.d/texlive.texlive"
-hash = "c4d3d806535c6737a07828ac84e297b87f6a406f6df67c9928c4fac71f47a17d"
-
-[[FileDigestGroup]]
 package  = "libcgroup-tools"
 note     = "this is for a setgid binary 'cgexec', running with 'cgred' group privs"
 bug      = "bsc#1231381"
