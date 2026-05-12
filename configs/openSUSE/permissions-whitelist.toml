@@ -15,23 +15,13 @@ path = "/etc/permissions.d/mismatch"
 hash = "4a5e8e9ca514c73f1dbee55e88c4d75a235473c1d5cef4751d84016833961fdf"
 
 [[FileDigestGroup]]
-package = "postfix"
+packages = ["postfix", "postfix-bdb"]
 type = "permissions"
 [[FileDigestGroup.digests]]
 path = "/usr/share/permissions/permissions.d/postfix"
 hash = "6f2e5d01189c05662083125ae3addab8b7273f6a57eae8369bc34b08a9a1d638"
 [[FileDigestGroup.digests]]
 path = "/usr/share/permissions/permissions.d/postfix.paranoid"
-hash = "54d194477fc688076940c93bfd201680b5cc0fd6079bba10bd0101fb986a2231"
-
-[[FileDigestGroup]]
-package = "postfix-bdb"
-type = "permissions"
-[[FileDigestGroup.digests]]
-path = "/etc/permissions.d/postfix"
-hash = "6f2e5d01189c05662083125ae3addab8b7273f6a57eae8369bc34b08a9a1d638"
-[[FileDigestGroup.digests]]
-path = "/etc/permissions.d/postfix.paranoid"
 hash = "54d194477fc688076940c93bfd201680b5cc0fd6079bba10bd0101fb986a2231"
 
 [[FileDigestGroup]]
