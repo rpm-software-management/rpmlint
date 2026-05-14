@@ -1789,3 +1789,14 @@ hash     = "df98df90f9f67db05808de4415f06f32029e4b6047e721a0b1a1cb88e078c076"
 path     = "/usr/share/dbus-1/system.d/org.freedesktop.intel_lpmd.conf"
 digester = "xml"
 hash     = "b729ad6c259db3460fa6c419fb24dd9512cbd7700ac6a254f7621c3300d56b6a"
+
+[[FileDigestGroup]]
+package  = "wall-broadcaster"
+note     = "A tool which forwards wall or write message via D-Bus to other services"
+bug      = "bsc#1263701"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.opensuse.WallBroadcast.conf"
+digester = "xml"
+hash     = "5012b8451001e03da2a00fb66ad629ab1741b5a7e24b2b518b1217d789ffa661"
+
