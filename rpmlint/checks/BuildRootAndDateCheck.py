@@ -38,8 +38,8 @@ class BuildRootAndDateCheck(AbstractFilesCheck):
         data = pkg.read_with_mmap(filename)
         if self.istoday.search(data):
             if self.looksliketime.search(data):
-                self.output.add_info('E', pkg, 'file-contains-date-and-time', filename)
+                self.output.add_info('W', pkg, 'file-contains-date-and-time', filename)
             else:
-                self.output.add_info('E', pkg, 'file-contains-current-date', filename)
+                self.output.add_info('W', pkg, 'file-contains-current-date', filename)
         if self.lookslikebuildroot.search(data):
             self.output.add_info('E', pkg, 'file-contains-buildroot', filename)
