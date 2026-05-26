@@ -95,3 +95,14 @@ bug = "bsc#1215988"
 nodigests = [
     "/usr/lib/zypp/plugins/commit/boot-plugin",
 ]
+
+[[FileDigestGroup]]
+package  = "pqcverification-zypp-plugin"
+note     = "this plugin enables post-quantum cryptography verification"
+bug      = "bsc#1265207"
+type     = "zypperplugin"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/zypp/plugins/sigcheck/pqcverification"
+digester = "shell"
+hash     = "77e775e984d1b0ec01391ebd83b002e5b699d2011adddd0aea3130d8bbfc4bec"
+
