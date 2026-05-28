@@ -143,3 +143,26 @@ ValidExceptionPackage = InvalidExceptionPackage.clone(
         'license': 'GPL-2.0+ WITH 389-exception',
     },
 )
+
+
+DepsPackage = get_tested_mock_package(
+    lazyload=True,
+    name='pkg',
+    header={
+        'requires': [
+            'expat-devel',
+            'libexplicit',
+        ],
+        'ARCH': 'noarch',
+        'NAME': 'pkg',
+        'VERSION': '5.6.3',
+        'RELEASE': '2.fc39',
+        'EPOCH': 1,
+    },
+)
+
+
+DepsDevPackage = DepsPackage.clone(
+    extend=True,
+    name='pkg-devel',
+)

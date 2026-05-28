@@ -1,0 +1,3 @@
+selinux-incorrect-if-file-location = '''
+SELinux interface (.if) files must be installed in /usr/share/selinux/devel/include/distributed/ as per Fedora and openSUSE independent module packaging guidelines. Files found elsewhere are packaging errors.
+'''

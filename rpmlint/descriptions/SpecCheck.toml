@@ -85,7 +85,7 @@ configuration to provide additional 'under the hood' functionality.  Add the
 section, even if empty.
 """
 "no-%check-section"="""
-The spec file does not contain an %check section.
+The spec file does not contain a %check section.
 Please check if the package has a testsuite and what it takes to enable the
 testsuite as part of the package build. If it is not possible to run it in the
 build environment (OBS/koji) or no testsuite exists, then please ignore this

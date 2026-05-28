@@ -296,14 +296,14 @@ class TagsCheck(AbstractCheck):
                     self.output.add_info('W', pkg, f'no-epoch-in-{tag}',
                                          Pkg.formatRequire(*x))
 
-    def _check_multiple_dependencies(self, pkg, deps, is_source, is_devel):
+    def _check_multiple_dependencies(self, pkg, deps, is_devel, is_source):
         """Contain multiple check, no-epoch-in-dependency, invalid-dependency,
         invalid-build-requires, devel-dependency, explicit-devel-dependency
 
         Args:
             deps: Variable to find PreReq and Requires tag
-            is_source: Variable to check if a package is of source type
             is_devel: The param to check if a package name ends with *-devel
+            is_source: Variable to check if a package is of source type
 
         Returns:
             Output info to STDOUT

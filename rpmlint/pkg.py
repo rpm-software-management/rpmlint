@@ -975,6 +975,23 @@ class FakePkg(AbstractPkg):
 
         self.req_names = [x[0] for x in self.requires + self.prereq]
 
+    def add_dependency(self, dep):
+        name, flags, version = parse_deps(dep)[0]
+        version = versionToString(version)
+        self.header[rpm.RPMTAG_REQUIRESNAME].append(name)
+        self.header[rpm.RPMTAG_REQUIRESFLAGS].append(flags)
+        self.header[rpm.RPMTAG_REQUIRESVERSION].append(version)
+
+        _requires = []
+        _prereq = []
+        self.requires, self.prereq = self._gather_aux(self.header, _requires,
+                                                      rpm.RPMTAG_REQUIRENAME,
+                                                      rpm.RPMTAG_REQUIREFLAGS,
+                                                      rpm.RPMTAG_REQUIREVERSION,
+                                                      _prereq)
+
+        self.req_names = [x[0] for x in self.requires + self.prereq]
+
     def add_symlink_to(self, name, target):
         """
         Add symlink to name file which path is related to name.

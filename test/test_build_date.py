@@ -23,8 +23,8 @@ def test_build_date_time(package, builddatecheck):
     test.istoday = re.compile('Jan  1 2019')
     test.check(package)
     out = output.print_results(output.results)
-    assert 'E: file-contains-date-and-time /bin/with-datetime' in out
-    assert 'E: file-contains-current-date /bin/with-date' in out
+    assert 'W: file-contains-date-and-time /bin/with-datetime' in out
+    assert 'W: file-contains-current-date /bin/with-date' in out
 
 
 @pytest.mark.parametrize('package', [BashismsPackage])
@@ -33,5 +33,5 @@ def test_build_date_time_correct(package, builddatecheck):
     test.istoday = re.compile('Jan  1 2019')
     test.check(package)
     out = output.print_results(output.results)
-    assert 'E: file-contains-date-and-time' not in out
-    assert 'E: file-contains-current-date' not in out
+    assert 'W: file-contains-date-and-time' not in out
+    assert 'W: file-contains-current-date' not in out

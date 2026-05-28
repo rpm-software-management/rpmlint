@@ -1,4 +1,6 @@
 from mockdata.mock_tags import (
+    DepsDevPackage,
+    DepsPackage,
     FooDevelPackage,
     FuseCommonPackage,
     InvalidExceptionPackage,
@@ -499,3 +501,39 @@ def test_missing_dependency_on_with_epoch(package, output, test):
     test.check(package)
     out = output.print_results(output.results)
     assert 'W: missing-dependency-on' not in out
+
+
+@pytest.mark.parametrize('package,should_fail', [
+    [DepsPackage, True],
+    [DepsDevPackage, False],
+])
+def test_devel_dependency(package, should_fail, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert ('devel-dependency' in out) == should_fail
+
+
+@pytest.mark.parametrize('package,should_fail', [
+    [DepsPackage, True],
+    [DepsDevPackage, False],
+])
+def test_explicit_lib_dependency(package, should_fail, output, test):
+    test.check(package)
+    out = output.print_results(output.results)
+    assert ('explicit-lib-dependency' in out) == should_fail
+
+
+@pytest.mark.parametrize('package,deps,should_fail', [
+    [DepsPackage, ('libxx2_2-devel', ), True],
+    [DepsPackage, ('libxx-devel', 'libxx2-devel'), True],
+    [DepsPackage, ('libxx2', 'libxx-devel'), False],
+])
+def test_invalid_build_requires(package, deps, should_fail, output, test):
+    pkg = package.clone()
+    pkg.is_source = True
+    pkg.requires = []
+    for dep in deps:
+        pkg.requires.append([dep, None, None])
+    test.check(pkg)
+    out = output.print_results(output.results)
+    assert ('invalid-build-requires' in out) == should_fail

@@ -51,6 +51,7 @@ basic_tests = [
     'PkgConfigCheck',
     'PostCheck',
     'PythonCheck',
+    'SELinuxIndependentModuleCheck',
     'SignatureCheck',
     'SourceCheck',
     'SpecCheck',
