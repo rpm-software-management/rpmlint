@@ -7,6 +7,7 @@ import stat
 import xml.etree.ElementTree as ET
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
+import rpmlint.filedigestcheck
 
 
 DEFAULT_DIGEST_ALG = 'sha256'
@@ -147,6 +148,7 @@ class FileDigestCheck(AbstractCheck):
             # make sure these keys always exists
             config.setdefault('NamePatterns', [])
             config.setdefault('FollowSymlinks', False)
+            config.setdefault('ContentCheck', None)
             config['type'] = check_type
             self.checks.append(config)
             self.known_check_types[check_type] = config
@@ -657,6 +659,30 @@ class FileDigestCheck(AbstractCheck):
                 return True
         return False
 
+    def has_restricted_content(self, check, pkg, path):
+        """Check whether the given path, which is located in a restricted
+        location, contains data which makes it subject to our whitelisting
+        restriction."""
+        content_check = check['ContentCheck']
+        if not content_check:
+            # there is no content check type declared in the configuration,
+            # this means all files present in the restricted location are
+            # covered by the check.
+            return True
+
+        pkgfile = self._resolve_links(pkg, path)
+        if pkgfile is None:
+            # some error in link resolution, later checks will complain more
+            # explicitly about this.
+            return True
+
+        try:
+            ContentChecker = getattr(rpmlint.filedigestcheck, content_check)
+        except AttributeError:
+            raise Exception(f'No matching type for ContentCheck={content_check} found in rpmlint.filedigestcheck')
+        checker = ContentChecker()
+        return checker.is_restricted(pkgfile.path)
+
     def check_binary(self, pkg):
         """Entry point for digest checks. Check that all files in restricted
         locations are covered by a file digest group in which all files have
@@ -681,6 +707,10 @@ class FileDigestCheck(AbstractCheck):
             elif stat.S_ISLNK(pkgfile.mode) and not check['FollowSymlinks']:
                 if not self._is_symlink_allowed(pkg, path):
                     self.output.add_info('E', pkg, f'{check_type}-file-symlink', path)
+            elif not self.has_restricted_content(check, pkg, path):
+                # the path is in a restricted location but the content is not
+                # relevant to us.
+                continue
             else:
                 file_list = restricted_paths.setdefault(check_type, [])
                 file_list.append(path)
