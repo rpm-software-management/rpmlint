@@ -18,6 +18,24 @@ Locations = [
     "/etc/dbus-1/system.d/"
 ]
 
+[FileDigestLocation.varlink]
+# At the moment there don't exist any symlinked socket units in Factory so
+# let's be restrictive here.
+FollowSymlinks = false
+# We are only looking for *.socket files in system service locations that
+# contain a "FileDescriptorName=varlink" directive. The ContentCheck will take
+# care of the latter limitation.
+Locations = [
+    "/etc/systemd/system/",
+    "/run/systemd/system/",
+    "/usr/lib/systemd/system/",
+    "/usr/local/lib/systemd/system/",
+]
+NamePatterns = [
+    "*.socket",
+]
+ContentCheck = "VarlinkServiceCheck"
+
 [FileDigestLocation.polkit]
 FollowSymlinks = false
 Locations = [

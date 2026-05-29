@@ -1,0 +1,9 @@
+[[FileDigestGroup]]
+package  = "rpmlint-integration-test"
+type     = "varlink"
+note     = "valid test whitelisting entry for the OBS integration test package"
+bug      = "bsc#1188704"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/test.socket"
+digester = "systemd-socket"
+hash     = "ff7a1f7581f81790cc063071026c4deaf4eafa6b0658217250db8e420c9064bc"
