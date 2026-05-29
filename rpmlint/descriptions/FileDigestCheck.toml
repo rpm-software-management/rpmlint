@@ -38,6 +38,11 @@ sysctl-file-digest-mismatch="A whitelisting related sysctl.d drop-in file change
 sysctl-file-ghost="This package installs a sysctl.d drop-in configuration file as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
 sysctl-file-symlink="Symlinks are not allowed for sysctl.d drop-in configuration files"
 
+varlink-file-digest-mismatch="A systemd socket unit declaring a Varlink service changed in content. Packaging varlink services #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+varlink-file-ghost="This package installs a systemd socket unit declaring a Varlink service as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"
+varlink-file-symlink="Symlinks are not allowed for systemd socket units declaring Varlink services"
+varlink-file-unauthorized="Packaging new Varlink services #SUFFIX#. #REVIEW_NEEDED_TEXT#"
+
 zypperplugin-file-digest-mismatch="A whitelisting related zypper plugin file changed in content. Packaging zypper plugins #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 zypperplugin-file-unauthorized="Packaging new zypper plugins #SUFFIX#. #REVIEW_NEEDED_TEXT#"
 zypperplugin-file-ghost="This package installs a zypper plugin as a %ghost file. #GHOST_ENCOUNTERED_TEXT#"

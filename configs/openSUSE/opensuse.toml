@@ -310,6 +310,10 @@ BlockedFilters = [
     "systemd-tmpfile-entry-unauthorized",
     "world-writable-mismatched-attrs",
     "world-writable-unauthorized-file",
+    "varlink-file-digest-mismatch",
+    "varlink-file-ghost",
+    "varlink-file-unauthorized",
+    "varlink-file-symlink",
     "zypperplugin-file-digest-mismatch",
     "zypperplugin-file-ghost",
     "zypperplugin-file-unauthorized"
