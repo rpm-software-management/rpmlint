@@ -2,9 +2,11 @@ import configparser
 
 # This module contains helper types used by the FileDigestCheck to implement
 # configuration-specific logic.
+
+# ContentCheck types
 #
-# Currently this relates to the "ContentCheck" configuration setting, which
-# allows to specify a class name in this module which will be invoked to
+# The following types relate to the "ContentCheck" configuration setting,
+# which allows to specify a class name in this module which will be invoked to
 # determine whether the whitelisting restriction should be applied to a
 # specific file. A type needs to provide a is_restricted(self, path: str)
 # member function to be usable as "ContentCheck".
@@ -58,3 +60,109 @@ class VarlinkServiceCheck:
         # this is more of a convention, not a hard requirement, but so far all
         # Varlink services we have use this scheme.
         return file_descriptor_name == 'varlink'
+
+# Digester types
+
+# We support different "filters" for calculating file digests for whitelisting
+# purposes. The reasoning behind this is that we want to detect *functional*
+# changes to certain files but we don't want to be bothered by any other
+# changes like changes in comments, copyright headers, whitespace and so on.
+#
+# To avoid such bogus changes showing up in the checker we can filter the
+# target files depending on their file type. Currently we have two common
+# special cases:
+#
+# - shell-like files (configuration files, shell scripts, Python
+# scripts, Perl scripts etc) that can contain empty lines or comments
+# introduced by '#'.
+# - XML files for things like D-Bus configuration files or polkit policies.
+# Here also XML style comments and whitespace can occur.
+#
+# The filter classes help in calculating a file digest for a filtered version
+# of the target file that is normalized and therefore stable against the
+# outlined kinds of changes. Since this makes getting the right whitelisting
+# digests hard, a small companion tool in tools/get_whitelisting_digest.py
+# exists.
+
+
+class DefaultDigester:
+    """This class performs the default digest calculation of arbitrary file
+    contents as is."""
+
+    def __init__(self, path, halg):
+        self.path = path
+        self.halg = halg
+
+    def parse_content(self):
+        # simply generate chunks on binary level
+        with open(self.path, 'rb') as fd:
+            while True:
+                chunk = fd.read(4096)
+                if not chunk:
+                    break
+                yield chunk
+
+    def get_digest(self):
+        """This returns the hash digest of the *un*filtered input file."""
+        import hashlib
+        hasher = hashlib.new(self.halg)
+
+        for chunk in self.parse_content():
+            hasher.update(chunk)
+
+        return hasher.hexdigest()
+
+
+class ShellDigester(DefaultDigester):
+    """This class performs digest calculation of shell style configuration
+    files or scripts. Certain aspects like comments and whitespace will be
+    filtered out of the digest calculation."""
+
+    def parse_content(self):
+        import re
+
+        # generate filtered lines
+        with open(self.path) as fd:
+            for line_nr, line in enumerate(fd):
+                stripped = line.strip()
+                if not stripped:
+                    # skip empty lines
+                    continue
+                elif line_nr == 0 and stripped.startswith('#!'):
+                    # keep shebang lines mostly intact,
+                    # but ignore minor interpreter versions
+                    line = re.sub(r'\bpython3\.\d+\b', 'python3', line)
+                elif stripped.startswith('#'):
+                    # skip comments
+                    # NOTE: we don't strip trailing comments like in
+                    # 'if [ 5 -eq $NUM ]; then # compare to 5'
+                    # because the danger would be too high to remove actual
+                    # content instead of just comments
+                    continue
+
+                # don't use the completely stripped version, in Python for
+                # example the indentation is part of the syntax and changes
+                # here could change the meaning
+                yield (line.rstrip() + '\n').encode()
+
+
+class XmlDigester(DefaultDigester):
+    """This class performs digest calculation of XML configuration files.
+    Certain aspects like comments and whitespace will be filtered out of the
+    digest calculation."""
+
+    def parse_content(self):
+        import xml.etree.ElementTree as ET
+        # NOTE: the ElementTree is not robust against malicious input. Rpmlint
+        # processes a lot of untrusted input. In the OBS context this only
+        # happens within the virtual machines where packagers can manipulate a
+        # lot of things anyway so it should be okay.
+
+        # this returns a canonicalized form of the XML without comments or
+        # anything. It is missing the XML preamble and DOCTYPE declaration,
+        # though. It's as good as I could get it to be without parsing XML on
+        # foot or relying on third party XML modules.
+
+        # chunked / line wise processing is likely impossible for XML so
+        # return the whole bunch
+        yield ET.canonicalize(from_file=self.path, strip_text=True).encode()
