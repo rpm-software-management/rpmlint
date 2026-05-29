@@ -166,3 +166,58 @@ class XmlDigester(DefaultDigester):
         # chunked / line wise processing is likely impossible for XML so
         # return the whole bunch
         yield ET.canonicalize(from_file=self.path, strip_text=True).encode()
+
+
+class SocketUnitDigester(DefaultDigester):
+
+    # [Socket] section configuration keys to include in the digest
+    # calculation.
+    #
+    # see systemd.socket(5) man page for reference.
+    #
+    # we're only interested in settings related to API / permissions / network
+    # entry points.
+    KEYS_TO_HASH = {
+        'ListenStream',
+        'ListenDatagram',
+        'ListenSequentialPacket',
+        'ListenFIFO',
+        'ListenSpecial',
+        'ListenNetlink',
+        'ListenMessageQueue',
+        'SocketProtocol',
+        'BindToDevice',
+        'SocketUser',
+        'SocketGroup',
+        'SocketMode',
+        'DirectoryMode',
+        'PassSecurity',
+        'AcceptFileDescriptors',
+        'ExecStartPre',
+        'ExecStartPost',
+        'ExecStopPre',
+        'ExecStopPost',
+        'FileDescriptorName',
+        'PassFileDescriptorsToExec'
+    }
+
+    def parse_content(self):
+        config = _open_socket_config(self.path)
+
+        if not config:
+            # shouldn't happen since VarlinkServiceCheck above should have
+            # already read the file successfully before.
+            raise Exception(f'failed to parse {self.path}')
+
+        try:
+            socket_section = config['Socket']
+        except KeyError:
+            # VarlinkServiceCheck must have seen a [Socket] section so this
+            # shouldn't happen.
+            raise Exception(f'[Socket] section in {self.path} disappeared?')
+
+        # yield all key/value pairs we're interested in for hashing
+        for key in socket_section:
+            if key in self.KEYS_TO_HASH:
+                value = socket_section[key]
+                yield f'{key}={value}\n'.encode()

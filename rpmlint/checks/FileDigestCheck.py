@@ -17,6 +17,7 @@ DIGESTERS = {
     'default': check_utils.DefaultDigester,
     'shell': check_utils.ShellDigester,
     'xml': check_utils.XmlDigester,
+    'systemd-socket': check_utils.SocketUnitDigester
 }
 
 
@@ -304,6 +305,12 @@ class FileDigestCheck(AbstractCheck):
             digest_hint += f' of resolved path {pkgfile.name}'
 
         for dtype, digester in DIGESTERS.items():
+            # lex systemd-socket: avoid spamming the output (and breaking
+            # expected test case output) with systemd-socket digests we don't
+            # need.
+            if dtype == 'systemd-socket' and not path.endswith('.socket'):
+                continue
+
             try:
                 digest = self._calc_digest(digester, pkgfile, DEFAULT_DIGEST_ALG)
             except Exception:
