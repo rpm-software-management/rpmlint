@@ -7,6 +7,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import rpmlint.checks.FileDigestCheck as fdc  # noqa: E402
+import rpmlint.filedigestcheck as fdc_utils  # noqa: E402
 
 parser = argparse.ArgumentParser(
     description='This tool helps calculating whitelisting digests for the FileDigestCheck'
@@ -23,7 +24,7 @@ if args.filter == 'default' and args.show_result:
     print('Cannot output result data for default digester (which is binary)', file=sys.stderr)
     sys.exit(1)
 
-Digester = fdc.DIGESTERS.get(args.filter, fdc.DefaultDigester)
+Digester = fdc.DIGESTERS.get(args.filter, fdc_utils.DefaultDigester)
 
 digester = Digester(args.FILE, fdc.DEFAULT_DIGEST_ALG)
 
