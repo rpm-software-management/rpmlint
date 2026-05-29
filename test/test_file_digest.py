@@ -406,6 +406,60 @@ def test_default_digester():
         assert len(output.results) == 1
 
 
+def test_varlink_content_check():
+    # here we want to test whether the VarlinkServiceCheck ContentCheck
+    # correctly identifies socket units declaring Varlink sockets.
+    UNAFFECTED_SOCKET_DATA = '[Socket]\nThis=stuff\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('defaultpkg') as pkg:
+        pkg.add_file_with_content('/sockets/harmless.socket', UNAFFECTED_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # only this config should be complained about since if contains a varlink
+    # FileDescriptorName
+    RESTRICTED_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('defaultpkg') as pkg:
+        pkg.add_file_with_content('/sockets/evil.socket', RESTRICTED_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 1
+
+
+def test_varlink_digester():
+    # here we want to check the SocketUnitDigester:
+    # - reject a mismatching digest
+    # - accept a matching digest
+    # - accept a file which has only changes in uninteresting fields
+
+    MISMATCHING_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\nSocketMode=0606\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('socketpkg') as pkg:
+        pkg.add_file_with_content('/sockets/the.socket', MISMATCHING_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 1
+
+    MATCHING_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\nSocketMode=0777\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('socketpkg') as pkg:
+        pkg.add_file_with_content('/sockets/the.socket', MATCHING_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+    # this adds Backlog=100, an uninteresting key, should yield the same digest
+    SIMILAR_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\nSocketMode=0777\nBacklog=100\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('socketpkg') as pkg:
+        pkg.add_file_with_content('/sockets/the.socket', SIMILAR_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 0
+
+
 @pytest.mark.parametrize('package', ['binary/pam-module'])
 def test_pam_modules(tmp_path, package, digestcheck):
     output, test = get_digestcheck('digests_pam.config')
