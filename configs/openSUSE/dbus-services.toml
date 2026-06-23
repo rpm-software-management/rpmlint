@@ -1616,8 +1616,8 @@ hash     = "ecc8ae6fe29a9ddc6c1f598c8558245b16d8280cd99caecc3ab268c428e1f8ff"
 
 [[FileDigestGroup]]
 package  = "kdeplasma6-addons"
-note     = "A small helper that allows to change LED colors via /sys/class/led"
-bug      = "bsc#1226306"
+note     = "A small helper that allows to change LED colors"
+bugs     = [ "bsc#1226306", "bsc#1267818" ]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.kde.kameleonhelper.conf"
@@ -1627,6 +1627,14 @@ hash     = "f9c8290a4e53a251b5405f0a04676b222866c9d0463e0d5e16d020657ec335cb"
 path     = "/usr/share/dbus-1/system-services/org.kde.kameleonhelper.service"
 digester = "shell"
 hash     = "85e17072d140148cf4cb4186389f5dd6a24c56fbae76c5392504b9062560e0f6"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kameleon.qmk.helper.service"
+digester = "shell"
+hash     = "7d11312252c8435071f453ee84a479366869bfeba72adb712f1bade9107e60ac"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kameleon.qmk.helper.conf"
+digester = "xml"
+hash     = "fac2d51f124edeb87fb097aaaf53618744810d5ddcfc0fbab0232d2c55b81b30"
 
 [[FileDigestGroup]]
 package  = "supergfxctl"
