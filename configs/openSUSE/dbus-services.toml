@@ -1821,3 +1821,13 @@ hash     = "df81a398c7eefc077a3fb155785e79dbce7c0da60aa7207f7fa9de5ed4440824"
 path     = "/usr/share/dbus-1/system.d/com.presire.qsnapper.Operations.conf"
 digester = "xml"
 hash     = "4ebd3fcf900e113e6d7a9a1e95ff7b32c4ab177723b8660030917313113a58ea"
+
+[[FileDigestGroup]]
+package  = "txnupd-maintenance-tools"
+note     = "forwards signals from transactional-update to a session D-Bus daemon"
+bug      = "bsc#1268577"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.opensuse.tukit.Updated.conf"
+digester = "xml"
+hash     = "abf27e413feacafdb95e5b48ae2d75f501d506feb6a0a46a96fab338bde1fd13"
