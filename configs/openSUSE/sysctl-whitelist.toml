@@ -56,7 +56,7 @@ bugs = ["bsc#1174722", "bsc#1226865", "bsc#1243959", "bsc#1267504"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-coredump.conf"
 digester = "shell"
-hash = "d3a082282a3e403ccba14cfee50e47da483943306f3405ece1b50c3fcde4c623"
+hash = "54f2f502708e2b70ac5b6994b4162641fcdee4b834d8eba928d066e4795c4f04"
 
 [[FileDigestGroup]]
 package = "aaa_base"
