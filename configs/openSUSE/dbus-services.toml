@@ -1075,7 +1075,7 @@ hash = "fa7460b998ff287fd411f209f854991c29dba0c32a01b39f0a43ec0fdbc2d027"
 package = "iwd"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1108037"
+bugs = ["bsc#1108037", "bsc#1270347"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/net.connman.iwd.service"
 digester = "shell"
@@ -1083,7 +1083,7 @@ hash = "8b6356439f6e6b29d5543aa1f6b15f38781c9b7dd38c89fdd58f9ffee2b18006"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/iwd-dbus.conf"
 digester = "xml"
-hash = "ed28e2c31bb8c89736c46374491f8c470ad5c73b961d1b5f71aef4ad134e492e"
+hash = "c19903cb491eb728e94439b43501c67191c6d97f098aaf1abadc5f1b750a111b"
 
 [[FileDigestGroup]]
 package = "connman-nmcompat"
