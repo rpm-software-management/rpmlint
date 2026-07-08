@@ -1831,3 +1831,13 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/org.opensuse.tukit.Updated.conf"
 digester = "xml"
 hash     = "abf27e413feacafdb95e5b48ae2d75f501d506feb6a0a46a96fab338bde1fd13"
+
+[[FileDigestGroup]]
+package  = "cosmic-greeter"
+note     = "supplies user account and configuration info for cosmic greeter"
+bug      = "bsc#1259401"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/com.system76.CosmicGreeter.conf"
+digester = "xml"
+hash     = "11cc8aa9c1b4486369700620d1112ab9cb43649b73ab9cc511574bf7dcefce90"
