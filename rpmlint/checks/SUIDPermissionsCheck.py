@@ -35,30 +35,46 @@ class SUIDPermissionsCheck(AbstractCheck):
         parser = PermissionsParser(self.var_handler, path)
         self.perms.update(parser.entries)
 
-    def _complain_restricted_mode(self, pkg, path, mode):
-        msg = f'{path} is packaged with setuid/setgid bits (0{stat.S_IMODE(mode):o})'
-        diag = 'permissions-directory-setuid-bit' if stat.S_ISDIR(mode) else 'permissions-file-setuid-bit'
-        self.output.add_info('E', pkg, diag, msg)
+    def _complain_restricted_privs(self, pkg, path, pkgfile):
+        if stat.S_ISDIR(pkgfile.mode):
+            diag = 'permissions-directory-setuid-bit'
+        else:
+            diag = 'permissions-file-setuid-bit'
 
-    def _verify_entry(self, entry, pkg, path, rpm_mode, rpm_owner):
+        if pkgfile.filecaps:
+            msg = f'{path} is packaged with capabilities ({pkgfile.filecaps})'
+            self.output.add_info('E', pkg, diag, msg)
+        if self._is_suid(pkgfile.mode):
+            msg = f'{path} is packaged with setuid/setgid bits (0{stat.S_IMODE(pkgfile.mode):o})'
+            self.output.add_info('E', pkg, diag, msg)
+
+    def _verify_entry(self, entry, pkg, path, pkgfile):
         """Complains about disagreements between the package metadata and the
         permissions profile settings. We also require the RPM permissions to
         match the reference permissions profile (secure)."""
         is_listed_as_dir = entry.path.endswith('/')
-        is_packaged_as_dir = stat.S_ISDIR(rpm_mode)
+        is_packaged_as_dir = stat.S_ISDIR(pkgfile.mode)
 
         if is_packaged_as_dir and not is_listed_as_dir:
             self.output.add_info('W', pkg, 'permissions-dir-without-slash', path)
         elif is_listed_as_dir and not is_packaged_as_dir:
             self.output.add_info('W', pkg, 'permissions-file-as-dir', f'{path} is a file but listed as directory')
 
+        if stat.S_IMODE(pkgfile.mode) != entry.mode:
+            self.output.add_info('E', pkg, 'permissions-incorrect', f'{path} has mode 0{stat.S_IMODE(pkgfile.mode):o} but should be 0{entry.mode:o}')
+        # it would be too much complexity with little gain to compare the
+        # capabilities found in RPM metadata against the capabilities
+        # configured in the permissions profile(s). Thus simply reject
+        # packaged capabilities outright, they should only be managed by
+        # `permctl`, not by `rpm`.
+        if pkgfile.filecaps:
+            self.output.add_info('E', pkg, 'permissions-fscaps', f'{path} has capabilities "{pkgfile.filecaps}". Capabilities should only be managed by the permissions package.')
+
         entry_owner = ':'.join((entry.owner, entry.group))
+        pkg_owner = ':'.join((pkgfile.user, pkgfile.group))
 
-        if stat.S_IMODE(rpm_mode) != entry.mode:
-            self.output.add_info('E', pkg, 'permissions-incorrect', f'{path} has mode 0{stat.S_IMODE(rpm_mode):o} but should be 0{entry.mode:o}')
-
-        if rpm_owner != entry_owner:
-            self.output.add_info('E', pkg, 'permissions-incorrect-owner', f'{path} belongs to {rpm_owner} but should be {entry_owner}')
+        if pkg_owner != entry_owner:
+            self.output.add_info('E', pkg, 'permissions-incorrect-owner', f'{path} belongs to {pkg_owner} but should be {entry_owner}')
 
     def _check_post_scriptlets(self, pkg, path):
         """Checks whether a call to "permctl -n {path}" is found in %post and
@@ -107,6 +123,9 @@ class SUIDPermissionsCheck(AbstractCheck):
                 return True
 
         return False
+
+    def _is_suid(self, mode):
+        return (mode & (stat.S_ISUID | stat.S_ISGID)) != 0
 
     def check(self, pkg):
         if pkg.is_source:
@@ -158,13 +177,9 @@ class SUIDPermissionsCheck(AbstractCheck):
                 # is that that we don't see warnings for privileges added by
                 # other mechanisms that are described in these %ghost files
                 continue
-            if pkgfile.filecaps:
-                # capabilities are only assigned via permctl, should not be
-                # packaged directly
-                self.output.add_info('E', pkg, 'permissions-fscaps', f"{f} has fscaps '{pkgfile.filecaps}'")
 
             mode = pkgfile.mode
-            owner = pkgfile.user + ':' + pkgfile.group
+            is_link = stat.S_ISLNK(mode)
             # whether we need to check for invocation of permctl in %post or
             # %verifyscript for this path
             check_scriptlets = False
@@ -172,19 +187,20 @@ class SUIDPermissionsCheck(AbstractCheck):
             skip_file = False
             for entry in self.perms.get(f, []):
                 if entry.matches_pkg(pkg.name):
-                    if stat.S_ISLNK(mode):
+                    if is_link:
                         self.output.add_info('W', pkg, 'permissions-symlink', f)
                         skip_file = True
                         break
 
                     check_scriptlets = True
-                    self._verify_entry(entry, pkg, f, mode, owner)
+                    self._verify_entry(entry, pkg, f, pkgfile)
                     break
             else:
+                grants_privileges = pkgfile.filecaps or self._is_suid(pkgfile.mode)
                 # no matching entry found; this means there is no whitelisting for any privileged bits.
-                if not stat.S_ISLNK(mode) and (mode & (stat.S_ISUID | stat.S_ISGID)):
+                if not is_link and grants_privileges:
                     check_scriptlets = True
-                    self._complain_restricted_mode(pkg, f, mode)
+                    self._complain_restricted_privs(pkg, f, pkgfile)
 
             if skip_file:
                 # is a symlink we warned about

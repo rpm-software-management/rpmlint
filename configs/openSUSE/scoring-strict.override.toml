@@ -21,6 +21,7 @@ permissions-file-ghost = 10000
 permissions-file-unauthorized = 10000
 permissions-file-setuid-bit = 10000
 permissions-file-symlink = 10000
+permissions-fscaps = 10000
 # this one is problematic, because e.g. /etc/cron.* is packaged by multiple
 # packages and only one should be responsible for caring about %postin
 permissions-missing-postin = 100

@@ -69,6 +69,7 @@ permissions-file-ghost = 10
 permissions-file-unauthorized = 10
 permissions-file-setuid-bit = 10
 permissions-file-symlink = 10
+permissions-fscaps = 10
 permissions-parse-error = 10
 pam-unauthorized-module = 10
 world-writable-unauthorized-file = 10

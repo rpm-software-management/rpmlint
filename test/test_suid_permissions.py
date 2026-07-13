@@ -88,7 +88,7 @@ def test_permissions_fscaps(tmp_path, package, permissions_check):
     output, test = permissions_check
     test.check(get_tested_package(package, tmp_path))
     out = output.print_results(output.results)
-    assert "testsuidpermissionscheck.x86_64: E: permissions-fscaps /var/lib/testsuidpermissionscheck/test_permissions_fscaps has fscaps 'cap_net_raw=ep'" in out
+    assert 'testsuidpermissionscheck.x86_64: E: permissions-file-setuid-bit /var/lib/testsuidpermissionscheck/test_permissions_fscaps is packaged with capabilities (cap_net_raw=ep)' in out
 
 
 @pytest.mark.parametrize('package', ['binary/testsuidpermissionscheck'])
