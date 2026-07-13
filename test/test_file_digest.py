@@ -417,7 +417,7 @@ def test_varlink_content_check():
         test.check(pkg)
         assert len(output.results) == 0
 
-    # only this config should be complained about since if contains a varlink
+    # only this config should be complained about since it contains a varlink
     # FileDescriptorName
     RESTRICTED_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\n'
 
@@ -449,6 +449,16 @@ def test_varlink_digester():
         pkg.add_file_with_content('/sockets/the.socket', MATCHING_SOCKET_DATA)
         test.check(pkg)
         assert len(output.results) == 0
+
+    # this contains duplicate keys for SocketMode, it should yield a different
+    # digest than MATCHING_SOCKET_DATA.
+    MISMATCHING_EXTRA_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\nSocketMode=0111\nSocketMode=0777\n'
+
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('socketpkg') as pkg:
+        pkg.add_file_with_content('/sockets/the.socket', MISMATCHING_EXTRA_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 1
 
     # this adds Backlog=100, an uninteresting key, should yield the same digest
     SIMILAR_SOCKET_DATA = '[Socket]\nFileDescriptorName=varlink\nSocketMode=0777\nBacklog=100\n'

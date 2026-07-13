@@ -1,5 +1,3 @@
-import configparser
-
 # This module contains helper types used by the FileDigestCheck to implement
 # configuration-specific logic.
 
@@ -13,24 +11,67 @@ import configparser
 
 
 def _open_socket_config(path):
-    """Opens a systemd .socket unit in `path` as an INI configuration file and
-    returns the ConfigParser instance resulting from it. On error None is
-    returned."""
-    # systemd services files are not 100 % compatible with regular INI
-    # files, thus we make python's configparser a bit more relaxed.
-    config = configparser.ConfigParser(
-        interpolation=None,
-        strict=False
-    )
+    """Opens a systemd .socket unit in `path` and returns a dictionary
+    containing parsed data. On error None is returned."""
 
-    # by default option keys are converted to lower-case, we don't want that
-    config.optionxform = lambda opt: opt
+    # Sadly we cannot use Python's configparser for this purpose, because the
+    # systemd semantics are too far apart from regular INI files. In
+    # particular we need to be able to process multiple keys of the same name
+    # in a given section, while configparser discards old values when running
+    # in non-strict mode.
 
-    read = config.read(path)
-    if len(read) == 1:
-        return config
+    # see systemd.syntax(7) man page for the details of this syntax
+    #
+    # NOTE: we do not worry about quoting of strings and escaping here, for
+    # the purposes of the whitelisting this should be good enough (we only
+    # lookup simple key/value pairs, calculating a digest over quotes/escapes
+    # should work just as well).
 
-    return None
+    try:
+        ret = {}
+        section = None
+        multiline = ''
+
+        with open(path) as fl:
+            for line in fl:
+                line = line.strip()
+                if not line or line.startswith('#') or line.startswith(';'):
+                    # NOTE: comments are ignored even in multi-line continuation
+                    continue
+                elif line.endswith('\\'):
+                    # backslash is replaced by a space
+                    multiline += line[:-1] + ' '
+                    continue
+
+                line = multiline + line
+                multiline = ''
+
+                if len(line) > 2 and line.startswith('[') and line.endswith(']'):
+                    section = ret.setdefault(line[1:-1], {})
+                    continue
+
+                if section is None:
+                    # this would be a directive before a section appeared,
+                    # which is invalid
+                    return None
+                elif '=' not in line:
+                    # all non-comment, non-section, non-continuation lines
+                    # must contain an equal sign
+                    return None
+
+                # all non-comment, non-section, non-continuation lines must
+                # contain an equal sign
+                key, value = line.split('=', 1)
+                # extra whitespace surrounding the equal sign is ignored
+                key = key.rstrip()
+                value = value.lstrip()
+
+                entries = section.setdefault(key, [])
+                entries.append(value)
+
+        return ret
+    except OSError:
+        return None
 
 
 class VarlinkServiceCheck:
@@ -51,15 +92,18 @@ class VarlinkServiceCheck:
             # no socket section in a socket unit? not Varlink anyway.
             return False
 
-        try:
-            file_descriptor_name = socket_section['FileDescriptorName']
-        except KeyError:
-            # no varlink service
-            return False
+        # It is unclear what happens when multiple FileDescriptorName
+        # assignments appear, the only logical thing would be to override
+        # previous occurences. Having this would be weird, however, so let's
+        # consider any appearance of varlink here.
+        for name in socket_section.get('FileDescriptorName', []):
+            # this is more of a convention, not a hard requirement, but so far all
+            # Varlink services we have use this scheme.
+            if name == 'varlink':
+                return True
 
-        # this is more of a convention, not a hard requirement, but so far all
-        # Varlink services we have use this scheme.
-        return file_descriptor_name == 'varlink'
+        # not a varlink service
+        return False
 
 # Digester types
 
@@ -219,5 +263,5 @@ class SocketUnitDigester(DefaultDigester):
         # yield all key/value pairs we're interested in for hashing
         for key in socket_section:
             if key in self.KEYS_TO_HASH:
-                value = socket_section[key]
-                yield f'{key}={value}\n'.encode()
+                for value in socket_section[key]:
+                    yield f'{key}={value}\n'.encode()
