@@ -16,8 +16,8 @@ please use the %attr macro to set the correct ownership.
 permissions-file-setuid-bit="""Packaging binaries with setuid/setgid bits or capabilities set requires a
 review and whitelisting by the SUSE security team. #REVIEW_NEEDED_TEXT#"""
 permissions-directory-setuid-bit="""#REVIEW_NEEDED_TEXT#"""
-permissions-fscaps="""Packaging files with capabilities is now allowed. The
-permissions package manages capability assigned via the %set_permissions macro
+permissions-fscaps="""Packaging files with capabilities is not allowed. The
+permissions package manages capabilities via the %set_permissions macro
 during %post. Please remove the capabilities from the file."""
 permissions-missing-postin="""
 Please add an appropriate %post section
