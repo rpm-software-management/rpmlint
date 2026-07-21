@@ -1137,11 +1137,11 @@ hash = "feecf1770babd5649face9cd0eb879fef642153ca87995b35b90897413b022a4"
 package = "keepalived"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bug = "bsc#1015141"
+bugs = ["bsc#1015141", "bsc#1271920"]
 [[FileDigestGroup.digests]]
 path = "/etc/dbus-1/system.d/org.keepalived.Vrrp1.conf"
 digester = "xml"
-hash = "d6c62de9278ac8890166387e17e96cc6d950f2f9c2c9e5ca80859e1fb3f087ea"
+hash = "2107e6e68c82493fd16d68ea3ff89efa2d215cd6ae3f68fc45cff59eee689b6a"
 
 [[FileDigestGroup]]
 package = "bolt"
