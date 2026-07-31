@@ -25,3 +25,13 @@ hash     = "220518bd3fdf78853054bcc3b4fa7031924a39d13b13b63b1bf6487fb5e8eaa3"
 path     = "/usr/lib/systemd/system/pwupdd.socket"
 digester = "systemd-socket"
 hash     = "7f160fe0102ee38992334f9d6a3f81c16c03f821ad704da0875058606957d872"
+
+[[FileDigestGroup]]
+package  = "wtmpdb"
+note     = "login records which are Y38-safe, based on a Varlink service"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/wtmpdbd.socket"
+digester = "systemd-socket"
+hash     = "21dfe83aa57d85fc019f5fd59e61dcab56b3c9d769c3869713fbf0cddc9f0ab5"
