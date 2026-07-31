@@ -7,3 +7,41 @@ bug      = "bsc#1188704"
 path     = "/usr/lib/systemd/system/test.socket"
 digester = "systemd-socket"
 hash     = "ff7a1f7581f81790cc063071026c4deaf4eafa6b0658217250db8e420c9064bc"
+
+[[FileDigestGroup]]
+package  = "account-utils"
+note     = "shadow utils replacement based on Varlink services"
+bugs     = ["bsc#1253684", "bsc#1253717", "bsc#1253630"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/newidmapd.socket"
+digester = "systemd-socket"
+hash     = "d39cadd50ed5a6d1862d07f2a46a00b9122a4c54ebea369f3b0760cfb31df62e"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/pwaccessd.socket"
+digester = "systemd-socket"
+hash     = "220518bd3fdf78853054bcc3b4fa7031924a39d13b13b63b1bf6487fb5e8eaa3"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/pwupdd.socket"
+digester = "systemd-socket"
+hash     = "7f160fe0102ee38992334f9d6a3f81c16c03f821ad704da0875058606957d872"
+
+[[FileDigestGroup]]
+package  = "wtmpdb"
+note     = "login records which are Y38-safe, based on a Varlink service"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/wtmpdbd.socket"
+digester = "systemd-socket"
+hash     = "21dfe83aa57d85fc019f5fd59e61dcab56b3c9d769c3869713fbf0cddc9f0ab5"
+
+[[FileDigestGroup]]
+package  = "sysextmgr"
+note     = "helper for dealing with systemd-sysext images based on a Varlink service"
+bug      = "bsc#1247107"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/sysextmgr.socket"
+digester = "systemd-socket"
+hash     = "22ad4eb46a0ddcd461ce0136548de13b207592fa464521f55948581606b53856"
