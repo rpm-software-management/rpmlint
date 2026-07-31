@@ -35,3 +35,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/wtmpdbd.socket"
 digester = "systemd-socket"
 hash     = "21dfe83aa57d85fc019f5fd59e61dcab56b3c9d769c3869713fbf0cddc9f0ab5"
+
+[[FileDigestGroup]]
+package  = "sysextmgr"
+note     = "helper for dealing with systemd-sysext images based on a Varlink service"
+bug      = "bsc#1247107"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/sysextmgr.socket"
+digester = "systemd-socket"
+hash     = "22ad4eb46a0ddcd461ce0136548de13b207592fa464521f55948581606b53856"
