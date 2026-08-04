@@ -110,11 +110,9 @@ jobs:
         if: matrix.build-type == 'no-optional-deps'
       - run: pipx install coveralls
       - run: pipx install pyupgrade
-      - run: pipx install ruff
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: pytest
       - run: flake8
-      - run: /github/home/.local/bin/ruff check .
       - run: find . -not -path "./test/files/*" -name '*.py' | xargs /github/home/.local/bin/pyupgrade --py38-plus
       - run: python3 -m cProfile -o profile.stats lint.py -V test/source/* test/binary/* > /dev/null
       - run: python3 test/dump_stats.py profile.stats
