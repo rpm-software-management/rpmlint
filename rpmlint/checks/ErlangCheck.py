@@ -20,14 +20,24 @@ class ErlangCheck(AbstractFilesCheck):
                 self.output.add_info('W', pkg, 'beam-compile-info-missed', filename)
                 return
 
-            compile_state = byte_to_string(beam.compileinfo['source'])
-            if 'debug_info' not in beam.compileinfo['options']:
+            # Beams compiled with the 'deterministic' option omit the
+            # 'source' and 'options' entries from the compile info. For
+            # those, fall back to the presence of the debug info chunk.
+            options = beam.compileinfo.get('options')
+            if options is None:
+                has_debug_info = beam.selectChunkByName(b'Dbgi') is not None
+            else:
+                has_debug_info = 'debug_info' in options
+            if not has_debug_info:
                 self.output.add_info('E', pkg, 'beam-compiled-without-debuginfo', filename)
 
             # This can't be an error as builddir can be user specific and vary between users
             # it could be error in OBS where all the builds are done by user abuild, not in
             # general.
-            if not self.source_re.match(compile_state):
-                self.output.add_info('W', pkg, 'beam-was-not-recompiled', filename, compile_state)
+            source = beam.compileinfo.get('source')
+            if source is not None:
+                compile_state = byte_to_string(source)
+                if not self.source_re.match(compile_state):
+                    self.output.add_info('W', pkg, 'beam-was-not-recompiled', filename, compile_state)
         except Exception:
             self.output.add_info('E', pkg, 'pybeam-failed', filename)
