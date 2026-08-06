@@ -93,19 +93,20 @@ hash = "18ecc523dec42f91c679143043c9b28ef82eac68d1729a21d371c18eb93f2a18"
 package = "gnome-initial-setup"
 type = "polkit"
 note = "Allows gnome-initial-session to configure the system after input is collected from the user"
-bug = "bsc#1125432"
-[[FileDigestGroup.digests]]
-path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
-hash = "6daefe0a835dc1b34513302f393e98089c137602823f41fd0c3dd984c40902d8"
-
-[[FileDigestGroup]]
-package = "gnome-initial-setup"
-type = "polkit"
-note = "Follow-up whitelisting, upstream added org.fedoraproject.thirdparty.* to the rules"
-bugs  = ["bsc#1192542", "bsc#1249067"]
+bugs  = ["bsc#1125432", "bsc#1192542", "bsc#1249067"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
 hash = "6241e147d107fbc2f786b7149c26abb75185cf9db5d921401e310f78f4e8bced"
+
+[[FileDigestGroup]]
+package  = "gnome-initial-setup"
+note     = "updated whitelist, to be merged once GNOME:Next reaches Factory"
+bug      = "bsc#1273685"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
+digester = "default"
+hash     = "97fe618c0987ec5fa08367a9ad934e86cd173be4ef05c4f4f7edebe6df566465"
 
 [[FileDigestGroup]]
 package = "libvirt-dbus"
