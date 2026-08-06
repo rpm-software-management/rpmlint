@@ -99,6 +99,16 @@ path = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
 hash = "6241e147d107fbc2f786b7149c26abb75185cf9db5d921401e310f78f4e8bced"
 
 [[FileDigestGroup]]
+package  = "gnome-initial-setup"
+note     = "updated whitelist, to be merged once GNOME:Next reaches Factory"
+bug      = "bsc#1273685"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/20-gnome-initial-setup.rules"
+digester = "default"
+hash     = "97fe618c0987ec5fa08367a9ad934e86cd173be4ef05c4f4f7edebe6df566465"
+
+[[FileDigestGroup]]
 package = "libvirt-dbus"
 type = "polkit"
 note = "Allows the libvirt-dbus daemon to run unprivileged but still control libvirt"
