@@ -46,6 +46,9 @@ class FileDigestCheck(AbstractCheck):
             config.setdefault('NamePatterns', [])
             config.setdefault('FollowSymlinks', False)
             config.setdefault('ContentCheck', None)
+            # whether we should consider files in sub-directories of the
+            # locations as well
+            config.setdefault('Recursive', True)
             config['type'] = check_type
             self.checks.append(config)
             self.known_check_types[check_type] = config
@@ -234,15 +237,22 @@ class FileDigestCheck(AbstractCheck):
         for config in self.checks:
             for location in config['Locations']:
                 with contextlib.suppress(ValueError):
-                    if path.relative_to(location):
-                        if not config['NamePatterns']:
-                            # files in this location are unconditionally subject to the check.
-                            return config
-                        else:
-                            # we need to check if the filename matches the configured pattern.
-                            for glob in config['NamePatterns']:
-                                if fnmatch(path.name, glob):
-                                    return config
+                    subpath = path.relative_to(location)
+
+                    if not subpath:
+                        continue
+                    elif not config['Recursive'] and len(subpath.parts) > 1:
+                        # it's not a direct descendant
+                        continue
+
+                    if not config['NamePatterns']:
+                        # files in this location are unconditionally subject to the check.
+                        return config
+                    else:
+                        # we need to check if the filename matches the configured pattern.
+                        for glob in config['NamePatterns']:
+                            if fnmatch(path.name, glob):
+                                return config
 
         # must be a file which isn't matched by a name pattern.
         return None
