@@ -35,6 +35,8 @@ NamePatterns = [
     "*.socket",
 ]
 ContentCheck = "VarlinkServiceCheck"
+# don't deal with sub-directories like "socket.target.wants"
+Recursive = false
 
 [FileDigestLocation.polkit]
 FollowSymlinks = false

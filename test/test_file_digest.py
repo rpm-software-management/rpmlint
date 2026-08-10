@@ -427,6 +427,13 @@ def test_varlink_content_check():
         test.check(pkg)
         assert len(output.results) == 1
 
+    # the check should not be recursive
+    output, test = get_digestcheck('digests_varlink.config')
+    with FakePkg('defaultpkg') as pkg:
+        pkg.add_file_with_content('/sockets/sub/unrelated.socket', RESTRICTED_SOCKET_DATA)
+        test.check(pkg)
+        assert len(output.results) == 0
+
 
 def test_varlink_digester():
     # here we want to check the SocketUnitDigester:
