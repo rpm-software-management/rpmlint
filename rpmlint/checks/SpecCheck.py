@@ -171,11 +171,17 @@ class SpecCheck(AbstractCheck):
             if fname.endswith('.spec'):
                 self._spec_file = pkgfile.path
                 self._spec_name = pkgfile.name
-                if fname == pkg.name + '.spec':
-                    wrong_spec = False
-                    break
-                else:
-                    wrong_spec = True
+                wrong_spec = True
+                # search for any suffix
+                spec_basename = pkg.name
+                while spec_basename:
+                    if fname == spec_basename + '.spec':
+                        wrong_spec = False
+                        break
+                    if '-' in spec_basename:
+                        spec_basename = spec_basename.rpartition('-')[0]
+                    else:
+                        break
 
         # method call
         self._check_no_spec_file(pkg)
