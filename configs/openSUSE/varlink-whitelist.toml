@@ -107,3 +107,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-nsresourced.socket"
 digester = "systemd-socket"
 hash     = "5db33de4baa1febd9c296fc28ebe6431fe85afcdcc154cec9edb7b25c5713643"
+
+[[FileDigestGroup]]
+package  = "systemd-networkd"
+note     = "Not too large API mostly for getting information, some for modifying state, protected by Polkit"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-networkd-varlink.socket"
+digester = "systemd-socket"
+hash     = "6411eceeeee8714caeb1d0f8967116da51e1ae3838f9593b71ddadcf88c3deb6"
