@@ -45,3 +45,25 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/sysextmgr.socket"
 digester = "systemd-socket"
 hash     = "22ad4eb46a0ddcd461ce0136548de13b207592fa464521f55948581606b53856"
+
+[[FileDigestGroup]]
+package  = "udev"
+note     = "udev core varlink services, all accessible to root only"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-bootctl.socket"
+digester = "systemd-socket"
+hash     = "8224c1d90efca44b975a83bc8989eb5438f43a1d02248f9fb28bfd67c012b650"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-pcrlock.socket"
+digester = "systemd-socket"
+hash     = "245abdf23ead7e1fd5eb8b54502c7a0d0536b2f8417cecd960450d827cc147a1"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-repart.socket"
+digester = "systemd-socket"
+hash     = "ce39189699d18c5e11406980d09e046a8a4b20bc9da2506fe7f447ae8dbf8b98"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-udevd-varlink.socket"
+digester = "systemd-socket"
+hash     = "9ca1632e762e1e3215c51b08b39b7660b5461072d82013ea3dca9193b0beada9"
