@@ -37,6 +37,7 @@ class LddParser:
 
     unused_regex = re.compile(r'^\s+(?P<lib>\S+)')
     undef_regex = re.compile(r'^undefined symbol:\s+(?P<symbol>[^, ]+)')
+    notfound_regex = re.compile(r'^\s+(?P<lib>\S+)\s+=>\s+not found')
 
     def __init__(self, pkgfile_path, path, is_installed_pkg):
         self.pkgfile_path = pkgfile_path
@@ -65,6 +66,20 @@ class LddParser:
                     self.unused_dependencies.append(unused.group('lib'))
                 else:
                     is_unused = False
+
+        # Fallback for glibc >= 2.44 where ldd -u may not produce the
+        # expected "Unused direct dependencies:" output due to IFUNC
+        # handling changes. In this case, detect unused dependencies by
+        # finding NEEDED libraries that cannot be resolved ("not found"
+        # in ldd -r output), as these cannot contribute any symbols.
+        if not self.unused_dependencies and r.returncode != 0:
+            r2 = subprocess.run(['ldd', '-r', self.pkgfile_path], encoding='utf8',
+                                capture_output=True, env=ENGLISH_ENVIRONMENT)
+            if r2.returncode == 0:
+                for line in r2.stdout.splitlines():
+                    m = self.notfound_regex.search(line)
+                    if m:
+                        self.unused_dependencies.append(m.group('lib'))
 
     def parse_undefined_symbols(self):
         r = subprocess.run(['ldd', '-r', self.pkgfile_path], encoding='utf8',
