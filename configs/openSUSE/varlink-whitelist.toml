@@ -67,3 +67,43 @@ hash     = "ce39189699d18c5e11406980d09e046a8a4b20bc9da2506fe7f447ae8dbf8b98"
 path     = "/usr/lib/systemd/system/systemd-udevd-varlink.socket"
 digester = "systemd-socket"
 hash     = "9ca1632e762e1e3215c51b08b39b7660b5461072d82013ea3dca9193b0beada9"
+
+[[FileDigestGroup]]
+package  = "systemd-container"
+note     = "container image import API, analogous to its D-Bus twin"
+bugs     = ["bsc#964935", "bsc#1259318", "bsc#1261919"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-importd.socket"
+digester = "systemd-socket"
+hash     = "fa1c9b80e6ba5b08f09abebcc7eabb00f93ef5c86767e2989785f7c6264e24b5"
+
+[[FileDigestGroup]]
+package  = "systemd-container"
+note     = "main daemon for controlling VMs/containers, analogous to its D-Bus twin"
+bugs     = ["bsc#828207", "bsc#1192033", "bsc#1257388", "bsc#1255368", "bsc#1259318", "bsc#1261919"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-machined.socket"
+digester = "systemd-socket"
+hash     = "9ac503dec78b8d8181e5a57752365f07cab7e9cfeae362695a0720000075691c"
+
+[[FileDigestGroup]]
+package  = "systemd-container"
+note     = "mount file-systems into user-controlled namespaces"
+bugs     = ["bsc#1250898", "bsc#1261919"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-mountfsd.socket"
+digester = "systemd-socket"
+hash     = "235a773f47e5594d3a5e5ddefb8d2986ea904c0d03a23202a8d59a1227512054"
+
+[[FileDigestGroup]]
+package  = "systemd-container"
+note     = "creation of container/namespace resources for unprivileged users"
+bugs     = ["bsc#1250902", "bsc#1261919"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-nsresourced.socket"
+digester = "systemd-socket"
+hash     = "5db33de4baa1febd9c296fc28ebe6431fe85afcdcc154cec9edb7b25c5713643"
