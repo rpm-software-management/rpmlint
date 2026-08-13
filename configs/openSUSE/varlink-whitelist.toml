@@ -147,3 +147,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-creds.socket"
 digester = "systemd-socket"
 hash     = "bc4fb052a8e1f298a15c0dc8d6e8a9850a3629776b6fa271ef8f9b45cb81d8ae"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "provides hardware information"
+bugs     = ["bsc#1261919", "bsc#641924", "bsc#1257388"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-hostnamed.socket"
+digester = "systemd-socket"
+hash     = "0bae10736a17d5b449fd2bfa3726599696b168e5e2cc70d9b2d990cea0a16359"
