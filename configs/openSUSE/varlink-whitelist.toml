@@ -127,3 +127,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-resolved-varlink.socket"
 digester = "systemd-socket"
 hash     = "924a769f997001348c10369a0af748932058c8f7e88ad5daf1a7e84abda53f77"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "service which helps to obtain a password from an interactive user"
+bugs     = ["bsc#1261919", "bsc#1257943"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-ask-password.socket"
+digester = "systemd-socket"
+hash     = "65796969f76971117b1f8405906e7ed54d95230faa45465714ab71ccf158e5aa"
