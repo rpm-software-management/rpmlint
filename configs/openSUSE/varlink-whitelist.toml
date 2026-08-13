@@ -167,3 +167,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-logind-varlink.socket"
 digester = "systemd-socket"
 hash     = "7e62a81cb560d9dbb4bf27a8c485ec4a2b2ce8d85a9cfddf3c1061795732ae7d"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "management of system extension / configuration images"
+bugs     = ["bsc#1261919", "bsc#1259318"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysext.socket"
+digester = "systemd-socket"
+hash     = "695f5a22b67ede89005bbf39065e94d1c17fff449cd925ecc969da654bba5e26"
