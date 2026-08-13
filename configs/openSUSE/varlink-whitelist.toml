@@ -177,3 +177,13 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-sysext.socket"
 digester = "systemd-socket"
 hash     = "695f5a22b67ede89005bbf39065e94d1c17fff449cd925ecc969da654bba5e26"
+
+[[FileDigestGroup]]
+package  = "systemd"
+note     = "access to /etc/passwd, /etc/group data"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-userdbd.socket"
+digester = "systemd-socket"
+hash     = "f18c943e7ee65fea7d34d282111230867b1d309d5bcbf5e0bb00982567c6bb82"
