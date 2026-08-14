@@ -187,3 +187,93 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-userdbd.socket"
 digester = "systemd-socket"
 hash     = "f18c943e7ee65fea7d34d282111230867b1d309d5bcbf5e0bb00982567c6bb82"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "access to information about factory reset status"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-factory-reset.socket"
+digester = "systemd-socket"
+hash     = "70d4b87386b0f4aa4d3c99d901b912bb604d7932203b772320625bbc448d978d"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "virtual machine instance metadata service"
+bugs     = ["bsc#1261919", "bsc#1267504"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-imdsd.socket"
+digester = "systemd-socket"
+hash     = "15703bc772caf1b5604eba1f6dd5709a679374747f6c853012abd6ab2127ff71"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "programmatic access to journalctl data"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-journalctl.socket"
+digester = "systemd-socket"
+hash     = "3232616b0acc13ff0b68b014e028662847b1a5692dc64fd29d63983a03f12bcb"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "turn of pid1 / kernel messages on a console"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-mute-console.socket"
+digester = "systemd-socket"
+hash     = "58a95fcb09c8ab8e0c2f98a2495d14a6a1ef1d0c18aacb751cebc624c9ba41f8"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows root to extend TPM PCR registers"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-pcrextend.socket"
+digester = "systemd-socket"
+hash     = "2cccfadaadd7c49d63a40f96ba899b590c77cab7e05fcb7824b58a425d064b71"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "systemd core metrics read-only access"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-basic.socket"
+digester = "systemd-socket"
+hash     = "a0637753ab908ba69ed22619bb7b64e47aa1b00dd6f2d85bb33236da64fceb85"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "systemd cgroup metrics read-only access"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-cgroup.socket"
+digester = "systemd-socket"
+hash     = "b546d041421a9828c416c613406ece826a81cc854e8ec528f1322c8adcb3a92f"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "read-only access to block devices, authorized read/write access to block devices"
+bugs     = ["bsc#1261919", "bsc#1267504"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-storage-block.socket"
+digester = "systemd-socket"
+hash     = "3671134aedaccb73fa0a5fca06ea5c664f8177052bdbddc605767b739de274c4"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "read-only access to file-systems, authorized read/write access to file systems"
+bug      = "bsc#1261919"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-storage-fs.socket"
+digester = "systemd-socket"
+hash     = "8f6818e0d31544b37d01432d6efd4816f126b12066c41024fa3043bce5116235"
