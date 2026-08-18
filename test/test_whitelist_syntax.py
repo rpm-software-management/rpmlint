@@ -50,7 +50,8 @@ def test_file_digest_whitelists():
         ('dbus', 'dbus-services'),
         ('pam', 'pam-modules'),
         ('permissions', 'permissions-whitelist'),
-        ('polkit', 'polkit-rules-whitelist')
+        ('polkit', 'polkit-rules-whitelist'),
+        ('varlink', 'varlink-whitelist')
     ]
 
     for _type, whitelist in WHITELISTS:
