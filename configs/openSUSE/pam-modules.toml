@@ -577,3 +577,12 @@ nodigests = [
     "glob:*/security/pam_debuginfo.so",
     "glob:*/security/pam_unix_ng.so"
 ]
+
+[[FileDigestGroup]]
+package  = "pam-ssh-agent"
+note     = "authentication via SSH public keys"
+bug      = "bsc#1274633"
+type     = "pam"
+nodigests = [
+    "glob:*/security/pam_ssh_agent.so"
+]
