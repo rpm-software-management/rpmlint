@@ -97,9 +97,10 @@ class VarlinkServiceCheck:
         # previous occurences. Having this would be weird, however, so let's
         # consider any appearance of varlink here.
         for name in socket_section.get('FileDescriptorName', []):
-            # this is more of a convention, not a hard requirement, but so far all
-            # Varlink services we have use this scheme.
-            if name == 'varlink':
+            # this is more of a convention, not a hard requirement.
+            # most of the time it is just "varlink", but some services also
+            # use "varlink-monitor" or similar names.
+            if name.find('varlink') != -1:
                 return True
 
         # not a varlink service
