@@ -309,3 +309,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/cosmic-settings-daemon.rules"
 digester = "default"
 hash     = "60c0b0121450c90a2f3436396406c031f9c4916945e5e15fc23c00e10594203e"
+
+[[FileDigestGroup]]
+package  = "portprotonqt"
+note     = "allow udisks2 and network manager actions for members of the portprotonqt group"
+bug      = "bsc#1270218"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/ru.linux_gaming.PortProtonQt.rules"
+digester = "default"
+hash     = "f44b5209614514052f1fc14db5bb43ae3cfc4562bd72c8c64c4061268f8aa143"
