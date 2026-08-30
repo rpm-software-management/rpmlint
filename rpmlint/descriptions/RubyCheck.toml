@@ -1,0 +1,5 @@
+ruby-script-wrong-shebang-="""
+Wrong ruby script found in a file. Any binary ruby file should have a
+shebang that points directly to the especific version, for example
+/usr/bin/ruby.ruby4.0
+"""

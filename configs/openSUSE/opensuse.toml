@@ -29,6 +29,7 @@ Checks = [
     "SUIDPermissionsCheck",
     "WorldWritableCheck",
     "AtomicUpdateCheck",
+    "RubyCheck",
 ]
 
 # List of directory prefixes that are not allowed in packages
