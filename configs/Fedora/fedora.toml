@@ -19,7 +19,7 @@ MaxLineLength = 80
 PythonDefaultVersion = ""
 
 # Regexp string with expected suffix in Release tags.
-ReleaseExtension = '\.(fc|rhe?l|el)\d+(?=\.|$)'
+ReleaseExtension = '\.(fc|rhe?l|el|eln)\d+(?=\.|$)'
 
 # Whether to want default start/stop runlevels specified in init scripts
 UseDefaultRunlevels = false
