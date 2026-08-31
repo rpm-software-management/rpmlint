@@ -552,7 +552,7 @@ class TagsCheck(AbstractCheck):
                         if self.release_ext:
                             expected.append(self.extension_regex.sub('', expected[0]))
                         # Check if a package does not have a version that is
-                        # compatible with epoch:vesrion-release tuple
+                        # compatible with epoch:version-release tuple
                         if ret.group(1) not in expected:
                             if len(expected) == 1:
                                 expected = expected[0]
