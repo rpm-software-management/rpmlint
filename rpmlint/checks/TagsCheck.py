@@ -244,7 +244,7 @@ class TagsCheck(AbstractCheck):
         """Trigger check not-standard-release-extension, no-release-tag
 
         Args:
-            release: Variable checks Realease: tag value
+            release: Variable checks Release: tag value
 
         Returns:
             Output info to STDOUT
@@ -348,7 +348,7 @@ class TagsCheck(AbstractCheck):
                     if res and not res.group(1):
                         self.output.add_info('E', pkg, 'explicit-lib-dependency', dep[0])
 
-            # Check if a package requires a specfic version of another package.
+            # Check if a package requires a specific version of another package.
             # For Ex:- Requires: python==3.8
             if dep[1] == rpm.RPMSENSE_EQUAL and dep[2][2] is not None:
                 self.output.add_info('W', pkg, 'requires-on-release', value)
@@ -552,7 +552,7 @@ class TagsCheck(AbstractCheck):
                         if self.release_ext:
                             expected.append(self.extension_regex.sub('', expected[0]))
                         # Check if a package does not have a version that is
-                        # compatible with epoch:vesrion-release tuple
+                        # compatible with epoch:version-release tuple
                         if ret.group(1) not in expected:
                             if len(expected) == 1:
                                 expected = expected[0]
@@ -577,8 +577,8 @@ class TagsCheck(AbstractCheck):
                 if clt < oldest_changelog_timestamp:
                     self.output.add_info('W', pkg, 'changelog-time-overflow',
                                          time.strftime('%Y-%m-%d', time.gmtime(clt)))
-                # Check if a package contians a entry in %changelog
-                # with timestamp thats in the future of its writing
+                # Check if a package contains a entry in %changelog
+                # with timestamp that's in the future of its writing
                 elif clt > time.time():
                     self.output.add_info('E', pkg, 'changelog-time-in-future',
                                          time.strftime('%Y-%m-%d', time.gmtime(clt)))
@@ -603,7 +603,7 @@ class TagsCheck(AbstractCheck):
             x, y = license_exception_regex.split(text)[1:3] or (text, '')
             return x.strip(), y.strip()
 
-        # Check if a package spec file conatins a License: tag
+        # Check if a package spec file contains a License: tag
         if not rpm_license:
             self.output.add_info('E', pkg, 'no-license')
         else:
