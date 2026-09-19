@@ -2,6 +2,7 @@
 arch-dependent-file-in-usr-share = 590
 arch-independent-package-contains-binary-or-object = 499
 binary-in-etc = 900
+cpe_name-mismatch = 10000
 devel-file-in-non-devel-package = 50
 dir-or-file-in-var-lock = 10000
 dir-or-file-in-var-run = 10000
