@@ -12,14 +12,25 @@ def _build_diff_pair(tmp_path):
     changed content (N_MODE_CHANGED of them also with a changed mode),
     changed content+mode for the two mc files, one added file and a
     changed Summary tag.
+
+    Modes are set with %attr in %files (applied at header generation
+    time), not with chmod in %install, so the test does not depend on
+    how a given rpmbuild preserves buildroot modes.
     """
     files = [f'/usr/share/diff-test/file{i:02d}' for i in range(N_FILES)]
-    files_list = '\n'.join(
-        files + [
-            '/usr/share/mc/skins/yadt256.ini',
-            '/usr/share/mc/syntax/cuda.syntax',
-        ]
-    )
+    mc_files = ['/usr/share/mc/skins/yadt256.ini',
+                '/usr/share/mc/syntax/cuda.syntax']
+    # files whose mode changes between the two packages
+    mode_changed = {f'/usr/share/diff-test/file{i:02d}'
+                    for i in range(N_MODE_CHANGED)} | set(mc_files)
+
+    def files_list(attr):
+        def entry(path):
+            if attr and path in mode_changed:
+                return f'%attr(755,root,root) {path}'
+            return path
+        return '\n'.join([entry(p) for p in files + mc_files])
+
     oldpkg = build_tiny_rpm(
         tmp_path / 'old', 'diff-test', version='1.0', summary='old summary',
         install_script='\n'.join([
@@ -28,22 +39,18 @@ def _build_diff_pair(tmp_path):
             'echo "old skin" > %{buildroot}/usr/share/mc/skins/yadt256.ini',
             'echo "old syntax" > %{buildroot}/usr/share/mc/syntax/cuda.syntax',
         ]),
-        files_list=files_list,
+        files_list=files_list(False),
     )
     newpkg = build_tiny_rpm(
         tmp_path / 'new', 'diff-test', version='2.0', summary='new summary',
         install_script='\n'.join([
             'mkdir -p %{buildroot}/usr/share/diff-test %{buildroot}/usr/share/mc/skins %{buildroot}/usr/share/mc/syntax',
             'for i in $(seq -w 0 49); do echo "new content $i" > %{buildroot}/usr/share/diff-test/file$i; done',
-            'chmod 755 ' + ' '.join(
-                f'%{{buildroot}}/usr/share/diff-test/file{i:02d}' for i in range(N_MODE_CHANGED)
-            ),
             'echo "new skin" > %{buildroot}/usr/share/mc/skins/yadt256.ini',
             'echo "new syntax" > %{buildroot}/usr/share/mc/syntax/cuda.syntax',
-            'chmod 755 %{buildroot}/usr/share/mc/skins/yadt256.ini %{buildroot}/usr/share/mc/syntax/cuda.syntax',
             'echo "yaml syntax" > %{buildroot}/usr/share/mc/syntax/yaml.syntax',
         ]),
-        files_list=files_list + '\n/usr/share/mc/syntax/yaml.syntax',
+        files_list=files_list(True) + '\n/usr/share/mc/syntax/yaml.syntax',
     )
     return oldpkg, newpkg
 
