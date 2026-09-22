@@ -69,6 +69,9 @@ SkipPackagePatterns = []
 # Distribution-specific build root locations that are searched for
 # rpmlintrc files before falling back to the package folder.
 RpmlintrcSearchPaths = []
+# Never print package extraction stderr, even in verbose mode (e.g. to
+# keep build logs clean).
+SuppressExtractionStderr = false
 # String regexp validating value for the Packager tag.
 Packager = ""
 # Assumed default version of Python if one cannot be determined from files

@@ -524,9 +524,12 @@ class AbstractPkg:
 class Pkg(AbstractPkg):
     _magic_from_compressed_re = re.compile(r'\([^)]+\s+compressed\s+data\b')
 
-    def __init__(self, filename, dirname, header=None, is_source=False, extracted=False, verbose=False):
+    def __init__(self, filename, dirname, header=None, is_source=False, extracted=False, verbose=False,
+                 suppress_stderr=False):
         self.filename = filename
         self.extracted = extracted
+        # some distributions never want extraction stderr noise (e.g. openSUSE OBS)
+        self.suppress_stderr = suppress_stderr
 
         # record decompression and extraction time
         start = time.monotonic()
@@ -621,9 +624,10 @@ class Pkg(AbstractPkg):
             # usage is doing chdir before invocation.
             filename = Path(self.filename).resolve()
             with pushd(dirname):
-                stderr = None if verbose else subprocess.DEVNULL
-                # SUSE-specific: never print stderr
-                stderr = subprocess.DEVNULL
+                if self.suppress_stderr:
+                    stderr = subprocess.DEVNULL
+                else:
+                    stderr = None if verbose else subprocess.DEVNULL
                 if shutil.which('rpm2archive'):
                     with open(filename, 'rb') as rpm_data:
                         subprocess.check_output('rpm2archive - | tar -xz && chmod -R +rX .', shell=True, env=ENGLISH_ENVIRONMENT,

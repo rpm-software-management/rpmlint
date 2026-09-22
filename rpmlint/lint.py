@@ -286,7 +286,8 @@ class Lint:
         try:
             if pname.suffix in ('.rpm', '.spm'):
                 with Pkg(pname, self.config.configuration['ExtractDir'],
-                         verbose=self.config.info) as pkg:
+                         verbose=self.config.info,
+                         suppress_stderr=self.config.configuration['SuppressExtractionStderr']) as pkg:
                     for k, v in pkg.timers.items():
                         self.check_duration[k] += v
                     self.run_checks(pkg, is_last)
