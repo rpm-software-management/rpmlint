@@ -1,13 +1,12 @@
-import pytest
-from rpmlint.checks.ZipCheck import ZipCheck
-from rpmlint.filter import Filter
-
 from mockdata.mock_zip import (
     BadCrcZipPackage,
     ClasspathJarPackage,
     EncryptedZipPackage,
     UnsupportedCompressionZipPackage,
 )
+import pytest
+from rpmlint.checks.ZipCheck import ZipCheck
+from rpmlint.filter import Filter
 
 from Testing import CONFIG
 
