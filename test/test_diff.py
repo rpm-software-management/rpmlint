@@ -1,30 +1,76 @@
 from rpmlint.rpmdiff import Rpmdiff
 
-from Testing import get_tested_path
+from Testing import build_tiny_rpm
+
+N_FILES = 50
+N_MODE_CHANGED = 10
 
 
-def test_distribution_tags():
-    oldpkg = get_tested_path('binary/mc-4.8.15-10.3.1.x86_64.rpm')
-    newpkg = get_tested_path('binary/mc-4.8.21-2.1.x86_64.rpm')
+def _build_diff_pair(tmp_path):
+    """
+    Build two tiny RPMs with controlled differences: N_FILES files with
+    changed content (N_MODE_CHANGED of them also with a changed mode),
+    changed content+mode for the two mc files, one added file and a
+    changed Summary tag.
+    """
+    files = [f'/usr/share/diff-test/file{i:02d}' for i in range(N_FILES)]
+    files_list = '\n'.join(
+        files + [
+            '/usr/share/mc/skins/yadt256.ini',
+            '/usr/share/mc/syntax/cuda.syntax',
+        ]
+    )
+    oldpkg = build_tiny_rpm(
+        tmp_path / 'old', 'diff-test', version='1.0', summary='old summary',
+        install_script='\n'.join([
+            'mkdir -p %{buildroot}/usr/share/diff-test %{buildroot}/usr/share/mc/skins %{buildroot}/usr/share/mc/syntax',
+            'for i in $(seq -w 0 49); do echo "old content $i" > %{buildroot}/usr/share/diff-test/file$i; done',
+            'echo "old skin" > %{buildroot}/usr/share/mc/skins/yadt256.ini',
+            'echo "old syntax" > %{buildroot}/usr/share/mc/syntax/cuda.syntax',
+        ]),
+        files_list=files_list,
+    )
+    newpkg = build_tiny_rpm(
+        tmp_path / 'new', 'diff-test', version='2.0', summary='new summary',
+        install_script='\n'.join([
+            'mkdir -p %{buildroot}/usr/share/diff-test %{buildroot}/usr/share/mc/skins %{buildroot}/usr/share/mc/syntax',
+            'for i in $(seq -w 0 49); do echo "new content $i" > %{buildroot}/usr/share/diff-test/file$i; done',
+            'chmod 755 ' + ' '.join(
+                f'%{{buildroot}}/usr/share/diff-test/file{i:02d}' for i in range(N_MODE_CHANGED)
+            ),
+            'echo "new skin" > %{buildroot}/usr/share/mc/skins/yadt256.ini',
+            'echo "new syntax" > %{buildroot}/usr/share/mc/syntax/cuda.syntax',
+            'chmod 755 %{buildroot}/usr/share/mc/skins/yadt256.ini %{buildroot}/usr/share/mc/syntax/cuda.syntax',
+            'echo "yaml syntax" > %{buildroot}/usr/share/mc/syntax/yaml.syntax',
+        ]),
+        files_list=files_list + '\n/usr/share/mc/syntax/yaml.syntax',
+    )
+    return oldpkg, newpkg
+
+
+def test_distribution_tags(tmp_path):
+    oldpkg, newpkg = _build_diff_pair(tmp_path)
     ignore = []
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
-    # the count always reports one less
-    assert 231 <= len(textdiff.splitlines()) <= 233
+    # every changed file plus the added file, the changed Summary tag
+    # and the versioned self-provides
+    assert len(textdiff.splitlines()) == 56
 
     ignore.append('T')
     ignore.append('5')
     ignore.append('S')
     diff = Rpmdiff(oldpkg, newpkg, ignore)
     textdiff = diff.textdiff()
-    assert 36 <= len(textdiff.splitlines()) <= 38
+    # only mode changes, the added file, the Summary tag and the
+    # versioned self-provides are left
+    assert len(textdiff.splitlines()) == 16
 
     assert 'added       /usr/share/mc/syntax/yaml.syntax' in textdiff
 
 
-def test_exclude():
-    oldpkg = get_tested_path('binary/mc-4.8.15-10.3.1.x86_64.rpm')
-    newpkg = get_tested_path('binary/mc-4.8.21-2.1.x86_64.rpm')
+def test_exclude(tmp_path):
+    oldpkg, newpkg = _build_diff_pair(tmp_path)
     ignore = list('T5S')
 
     # print(Rpmdiff(oldpkg, newpkg, ignore=ignore).textdiff())

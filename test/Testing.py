@@ -59,7 +59,8 @@ def get_tested_package(name, testdir):
     return Pkg(candidates[0], testdir)
 
 
-def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=''):
+def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list='',
+                   summary='test package'):
     """
     Build a tiny noarch RPM at test time with rpmbuild.
 
@@ -75,7 +76,7 @@ def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=
         f'Name:           {name}\n'
         f'Version:        {version}\n'
         'Release:        0\n'
-        'Summary:        test package\n'
+        f'Summary:        {summary}\n'
         'License:        MIT\n'
         'BuildArch:      noarch\n'
         '\n'
