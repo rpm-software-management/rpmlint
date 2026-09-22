@@ -1,9 +1,8 @@
 """
 In-memory representation of (RPM) packages for rpmlint checks.
 
-This package is a split of the former monolithic ``rpmlint/pkg.py``;
-everything is re-exported here so ``from rpmlint.pkg import Pkg``
-and friends keep working unchanged.
+Public names are re-exported from the submodules, so
+``from rpmlint.pkg import Pkg`` and similar imports work.
 """
 
 from rpmlint.pkg.base import AbstractPkg
