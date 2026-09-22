@@ -6,6 +6,7 @@ import re
 import shutil
 import subprocess
 
+import rpm
 from rpmlint.config import Config
 from rpmlint.pkg import FakePkg, Pkg
 import rpmlint.spellcheck
@@ -28,7 +29,10 @@ HAS_DESKTOP_FILE_UTILS = shutil.which('desktop-file-validate')
 HAS_APPSTREAM_GLIB = shutil.which('appstream-util')
 
 RPMDB_PATH = subprocess.run(['rpm', '--eval', '%_dbpath'], encoding='utf8', stdout=subprocess.PIPE).stdout
-HAS_RPMDB = RPMDB_PATH and Path(RPMDB_PATH.strip()).exists()
+# The db path may exist while the database itself is empty (e.g. rpm
+# installed on a non-rpm distro); installed-package tests need entries.
+HAS_RPMDB = bool(RPMDB_PATH and Path(RPMDB_PATH.strip()).exists() and
+                 len(list(rpm.TransactionSet().dbMatch())) > 0)
 
 
 def _has_dictionary(language):
