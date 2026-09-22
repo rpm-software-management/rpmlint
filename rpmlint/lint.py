@@ -195,15 +195,19 @@ class Lint:
             return
         check_names = list(self.checks.keys())
         extract_dir = self.config.configuration['ExtractDir']
-        full_tasks = [(kind, ident, self.config, check_names, extract_dir)
-                      for kind, ident in tasks]
         jobs = max(1, self.options['jobs'])
+        idents = [(kind, ident) for kind, ident in tasks]
         if jobs == 1:
             # in-process execution, easier to debug
-            results = [worker.check_package(task) for task in full_tasks]
+            worker.init_worker(self.config, check_names, extract_dir)
+            results = [worker.check_package(task) for task in idents]
         else:
-            with ProcessPoolExecutor(max_workers=jobs) as executor:
-                results = list(executor.map(worker.check_package, full_tasks))
+            # the initializer builds the check instances once per
+            # worker instead of once per package
+            with ProcessPoolExecutor(max_workers=jobs,
+                                     initializer=worker.init_worker,
+                                     initargs=(self.config, check_names, extract_dir)) as executor:
+                results = list(executor.map(worker.check_package, idents))
         for (kind, ident), result in zip(tasks, results):
             display = ident[0] if kind == 'installed' else ident
             self._replay_result(display, result)
@@ -238,6 +242,9 @@ class Lint:
             self.checks[check_name].import_state(state)
         for check_name, duration in result['durations'].items():
             self.check_duration[check_name] += duration
+        for check_name, count in result['checked_files'].items():
+            checker = self.checks[check_name]
+            checker.checked_files = (checker.checked_files or 0) + count
         for timer, duration in result['timers'].items():
             self.check_duration[timer] += duration
         if result['is_spec']:

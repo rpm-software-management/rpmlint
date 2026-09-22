@@ -32,7 +32,9 @@ class AbstractCheck:
         """
         Export picklable state accumulated across packages for after_checks().
 
-        Called in worker processes after check() finishes. The default
+        Called in worker processes after check() finishes. The exported
+        state is cleared from the check, so every export only contains
+        contributions made since the previous export. The default
         implementation returns None (no cross-package state).
         """
         return None
@@ -76,9 +78,6 @@ class AbstractFilesCheck(AbstractCheck):
             for filename in filenames:
                 self.check_file(pkg, filename)
         self.checked_files += len(filenames)
-
-    def reset(self):
-        self.checked_files = None
 
     def check_file(self, pkg, filename):
         """Virtual method called for each file that match the regexp passed

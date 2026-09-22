@@ -24,12 +24,17 @@ class LibraryDependencyCheck(AbstractCheck):
         self.isa = expandMacro('%{_isa}')
 
     def export_state(self):
-        return {
+        state = {
             'package_requires': self.package_requires,
             'package_so_symlinks': self.package_so_symlinks,
             'package_so_files': self.package_so_files,
             'package_arch_mapping': self.package_arch_mapping,
         }
+        self.package_requires = {}
+        self.package_so_symlinks = {}
+        self.package_so_files = {}
+        self.package_arch_mapping = {}
+        return state
 
     def import_state(self, state):
         self.package_requires.update(state['package_requires'])
