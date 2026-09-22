@@ -9,8 +9,6 @@ Whatever.
 
 %prep
 
-%build
-
 %install
 
 %check
