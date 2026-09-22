@@ -83,19 +83,34 @@ class Filter:
         """
         Replace all variables in error_details. Example variable:
         "Please follow this #URL#
+
+        Resolved recursively with cycle detection: the previous
+        hand-rolled loop would spin forever on a self-referential or
+        cyclic variable instead of failing loudly.
         """
-        for k, v in self.error_details.items():
-            # replace all variables recursively
-            while True:
-                before_replacement = v
-                variables = list(re.finditer(r'#(?P<var>\w+)#', v))
-                if not variables:
-                    break
-                for match in reversed(variables):
-                    replacement = self.error_details[match.group('var')]
-                    v = v[:match.start()] + replacement + v[match.end():]
-                assert v != before_replacement
-            self.error_details[k] = v
+        var_re = re.compile(r'#(?P<var>\w+)#')
+        resolved = {}
+
+        def resolve(key, stack):
+            if key in resolved:
+                return resolved[key]
+            if key in stack:
+                cycle = ' -> '.join([*stack, key])
+                raise ValueError(
+                    f'Circular description variable reference: {cycle}')
+
+            def repl(match):
+                var = match.group('var')
+                if var not in self.error_details:
+                    raise KeyError(
+                        f'Unknown description variable #{var}# referenced from {key}')
+                return resolve(var, [*stack, key])
+            resolved[key] = var_re.sub(repl, self.error_details[key])
+            return resolved[key]
+
+        for key in self.error_details:
+            resolve(key, [])
+        self.error_details.update(resolved)
 
     def add_info(self, level, package, rpmlint_issue, *details):
         """
