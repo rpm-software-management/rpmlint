@@ -23,8 +23,6 @@ class Lint:
     Generic object handling the basic rpmlint operations
     """
 
-    rpmlint_package = re.compile(r'/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d')
-
     def __init__(self, options):
         # initialize configuration
         self.checks = {}
@@ -60,11 +58,13 @@ class Lint:
         # initialize output buffer
         self.output = Filter(self.config)
 
-        # Do not run rpmlint on rpmlint package that easily leads
-        # to run-time error as old rpmlint (taken from rpmlint-mini)
-        # uses a modified configuration.
+        # Do not run rpmlint on packages matching the configured skip
+        # patterns (e.g. openSUSE skips the rpmlint package itself as the
+        # rpmlint-mini wrapper uses a modified configuration that easily
+        # leads to run-time errors).
+        skip_package_res = [re.compile(pattern) for pattern in self.config.configuration['SkipPackagePatterns']]
         for file in self.options['rpmfile']:
-            if self.rpmlint_package.search(str(file)):
+            if any(skip_re.search(str(file)) for skip_re in skip_package_res):
                 print('Skipping rpmlint for rpmlint package!')
                 sys.exit(0)
 

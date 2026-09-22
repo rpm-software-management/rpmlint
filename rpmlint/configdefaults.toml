@@ -62,6 +62,10 @@ KernelModuleRPMsOK = true
 MaxLineLength = 79
 # Regexp string with names of packages to treat as "meta" ones.
 MetaPackageRegexp = '^(bundle|task)-'
+# List of regexp patterns for package paths that rpmlint should refuse to
+# check and exit cleanly instead (e.g. the rpmlint package itself when the
+# checking wrapper uses a modified configuration).
+SkipPackagePatterns = []
 # String regexp validating value for the Packager tag.
 Packager = ""
 # Assumed default version of Python if one cannot be determined from files

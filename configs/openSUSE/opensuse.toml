@@ -8,6 +8,9 @@ BadnessThreshold = 999
 
 # openSUSE OBS runs rpmlint in permissive mode unless --strict is requested
 PermissiveByDefault = true
+# Do not run rpmlint on the rpmlint package itself; the rpmlint-mini
+# wrapper uses a modified configuration that easily leads to run-time errors
+SkipPackagePatterns = ['/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d']
 
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
