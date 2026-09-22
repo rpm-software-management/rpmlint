@@ -206,9 +206,9 @@ class Lint:
             self.options['rpmlintrc'] = []
             # Skip auto-loading when running under PYTEST
             if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
-                # first load SUSE-specific locations
-                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/home/abuild/rpmbuild/SOURCES'))
-                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/usr/src/packages/SOURCES/'))
+                # first load distribution-specific build root locations
+                for path in self.config.configuration['RpmlintrcSearchPaths']:
+                    self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path(path))
             if not self.options['rpmlintrc'] and len(self.options['rpmfile']) == 1:
                 # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
                 # do this only in a case where there is one folder parameter or one file

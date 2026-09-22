@@ -11,6 +11,8 @@ PermissiveByDefault = true
 # Do not run rpmlint on the rpmlint package itself; the rpmlint-mini
 # wrapper uses a modified configuration that easily leads to run-time errors
 SkipPackagePatterns = ['/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d']
+# openSUSE build roots searched for rpmlintrc files
+RpmlintrcSearchPaths = ['/home/abuild/rpmbuild/SOURCES', '/usr/src/packages/SOURCES/']
 
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility

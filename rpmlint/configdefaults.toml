@@ -66,6 +66,9 @@ MetaPackageRegexp = '^(bundle|task)-'
 # check and exit cleanly instead (e.g. the rpmlint package itself when the
 # checking wrapper uses a modified configuration).
 SkipPackagePatterns = []
+# Distribution-specific build root locations that are searched for
+# rpmlintrc files before falling back to the package folder.
+RpmlintrcSearchPaths = []
 # String regexp validating value for the Packager tag.
 Packager = ""
 # Assumed default version of Python if one cannot be determined from files
