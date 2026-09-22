@@ -23,7 +23,6 @@ options_preset = {
     'rpmlintrc': False,
     'installed': '',
     'time_report': False,
-    'profile': False,
     'ignore_unused_rpmlintrc': False,
     'checks': None,
     'jobs': 1,

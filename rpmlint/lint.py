@@ -1,9 +1,7 @@
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
-import cProfile
 import importlib
 import operator
-from pstats import Stats
 import sys
 from tempfile import gettempdir
 import time
@@ -37,11 +35,6 @@ class Lint:
             self.config = Config(options['config'])
         else:
             self.config = Config()
-        if options['profile']:
-            self.profile = cProfile.Profile()
-            self.profile.enable()
-        else:
-            self.profile = None
 
         self._load_rpmlintrc()
         if options['verbose']:
@@ -127,8 +120,6 @@ class Lint:
     def _maybe_print_reports(self):
         if self.options['time_report']:
             self._print_time_report()
-        if self.profile:
-            self._print_cprofile()
 
     def _get_color_time_report_value(self, fraction):
         if fraction > 25:
@@ -165,17 +156,6 @@ class Lint:
             print(f'    {check:32s} {duration:15.1f} {self._get_color_time_report_value(fraction)} {checked_files:>14}')
 
         print(f'    {"TOTAL":32s} {total:15.1f} {100:17.1f} {total_checked_files:>14}\n')       # noqa Q000
-
-    def _print_cprofile(self):
-        N = 30
-        print(f'{Color.Bold}cProfile report:{Color.Reset}')
-        self.profile.disable()
-        stats = Stats(self.profile)
-        stats.sort_stats('cumulative').print_stats(N)
-        print('========================================================')
-        stats.sort_stats('ncalls').print_stats(N)
-        print('========================================================')
-        stats.sort_stats('tottime').print_stats(N)
 
     def _installed_tasks(self, packages):
         """

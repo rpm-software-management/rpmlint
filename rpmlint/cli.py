@@ -81,7 +81,6 @@ def process_lint_args(argv):
     parser.add_argument('-p', '--print-config', action='store_true', help='print the settings that are in effect when using the rpmlint')
     parser.add_argument('-i', '--installed', nargs='+', default='', help='installed packages to be validated by rpmlint')
     parser.add_argument('-t', '--time-report', action='store_true', help='print time report for run checks')
-    parser.add_argument('-T', '--profile', action='store_true', help='print cProfile report')
     parser.add_argument('--ignore-unused-rpmlintrc', action='store_true',
                         help='Do not report "unused-rpmlintrc-filter" errors')
     parser.add_argument('--checks',
