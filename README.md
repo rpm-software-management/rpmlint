@@ -116,7 +116,6 @@ in the long run.
 
 No binary RPMs are stored in git for tests. Pick the lightest approach that
 covers your case:
-
 * For check-level tests use a `FakePkg`-based mock in `test/mockdata/mock_*.py`
   built with `get_tested_mock_package()` from `test/Testing.py`. Mock the
   header tags directly for metadata checks (see `mock_tags.py`); for payload
@@ -131,6 +130,8 @@ covers your case:
 The only real RPMs kept in git are the three signature fixtures in
 `test/binary/` (`hello-*-signed.rpm`, `no-signature-*.rpm`,
 `unknown-key-*.rpm`) because GPG signature verification cannot be faked.
+
+Run `flake8` on changed files before pushing; CI gates on it.
 
 ## Configuration
 
