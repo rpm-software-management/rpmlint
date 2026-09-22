@@ -6,6 +6,9 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
 
+# openSUSE OBS runs rpmlint in permissive mode unless --strict is requested
+PermissiveByDefault = true
+
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
 AtomicCheckGhosts = false

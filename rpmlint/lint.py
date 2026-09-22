@@ -49,6 +49,9 @@ class Lint:
             self.config.strict = options['strict']
         if options['permissive']:
             self.config.permissive = options['permissive']
+        if not options['strict'] and not options['permissive'] and self.config.configuration['PermissiveByDefault']:
+            # e.g. openSUSE OBS runs rpmlint in permissive mode by default
+            self.config.permissive = True
         if options['mini_mode']:
             self.config.mini_mode = options['mini_mode']
 

@@ -37,6 +37,10 @@ Filters = []
 BlockedFilters = []
 # Treshold where we should error out, by default single error is enough
 BadnessThreshold = -1
+# Treat individual errors as non-fatal unless --strict is passed on the
+# command line. Used by distributions (e.g. openSUSE OBS) that run rpmlint
+# in permissive mode by default.
+PermissiveByDefault = false
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
 AtomicCheckGhosts = false
