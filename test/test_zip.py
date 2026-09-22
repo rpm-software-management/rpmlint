@@ -2,7 +2,14 @@ import pytest
 from rpmlint.checks.ZipCheck import ZipCheck
 from rpmlint.filter import Filter
 
-from Testing import CONFIG, get_tested_package
+from mockdata.mock_zip import (
+    BadCrcZipPackage,
+    ClasspathJarPackage,
+    EncryptedZipPackage,
+    UnsupportedCompressionZipPackage,
+)
+
+from Testing import CONFIG
 
 
 @pytest.fixture(scope='function', autouse=True)
@@ -13,10 +20,10 @@ def zipcheck():
     return output, test
 
 
-@pytest.mark.parametrize('package', ['binary/bad-crc-uncompressed'])
-def test_bad_crc_and_compression(tmp_path, package, zipcheck):
+@pytest.mark.parametrize('package', [BadCrcZipPackage])
+def test_bad_crc_and_compression(package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
 
     assert 'bad-crc-in-zip' in out
@@ -26,10 +33,10 @@ def test_bad_crc_and_compression(tmp_path, package, zipcheck):
     assert 'zip file is not compressed' in out
 
 
-@pytest.mark.parametrize('package', ['binary/asm'])
-def test_classpath_and_index(tmp_path, package, zipcheck):
+@pytest.mark.parametrize('package', [ClasspathJarPackage])
+def test_classpath_and_index(package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'class-path-in-manifest' in out
     assert 'jar contains a hardcoded Class-Path' in out
@@ -38,10 +45,10 @@ def test_classpath_and_index(tmp_path, package, zipcheck):
     assert 'jar file is not indexed' in out
 
 
-@pytest.mark.parametrize('package', ['binary/ruby2.5-rubygem-rubyzip-testsuite'])
-def test_zip1(tmp_path, package, zipcheck):
+@pytest.mark.parametrize('package', [EncryptedZipPackage])
+def test_zip1(package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # these are PW protected not broken so do not error about them
     assert 'W: unable-to-read-zip' in out
@@ -51,9 +58,9 @@ def test_zip1(tmp_path, package, zipcheck):
     assert 'uncompressed-zip' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/texlive-codepage-doc'])
-def test_zip2(tmp_path, package, zipcheck):
+@pytest.mark.parametrize('package', [UnsupportedCompressionZipPackage])
+def test_zip2(package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: unable-to-read-zip' in out
