@@ -1031,3 +1031,7 @@ class FakePkg(AbstractPkg):
     # access the tags like an array
     def __getitem__(self, key):
         return self.header.get(key, None)
+
+    def langtag(self, tag, lang):
+        """Get value of tag in the given language (mocks hold a single value)."""
+        return self.header.get(tag, None)

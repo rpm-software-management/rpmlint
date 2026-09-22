@@ -1,11 +1,33 @@
 from mockdata.mock_tags import (
     DepsDevPackage,
     DepsPackage,
+    DevDependencyPackage,
     FooDevelPackage,
+    ForbiddenControlcharChangelogPackage,
+    ForbiddenControlcharRequiresPackage,
+    ForbiddenControlcharSpecPackage,
     FuseCommonPackage,
+    InvalidDependencyMultiplePackage,
+    InvalidDependencyPackage,
     InvalidExceptionPackage,
+    InvalidLaFilePackage,
+    InvalidLicensePackage,
+    InvalidVersionPackage,
+    MiscNoWarningsPackage,
+    MiscWarningsPackage,
     MissingProvidesPackage,
+    NonStandardGroupPackage,
+    NotStandardReleaseExtensionPackage,
+    NoUrlTagPackage,
+    RandomDevelPackage,
+    RandomExpPackage,
+    RequiresOnReleasePackage,
     SelfPackage,
+    SpellingErrorDefaultPackage,
+    SpellingErrorLangPackage,
+    SummaryOnMultipleLinesPackage,
+    SummaryWarningPackage,
+    UnexpandedMacroExpPackage,
     UnexpandedMacroPackage,
     ValidExceptionPackage,
 )
@@ -127,26 +149,26 @@ def test_valid_license_exception_begin_grouping(tmp_path, package, tagscheck):
     assert 'W: invalid-license-exception' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/xtables-addons-kmp-default'])
-def test_forbidden_controlchar_found_requires(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlcharRequiresPackage])
+def test_forbidden_controlchar_found_requires(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found Requires:' in out
 
 
-@pytest.mark.parametrize('package', ['binary/ruby2.6-rubygem-fast_gettext'])
-def test_forbidden_controlchar_found_changelog(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlcharChangelogPackage])
+def test_forbidden_controlchar_found_changelog(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found %changelog' in out
 
 
-@pytest.mark.parametrize('package', ['binary/SpecCheck4'])
-def test_forbidden_controlchar_found(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [ForbiddenControlcharSpecPackage])
+def test_forbidden_controlchar_found(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: forbidden-controlchar-found Requires:' in out
     assert 'E: forbidden-controlchar-found Provides:' in out
@@ -155,11 +177,11 @@ def test_forbidden_controlchar_found(tmp_path, package, tagscheck):
     assert 'E: forbidden-controlchar-found %changelog :' in out
 
 
-@pytest.mark.parametrize('package', ['binary/unexpanded-macro-exp'])
-def test_check_unexpanded_macro(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [UnexpandedMacroExpPackage])
+def test_check_unexpanded_macro(package, tagscheck):
     """Test if a package has an unexpanded macro in it's specfile."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: unexpanded-macro Packager %ppc' in out
     assert 'W: unexpanded-macro Group %ppc' in out
@@ -173,11 +195,11 @@ def test_check_unexpanded_macro(tmp_path, package, tagscheck):
     assert 'W: unexpanded-macro Supplements packageand(python-gobject:%{gdk_real_package})%ppc %ppc' in out
 
 
-@pytest.mark.parametrize('package', ['binary/invalid-version'])
-def test_check_errors(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidVersionPackage])
+def test_check_errors(package, tagscheck):
     """Test package for check invalid-version."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a Version: tag with pre/alpha/beta suffixes in it's specfile
     assert 'E: invalid-version 0pre' in out
@@ -186,8 +208,8 @@ def test_check_errors(tmp_path, package, tagscheck):
 # TODO: Add a test for no-changelogname-tag not in out
 
 
-@pytest.mark.parametrize('package', ['binary/summary-warning'])
-def test_check_summary_warning(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [SummaryWarningPackage])
+def test_check_summary_warning(package, tagscheck):
     """Test package for check
     - in out,
         summary-too-long, summary-has-leading-spaces,
@@ -196,7 +218,7 @@ def test_check_summary_warning(tmp_path, package, tagscheck):
     invalid-version, unexpanded-macro.
     """
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if package has a summary longer than 80 characters
     assert 'E: summary-too-long' in out
@@ -214,13 +236,13 @@ def test_check_summary_warning(tmp_path, package, tagscheck):
     assert 'E: no-group-tag' in out
 
 
-@pytest.mark.parametrize('package', ['binary/no-url-tag'])
-def test_check_warning(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [NoUrlTagPackage])
+def test_check_warning(package, tagscheck):
     """Test if a package contains the warning for
     summary-not-capitalized, summary-ended-with-dot,
     no-url-tag."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if package Summary does not start with a capital letter
     assert 'W: summary-not-capitalized no-url-tag warning.' in out
@@ -230,15 +252,15 @@ def test_check_warning(tmp_path, package, tagscheck):
     assert 'W: no-url-tag' in out
 
 
-@pytest.mark.parametrize('package', ['binary/invalid-la-file'])
-def test_check_errors_not_found(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidLaFilePackage])
+def test_check_errors_not_found(package, tagscheck):
     """Test packages for checks
     summary-too-long, summary-not-capitalized,
     summary-ended-with-dot, summary-has-leading-spaces,
     no-url-tag, description-shorter-than-summary.
     """
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package Summary is not longer than 80 characters
     assert 'W: summary-too-long' not in out
@@ -254,12 +276,12 @@ def test_check_errors_not_found(tmp_path, package, tagscheck):
     assert 'W: description-shorter-than-summary' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/misc-warnings'])
-def test_check_misc_warning(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [MiscWarningsPackage])
+def test_check_misc_warning(package, tagscheck):
     """Test package for check tag-in-description,
     name-repeated-in-summary, invalid-url."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a tag such as Name: in the description
     assert 'W: tag-in-description Name:' in out
@@ -269,12 +291,12 @@ def test_check_misc_warning(tmp_path, package, tagscheck):
     assert 'W: invalid-url URL so;mething.' in out
 
 
-@pytest.mark.parametrize('package', ['binary/misc-no-warnings'])
-def test_check_misc_warning_not_found(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [MiscNoWarningsPackage])
+def test_check_misc_warning_not_found(package, tagscheck):
     """Test package for check not in out
     tag-in-description, name-repeated-in-summary, invalid-url."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package does not have a tag in description
     assert 'W: tag-in-description' not in out
@@ -284,12 +306,12 @@ def test_check_misc_warning_not_found(tmp_path, package, tagscheck):
     assert 'W: invalid-url' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/invalid-dependency'])
-def test_check_invalid_dependency(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidDependencyPackage])
+def test_check_invalid_dependency(package, tagscheck):
     """Test if a package has
     invalid-dependency, no-description-tag, unreasonable-epoch."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a Epoch tag value greater than 99
     assert 'W: unreasonable-epoch 100' in out
@@ -299,21 +321,21 @@ def test_check_invalid_dependency(tmp_path, package, tagscheck):
     assert 'E: no-description-tag' in out
 
 
-@pytest.mark.parametrize('package', ['binary/python39-evtx'])
-def test_check_invalid_dependency_multiple(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidDependencyMultiplePackage])
+def test_check_invalid_dependency_multiple(package, tagscheck):
     """Test if a package has
     invalid-dependency, when the invalid dependency is not first in the list"""
     CONFIG.info = True
     CONFIG.configuration['InvalidRequires'].append('/bin/sh')
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: invalid-dependency /bin/sh' in out
 
 
-@pytest.mark.parametrize('package', ['binary/random-exp'])
-def test_package_random_warnings(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [RandomExpPackage])
+def test_package_random_warnings(package, tagscheck):
     """Test if a package has check,
     - in out,
         obsolete-not-provided
@@ -324,7 +346,7 @@ def test_package_random_warnings(tmp_path, package, tagscheck):
         no-description-tag,
         self-obsoletion."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package that was obsoleted is still provided
     # in newer package to avoid unnecessary dependency breakage
@@ -342,8 +364,8 @@ def test_package_random_warnings(tmp_path, package, tagscheck):
     assert 'W: self-obsoletion' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/random-devel'])
-def test_package_random_exp(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [RandomDevelPackage])
+def test_package_random_exp(package, tagscheck):
     """Test if a package check,
     - in out,
         self-obsoletion,
@@ -352,7 +374,7 @@ def test_package_random_exp(tmp_path, package, tagscheck):
         description-line-too-long,
         devel-dependency."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package obsoletes itself i.e. Obsoletes: random-devel
     assert 'W: self-obsoletion random-devel obsoletes random-devel' in out
@@ -365,20 +387,20 @@ def test_package_random_exp(tmp_path, package, tagscheck):
     assert 'W: devel-dependency' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/requires-on-release'])
-def test_check_requires_on_release(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [RequiresOnReleasePackage])
+def test_check_requires_on_release(package, tagscheck):
     """Test if a package check,
     - in out,
         requires-on-release."""
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package requires specific release of another package
     assert 'W: requires-on-release baz = 2.1-1' in out
 
 
-@pytest.mark.parametrize('package', ['binary/invalid-license'])
-def test_check_invalid_license(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [InvalidLicensePackage])
+def test_check_invalid_license(package, tagscheck):
     """Test if a package check,
     - in out,
         invalid-license,
@@ -387,7 +409,7 @@ def test_check_invalid_license(tmp_path, package, tagscheck):
     CONFIG.configuration['ValidLicenses'] = ['MIT']
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a License: tag value different from
     # ValidLicense = [] list in configuration
@@ -396,8 +418,8 @@ def test_check_invalid_license(tmp_path, package, tagscheck):
     assert 'W: requires-on-release' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/not-standard-release-extension'])
-def test_package_not_std_release_extension(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [NotStandardReleaseExtensionPackage])
+def test_package_not_std_release_extension(package, tagscheck):
     """Test if package has check,
     - in out,
         not-standard-release-extension
@@ -407,7 +429,7 @@ def test_package_not_std_release_extension(tmp_path, package, tagscheck):
     CONFIG.configuration['ValidLicenses'] = ['Apache-2.0 License']
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a ReleaseExtension regex does not match with the Release: tag value expression
     # i.e. Release tag value must not match regex expression 'hello$'
@@ -416,8 +438,8 @@ def test_package_not_std_release_extension(tmp_path, package, tagscheck):
     assert 'W: invalid-license Apache-2.0 License' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/non-standard-group'])
-def test_check_non_standard_group(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [NonStandardGroupPackage])
+def test_check_non_standard_group(package, tagscheck):
     """Test if a package has check,
     - in out,
         non-standard-group
@@ -427,7 +449,7 @@ def test_check_non_standard_group(tmp_path, package, tagscheck):
     CONFIG.configuration['ReleaseExtension'] = '0'
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package has a different Group: tag value than ValidGroups = []
     assert 'W: non-standard-group non/standard/group' in out
@@ -435,8 +457,8 @@ def test_check_non_standard_group(tmp_path, package, tagscheck):
     assert 'not-standard-release-extension 0' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/dev-dependency'])
-def test_package_dev_dependency(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [DevDependencyPackage])
+def test_package_dev_dependency(package, tagscheck):
     """Test if a package check,
     - in out,
         devel-dependency,
@@ -445,7 +467,7 @@ def test_package_dev_dependency(tmp_path, package, tagscheck):
     CONFIG.configuration['ValidGroups'] = ['Devel/Something']
     output = Filter(CONFIG)
     test = TagsCheck(CONFIG, output)
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     # Test if a package is not a devel package itself but requires a devel dependency
     assert 'E: devel-dependency glibc-devel' in out
@@ -453,11 +475,11 @@ def test_package_dev_dependency(tmp_path, package, tagscheck):
     assert 'W: non-standard-group Devel/Something' not in out
 
 
-@pytest.mark.parametrize('package', ['binary/summary-on-multiple-lines'])
-def test_summary_on_multiple_lines(tmp_path, package, tagscheck):
+@pytest.mark.parametrize('package', [SummaryOnMultipleLinesPackage])
+def test_summary_on_multiple_lines(package, tagscheck):
     # Test if a package has summary on multiple lines.
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: summary-on-multiple-lines' in out
 
@@ -466,20 +488,17 @@ def test_summary_on_multiple_lines(tmp_path, package, tagscheck):
 @pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
 @pytest.mark.skipif(not HAS_FRENCH_DICTIONARY, reason='Missing French dictionary')
 @pytest.mark.parametrize('package', [
-    'binary/spellingerrors-default',
-    'binary/spellingerrors-lang',
-    'binary/spellingerrors-lang2',
-    'binary/spellingerrors-lang3',
+    SpellingErrorDefaultPackage,
+    SpellingErrorLangPackage,
 ])
-def test_description_spelling_error(tmp_path, package, tagscheck):
+def test_description_spelling_error(package, tagscheck):
     output, test = tagscheck
-    test.check(get_tested_package(package, tmp_path))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'E: spelling-error' in out
 
 
 @pytest.mark.parametrize('package', [
-    get_tested_package('binary/xrootd-devel', '/tmp/'),
     get_tested_mock_package(
         name='xrootd-devel',
         files=[
