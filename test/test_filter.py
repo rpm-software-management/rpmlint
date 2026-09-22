@@ -8,8 +8,8 @@ from Testing import get_tested_package, get_tested_path
 TEST_CONFIG_FILTERS = [get_tested_path('configs/testfilters.config')]
 TEST_RPMLINTRC = get_tested_path('configs/testing-rpmlintrc')
 TEST3_RPMLINTRC = get_tested_path('configs/testing3-rpmlintrc')
-TEST_PACKAGE = Path('binary', 'ngircd')
-TEST_PACKAGE2 = Path('binary', 'tempfiled')
+TEST_PACKAGE = Path('binary', 'hello')
+TEST_PACKAGE2 = Path('binary', 'no-signature')
 TEST_DESCRIPTIONS = [get_tested_path('configs/descriptions.config')]
 
 
@@ -126,9 +126,9 @@ def test_output(tmp_path):
     """
     Test the actual output of rpmlint on one file
     """
-    expected_output = """ngircd.x86_64: I: suse-other-error /usr/bin/1
-ngircd.x86_64: I: suse-other-error /usr/bin/2
-tempfiled.x86_64: E: suse-other-error /usr/bin/3
+    expected_output = """hello.x86_64: I: suse-other-error /usr/bin/1
+hello.x86_64: I: suse-other-error /usr/bin/2
+no-signature.noarch: E: suse-other-error /usr/bin/3
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -136,7 +136,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
 eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
 in culpa qui officia deserunt mollit anim id est laborum.
 
-ngircd.x86_64: E: suse-dbus-unauthorized-service\n"""
+hello.x86_64: E: suse-dbus-unauthorized-service\n"""
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
     pkg = get_tested_package(TEST_PACKAGE, tmp_path)
