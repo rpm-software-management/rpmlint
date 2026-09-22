@@ -1,4 +1,5 @@
 from pathlib import Path
+import shutil
 
 import pytest
 from rpmlint.lint import Lint
@@ -98,6 +99,67 @@ def test_time_report(capsys):
     assert out
     assert 'Duration' in out
     assert 'TOTAL' in out
+
+
+@pytest.mark.parametrize('jobs', (1, 2))
+def test_fatal_error_does_not_abort_run(tmp_path, capsys, jobs):
+    """
+    A fatal error in one package is reported as an E-level message and
+    the run continues with the remaining packages, like other linters
+    handle per-file fatal errors. The run still fails with exit code 3.
+    """
+    broken_before = tmp_path / 'aaa-broken.rpm'
+    broken_before.write_bytes(b'not an rpm')
+    broken_after = tmp_path / 'zzz-broken.rpm'
+    broken_after.write_bytes(b'not an rpm either')
+    # the healthy package sorts between the two broken ones so its
+    # issues are reported after the first fatal error
+    healthy = tmp_path / 'mmm-healthy.rpm'
+    shutil.copy(get_tested_path('binary/binary-in-etc-1.0-0.x86_64.rpm'), healthy)
+    additional_options = {
+        'rpmfile': [broken_before, healthy, broken_after],
+        'jobs': jobs,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    assert linter.run() == 3
+    out, err = capsys.readouterr()
+    # both fatal errors are reported ...
+    assert err.count('fatal error while reading') == 2
+    assert 'aaa-broken.rpm' in err
+    assert 'zzz-broken.rpm' in err
+    # ... the healthy package is still fully reported ...
+    assert 'binary-in-etc.x86_64: E: no-signature' in out
+    # ... and the run ends with the usual summary
+    assert '3 packages and 0 specfiles checked' in out
+
+
+def test_fatal_error_identical_sequential_parallel(tmp_path, capsys):
+    """
+    Sequential and parallel runs report fatal errors identically.
+    """
+    import re
+    broken = tmp_path / 'broken.rpm'
+    broken.write_bytes(b'not an rpm')
+    healthy = tmp_path / 'healthy.rpm'
+    shutil.copy(get_tested_path('binary/binary-in-etc-1.0-0.x86_64.rpm'), healthy)
+    outputs = []
+    for jobs in (1, 2):
+        additional_options = {
+            'rpmfile': [broken, healthy],
+            'jobs': jobs,
+        }
+        options = {**options_preset, **additional_options}
+        linter = Lint(options)
+        assert linter.run() == 3
+        outputs.append(capsys.readouterr())
+
+    # durations and temporary extraction paths vary between runs
+    def normalize(s):
+        s = re.sub(r'has taken [\d.]+ s', 'has taken X s', s)
+        return re.sub(r'/tmp/rpmlint\.[^/:\s]+/', '/tmp/rpmlint.XXX/', s)
+    assert normalize(outputs[0].out) == normalize(outputs[1].out)
+    assert normalize(outputs[0].err) == normalize(outputs[1].err)
 
 
 def test_explain_unknown(capsys):

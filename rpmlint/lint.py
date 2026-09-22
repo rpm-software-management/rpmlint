@@ -29,6 +29,9 @@ class Lint:
         self.options = options
         self.packages_checked = 0
         self.specfiles_checked = 0
+        # set when any package hit a fatal error; the run continues but
+        # still fails with exit code 3 at the end
+        self.had_fatal_error = False
         self.check_duration = defaultdict(int)
         if options['config']:
             self.config = Config(options['config'])
@@ -95,6 +98,11 @@ class Lint:
             quit_color = Color.Red
             all_promoted = self.output.printed_messages['E'] == self.output.promoted_to_error
             retcode = 65 if all_promoted else 64
+
+        if self.had_fatal_error:
+            # a fatal error fails the run, but only after everything
+            # else has been processed and reported
+            retcode = 3
 
         self._maybe_print_reports()
 
@@ -237,9 +245,11 @@ class Lint:
         sys.stderr.write(result['stderr'])
         if result['fatal'] is not None:
             print_warning(f'(none): E: fatal error while reading {ident}: {result["fatal"]}')
-            if self.config.info:
-                raise RuntimeError(result['fatal'])
-            sys.exit(3)
+            # Report the fatal error and continue with the remaining
+            # packages instead of aborting the run, like other linters
+            # do with per-file fatal errors; the exit code is set at
+            # the end once everything has been reported.
+            self.had_fatal_error = True
         for level, name, arch, linenum, issue, details in result['issues']:
             pkg = SimpleNamespace(name=name, arch=arch, current_linenum=linenum)
             self.output.add_info(level, pkg, issue, *details)
