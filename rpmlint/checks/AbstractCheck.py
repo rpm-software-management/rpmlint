@@ -28,6 +28,22 @@ class AbstractCheck:
     def after_checks(self):
         return
 
+    def export_state(self):
+        """
+        Export picklable state accumulated across packages for after_checks().
+
+        Called in worker processes after check() finishes. The default
+        implementation returns None (no cross-package state).
+        """
+        return None
+
+    def import_state(self, state):
+        """
+        Merge state exported by a worker into this instance.
+
+        Called in the main process before after_checks().
+        """
+
     def reset(self):
         return
 

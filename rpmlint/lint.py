@@ -1,4 +1,5 @@
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
 import cProfile
 import importlib
 import operator
@@ -6,12 +7,14 @@ from pstats import Stats
 import sys
 from tempfile import gettempdir
 import time
+from types import SimpleNamespace
 
+from rpmlint import worker
 from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 from rpmlint.helpers import print_warning, string_center
-from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
+from rpmlint.pkg import get_installed_pkgs
 from rpmlint.version import __version__
 
 
@@ -48,6 +51,8 @@ class Lint:
             self.config.configuration['ExtractDir'] = gettempdir()
         # initialize output buffer
         self.output = Filter(self.config)
+        # last processed package (stub), used for validate_filters()
+        self._last_pkg = None
         # preload the check list if we not print config
         # some of the config values are transformed e.g. to regular
         # expressions
@@ -66,13 +71,15 @@ class Lint:
             self.print_explanation(self.options['explain'], self.config)
             return retcode
 
-        # if there are installed arguments just load them up as extra
-        # items to the rpmfile option
+        # check installed packages first and then files; after_checks()
+        # runs once per batch so post checks see a consistent state
         if self.options['installed']:
-            self.validate_installed_packages(self._load_installed_rpms(self.options['installed']))
-        # if no exclusive option is passed then just loop over all the
-        # arguments that are supposed to be either rpm or spec files
-        self.validate_files(self.options['rpmfile'])
+            self._check_packages(self._installed_tasks(self.options['installed']),
+                                 run_after_checks=not self.options['rpmfile'])
+        self._check_packages(self._file_tasks(self.options['rpmfile']),
+                             run_after_checks=True)
+        if not self.options['ignore_unused_rpmlintrc'] and self._last_pkg is not None:
+            self.output.validate_filters(self._last_pkg)
         self._print_header()
         print(self.output.print_results(self.output.results, self.config),
               end='')
@@ -162,15 +169,88 @@ class Lint:
         print('========================================================')
         stats.sort_stats('tottime').print_stats(N)
 
-    def _load_installed_rpms(self, packages):
-        existing_packages = []
+    def _installed_tasks(self, packages):
+        """
+        Build worker tasks for installed packages, warning about unknown names.
+        """
+        tasks = []
         for name in packages:
-            pkg = get_installed_pkgs(name)
-            if pkg:
-                existing_packages.extend(pkg)
+            pkgs = get_installed_pkgs(name)
+            if pkgs:
+                tasks.extend(('installed', (name, index)) for index in range(len(pkgs)))
             else:
                 print_warning(f'(none): E: there is no installed rpm "{name}".')
-        return existing_packages
+        return tasks
+
+    def _file_tasks(self, files):
+        """
+        Build worker tasks for the passed file list, expanding directories
+        and sorting so the output is stable.
+        """
+        if not files:
+            if self.packages_checked == 0:
+                # print warning only if we didn't process even installed files
+                print_warning('There are no files to process nor additional arguments.')
+                print_warning('Nothing to do, aborting.')
+            return []
+        # check all elements if they are a folder or a file with proper suffix
+        # and expand everything
+        packages = sorted(self._expand_filelist(files))
+        return [('file', str(pkg)) for pkg in packages]
+
+    def _check_packages(self, tasks, run_after_checks):
+        """
+        Check packages, optionally in parallel worker processes, and replay
+        their results through the filter in deterministic order.
+        """
+        if not tasks:
+            return
+        check_names = list(self.checks.keys())
+        extract_dir = self.config.configuration['ExtractDir']
+        full_tasks = [(kind, ident, self.config, check_names, extract_dir)
+                      for kind, ident in tasks]
+        jobs = max(1, self.options['jobs'])
+        if jobs == 1:
+            # in-process execution, easier to debug
+            results = [worker.check_package(task) for task in full_tasks]
+        else:
+            with ProcessPoolExecutor(max_workers=jobs) as executor:
+                results = list(executor.map(worker.check_package, full_tasks))
+        for (kind, ident), result in zip(tasks, results):
+            display = ident[0] if kind == 'installed' else ident
+            self._replay_result(display, result)
+        if run_after_checks:
+            for checker in self.checks.values():
+                checker.after_checks()
+        # drop the merged cross-package state so batches stay independent
+        self.reset_checks()
+
+    def _replay_result(self, ident, result):
+        """
+        Feed one worker result through the filter, preserving the order
+        in which the packages were passed on the command line.
+        """
+        if result['fatal'] is not None:
+            print_warning(f'(none): E: fatal error while reading {ident}: {result["fatal"]}')
+            if self.config.info:
+                raise RuntimeError(result['fatal'])
+            sys.exit(3)
+        for level, name, arch, linenum, issue, details in result['issues']:
+            pkg = SimpleNamespace(name=name, arch=arch, current_linenum=linenum)
+            self.output.add_info(level, pkg, issue, *details)
+        self.output.error_details.update(result['error_details'])
+        for check_name, state in result['after_states'].items():
+            self.checks[check_name].import_state(state)
+        for check_name, duration in result['durations'].items():
+            self.check_duration[check_name] += duration
+        for timer, duration in result['timers'].items():
+            self.check_duration[timer] += duration
+        if result['is_spec']:
+            self.specfiles_checked += 1
+        else:
+            self.packages_checked += 1
+        self._last_pkg = SimpleNamespace(name=result['pkg_name'], arch=result['pkg_arch'],
+                                         current_linenum=None)
 
     def _load_rpmlintrc(self):
         """
@@ -217,33 +297,6 @@ class Lint:
         print(f'{Color.Bold}checks: {no_checks}, packages: {no_pkgs}{Color.Reset}')
         print('')
 
-    def validate_installed_packages(self, packages):
-        # Do not run post checks if there are also plain rpm/spec files to validate
-        run_post_checks = not bool(self.options['rpmfile'])
-        for pkg in packages:
-            self.run_checks(pkg, run_post_checks and pkg == packages[-1])
-            self.reset_checks()
-
-    def validate_files(self, files):
-        """
-        Run all the check for passed file list
-        """
-        if not files:
-            if self.packages_checked == 0:
-                # print warning only if we didn't process even installed files
-                print_warning('There are no files to process nor additional arguments.')
-                print_warning('Nothing to do, aborting.')
-            return
-        # check all elements if they are a folder or a file with proper suffix
-        # and expand everything
-        packages = self._expand_filelist(files)
-
-        # Sort the files so that the output is stable
-        packages = sorted(packages)
-        for pkg in packages:
-            self.validate_file(pkg, pkg == packages[-1])
-            self.reset_checks()
-
     def _expand_filelist(self, files):
         packages = []
         for pkg in files:
@@ -252,44 +305,6 @@ class Lint:
             elif pkg.is_dir():
                 packages.extend(self._expand_filelist(pkg.iterdir()))
         return packages
-
-    def validate_file(self, pname, is_last):
-        try:
-            if pname.suffix in ('.rpm', '.spm'):
-                with Pkg(pname, self.config.configuration['ExtractDir'],
-                         verbose=self.config.info) as pkg:
-                    for k, v in pkg.timers.items():
-                        self.check_duration[k] += v
-                    self.run_checks(pkg, is_last)
-            elif pname.suffix == '.spec':
-                with FakePkg(pname) as pkg:
-                    self.run_checks(pkg, is_last)
-        except Exception as e:
-            print_warning(f'(none): E: fatal error while reading {pname}: {e}')
-            if self.config.info:
-                raise e
-            sys.exit(3)
-
-    def run_checks(self, pkg, is_last):
-        spec_checks = isinstance(pkg, FakePkg)
-        for checker in self.checks:
-            start = time.monotonic()
-            fn = self.checks[checker].check_spec if spec_checks else self.checks[checker].check
-            fn(pkg)
-            self.check_duration[checker] += time.monotonic() - start
-
-        # run post check function and validate used filters in rpmlintrc
-        if is_last:
-            for checker in self.checks.values():
-                checker.after_checks()
-
-            if not self.options['ignore_unused_rpmlintrc']:
-                self.output.validate_filters(pkg)
-
-        if spec_checks:
-            self.specfiles_checked += 1
-        else:
-            self.packages_checked += 1
 
     def print_config(self):
         """

@@ -11,6 +11,31 @@ except ImportError:
     import tomli as tomllib
 
 
+class ResultCollector:
+    """
+    Collect rpmlint issues in worker processes without filtering,
+    formatting or printing anything.
+
+    Implements the same add_info() signature as Filter so checks run
+    unchanged; the main process replays the collected raw records
+    through the real Filter in deterministic order.
+    """
+
+    def __init__(self):
+        # raw records: (level, package name, arch, linenum, issue, details)
+        self.issues = []
+        # description updates from checks, merged into Filter.error_details
+        self.error_details = {}
+
+    def add_info(self, level, package, rpmlint_issue, *details):
+        if ' ' in rpmlint_issue:
+            raise ValueError(f'Space cannot be part of an issue name: "{rpmlint_issue}"')
+        self.issues.append((
+            level, package.name, package.arch,
+            package.current_linenum, rpmlint_issue, details,
+        ))
+
+
 class Filter:
     """
     Handle all printing/formatting/filtering of the rpmlint output.

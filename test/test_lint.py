@@ -24,7 +24,8 @@ options_preset = {
     'time_report': False,
     'profile': False,
     'ignore_unused_rpmlintrc': False,
-    'checks': None
+    'checks': None,
+    'jobs': 1,
 }
 
 basic_tests = [
@@ -471,3 +472,36 @@ def test_installed_package(capsys):
     out, err = capsys.readouterr()
     assert '1 packages and 0 specfiles checked' in out
     assert retcode == 0
+
+
+def _lint_stdout(paths, jobs, capsys):
+    additional_options = {
+        'rpmfile': [Path(p) for p in paths],
+        'jobs': jobs,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, _ = capsys.readouterr()
+    return out
+
+
+def test_parallel_output_matches_sequential(capsys):
+    """
+    Worker processes must not tangle the output: parallel runs have to
+    produce the same results in the same order as the sequential run.
+    """
+    import re
+    paths = [
+        'test/binary/alternatives-ok-1.0-0.x86_64.rpm',
+        'test/binary/bcc-lua-0.10.0-86.12.x86_64.rpm',
+        'test/spec/SpecCheck2.spec',
+    ]
+    out_seq = _lint_stdout(paths, 1, capsys)
+    out_par = _lint_stdout(paths, 2, capsys)
+
+    # durations and temporary extraction paths vary between runs
+    def normalize(s):
+        s = re.sub(r'has taken [\d.]+ s', 'has taken X s', s)
+        return re.sub(r'/tmp/rpmlint\.[^/:\s]+/', '/tmp/rpmlint.XXX/', s)
+    assert normalize(out_seq) == normalize(out_par)

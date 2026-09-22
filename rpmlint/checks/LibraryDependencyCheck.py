@@ -23,6 +23,20 @@ class LibraryDependencyCheck(AbstractCheck):
         self.package_arch_mapping = {}
         self.isa = expandMacro('%{_isa}')
 
+    def export_state(self):
+        return {
+            'package_requires': self.package_requires,
+            'package_so_symlinks': self.package_so_symlinks,
+            'package_so_files': self.package_so_files,
+            'package_arch_mapping': self.package_arch_mapping,
+        }
+
+    def import_state(self, state):
+        self.package_requires.update(state['package_requires'])
+        self.package_so_symlinks.update(state['package_so_symlinks'])
+        self.package_so_files.update(state['package_so_files'])
+        self.package_arch_mapping.update(state['package_arch_mapping'])
+
     def check_binary(self, pkg):
         if pkg.is_source:
             return

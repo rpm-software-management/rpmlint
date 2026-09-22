@@ -1,4 +1,5 @@
 import argparse
+import os
 from pathlib import Path
 import sys
 
@@ -85,6 +86,8 @@ def process_lint_args(argv):
                         help='Do not report "unused-rpmlintrc-filter" errors')
     parser.add_argument('--checks',
                         help='Debugging option that enables only selected checks (separated by comma)')
+    parser.add_argument('-j', '--jobs', type=int, default=os.cpu_count() or 1,
+                        help='number of parallel worker processes for checking packages (1 for sequential)')
     lint_modes_parser = parser.add_mutually_exclusive_group()
     lint_modes_parser.add_argument('-s', '--strict', action='store_true', help='treat all messages as errors')
     lint_modes_parser.add_argument('-P', '--permissive', action='store_true', help='treat individual errors as non-fatal')
