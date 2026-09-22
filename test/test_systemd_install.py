@@ -1,4 +1,5 @@
 import pytest
+import rpm
 from rpmlint.checks.SystemdInstallCheck import SystemdInstallCheck
 from rpmlint.filter import Filter
 
@@ -7,10 +8,18 @@ from Testing import CONFIG, get_tested_mock_package, get_tested_package
 
 @pytest.fixture(scope='function', autouse=True)
 def systemdinstallcheck():
+    # The check expands %{_unitdir} at instantiation; define it explicitly
+    # so the tests do not depend on host rpm macros. Only add it when the
+    # host does not define it, and remove it again afterwards.
+    added_macro = rpm.expandMacro('%{_unitdir}') == '%{_unitdir}'
+    if added_macro:
+        rpm.addMacro('_unitdir', '/usr/lib/systemd/system')
     CONFIG.info = True
     output = Filter(CONFIG)
     test = SystemdInstallCheck(CONFIG, output)
-    return output, test
+    yield output, test
+    if added_macro:
+        rpm.delMacro('_unitdir')
 
 
 @pytest.mark.parametrize('package', ['binary/dnf-automatic'])
