@@ -163,8 +163,6 @@ def _check_package_body(kind, ident, config, extract_dir, checks,
         # could not be checked never contributes to after_checks()
         for checker in checks.values():
             checker.export_state()
-    # restore per-package check state for the next package, mirroring
-    # the reset_checks() call the sequential runner made after every
-    # package
+    # restore per-package check state for the next package
     for checker in checks.values():
         checker.reset()
