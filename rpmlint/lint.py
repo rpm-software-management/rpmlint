@@ -229,10 +229,9 @@ class Lint:
         sys.stderr.write(result['stderr'])
         if result['fatal'] is not None:
             print_warning(f'(none): E: fatal error while reading {ident}: {result["fatal"]}')
-            # Report the fatal error and continue with the remaining
-            # packages instead of aborting the run, like other linters
-            # do with per-file fatal errors; the exit code is set at
-            # the end once everything has been reported.
+            # Record the fatal error and continue with the remaining
+            # packages; the exit code is set at the end once everything
+            # has been reported.
             self.had_fatal_error = True
         for level, name, arch, linenum, issue, details in result['issues']:
             pkg = SimpleNamespace(name=name, arch=arch, current_linenum=linenum)
