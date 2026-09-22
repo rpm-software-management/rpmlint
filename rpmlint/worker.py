@@ -1,13 +1,15 @@
 """
 Run rpmlint checks on a single package in a worker process.
 
-Workers never print or filter anything; they return structured results
-that the main process replays through Filter in deterministic order,
-so parallel execution cannot tangle the output.
+Workers never print or filter anything directly; anything checks print
+is captured and returned with the structured results so the main
+process can replay it in deterministic order. Parallel execution
+therefore cannot tangle the output.
 """
 
 import contextlib
 import importlib
+import io
 from pathlib import Path
 import time
 import traceback
@@ -27,8 +29,9 @@ def check_package(task):
 
     Returns:
         dict with issues, error_details, durations, timers,
-        checked_files, after_states, pkg_name, pkg_arch, is_spec and
-        fatal (a traceback string if the package could not be loaded).
+        checked_files, after_states, pkg_name, pkg_arch, is_spec,
+        captured stdout/stderr and fatal (a traceback string if the
+        package could not be checked).
     """
     kind, ident, config, check_names, extract_dir = task
     collector = ResultCollector()
@@ -48,8 +51,28 @@ def check_package(task):
         'pkg_arch': None,
         'is_spec': False,
         'fatal': None,
+        'stdout': '',
+        'stderr': '',
     }
 
+    # Checks may print directly (e.g. print_warning); capture it so the
+    # main process can replay it in deterministic order instead of
+    # letting workers tangle the output.
+    stdout_buf = io.StringIO()
+    stderr_buf = io.StringIO()
+    with contextlib.redirect_stdout(stdout_buf), contextlib.redirect_stderr(stderr_buf):
+        _check_package_body(kind, ident, config, extract_dir,
+                            collector, checks, result)
+    result['stdout'] = stdout_buf.getvalue()
+    result['stderr'] = stderr_buf.getvalue()
+    result['issues'] = collector.issues
+    result['error_details'] = collector.error_details
+    return result
+
+
+def _check_package_body(kind, ident, config, extract_dir,
+                        collector, checks, result):
+    """Load the package and run all checks, filling in result."""
     try:
         if kind == 'file':
             path = Path(ident)
@@ -62,7 +85,7 @@ def check_package(task):
             pkg = get_installed_pkgs(ident[0])[ident[1]]
     except Exception:
         result['fatal'] = traceback.format_exc()
-        return result
+        return
 
     # installed packages are not used as context managers, mirroring
     # Lint.validate_installed_packages
@@ -87,7 +110,3 @@ def check_package(task):
                     result['after_states'][name] = state
     except Exception:
         result['fatal'] = traceback.format_exc()
-
-    result['issues'] = collector.issues
-    result['error_details'] = collector.error_details
-    return result

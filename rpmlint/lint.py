@@ -230,6 +230,11 @@ class Lint:
         Feed one worker result through the filter, preserving the order
         in which the packages were passed on the command line.
         """
+        # Replay anything the checks printed directly (e.g. warnings
+        # about missing optional dependencies) before the buffered
+        # issue output, matching sequential execution.
+        sys.stdout.write(result['stdout'])
+        sys.stderr.write(result['stderr'])
         if result['fatal'] is not None:
             print_warning(f'(none): E: fatal error while reading {ident}: {result["fatal"]}')
             if self.config.info:
