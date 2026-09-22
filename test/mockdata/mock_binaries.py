@@ -21,7 +21,16 @@ NgircdPackage = get_tested_mock_package(
     lazyload=True,
     files={
         '/usr/sbin/ngircd': {
-            'content-path': 'files/plain-pie', 'create_dirs': True,
+            'content-path': 'files/gnutls-waived-caller', 'create_dirs': True,
+        },
+    },
+)
+
+GnutlsCallerPackage = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/usr/sbin/gnutls-caller': {
+            'content-path': 'files/gnutls-caller', 'create_dirs': True,
         },
     },
 )

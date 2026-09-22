@@ -40,6 +40,34 @@ int SSL_CTX_set_cipher_list(void *ctx, const char *list)
 }
 EOF
 
+# undefined gnutls symbol on purpose, with and without the SYSLOG waiver
+# string, used by the crypto-policy waiver tests
+cat > gnutlsuser.c <<'EOF'
+extern int gnutls_priority_init(void *, const char *);
+int main(void)
+{
+    return gnutls_priority_init(0, "NORMAL");
+}
+EOF
+
+cat > gnutlswaiveduser.c <<'EOF'
+extern int gnutls_priority_init(void *, const char *);
+int main(void)
+{
+    return gnutls_priority_init(0, "SYSLOG");
+}
+EOF
+
+# stub provider for the symbol above so the executables keep an UND entry
+cat > gnutlsstub.c <<'EOF'
+int gnutls_priority_init(void *a, const char *b)
+{
+    (void)a;
+    (void)b;
+    return 0;
+}
+EOF
+
 # must reference setgid+setuid (without setgroups), mktemp and gethostbyname
 cat > multierror.c <<'EOF'
 #include <stdlib.h>
@@ -75,6 +103,12 @@ gcc -o ssl-caller ssluser.c -L. -lsslstub
 # shared library referencing SSL_CTX_set_cipher_list (FUNC UND via stub link)
 gcc -shared -o ssl-caller.so ssluser.c -L. -lsslstub
 
+# executables referencing gnutls_priority_init (kept as UND via the stub
+# lib), one containing the SYSLOG waiver string and one without it
+gcc -shared -o libgnutlsstub.so gnutlsstub.c
+gcc -o gnutls-caller gnutlsuser.c -L. -lgnutlsstub
+gcc -o gnutls-waived-caller gnutlswaiveduser.c -L. -lgnutlsstub
+
 # non-PIE executables
 gcc -no-pie -o nonpie-exec main.c
 gcc -no-pie -o nonpie-stripped main.c
@@ -108,6 +142,7 @@ strip multi-error
 printf '#!/bin/bash\n# This wrapper script should never be moved out of the build directory.\n' \
     > libtool-wrapper.sh
 
-rm -f main.c shlib.c ssluser.c sslstub.c multierror.c ghc.s empty.c \
-      libsslstub.so empty.o with-text.o ghc.o patchable.o
+rm -f main.c shlib.c ssluser.c sslstub.c gnutlsuser.c gnutlswaiveduser.c \
+      gnutlsstub.c multierror.c ghc.s empty.c \
+      libsslstub.so libgnutlsstub.so empty.o with-text.o ghc.o patchable.o
 ls -la

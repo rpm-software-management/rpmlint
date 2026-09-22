@@ -4,6 +4,7 @@ from mockdata.mock_binaries import (
     CryptoPolicyPackage,
     GhcPackage,
     GlibcPackage,
+    GnutlsCallerPackage,
     InvalidLaFilePackage,
     LibnoexecPackage,
     Libtest1Package,
@@ -48,11 +49,21 @@ def test_forbidden_c_calls(package, binariescheck):
 
 
 @pytest.mark.parametrize('package', [NgircdPackage])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
 def test_waived_forbidden_c_calls(package, binariescheck):
     output, test = binariescheck
     test.check(package)
     out = output.print_results(output.results)
     assert 'crypto-policy-non-compliance' not in out
+
+
+@pytest.mark.parametrize('package', [GnutlsCallerPackage])
+@pytest.mark.skipif(not IS_X86_64, reason='x86-64 only')
+def test_non_waived_forbidden_c_calls(package, binariescheck):
+    output, test = binariescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'crypto-policy-non-compliance-gnutls-2 /usr/sbin/gnutls-caller gnutls_priority_init' in out
 
 
 @pytest.mark.parametrize('package', [LibReiserFSCoreDevelPackage])
