@@ -131,8 +131,6 @@ covers your case:
 The only real RPMs kept in git are the three signature fixtures in
 `test/binary/` (`hello-*-signed.rpm`, `no-signature-*.rpm`,
 `unknown-key-*.rpm`) because GPG signature verification cannot be faked.
-Do not add new binary RPMs; the old OBS route
-(`devel:openSUSE:Factory:rpmlint:tests`) is obsolete.
 
 ## Configuration
 
