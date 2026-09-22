@@ -1,14 +1,10 @@
 from pathlib import Path
 import re
 import textwrap
+import tomllib
 
 from rpmlint.color import Color
 from rpmlint.helpers import print_warning
-
-try:
-    import tomllib
-except ImportError:
-    import tomli as tomllib
 
 
 class Filter:

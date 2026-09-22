@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=61.0"
+    "setuptools>=77.0"
 ]
 build-backend = "setuptools.build_meta"
 
@@ -16,6 +16,7 @@ maintainers = [
     {name = "RPMLint maintainers", email = "rpm-ecosystem@lists.rpm.org"}
 ]
 readme = "README.md"
+requires-python = ">=3.11"
 classifiers = [
     # complete classifier list:
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -26,9 +27,10 @@ classifiers = [
     "Operating System :: POSIX",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Utilities",
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: System :: Archiving :: Packaging",
@@ -38,10 +40,8 @@ dependencies = [
     "pybeam",
     "pyxdg",
     "rpm",
-    "tomli;python_version<'3.11'",
     "tomli-w",
     "zstandard",
-    "importlib-metadata;python_version<'3.8'",
     "pyenchant",
     "python-magic",
     "packaging"
