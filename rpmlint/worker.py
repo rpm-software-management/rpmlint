@@ -25,6 +25,11 @@ from rpmlint.pkg import FakePkg, get_installed_pkgs, Pkg
 # them for every package.
 _worker_state = None
 
+# Cache of get_installed_pkgs() results per package name, so a worker
+# handling several packages of the same name only queries the rpm
+# database once. Cleared by init_worker().
+_installed_pkgs_cache = {}
+
 
 def init_worker(config, check_names, extract_dir):
     """
@@ -43,6 +48,7 @@ def init_worker(config, check_names, extract_dir):
         module = importlib.import_module(f'rpmlint.checks.{name}')
         checks[name] = getattr(module, name)(config, init_collector)
     _worker_state = (config, extract_dir, checks, init_collector)
+    _installed_pkgs_cache.clear()
 
 
 def check_package(task):
@@ -115,7 +121,14 @@ def _check_package_body(kind, ident, config, extract_dir, checks,
             else:
                 pkg = Pkg(path, extract_dir, verbose=config.info)
         else:
-            pkg = get_installed_pkgs(ident[0])[ident[1]]
+            # the main process already enumerated the installed packages;
+            # cache the query per name so several packages of the same
+            # name only hit the rpm database once per worker
+            pkgs = _installed_pkgs_cache.get(ident[0])
+            if pkgs is None:
+                pkgs = get_installed_pkgs(ident[0])
+                _installed_pkgs_cache[ident[0]] = pkgs
+            pkg = pkgs[ident[1]]
     except Exception:
         result['fatal'] = traceback.format_exc()
         return
