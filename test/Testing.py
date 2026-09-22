@@ -59,6 +59,44 @@ def get_tested_package(name, testdir):
     return Pkg(candidates[0], testdir)
 
 
+def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=''):
+    """
+    Build a tiny noarch RPM at test time with rpmbuild.
+
+    install_script runs as the %install section body (with %{buildroot}
+    available), files_list is the %files section body.
+    Returns the path of the built RPM.
+    """
+    topdir = tmp_path / 'rpmbuild'
+    for subdir in ('BUILD', 'RPMS', 'SOURCES', 'SPECS', 'SRPMS'):
+        (topdir / subdir).mkdir(parents=True, exist_ok=True)
+    spec = topdir / 'SPECS' / f'{name}.spec'
+    spec.write_text(
+        f'Name:           {name}\n'
+        f'Version:        {version}\n'
+        'Release:        0\n'
+        'Summary:        test package\n'
+        'License:        MIT\n'
+        'BuildArch:      noarch\n'
+        '\n'
+        '%description\n'
+        'test package\n'
+        '\n'
+        '%install\n'
+        f'{install_script}\n'
+        '\n'
+        '%files\n'
+        f'{files_list}\n'
+    )
+    subprocess.run(
+        ['rpmbuild', '-bb', '--define', f'_topdir {topdir}', str(spec)],
+        check=True, capture_output=True, text=True,
+    )
+    rpms = list((topdir / 'RPMS' / 'noarch').glob('*.rpm'))
+    assert len(rpms) == 1
+    return rpms[0]
+
+
 def get_tested_spec_package(name):
     filename = Path(name).name + '.spec'
     candidates = list(get_tested_path(name).parent.glob(filename))
