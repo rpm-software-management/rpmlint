@@ -14,3 +14,11 @@ The package contains a man page file for a language code that's not recognized
 by rpmlint, in a path like /usr/share/man/LANGCODE/man1/FILE.1.gz.
 please report a bug if the LANGCODE is correct.
 """
+
+"incorrect-locale-subdir"="""
+The package installed locale files into a subdirectory of /usr/share/locale
+whose name is not a valid language code (for example en or en_US). This
+usually means the files ended up in the wrong subdirectory and the locale
+system will never find them there. Double-check the subdirectory name; if it
+is a valid locale code that rpmlint doesn't know, please report a bug.
+"""
