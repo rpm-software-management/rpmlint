@@ -6,6 +6,11 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
 
+# Regexp string with expected suffix in Release tags.
+# Tightened to openSUSE's own dist suffixes (e.g. .suse.lp153, .suse.tw);
+# the full catalog of known suffixes lives in rpmlint/configdefaults.toml.
+ReleaseExtension = '\.suse\.[\w.]+$'
+
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
 AtomicCheckGhosts = false
