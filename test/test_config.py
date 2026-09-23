@@ -135,3 +135,19 @@ def test_rpmlint_loading():
     assert 'arch-independent-package-contains-binary-or-object ' in cfg.configuration['Filters']
     assert len(cfg.configuration['Filters']) == 113
     assert len(cfg.configuration['Scoring']) == 3
+
+
+def test_opensuse_devel_number_exceptions():
+    """
+    The general config leaves DevelNumberExceptions empty while the openSUSE
+    config carries its Tumbleweed-derived exception list.
+    """
+    cfg = Config(TEST_CONFIG)
+    assert cfg.configuration['DevelNumberExceptions'] == []
+    cfg = Config([get_tested_path('../configs/openSUSE/opensuse.toml')])
+    exceptions = cfg.configuration['DevelNumberExceptions']
+    assert len(exceptions) == 169
+    assert 'libnl3' in exceptions
+    assert 'libboost_python3' in exceptions
+    assert 'libboost_mpi_python3' in exceptions
+    assert 'libboost_numpy3' in exceptions

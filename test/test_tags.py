@@ -553,6 +553,9 @@ def test_invalid_build_requires(package, deps, should_fail, output, test):
     pkg.requires = []
     for dep in deps:
         pkg.requires.append([dep, None, None])
+    # the DevelNumberExceptions option is read from config; exercise it here
+    # the way a distro config would set it
+    test.devel_number_exceptions = {'libnl3', 'libboost_python3'}
     test.check(pkg)
     out = output.print_results(output.results)
     assert ('invalid-build-requires' in out) == should_fail
