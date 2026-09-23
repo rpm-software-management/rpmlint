@@ -1,6 +1,9 @@
 from mockdata.mock_duplicates import (
     HardlinksAndDuplicatesPresent,
-    NoHardLinksAndDuplicatesPresent
+    MixedHardlinksAndDuplicates,
+    NoHardLinksAndDuplicatesPresent,
+    PureDuplicates,
+    PureHardlinksAcrossPartition
 )
 import pytest
 from rpmlint.checks.DuplicatesCheck import DuplicatesCheck
@@ -50,4 +53,39 @@ def test_duplicates_correct(package, test, output):
     assert 'E: hardlink-across-partition' not in out
     assert 'E: hardlink-across-config-files' not in out
     assert 'W: files-duplicate' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [MixedHardlinksAndDuplicates])
+def test_duplicates_mixed_hardlinks_and_duplicates(package, test, output):
+    # two files hardlinked across prefixes plus one genuine duplicate:
+    # both the hardlink and the duplicate must be reported
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'E: hardlink-across-partition /var/dup_b /etc/dup_a' in out
+    assert 'W: files-duplicate /var/dup_b /etc/dup_a:/etc/dup_c' in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [PureHardlinksAcrossPartition])
+def test_duplicates_pure_hardlinks_across_partition(package, test, output):
+    # only hardlinks across prefixes: no genuine duplicates to report
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'E: hardlink-across-partition /var/linked /etc/linked' in out
+    assert 'W: files-duplicate' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [PureDuplicates])
+def test_duplicates_pure_duplicates(package, test, output):
+    # only genuine duplicates: no hardlinks involved at all
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'W: files-duplicate /etc/only_b /etc/only_a' in out
+    assert 'E: hardlink-across-partition' not in out
+    assert 'E: hardlink-across-config-files' not in out
     assert 'E: files-duplicated-waste' not in out
