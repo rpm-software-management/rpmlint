@@ -90,7 +90,13 @@ def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=
         f'{files_list}\n'
     )
     subprocess.run(
-        ['rpmbuild', '-bb', '--define', f'_topdir {topdir}', str(spec)],
+        ['rpmbuild', '-bb',
+         '--define', f'_topdir {topdir}',
+         # Pin _rpmdir as well: it may be overridden by system or user
+         # rpm configuration, which would redirect the built RPM away
+         # from topdir/RPMS while rpmbuild still exits successfully.
+         '--define', f'_rpmdir {topdir}/RPMS',
+         str(spec)],
         check=True, capture_output=True, text=True,
     )
     rpms = list((topdir / 'RPMS' / 'noarch').glob('*.rpm'))
