@@ -275,6 +275,44 @@ Shlib1Package = get_tested_mock_package(
 Shlib2DevelPackage = Shlib1Package.clone(name='shlib2-devel')
 
 
+# %post/%postun using -p /sbin/ldconfig with a non-empty body: the ldconfig
+# interpreter itself satisfies the ldconfig check, no warning is expected
+ShlibLdconfigProgPackage = Shlib1Package.clone(
+    name='shlib-ldconfig-prog',
+    header={
+        'postin': 'echo hi',
+        'postinprog': '/sbin/ldconfig',
+        'postun': 'echo hi',
+        'postunprog': '/sbin/ldconfig',
+    },
+    extend=True,
+)
+
+# explicit ldconfig calls in the %post/%postun bodies
+ShlibLdconfigBodyPackage = Shlib1Package.clone(
+    name='shlib-ldconfig-body',
+    header={
+        'postin': '/sbin/ldconfig\necho done',
+        'postinprog': '/bin/sh',
+        'postun': '/sbin/ldconfig',
+        'postunprog': '/bin/sh',
+    },
+    extend=True,
+)
+
+# plain %post/%postun bodies with no ldconfig: the warning must still fire
+ShlibNoLdconfigPackage = Shlib1Package.clone(
+    name='shlib-no-ldconfig',
+    header={
+        'postin': 'echo hi',
+        'postinprog': '/bin/sh',
+        'postun': 'echo hi',
+        'postunprog': '/bin/sh',
+    },
+    extend=True,
+)
+
+
 FileZeroLengthPackage = get_tested_mock_package(
     lazyload=True,
     files={
