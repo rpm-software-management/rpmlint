@@ -56,11 +56,11 @@ hash = "6fa951c8cb81606a10bd82e6ef8e260e98cc84e68e9a49310a8a670889e31b4d"
 [[FileDigestGroup]]
 package = "systemd-networkd"
 type = "polkit"
-note = "allows systemd-networkd to set hostname and timezone from DHCP information"
-bugs = ["bsc#1125438", "bsc#1185469", "bsc#1242056"]
+note = "allows systemd-networkd to set hostname and timezone from DHCP information and control ModemManager"
+bugs = ["bsc#1125438", "bsc#1185469", "bsc#1242056", "bsc#1281962"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/polkit-1/rules.d/60-systemd-networkd.rules"
-hash = "f199e386a9297858331b00df07ed0b0ee5fcf4bea67f6c0bccc8a92b7e310bbd"
+hash = "682272c73e766dfb6e1f45cd6e0773d57e96da4073a329c24d42d261907ba52c"
 
 [[FileDigestGroup]]
 package = "flatpak"
