@@ -22,6 +22,9 @@ from mockdata.mock_files import (
     RustFilesPackage,
     Shlib1Package,
     Shlib2DevelPackage,
+    ShlibLdconfigBodyPackage,
+    ShlibLdconfigProgPackage,
+    ShlibNoLdconfigPackage,
     SphinxInvPackage,
     TclPackage,
     TestDocumentationPackage,
@@ -269,6 +272,22 @@ def test_shlib(package, is_devel, filescheck):
         assert 'non-devel-file-in-devel-package' in out
     else:
         assert 'devel-file-in-non-devel-package' in out
+
+
+@pytest.mark.parametrize('package, is_ok', [
+    # -p /sbin/ldconfig with a non-empty body: no warning
+    (ShlibLdconfigProgPackage, True),
+    # explicit ldconfig call in the scriptlet bodies: no warning
+    (ShlibLdconfigBodyPackage, True),
+    # plain bodies with no ldconfig: the warning must still fire
+    (ShlibNoLdconfigPackage, False),
+])
+def test_shlib_ldconfig_scriptlets(package, is_ok, filescheck):
+    output, test = filescheck
+    test.check(package)
+    out = output.print_results(output.results)
+    assert ('postin-without-ldconfig' in out) != is_ok
+    assert ('postun-without-ldconfig' in out) != is_ok
 
 
 @pytest.mark.parametrize('package, files', [
