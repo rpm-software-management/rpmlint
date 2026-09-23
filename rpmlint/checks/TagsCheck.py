@@ -547,10 +547,15 @@ class TagsCheck(AbstractCheck):
                         expected = [version + '-' + release]
                         if epoch is not None:  # regardless of use_epoch
                             expected[0] = str(epoch) + ':' + expected[0]
-                        # Allow EVR in changelog without release extension,
-                        # the extension is often a macro or otherwise dynamic.
+                        # The changelog version must not carry the release
+                        # extension: distro tags (%{?dist} style suffixes)
+                        # never appear in %changelog entries, so only the
+                        # EVR without the extension is accepted here. The
+                        # extension is often a macro or otherwise dynamic,
+                        # which is why the comparison strips it from the
+                        # release side instead of requiring it in the entry.
                         if self.release_ext:
-                            expected.append(self.extension_regex.sub('', expected[0]))
+                            expected = [self.extension_regex.sub('', expected[0])]
                         # Check if a package does not have a version that is
                         # compatible with epoch:version-release tuple
                         if ret.group(1) not in expected:
