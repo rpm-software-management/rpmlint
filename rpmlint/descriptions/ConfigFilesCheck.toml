@@ -1,6 +1,7 @@
 non-etc-or-var-file-marked-as-conffile="""
 A file not in /etc or /var is marked as being a configuration file (%config).
-Please put your configuration files in /etc or /var.
+Put your configuration files in /etc or /var, or remove the %config attribute
+from the corresponding line in the %files section.
 """
 conffile-without-noreplace-flag="""
 A configuration file is stored in your package without the noreplace flag.
