@@ -90,6 +90,15 @@ def test_description_from_toml(tmp_path):
     assert result.get_description('uncompressed-zip') == 'The zip file is not compressed.\n\n'
 
 
+def test_description_incorrect_locale_subdir(tmp_path):
+    """
+    Test that the incorrect-locale-subdir error id resolves to a description
+    """
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    assert result.get_description('incorrect-locale-subdir')
+
+
 def test_description_from_conf(tmp_path):
     """
     Test that descriptions strings are updated from configuration file.
