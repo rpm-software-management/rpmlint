@@ -24,3 +24,36 @@ NoHardLinksAndDuplicatesPresent = HardlinksAndDuplicatesPresent.clone(
         '/usr/share/uncompressed.zip': {'content': 'this is an another zip file', 'metadata': {'mode': 33188, 'flags': 1}},
     },
 )
+
+MixedHardlinksAndDuplicates = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/dup_a': {'content': 'same content for all three files here', 'metadata': {'mode': 33188, 'inode': 10}},
+        '/var/dup_b': {'content': 'same content for all three files here', 'metadata': {'mode': 33188, 'inode': 10}},
+        '/etc/dup_c': {'content': 'same content for all three files here', 'metadata': {'mode': 33188, 'inode': 20}},
+    }
+)
+
+PureHardlinksAcrossPartition = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/linked': {'content': 'hardlinked content across prefixes', 'metadata': {'mode': 33188, 'inode': 42}},
+        '/var/linked': {'content': 'hardlinked content across prefixes', 'metadata': {'mode': 33188, 'inode': 42}},
+    }
+)
+
+PureDuplicates = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/only_a': {'content': 'genuine duplicate content here', 'metadata': {'mode': 33188}},
+        '/etc/only_b': {'content': 'genuine duplicate content here', 'metadata': {'mode': 33188}},
+    }
+)
+
+CrossPrefixDuplicates = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/cross_a': {'content': 'duplicate content across prefixes', 'metadata': {'mode': 33188}},
+        '/var/cross_b': {'content': 'duplicate content across prefixes', 'metadata': {'mode': 33188}},
+    }
+)

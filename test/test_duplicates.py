@@ -1,6 +1,10 @@
 from mockdata.mock_duplicates import (
+    CrossPrefixDuplicates,
     HardlinksAndDuplicatesPresent,
-    NoHardLinksAndDuplicatesPresent
+    MixedHardlinksAndDuplicates,
+    NoHardLinksAndDuplicatesPresent,
+    PureDuplicates,
+    PureHardlinksAcrossPartition
 )
 import pytest
 from rpmlint.checks.DuplicatesCheck import DuplicatesCheck
@@ -50,4 +54,53 @@ def test_duplicates_correct(package, test, output):
     assert 'E: hardlink-across-partition' not in out
     assert 'E: hardlink-across-config-files' not in out
     assert 'W: files-duplicate' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [MixedHardlinksAndDuplicates])
+def test_duplicates_mixed_hardlinks_cross_prefix_suppressed(package, test, output):
+    # two files hardlinked across prefixes plus one genuine duplicate:
+    # the hardlink across prefixes is reported, but files-duplicate stays
+    # suppressed because the duplicates span different prefixes and can
+    # not be hardlinked anyway
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'E: hardlink-across-partition /var/dup_b /etc/dup_a' in out
+    assert 'W: files-duplicate' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [CrossPrefixDuplicates])
+def test_duplicates_cross_prefix_suppressed(package, test, output):
+    # genuine duplicates in different prefixes can not be hardlinked,
+    # so files-duplicate is not reported for them
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'W: files-duplicate' not in out
+    assert 'E: hardlink-across-partition' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [PureHardlinksAcrossPartition])
+def test_duplicates_pure_hardlinks_across_partition(package, test, output):
+    # only hardlinks across prefixes: no genuine duplicates to report
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'E: hardlink-across-partition /var/linked /etc/linked' in out
+    assert 'W: files-duplicate' not in out
+    assert 'E: files-duplicated-waste' not in out
+
+
+@pytest.mark.parametrize('package', [PureDuplicates])
+def test_duplicates_pure_duplicates(package, test, output):
+    # only genuine duplicates: no hardlinks involved at all
+    test.check(package)
+    out = output.print_results(output.results)
+
+    assert 'W: files-duplicate /etc/only_b /etc/only_a' in out
+    assert 'E: hardlink-across-partition' not in out
+    assert 'E: hardlink-across-config-files' not in out
     assert 'E: files-duplicated-waste' not in out
