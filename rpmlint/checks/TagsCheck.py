@@ -21,15 +21,24 @@ lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 # package name changes too (qt5 -> qt6 -> qt7), so the digit is part of the
 # upstream library name rather than a version number.
 lib_devel_toolkit_regex = re.compile(r'(qt|gtk)\d', re.IGNORECASE)
+# Boost libraries are always versioned and the version goes up, so a name
+# following the genuine boost scheme (libboost_<component><major>_<minor>_<patch>)
+# is exempt. The pattern is deliberately strict: boost names that do not
+# follow this scheme still fall through to the error path.
+lib_devel_boost_regex = re.compile(r'^libboost_(?:[a-z_]+-py3-)?[a-z_]*[0-9]+_[0-9]+_[0-9]+$')
 
 
 def _lib_devel_number_exempt(lib_name):
     """Decide whether the digits in a lib*-devel name are part of the upstream
     library name rather than a distro version suffix."""
     lowered = lib_name.lower()
-    # boost libraries are always versioned and the version keeps going up
+    # boost libraries are always versioned and the version keeps going up:
+    # a name matching the genuine boost scheme is exempt; the boost-defaults
+    # python3 flavor names are covered by the static array; anything else
+    # merely containing "boost" is still flagged
     if 'boost' in lowered:
-        return False
+        return bool(lib_devel_boost_regex.match(lib_name)) or \
+            lib_name in lib_devel_number_exceptions
     # X11 is Xorg: there will be Wayland but never X12
     if lowered.endswith('x11'):
         return True
@@ -48,8 +57,9 @@ def _lib_devel_number_exempt(lib_name):
 # lib<stem><digits>-devel name was compared against its source package name,
 # and entries where the digits are baked into the source/upstream naming
 # (rather than a distro-added version suffix) were kept. Names covered by the
-# programmatic rules below (toolkit generations, x11) are not listed here;
-# boost names are deliberately never listed.
+# programmatic rules below (toolkit generations, x11, the boost versioning
+# scheme) are not listed here, except for the three boost-defaults python3
+# flavor names, which carry digits but do not follow the versioned scheme.
 lib_devel_number_exceptions = (
     'lib3270',
     'libKPim6AddressbookImportExport6',
@@ -83,6 +93,9 @@ lib_devel_number_exceptions = (
     'libblacs2-mvapich2',
     'libblacs2-openmpi4',
     'libblacs2-openmpi5',
+    'libboost_mpi_python3',
+    'libboost_numpy3',
+    'libboost_python3',
     'libbz2',
     'libcanfigger0',
     'libcapi20',

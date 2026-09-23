@@ -536,8 +536,13 @@ def test_explicit_lib_dependency(package, should_fail, output, test):
     # X11 is Xorg: there will be Wayland but never X12
     [DepsPackage, ('libX11-devel', ), False],
     [DepsPackage, ('libxkbcommon-x11-devel', ), False],
-    # boost is always versioned and the version goes up: still flagged
-    [DepsPackage, ('libboost_iostreams1_91_0-devel', ), True],
+    # boost follows its own versioning scheme: well-formed names are exempt
+    [DepsPackage, ('libboost_iostreams1_91_0-devel', ), False],
+    [DepsPackage, ('libboost_mpi_python-py3-1_91_0-devel', ), False],
+    [DepsPackage, ('libboost_python3-devel', ), False],
+    # boost names not following the scheme are still flagged
+    [DepsPackage, ('libboost_foo1-devel', ), True],
+    [DepsPackage, ('libboost_foo1_91-devel', ), True],
     # Genuine versioned devel names are still flagged
     [DepsPackage, ('libfoo1-devel', ), True],
     [DepsPackage, ('libfoo2-devel', ), True],
