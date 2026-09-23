@@ -89,7 +89,7 @@ def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=
         '%files\n'
         f'{files_list}\n'
     )
-    subprocess.run(
+    proc = subprocess.run(
         ['rpmbuild', '-bb',
          '--define', f'_topdir {topdir}',
          # Pin _rpmdir as well: it may be overridden by system or user
@@ -97,10 +97,20 @@ def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=
          # from topdir/RPMS while rpmbuild still exits successfully.
          '--define', f'_rpmdir {topdir}/RPMS',
          str(spec)],
-        check=True, capture_output=True, text=True,
+        capture_output=True, text=True,
     )
-    rpms = list((topdir / 'RPMS' / 'noarch').glob('*.rpm'))
-    assert len(rpms) == 1
+    assert proc.returncode == 0, \
+        f'rpmbuild failed:\n{proc.stdout}\n{proc.stderr}'
+    # Ask rpmbuild where it put the RPM instead of assuming a directory:
+    # macro configuration (e.g. in mock chroots) may redirect it.
+    rpms = [line.split('Wrote: ', 1)[1].strip()
+            for line in proc.stdout.splitlines()
+            if line.startswith('Wrote: ') and line.rstrip().endswith('.rpm')]
+    if not rpms:
+        # Fall back to searching topdir, e.g. for localized rpmbuild output.
+        rpms = [str(path) for path in (topdir / 'RPMS').rglob('*.rpm')]
+    assert len(rpms) == 1, \
+        f'expected one RPM, got {rpms}:\n{proc.stdout}\n{proc.stderr}'
     return rpms[0]
 
 
