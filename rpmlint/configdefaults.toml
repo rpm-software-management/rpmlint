@@ -314,6 +314,12 @@ ValidLicenses = []
 # Default valid license exceptions
 ValidLicenseExceptions = []
 
+# Library names whose trailing digits are part of the upstream project name
+# rather than a version number; BuildRequires on their -devel packages is
+# legitimate and must not trigger invalid-build-requires. Distro configs
+# list their own known names here.
+DevelNumberExceptions = []
+
 # Default list of authorized PAM modules
 PAMAuthorizedModules = []
 
