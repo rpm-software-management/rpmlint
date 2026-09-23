@@ -529,6 +529,15 @@ def test_explicit_lib_dependency(package, should_fail, output, test):
     [DepsPackage, ('libxx2', 'libxx-devel'), False],
     # The 3 in libnl3 is part of the upstream library name, not a version
     [DepsPackage, ('libnl3-devel', ), False],
+    # Toolkit API generations are part of the upstream name (qt5 -> qt6 -> qt7)
+    [DepsPackage, ('libQt5Charts5-devel', ), False],
+    [DepsPackage, ('libfoo-qt6-devel', ), False],
+    [DepsPackage, ('libcanberra-gtk3-devel', ), False],
+    # X11 is Xorg: there will be Wayland but never X12
+    [DepsPackage, ('libX11-devel', ), False],
+    [DepsPackage, ('libxkbcommon-x11-devel', ), False],
+    # boost is always versioned and the version goes up: still flagged
+    [DepsPackage, ('libboost_iostreams1_91_0-devel', ), True],
     # Genuine versioned devel names are still flagged
     [DepsPackage, ('libfoo1-devel', ), True],
     [DepsPackage, ('libfoo2-devel', ), True],
