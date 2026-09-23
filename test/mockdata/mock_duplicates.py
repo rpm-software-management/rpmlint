@@ -49,3 +49,11 @@ PureDuplicates = get_tested_mock_package(
         '/etc/only_b': {'content': 'genuine duplicate content here', 'metadata': {'mode': 33188}},
     }
 )
+
+CrossPrefixDuplicates = get_tested_mock_package(
+    lazyload=True,
+    files={
+        '/etc/cross_a': {'content': 'duplicate content across prefixes', 'metadata': {'mode': 33188}},
+        '/var/cross_b': {'content': 'duplicate content across prefixes', 'metadata': {'mode': 33188}},
+    }
+)

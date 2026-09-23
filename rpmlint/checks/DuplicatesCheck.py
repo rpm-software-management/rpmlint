@@ -86,21 +86,33 @@ class DuplicatesCheck(AbstractCheck):
                                              'hardlink-across-config-files',
                                              group_first.name, duplicate.name)
 
-            # more than one inode group means there is at least one genuine
-            # duplicate (same content, different inode); always report it,
-            # no matter which prefixes the files live in
-            if len(inode_groups) > 1 and sizes[md5_hash]:
-                display_duplicates = duplicates[:self.DUPLICATES_DISPLAY_LIMIT]
-                other_duplicates = len(duplicates[self.DUPLICATES_DISPLAY_LIMIT:])
+            # diff is a number of files that are duplicates of first but
+            # not hardlinks to it
+            diff = 1 + len(duplicates) - len(inode_groups[(first.rdev, first.inode)])
 
-                description = ':'.join([x.name for x in display_duplicates])
-                if other_duplicates > 0:
-                    description += f':(and {other_duplicates} more)'
-                self.output.add_info('W', pkg, 'files-duplicate', first.name,
-                                     description)
+            if diff > 0:
+                prefix = self._get_prefix(first)
 
-            # every inode group beyond the first one is a wasted copy
-            total_dup_size += sizes[md5_hash] * (len(inode_groups) - 1)
+                # now we know that there are some duplicates that are not links
+                for duplicate in duplicates:
+                    if prefix != self._get_prefix(duplicate):
+                        # if the duplicate is in a different prefix, we can ignore
+                        # it since it can't be linked anyway
+                        diff = diff - 1
+
+                # if there is still a positive diff (i.e. there is a duplicate that
+                # is not a link and wasn't ignored by the previous step),
+                # report a warning
+                if sizes[md5_hash] and diff > 0:
+                    display_duplicates = duplicates[:self.DUPLICATES_DISPLAY_LIMIT]
+                    other_duplicates = len(duplicates[self.DUPLICATES_DISPLAY_LIMIT:])
+
+                    description = ':'.join([x.name for x in display_duplicates])
+                    if other_duplicates > 0:
+                        description += f':(and {other_duplicates} more)'
+                    self.output.add_info('W', pkg, 'files-duplicate', first.name,
+                                         description)
+                total_dup_size += sizes[md5_hash] * diff
 
         # check the overall size of the duplicates and print an error if it's
         # too much
