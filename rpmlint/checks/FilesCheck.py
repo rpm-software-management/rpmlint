@@ -163,7 +163,14 @@ buildconfigfile_regex = re.compile(r'(\.pc|/bin/.+-config)$')
 # room for improvement with catching more -R, but also for false positives...
 buildconfig_rpath_regex = re.compile(r'(?:-rpath|Wl,-R)\b')
 sofile_regex = re.compile(r'/lib(64)?/(.+/)?lib[^/]+\.so$')
-devel_regex = re.compile(r'(.*)-(debug(info|source)?|devel|headers|source|static|prof)$')
+# The -headers suffix only marks a devel package when the base name is a
+# single word (e.g. kernel-headers, glibc-headers); in longer names it is
+# part of the upstream project name (e.g. python-django-cors-headers, an
+# HTTP headers library, not a devel subpackage).
+devel_regex = re.compile(
+    r'(?P<base>.*)-(debug(info|source)?|devel|source|static|prof)$|'
+    r'^(?P<headers_base>[^-]+)-headers$'
+)
 debuginfo_package_regex = re.compile(r'-debug(info)?$')
 debugsource_package_regex = re.compile(r'-debugsource$')
 lib_regex = re.compile(r'/lib(?:64)?/lib[A-Za-z0-9](?:(?:|[\w\-\.]*[A-Za-z0-9])\.so\.[\w+\.]+|\w*-\d(?:|[\w\-\.]*[A-Za-z0-9])\.so)$')  # see commit log for detail

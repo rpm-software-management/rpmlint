@@ -28,6 +28,7 @@ from mockdata.mock_files import (
     UnexpandedMacroFilesPackage,
 )
 import pytest
+from rpmlint.checks.FilesCheck import devel_regex
 from rpmlint.checks.FilesCheck import FilesCheck
 from rpmlint.checks.FilesCheck import pyc_magic_from_chunk, pyc_mtime_from_chunk
 from rpmlint.checks.FilesCheck import python_bytecode_to_script as pbts
@@ -55,6 +56,29 @@ def output(filescheck):
 def test(filescheck):
     _output, test = filescheck
     yield test
+
+
+@pytest.mark.parametrize('name,expected_base', [
+    ('foo-devel', 'foo'),
+    ('foo-debuginfo', 'foo'),
+    ('foo-debugsource', 'foo'),
+    ('libfoo-devel', 'libfoo'),
+    ('foo-static', 'foo'),
+    # single-word -headers names are genuine devel packages
+    ('kernel-headers', 'kernel'),
+    ('glibc-headers', 'glibc'),
+    # "headers" as part of the upstream project name is not a devel marker
+    # https://github.com/rpm-software-management/rpmlint/issues/1091
+    ('python-django-cors-headers', None),
+    ('plainpkg', None),
+])
+def test_devel_regex(name, expected_base):
+    match = devel_regex.search(name)
+    if expected_base is None:
+        assert match is None
+    else:
+        assert match is not None
+        assert (match.group('base') or match.group('headers_base')) == expected_base
 
 
 def test_pep3147():

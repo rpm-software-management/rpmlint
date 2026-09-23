@@ -372,7 +372,7 @@ class TagsCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'no-name-tag')
         else:
             if is_devel and not is_source:
-                base = is_devel.group(1)
+                base = is_devel.group('base') or is_devel.group('headers_base')
                 dep = None
                 has_so = False
                 has_pc = False

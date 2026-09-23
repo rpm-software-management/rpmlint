@@ -513,6 +513,28 @@ def test_devel_dependency(package, should_fail, output, test):
     assert ('devel-dependency' in out) == should_fail
 
 
+@pytest.mark.parametrize('dep,should_fail', [
+    # https://github.com/rpm-software-management/rpmlint/issues/1091
+    # "headers" is part of the upstream project name (HTTP headers
+    # libraries), not a devel subpackage marker
+    ('python-django-cors-headers', False),
+    ('python310-django-cors-headers', False),
+    # true positives stay flagged
+    ('foo-devel', True),
+    ('foo-debuginfo', True),
+    ('libfoo-devel', True),
+    # genuine headers-style devel packages stay flagged
+    ('kernel-headers', True),
+    ('glibc-headers', True),
+])
+def test_devel_dependency_headers_suffix(dep, should_fail, output, test):
+    pkg = DepsPackage.clone()
+    pkg.requires = [[dep, None, None]]
+    test.check(pkg)
+    out = output.print_results(output.results)
+    assert ('devel-dependency' in out) == should_fail
+
+
 @pytest.mark.parametrize('package,should_fail', [
     [DepsPackage, True],
     [DepsDevPackage, False],
