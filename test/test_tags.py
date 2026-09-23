@@ -527,6 +527,11 @@ def test_explicit_lib_dependency(package, should_fail, output, test):
     [DepsPackage, ('libxx2_2-devel', ), True],
     [DepsPackage, ('libxx-devel', 'libxx2-devel'), True],
     [DepsPackage, ('libxx2', 'libxx-devel'), False],
+    # The 3 in libnl3 is part of the upstream library name, not a version
+    [DepsPackage, ('libnl3-devel', ), False],
+    # Genuine versioned devel names are still flagged
+    [DepsPackage, ('libfoo1-devel', ), True],
+    [DepsPackage, ('libfoo2-devel', ), True],
 ])
 def test_invalid_build_requires(package, deps, should_fail, output, test):
     pkg = package.clone()

@@ -17,6 +17,10 @@ changelog_version_regex = re.compile(r'[^>]([^ >]+)\s*$')
 changelog_text_version_regex = re.compile(r'^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 devel_number_regex = re.compile(r'(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+# Library names whose trailing digits are part of the upstream project name
+# rather than a version number (e.g. libnl3); BuildRequires on their -devel
+# packages is legitimate and must not trigger invalid-build-requires.
+lib_devel_number_exceptions = ('libnl3',)
 lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex = re.compile(r'^\s+')
 pkg_config_regex = re.compile(r'^/usr/(?:lib\d*|share)/pkgconfig/')
@@ -331,8 +335,14 @@ class TagsCheck(AbstractCheck):
             # Check if a package contains a dependency whose name is not docile with
             # lib64 naming standards.
             if is_source:
-                if lib_devel_number_regex.search(dep[0]):
-                    self.output.add_info('E', pkg, 'invalid-build-requires', dep[0])
+                devel_name_match = lib_devel_number_regex.search(dep[0])
+                if devel_name_match:
+                    # Digits that are part of the upstream library name rather
+                    # than a version number are exempt from this check.
+                    lib_name = 'lib' + devel_name_match.group(1) + \
+                        devel_name_match.group(2) + (devel_name_match.group(3) or '')
+                    if lib_name not in lib_devel_number_exceptions:
+                        self.output.add_info('E', pkg, 'invalid-build-requires', dep[0])
 
             # Check if a package containing a devel dependency
             # is not a devel package itself
