@@ -111,7 +111,7 @@ def build_tiny_rpm(tmp_path, name, version='1.0', install_script='', files_list=
         rpms = [str(path) for path in (topdir / 'RPMS').rglob('*.rpm')]
     assert len(rpms) == 1, \
         f'expected one RPM, got {rpms}:\n{proc.stdout}\n{proc.stderr}'
-    return rpms[0]
+    return Path(rpms[0])
 
 
 def get_tested_spec_package(name):
