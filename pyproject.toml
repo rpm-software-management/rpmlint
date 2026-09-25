@@ -8,7 +8,8 @@ build-backend = "setuptools.build_meta"
 name = "rpmlint"
 version = "2.10.0"
 description = "Check for common errors in RPM packages"
-license = {text = "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)"}
+license = "GPL-2.0-or-later"
+license-files = ["COPYING"]
 authors = [
     {name = "Frédéric Lepied", email = "flepied@mandriva.com"}
 ]
@@ -22,7 +23,6 @@ classifiers = [
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
     "Operating System :: Unix",
     "Operating System :: POSIX",
     "Operating System :: POSIX :: Linux",
@@ -63,7 +63,6 @@ homepage = "https://github.com/rpm-software-management/rpmlint"
 download-url = "https://github.com/rpm-software-management/rpmlint"
 
 [tool.setuptools]
-license-files = ['COPYING']
 platforms = ["Linux"]
 packages = [
     "rpmlint",
