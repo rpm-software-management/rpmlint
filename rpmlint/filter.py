@@ -83,6 +83,10 @@ class Filter:
         """
         Replace all variables in error_details. Example variable:
         "Please follow this #URL#
+
+        A variable expanding to a text that still references the variable
+        itself is a circular reference and raises ValueError instead of
+        looping forever.
         """
         for k, v in self.error_details.items():
             # replace all variables recursively
@@ -92,7 +96,14 @@ class Filter:
                 if not variables:
                     break
                 for match in reversed(variables):
-                    replacement = self.error_details[match.group('var')]
+                    var = match.group('var')
+                    if var not in self.error_details:
+                        raise KeyError(
+                            f'Unknown description variable #{var}# referenced from {k}')
+                    replacement = self.error_details[var]
+                    if f'#{var}#' in replacement:
+                        raise ValueError(
+                            f'Circular description variable reference #{var}#')
                     v = v[:match.start()] + replacement + v[match.end():]
                 assert v != before_replacement
             self.error_details[k] = v
