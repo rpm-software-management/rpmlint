@@ -76,7 +76,10 @@ def test(filescheck):
     # and is part of the upstream project name, not a devel marker
     # https://github.com/rpm-software-management/rpmlint/issues/1091
     ('python-django-cors-headers', None),
+    ('python3-django-cors-headers', None),
     ('python310-django-cors-headers', None),
+    # only the python prefix itself is exempt, not names merely containing it
+    ('cpython-headers', 'cpython'),
     ('plainpkg', None),
 ])
 def test_devel_regex(name, expected_base):

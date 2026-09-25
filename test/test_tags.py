@@ -518,6 +518,7 @@ def test_devel_dependency(package, should_fail, output, test):
     # "headers" is part of the upstream project name (HTTP headers
     # libraries), not a devel subpackage marker
     ('python-django-cors-headers', False),
+    ('python3-django-cors-headers', False),
     ('python310-django-cors-headers', False),
     # true positives stay flagged
     ('foo-devel', True),
@@ -527,6 +528,7 @@ def test_devel_dependency(package, should_fail, output, test):
     ('kernel-headers', True),
     ('glibc-headers', True),
     ('blacs-devel-headers', True),
+    ('suse-libsgx-headers', True),
     ('valgrind-client-headers', True),
 ])
 def test_devel_dependency_headers_suffix(dep, should_fail, output, test):
