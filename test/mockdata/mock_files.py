@@ -130,6 +130,9 @@ IncorrectFSFAddress = get_tested_mock_package(
         '/usr/correct-fsf.txt': {
             'content-path': 'files/correct-fsf.txt',
         },
+        '/usr/correct-fsf-address.txt': {
+            'content-path': 'files/correct-fsf-address.txt',
+        },
     },
     header={
         'version': '2.4.3',
