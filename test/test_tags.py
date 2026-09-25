@@ -526,6 +526,8 @@ def test_devel_dependency(package, should_fail, output, test):
     # genuine headers-style devel packages stay flagged
     ('kernel-headers', True),
     ('glibc-headers', True),
+    ('blacs-devel-headers', True),
+    ('valgrind-client-headers', True),
 ])
 def test_devel_dependency_headers_suffix(dep, should_fail, output, test):
     pkg = DepsPackage.clone()

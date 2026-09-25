@@ -64,12 +64,19 @@ def test(filescheck):
     ('foo-debugsource', 'foo'),
     ('libfoo-devel', 'libfoo'),
     ('foo-static', 'foo'),
-    # single-word -headers names are genuine devel packages
+    # -headers marks a devel package shipping C header files, even with
+    # longer stems
+    # https://github.com/rpm-software-management/rpmlint/pull/1598#pullrequestreview-5316559316
     ('kernel-headers', 'kernel'),
     ('glibc-headers', 'glibc'),
-    # "headers" as part of the upstream project name is not a devel marker
+    ('blacs-devel-headers', 'blacs-devel'),
+    ('suse-libsgx-headers', 'suse-libsgx'),
+    ('valgrind-client-headers', 'valgrind-client'),
+    # ...except in the Python ecosystem, where "headers" means HTTP headers
+    # and is part of the upstream project name, not a devel marker
     # https://github.com/rpm-software-management/rpmlint/issues/1091
     ('python-django-cors-headers', None),
+    ('python310-django-cors-headers', None),
     ('plainpkg', None),
 ])
 def test_devel_regex(name, expected_base):
