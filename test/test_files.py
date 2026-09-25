@@ -139,6 +139,7 @@ def test_incorrect_fsf_address(package, filescheck):
     out = output.print_results(output.results)
     assert 'incorrect-fsf-address /usr/incorrect-fsf.txt' in out
     assert 'incorrect-fsf-address /usr/correct-fsf.txt' not in out
+    assert 'incorrect-fsf-address /usr/correct-fsf-address.txt' not in out
 
 
 @pytest.mark.parametrize('package', [MakefileJunkPackage])
