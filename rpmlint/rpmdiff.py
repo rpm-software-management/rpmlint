@@ -44,7 +44,9 @@ class Rpmdiff:
         self.ignore = ignore or []
         self.exclude = exclude or []
 
-        FILEIDX = self.__FILEIDX
+        # copy the class-level table: disabling entries for the ignored
+        # attributes must not leak into other instances
+        FILEIDX = [entry[:] for entry in self.__FILEIDX]
         for tag in self.ignore:
             for entry in FILEIDX:
                 if tag == entry[0]:

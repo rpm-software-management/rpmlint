@@ -5,8 +5,8 @@ from rpmlint.lint import Lint
 from rpmlint.spellcheck import ENCHANT
 
 from Testing import (
-    get_tested_path, HAS_CHECKBASHISMS, HAS_DASH, HAS_ENGLISH_DICTIONARY, HAS_RPMDB,
-    TEST_CONFIG
+    build_tiny_rpm, get_tested_path, HAS_CHECKBASHISMS, HAS_DASH,
+    HAS_ENGLISH_DICTIONARY, HAS_RPMDB, TEST_CONFIG,
 )
 
 TEST_RPMLINTRC = get_tested_path('configs/testing2-rpmlintrc')
@@ -209,8 +209,7 @@ def test_explain_non_standard_dir_from_cfg(capsys):
 
 @pytest.mark.skipif(not ENCHANT, reason='Optional dependency pyenchant not install')
 @pytest.mark.skipif(not HAS_ENGLISH_DICTIONARY, reason='Missing English dictionary')
-@pytest.mark.parametrize('packages', [Path('test/binary/non-fhs-0-0.x86_64.rpm')])
-def test_descriptions_from_config(capsys, packages):
+def test_descriptions_from_config(capsys, tmp_path):
     """
     Test that rpmlint updates 'parametrized' descriptions from configuration.
 
@@ -218,9 +217,15 @@ def test_descriptions_from_config(capsys, packages):
     and non-standard-dir-in-var) were overridden by values from
     'descriptions.config' file.
     """
+    package = build_tiny_rpm(
+        tmp_path,
+        'non-fhs-test',
+        install_script='mkdir -p %{buildroot}/usr/dummy %{buildroot}/var/dummy %{buildroot}/var/local',
+        files_list='%dir /usr/dummy\n%dir /var/dummy\n%dir /var/local',
+    )
     additional_options = {
         'config': [get_tested_path('configs/descriptions.config')],
-        'rpmfile': [packages]
+        'rpmfile': [package]
     }
     options_preset['verbose'] = True
     options = {**options_preset, **additional_options}
@@ -269,13 +274,19 @@ def test_run_installed(capsys, packages):
     assert not err
 
 
-@pytest.mark.parametrize('packages', [Path('test/binary/ruby2.5-rubygem-rubyzip-testsuite-1.2.1-0.x86_64.rpm')])
-def test_run_strict(capsys, packages):
+def test_run_strict(capsys, tmp_path):
     """
     Test if we convert warning to error
     """
+    package = build_tiny_rpm(
+        tmp_path,
+        'zip-test',
+        install_script=f'install -Dm644 {get_tested_path("files/encrypted.zip")} '
+                       '%{buildroot}/usr/share/zip-test/encrypted.zip',
+        files_list='/usr/share/zip-test/encrypted.zip',
+    )
     additional_options = {
-        'rpmfile': [packages],
+        'rpmfile': [package],
         'strict': True,
     }
     options = {**options_preset, **additional_options}
@@ -339,9 +350,6 @@ def test_header_information(capsys):
 @pytest.mark.parametrize('configs', [list(Path('configs').glob('*/*.toml'))])
 @pytest.mark.no_cover
 def test_run_full_rpm(capsys, packages, configs):
-    # the package cannot be extracted using rpm2cpio because it contains a directory without 'x' permission
-    packages.remove(Path('test/binary/python311-pytest-xprocess-0.23.0-2.4.noarch.rpm'))
-
     number_of_pkgs = len(packages)
     additional_options = {
         'rpmfile': packages,

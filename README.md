@@ -97,16 +97,15 @@ Alternatively, the built binary can be found in the `rpmlint` directory under th
 
 ### Example workflow for testing a functionality
 
-1) I have rpmfile that should report unreadable zip file
-2) I store this file in git under `test/binary/texlive-codepage-doc-2018.151.svn21126-38.1.noarch.rpm`
-3) Now I need to figure out what `check` should test this, in this case `test_zip.py`
-4) For the testing I will have to devise a small function that validates my expectations:
+1) I have a zip file that should report as unreadable
+2) I check what `check` should test this, in this case `ZipCheck` covered by `test_zip.py`
+3) For the testing I devise a small function that validates my expectations:
 
 ```
-@pytest.mark.parametrize('package', ['binary/texlive-codepage-doc'])
-def test_zip2(tmpdir, package, zipcheck):
+@pytest.mark.parametrize('package', [EncryptedZipPackage])
+def test_zip1(package, zipcheck):
     output, test = zipcheck
-    test.check(get_tested_package(package, tmpdir))
+    test.check(package)
     out = output.print_results(output.results)
     assert 'W: unable-to-read-zip' in out
 ```
@@ -115,12 +114,24 @@ As you can see it is not so hard and with each added test we get better
 coverage on what is really expected from rpmlint and avoid naughty regressions
 in the long run.
 
-Preferable approach for binary packages is to create artificial testcase (to keep binaries small and trivial).
-We are currently using OBS to produce binaries:
-https://build.opensuse.org/project/show/devel:openSUSE:Factory:rpmlint:tests
+No binary RPMs are stored in git for tests. Pick the lightest approach that
+covers your case:
+* For check-level tests use a `FakePkg`-based mock in `test/mockdata/mock_*.py`
+  built with `get_tested_mock_package()` from `test/Testing.py`. Mock the
+  header tags directly for metadata checks (see `mock_tags.py`); for payload
+  content checks point `content-path` at a small real fixture file under
+  `test/files/` (see `mock_zip.py`).
+* When the code under test needs real RPM parsing or extraction, build a tiny
+  RPM at test time with `build_tiny_rpm()` from `test/Testing.py` (uses
+  `rpmbuild`, no network needed). See `test_pkg.py` and `test_diff.py`.
+* Small real payloads (ELF objects, zip files) live in `test/files/`; the ELF
+  ones can be regenerated with `test/files/build-elf-fixtures.sh`.
 
-For a sample package see:
-https://build.opensuse.org/package/show/devel:openSUSE:Factory:rpmlint:tests/non-position-independent-exec
+The only real RPMs kept in git are the three signature fixtures in
+`test/binary/` (`hello-*-signed.rpm`, `no-signature-*.rpm`,
+`unknown-key-*.rpm`) because GPG signature verification cannot be faked.
+
+Run `flake8` on changed files before pushing; CI gates on it.
 
 ## Configuration
 

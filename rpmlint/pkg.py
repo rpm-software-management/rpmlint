@@ -790,15 +790,15 @@ class FakeHeader(dict):
         return expr
 
     def __missing__(self, key):
+        # absent tags behave like real rpm headers and return None
+        if isinstance(key, int):
+            return None
         try:
             key = getattr(rpm, key)
         except (TypeError, KeyError):
             raise KeyError
 
-        if key not in self:
-            raise KeyError
-
-        return self[key]
+        return self.get(key, None)
 
 
 # Class to provide an API to a 'fake' package, eg. for specfile-only checks
@@ -862,6 +862,15 @@ class FakePkg(AbstractPkg):
 
         if 'linkto' in attrs:
             self.add_symlink_to(path, attrs['linkto'])
+        elif metadata and metadata.get('flags', 0) & rpm.RPMFILE_GHOST:
+            # ghost files are not shipped in the payload
+            pkg_file = PkgFile(path)
+            pkg_file.mode = stat.S_IFREG | 0o0644
+            pkg_file.user = 'root'
+            pkg_file.group = 'root'
+            for k, v in metadata.items():
+                setattr(pkg_file, k, v)
+            self.files[path] = pkg_file
         else:
             self.add_file_with_content(path, content, metadata=metadata)
         self.header[rpm.RPMTAG_FILENAMES].append(path)
@@ -954,7 +963,14 @@ class FakePkg(AbstractPkg):
                 # the header name wihtout the ending 's'
                 tagname = k[:-1].upper()
                 for i in v:
+                    # (dep, flags) tuples allow setting rpm sense flags,
+                    # e.g. the script context of Requires(post)
+                    if isinstance(i, tuple):
+                        i, extra_flags = i
+                    else:
+                        extra_flags = 0
                     name, flags, version = parse_deps(i)[0]
+                    flags |= extra_flags
                     version = versionToString(version)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}NAME')].append(name)
                     self.header[getattr(rpm, f'RPMTAG_{tagname}FLAGS')].append(flags)
@@ -1031,3 +1047,7 @@ class FakePkg(AbstractPkg):
     # access the tags like an array
     def __getitem__(self, key):
         return self.header.get(key, None)
+
+    def langtag(self, tag, lang):
+        """Get value of tag in the given language (mocks hold a single value)."""
+        return self.header.get(tag, None)
