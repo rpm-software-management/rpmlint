@@ -166,3 +166,17 @@ DepsDevPackage = DepsPackage.clone(
     extend=True,
     name='pkg-devel',
 )
+
+
+MergePatternPackage = get_tested_mock_package(
+    lazyload=True,
+    name='mergepattern',
+    header={
+        'provides': ['merged = 1.6.1'],
+        'obsoletes': ['merged <= 1.6.1'],
+        'arch': 'noarch',
+        'name': 'mergepattern',
+        'version': '0',
+        'release': '0',
+    },
+)
