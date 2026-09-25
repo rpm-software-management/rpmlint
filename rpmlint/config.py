@@ -2,12 +2,9 @@ import os
 from pathlib import Path
 import re
 import sys
+import tomllib
 
 from rpmlint.helpers import print_warning
-try:
-    import tomllib
-except ImportError:
-    import tomli as tomllib
 import tomli_w
 from xdg.BaseDirectory import xdg_config_dirs
 
