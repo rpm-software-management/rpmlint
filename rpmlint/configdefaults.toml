@@ -65,7 +65,19 @@ PythonDefaultVersion = ""
 # Trick in perl version handling
 PerlVersionTrick = true
 # Regexp string with expected suffix in Release tags.
-ReleaseExtension = ""
+#
+# Known %{?dist} style release-extension suffixes of RPM based distros.
+# Distro configs tighten this option to their own suffixes; the full
+# catalog is listed here so it can be adjusted as needed:
+#   fedora:        fc\d+            (e.g. .fc42)
+#   rhel:          rhe?l\d+, el\d+  (e.g. .el9)
+#   eln:           eln\d+           (e.g. .eln144)
+#   mageia:        mga\d+           (e.g. .mga10)
+#   amazon linux:  amzn\d+          (e.g. .amzn2, .amzn2023)
+#   openEuler:     oe\d+            (e.g. .oe2403)
+#   elrepo:        elrepo           (e.g. .el9.elrepo)
+#   suse:          suse\.[\w.]+     (e.g. .suse.lp153)
+ReleaseExtension = '\.(fc|rhe?l|el|eln|mga|amzn|oe)\d+(?=\.|$)|\.suse\.[\w.]+$|\.elrepo$'
 # Regexp string with allowed Group tag for games
 RpmGamesGroup = "Games"
 # Doc files to which end of line and UTF-8 checks should not be applied
