@@ -486,10 +486,12 @@ class FilesCheck(AbstractCheck):
         # Prefetch scriptlets, strip quotes from them (#169)
         self.postin = pkg[rpm.RPMTAG_POSTIN] or \
             pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
+        self.postinprog = pkg.scriptprog(rpm.RPMTAG_POSTINPROG)
         if self.postin:
             self.postin = quotes_regex.sub('', self.postin)
         self.postun = pkg[rpm.RPMTAG_POSTUN] or \
             pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
+        self.postunprog = pkg.scriptprog(rpm.RPMTAG_POSTUNPROG)
         if self.postun:
             self.postun = quotes_regex.sub('', self.postun)
 
@@ -1090,14 +1092,27 @@ class FilesCheck(AbstractCheck):
             if not self.postin:
                 self.output.add_info('E', pkg, 'library-without-ldconfig-postin', fname)
             else:
-                if not ldconfig_regex.search(self.postin):
+                if not self._scriptlet_runs_ldconfig(self.postin, self.postinprog):
                     self.output.add_info('E', pkg, 'postin-without-ldconfig', fname)
 
             if not self.postun:
                 self.output.add_info('E', pkg, 'library-without-ldconfig-postun', fname)
             else:
-                if not ldconfig_regex.search(self.postun):
+                if not self._scriptlet_runs_ldconfig(self.postun, self.postunprog):
                     self.output.add_info('E', pkg, 'postun-without-ldconfig', fname)
+
+    @staticmethod
+    def _scriptlet_runs_ldconfig(script, prog):
+        """
+        Check whether a scriptlet runs ldconfig: either through an explicit
+        ldconfig call in the scriptlet body, or by using ldconfig as the
+        scriptlet interpreter (e.g. %post -p /sbin/ldconfig).
+        """
+        if ldconfig_regex.search(script):
+            return True
+        # scriptprog may carry interpreter arguments, compare the program
+        # itself against the ldconfig basename
+        return bool(prog) and os.path.basename(prog.split()[0]) == 'ldconfig'
 
     def _check_file_normal_file_depmod_call(self, pkg, fname):
         # check depmod call in %post and %postun
