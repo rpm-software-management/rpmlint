@@ -4,6 +4,7 @@ from mockdata.mock_tags import (
     FooDevelPackage,
     FuseCommonPackage,
     InvalidExceptionPackage,
+    MergePatternPackage,
     MissingProvidesPackage,
     SelfPackage,
     UnexpandedMacroPackage,
@@ -363,6 +364,35 @@ def test_package_random_exp(tmp_path, package, tagscheck):
     assert 'E: description-line-too-long' not in out
     # Test if a package is a *-devel package and requires a devel dependency
     assert 'W: devel-dependency' not in out
+
+
+@pytest.mark.parametrize('provides,obsoletes,expected', [
+    # documented package-merge pattern: appropriately versioned,
+    # must not trigger self-obsoletion
+    # https://github.com/rpm-software-management/rpmlint/issues/438
+    ('merged = 1.6.1', 'merged <= 1.6.1', None),
+    # pinned to exactly the provided EVR: same legitimate shape
+    ('mergedeq = 1.6.1', 'mergedeq = 1.6.1', None),
+    # unversioned Obsoletes genuinely obsoletes the package itself
+    ('selfobs = 1.0', 'selfobs',
+     'W: self-obsoletion selfobs obsoletes selfobs = 1.0'),
+    # range reaching beyond the provided EVR covers the package itself
+    ('higher = 1.6.1', 'higher <= 2.0',
+     'W: self-obsoletion higher <= 2.0 obsoletes higher = 1.6.1'),
+    # strictly below the provided EVR cannot match the package itself
+    ('lower = 1.6.1', 'lower < 1.6.1', None),
+])
+def test_self_obsoletion(provides, obsoletes, expected, tagscheck):
+    pkg = MergePatternPackage.clone(
+        header={'provides': [provides], 'obsoletes': [obsoletes]},
+        extend=True)
+    output, test = tagscheck
+    test._check_self_obsoletion(pkg)
+    out = output.print_results(output.results)
+    if expected is None:
+        assert 'W: self-obsoletion' not in out
+    else:
+        assert expected in out
 
 
 @pytest.mark.parametrize('package', ['binary/requires-on-release'])

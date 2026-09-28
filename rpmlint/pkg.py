@@ -171,6 +171,15 @@ def rangeCompare(reqtuple, provtuple):
     if reqn != n:
         return 0
 
+    # Package-merge pattern (e.g. Provides: foo = 1.6.1 with
+    # Obsoletes: foo <= 1.6.1): a requirement upper-bounded by the provided
+    # EVR only matches older releases of a merged-away package, never the
+    # package itself.
+    if reqf in (rpm.RPMSENSE_LESS | rpm.RPMSENSE_EQUAL,
+                rpm.RPMSENSE_EQUAL, 'LE', 'EQ') and \
+            compareEVR((reqe, reqv, reqr), (e, v, r)) <= 0:
+        return 0
+
     # unversioned satisfies everything
     if not f or not reqf:
         return 1
