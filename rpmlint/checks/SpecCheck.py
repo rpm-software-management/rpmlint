@@ -603,7 +603,11 @@ class SpecCheck(AbstractCheck):
     def _checkline_package_buildarch(self, line):
         res = buildarch_regex.search(line)
         if res:
-            if res.group(1) != 'noarch':
+            # A trailing backslash is a line-continuation marker when the tag
+            # sits inside a multi-line macro; strip it before comparing so
+            # 'BuildArch: noarch \' is not reported as a real architecture.
+            arch = res.group(1).removesuffix('\\').strip()
+            if arch != 'noarch':
                 self.output.add_info('E', self.pkg,
                                      'buildarch-instead-of-exclusivearch-tag',
                                      res.group(1))
