@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 
@@ -181,3 +182,27 @@ def test_blocked_filters(tmp_path):
     assert key in cfg.configuration['Filters']
     result.add_info('E', pkg, key, '')
     assert len(result.results) == 1
+
+
+def test_description_variable_self_reference(monkeypatch):
+    """
+    A description variable referencing itself must fail loudly
+    instead of looping forever.
+    """
+    monkeypatch.setattr(Filter, '_load_descriptions',
+                        staticmethod(lambda: {'foo': 'see #foo#'}))
+    cfg = Config(TEST_CONFIG_FILTERS)
+    with pytest.raises(ValueError, match='Circular description variable'):
+        Filter(cfg)
+
+
+def test_description_variable_unknown(monkeypatch):
+    """
+    A description variable referencing an unknown variable must
+    name both the variable and the referencing entry.
+    """
+    monkeypatch.setattr(Filter, '_load_descriptions',
+                        staticmethod(lambda: {'foo': 'see #bar#'}))
+    cfg = Config(TEST_CONFIG_FILTERS)
+    with pytest.raises(KeyError, match='Unknown description variable #bar#'):
+        Filter(cfg)

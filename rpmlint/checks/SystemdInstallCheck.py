@@ -6,9 +6,15 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 
 
 class SystemdInstallCheck(AbstractCheck):
-    systemd_service_directory = rpm.expandMacro('%{_unitdir}')
     checked_units = ['service', 'socket', 'target', 'path']
-    checked_units_regexp = re.compile('^' + systemd_service_directory + r'.+[^@]\.(' + '|'.join(checked_units) + ')$')
+
+    def __init__(self, config, output):
+        super().__init__(config, output)
+        # Expand at instantiation time, not import time: on hosts without
+        # systemd rpm macros %{_unitdir} stays literal and the check would
+        # silently never match anything.
+        systemd_service_directory = rpm.expandMacro('%{_unitdir}')
+        self.checked_units_regexp = re.compile('^' + systemd_service_directory + r'.+[^@]\.(' + '|'.join(self.checked_units) + ')$')
 
     def check(self, pkg):
         # Check only binary package
