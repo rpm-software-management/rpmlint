@@ -233,9 +233,9 @@ digester = "systemd-socket"
 hash     = "58a95fcb09c8ab8e0c2f98a2495d14a6a1ef1d0c18aacb751cebc624c9ba41f8"
 
 [[FileDigestGroup]]
-package  = "systemd-experimental"
+packages = ["systemd-experimental", "udev"]
 note     = "allows root to extend TPM PCR registers"
-bug      = "bsc#1261919"
+bugs     = ["bsc#1261919", "bsc#1281962"]
 type     = "varlink"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-pcrextend.socket"
