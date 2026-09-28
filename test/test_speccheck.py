@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from rpmlint.checks.SpecCheck import SpecCheck
+from rpmlint.checks.SpecCheck import comment_start_pos, SpecCheck
 from rpmlint.filter import Filter
 
 from Testing import CONFIG, get_tested_package, get_tested_spec_package
@@ -842,6 +842,32 @@ def test_check_macro_in_comment(package, speccheck):
     test.check_spec(pkg)
     out = output.print_results(output.results)
     assert 'W: macro-in-comment' in out
+
+
+@pytest.mark.parametrize('package', ['spec/macro-in-quoted-comment'])
+def test_check_macro_in_quoted_comment_not_found(package, speccheck):
+    """Test that '#' inside shell quotes does not start a comment (#183)."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'W: macro-in-comment' not in out
+
+
+@pytest.mark.parametrize('line,expected', [
+    ('# comment with %{macro}', 0),
+    ('cmd arg # comment with %{macro}', 8),
+    ("sed -i 'a #text %{macro}' file", -1),
+    ('echo "quoted #text %{macro}"', -1),
+    ("echo 'single #text %{macro}'", -1),
+    ("echo it\\'s # comment %{macro}", 11),
+    ('echo "a\\"b" # comment %{macro}', 12),
+    ('no hash here', -1),
+    ('#!BuildIgnore: %{macro}', 0),
+])
+def test_comment_start_pos(line, expected):
+    """Test shell-quote aware '#' comment start detection."""
+    assert comment_start_pos(line) == expected
 
 
 @pytest.mark.parametrize('package', ['spec/%autosetup-not-in-prep'])

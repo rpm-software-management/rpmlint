@@ -113,6 +113,34 @@ def contains_buildroot(line):
     return False
 
 
+def comment_start_pos(line):
+    """
+    Return the position of the first '#' that starts a shell comment, or -1.
+
+    '#' characters inside single- or double-quoted shell strings are not
+    comment starts. A backslash escapes the next character unless it is
+    inside single quotes (shell semantics); the caller still decides
+    whether a '#' candidate counts as a comment start.
+    """
+    in_single = False
+    in_double = False
+    pos = 0
+    while pos < len(line):
+        char = line[pos]
+        if char == '#' and not in_single and not in_double:
+            return pos
+        if char == '\\' and not in_single and pos + 1 < len(line):
+            # escaped character, cannot start or end quoting
+            pos += 2
+            continue
+        if char == "'" and not in_double:
+            in_single = not in_single
+        elif char == '"' and not in_single:
+            in_double = not in_double
+        pos += 1
+    return -1
+
+
 class SpecCheck(AbstractCheck):
     """Contain check methods that catch errors and warnings in a specfile."""
 
@@ -776,8 +804,9 @@ class SpecCheck(AbstractCheck):
                 self.output.add_info('W', self.pkg, 'non-standard-group', group)
 
     def _checkline_macros_in_comments(self, line):
-        hash_pos = line.find('#')
-        # Test if there are macros in comments
+        # Test if there are macros in comments; ignore '#' characters
+        # inside shell-quoted strings (e.g. sed expressions)
+        hash_pos = comment_start_pos(line)
         if hash_pos != -1 and \
                 (hash_pos == 0 or line[hash_pos - 1] in (' ', '\t')):
 
