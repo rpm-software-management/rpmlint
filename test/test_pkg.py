@@ -4,9 +4,9 @@ import unittest.mock as mock
 
 import pytest
 import rpm
-from rpmlint.pkg import parse_deps, rangeCompare
+from rpmlint.pkg import parse_deps, Pkg, rangeCompare
 
-from Testing import get_tested_package
+from Testing import build_tiny_rpm
 
 
 def test_parse_deps():
@@ -28,19 +28,27 @@ def test_range_compare():
         assert not rangeCompare(req, prov)
 
 
-@pytest.mark.parametrize('package', ['binary/python311-pytest-xprocess'])
 @pytest.mark.skipif(os.getuid() == 0, reason='Root has full permission')
-def test_extract_fail(package, tmp_path):
+def test_extract_fail(tmp_path):
     """
     Check that rpm2cpio fails to extract this package because it has no
     permissions to some files.
     """
+    rpm_path = build_tiny_rpm(
+        tmp_path,
+        'noperm-test',
+        install_script='mkdir -p %{buildroot}/usr/share/doc/noperm-test\n'
+                       'echo data > %{buildroot}/usr/share/doc/noperm-test/file.txt',
+        # record the directory without the search bit, the buildroot itself
+        # stays readable so rpmbuild can package it as non-root
+        files_list='%attr(644,root,root) /usr/share/doc/noperm-test',
+    )
 
     with mock.patch('shutil.which') as mock_which:
         mock_which.return_value = None
         # the package cannot be extracted using rpm2cpio because it contains a directory without 'x' permission
         with pytest.raises(subprocess.CalledProcessError) as exc:
-            get_tested_package(package, tmp_path)
+            Pkg(rpm_path, tmp_path)
         mock_which.assert_called_once_with('rpm2archive')
         # check that it was rpm2cpio what failed
         assert exc.match(r'rpm2cpio .*')
