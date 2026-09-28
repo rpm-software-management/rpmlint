@@ -46,5 +46,9 @@ LogrotatePackage = get_tested_mock_package(
             'create_dirs': True,
             'content-path': 'files/logrotate/logrotate2.conf',
         },
+        '/etc/logrotate.d/logrotate3.conf': {
+            'create_dirs': True,
+            'content-path': 'files/logrotate/logrotate3.conf',
+        },
     }
 )
