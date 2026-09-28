@@ -19,6 +19,8 @@ MaxLineLength = 80
 PythonDefaultVersion = ""
 
 # Regexp string with expected suffix in Release tags.
+# Tightened to Fedora's own dist suffixes; the full catalog of known
+# suffixes lives in rpmlint/configdefaults.toml.
 ReleaseExtension = '\.(fc|rhe?l|el|eln)\d+(?=\.|$)'
 
 # Whether to want default start/stop runlevels specified in init scripts

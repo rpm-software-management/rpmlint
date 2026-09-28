@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from mockdata.mock_tags import (
+    ChangelogDistReleasePackage,
     DepsDevPackage,
     DepsPackage,
     FooDevelPackage,
@@ -11,6 +14,7 @@ from mockdata.mock_tags import (
 )
 import pytest
 from rpmlint.checks.TagsCheck import TagsCheck
+from rpmlint.config import Config
 from rpmlint.filter import Filter
 import rpmlint.spellcheck
 
@@ -433,6 +437,96 @@ def test_check_non_standard_group(tmp_path, package, tagscheck):
     assert 'W: non-standard-group non/standard/group' in out
     # Test if a package matches the Release tag regex
     assert 'not-standard-release-extension 0' not in out
+
+
+def tagscheck_for_config(config_file=None):
+    """TagsCheck instance running with the given distro config file.
+
+    With no config file, the general rpmlint config is used. The changelog
+    version comparison is enabled and message filtering is disabled so the
+    raw check output can be observed."""
+    config = Config([Path(__file__).parent.parent / config_file] if config_file else None)
+    config.configuration['UseVersionInChangelog'] = True
+    config.configuration['Filters'] = []
+    output = Filter(config)
+    return output, TagsCheck(config, output)
+
+
+@pytest.mark.parametrize('package', [ChangelogDistReleasePackage])
+def test_changelog_opensuse_dist_suffix_tolerated(package):
+    """The ReleaseExtension configured in the openSUSE config tolerates
+    %{?dist} style release suffixes in the changelog version comparison
+    (#856)."""
+    output, test = tagscheck_for_config('configs/openSUSE/opensuse.toml')
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' not in out
+
+
+@pytest.mark.parametrize('package', [ChangelogDistReleasePackage])
+def test_changelog_general_config_tolerates_known_dist_suffixes(package):
+    """The general config catalog tolerates %{?dist} style release suffixes
+    of any known RPM distro in the changelog version comparison (#856)."""
+    output, test = tagscheck_for_config()
+    for release in ('3.amzn2023', '3.oe2403', '3.el9', '3.suse.tw'):
+        test.check(package.clone(
+            extend=True,
+            header={
+                'release': release,
+                'sourcerpm': f'distrelease-1.15.1-{release}.src.rpm',
+            },
+        ))
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' not in out
+
+
+@pytest.mark.parametrize('package', [ChangelogDistReleasePackage])
+def test_changelog_incoherent_version_still_reported(package):
+    """A changelog version that differs beyond the dist suffix is still
+    reported as incoherent (#856)."""
+    output, test = tagscheck_for_config('configs/openSUSE/opensuse.toml')
+    test.check(package.clone(
+        extend=True,
+        header={'changelogname': ['* Mon Sep 05 2022 Someone <someone@example.com> - 1.15.2-3']},
+    ))
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' in out
+
+
+@pytest.mark.parametrize('package', [ChangelogDistReleasePackage])
+def test_changelog_suffix_unknown_to_config_still_reported(package):
+    """A release suffix the configured ReleaseExtension does not know is
+    still reported as incoherent."""
+    output, test = tagscheck_for_config('configs/openSUSE/opensuse.toml')
+    test.check(package.clone(
+        extend=True,
+        header={
+            'release': '3.weird9',
+            'sourcerpm': 'distrelease-1.15.1-3.weird9.src.rpm',
+        },
+    ))
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' in out
+
+
+@pytest.mark.parametrize('package', [ChangelogDistReleasePackage])
+def test_changelog_fedora_config_unchanged(package):
+    """The Fedora configured ReleaseExtension keeps its exact behavior."""
+    output, test = tagscheck_for_config('configs/Fedora/fedora.toml')
+    test.check(package.clone(
+        extend=True,
+        header={
+            'release': '3.fc39',
+            'sourcerpm': 'distrelease-1.15.1-3.fc39.src.rpm',
+        },
+    ))
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' not in out
+    # a suffix the Fedora ReleaseExtension does not know still warns
+    output, test = tagscheck_for_config('configs/Fedora/fedora.toml')
+    test.check(package)
+    out = output.print_results(output.results)
+    assert 'W: incoherent-version-in-changelog' in out
 
 
 @pytest.mark.parametrize('package', ['binary/dev-dependency'])
