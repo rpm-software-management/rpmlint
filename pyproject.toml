@@ -68,6 +68,7 @@ platforms = ["Linux"]
 packages = [
     "rpmlint",
     "rpmlint.checks",
+    "rpmlint.pkg",
     "rpmlint.descriptions"
 ]
 include-package-data = true
