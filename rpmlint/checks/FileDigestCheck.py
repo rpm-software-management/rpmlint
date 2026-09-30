@@ -439,16 +439,16 @@ class FileDigestCheck(AbstractCheck):
             else:
                 found_mismatch = True
 
-            if hashsum:
-                # also store the digest we encountered for later reference
-                digest_info['encountered'] = hashsum
-                # Record this digest mismatch for later error messages
-                if self._is_path_restricted(path):
-                    mismatch_list = mismatches.setdefault(path, [])
-                else:
-                    mismatch_list = unrelated_mismatches.setdefault(path, [])
+                if hashsum:
+                    # also store the digest we encountered for later reference
+                    digest_info['encountered'] = hashsum
+                    # Record this digest mismatch for later error messages
+                    if self._is_path_restricted(path):
+                        mismatch_list = mismatches.setdefault(path, [])
+                    else:
+                        mismatch_list = unrelated_mismatches.setdefault(path, [])
 
-                mismatch_list.append(digest_info)
+                    mismatch_list.append(digest_info)
 
         if valid_files and unrelated_mismatches:
             # only store unrelated file mismatches if any actually
