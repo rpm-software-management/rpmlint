@@ -3,12 +3,25 @@
 from contextlib import contextmanager
 import os
 from shutil import get_terminal_size
+import subprocess
 import sys
 
 from rpmlint.color import Color
 
 
-ENGLISH_ENVIRONMENT = dict(os.environ, LC_ALL='en_US.UTF-8', LANGUAGE='en_US')
+def _english_environ():
+    try:
+        cmd = ['locale', '-a']
+        locales = subprocess.check_output(cmd, text=True).splitlines()
+        locales = [locale.lower() for locale in locales]
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        locales = []
+    if 'c.utf8' in locales or 'c.utf-8' in locales:
+        return dict(os.environ, LC_ALL='C.UTF-8', LANGUAGE='C')
+    return dict(os.environ, LC_ALL='en_US.UTF-8', LANGUAGE='en_US')
+
+
+ENGLISH_ENVIRONMENT = _english_environ()
 
 
 def string_center(message, filler=' '):
