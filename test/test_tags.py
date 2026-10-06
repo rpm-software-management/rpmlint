@@ -527,6 +527,25 @@ def test_explicit_lib_dependency(package, should_fail, output, test):
     [DepsPackage, ('libxx2_2-devel', ), True],
     [DepsPackage, ('libxx-devel', 'libxx2-devel'), True],
     [DepsPackage, ('libxx2', 'libxx-devel'), False],
+    # The 3 in libnl3 is part of the upstream library name, not a version
+    [DepsPackage, ('libnl3-devel', ), False],
+    # Toolkit API generations are part of the upstream name (qt5 -> qt6 -> qt7)
+    [DepsPackage, ('libQt5Charts5-devel', ), False],
+    [DepsPackage, ('libfoo-qt6-devel', ), False],
+    [DepsPackage, ('libcanberra-gtk3-devel', ), False],
+    # X11 is Xorg: there will be Wayland but never X12
+    [DepsPackage, ('libX11-devel', ), False],
+    [DepsPackage, ('libxkbcommon-x11-devel', ), False],
+    # boost follows its own versioning scheme: well-formed names are exempt
+    [DepsPackage, ('libboost_iostreams1_91_0-devel', ), False],
+    [DepsPackage, ('libboost_mpi_python-py3-1_91_0-devel', ), False],
+    [DepsPackage, ('libboost_python3-devel', ), False],
+    # boost names not following the scheme are still flagged
+    [DepsPackage, ('libboost_foo1-devel', ), True],
+    [DepsPackage, ('libboost_foo1_91-devel', ), True],
+    # Genuine versioned devel names are still flagged
+    [DepsPackage, ('libfoo1-devel', ), True],
+    [DepsPackage, ('libfoo2-devel', ), True],
 ])
 def test_invalid_build_requires(package, deps, should_fail, output, test):
     pkg = package.clone()
@@ -534,6 +553,9 @@ def test_invalid_build_requires(package, deps, should_fail, output, test):
     pkg.requires = []
     for dep in deps:
         pkg.requires.append([dep, None, None])
+    # the DevelNumberExceptions option is read from config; exercise it here
+    # the way a distro config would set it
+    test.devel_number_exceptions = {'libnl3', 'libboost_python3'}
     test.check(pkg)
     out = output.print_results(output.results)
     assert ('invalid-build-requires' in out) == should_fail

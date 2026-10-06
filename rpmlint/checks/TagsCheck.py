@@ -17,6 +17,42 @@ changelog_version_regex = re.compile(r'[^>]([^ >]+)\s*$')
 changelog_text_version_regex = re.compile(r'^\s*-\s*((\d+:)?[\w\.]+-[\w\.]+)')
 devel_number_regex = re.compile(r'(.*?)([0-9.]+)(_[0-9.]+)?-devel')
 lib_devel_number_regex = re.compile(r'^lib(.*?)([0-9.]+)(_[0-9.]+)?-devel')
+# Toolkit API generations (qt6, gtk3, ...): when the generation changes the
+# package name changes too (qt5 -> qt6 -> qt7), so the digit is part of the
+# upstream library name rather than a version number.
+lib_devel_toolkit_regex = re.compile(r'(qt|gtk)\d', re.IGNORECASE)
+# Boost libraries are always versioned and the version goes up, so a name
+# following the genuine boost scheme (libboost_<component><major>_<minor>_<patch>)
+# is exempt. The pattern is deliberately strict: boost names that do not
+# follow this scheme still fall through to the error path.
+lib_devel_boost_regex = re.compile(r'^libboost_(?:[a-z_]+-py3-)?[a-z_]*[0-9]+_[0-9]+_[0-9]+$')
+
+
+def _lib_devel_number_exempt(lib_name, exceptions):
+    """Decide whether the digits in a lib*-devel name are part of the upstream
+    library name rather than a distro version suffix.
+
+    exceptions: library names from the DevelNumberExceptions configuration
+    option whose trailing digits are part of the upstream project name.
+    """
+    lowered = lib_name.lower()
+    # boost libraries are always versioned and the version keeps going up:
+    # a name matching the genuine boost scheme is exempt; the boost-defaults
+    # python3 flavor names are covered by the configured exceptions; anything
+    # else merely containing "boost" is still flagged
+    if 'boost' in lowered:
+        return bool(lib_devel_boost_regex.match(lib_name)) or \
+            lib_name in exceptions
+    # X11 is Xorg: there will be Wayland but never X12
+    if lowered.endswith('x11'):
+        return True
+    # toolkit API generations: when the generation changes the package name
+    # changes too (qt5 -> qt6 -> qt7)
+    if lib_devel_toolkit_regex.search(lib_name):
+        return True
+    return lib_name in exceptions
+
+
 lib_package_regex = re.compile(r'(?:^(?:compat-)?lib.*?(\.so.*)?|libs?[\d-]*)$', re.IGNORECASE)
 leading_space_regex = re.compile(r'^\s+')
 pkg_config_regex = re.compile(r'^/usr/(?:lib\d*|share)/pkgconfig/')
@@ -48,6 +84,7 @@ class TagsCheck(AbstractCheck):
         self.max_line_len = config.configuration['MaxLineLength']
         self.spellcheck = config.configuration['UseEnchant']
         self.valid_license_exceptions = config.configuration['ValidLicenseExceptions']
+        self.devel_number_exceptions = config.configuration['DevelNumberExceptions']
         if self.spellcheck:
             self.spellchecker = Spellcheck()
 
@@ -331,8 +368,14 @@ class TagsCheck(AbstractCheck):
             # Check if a package contains a dependency whose name is not docile with
             # lib64 naming standards.
             if is_source:
-                if lib_devel_number_regex.search(dep[0]):
-                    self.output.add_info('E', pkg, 'invalid-build-requires', dep[0])
+                devel_name_match = lib_devel_number_regex.search(dep[0])
+                if devel_name_match:
+                    # Digits that are part of the upstream library name rather
+                    # than a version number are exempt from this check.
+                    lib_name = 'lib' + devel_name_match.group(1) + \
+                        devel_name_match.group(2) + (devel_name_match.group(3) or '')
+                    if not _lib_devel_number_exempt(lib_name, self.devel_number_exceptions):
+                        self.output.add_info('E', pkg, 'invalid-build-requires', dep[0])
 
             # Check if a package containing a devel dependency
             # is not a devel package itself
