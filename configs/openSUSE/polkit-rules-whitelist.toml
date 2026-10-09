@@ -319,3 +319,13 @@ type     = "polkit"
 path     = "/usr/share/polkit-1/rules.d/ru.linux_gaming.PortProtonQt.rules"
 digester = "default"
 hash     = "f44b5209614514052f1fc14db5bb43ae3cfc4562bd72c8c64c4061268f8aa143"
+
+[[FileDigestGroup]]
+package  = "fwupd"
+note     = "allows the fwupd-refresh service use to gain extra privileges"
+bug      = "bsc#1279948"
+type     = "polkit"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/polkit-1/rules.d/org.freedesktop.fwupd.rules"
+digester = "default"
+hash     = "165e39f7eb0e7e6aa0274fa36605fa2afe33460dd1f74c8dd31198c867279cf1"
