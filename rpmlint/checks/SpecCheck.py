@@ -65,6 +65,12 @@ requires_regex = re.compile(r'^(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?:\s
 provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
 conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
+weak_dependency_regex = re.compile(
+    r'^(?:Recommends|Suggests|Supplements|Enhances|OrderWithRequires)(?:\([^\)]+\))?:\s*(.*)',
+    re.IGNORECASE)
+
+dependency_regexs = [requires_regex, provides_regex, obsoletes_regex, conflicts_regex,
+                     weak_dependency_regex]
 
 declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
 
@@ -197,7 +203,7 @@ class SpecCheck(AbstractCheck):
         self.pkg = pkg
         self.spec_only = isinstance(pkg, Pkg.FakePkg)
 
-        spec_lines = readlines(self._spec_file)
+        spec_lines = list(readlines(self._spec_file))
         # Analyse specfile line by line to check for (E)rrors or (W)arnings
         # And initialize the SpecCheck instance for following checks
         self._check_lines(spec_lines)
@@ -217,6 +223,7 @@ class SpecCheck(AbstractCheck):
         self._check_mixed_use_of_space_and_tabs(pkg, self.indent_spaces, self.indent_tabs)
         self.check_ifarch_and_not_applied_patches(pkg, self.patches_auto_applied, self.patches,
                                                   self.applied_patches_ifarch, self.applied_patches)
+        self._check_dependency_not_in_preamble(pkg, spec_lines)
 
         # Checks below require a real spec file
         if not self._spec_file:
@@ -309,6 +316,24 @@ class SpecCheck(AbstractCheck):
                 if pnum not in applied_patches:
                     self.output.add_info('W', pkg, 'patch-not-applied',
                                          'Patch%d:' % pnum, pfile)
+
+    def _check_dependency_not_in_preamble(self, pkg, lines):
+        """Check if a package dependency tag is outside the preamble section.
+
+        Dependency tags are only evaluated by rpm when they are part of a
+        package preamble.  A %package marker starts a new preamble for a
+        subpackage, so tags immediately following it are valid.
+        """
+        in_preamble = True
+        for line in lines:
+            for section, section_regex in section_regexs.items():
+                if section_regex.search(line):
+                    in_preamble = section == 'package'
+                    break
+            else:
+                if not in_preamble and any(regex.match(line) for regex in dependency_regexs):
+                    self.output.add_info('W', pkg, 'dependency-not-in-preamble')
+                    return
 
     def _check_specfile_error(self, pkg):
         """It parse the specfile with rpm and forward errors to rpmlint output."""
