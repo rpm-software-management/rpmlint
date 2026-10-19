@@ -16,6 +16,14 @@ and an invalid package will fail to block the build.
 Provides:       this-provides-will-not-be-evaluated
 Requires:       this-requires-will-not-be-evaluated
 
+%package subpackage
+Summary:        Dummy test subpackage
+
+%description subpackage
+The same applies for subpackages, which has its own preamble section.
+
+Provides:       this-will-not-be-evaluated-either
+
 %files
 %defattr(-,root,root,-)
 %{_libdir}/foo
