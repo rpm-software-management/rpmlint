@@ -1295,6 +1295,7 @@ def test_bogus_date_in_changelog(spec, output, test):
     assert 'warning: bogus date in %changelog' in out
     assert 'W: specfile-warning warning: bogus date in %changelog' in out
 
+
 @pytest.mark.parametrize('package', ['spec/dependency-not-in-preamble'])
 def test_check_dependency_not_in_preamble(package, speccheck):
     output, test = speccheck

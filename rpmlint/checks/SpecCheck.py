@@ -81,7 +81,7 @@ deps = [
     'Enhances',
     'OrderWithRequires',
 ]
-dependency_regex = re.compile(r'^(%s)(\([^\)]+\))?:.*' % '|'.join(deps), re.IGNORECASE)
+dependency_regex = re.compile(r'^({})(\([^\)]+\))?:.*'.format('|'.join(deps)), re.IGNORECASE)
 
 declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
 
