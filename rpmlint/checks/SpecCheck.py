@@ -223,7 +223,6 @@ class SpecCheck(AbstractCheck):
         self._check_mixed_use_of_space_and_tabs(pkg, self.indent_spaces, self.indent_tabs)
         self.check_ifarch_and_not_applied_patches(pkg, self.patches_auto_applied, self.patches,
                                                   self.applied_patches_ifarch, self.applied_patches)
-        self._check_dependency_not_in_preamble(pkg, spec_lines)
 
         # Checks below require a real spec file
         if not self._spec_file:
@@ -317,24 +316,6 @@ class SpecCheck(AbstractCheck):
                     self.output.add_info('W', pkg, 'patch-not-applied',
                                          'Patch%d:' % pnum, pfile)
 
-    def _check_dependency_not_in_preamble(self, pkg, lines):
-        """Check if a package dependency tag is outside the preamble section.
-
-        Dependency tags are only evaluated by rpm when they are part of a
-        package preamble.  A %package marker starts a new preamble for a
-        subpackage, so tags immediately following it are valid.
-        """
-        in_preamble = True
-        for line in lines:
-            for section, section_regex in section_regexs.items():
-                if section_regex.search(line):
-                    in_preamble = section == 'package'
-                    break
-            else:
-                if not in_preamble and any(regex.match(line) for regex in dependency_regexs):
-                    self.output.add_info('W', pkg, 'dependency-not-in-preamble')
-                    return
-
     def _check_specfile_error(self, pkg):
         """It parse the specfile with rpm and forward errors to rpmlint output."""
 
@@ -423,6 +404,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_python_module_def(line)
         self._checkline_python_sitelib_glob(line)
         self._checkline_shared_dir_glob(line)
+        self._check_dependency_not_in_preamble(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -872,3 +854,13 @@ class SpecCheck(AbstractCheck):
             self.output.add_info('W', self.pkg,
                                  'suse-update-desktop-file-deprecated',
                                  '%suse_update_desktop_file is deprecated')
+
+    def _check_dependency_not_in_preamble(self, line):
+        """Check if a package dependency tag is outside the preamble section.
+
+        Dependency tags are only evaluated by rpm when they are part of a
+        package preamble.  A %package marker starts a new preamble for a
+        subpackage, so tags immediately following it are valid.
+        """
+        if self.current_section != 'package' and any(regex.match(line) for regex in dependency_regexs):
+            self.output.add_info('W', self.pkg, 'dependency-not-in-preamble')
