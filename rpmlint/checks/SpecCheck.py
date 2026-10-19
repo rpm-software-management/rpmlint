@@ -65,12 +65,8 @@ requires_regex = re.compile(r'^(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?:\s
 provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
 conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
-weak_dependency_regex = re.compile(
-    r'^(?:Recommends|Suggests|Supplements|Enhances|OrderWithRequires)(?:\([^\)]+\))?:\s*(.*)',
-    re.IGNORECASE)
 
-dependency_regexs = [requires_regex, provides_regex, obsoletes_regex, conflicts_regex,
-                     weak_dependency_regex]
+dependency_regex = re.compile(r'^(?:(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?|(?:Build)?Conflicts|Obsoletes|Provides(?:\([^\)]+\))?|(?:Recommends|Suggests|Supplements|Enhances|OrderWithRequires)(?:\([^\)]+\))?):\s*(.*)', re.IGNORECASE)
 
 declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
 
@@ -862,5 +858,5 @@ class SpecCheck(AbstractCheck):
         package preamble.  A %package marker starts a new preamble for a
         subpackage, so tags immediately following it are valid.
         """
-        if self.current_section != 'package' and any(regex.match(line) for regex in dependency_regexs):
+        if self.current_section != 'package' and dependency_regex.match(line):
             self.output.add_info('W', self.pkg, 'dependency-not-in-preamble')
