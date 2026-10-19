@@ -326,6 +326,6 @@ note     = "allows the fwupd-refresh service use to gain extra privileges"
 bug      = "bsc#1279948"
 type     = "polkit"
 [[FileDigestGroup.digests]]
-path     = "/usr/share/polkit-1/rules.d/org.freedesktop.fwupd.rules"
+path     = "/usr/share/polkit-1/rules.d/10-org.freedesktop.fwupd.rules"
 digester = "default"
 hash     = "165e39f7eb0e7e6aa0274fa36605fa2afe33460dd1f74c8dd31198c867279cf1"
