@@ -66,7 +66,22 @@ provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
 conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
 
-dependency_regex = re.compile(r'^(?:(?:Build)?(?:Pre)?Req(?:uires)?(?:\([^\)]+\))?|(?:Build)?Conflicts|Obsoletes|Provides(?:\([^\)]+\))?|(?:Recommends|Suggests|Supplements|Enhances|OrderWithRequires)(?:\([^\)]+\))?):\s*(.*)', re.IGNORECASE)
+deps = [
+    'BuildPreReq',
+    'PreReq',
+    'BuildRequires',
+    'Requires',
+    'Provides',
+    'Obsoletes',
+    'BuildConflicts',
+    'Conflicts',
+    'Recommends',
+    'Suggests',
+    'Supplements',
+    'Enhances',
+    'OrderWithRequires',
+]
+dependency_regex = re.compile(r'^(%s)(\([^\)]+\))?:.*' % '|'.join(deps), re.IGNORECASE)
 
 declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
 
