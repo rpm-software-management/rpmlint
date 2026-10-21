@@ -1,5 +1,9 @@
 # Fedora's configuration for the rpmlint utility.
 
+# The Fedora filesystem package ships /var/spool/mail, so it is a standard
+# directory there (the default list matches distributions that do not ship it).
+StandardDirs = ["/var/spool/mail"]
+
 # When checking that various files that should be compressed are
 # indeed compressed, look for this filename extension
 CompressExtension = "gz"

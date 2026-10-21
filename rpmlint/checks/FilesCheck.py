@@ -18,135 +18,6 @@ from rpmlint.checks.AbstractCheck import AbstractCheck
 from rpmlint.helpers import byte_to_string
 from rpmlint.pkg import is_utf8, is_utf8_bytestr
 
-# must be kept in sync with the filesystem package
-STANDARD_DIRS = (
-    '/',
-    '/bin',
-    '/boot',
-    '/etc',
-    '/etc/X11',
-    '/etc/opt',
-    '/etc/profile.d',
-    '/etc/skel',
-    '/etc/xinetd.d',
-    '/home',
-    '/lib',
-    '/lib/modules',
-    '/lib64',
-    '/media',
-    '/mnt',
-    '/mnt/cdrom',
-    '/mnt/disk',
-    '/mnt/floppy',
-    '/opt',
-    '/proc',
-    '/root',
-    '/run',
-    '/sbin',
-    '/selinux',
-    '/srv',
-    '/sys',
-    '/tmp',
-    '/usr',
-    '/usr/X11R6',
-    '/usr/X11R6/bin',
-    '/usr/X11R6/doc',
-    '/usr/X11R6/include',
-    '/usr/X11R6/lib',
-    '/usr/X11R6/lib64',
-    '/usr/X11R6/man',
-    '/usr/X11R6/man/man1',
-    '/usr/X11R6/man/man2',
-    '/usr/X11R6/man/man3',
-    '/usr/X11R6/man/man4',
-    '/usr/X11R6/man/man5',
-    '/usr/X11R6/man/man6',
-    '/usr/X11R6/man/man7',
-    '/usr/X11R6/man/man8',
-    '/usr/X11R6/man/man9',
-    '/usr/X11R6/man/mann',
-    '/usr/bin',
-    '/usr/bin/X11',
-    '/usr/etc',
-    '/usr/games',
-    '/usr/include',
-    '/usr/lib',
-    '/usr/lib/X11',
-    '/usr/lib/games',
-    '/usr/lib/gcc-lib',
-    '/usr/lib/menu',
-    '/usr/lib64',
-    '/usr/lib64/gcc-lib',
-    '/usr/local',
-    '/usr/local/bin',
-    '/usr/local/doc',
-    '/usr/local/etc',
-    '/usr/local/games',
-    '/usr/local/info',
-    '/usr/local/lib',
-    '/usr/local/lib64',
-    '/usr/local/man',
-    '/usr/local/man/man1',
-    '/usr/local/man/man2',
-    '/usr/local/man/man3',
-    '/usr/local/man/man4',
-    '/usr/local/man/man5',
-    '/usr/local/man/man6',
-    '/usr/local/man/man7',
-    '/usr/local/man/man8',
-    '/usr/local/man/man9',
-    '/usr/local/man/mann',
-    '/usr/local/sbin',
-    '/usr/local/share',
-    '/usr/local/share/man',
-    '/usr/local/share/man/man1',
-    '/usr/local/share/man/man2',
-    '/usr/local/share/man/man3',
-    '/usr/local/share/man/man4',
-    '/usr/local/share/man/man5',
-    '/usr/local/share/man/man6',
-    '/usr/local/share/man/man7',
-    '/usr/local/share/man/man8',
-    '/usr/local/share/man/man9',
-    '/usr/local/share/man/mann',
-    '/usr/local/src',
-    '/usr/sbin',
-    '/usr/share',
-    '/usr/share/dict',
-    '/usr/share/doc',
-    '/usr/share/icons',
-    '/usr/share/info',
-    '/usr/share/man',
-    '/usr/share/man/man1',
-    '/usr/share/man/man2',
-    '/usr/share/man/man3',
-    '/usr/share/man/man4',
-    '/usr/share/man/man5',
-    '/usr/share/man/man6',
-    '/usr/share/man/man7',
-    '/usr/share/man/man8',
-    '/usr/share/man/man9',
-    '/usr/share/man/mann',
-    '/usr/share/misc',
-    '/usr/src',
-    '/usr/tmp',
-    '/var',
-    '/var/cache',
-    '/var/db',
-    '/var/lib',
-    '/var/lib/games',
-    '/var/lib/misc',
-    '/var/lib/rpm',
-    '/var/local',
-    '/var/log',
-    '/var/mail',
-    '/var/nis',
-    '/var/opt',
-    '/var/preserve',
-    '/var/spool',
-    '/var/tmp',
-)
-
 compressions = r'\.(gz|z|Z|zip|bz2|lzma|xz|zst)'
 sub_bin_regex = re.compile(r'^(/usr)?/s?bin/\S+/')
 backup_regex = re.compile(r'(~|\#[^/]+\#|((\.orig|\.rej)(' + compressions + ')?))$')
@@ -196,7 +67,6 @@ shebang_regex = re.compile(br'^#!\s*(\S+)(.*?)$', re.M)
 interpreter_regex = re.compile(r'^/(?:usr/)?(?:s?bin|games|libexec(?:/.+)?|(?:lib(?:64)?|share)/.+)/([^/]+)$')
 script_regex = re.compile(r'^/((usr/)?s?bin|etc/(rc\.d/init\.d|X11/xinit\.d|cron\.(hourly|daily|monthly|weekly)))/')
 sourced_script_regex = re.compile(r'^/etc/(bash_completion\.d|profile\.d)/')
-filesys_packages = ['filesystem']  # TODO: make configurable?
 quotes_regex = re.compile(r'[\'"]+')
 start_certificate_regex = re.compile(r'^-----BEGIN CERTIFICATE-----$')
 start_private_key_regex = re.compile(r'^----BEGIN PRIVATE KEY-----$')
@@ -380,6 +250,8 @@ class FilesCheck(AbstractCheck):
         self.meta_package_regex = re.compile(self.config.configuration['MetaPackageRegexp'])
         self.use_relative_symlinks = self.config.configuration['UseRelativeSymlinks']
         self.standard_groups = self.config.configuration['StandardGroups']
+        self.standard_dirs = self.config.configuration['StandardDirs']
+        self.filesystem_packages = self.config.configuration['FilesystemPackages']
         self.standard_users = self.config.configuration['StandardUsers']
         self.disallowed_dirs = self.config.configuration['DisallowedDirs']
         self.compress_ext = self.config.configuration['CompressExtension']
@@ -964,7 +836,7 @@ class FilesCheck(AbstractCheck):
             self.output.add_info('E', pkg, 'world-writable', fname, '%o' % perm)
         if perm != 0o755:
             self.output.add_info('E', pkg, 'non-standard-dir-perm', fname, '%o' % perm)
-        if pkg.name not in filesys_packages and fname in STANDARD_DIRS:
+        if pkg.name not in self.filesystem_packages and fname in self.standard_dirs:
             self.output.add_info('E', pkg, 'standard-dir-owned-by-package', fname)
         if hidden_file_regex.search(fname) and not fname.endswith('/.build-id'):
             self.output.add_info('W', pkg, 'hidden-file-or-dir', fname)

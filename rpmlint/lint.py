@@ -23,8 +23,6 @@ class Lint:
     Generic object handling the basic rpmlint operations
     """
 
-    rpmlint_package = re.compile(r'/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d')
-
     def __init__(self, options):
         # initialize configuration
         self.checks = {}
@@ -49,6 +47,9 @@ class Lint:
             self.config.strict = options['strict']
         if options['permissive']:
             self.config.permissive = options['permissive']
+        if not options['strict'] and not options['permissive'] and self.config.configuration['PermissiveByDefault']:
+            # e.g. openSUSE OBS runs rpmlint in permissive mode by default
+            self.config.permissive = True
         if options['mini_mode']:
             self.config.mini_mode = options['mini_mode']
 
@@ -57,11 +58,13 @@ class Lint:
         # initialize output buffer
         self.output = Filter(self.config)
 
-        # Do not run rpmlint on rpmlint package that easily leads
-        # to run-time error as old rpmlint (taken from rpmlint-mini)
-        # uses a modified configuration.
+        # Do not run rpmlint on packages matching the configured skip
+        # patterns (e.g. openSUSE skips the rpmlint package itself as the
+        # rpmlint-mini wrapper uses a modified configuration that easily
+        # leads to run-time errors).
+        skip_package_res = [re.compile(pattern) for pattern in self.config.configuration['SkipPackagePatterns']]
         for file in self.options['rpmfile']:
-            if self.rpmlint_package.search(str(file)):
+            if any(skip_re.search(str(file)) for skip_re in skip_package_res):
                 print('Skipping rpmlint for rpmlint package!')
                 sys.exit(0)
 
@@ -203,9 +206,9 @@ class Lint:
             self.options['rpmlintrc'] = []
             # Skip auto-loading when running under PYTEST
             if not os.environ.get('PYTEST_XDIST_TESTRUNUID'):
-                # first load SUSE-specific locations
-                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/home/abuild/rpmbuild/SOURCES'))
-                self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path('/usr/src/packages/SOURCES/'))
+                # first load distribution-specific build root locations
+                for path in self.config.configuration['RpmlintrcSearchPaths']:
+                    self.options['rpmlintrc'] += self._find_rpmlintrc_files(Path(path))
             if not self.options['rpmlintrc'] and len(self.options['rpmfile']) == 1:
                 # load only from the same folder specname.rpmlintrc or specname-rpmlintrc
                 # do this only in a case where there is one folder parameter or one file
@@ -283,7 +286,8 @@ class Lint:
         try:
             if pname.suffix in ('.rpm', '.spm'):
                 with Pkg(pname, self.config.configuration['ExtractDir'],
-                         verbose=self.config.info) as pkg:
+                         verbose=self.config.info,
+                         suppress_stderr=self.config.configuration['SuppressExtractionStderr']) as pkg:
                     for k, v in pkg.timers.items():
                         self.check_duration[k] += v
                     self.run_checks(pkg, is_last)

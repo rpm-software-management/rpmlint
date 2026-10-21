@@ -6,6 +6,16 @@ UseVarLockSubsys = false
 UseVersionInChangelog = false
 BadnessThreshold = 999
 
+# openSUSE OBS runs rpmlint in permissive mode unless --strict is requested
+PermissiveByDefault = true
+# Do not run rpmlint on the rpmlint package itself; the rpmlint-mini
+# wrapper uses a modified configuration that easily leads to run-time errors
+SkipPackagePatterns = ['/home/abuild/rpmbuild/RPMS/noarch/rpmlint-\d']
+# openSUSE build roots searched for rpmlintrc files
+RpmlintrcSearchPaths = ['/home/abuild/rpmbuild/SOURCES', '/usr/src/packages/SOURCES/']
+# never print package extraction stderr, even in verbose mode
+SuppressExtractionStderr = true
+
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
 AtomicCheckGhosts = false
