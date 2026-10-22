@@ -59,24 +59,24 @@ hash     = "22ad4eb46a0ddcd461ce0136548de13b207592fa464521f55948581606b53856"
 [[FileDigestGroup]]
 packages = ["udev", "udev-mini"]
 note     = "udev core varlink services, all accessible to root only"
-bug      = "bsc#1261919"
+bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-bootctl.socket"
 digester = "systemd-socket"
-hash     = "8224c1d90efca44b975a83bc8989eb5438f43a1d02248f9fb28bfd67c012b650"
+hash     = "59762f891aca8eeacc6d8eb7a49571db21a2b4d1e272cb2443f2b65ad39c75df"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-pcrlock.socket"
 digester = "systemd-socket"
-hash     = "245abdf23ead7e1fd5eb8b54502c7a0d0536b2f8417cecd960450d827cc147a1"
+hash     = "ff85b2858b9e52e9c4bd872d88dfa12c96f195e55ae9ac3c5b86e27d902911ad"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-repart.socket"
 digester = "systemd-socket"
-hash     = "ce39189699d18c5e11406980d09e046a8a4b20bc9da2506fe7f447ae8dbf8b98"
+hash     = "c7fe65787140d96eea9c66745b3e909cebf20833aedfedace3eb6ce53fac7643"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-udevd-varlink.socket"
 digester = "systemd-socket"
-hash     = "9ca1632e762e1e3215c51b08b39b7660b5461072d82013ea3dca9193b0beada9"
+hash     = "02ac2eb9d03b46df84651591772048885f45532434dc646739d86c289057f449"
 
 [[FileDigestGroup]]
 package  = "systemd-container"
@@ -225,32 +225,32 @@ hash     = "15703bc772caf1b5604eba1f6dd5709a679374747f6c853012abd6ab2127ff71"
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "systemd-mini-experimental"]
 note     = "programmatic access to journalctl data"
-bug      = "bsc#1261919"
+bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-journalctl.socket"
 digester = "systemd-socket"
-hash     = "3232616b0acc13ff0b68b014e028662847b1a5692dc64fd29d63983a03f12bcb"
+hash     = "89a3ca938781749d92ff2154b0bb761a1a1920e1ba64410501768406b5fde98a"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "systemd-mini-experimental"]
-note     = "turn of pid1 / kernel messages on a console"
-bug      = "bsc#1261919"
+note     = "turn off pid1 / kernel messages on a console"
+bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-mute-console.socket"
 digester = "systemd-socket"
-hash     = "58a95fcb09c8ab8e0c2f98a2495d14a6a1ef1d0c18aacb751cebc624c9ba41f8"
+hash     = "dda8e6be980de95fc8b3dcd4457ae7faf4ec54af01171551de08803f26d9746d"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "udev"]
 note     = "allows root to extend TPM PCR registers"
-bugs     = ["bsc#1261919", "bsc#1281962"]
+bugs     = ["bsc#1261919", "bsc#1281962", "bsc#1282497"]
 type     = "varlink"
 [[FileDigestGroup.digests]]
 path     = "/usr/lib/systemd/system/systemd-pcrextend.socket"
 digester = "systemd-socket"
-hash     = "2cccfadaadd7c49d63a40f96ba899b590c77cab7e05fcb7824b58a425d064b71"
+hash     = "3f1286820b1d38bf6ec4fa6687ebcedce3fc99be3b59a6c29efe223163609a10"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "systemd-mini-experimental"]
@@ -301,3 +301,135 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-networkd-varlink-metrics.socket"
 digester = "systemd-socket"
 hash     = "d72edad2d2b60779094d1fad79353c330767a9ecd0e7d55f58dd0b686fa380cd"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "exposes IMDS details as structured metrics"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-imds-metrics.socket"
+digester = "systemd-socket"
+hash     = "6d471d67be0f4b9cb3a2891b13b7abff07b418745cd02656eb4e97692dab8c32"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "exposes log statistics"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-journalctl-metrics.socket"
+digester = "systemd-socket"
+hash     = "155ef80541ca5fbbf890cdb9dba0ace6e7dbb82dfe6dd58f8372c21715b3c969"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "allows querying of system config and report files"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-files.socket"
+digester = "systemd-socket"
+hash     = "b1553a7c8510a0c5642bb61fe9b7cd57cd6954fc64e3bdb34baa27c6e9f75e75"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows requesting signatures for reports"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-sign-plain.socket"
+digester = "systemd-socket"
+hash     = "4974c27ac4ca895bb6823df367cf4ebb7cd658bacf2484542d0705cfce03a7fa"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows requesting signatures for reports with TPM2"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-sign-tpm2.socket"
+digester = "systemd-socket"
+hash     = "4663a42852336cb169395ce04e883d216861d2f5f76f5d24fddb3ec0878d5ca5"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "allows requesting signatures for reports with TSM"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report-sign-tsm.socket"
+digester = "systemd-socket"
+hash     = "c0bc157bfd1c326c87014f6b362a8fd449344005da5764bbb268ffda27ea408e"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "orchestrates collection, signing and submission of reports"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-report.socket"
+digester = "systemd-socket"
+hash     = "912186cf9a74260eff7446fdbf5153018bbb50cb69bf53a813ad22fe5831f8d1"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows installation of unit files on disk images or mounts"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysinstall.socket"
+digester = "systemd-socket"
+hash     = "94d2d986059bf5da962d93d77fdf80518adfd552a839ec4052fda56dc9f56291"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows notification of bootctl that updates are ready"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysupdate-notify-bootctl.socket"
+digester = "systemd-socket"
+hash     = "acb7397d787980dd566868d76fdd77caeb300f8084ff56537c68c5b35e1bbd07"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows notification of systemd-pcrlock when updates are ready"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysupdate-notify-pcrlock.socket"
+digester = "systemd-socket"
+hash     = "720cf129445b3ec3244968014ac5d74987260decd9e4f8711c449ac0a9f2b442"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "allows notification of systemd-sysext managers when updates are ready"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysupdate-notify-sysext.socket"
+digester = "systemd-socket"
+hash     = "0a7bc2042565f2adb6d6ba1ec50e944a32159adee932cb0590719f79e37d60ec"
+
+[[FileDigestGroup]]
+package  = "systemd-experimental"
+note     = "allows clients to check and apply system updates"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-sysupdate.socket"
+digester = "systemd-socket"
+hash     = "f25a086335239ddf480451f321c758c333c5e369d845673955eb0471d8127b38"
+
+[[FileDigestGroup]]
+package  = "udev"
+note     = "allows clients to query and enroll key management mechanisms"
+bug      = "bsc#1282497"
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-cryptenroll.socket"
+digester = "systemd-socket"
+hash     = "11040941d20e770d2bb74e7d865c52cea98e3dd0336a62711dc627a3cbf87174"
+
+
