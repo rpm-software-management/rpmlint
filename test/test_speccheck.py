@@ -1302,4 +1302,7 @@ def test_check_dependency_not_in_preamble(package, speccheck):
     pkg = get_tested_spec_package(package)
     test.check_spec(pkg)
     out = output.print_results(output.results)
-    assert 'W: dependency-not-in-preamble' in out
+    for pkg in ['this-provides-will-not-be-evaluated', 'this-requires-will-not-be-evaluated', 'this-will-not-be-evaluated-either']:
+        assert f'W: dependency-not-in-preamble {pkg}' in out
+    for pkg in ['this-recommends-will-be-evaluated', 'this-will-also-be-evaluated']:
+        assert f'W: dependency-not-in-preamble {pkg}' not in out

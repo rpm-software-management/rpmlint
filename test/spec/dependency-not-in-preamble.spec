@@ -6,7 +6,7 @@ Summary:        Dummy test package
 Group:          Undefined
 License:        GPLv2
 
-Requires:       this-requires-will-be-evaluated
+Recommends:     this-recommends-will-be-evaluated
 
 %description
 A dependency-related tag after the preamble section will not be evaluated.
@@ -19,10 +19,12 @@ Requires:       this-requires-will-not-be-evaluated
 %package subpackage
 Summary:        Dummy test subpackage
 
+Conflicts:      this-will-also-be-evaluated
+
 %description subpackage
 The same applies for subpackages, which has its own preamble section.
 
-Provides:       this-will-not-be-evaluated-either
+BuildConflicts: this-will-not-be-evaluated-either
 
 %files
 %defattr(-,root,root,-)
