@@ -32,6 +32,12 @@ deprecated-grep="""
 Direct use of grep as egrep or fgrep is deprecated in GNU grep and
 historical in POSIX, use grep -E and grep -F instead.
 """
+dependency-not-in-preamble="""
+A dependency tag (such as Requires, Provides, Obsoletes or Conflicts) appears
+after a section marker. RPM only evaluates dependency tags in the package
+preamble; tags placed in a section such as %description, %prep or %files are
+ignored. Move the tag into the preamble of the affected package.
+"""
 no-buildroot-tag="""
 The BuildRoot tag isn't used in your spec. It must be used in order to
 allow building the package as non root on some systems. For some rpm versions
