@@ -214,7 +214,7 @@ class SpecCheck(AbstractCheck):
         self.pkg = pkg
         self.spec_only = isinstance(pkg, Pkg.FakePkg)
 
-        spec_lines = list(readlines(self._spec_file))
+        spec_lines = readlines(self._spec_file)
         # Analyse specfile line by line to check for (E)rrors or (W)arnings
         # And initialize the SpecCheck instance for following checks
         self._check_lines(spec_lines)
@@ -874,4 +874,5 @@ class SpecCheck(AbstractCheck):
         subpackage, so tags immediately following it are valid.
         """
         if self.current_section != 'package' and dependency_regex.match(line):
-            self.output.add_info('W', self.pkg, 'dependency-not-in-preamble')
+            package = line[line.find(':') + 1:].strip()
+            self.output.add_info('W', self.pkg, 'dependency-not-in-preamble', package)
