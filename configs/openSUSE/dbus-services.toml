@@ -1323,7 +1323,7 @@ digester = "shell"
 hash     = "c4281ad74af8c43a963806142e2770751b153df8c1217da4edf212b334ecddcf"
 
 [[FileDigestGroup]]
-package = "systemd-experimental"
+package = "systemd"
 type = "dbus"
 note = "systemd-oomd out-of memory userspace handler based on control groups and PMI"
 bug = "bsc#1202454"
