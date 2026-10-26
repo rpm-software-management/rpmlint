@@ -19,9 +19,8 @@ Locations = [
 ]
 
 [FileDigestLocation.varlink]
-# At the moment there don't exist any symlinked socket units in Factory so
-# let's be restrictive here.
-FollowSymlinks = false
+# A few packages like systemd use symbolic links (bsc#1287673).
+FollowSymlinks = true
 # We are only looking for *.socket files in system service locations that
 # contain a "FileDescriptorName=varlink" directive. The ContentCheck will take
 # care of the latter limitation.
