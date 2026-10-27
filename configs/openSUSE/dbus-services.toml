@@ -1449,11 +1449,11 @@ hash = "fa65ae25c9eb99b8e3d338383a24e3675fa4388e878e1ec78ec9e3c6c90602e7"
 package = "tukitd"
 type = "dbus"
 note = "openSUSE transactional updates"
-bugs = ["bsc#1196149", "bsc#1215216"]
+bugs = ["bsc#1196149", "bsc#1215216", "bsc#1286924"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf"
 digester = "xml"
-hash = "ad0e4ef18f2c459a4991645ad55de61b49eb119324cb625a275a75f8793c8f44"
+hash = "1f696acccf643f556312d6fddac16daa72e090a1d684bc569acd8c13272d98f3"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.opensuse.tukit.service"
 digester = "shell"
