@@ -37,6 +37,10 @@ Filters = []
 BlockedFilters = []
 # Treshold where we should error out, by default single error is enough
 BadnessThreshold = -1
+# Treat individual errors as non-fatal unless --strict is passed on the
+# command line. Used by distributions (e.g. openSUSE OBS) that run rpmlint
+# in permissive mode by default.
+PermissiveByDefault = false
 # Set to true to issue a warning for ghost entries outside snapshots
 # when checking for atomic update compatibility
 AtomicCheckGhosts = false
@@ -58,6 +62,16 @@ KernelModuleRPMsOK = true
 MaxLineLength = 79
 # Regexp string with names of packages to treat as "meta" ones.
 MetaPackageRegexp = '^(bundle|task)-'
+# List of regexp patterns for package paths that rpmlint should refuse to
+# check and exit cleanly instead (e.g. the rpmlint package itself when the
+# checking wrapper uses a modified configuration).
+SkipPackagePatterns = []
+# Distribution-specific build root locations that are searched for
+# rpmlintrc files before falling back to the package folder.
+RpmlintrcSearchPaths = []
+# Never print package extraction stderr, even in verbose mode (e.g. to
+# keep build logs clean).
+SuppressExtractionStderr = false
 # String regexp validating value for the Packager tag.
 Packager = ""
 # Assumed default version of Python if one cannot be determined from files
@@ -321,6 +335,141 @@ PAMAuthorizedModules = []
 DuplicatesMinSize = 2
 
 # Additional warnings on specific function calls
+# Directories that must be owned by the filesystem package; a regular
+# package owning one of them gets the standard-dir-owned-by-package error.
+# Must be kept in sync with the filesystem package of the distribution.
+# Distributions whose filesystem package ships extra standard directories
+# (e.g. Fedora with /var/spool/mail) append them in their own configuration.
+StandardDirs = [
+    "/",
+    "/bin",
+    "/boot",
+    "/etc",
+    "/etc/X11",
+    "/etc/opt",
+    "/etc/profile.d",
+    "/etc/skel",
+    "/etc/xinetd.d",
+    "/home",
+    "/lib",
+    "/lib/modules",
+    "/lib64",
+    "/media",
+    "/mnt",
+    "/mnt/cdrom",
+    "/mnt/disk",
+    "/mnt/floppy",
+    "/opt",
+    "/proc",
+    "/root",
+    "/run",
+    "/sbin",
+    "/selinux",
+    "/srv",
+    "/sys",
+    "/tmp",
+    "/usr",
+    "/usr/X11R6",
+    "/usr/X11R6/bin",
+    "/usr/X11R6/doc",
+    "/usr/X11R6/include",
+    "/usr/X11R6/lib",
+    "/usr/X11R6/lib64",
+    "/usr/X11R6/man",
+    "/usr/X11R6/man/man1",
+    "/usr/X11R6/man/man2",
+    "/usr/X11R6/man/man3",
+    "/usr/X11R6/man/man4",
+    "/usr/X11R6/man/man5",
+    "/usr/X11R6/man/man6",
+    "/usr/X11R6/man/man7",
+    "/usr/X11R6/man/man8",
+    "/usr/X11R6/man/man9",
+    "/usr/X11R6/man/mann",
+    "/usr/bin",
+    "/usr/bin/X11",
+    "/usr/etc",
+    "/usr/games",
+    "/usr/include",
+    "/usr/lib",
+    "/usr/lib/X11",
+    "/usr/lib/games",
+    "/usr/lib/gcc-lib",
+    "/usr/lib/menu",
+    "/usr/lib64",
+    "/usr/lib64/gcc-lib",
+    "/usr/local",
+    "/usr/local/bin",
+    "/usr/local/doc",
+    "/usr/local/etc",
+    "/usr/local/games",
+    "/usr/local/info",
+    "/usr/local/lib",
+    "/usr/local/lib64",
+    "/usr/local/man",
+    "/usr/local/man/man1",
+    "/usr/local/man/man2",
+    "/usr/local/man/man3",
+    "/usr/local/man/man4",
+    "/usr/local/man/man5",
+    "/usr/local/man/man6",
+    "/usr/local/man/man7",
+    "/usr/local/man/man8",
+    "/usr/local/man/man9",
+    "/usr/local/man/mann",
+    "/usr/local/sbin",
+    "/usr/local/share",
+    "/usr/local/share/man",
+    "/usr/local/share/man/man1",
+    "/usr/local/share/man/man2",
+    "/usr/local/share/man/man3",
+    "/usr/local/share/man/man4",
+    "/usr/local/share/man/man5",
+    "/usr/local/share/man/man6",
+    "/usr/local/share/man/man7",
+    "/usr/local/share/man/man8",
+    "/usr/local/share/man/man9",
+    "/usr/local/share/man/mann",
+    "/usr/local/src",
+    "/usr/sbin",
+    "/usr/share",
+    "/usr/share/dict",
+    "/usr/share/doc",
+    "/usr/share/icons",
+    "/usr/share/info",
+    "/usr/share/man",
+    "/usr/share/man/man1",
+    "/usr/share/man/man2",
+    "/usr/share/man/man3",
+    "/usr/share/man/man4",
+    "/usr/share/man/man5",
+    "/usr/share/man/man6",
+    "/usr/share/man/man7",
+    "/usr/share/man/man8",
+    "/usr/share/man/man9",
+    "/usr/share/man/mann",
+    "/usr/share/misc",
+    "/usr/src",
+    "/usr/tmp",
+    "/var",
+    "/var/cache",
+    "/var/db",
+    "/var/lib",
+    "/var/lib/games",
+    "/var/lib/misc",
+    "/var/lib/rpm",
+    "/var/local",
+    "/var/log",
+    "/var/mail",
+    "/var/nis",
+    "/var/opt",
+    "/var/preserve",
+    "/var/spool",
+    "/var/tmp",
+]
+# Packages that are allowed to own the StandardDirs above.
+FilesystemPackages = ["filesystem"]
+
 [WarnOnFunction]
 #[WarnOnFunction.testname]
 #f_name = ""

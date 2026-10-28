@@ -168,12 +168,7 @@ def lint():
     Main wrapper for lint command processing
     """
 
-    options = sys.argv[1:]
-    if '-s' not in options and '--strict' not in options:
-        # Enforce --permissive mode if strict mode is not used
-        # TODO: remove once OBS integration is done
-        options += ['--permissive']
-    options = process_lint_args(options)
+    options = process_lint_args(sys.argv[1:])
 
     sys.exit(Lint(options).run())
 
