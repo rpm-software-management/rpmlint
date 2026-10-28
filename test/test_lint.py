@@ -1,4 +1,5 @@
 from pathlib import Path
+import shutil
 
 import pytest
 from rpmlint.lint import Lint
@@ -22,9 +23,9 @@ options_preset = {
     'rpmlintrc': False,
     'installed': '',
     'time_report': False,
-    'profile': False,
     'ignore_unused_rpmlintrc': False,
-    'checks': None
+    'checks': None,
+    'jobs': 1,
 }
 
 basic_tests = [
@@ -97,6 +98,67 @@ def test_time_report(capsys):
     assert out
     assert 'Duration' in out
     assert 'TOTAL' in out
+
+
+@pytest.mark.parametrize('jobs', (1, 2))
+def test_fatal_error_does_not_abort_run(tmp_path, capsys, jobs):
+    """
+    A fatal error in one package is reported as an E-level message and
+    the run continues with the remaining packages, like other linters
+    handle per-file fatal errors. The run still fails with exit code 3.
+    """
+    broken_before = tmp_path / 'aaa-broken.rpm'
+    broken_before.write_bytes(b'not an rpm')
+    broken_after = tmp_path / 'zzz-broken.rpm'
+    broken_after.write_bytes(b'not an rpm either')
+    # the healthy package sorts between the two broken ones so its
+    # issues are reported after the first fatal error
+    healthy = tmp_path / 'mmm-healthy.rpm'
+    shutil.copy(get_tested_path('binary/binary-in-etc-1.0-0.x86_64.rpm'), healthy)
+    additional_options = {
+        'rpmfile': [broken_before, healthy, broken_after],
+        'jobs': jobs,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    assert linter.run() == 3
+    out, err = capsys.readouterr()
+    # both fatal errors are reported ...
+    assert err.count('fatal error while reading') == 2
+    assert 'aaa-broken.rpm' in err
+    assert 'zzz-broken.rpm' in err
+    # ... the healthy package is still fully reported ...
+    assert 'binary-in-etc.x86_64: E: no-signature' in out
+    # ... and the run ends with the usual summary
+    assert '3 packages and 0 specfiles checked' in out
+
+
+def test_fatal_error_identical_sequential_parallel(tmp_path, capsys):
+    """
+    Sequential and parallel runs report fatal errors identically.
+    """
+    import re
+    broken = tmp_path / 'broken.rpm'
+    broken.write_bytes(b'not an rpm')
+    healthy = tmp_path / 'healthy.rpm'
+    shutil.copy(get_tested_path('binary/binary-in-etc-1.0-0.x86_64.rpm'), healthy)
+    outputs = []
+    for jobs in (1, 2):
+        additional_options = {
+            'rpmfile': [broken, healthy],
+            'jobs': jobs,
+        }
+        options = {**options_preset, **additional_options}
+        linter = Lint(options)
+        assert linter.run() == 3
+        outputs.append(capsys.readouterr())
+
+    # durations and temporary extraction paths vary between runs
+    def normalize(s):
+        s = re.sub(r'has taken [\d.]+ s', 'has taken X s', s)
+        return re.sub(r'/tmp/rpmlint\.[^/:\s]+/', '/tmp/rpmlint.XXX/', s)
+    assert normalize(outputs[0].out) == normalize(outputs[1].out)
+    assert normalize(outputs[0].err) == normalize(outputs[1].err)
 
 
 def test_explain_unknown(capsys):
@@ -471,3 +533,36 @@ def test_installed_package(capsys):
     out, err = capsys.readouterr()
     assert '1 packages and 0 specfiles checked' in out
     assert retcode == 0
+
+
+def _lint_stdout(paths, jobs, capsys):
+    additional_options = {
+        'rpmfile': [Path(p) for p in paths],
+        'jobs': jobs,
+    }
+    options = {**options_preset, **additional_options}
+    linter = Lint(options)
+    linter.run()
+    out, _ = capsys.readouterr()
+    return out
+
+
+def test_parallel_output_matches_sequential(capsys):
+    """
+    Worker processes must not tangle the output: parallel runs have to
+    produce the same results in the same order as the sequential run.
+    """
+    import re
+    paths = [
+        'test/binary/alternatives-ok-1.0-0.x86_64.rpm',
+        'test/binary/bcc-lua-0.10.0-86.12.x86_64.rpm',
+        'test/spec/SpecCheck2.spec',
+    ]
+    out_seq = _lint_stdout(paths, 1, capsys)
+    out_par = _lint_stdout(paths, 2, capsys)
+
+    # durations and temporary extraction paths vary between runs
+    def normalize(s):
+        s = re.sub(r'has taken [\d.]+ s', 'has taken X s', s)
+        return re.sub(r'/tmp/rpmlint\.[^/:\s]+/', '/tmp/rpmlint.XXX/', s)
+    assert normalize(out_seq) == normalize(out_par)
