@@ -24,10 +24,10 @@ digester = "xml"
 package = "cups"
 type = "dbus"
 note = "the well known printing system daemon"
-bugs = [ "bsc#515977", "bsc#1201346" ]
+bugs = [ "bsc#515977", "bsc#1201346", "bsc#1285410" ]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/cups.conf"
-hash = "1bbed8c1ecac00e546a3659235855aa2e88ec1142b3908b3d662e68ad4e664fe"
+hash = "013f81b330170be3629bae66b26828beb6a6e7885c0f00e50c971acc1816a0d7"
 digester = "xml"
 
 [[FileDigestGroup]]
