@@ -454,8 +454,18 @@ def test_varlink_digester():
     output, test = get_digestcheck('digests_varlink.config')
     with FakePkg('socketpkg') as pkg:
         pkg.add_file_with_content('/sockets/the.socket', MATCHING_SOCKET_DATA)
+        # this symlink to the already whitelisted socket unit shuold not
+        # trigger an additional error
+        pkg.add_symlink_to('/sockets/linked.socket', '/sockets/the.socket')
         test.check(pkg)
         assert len(output.results) == 0
+
+        # when adding a symbolic link to another file in the same package but
+        # placed in an unrelated directory then an error should be triggered.
+        pkg.add_file_with_content('/etc/hidden.socket', MATCHING_SOCKET_DATA)
+        pkg.add_symlink_to('/sockets/another-linked.socket', '/etc/hidden.socket')
+        test.check(pkg)
+        assert len(output.results) == 1
 
     # this contains duplicate keys for SocketMode, it should yield a different
     # digest than MATCHING_SOCKET_DATA.
