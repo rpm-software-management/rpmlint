@@ -572,6 +572,32 @@ class FileDigestCheck(AbstractCheck):
                 return True
         return False
 
+    def is_loopback_link(self, check, pkg, pkgfile):
+        """Check if a symlink file points to another restricted file covered
+        by the same check. The caller needs to ensure that `pkgfile` is a
+        link before calling this function."""
+
+        # This is to catch the situation when a symbolic link points to
+        # another file in the same or another restricted directory covered by
+        # the same check.
+        #
+        # We don't want to maintain multiple whitelisting entries for the same
+        # files, thus consider these types of symlinks as not restricted.
+        targetfile = pkg.readlink(pkgfile)
+        if not targetfile:
+            # target is not in the same package
+            return False
+
+        target = Path(targetfile.path)
+
+        for restricted in check['Locations']:
+            # `target´ contains the extracted package dir prefix, so we need
+            # to check whether it ends with the restricted path.
+            if str(target.parent).endswith(str(restricted.absolute())):
+                return True
+
+        return False
+
     def has_restricted_content(self, check, pkg, path):
         """Check whether the given path, which is located in a restricted
         location, contains data which makes it subject to our whitelisting
@@ -612,14 +638,17 @@ class FileDigestCheck(AbstractCheck):
                 continue
 
             check_type = check['type']
+            is_link = stat.S_ISLNK(pkgfile.mode)
 
             path = pkgfile.name
             if path in pkg.ghost_files:
                 if not self._is_ghost_allowed(pkg, path):
                     self.output.add_info('E', pkg, f'{check_type}-file-ghost', path)
-            elif stat.S_ISLNK(pkgfile.mode) and not check['FollowSymlinks']:
+            elif is_link and not check['FollowSymlinks']:
                 if not self._is_symlink_allowed(pkg, path):
                     self.output.add_info('E', pkg, f'{check_type}-file-symlink', path)
+            elif is_link and self.is_loopback_link(check, pkg, pkgfile):
+                continue
             elif not self.has_restricted_content(check, pkg, path):
                 # the path is in a restricted location but the content is not
                 # relevant to us.
