@@ -225,3 +225,12 @@ entries = [
     "d /var/google-users.d",
     "d /var/google-sudoers.d"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "flake-pilot"
+bugs = ["bsc#1285113"]
+note = "shared directory for container management"
+path = "/usr/lib/tmpfiles.d/flake-pilot.conf"
+entries = [
+    "d /tmp/flakes 1777 root root -"
+]
