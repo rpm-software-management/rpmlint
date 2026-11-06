@@ -923,7 +923,7 @@ hash = "98f5c613a636464106ceb9705531be5b33b168d7eca9f4e904b4beea1e739339"
 package = "backintime-qt"
 type = "dbus"
 note = "manages udev rules for removable devices, allowing to automatically run backups once inserted"
-bugs = ["bsc#1007723", "bsc#1032717", "bsc#1226446"]
+bugs = ["bsc#1007723", "bsc#1032717", "bsc#1226446", "bsc#1288838"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/net.launchpad.backintime.serviceHelper.conf"
 digester = "xml"
@@ -931,7 +931,7 @@ hash     = "3dc2c6d8d116565307721dc1a5dc276e6a287ef4c95ee70c991f4ce452161556"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/net.launchpad.backintime.serviceHelper.service"
 digester = "shell"
-hash     = "0307c5d349fc33499c49b10eab1a76ffb2427955a5982525242208c368e63d6a"
+hash     = "876ceaec5396c69f8d80d53ad73a3994391aef53f79b1d00149b281eb45fe17b"
 
 [[FileDigestGroup]]
 package = "switcheroo-control"
