@@ -633,7 +633,7 @@ hash = "ba1ed5dc253c52e7664fdd5a8e92016ab4d3ebacd444f9f51fcac7ea0a8e3f9b"
 package = "systemd-container"
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#964935", "bsc#1259318"]
+bugs = ["bsc#964935", "bsc#1259318", "bsc#1282497"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.import1.service"
 digester = "shell"
@@ -641,7 +641,7 @@ hash = "7abbbe8d99e3134d7cb0e93f657671f80ab430cf06259a1bb07d0de0142e7e6f"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.import1.conf"
 digester = "xml"
-hash = "426f75e9a68216b346ba6421a35b2d0645b3fb52a2865328e351959193ffddb3"
+hash = "12487de8ce20c91469f55c0cb35fe6a8d41ab66504fad9167395b689882bddc1"
 
 [[FileDigestGroup]]
 package = "geoclue2"
