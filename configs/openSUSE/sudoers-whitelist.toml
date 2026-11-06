@@ -87,3 +87,43 @@ bug = "bsc#1217706"
 path = "/etc/sudoers.d/50-kalpa"
 digester = "shell"
 hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
+
+[[FileDigestGroup]]
+package = "sudo-policy-sudo-auth-self"
+type = "sudoers"
+note = "allow members of the sudo group to authenticate using their own passowrd"
+bug = "bsc#1257092"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/50-sudo-auth-self"
+digester = "shell"
+hash = "6871f243bc26ac29e1b283f30e3e58d327c0da4670ecff6591738849a5b59877"
+
+[[FileDigestGroup]]
+package = "sudo-policy-wheel-auth-self"
+type = "sudoers"
+note = "allow members of the wheel group to authenticate using their own passowrd"
+bug = "bsc#1257092"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/50-wheel-auth-self"
+digester = "shell"
+hash = "554ad7ffea09c0c9bed71f6ef7621e729d9d5368175b6e3b0e29214531d14c39"
+
+[[FileDigestGroup]]
+package = "aws-cli-cmd"
+type = "sudoers"
+note = "Allows members of the users group to invoke flake-pilot-helper for creating AWS containers"
+bug = "bsc#1285113"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/aws"
+digester = "shell"
+hash = "757c6631faa915b03d4ed30f47fc13f1c083c287d5694f5b1c0f950121461fe0"
+
+[[FileDigestGroup]]
+package = "az-cli-cmd"
+type = "sudoers"
+note = "Allows members of the users group to invoke flake-pilot-helper for creating Azure containers"
+bug = "bsc#1285113"
+[[FileDigestGroup.digests]]
+path = "/usr/etc/sudoers.d/az"
+digester = "shell"
+hash = "8cb9c51dcee6f3df8d582509d2ebbd4432e7740dfb53e134eef672e57b8e7d33"

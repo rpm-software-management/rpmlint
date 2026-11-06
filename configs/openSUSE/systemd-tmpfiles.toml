@@ -161,3 +161,12 @@ entries = [
     "d /var/lib/texmf/luametatex-cache      0755 root  root  - -",
     "f /var/lib/texmf/ls-R                  0664 root  mktex - %% ls-R -- filename database for kpathsea; do not change this line.",
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "flake-pilot"
+bugs = ["bsc#1285113"]
+note = "shared directory for container management"
+path = "/usr/lib/tmpfiles.d/flake-pilot.conf"
+entries = [
+    "d /tmp/flakes 1777 root root -"
+]
