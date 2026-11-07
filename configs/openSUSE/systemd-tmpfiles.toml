@@ -74,7 +74,7 @@ bug = "bsc#1150905"
 note = "shared session dir for non-root users"
 path = "/usr/lib/tmpfiles.d/screen.conf"
 entries = [
-	"d /run/uscreens 1777 root root -"
+	"d /run/screens 1777 root root -"
 ]
 
 [[SystemdTmpfilesWhitelist]]
