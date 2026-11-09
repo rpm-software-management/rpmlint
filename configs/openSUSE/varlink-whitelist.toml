@@ -58,6 +58,28 @@ hash     = "22ad4eb46a0ddcd461ce0136548de13b207592fa464521f55948581606b53856"
 
 [[FileDigestGroup]]
 packages = ["udev", "udev-mini"]
+note     = "TODO: backward compatibility entry for systemd 261, remove once 262 is in Factory"
+bugs     = ["bsc#1261919", "bsc#1282497"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-bootctl.socket"
+digester = "systemd-socket"
+hash     = "8224c1d90efca44b975a83bc8989eb5438f43a1d02248f9fb28bfd67c012b650"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-pcrlock.socket"
+digester = "systemd-socket"
+hash     = "245abdf23ead7e1fd5eb8b54502c7a0d0536b2f8417cecd960450d827cc147a1"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-repart.socket"
+digester = "systemd-socket"
+hash     = "ce39189699d18c5e11406980d09e046a8a4b20bc9da2506fe7f447ae8dbf8b98"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-udevd-varlink.socket"
+digester = "systemd-socket"
+hash     = "9ca1632e762e1e3215c51b08b39b7660b5461072d82013ea3dca9193b0beada9"
+
+[[FileDigestGroup]]
+packages = ["udev", "udev-mini"]
 note     = "udev core varlink services, all accessible to root only"
 bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
@@ -224,6 +246,16 @@ hash     = "15703bc772caf1b5604eba1f6dd5709a679374747f6c853012abd6ab2127ff71"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "TODO: backward compatibility for sytemd 261, remove once 262 is in Factory"
+bugs     = ["bsc#1261919", "bsc#1282497"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-journalctl.socket"
+digester = "systemd-socket"
+hash     = "3232616b0acc13ff0b68b014e028662847b1a5692dc64fd29d63983a03f12bcb"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
 note     = "programmatic access to journalctl data"
 bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
@@ -234,6 +266,16 @@ hash     = "89a3ca938781749d92ff2154b0bb761a1a1920e1ba64410501768406b5fde98a"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "systemd-mini-experimental"]
+note     = "TODO: backward compatibility for sytemd 261, remove once 262 is in Factory"
+bugs     = ["bsc#1261919", "bsc#1282497"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-mute-console.socket"
+digester = "systemd-socket"
+hash     = "58a95fcb09c8ab8e0c2f98a2495d14a6a1ef1d0c18aacb751cebc624c9ba41f8"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "systemd-mini-experimental"]
 note     = "turn off pid1 / kernel messages on a console"
 bugs     = ["bsc#1261919", "bsc#1282497"]
 type     = "varlink"
@@ -241,6 +283,16 @@ type     = "varlink"
 path     = "/usr/lib/systemd/system/systemd-mute-console.socket"
 digester = "systemd-socket"
 hash     = "dda8e6be980de95fc8b3dcd4457ae7faf4ec54af01171551de08803f26d9746d"
+
+[[FileDigestGroup]]
+packages = ["systemd-experimental", "udev"]
+note     = "TODO: backward compatibility entry for systemd 261, remove once 262 is in Factory"
+bugs     = ["bsc#1261919", "bsc#1281962", "bsc#1282497"]
+type     = "varlink"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/systemd/system/systemd-pcrextend.socket"
+digester = "systemd-socket"
+hash     = "2cccfadaadd7c49d63a40f96ba899b590c77cab7e05fcb7824b58a425d064b71"
 
 [[FileDigestGroup]]
 packages = ["systemd-experimental", "udev"]
