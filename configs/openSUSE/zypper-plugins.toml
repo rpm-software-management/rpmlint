@@ -78,6 +78,16 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "cloud-regionsrv-client"
+note     = "2nd incarnation of this Zypper plugin, it manages Zypper repo access in cloud environments"
+bug      = "bsc#1289777"
+type     = "zypperplugin"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/zypp/plugins/urlresolver/susecloud"
+digester = "shell"
+hash     = "41da2801e76edfc04518d6365335fe158960c283f34e725d4e6654e51765a5b1"
+
+[[FileDigestGroup]]
 package = "salt-minion"
 type = "zypperplugin"
 note = "this plugin maintains a timestamp and checksum of the RPM database"
