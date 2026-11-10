@@ -1462,6 +1462,20 @@ hash = "fa65ae25c9eb99b8e3d338383a24e3675fa4388e878e1ec78ec9e3c6c90602e7"
 [[FileDigestGroup]]
 package = "tukitd"
 type = "dbus"
+note = "TODO: backward compatibility entry for systemd 261, remove once 262 is in Factory"
+bugs = ["bsc#1196149", "bsc#1215216", "bsc#1286924"]
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf"
+digester = "xml"
+hash = "ad0e4ef18f2c459a4991645ad55de61b49eb119324cb625a275a75f8793c8f44"
+[[FileDigestGroup.digests]]
+path = "/usr/share/dbus-1/system-services/org.opensuse.tukit.service"
+digester = "shell"
+hash = "32bbd0895234c5ed4d952f437cc511cb95419304b1174069a2c84efab6b771e7"
+
+[[FileDigestGroup]]
+package = "tukitd"
+type = "dbus"
 note = "openSUSE transactional updates"
 bugs = ["bsc#1196149", "bsc#1215216", "bsc#1286924"]
 [[FileDigestGroup.digests]]
