@@ -24,6 +24,13 @@ def test_parsing_config_file(test_arguments):
     assert parsed['config'][0] == PosixPath('rpmlint/configdefaults.toml')
 
 
+def test_parsing_check_source_binaries():
+    parsed = process_lint_args(['--check-source-binaries', 'test/source/wrongsrc-0-0.src.rpm'])
+
+    assert parsed['check_source_binaries'] is True
+    assert Lint(parsed).config.configuration['CheckSourceBinaries'] is True
+
+
 @pytest.mark.skipif(not HAS_CHECKBASHISMS, reason='Optional dependency checkbashisms not installed')
 @pytest.mark.skipif(not HAS_DASH, reason='Optional dependency dash not installed')
 @pytest.mark.parametrize('test_arguments', [['-c', 'configs/openSUSE']])

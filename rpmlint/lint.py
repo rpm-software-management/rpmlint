@@ -31,6 +31,8 @@ class Lint:
             self.config = Config(options['config'])
         else:
             self.config = Config()
+        if options.get('check_source_binaries'):
+            self.config.configuration['CheckSourceBinaries'] = True
         if options['profile']:
             self.profile = cProfile.Profile()
             self.profile.enable()

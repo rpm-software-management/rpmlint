@@ -10,3 +10,8 @@ inconsistent-file-extension="""
 The file name extension indicates a different compression format than
 what is actually used (as checked by file(1)).
 """
+source-contains-prebuilt-binary="""
+The source package contains a pre-built binary. Pre-built binaries prevent
+auditing and rebuilding the complete package from source. Remove the binary
+from the source archive or delete it during %prep if it is not needed.
+"""
