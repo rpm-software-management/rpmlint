@@ -1,4 +1,13 @@
+from pathlib import Path
 import re
+import tarfile
+from zipfile import BadZipFile, is_zipfile, ZipFile
+
+try:
+    import magic
+except ImportError:
+    magic = None
+import zstandard
 
 from rpmlint.checks.AbstractCheck import AbstractCheck
 
@@ -20,10 +29,25 @@ class SourceCheck(AbstractCheck):
         'zip': r'Zip archive data',
     }
 
+    binary_fileext_regex = re.compile(
+        r'\.(?:a|bc|class|dex|dll|dylib|ear|exe|gch|jar|ko|lib|node|o|obj|pyc|pyo|so(?:\..*)?|wasm|war)$',
+        re.IGNORECASE,
+    )
+    binary_magic_regex = re.compile(
+        r'(?:application/(?:java-archive|java-vm|wasm|vnd\.android\.dex|'
+        r'x-(?:archive|bytecode\.python|dosexec|executable|java-archive|llvm|mach-binary|object|pie-executable|sharedlib))'
+        r'|ELF|Mach-O|PE32|WebAssembly|Java class data|Dalvik dex file|LLVM IR bitcode|'
+        r'GCC precompiled header|(?:^|\s)(?:current )?ar archive|python.*byte-compiled)',
+        re.IGNORECASE,
+    )
+    embedded_wasm_magic = b'AGFzb'
+    magic_sample_size = 256 * 1024
+
     def __init__(self, config, output):
         super().__init__(config, output)
         self.compress_ext = config.configuration['CompressExtension']
         self.valid_src_perms = [int(value, 8) for value in config.configuration['ValidSrcPerms']]
+        self.check_source_binaries = config.configuration['CheckSourceBinaries']
         self.spec_file = None
 
         source_details_dict = {
@@ -44,6 +68,8 @@ class SourceCheck(AbstractCheck):
             self._check_permissions(fname, pkgfile, pkg)
             self._check_compressed_source(fname, pkg)
             self._check_multiple_specfiles(fname, pkg)
+            if self.check_source_binaries:
+                self._check_source_binaries(fname, pkgfile, pkg)
 
     def _check_file_ext(self, fname, pkgfile, pkg):
         """
@@ -86,3 +112,119 @@ class SourceCheck(AbstractCheck):
                 self.output.add_info('E', pkg, 'multiple-specfiles', self.spec_file, fname)
             else:
                 self.spec_file = fname
+
+    @classmethod
+    def _magic_from_buffer(cls, data):
+        """Return a libmagic description for bytes with either supported binding."""
+        if not magic or not data:
+            return ''
+        try:
+            if hasattr(magic, 'from_buffer'):
+                return magic.from_buffer(data)
+            if hasattr(magic, 'detect_from_content'):
+                return magic.detect_from_content(data).name
+        except (ValueError, TypeError):
+            pass
+        return ''
+
+    @classmethod
+    def _is_binary(cls, name, description, sample=b''):
+        return bool(
+            cls.binary_fileext_regex.search(name)
+            or cls.binary_magic_regex.search(description or '')
+            or cls.embedded_wasm_magic in sample
+        )
+
+    @classmethod
+    def _read_sample(cls, stream):
+        return stream.read(cls.magic_sample_size)
+
+    def _report_binary(self, pkg, source, member, description):
+        location = f'{source}:{member}' if member else source
+        self.output.add_info('W', pkg, 'source-contains-prebuilt-binary', location, description)
+
+    def _check_stream(self, pkg, source, member, stream):
+        sample = self._read_sample(stream)
+        description = self._magic_from_buffer(sample)
+        if self._is_binary(member, description, sample) or self._contains_embedded_wasm(stream, sample):
+            self._report_binary(pkg, source, member, description)
+
+    @classmethod
+    def _contains_embedded_wasm(cls, stream, initial=b''):
+        marker = cls.embedded_wasm_magic
+        if marker in initial:
+            return True
+        previous = initial[-(len(marker) - 1):]
+        while chunk := stream.read(cls.magic_sample_size):
+            if marker in previous + chunk:
+                return True
+            previous = chunk[-(len(marker) - 1):]
+        return False
+
+    def _check_tar(self, pkg, fname, archive):
+        for member in archive:
+            if not member.isfile():
+                continue
+            stream = archive.extractfile(member)
+            if stream is None:
+                continue
+            with stream:
+                self._check_stream(pkg, fname, member.name, stream)
+
+    def _check_zip(self, pkg, fname, path):
+        try:
+            with ZipFile(path) as archive:
+                for member in archive.infolist():
+                    if member.is_dir():
+                        continue
+                    try:
+                        with archive.open(member) as stream:
+                            self._check_stream(pkg, fname, member.filename, stream)
+                    except (BadZipFile, RuntimeError):
+                        continue
+        except (BadZipFile, OSError):
+            pass
+
+    def _check_zstd_tar(self, pkg, fname, path):
+        try:
+            with open(path, 'rb') as source:
+                with zstandard.ZstdDecompressor().stream_reader(source) as stream:
+                    with tarfile.open(fileobj=stream, mode='r|') as archive:
+                        self._check_tar(pkg, fname, archive)
+        except (OSError, tarfile.TarError, zstandard.ZstdError):
+            pass
+
+    def _check_source_binaries(self, fname, pkgfile, pkg):
+        path = Path(pkgfile.path)
+        if not path.is_file():
+            return
+
+        # Report a source that is itself a binary, such as a JAR or object file.
+        if self._is_binary(fname, pkgfile.magic):
+            self._report_binary(pkg, fname, None, pkgfile.magic)
+            return
+
+        if is_zipfile(path):
+            self._check_zip(pkg, fname, path)
+            return
+
+        try:
+            with tarfile.open(path, mode='r:*') as archive:
+                self._check_tar(pkg, fname, archive)
+            return
+        except (OSError, tarfile.TarError):
+            pass
+
+        if fname.lower().endswith(('.tar.zst', '.tar.zstd', '.tzst')):
+            self._check_zstd_tar(pkg, fname, path)
+            return
+
+        # Standalone text sources can contain an embedded base64 WebAssembly
+        # module too. Spec files and patches may merely discuss that marker.
+        if not fname.lower().endswith(('.spec', '.patch', '.diff')):
+            try:
+                with open(path, 'rb') as stream:
+                    if self._contains_embedded_wasm(stream):
+                        self._report_binary(pkg, fname, None, pkgfile.magic)
+            except OSError:
+                pass
