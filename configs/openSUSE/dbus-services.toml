@@ -1862,3 +1862,27 @@ type     = "dbus"
 path     = "/usr/share/dbus-1/system.d/com.system76.CosmicGreeter.conf"
 digester = "xml"
 hash     = "11cc8aa9c1b4486369700620d1112ab9cb43649b73ab9cc511574bf7dcefce90"
+
+[[FileDigestGroup]]
+package  = "plasma6-login-manager"
+note     = "unauthenticated dummy-like D-Bus API for the display manager (SDDM clone)"
+bug      = "bsc#1260402"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.DisplayManager-plasmalogin.conf"
+digester = "xml"
+hash     = "4b4cbecadaf6124b64d65abcc27157a154f4f3544b1a68b1f0754282e6766c8f"
+
+[[FileDigestGroup]]
+package  = "plasma6-login-manager-kcm"
+note     = "Display-manager configuration module (theme config etc.)"
+bug      = "bsc#1260039"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmplasmalogin.service"
+digester = "shell"
+hash     = "02503c258f36f5e4d3439aa0833e830faa4ec57d7f5a2f6f2c3a252a52e77ef6"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmplasmalogin.conf"
+digester = "xml"
+hash     = "fec0ea08b81719bbad4e4c1047de9c6a00fdf10ceda44edb1e7e084abe1a2155"
