@@ -308,6 +308,8 @@ ValidSrcPerms = [
     "0o644",
     "0o755",
 ]
+# Whether to inspect files in source archives for pre-built binaries
+CheckSourceBinaries = false
 # Valid values for the License tag
 ValidLicenses = []
 
