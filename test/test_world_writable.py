@@ -22,5 +22,5 @@ def test_device_files_simple(check):
         test.check(pkg)
     out = output.print_results(output.results)
     assert len(output.results) == 2
-    assert 'dummy: E: world-writable-mismatched-attrs /tempus expected "mode": drw-rw---t, has: drwxr-xr-t'
+    assert 'dummy: E: world-writable-mismatched-attrs /tempus expected "mode": drw-rw---t, has: drwxrwxrwt' in out
     assert 'dummy: E: world-writable-unauthorized-file /tmp' in out
