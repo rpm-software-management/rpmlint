@@ -1886,3 +1886,17 @@ hash     = "02503c258f36f5e4d3439aa0833e830faa4ec57d7f5a2f6f2c3a252a52e77ef6"
 path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmplasmalogin.conf"
 digester = "xml"
 hash     = "fec0ea08b81719bbad4e4c1047de9c6a00fdf10ceda44edb1e7e084abe1a2155"
+
+[[FileDigestGroup]]
+package  = "owly"
+note     = "Grants access to a virtual WiFi device for transferring files between an iPhone and a Linux desktop"
+bug      = "bsc#1288451"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/io.github.t4t5.Owly.service"
+digester = "shell"
+hash     = "ca68921fd8b3c61b406608e8985864220ededd01de958ffd8385c53edc7d43f5"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/io.github.t4t5.Owly.conf"
+digester = "xml"
+hash     = "c3e1e16c6dd17028f29ebac7f8410ba74a45204ba5ae8204fa16454155bf1c5c"
