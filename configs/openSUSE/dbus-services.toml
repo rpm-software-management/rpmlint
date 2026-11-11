@@ -67,11 +67,11 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922"]
+bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
-hash     = "127c6446350030991bd98c583eab96d7a5ff4b9301faa8e88bc7928c48dba0a8"
+hash     = "6c74cd8824a587ccd281886c655718dfecd1da530bb823e6625be4a22c5a09e6"
 
 [[FileDigestGroup]]
 package = "udisks2"
@@ -693,25 +693,25 @@ nodigests = [
 package = "thermald"
 type = "dbus"
 note = "Daemon to control thermal settings. Not fit for unprivileges API access!"
-bugs = ["bsc#954771", "bsc#1215873"]
+bugs = ["bsc#954771", "bsc#1215873", "bsc#1258704"]
 [[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.thermald.service"
+path     = "/usr/share/dbus-1/system-services/org.freedesktop.thermald.service"
 digester = "shell"
-hash = "0400fd4be2dc9607e29b51c257b867bea932d461e78f84fc2986637dee6fba87"
+hash     = "0400fd4be2dc9607e29b51c257b867bea932d461e78f84fc2986637dee6fba87"
 [[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.thermald.conf"
+path     = "/usr/share/dbus-1/system.d/org.freedesktop.thermald.conf"
 digester = "xml"
-hash = "ee724388f3ea73402b1ceb753d77a19636cf14b74c2a79bf5581ae4067aa49b5"
+hash     = "2f66843d7974169a84861c6428db08952a06f4f9f116d70e860f28824ed6506c"
 
 [[FileDigestGroup]]
 package = "iio-sensor-proxy"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#939191", "bsc#1204055"]
+note = "D-Bus interface for access to sensor information like GPS"
+bugs = ["bsc#939191", "bsc#1204055", "bsc#1236290"]
 [[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/net.hadess.SensorProxy.conf"
+path     = "/usr/share/dbus-1/system.d/net.hadess.SensorProxy.conf"
 digester = "xml"
-hash = "4695ec7205d52d47595db7a1cab533ed216d3e8913ecc0ad81bf74ec3388b1ad"
+hash     = "b75b8be59e6900c34977acc97a8e17ca4f4cb56ad6384027cd61b4bcd74c0c54"
 
 [[FileDigestGroup]]
 package = "tcmu-runner"
@@ -1026,15 +1026,15 @@ nodigests = [
 package = "sssd-dbus"
 type = "dbus"
 note = "sssd responder 'infopipe' service; D-Bus interface towards sssd"
-bugs = ["bsc#1157663", "bsc#1106600", "bsc#1207586"]
+bugs = ["bsc#1157663", "bsc#1106600", "bsc#1207586", "bsc#1230051", "bsc#1235724"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/org.freedesktop.sssd.infopipe.service"
 digester = "shell"
-hash = "a2631eb70e5cdc8392c97e19924dc9aca4ddcf4b38a44ada079dbfd5f3b5c873"
+hash = "c966cc2c04a17dea3824fcb280db81a7792bfb8712946169a5dac406560cf473"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/org.freedesktop.sssd.infopipe.conf"
 digester = "xml"
-hash = "d9304d507aced6bfd7f14eb5dcc93689ccf2a8b61d346718677fcd97a8b67feb"
+hash = "aa5395a37ad6839776d0b64ec1861c42dea27d333049fcc962d166f24f3a1b85"
 
 [[FileDigestGroup]]
 package = "oddjob"
@@ -1388,16 +1388,20 @@ hash     = "8dff187bd14e516fd976731fb4ab3996bb92b36dfa944733655641a6aec215e1"
 [[FileDigestGroup]]
 package  = "gnome-remote-desktop"
 note     = "system wide remote desktop access to the display manager"
-bug      = "bsc#1222159"
+bugs     = ["bsc#1222159", "bsc#1230406"]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.gnome.RemoteDesktop.conf"
 digester = "xml"
-hash     = "5ed8492b7b77bf77beba04b5eb989a028cc90ac193eb598b102189b8374a9c5d"
+hash     = "d28ae537328593ac6462af9ec6bab63c49f9a6851190e7a4f13fe8dd48fd88b6"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.service"
 digester = "shell"
 hash     = "1053fce12e03e219ff4518c8498b3ce1983597961afcefa93be25005414a50d8"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.gnome.RemoteDesktop.Configuration.service"
+digester = "shell"
+hash     = "ecc8ae6fe29a9ddc6c1f598c8558245b16d8280cd99caecc3ab268c428e1f8ff"
 
 [[FileDigestGroup]]
 package  = "kdeplasma6-addons"
@@ -1446,3 +1450,17 @@ type     = "dbus"
 path     = "/etc/dbus-1/system.d/io.gpiod1.conf"
 digester = "xml"
 hash     = "4a620749a1b62fb229cd564e2ddafdd59e0302702c57ad7ac76ec5f56429f48b"
+
+[[FileDigestGroup]]
+package  = "bootkitd"
+note     = "D-Bus service only accessible to root for editing grub2 bootloader config"
+bug      = "bsc#1256421"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/org.opensuse.bootkit.service"
+digester = "shell"
+hash     = "ae790fff12a3ff5493ce5679f8bb801faecc25854efb54fbd1b3f4428ff1eade"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/org.opensuse.bootkit.conf"
+digester = "xml"
+hash     = "f70ed1e0cd4b240f5dedd1d99df15af8ed1e0ef2c90132282f78822da3f880cf"

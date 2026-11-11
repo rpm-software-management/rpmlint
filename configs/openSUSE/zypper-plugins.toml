@@ -78,6 +78,16 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
+package  = "cloud-regionsrv-client"
+note     = "2nd incarnation of this Zypper plugin, it manages Zypper repo access in cloud environments"
+bug      = "bsc#1289777"
+type     = "zypperplugin"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/zypp/plugins/urlresolver/susecloud"
+digester = "shell"
+hash     = "41da2801e76edfc04518d6365335fe158960c283f34e725d4e6654e51765a5b1"
+
+[[FileDigestGroup]]
 package = "salt-minion"
 type = "zypperplugin"
 note = "this plugin maintains a timestamp and checksum of the RPM database"
@@ -95,3 +105,14 @@ bug = "bsc#1215988"
 nodigests = [
     "/usr/lib/zypp/plugins/commit/boot-plugin",
 ]
+
+[[FileDigestGroup]]
+package  = "pqcverification-zypp-plugin"
+note     = "this plugin enables post-quantum cryptography verification"
+bug      = "bsc#1265207"
+type     = "zypperplugin"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/zypp/plugins/sigcheck/pqcverification"
+digester = "shell"
+hash     = "77e775e984d1b0ec01391ebd83b002e5b699d2011adddd0aea3130d8bbfc4bec"
+

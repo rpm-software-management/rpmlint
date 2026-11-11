@@ -66,7 +66,7 @@ bugs = ["bsc#1174722", "bsc#1219656", "bsc#1226464", "bsc#1228731"]
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-default.conf"
 digester = "shell"
-hash = "83d76eec651d08ddf758989962ad62084885440d83b4ea0355bc838e7cf6eecc"
+hash = "c440fe069ee0bdfa77e5c3c594b473aa379788717e1ac55bb4cc5dc74812dc0e"
 [[FileDigestGroup.digests]]
 path = "/usr/lib/sysctl.d/50-pid-max.conf"
 digester = "shell"
@@ -175,3 +175,13 @@ bugs = ["bsc#1174722", "bsc#1209363", "bsc#1210951", "bsc#1215542", "bsc#1219168
 path = "/usr/lib/sysctl.d/90-kubeadm.conf"
 digester = "shell"
 hash = "43e95061f764465452c91708145e6d5948ab0e4750ed9ce98b59e1a1f223f45a"
+
+[[FileDigestGroup]]
+package  = "health-checker"
+note     = "helper which checks system health after updates with potential rollback; sets kernel reboot timeout after panic"
+bug      = "bsc#1252778"
+type     = "sysctl"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/sysctl.d/health-checker.conf"
+digester = "shell"
+hash     = "40838811f1f8ec4f4b19ce8f049f63ab616f92a1d0a8190e29d0bbf6fe43e66a"

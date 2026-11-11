@@ -127,3 +127,13 @@ bug = "bsc#1285113"
 path = "/usr/etc/sudoers.d/az"
 digester = "shell"
 hash = "8cb9c51dcee6f3df8d582509d2ebbd4432e7740dfb53e134eef672e57b8e7d33"
+
+[[FileDigestGroup]]
+package  = "cloud-regionsrv-client"
+note     = "allows to register cloud instances without a password"
+bugs     = ["bsc#1222985", "bsc#1289777"]
+type     = "sudoers"
+[[FileDigestGroup.digests]]
+path     = "/etc/sudoers.d/cloudguestregistryauth"
+digester = "shell"
+hash     = "108355d9853b158aa2192766b75190d561e82a5437f338fdadcbf2b2d9cfbc97"

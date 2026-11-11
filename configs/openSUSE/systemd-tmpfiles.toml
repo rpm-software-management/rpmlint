@@ -170,3 +170,50 @@ path = "/usr/lib/tmpfiles.d/flake-pilot.conf"
 entries = [
     "d /tmp/flakes 1777 root root -"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "aaa_base-extras"
+bugs = ["bsc#1255794"]
+note = "Regular directories in /var/adm/backup"
+path = "/usr/lib/tmpfiles.d/adm-backup.conf"
+entries = [
+    "d /var/adm/backup/rpmdb 0755 root root -",
+    "d /var/adm/backup/sysconfig 0755 root root -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "google-guest-oslogin"
+bugs = ["bsc#1261275"]
+note = "Google-specific drop-in directories for openSSH and sudo"
+path = "/usr/lib/tmpfiles.d/google-guest-oslogin.conf"
+entries = [
+    "d /var/google-users.d",
+    "d /var/google-sudoers.d"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "libpulp-tools"
+bugs = ["bsc#1257865"]
+note = "Directory for dealing with live patches during updates"
+path = "/usr/lib/tmpfiles.d/ulp-tmp.conf"
+entries = [
+    "d /var/livepatches 0755 root root"
+]
+
+[[SystemdTmpfilesWhitelist]]
+packages = ["postfix", "postfix-bdb"]
+bugs = ["bsc#1258381"]
+note = "manages the spool directory for postfix"
+path = "/usr/lib/tmpfiles.d/postfix.conf"
+entries = [
+    "d /var/spool/mail 1777 root root - -"
+]
+
+[[SystemdTmpfilesWhitelist]]
+package = "samba-client"
+bugs = ["bsc#1251267"]
+note = "Used as Samba printer spool. A non-default location to help dealing with SELinux."
+path = "/usr/lib/tmpfiles.d/samba.conf"
+entries = [
+    "d /var/samba/spool 1777 root root"
+]
