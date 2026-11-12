@@ -1,3 +1,5 @@
+import importlib
+
 from rpmlint import helpers
 
 
@@ -41,3 +43,35 @@ def test_centering(capsys):
     out, err = capsys.readouterr()
     assert '** Hello there **' in out
     assert not err
+
+
+def test_english_environment_keeps_ld_library_path(monkeypatch):
+    """
+    ENGLISH_ENVIRONMENT forwards LD_LIBRARY_PATH: the tools bundled by
+    the launcher (e.g. rpmlint-mini's dash) find their own libraries
+    through it.
+    """
+    monkeypatch.setenv('LD_LIBRARY_PATH', '/opt/testing/lib')
+    importlib.reload(helpers)
+    try:
+        assert helpers.ENGLISH_ENVIRONMENT['LD_LIBRARY_PATH'] == \
+            '/opt/testing/lib'
+    finally:
+        importlib.reload(helpers)
+
+
+def test_extraction_environment_drops_ld_library_path(monkeypatch):
+    """
+    EXTRACTION_ENVIRONMENT is ENGLISH_ENVIRONMENT without
+    LD_LIBRARY_PATH: the extraction tools come from the build root
+    being checked and must resolve its libraries, not the launcher's
+    bundled ones.
+    """
+    monkeypatch.setenv('LD_LIBRARY_PATH', '/opt/testing/lib')
+    importlib.reload(helpers)
+    try:
+        assert 'LD_LIBRARY_PATH' not in helpers.EXTRACTION_ENVIRONMENT
+        assert helpers.EXTRACTION_ENVIRONMENT['LC_ALL'] == \
+            helpers.ENGLISH_ENVIRONMENT['LC_ALL']
+    finally:
+        importlib.reload(helpers)
