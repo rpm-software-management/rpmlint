@@ -1843,6 +1843,21 @@ path     = "/usr/share/dbus-1/system.d/com.presire.qsnapper.Operations.conf"
 digester = "xml"
 hash     = "4ebd3fcf900e113e6d7a9a1e95ff7b32c4ab177723b8660030917313113a58ea"
 
+# TODO: merge with entry above once qsnapper 1.4.x is in Factory
+[[FileDigestGroup]]
+package  = "qsnapper"
+note     = "GUI tool for managing snapper snapshots. This is for the daemon implementing privileged operations."
+bug      = "bsc#1288229"
+type     = "dbus"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system-services/com.presire.qsnapper.Operations.service"
+digester = "shell"
+hash     = "df81a398c7eefc077a3fb155785e79dbce7c0da60aa7207f7fa9de5ed4440824"
+[[FileDigestGroup.digests]]
+path     = "/usr/share/dbus-1/system.d/com.presire.qsnapper.Operations.conf"
+digester = "xml"
+hash     = "9f285cc77c7b39ab5b826268a8d60a54286458f31e06dbaac52863027ab0ee00"
+
 [[FileDigestGroup]]
 package  = "txnupd-maintenance-tools"
 note     = "forwards signals from transactional-update to a session D-Bus daemon"
