@@ -194,16 +194,16 @@ hash = "601ce02347339b2fdfde893754f864b0318adf0dd39e352d39068b4b89c6e1d0"
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList"
-bugs = ["bsc#681116", "bsc#1200342"]
+note = "control interface for the WPA daemon, only accessible to root based on D-Bus config, not otherwise authenticated"
+bugs = ["bsc#681116", "bsc#1200342", "bsc#1289855"]
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service"
 digester = "shell"
-hash = "cca1385e218f35305bf4c4f9982b90cf7e1bbe013f0404977b464d2034bcd3ce"
+hash = "ee69165e00f5021bb87f5ea45c55a2059a9ad5c78e0509d091091e5210399b26"
 [[FileDigestGroup.digests]]
 path = "/usr/share/dbus-1/system.d/wpa_supplicant.conf"
 digester = "xml"
-hash = "2986f210d55588e8c556e3b81e9eeee94668ebb2be6024fb68f8a2f4fcae8469"
+hash = "2922b9262fcc988a9b8d20041e692ee65b274b95080000d74e938cf838205420"
 
 [[FileDigestGroup]]
 package  = "plasma6-desktop"
