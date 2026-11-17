@@ -1,9 +1,10 @@
 from pathlib import Path
 
+from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
 
-from Testing import get_tested_package, get_tested_path
+from Testing import get_tested_mock_package, get_tested_package, get_tested_path
 
 TEST_CONFIG_FILTERS = [get_tested_path('configs/testfilters.config')]
 TEST_RPMLINTRC = get_tested_path('configs/testing-rpmlintrc')
@@ -184,3 +185,24 @@ def test_blocked_filters(tmp_path):
     assert key in cfg.configuration['Filters']
     result.add_info('E', pkg, key, '')
     assert len(result.results) == 1
+
+
+def test_description_with_colors(monkeypatch):
+    """
+    With colored output (stdout is a tty), issue names ending in characters
+    of the color reset sequence (like 'spurious-executable-perm') must still
+    get their description printed in info mode.
+    """
+    monkeypatch.setattr(Color, 'Bold', '\x1b[1m')
+    monkeypatch.setattr(Color, 'Red', '\x1b[31m')
+    monkeypatch.setattr(Color, 'Yellow', '\x1b[33m')
+    monkeypatch.setattr(Color, 'Reset', '\x1b[0m')
+    cfg = Config(TEST_CONFIG_FILTERS)
+    result = Filter(cfg)
+    result.info = True
+    pkg = get_tested_mock_package(name='foo')
+    for issue in ('spurious-executable-perm', 'non-transparent-xpm', 'hidden-file-or-dir'):
+        result.add_info('W', pkg, issue, '/usr/share/foo')
+    output = result.print_results(result.results)
+    for issue in ('spurious-executable-perm', 'non-transparent-xpm', 'hidden-file-or-dir'):
+        assert result.get_description(issue).strip() in output
