@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from rpmlint.color import Color
 from rpmlint.config import Config
 from rpmlint.filter import Filter
@@ -187,22 +188,20 @@ def test_blocked_filters(tmp_path):
     assert len(result.results) == 1
 
 
-def test_description_with_colors(monkeypatch):
+@pytest.mark.parametrize('issue', ['spurious-executable-perm', 'non-transparent-xpm', 'hidden-file-or-dir'])
+def test_description_with_colors(monkeypatch, issue):
     """
     With colored output (stdout is a tty), issue names ending in characters
     of the color reset sequence (like 'spurious-executable-perm') must still
     get their description printed in info mode.
     """
-    monkeypatch.setattr(Color, 'Bold', '\x1b[1m')
-    monkeypatch.setattr(Color, 'Red', '\x1b[31m')
-    monkeypatch.setattr(Color, 'Yellow', '\x1b[33m')
+    # pytest's stdout is not a tty, so Color.Reset is '' here; set the real
+    # reset sequence, otherwise the old rstrip() would pass as well.
     monkeypatch.setattr(Color, 'Reset', '\x1b[0m')
     cfg = Config(TEST_CONFIG_FILTERS)
     result = Filter(cfg)
     result.info = True
     pkg = get_tested_mock_package(name='foo')
-    for issue in ('spurious-executable-perm', 'non-transparent-xpm', 'hidden-file-or-dir'):
-        result.add_info('W', pkg, issue, '/usr/share/foo')
+    result.add_info('W', pkg, issue, '/usr/share/foo')
     output = result.print_results(result.results)
-    for issue in ('spurious-executable-perm', 'non-transparent-xpm', 'hidden-file-or-dir'):
-        assert result.get_description(issue).strip() in output
+    assert result.get_description(issue).strip() in output
