@@ -23,6 +23,16 @@ def _english_environ():
 
 ENGLISH_ENVIRONMENT = _english_environ()
 
+# The extraction tools (rpm2archive, rpm2cpio) come from the build root
+# being checked, so they run without LD_LIBRARY_PATH: a launcher that
+# bundles its own libraries (e.g. rpmlint-mini) would otherwise shadow
+# the reader's libraries with the bundled ones. Every other subprocess
+# keeps the full environment; the launcher's bundled tools rely on it.
+EXTRACTION_ENVIRONMENT = {
+    key: value for key, value in ENGLISH_ENVIRONMENT.items()
+    if key != 'LD_LIBRARY_PATH'
+}
+
 
 def string_center(message, filler=' '):
     """
