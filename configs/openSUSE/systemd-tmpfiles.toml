@@ -217,3 +217,12 @@ path = "/usr/lib/tmpfiles.d/samba.conf"
 entries = [
     "d /var/samba/spool 1777 root root"
 ]
+
+[[SystemdTmpfilesWhitelist]]
+package = "s390-tools"
+bugs = ["bsc#1290818"]
+note = "setgid ts-shell directory, not world-writable"
+path = "/usr/lib/tmpfiles.d/s390-tools.conf"
+entries = [
+    "d /var/log/ts-shell 2770 root ts-shell - -"
+]
