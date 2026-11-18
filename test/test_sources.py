@@ -1,4 +1,9 @@
+import io
+import tarfile
+import zipfile
+
 import pytest
+import zstandard
 from rpmlint.checks.SourceCheck import SourceCheck
 from rpmlint.filter import Filter
 
@@ -127,3 +132,100 @@ def test_file_ext_unknown_extension(sourcescheck):
     test.check_source(pkg)
     out = output.print_results(output.results)
     assert 'inconsistent-file-extension' not in out
+
+
+def make_tar(files, mode='w:gz'):
+    archive = io.BytesIO()
+    with tarfile.open(fileobj=archive, mode=mode) as tar:
+        for name, content in files.items():
+            info = tarfile.TarInfo(name)
+            info.size = len(content)
+            tar.addfile(info, io.BytesIO(content))
+    return archive.getvalue()
+
+
+def make_zip(files):
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, mode='w') as zipped:
+        for name, content in files.items():
+            zipped.writestr(name, content)
+    return archive.getvalue()
+
+
+@pytest.mark.parametrize('archive_name, binary_name', [
+    pytest.param('sources.tar.gz', 'vendor/prebuilt.o', id='tar-gzip'),
+    pytest.param('sources.tar.zst', 'vendor/prebuilt.class', id='tar-zstd'),
+    pytest.param('sources.zip', 'vendor/prebuilt.wasm', id='zip'),
+])
+def test_source_binary_archive(sourcescheck, archive_name, binary_name):
+    output, test = sourcescheck
+    test.check_source_binaries = True
+    files = {
+        'src/main.c': b'int main(void) { return 0; }',
+        binary_name: b'not really a binary',
+    }
+    if archive_name.endswith('.tar.gz'):
+        content = make_tar(files)
+    elif archive_name.endswith('.tar.zst'):
+        content = zstandard.ZstdCompressor().compress(make_tar(files, mode='w'))
+    else:
+        content = make_zip(files)
+    pkg = get_tested_mock_package(files={archive_name: {'content': content}})
+
+    test.check_source(pkg)
+    out = output.print_results(output.results)
+
+    assert f'W: source-contains-prebuilt-binary {archive_name}:vendor/prebuilt.' in out
+    assert 'src/main.c' not in out
+
+
+def test_source_binary_check_is_disabled_by_default(sourcescheck):
+    output, test = sourcescheck
+    pkg = get_tested_mock_package(files={
+        'sources.tar.gz': {'content': make_tar({'prebuilt.so': b'not really a library'})},
+    })
+
+    test.check_source(pkg)
+
+    assert 'source-contains-prebuilt-binary' not in output.print_results(output.results)
+
+
+def test_direct_binary_source(sourcescheck):
+    output, test = sourcescheck
+    test.check_source_binaries = True
+    pkg = get_tested_mock_package(files={'prebuilt.jar': {'content': b'not really a jar'}})
+
+    test.check_source(pkg)
+    out = output.print_results(output.results)
+
+    assert 'W: source-contains-prebuilt-binary prebuilt.jar' in out
+
+
+def test_binary_magic_does_not_confuse_tar_with_ar():
+    assert SourceCheck._is_binary('sources.tar', 'POSIX tar archive') is False
+    assert SourceCheck._is_binary('library', 'current ar archive') is True
+
+
+def test_embedded_wasm_in_source_archive(sourcescheck):
+    output, test = sourcescheck
+    test.check_source_binaries = True
+    content = make_tar({'loader.js': b'const wasm = "AGFzbQEAAAA";'})
+    pkg = get_tested_mock_package(files={'sources.tar.gz': {'content': content}})
+
+    test.check_source(pkg)
+    out = output.print_results(output.results)
+
+    assert 'W: source-contains-prebuilt-binary sources.tar.gz:loader.js' in out
+
+
+def test_embedded_wasm_in_standalone_source(sourcescheck):
+    output, test = sourcescheck
+    test.check_source_binaries = True
+    pkg = get_tested_mock_package(files={
+        'loader.js': {'content': b'const wasm = "AGFzbQEAAAA";'},
+    })
+
+    test.check_source(pkg)
+    out = output.print_results(output.results)
+
+    assert 'W: source-contains-prebuilt-binary loader.js' in out

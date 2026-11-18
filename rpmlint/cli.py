@@ -84,6 +84,8 @@ def process_lint_args(argv):
                         help='Do not report "unused-rpmlintrc-filter" errors')
     parser.add_argument('--checks',
                         help='Debugging option that enables only selected checks (separated by comma)')
+    parser.add_argument('--check-source-binaries', action='store_true',
+                        help='scan source files and archives for pre-built binaries')
     lint_modes_parser = parser.add_mutually_exclusive_group()
     lint_modes_parser.add_argument('-s', '--strict', action='store_true', help='treat all messages as errors')
     lint_modes_parser.add_argument('-P', '--permissive', action='store_true', help='treat individual errors as non-fatal')
