@@ -1,6 +1,7 @@
 import contextlib
 from itertools import chain
 import pathlib
+import stat
 import sys
 import tempfile
 
@@ -95,8 +96,14 @@ class Rpmdiff:
                 self.__add(self.FORMAT, (self.REMOVED, f))
             else:
                 fmt = ''
+                # directory sizes and digests carry no content information,
+                # so comparing them only produces noise (e.g. S without 5)
+                skip_s5 = (stat.S_ISDIR(old_file.mode) and
+                           stat.S_ISDIR(new_file.mode))
                 for entry in FILEIDX:
-                    if entry[1] is not None and \
+                    if skip_s5 and entry[0] in ('S', '5'):
+                        fmt += '.'
+                    elif entry[1] is not None and \
                             getattr(old_file, entry[1]) != getattr(new_file, entry[1]):
                         fmt += entry[0]
                         diff = True
