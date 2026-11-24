@@ -17,11 +17,7 @@ import tempfile
 import time
 from urllib.parse import urljoin
 
-try:
-    import magic
-    has_magic = True
-except ImportError:
-    has_magic = False
+import magic
 import rpm
 from rpmlint.helpers import (byte_to_string, ENGLISH_ENVIRONMENT,
                              print_warning, pushd)
@@ -393,7 +389,7 @@ class AbstractPkg:
                 magic_description = "symbolic link to `%s'" % pkgfile.linkto
             elif not pkgfile.size:
                 magic_description = 'empty'
-        if not magic_description and not pkgfile.is_ghost and has_magic:
+        if not magic_description and not pkgfile.is_ghost:
             start = time.monotonic()
             magic_description = get_magic(pkgfile.path)
             self.timers['libmagic'] += time.monotonic() - start
