@@ -465,15 +465,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "malcontent"
-type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1177974"
-nodigests = [
-    "glob:*/security/pam_malcontent.so",
-]
-
-[[FileDigestGroup]]
 package = "sssd"
 type = "pam"
 note = "sssd gssapi extension"
