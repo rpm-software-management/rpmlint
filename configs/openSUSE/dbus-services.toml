@@ -186,20 +186,6 @@ digester = "xml"
 hash = "2922b9262fcc988a9b8d20041e692ee65b274b95080000d74e938cf838205420"
 
 [[FileDigestGroup]]
-package  = "plasma6-desktop"
-type     = "dbus"
-note     = "helper for setting time, date, ntp, timezone"
-bug      = "bsc#1217184"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf"
-digester = "xml"
-hash     = "714253ca0a9f797dbd44be98b3d2cf19ee62e39f4c504a9fe9b449095df2803d"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service"
-digester = "shell"
-hash     = "727328d0cf3839edcee6a95bebd7593df539fb36799839d3c574b2cde96aaebd"
-
-[[FileDigestGroup]]
 package  = "plasma6-workspace"
 note     = "supports managing system fonts - this is a high risk legacy D-Bus interface"
 bug      = "bsc#1217186"
