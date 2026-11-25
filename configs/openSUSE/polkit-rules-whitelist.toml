@@ -222,18 +222,7 @@ hash     = "fb2bcf81da84890c74de32b1f4dd6d829058a43bbef9ae7862b92372efe4ddc0"
 [[FileDigestGroup]]
 package  = "gdm"
 note     = "allows the display manager to add WiFi connections via NetworkManager"
-bugs     = ["bsc#1239719","bsc#1248881"]
-type     = "polkit"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
-digester = "default"
-hash     = "38aaac33cd24fca2db1bdf35389b0d52bc17741ae55f0de4ea35d16d5817cd24"
-
-# TODO: merge with entry above once GDM 50 enters Factory
-[[FileDigestGroup]]
-package  = "gdm"
-note     = "allows the display manager to add WiFi connections via NetworkManager, as well as creation of headless VNC displays"
-bug      = "bsc#1258025"
+bugs     = ["bsc#1239719","bsc#1248881","bsc#1258025"]
 type     = "polkit"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/polkit-1/rules.d/20-gdm.rules"
