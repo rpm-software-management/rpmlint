@@ -71,18 +71,7 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881"]
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/gdm.conf"
-digester = "xml"
-hash     = "cf4cb93af82aacc9b4a0fc600c602af5089e001df10282a35287b6f27199f7ea"
-
-# TODO: merge with entry above once GDM 50 enters Factory
-[[FileDigestGroup]]
-package  = "gdm"
-note     = "D-Bus interface for managing GDM sessions"
-bug      = "bsc#1258025"
-type     = "dbus"
+bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881", "bsc#1258025"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
