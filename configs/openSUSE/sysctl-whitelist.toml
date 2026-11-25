@@ -107,16 +107,6 @@ digester = "shell"
 hash = "e51a21b525e8b4f95f8e2971740f85c1ef39fc38ab0f6d2e2abbd0d70072332b"
 
 [[FileDigestGroup]]
-package = "lxd"
-type = "sysctl"
-note = "inotify limit increase, ip neighborhood gc-threshold settings, max kernel keys increase"
-bug = "bsc#1174722"
-[[FileDigestGroup.digests]]
-path = "/usr/lib/sysctl.d/60-lxd.conf"
-digester = "shell"
-hash = "25d4856bfebac6880d789f328381ac2c4f2280521fe166d3fbf539ab0f7d7612"
-
-[[FileDigestGroup]]
 package = "389-ds"
 type = "sysctl"
 note = "changes TCP performance related settings, changes swappiness behaviour"
