@@ -141,7 +141,6 @@ nodigests = [
     "glob:*/security/pam_ftp.so",
     "glob:*/security/pam_group.so",
     "glob:*/security/pam_keyinit.so",
-    "glob:*/security/pam_lastlog.so",
     "glob:*/security/pam_listfile.so",
     "glob:*/security/pam_localuser.so",
     "glob:*/security/pam_loginuid.so",
