@@ -66,6 +66,23 @@ provides_regex = re.compile(r'^Provides(?:\([^\)]+\))?:\s*(.*)', re.IGNORECASE)
 obsoletes_regex = re.compile(r'^Obsoletes:\s*(.*)', re.IGNORECASE)
 conflicts_regex = re.compile(r'^(?:Build)?Conflicts:\s*(.*)', re.IGNORECASE)
 
+deps = [
+    'BuildPreReq',
+    'PreReq',
+    'BuildRequires',
+    'Requires',
+    'Provides',
+    'Obsoletes',
+    'BuildConflicts',
+    'Conflicts',
+    'Recommends',
+    'Suggests',
+    'Supplements',
+    'Enhances',
+    'OrderWithRequires',
+]
+dependency_regex = re.compile(r'^({})(\([^\)]+\))?:.*'.format('|'.join(deps)), re.IGNORECASE)
+
 declarative_regex = re.compile(r'^BuildSystem:\s*(.*)', re.IGNORECASE)
 
 compop_regex = re.compile(r'[<>=]')
@@ -398,6 +415,7 @@ class SpecCheck(AbstractCheck):
         self._checkline_python_module_def(line)
         self._checkline_python_sitelib_glob(line)
         self._checkline_shared_dir_glob(line)
+        self._check_dependency_not_in_preamble(line)
 
         # If statement, starts
         if ifarch_regex.search(line):
@@ -847,3 +865,14 @@ class SpecCheck(AbstractCheck):
             self.output.add_info('W', self.pkg,
                                  'suse-update-desktop-file-deprecated',
                                  '%suse_update_desktop_file is deprecated')
+
+    def _check_dependency_not_in_preamble(self, line):
+        """Check if a package dependency tag is outside the preamble section.
+
+        Dependency tags are only evaluated by rpm when they are part of a
+        package preamble.  A %package marker starts a new preamble for a
+        subpackage, so tags immediately following it are valid.
+        """
+        if self.current_section != 'package' and dependency_regex.match(line):
+            package = line[line.find(':') + 1:].strip()
+            self.output.add_info('W', self.pkg, 'dependency-not-in-preamble', package)
