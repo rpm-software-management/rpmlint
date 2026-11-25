@@ -219,11 +219,7 @@ type = "pam"
 note = "legacy: not audited"
 bugs = ["bsc#1206485"]
 nodigests = [
-    "glob:*/security/pam_unix.so",
-    "glob:*/security/pam_unix_acct.so",
-    "glob:*/security/pam_unix_auth.so",
-    "glob:*/security/pam_unix_passwd.so",
-    "glob:*/security/pam_unix_session.so",
+    "glob:*/security/pam_unix.so"
 ]
 
 [[FileDigestGroup]]
