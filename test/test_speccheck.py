@@ -473,6 +473,19 @@ def test_check_buildarch_instead_of_exclusivearch_tag(package, speccheck):
     assert 'E: buildarch-instead-of-exclusivearch-tag i586' in out
 
 
+@pytest.mark.parametrize('package', ['spec/buildarch-noarch-continuation'])
+def test_check_buildarch_noarch_line_continuation(package, speccheck):
+    """A 'BuildArch: noarch \\' line ending with a line-continuation
+    backslash (e.g. inside a multi-line macro) must not be reported, while
+    a real architecture with a continuation still is (#698)."""
+    output, test = speccheck
+    pkg = get_tested_spec_package(package)
+    test.check_spec(pkg)
+    out = output.print_results(output.results)
+    assert 'E: buildarch-instead-of-exclusivearch-tag x86_64' in out
+    assert 'buildarch-instead-of-exclusivearch-tag noarch' not in out
+
+
 @pytest.mark.parametrize('package', ['spec/SpecCheck2'])
 def test_check_biet_not_applied(package, speccheck):
     """biet: buildarch-instead-of-exclusivearch-tag
