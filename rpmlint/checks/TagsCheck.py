@@ -742,6 +742,11 @@ class TagsCheck(AbstractCheck):
         example:
         Name: lib-devel and Obsoletes: lib-devel in its spec file
 
+        A versioned Obsoletes entry that matches a Provides entry of the
+        same name without reaching beyond the provided EVR is the
+        documented package-merge pattern (e.g. Provides: foo = 1.6.1
+        with Obsoletes: foo <= 1.6.1) and is not reported.
+
         Returns:
         Output info to STDOUT
         """
