@@ -118,14 +118,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_userpass"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "glob:*/security/pam_userpass.so",
-]
-
-[[FileDigestGroup]]
 package = "pam_apparmor"
 type = "pam"
 note = "legacy: not audited"
