@@ -452,7 +452,6 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169614"
 nodigests = [
-    "glob:*/security/pam_cockpit_cert.so",
     "glob:*/security/pam_ssh_add.so",
 ]
 
