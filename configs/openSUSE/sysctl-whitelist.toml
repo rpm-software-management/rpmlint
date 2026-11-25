@@ -175,13 +175,3 @@ type     = "sysctl"
 path     = "/usr/lib/sysctl.d/health-checker.conf"
 digester = "shell"
 hash     = "6fbb1a98089869bfda619491b29f6116aa61e57f52b37b6c1bff895fcb58729a"
-
-[[FileDigestGroup]]
-package  = "foomuuri"
-note     = "networking stack and firewall related settings"
-bug      = "bsc#1254385"
-type     = "sysctl"
-[[FileDigestGroup.digests]]
-path     = "/usr/lib/sysctl.d/50-foomuuri.conf"
-digester = "shell"
-hash     = "c5077daeb66bbb4b6f2f160c799950547adf52c9454545080eefef244424e669"
