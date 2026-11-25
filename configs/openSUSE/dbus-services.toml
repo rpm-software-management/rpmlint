@@ -174,15 +174,6 @@ hash     = "8a90ad6824da4bc87d770b552f83212e47b8343afb0dccee828ba3e63b099267"
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
-note = "legacy: not audited"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service"
-digester = "shell"
-hash = "601ce02347339b2fdfde893754f864b0318adf0dd39e352d39068b4b89c6e1d0"
-
-[[FileDigestGroup]]
-package = "wpa_supplicant"
-type = "dbus"
 note = "control interface for the WPA daemon, only accessible to root based on D-Bus config, not otherwise authenticated"
 bugs = ["bsc#681116", "bsc#1200342", "bsc#1289855"]
 [[FileDigestGroup.digests]]
