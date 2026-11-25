@@ -191,13 +191,13 @@ hash = "9e12a279a21d11c92a41ccd818edcb9b7c89a162984a6e1ca5609b9bbcbbf989"
 
 [[FileDigestGroup]]
 package  = "gnome-remote-desktop"
-note     = "allows the g-r-d system user to enable/disable itself"
-bugs     = ["bsc#1222159", "bsc#1248979"]
+note     = "allows the g-r-d system user to enable/disable itself and invoke some privileged D-Bus methods"
+bugs     = ["bsc#1222159", "bsc#1248979", "bsc#1291688"]
 type     = "polkit"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/polkit-1/rules.d/20-gnome-remote-desktop.rules"
 digester = "default"
-hash     = "4cbe3c8b9fac5eb9d5eb7a32b7f0e57bdbcf460fde7bc1994d3746ad46a8a446"
+hash     = "9d2c94c73e8aad7bb021eb510a4a0a3803256490422cfda66c2e0588f63f575a"
 
 [[FileDigestGroup]]
 package  = "sssd"
