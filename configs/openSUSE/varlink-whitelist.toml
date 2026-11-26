@@ -243,7 +243,7 @@ digester = "systemd-socket"
 hash     = "dda8e6be980de95fc8b3dcd4457ae7faf4ec54af01171551de08803f26d9746d"
 
 [[FileDigestGroup]]
-packages = ["systemd-experimental", "udev"]
+packages = ["udev"]
 note     = "allows root to extend TPM PCR registers"
 bugs     = ["bsc#1261919", "bsc#1281962", "bsc#1282497"]
 type     = "varlink"
