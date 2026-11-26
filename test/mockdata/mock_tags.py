@@ -166,3 +166,21 @@ DepsDevPackage = DepsPackage.clone(
     extend=True,
     name='pkg-devel',
 )
+
+
+ChangelogDistReleasePackage = get_tested_mock_package(
+    lazyload=True,
+    name='distrelease',
+    header={
+        'arch': 'x86_64',
+        'name': 'distrelease',
+        'version': '1.15.1',
+        'release': '3.suse.lp153',
+        'sourcerpm': 'distrelease-1.15.1-3.suse.lp153.src.rpm',
+        'license': 'GPL-2.0-or-later',
+        'summary': 'test package',
+        'changelogname': ['* Mon Sep 05 2022 Someone <someone@example.com> - 1.15.1-3'],
+        'changelogtext': ['- test changelog entry'],
+        'changelogtime': [1662400000],
+    },
+)
