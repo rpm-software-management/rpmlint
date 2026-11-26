@@ -71,18 +71,7 @@ hash = "00d25f898cf4c78cf45d68000ee00be27b0aa15b7ebe22c4ba86bc1b5f33b898"
 package  = "gdm"
 type     = "dbus"
 note     = "D-Bus interface for managing GDM sessions"
-bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881"]
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/gdm.conf"
-digester = "xml"
-hash     = "cf4cb93af82aacc9b4a0fc600c602af5089e001df10282a35287b6f27199f7ea"
-
-# TODO: merge with entry above once GDM 50 enters Factory
-[[FileDigestGroup]]
-package  = "gdm"
-note     = "D-Bus interface for managing GDM sessions"
-bug      = "bsc#1258025"
-type     = "dbus"
+bugs     = ["bsc#1204052", "bsc#1218922", "bsc#1230466", "bsc#1248881", "bsc#1258025"]
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/gdm.conf"
 digester = "xml"
@@ -185,15 +174,6 @@ hash     = "8a90ad6824da4bc87d770b552f83212e47b8343afb0dccee828ba3e63b099267"
 [[FileDigestGroup]]
 package = "wpa_supplicant"
 type = "dbus"
-note = "legacy: not audited"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service"
-digester = "shell"
-hash = "601ce02347339b2fdfde893754f864b0318adf0dd39e352d39068b4b89c6e1d0"
-
-[[FileDigestGroup]]
-package = "wpa_supplicant"
-type = "dbus"
 note = "control interface for the WPA daemon, only accessible to root based on D-Bus config, not otherwise authenticated"
 bugs = ["bsc#681116", "bsc#1200342", "bsc#1289855"]
 [[FileDigestGroup.digests]]
@@ -204,20 +184,6 @@ hash = "ee69165e00f5021bb87f5ea45c55a2059a9ad5c78e0509d091091e5210399b26"
 path = "/usr/share/dbus-1/system.d/wpa_supplicant.conf"
 digester = "xml"
 hash = "2922b9262fcc988a9b8d20041e692ee65b274b95080000d74e938cf838205420"
-
-[[FileDigestGroup]]
-package  = "plasma6-desktop"
-type     = "dbus"
-note     = "helper for setting time, date, ntp, timezone"
-bug      = "bsc#1217184"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/org.kde.kcontrol.kcmclock.conf"
-digester = "xml"
-hash     = "714253ca0a9f797dbd44be98b3d2cf19ee62e39f4c504a9fe9b449095df2803d"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system-services/org.kde.kcontrol.kcmclock.service"
-digester = "shell"
-hash     = "727328d0cf3839edcee6a95bebd7593df539fb36799839d3c574b2cde96aaebd"
 
 [[FileDigestGroup]]
 package  = "plasma6-workspace"
@@ -628,20 +594,6 @@ hash = "049c2e5c14f53c6d34f1c033b7bf1a14566d4380143920090c076a8ce6348e5b"
 path = "/usr/share/dbus-1/system.d/org.freedesktop.machine1.conf"
 digester = "xml"
 hash = "ba1ed5dc253c52e7664fdd5a8e92016ab4d3ebacd444f9f51fcac7ea0a8e3f9b"
-
-[[FileDigestGroup]]
-package = "systemd-container"
-type = "dbus"
-note = "TODO: backward compatibility entry for systemd 261, remove once 262 is in Factory"
-bugs = ["bsc#964935", "bsc#1259318", "bsc#1282497"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.import1.service"
-digester = "shell"
-hash = "7abbbe8d99e3134d7cb0e93f657671f80ab430cf06259a1bb07d0de0142e7e6f"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.import1.conf"
-digester = "xml"
-hash = "426f75e9a68216b346ba6421a35b2d0645b3fb52a2865328e351959193ffddb3"
 
 [[FileDigestGroup]]
 package = "systemd-container"
@@ -1120,21 +1072,7 @@ digester = "xml"
 hash = "382e31dfc5f6a62b811535e54c09d95b59689dff2641f0aaeee4927d5705bfca"
 
 [[FileDigestGroup]]
-package = "udev"
-type = "dbus"
-note = "imported from rpmlint1 DBUSServices.WhiteList. later moved to udev"
-bugs = ["bsc#1111254", "bsc#1213292"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.timesync1.service"
-digester = "shell"
-hash = "1319308c6b4c72399d29ff75fe9fd8b08a0fde71297c0eccdd0badc395e7e178"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.timesync1.conf"
-digester = "xml"
-hash = "feecf1770babd5649face9cd0eb879fef642153ca87995b35b90897413b022a4"
-
-[[FileDigestGroup]]
-package = "udev-mini"
+packages = ["udev", "udev-mini"]
 type = "dbus"
 note = "imported from rpmlint1 DBUSServices.WhiteList. later moved to udev"
 bugs = ["bsc#1111254", "bsc#1213292"]
@@ -1280,23 +1218,9 @@ digester = "shell"
 hash = "9ae44bd6f4c16417e6752581fe7513f791d5660b849747bbed4307e25444606b"
 
 [[FileDigestGroup]]
-package = "kde-inotify-survey"
-type = "dbus"
-note = "KDE tooling for monitoring inotify limits"
-bugs = ["bsc#1208689"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.kde.kded.inotify.conf"
-digester = "xml"
-hash = "4eb68f2c3bc75842df0f3d67874588fc672ec540769db09c3a71cbb292a989f7"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.kde.kded.inotify.service"
-digester = "shell"
-hash = "89a2ce5a4c6ebd7cb471f820a28fbd2dd418e377cb2ed0eaea1af59840c1dabd"
-
-[[FileDigestGroup]]
 package  = "kde-inotify-survey"
-note     = "KDE tooling for monitoring inotify limits (kde6 update)"
-bugs     = ["bsc#1217191"]
+note     = "KDE tooling for monitoring inotify limits"
+bugs     = ["bsc#1208689", "bsc#1217191"]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system-services/org.kde.kded.inotify.service"
@@ -1308,24 +1232,9 @@ digester = "xml"
 hash     = "7dd017f2535dabd623fdb59ecb6362ac60fa836e9a146243c2a450b04d9aee5d"
 
 [[FileDigestGroup]]
-package = "systemd-homed"
-type = "dbus"
-note = "systemd-homed helper service for providing portable home directory containers"
-bugs = ["bsc#1185285", "bsc#1213692", "bsc#1219916", "bsc#1225317"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf"
-digester = "xml"
-hash = "0bdd8a388268b3c8d187433b2192ca1b682184881d4b4cb4056a81b757c5ab04"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.freedesktop.home1.service"
-digester = "shell"
-hash = "c4281ad74af8c43a963806142e2770751b153df8c1217da4edf212b334ecddcf"
-
-# TODO: merge with entry above once v258 reaches Factory
-[[FileDigestGroup]]
 package  = "systemd-homed"
-note     = "systemd-homed v258 changes"
-bug      = "bsc#1250884"
+note     = "systemd-homed helper service for providing portable home directory containers"
+bugs     = ["bsc#1185285", "bsc#1213692", "bsc#1219916", "bsc#1225317", "bsc#1250884"]
 type     = "dbus"
 [[FileDigestGroup.digests]]
 path     = "/usr/share/dbus-1/system.d/org.freedesktop.home1.conf"
@@ -1462,20 +1371,6 @@ hash = "fa65ae25c9eb99b8e3d338383a24e3675fa4388e878e1ec78ec9e3c6c90602e7"
 [[FileDigestGroup]]
 package = "tukitd"
 type = "dbus"
-note = "TODO: backward compatibility entry for systemd 261, remove once 262 is in Factory"
-bugs = ["bsc#1196149", "bsc#1215216", "bsc#1286924"]
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system.d/org.opensuse.tukit.conf"
-digester = "xml"
-hash = "ad0e4ef18f2c459a4991645ad55de61b49eb119324cb625a275a75f8793c8f44"
-[[FileDigestGroup.digests]]
-path = "/usr/share/dbus-1/system-services/org.opensuse.tukit.service"
-digester = "shell"
-hash = "32bbd0895234c5ed4d952f437cc511cb95419304b1174069a2c84efab6b771e7"
-
-[[FileDigestGroup]]
-package = "tukitd"
-type = "dbus"
 note = "openSUSE transactional updates"
 bugs = ["bsc#1196149", "bsc#1215216", "bsc#1286924"]
 [[FileDigestGroup.digests]]
@@ -1566,24 +1461,6 @@ hash = "72e1dbaa64ae4f041b45d87c1ec65ae1f6596245171cf6bd967e4d13e4d48600"
 path = "/usr/share/dbus-1/system.d/org.selinux.conf"
 digester = "xml"
 hash = "0ec37dac1d4ff66ca0ff3aec940c28ad9468e70f7376571dcaf311c58ef66927"
-
-# Passim never reached Factory, the entry was sitting here for nearly two
-# years, unused. Keep it commented-out for now, should we need to reinstate it
-# at a later time.
-#
-#[[FileDigestGroup]]
-#package = "passim"
-#type = "dbus"
-#note = "caching of public files in local networks"
-#bug = "bsc#1216434"
-#[[FileDigestGroup.digests]]
-#path = "/usr/share/dbus-1/system-services/org.freedesktop.Passim.service"
-#digester = "shell"
-#hash = "0c07dc9b27fb506af38d60d5b0555fb88849dc457c31b6bc67a979be538a1946"
-#[[FileDigestGroup.digests]]
-#path = "/usr/share/dbus-1/system.d/org.freedesktop.Passim.conf"
-#digester = "xml"
-#hash = "f0a5a607af98b0f4841ac0cab80af5592ee81d29279e50932bccdbf92c10d227"
 
 [[FileDigestGroup]]
 package  = "drkonqi6"
@@ -1728,26 +1605,6 @@ hash     = "91b532cb7675218944e9f77705c7bcaaec73ea11fa6e770e0a39dfaab350832b"
 path     = "/usr/share/dbus-1/system.d/org.kde.smb4k.mounthelper.conf"
 digester = "xml"
 hash     = "c67705447819baeede72d3f1efd4f1df22f86b5916af1cdf64e542630821539e"
-
-[[FileDigestGroup]]
-package  = "foomuuri"
-note     = "Firewall management via D-Bus"
-bug      = "bsc#1254385"
-type     = "dbus"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/fi.foobar.Foomuuri1.conf"
-digester = "xml"
-hash     = "f94635f00f0cc1c8622a9a36677e91736fe37221d7a9ab05484ac238e16790aa"
-
-[[FileDigestGroup]]
-package  = "foomuuri-firewalld"
-note     = "Firewall management via D-Bus (firewalld drop-in)"
-bug      = "bsc#1254385"
-type     = "dbus"
-[[FileDigestGroup.digests]]
-path     = "/usr/share/dbus-1/system.d/fi.foobar.Foomuuri-FirewallD.conf"
-digester = "xml"
-hash     = "a4d61b04ab65225d2e11f60a3fcaf2705ae9ce9dcea9c5d814d7be6724403250"
 
 [[FileDigestGroup]]
 package  = "snapd"

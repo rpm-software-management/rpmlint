@@ -118,14 +118,6 @@ nodigests = [
 ]
 
 [[FileDigestGroup]]
-package = "pam_userpass"
-type = "pam"
-note = "legacy: not audited"
-nodigests = [
-    "glob:*/security/pam_userpass.so",
-]
-
-[[FileDigestGroup]]
 package = "pam_apparmor"
 type = "pam"
 note = "legacy: not audited"
@@ -149,7 +141,6 @@ nodigests = [
     "glob:*/security/pam_ftp.so",
     "glob:*/security/pam_group.so",
     "glob:*/security/pam_keyinit.so",
-    "glob:*/security/pam_lastlog.so",
     "glob:*/security/pam_listfile.so",
     "glob:*/security/pam_localuser.so",
     "glob:*/security/pam_loginuid.so",
@@ -228,11 +219,7 @@ type = "pam"
 note = "legacy: not audited"
 bugs = ["bsc#1206485"]
 nodigests = [
-    "glob:*/security/pam_unix.so",
-    "glob:*/security/pam_unix_acct.so",
-    "glob:*/security/pam_unix_auth.so",
-    "glob:*/security/pam_unix_passwd.so",
-    "glob:*/security/pam_unix_session.so",
+    "glob:*/security/pam_unix.so"
 ]
 
 [[FileDigestGroup]]
@@ -465,7 +452,6 @@ type = "pam"
 note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1169614"
 nodigests = [
-    "glob:*/security/pam_cockpit_cert.so",
     "glob:*/security/pam_ssh_add.so",
 ]
 
@@ -476,15 +462,6 @@ note = "imported from rpmlint1 PAMModules.WhiteList"
 bug = "bsc#1173387"
 nodigests = [
     "glob:*/security/pam_kanidm.so",
-]
-
-[[FileDigestGroup]]
-package = "malcontent"
-type = "pam"
-note = "imported from rpmlint1 PAMModules.WhiteList"
-bug = "bsc#1177974"
-nodigests = [
-    "glob:*/security/pam_malcontent.so",
 ]
 
 [[FileDigestGroup]]

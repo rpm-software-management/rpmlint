@@ -30,16 +30,7 @@ hash = "6981b346a1cdafbc018c6f69819a28994c64d9b0a9d6365235f1a79b7054312f"
 package = "nextcloud"
 type = "cron"
 note = "default-disabled cron job that runs PHP cleanup logic for nextcloud as unprivileged user"
-bug = "bsc#1162254"
-[[FileDigestGroup.digests]]
-path = "/etc/cron.d/nextcloud"
-hash = "176aed8f9adc79cc3d0a75a223730d621cf9435d7baee03823afc558c110b76d"
-
-[[FileDigestGroup]]
-package = "nextcloud"
-type = "cron"
-note = "follow-up whitelisting for no-op change in comments"
-bug = "bsc#1168964"
+bugs = ["bsc#1162254", "bsc#1168964"]
 [[FileDigestGroup.digests]]
 path = "/etc/cron.d/nextcloud"
 hash = "5f883ad50e790de95f4ffbafd9515dc0bc88f9e49fcb404d16ed0d781fbd4c77"

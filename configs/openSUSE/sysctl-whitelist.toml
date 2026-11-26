@@ -107,16 +107,6 @@ digester = "shell"
 hash = "e51a21b525e8b4f95f8e2971740f85c1ef39fc38ab0f6d2e2abbd0d70072332b"
 
 [[FileDigestGroup]]
-package = "lxd"
-type = "sysctl"
-note = "inotify limit increase, ip neighborhood gc-threshold settings, max kernel keys increase"
-bug = "bsc#1174722"
-[[FileDigestGroup.digests]]
-path = "/usr/lib/sysctl.d/60-lxd.conf"
-digester = "shell"
-hash = "25d4856bfebac6880d789f328381ac2c4f2280521fe166d3fbf539ab0f7d7612"
-
-[[FileDigestGroup]]
 package = "389-ds"
 type = "sysctl"
 note = "changes TCP performance related settings, changes swappiness behaviour"
@@ -175,13 +165,3 @@ type     = "sysctl"
 path     = "/usr/lib/sysctl.d/health-checker.conf"
 digester = "shell"
 hash     = "6fbb1a98089869bfda619491b29f6116aa61e57f52b37b6c1bff895fcb58729a"
-
-[[FileDigestGroup]]
-package  = "foomuuri"
-note     = "networking stack and firewall related settings"
-bug      = "bsc#1254385"
-type     = "sysctl"
-[[FileDigestGroup.digests]]
-path     = "/usr/lib/sysctl.d/50-foomuuri.conf"
-digester = "shell"
-hash     = "c5077daeb66bbb4b6f2f160c799950547adf52c9454545080eefef244424e669"
