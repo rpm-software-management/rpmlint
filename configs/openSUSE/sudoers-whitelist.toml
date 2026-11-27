@@ -137,3 +137,13 @@ type     = "sudoers"
 path     = "/etc/sudoers.d/cloudguestregistryauth"
 digester = "shell"
 hash     = "108355d9853b158aa2192766b75190d561e82a5437f338fdadcbf2b2d9cfbc97"
+
+[[FileDigestGroup]]
+package  = "certification-sles-eal4"
+note     = "allow members of the 'trusted' group to escalate via sudo"
+bug      = "bsc#1291944"
+type     = "sudoers"
+[[FileDigestGroup.digests]]
+path     = "/etc/sudoers.d/common-criteria"
+digester = "shell"
+hash     = "fd70779de6711c77e8640aa25eaaafa4b77e0d3fd826587de2708dda22c10189"
