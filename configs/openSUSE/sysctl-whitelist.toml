@@ -185,3 +185,13 @@ type     = "sysctl"
 path     = "/usr/lib/sysctl.d/health-checker.conf"
 digester = "shell"
 hash     = "40838811f1f8ec4f4b19ce8f049f63ab616f92a1d0a8190e29d0bbf6fe43e66a"
+
+[[FileDigestGroup]]
+package  = "certification-sles-eal4"
+note     = "disables magic keyreq in the kernel"
+bug      = "bsc#1291944"
+type     = "sysctl"
+[[FileDigestGroup.digests]]
+path     = "/usr/lib/sysctl.d/55-common-criteria.conf"
+digester = "shell"
+hash     = "1a25306c51ebefbe547f20a43603bbbadf8f2464f510ff755445a7a70a1f2733"

@@ -91,3 +91,13 @@ type     = "permissions"
 path     = "/usr/share/permissions/permissions.d/sssd"
 digester = "shell"
 hash     = "c90615240af575b857e264caa1bd56282a74c68ab1f53a411b56d6747a8a0df6"
+
+[[FileDigestGroup]]
+package  = "certification-sles-eal4"
+note     = "a couple of certification-related permission settings like restricted su, setuid-root passwd & vlock"
+bug      = "bsc#1291944"
+type     = "permissions"
+[[FileDigestGroup.digests]]
+path     = "/etc/permissions.d/permissions-commoncriteria"
+digester = "shell"
+hash     = "87de5ddd6019f8bf73c9fdfceaa0574d457e5eea80c9e0cb80e80ef0de95faef"
